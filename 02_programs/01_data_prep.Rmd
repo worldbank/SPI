@@ -139,6 +139,26 @@ spi_mapper('aspire_df', 'ben_info', 'Administrative Data Available on Beneficiar
       * Out-of-school rate by school age and sex    
       * 4.2.2 Participation rate in organized learning (one year before the official primary entry age), by sex  
 
+```{r uis, message=FALSE, warning=FALSE}
+
+#read data
+unesco_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','unesco_admin_sources.csv', sep="/"))
+
+#cleaning of aspire data
+unesco_df <- unesco_df_raw %>%
+    group_by( LOCATION2017) %>%
+    summarise(Value=mean(Value, na.rm=T)) %>%
+    rename(iso3c=LOCATION2017) %>%
+    left_join(country_metadata) %>%
+    mutate(available=(!is.na(Value))
+           ) %>%
+    filter(available==TRUE)
+  
+
+spi_mapper('unesco_df', 'available', 'Education Administrative Data Available According to UIS' )
+
+
+```
 
 ### Health Admin Data
 
@@ -200,7 +220,23 @@ crvs_df$crvs<-as.numeric(grepl("Yes", crvs_df$Vitalregistrationcomplete)) #creat
   
 * Database extends from 2010 to 2019 and covers 177 countries
 
+```{r ilo, message=FALSE, warning=FALSE}
 
+#read data
+ilo_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ILOSTAT_sources.csv', sep="/"))
+
+#cleaning of aspire data
+ilo_df <- ilo_df_raw %>%
+  group_by(iso3c) %>%
+  summarise(Source.type=last(Source.type)) %>%
+  left_join(country_metadata)
+
+  
+
+spi_mapper('ilo_df', 'Source.type', 'Labor Administrative Data Available According to ILO' )
+
+
+```
 
   
 ## Indicator 4.4: private/citizen generated data  

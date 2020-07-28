@@ -1,4 +1,4 @@
-"0","knitr::opts_chunk$set(echo = TRUE)"
+"0","knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.height=7, fig.width=9)"
 "0",""
 "0","library(tidyverse)"
 "0","library(here)"
