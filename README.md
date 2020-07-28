@@ -2,8 +2,6 @@ Statistical Performance Indicators
 ================
 
 
-# Statistical Performance Indicators
-
 The SPI framework is designed to capture different aspects of national
 statistical capacity by employing most relevant and representative
 variables that are publicly available. The SPI can be used to gauge
