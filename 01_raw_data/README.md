@@ -1,7 +1,7 @@
 Statistical Performance Indicators - Raw Data folder
 ================
 
-This folder contains the raw data that will be used to form the Statistical Performance Indicators.  By raw data, we mainly mean data that has not yet been transformed into an indicator.  The data may have gone through an initial process of cleaning however.  For instance, with in the 4.1_SOCS folder you can find a database containing the last population censuses.  
+This folder contains the raw data that will be used to form the Statistical Performance Indicators.  By raw data, we mainly mean data that has not yet been transformed into an indicator.  The data may have gone through an initial process of cleaning however.  Data will be in csv format.  For instance, with in the 4.1_SOCS folder you can find a database containing the last population censuses.  
 
 Twenty-two sub-folders can be found in this directory.  Each corresponds to one of the twenty-two primary SPI indicator groupings.  A description of each sub-folder is below.
 

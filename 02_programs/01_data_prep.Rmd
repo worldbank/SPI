@@ -1,0 +1,268 @@
+---
+title: "Data Preparation and Cleaning"
+author: "Brian Stacy"
+date: "7/28/2020"
+output: 
+  pdf_document: 
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.height=7, fig.width=9)
+
+library(tidyverse)
+library(here)
+library(wbggeo)
+library(wbgmaps)
+library(ggthemes)
+library(Hmisc)
+library(httr)
+
+#set directories
+dir <- here()
+
+raw_dir <- paste(dir, '01_raw_data', sep="/")
+
+
+```
+
+```{r programs, include=FALSE}
+
+
+#Now map the result
+quality = "high"
+maps <- wbgmaps::wbgmaps[[quality]]
+
+country_metadata <- wbstats::wbcountries()
+
+
+
+spi_mapper  <- function(data, indicator, title) {
+  
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    group_by( country) %>%
+    summarise(across(!! indicator,last)) %>%
+    mutate(data_available=TRUE) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), FALSE, data_available))    
+  
+  
+   ggplot() +
+    geom_map(data = map_df, aes(map_id = iso3c, fill = data_available), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+     geom_path(data = maps$boundaries,
+               aes(long, lat, group = group),
+               color = "white",
+               size = 0.1,
+               lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_brewer(
+      name='Data Available',
+      palette='Paired',
+      na.value='blue'
+    )  +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap(title,100),
+      caption = 'Source: SPI Indicators Raw Data'
+    )
+
+
+}
+
+```
+
+
+# Introduction
+
+In this program, I will clean and reshape the raw data files in the 01_rawdata folder in order to produce the Statistical Performance Indicators.
+
+# Data Sources
+
+Cleaning for the Data Sources Indicators.  Data Sources (4 Indicators):  
+  - 4.1_SOCS - Indicator 4.1: censuses and surveys    
+  - 4.2_SOAD - Indicator 4.2: administrative data  
+  - 4.3_SOGS - Indicator 4.3: geospatial data  
+  - 4.4_SOPC - Indicator 4.4: private/citizen generated data
+  
+## Indicator 4.2: administrative data
+
+The following indicator checks whether administrative data is available for the following topic areas: Social Protection, Education, Health, and Labor
+
+### Social Protection Admin Data
+
+-  Atlas of Social Protection Indicators of Resilience and Equity (ASPIRE) is compilation of Social Protection and Labor (SPL) indicators to analyze scope and performance of SPL programs.   
+- ASPIRE has indicators for 136 countries on:    
+  * Social assistance   
+  * Social insurance    
+  * Labor market programs 
+  
+- Based on both program-level administrative data and national household survey data    
+- Data extends from 2001 to 2018
+
+```{r aspire, message=FALSE, warning=FALSE}
+
+#read data
+aspire_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ASPIRE_sources.csv', sep="/"))
+
+#cleaning of aspire data
+aspire_df <- aspire_df_raw %>%
+    group_by( ccode) %>%
+    summarise(ben_count=mean(ben, na.rm=T),
+              ben_exp=mean(exp_b, na.rm=T)) %>%
+    rename(iso3c=ccode) %>%
+    left_join(country_metadata) %>%
+    mutate(ben_info=(!is.na(ben_count) | !is.na(ben_exp))
+           ) 
+
+spi_mapper('aspire_df', 'ben_info', 'Administrative Data Available on Beneficiary Counts or Expenditures in 2001-2018 using ASPIRE' )
+
+
+```
+
+
+### Education Admin Data
+
+* UNESCO UIS has shared a database containing data we can use on administrative data systems    
+* Two areas:    
+
+  * Data tracking SDG 4.1.2 Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education    
+  
+  * Data tracking whether countries produce the following from administrative data sources:   
+  
+      * Out-of-school rate by school age and sex    
+      * 4.2.2 Participation rate in organized learning (one year before the official primary entry age), by sex  
+
+
+### Health Admin Data
+
+* This indicator is formed using World Bank metadata on whether the Civil Registration and Vital Statistics (CRVS) system is complete in the country.  
+
+Civil registration is the act of recording and documenting of vital events in a person’s life (including birth, marriage, divorce, adoption, and death and cause of death) and is a fundamental function of national governments. Birth registration establishes an individual’s legal identity at birth. A legal identity, name, nationality, and proof of age, are important human rights. They enable individuals to be included in various government, social and private services, and include the right to vote, etc. Vital statistics are compiled using civil registration information on these vital events. The availability of reliable and up-to-date vital statistics depends on the level of development of civil registration programs. An effective civil registration and vital statistics (CRVS) system is critical for planning and monitoring programs across several sectors. 
+
+By complete, that is representing 90 per cent or more of the events occurring in the specified year.
+
+Source: World Bank WDI Metadata.  
+
+```{r crvs}
+
+Request_metadata <- GET(url = "https://api.worldbank.org/v2/sources/2/country/all/metadata?per_page=30000&format=json")
+Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+JSON_metadata <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+  data.frame()
+
+#do some conversion to produce a dataframe
+crvs_df <- JSON_metadata$source.concept %>%
+  data.frame() 
+
+#do some more cleaning and conversion
+crvs_df <- crvs_df$variable %>%
+  data.frame()   %>%
+  rename(iso3c=id) %>%
+  unnest(metatype) %>%
+  pivot_wider(
+    id_cols=iso3c,
+    names_from=id,
+    values_from=value
+  ) 
+
+# Manipulate and clean final data
+crvs_df <- crvs_df %>%
+  filter(!is.na(IncomeGroup))  #keep just countries (drop aggregations)
+  
+crvs_df$crvs<-as.numeric(grepl("Yes", crvs_df$Vitalregistrationcomplete)) #create 0,1 variable for vital registration
+
+```
+
+
+### Labor Admin Data
+
+* ILO shared database containing all administrative data sources used to produce ILO statistics (ILOSTAT)   
+  * May not be comprehensive of all administrative datasets available in a country    
+  * But gives some indication of whether labor statistics produced using Admin data
+  
+* Database contains the following admin sources:    
+
+  * Insurance records   
+  * Labour inspectorate records   
+  * Records of employers' organizations   
+  * Employment office records
+  * Records of workers' organizations
+  * Other administrative records and related sources
+  
+* Database extends from 2010 to 2019 and covers 177 countries
+
+
+
+  
+## Indicator 4.4: private/citizen generated data  
+
+New indicator based on references to private/citizen generated data in metadata relating to content on NSO website.
+
+We have seen an increased use of private/citizen generated data during the COVID-19 pandemic.  One way in which it has been used is for tracking mobility of citizens to understand the social distancing measures citizens are taking.  As a measure of private/citizen generated data we make use of Apple and Google Mobility tracking data made publicly available during the pandemic.
+
+Source: 
+
+Google LLC "Google COVID-19 Community Mobility Reports".
+https://www.google.com/covid19/mobility/ Accessed: 2020-07-23.
+
+Apple "Mobility Trends Reports".
+https://www.apple.com/covid19/mobility/ Accessed: 2020-07-23.
+
+
+```{r 4.4_SOPC, fig.height=7, fig.width=9, message=FALSE, warning=FALSE}
+#####
+# Google
+#####
+#google mobility
+google_df_raw <- read_csv(paste(raw_dir, '4.4_SOPC','Global_Mobility_Report.csv', sep="/"))
+
+
+#match to world bank country database
+google_df <- google_df_raw %>%
+  left_join(country_metadata, by=c('country_region_code'='iso2c'))
+
+
+spi_mapper('google_df', 'date', 'Google Global Mobility Report Data' )
+
+
+#####
+# Apple
+#####
+
+apple_df_raw <- read_csv(paste(raw_dir, '4.4_SOPC','applemobilitytrends-2020-07-26.csv', sep="/")) 
+
+#match to world bank country database
+apple_df <- apple_df_raw %>%
+  select(-c('country', 'alternative_name', 'sub-region')) %>%
+  filter(geo_type=="country/region") %>%
+  rename(country=region) %>%
+  pivot_longer(cols=starts_with("2020"),
+               names_to='date',
+               values_to='value') %>%
+  group_by(country) %>%
+  summarise(across(everything(), last)) %>%
+  mutate(country=case_when(
+    country=="Egypt" ~ "Egypt, Arab Rep.",
+    country=="Republic of Korea" ~ "Korea, Rep.",
+    country=="Macao" ~ "Macao SAR, China",
+    country=="Slovakia" ~ "Slovak Republic",
+    country=="Taiwan" ~ "Taiwan, China",
+    TRUE ~ country
+  )) %>%
+  left_join(country_metadata)
+
+
+
+spi_mapper('apple_df', 'date', 'Apple Mobility Report Data' )
+
+```
+

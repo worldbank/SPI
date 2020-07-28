@@ -1,0 +1,60 @@
+"0",""
+"0","#read data"
+"0","aspire_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ASPIRE_sources.csv', sep=""/""))"
+"2","Parsed with column specification:
+cols(
+  .default = col_double(),
+  region = [31mcol_character()[39m,
+  country_name = [31mcol_character()[39m,
+  ccode = [31mcol_character()[39m,
+  income_group = [31mcol_character()[39m,
+  sp_area = [31mcol_character()[39m,
+  sp_category = [31mcol_character()[39m,
+  sub_category = [31mcol_character()[39m,
+  sub_sub_category = [33mcol_logical()[39m,
+  program_name = [31mcol_character()[39m,
+  program_name_l = [31mcol_character()[39m,
+  previous_name = [33mcol_logical()[39m,
+  benefit_name = [33mcol_logical()[39m,
+  notes = [31mcol_character()[39m,
+  programdescription = [31mcol_character()[39m,
+  law_decree = [33mcol_logical()[39m,
+  budget_code = [33mcol_logical()[39m,
+  national = [33mcol_logical()[39m,
+  targ_other = [31mcol_character()[39m,
+  benefity_type_expl = [31mcol_character()[39m,
+  conditionality_type = [31mcol_character()[39m
+  # ... with 28 more columns
+)
+"
+"2","See spec(...) for full column specifications.
+"
+"2","50351 parsing failures.
+ row     col           expected                                                                             actual                                                                                               file
+2341 webpage a double           http://mof.portal.gov.bd/site/page/32220b73-846f-4a33-b4c0-a6650c918e25/Safety-Net 'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/01_raw_data/4.2_SOAD/ASPIRE_sources.csv'
+2341 contact 1/0/T/F/TRUE/FALSE Md. Anisur Rahman (Director, Planning) 01711056098 rohmananisur@yahoo.com          'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/01_raw_data/4.2_SOAD/ASPIRE_sources.csv'
+2342 webpage a double           http://mof.portal.gov.bd/site/page/32220b73-846f-4a33-b4c0-a6650c918e25/Safety-Net 'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/01_raw_data/4.2_SOAD/ASPIRE_sources.csv'
+2342 contact 1/0/T/F/TRUE/FALSE Md. Anisur Rahman (Director, Planning) 01711056098 rohmananisur@yahoo.com          'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/01_raw_data/4.2_SOAD/ASPIRE_sources.csv'
+2343 webpage a double           http://mof.portal.gov.bd/site/page/32220b73-846f-4a33-b4c0-a6650c918e25/Safety-Net 'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/01_raw_data/4.2_SOAD/ASPIRE_sources.csv'
+.... ....... .................. .................................................................................. ..................................................................................................
+See problems(...) for more details.
+"
+"0","#cleaning of aspire data"
+"0","aspire_df <- aspire_df_raw %>%"
+"0","    group_by( ccode) %>%"
+"0","    summarise(ben_count=mean(ben, na.rm=T),"
+"0","              ben_exp=mean(exp_b, na.rm=T)) %>%"
+"0","    rename(iso3c=ccode) %>%"
+"0","    left_join(country_metadata) %>%"
+"0","    mutate(ben_info=(!is.na(ben_count) | !is.na(ben_exp))"
+"0","           ) "
+"2","`summarise()` ungrouping output (override with `.groups` argument)
+"
+"2","Joining, by = ""iso3c""
+"
+"0","spi_mapper('aspire_df', 'ben_info', 'Administrative Data Available on Beneficiary Counts or Expenditures in 2001-2018 using ASPIRE' )"
+"2","`summarise()` ungrouping output (override with `.groups` argument)
+"
+"2","Joining, by = ""country""
+"
+"2","Ignoring unknown aesthetics: map_id"

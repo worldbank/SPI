@@ -80,8 +80,9 @@
 !/Data/**/*.xlsx
 
 # csv files
-!/R/**/*rawdata/*.csv
-!/R/**/*outputs/*.csv
+!/**/**/*.csv
+
+
 
 # stata files
 !/R/**/*outputs/*.dta
