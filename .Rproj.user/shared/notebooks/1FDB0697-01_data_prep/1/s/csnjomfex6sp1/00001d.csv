@@ -1,5 +1,0 @@
-"0","#####"
-"0","# Google"
-"0","#####"
-"0","#google mobility"
-"0","google_df_raw <- read_csv(paste(raw_dir, '4.4_SOPC','Global_Mobility_Report.csv', sep=""/""))"
