@@ -136,6 +136,71 @@ Cleaning for the Data Sources Indicators.  Data Sources (4 Indicators):
   - 4.2_SOAD - Indicator 4.2: administrative data   
   - 4.3_SOGS - Indicator 4.3: geospatial data     
   - 4.4_SOPC - Indicator 4.4: private/citizen generated data    
+
+## Indicator 4.1: censuses and surveys 
+
+This indicator draws from data collected by the Statistical Performance Indicators team.  The following censuses and surveys are considered.
+
+```{r cs}
+
+cs_fun  <- function(data, input_var, indicator) {
+  
+  data <- data
+  input_var <- input_var
+  indicator <- indicator
+
+  #read in csv file.
+  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, ".csv", sep="" )) %>%
+    group_by(iso3c, country) %>% 
+    rename(input_var = !! input_var) %>%
+    nest() %>% # The next chunk of code will split our string with the years of the census (i.e. "2000, 2010") in to separate rows.  We will then aggregate up.
+    mutate(
+      temp_col = map(
+        data, 
+        ~ str_extract_all(.x$input_var, "\\d{4}") %>% 
+          flatten() %>% 
+          map_chr(~return(.x)) %>% 
+          as_tibble()
+      )
+    ) %>% 
+    unnest(keep_empty = TRUE) %>% # Now we have a database with the observations equal to Country*Census observations.  From here we can calculate latest census, etc.
+    mutate(indicator_date=as.numeric(value)) 
+  
+  
+  
+  #Now calculate our SPI score for this indicator
+  for (i in 2016:2019) {
+   temp <- cs_df %>%
+    mutate(date=i) %>%
+    mutate(recency_indicator=((date>indicator_date)) ) %>% #restrict to censuses that do not occur after reference date
+    mutate(indicator_date=if_else(recency_indicator==TRUE, indicator_date, as.numeric(NA))) %>%
+    group_by(iso3c, country, date, database_last_updated, input_var ) %>%
+    summarise(last_val=max(indicator_date, na.rm=T)) %>%
+    mutate(indicator=case_when(
+      (date-last_val<=10) & (date-last_val>0) ~ 1,
+      (date-last_val<=20) & (date-last_val>0) ~ 0.5,
+      TRUE ~ 0 )
+    )  %>%
+     ungroup() %>%
+    select(c('iso3c', 'country', 'date', 'input_var', 'indicator')  ) %>%
+    arrange(date, country)
+
+
+    assign(paste('temp',i,sep="_"), temp)
+  }
+
+  bind_rows(temp_2016, temp_2017, temp_2018, temp_2019)
+
+  
+}
+
+cs_df <-cs_fun('D2.1.CEN.POPU', 'POPU.CENSUS', 'SPI.D2.1.POPU')
+
+
+
+
+```
+
   
 ## Indicator 4.2: administrative data
 
