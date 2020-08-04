@@ -96,6 +96,25 @@ spi_mapper  <- function(data, indicator, title) {
      
 }
 
+
+
+```
+
+
+```{r spi_df}
+
+# This block of code will create a blank SPI dataset (only containing country info) that will be appended to when each indicator is added.
+# There will be two indicators added for each dimension
+# 1. An indicator with a score between 0-1 for each dimension
+# 2. An indicator with the raw (unscored) values of the indicators
+# The unit for this database will be country*year
+
+span <- c(2004:2020)
+
+spi_df <- bind_rows(replicate(length(span), country_metadata, simplify = FALSE), .id='date') %>%
+  mutate(date=as.numeric(date)+span[1]-1)
+
+
 ```
 
 
@@ -120,6 +139,96 @@ Cleaning for Data Services Indicators.  Data Services (4 Indicators):
   - 2.2_DSOA - Indicator 2.2: Online access     
   - 2.3_DSAS - Indicator 2.3: Advisory/ Analytical Services  
   - 2.4_DSDS - Indicator 2.4: Data services    
+
+## Indicator 2.1: Data Releases
+
+Data Dissemination Standard (SDDS) and electronic General Data Dissemination Standard (e-GDDS) were 
+established by the International Monetary Fund (IMF) for member countries that have or that might seek 
+access to international capital markets, to guide them in providing their economic and financial data to the public.
+Although subscription is voluntary, the subscribing member needs to be committed to observing the standard and provide
+information about its data and data dissemination practices (metadata).  The metadata are posted on the IMF's SDDS and 
+e-GDDS websites.       
+
+1 Point. Subscribing to IMF SDDS+ or SDDS standards	
+0.5 Points. Subscribing to IMF e-GDDS standards	
+0 Points. Otherwise
+
+
+```{r idds}
+
+#read in csv file.
+D2.2_DSDR <- read_csv(file = paste(raw_dir, '/2.1_DSDR/', "D2.1.GDDS.csv", sep="" )) %>%
+  mutate(D2.1.GDDS=case_when(
+    IDDS=="SDDS Plus" | IDDS=="SDDS"~ 1, 
+    IDDS=="e-GDDS"~ 0.5,
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, IDDS, D2.1.GDDS  ) %>%
+  arrange(date, country)
+
+
+D2.2_DSDR_2019 <- D2.2_DSDR %>%
+  filter(date==2019) %>%
+  filter(D2.1.GDDS>0)
+
+spi_mapper('D2.2_DSDR_2019', 'IDDS', 'SDDS, SDDS Plus, or e-GDDS Data Standards in Place in 2019' )
+
+
+#add to spi databases
+spi_scores_df <- spi_scores_df %>%
+  left_join(D2.2_DSDR)
+
+```
+
+
+
+
+
+## Indicator 2.2: Online access 
+
+This indicator measures the richness and openness of online access.
+
+### Source
+
+Our source for this indicator is Open Data Watch.  From Open Data watch:
+
+> The Open Data Inventory (ODIN) assesses the coverage and openness of official statistics to help identify gaps, promote open data policies, improve access, and encourage dialogue 
+> between national statistical offices (NSOs) and data users. ODIN 2018/19 includes 178 countries, including most all OECD countries. Two-year comparisons are for all countries with
+> two years of data between 2015-2017. Scores can be compared across topics and countries.
+
+
+```{r online_access}
+
+  #read in ODIN data
+  for (i in 2016:2018) {
+   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
+        as_tibble(.name_repair = 'universal') %>%
+        mutate(date=i) 
+
+
+    assign(paste('openness_df',i,sep="_"), temp)
+  }
+
+#bind different years together
+openness_df <- bind_rows(openness_df_2016, openness_df_2017, openness_df_2018)
+
+
+openness_df <- openness_df %>%
+    select(Country.Code, date, Machine.readable, Non.proprietary, Download.options, Metadata.available, Terms.of.use, Openness.subscore) %>%
+    rename(iso3c=Country.Code) %>%
+    group_by( iso3c) %>%
+    right_join(country_metadata) %>%
+    mutate(First.administrative.level=if_else(is.na(First.administrative.level), 0, First.administrative.level/18),
+           Second.administrative.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level/12))  
+
+```
+
+
+## Indicator 2.3: Advisory/ Analytical Services 
+
+
+## Indicator 2.4: Data services
+
   
 # Data Products
 
@@ -139,15 +248,26 @@ Cleaning for the Data Sources Indicators.  Data Sources (4 Indicators):
 
 ## Indicator 4.1: censuses and surveys 
 
-This indicator draws from data collected by the Statistical Performance Indicators team.  The following censuses and surveys are considered.
+This indicator draws from data collected by the Statistical Performance Indicators team.  The following censuses and surveys are considered:     
+
+  - Population & Housing census   
+  - Agriculture census    
+  - Business/establishment census   
+  - Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey   
+  - Agriculture survey    
+  - Labor Force Survey    
+  - Health/Demographic survey   
+  - Business/establishment survey   
+
+
+We will just show the map and data for the population census, but others maps can be generated and this has been collected already by SPI team.
 
 ```{r cs}
 
-cs_fun  <- function(data, input_var, indicator) {
+cs_fun  <- function(data, input_var) {
   
   data <- data
   input_var <- input_var
-  indicator <- indicator
 
   #read in csv file.
   cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, ".csv", sep="" )) %>%
@@ -194,9 +314,67 @@ cs_fun  <- function(data, input_var, indicator) {
   
 }
 
-cs_df <-cs_fun('D2.1.CEN.POPU', 'POPU.CENSUS', 'SPI.D2.1.POPU')
+#Population Censuses
+cs1_df <-cs_fun('D4.1.1.CEN.POPU', 'POPU.CENSUS') %>%
+  rename(POPU.CENSUS=input_var,
+         SPI.D4.1.1.POPU=indicator)
+
+#Agriculture census  
+cs2_df <-cs_fun('D4.1.2.CEN.AGRI', 'AGRI.CENSUS') %>%
+  rename(AGRI.CENSUS=input_var,
+         SPI.D4.1.2.AGRI=indicator)
+
+#Business/establishment census 
+cs3_df <-cs_fun('D4.1.3.CEN.BIZZ', 'BIZZ.CENSUS') %>%
+  rename(BIZZ.CENSUS=input_var,
+         SPI.D4.1.3.BIZZ=indicator)
+
+#Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey
+cs4_df <-cs_fun('D4.1.4.SVY.HOUS', 'HOUS.SURVEYS') %>%
+  rename(HOUS.SURVEYS=input_var,
+         SPI.D4.1.4.HOUS=indicator)
+
+#Agriculture survey 
+cs5_df <-cs_fun('D4.1.5.SVY.AGRI', 'AGRI.SURVEYS') %>%
+  rename(AGRI.SURVEYS=input_var,
+         SPI.D4.1.5.AGSVY=indicator)
+
+#Labor Force Survey 
+cs6_df <-cs_fun('D4.1.6.SVY.LABR', 'LABR.SURVEYS') %>%
+  rename(LABR.SURVEYS=input_var,
+         SPI.D4.1.6.LABR=indicator)
+
+#Health/Demographic survey
+cs7_df <-cs_fun('D4.1.7.SVY.HLTH', 'HLTH.SURVEYS') %>%
+  rename(HLTH.SURVEYS=input_var,
+         SPI.D4.1.7.HLTH=indicator)
+
+#Business/establishment survey  
+cs8_df <-cs_fun('D4.1.8.SVY.BIZZ', 'BIZZ.SURVEYS') %>%
+  rename(BIZZ.SURVEYS=input_var,
+         SPI.D4.1.8.BZSVY=indicator)
 
 
+#brind all censuses and surveys together
+cs_df <- cs1_df %>%
+  left_join(cs2_df) %>%
+  left_join(cs3_df) %>%
+  left_join(cs4_df) %>%
+  left_join(cs5_df) %>%
+  left_join(cs6_df) %>%
+  left_join(cs7_df) %>%
+  left_join(cs8_df) 
+
+#add to spi databases
+spi_scores_df <- spi_scores_df %>%
+  left_join(cs_df)
+
+#now do the figures for population censuses
+cs_df_2019 <- cs_df %>%
+  filter(date==2019) %>%
+  filter(!is.na(POPU.CENSUS))
+
+spi_mapper('cs_df_2019', 'POPU.CENSUS', 'Population Census Available in Past 20 Years in 2019' )
 
 
 ```
@@ -461,7 +639,7 @@ geo_df <- geo_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     mutate(Percentage=100*mean(First.administrative.level),
-           Label = paste(sum(Second.administrative.level),'/',n(), sep="")) %>%
+           Label = paste(round(100*mean(First.administrative.level)), sep="")) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
@@ -500,7 +678,7 @@ geo_df <- geo_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     mutate(Percentage=100*mean(Second.administrative.level),
-           Label = paste(sum(Second.administrative.level),'/',n(), sep="")) %>%
+           Label = paste(round(100*mean(Second.administrative.level)), sep="")) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
