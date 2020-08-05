@@ -18,13 +18,32 @@ library(ggthemes)
 library(Hmisc)
 library(httr)
 library(patchwork)
-
-
+library(ggrepel)
+library(jsonlite)
+library(forcats)
 #set directories
 dir <- here()
 
 raw_dir <- paste(dir, '01_raw_data', sep="/")
+output_dir <- paste(dir, '03_output_data', sep="/")
 
+```
+
+```{r spi_df}
+
+# This block of code will create a blank SPI dataset (only containing country info) that will be appended to when each indicator is added.
+# There will be two indicators added for each dimension
+# 1. An indicator with a score between 0-1 for each dimension
+# 2. An indicator with the raw (unscored) values of the indicators
+# The unit for this database will be country*year
+
+span <- c(2004:2019)
+
+spi_df_empty <- bind_rows(replicate(length(span), wbstats::wbcountries(), simplify = FALSE), .id='date') %>%
+  mutate(date=as.numeric(date)+span[1]-1) %>%
+  filter(region!="Aggregates") # take out the aggregates (LAC, SAR, etc)
+
+spi_df <- spi_df_empty
 
 ```
 
@@ -45,6 +64,7 @@ spi_mapper  <- function(data, indicator, title) {
 
   map_df <- get(data) %>%
     group_by( country) %>%
+    filter(date==max(date, na.rm=T)) %>%
     summarise(across(!! indicator,last)) %>%
     mutate(data_available=TRUE) %>%
     right_join(country_metadata) %>%
@@ -72,7 +92,8 @@ spi_mapper  <- function(data, indicator, title) {
     theme_map(base_size=12) +
     labs(
       title=str_wrap(title,100),
-      caption = 'Source: SPI Indicators Raw Data'
+      subtitle= 'Data Point is for last year available (typically 2019)',
+      caption = 'Source: SPI Indicators Raw Data.'
     )
   
   #add histogram by region 
@@ -86,13 +107,37 @@ spi_mapper  <- function(data, indicator, title) {
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data'
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (typically 2019)',
       ) +
       theme_bw()
-    
+
+  # #add line graph over time
+  p3 <- get(data)  %>%
+    mutate(data_available=TRUE) %>%
+    right_join(spi_df_empty) %>%
+    group_by( date) %>%
+    mutate(data_available=if_else(is.na(data_available), FALSE, data_available)) %>%
+    mutate(Percentage=100*mean(data_available),
+           Label = paste(sum(data_available),'/',n(), sep="")) %>%
+    ungroup() %>%
+    ggplot(aes(y=Percentage, x=date)) +
+      geom_point() +
+      geom_line(fill='blue') +
+      # geom_text_repel(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Date', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data'
+      ) +
+      expand_limits(y=c(0,100)) +
+      theme_bw()
+      
   print(p1)
   
   print(p2)
+  
+  print(p3)
+
      
 }
 
@@ -101,21 +146,7 @@ spi_mapper  <- function(data, indicator, title) {
 ```
 
 
-```{r spi_df}
 
-# This block of code will create a blank SPI dataset (only containing country info) that will be appended to when each indicator is added.
-# There will be two indicators added for each dimension
-# 1. An indicator with a score between 0-1 for each dimension
-# 2. An indicator with the raw (unscored) values of the indicators
-# The unit for this database will be country*year
-
-span <- c(2004:2020)
-
-spi_df <- bind_rows(replicate(length(span), country_metadata, simplify = FALSE), .id='date') %>%
-  mutate(date=as.numeric(date)+span[1]-1)
-
-
-```
 
 
 # Introduction
@@ -130,6 +161,287 @@ Cleaning for Data Use Indicators.  Data Use (5 Indicators):
   - 1.3_DUCS - Indicator 1.3: Data use by civil society     
   - 1.4_DUAC - Indicator 1.4: Data use by academia    
   - 1.5_DUIO - Indicator 1.5: Data use by international organizations   
+
+## Indicator 1.1: Data use by national legislature    
+
+Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using national legislature website as source.
+
+## Indicator 1.2: Data use by national executive branch
+
+Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using national development plans and poverty reduction plans as a source.
+
+
+## Indicator 1.3: Data use by civil society     
+
+Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using main social media platform in use in country as source.
+
+## Indicator 1.4: Data use by academia  
+
+The idea for this indicator is that countries should be producing statistical products that are utilized by academia.  As a measure of this, we use the IHSN database on censuses and surveys conducted by counties and calculate a ranking of countries based on the total number of downloads of the censuses and surveys produced by that country on a per capita basis.  In other words, we calculate the total number of downloads of censuses and surveys for a country, divided by the population of that country, to produce a ranking.
+
+
+The source for this indicator is the IHSN.
+
+> The mission of the IHSN is to improve the availability, accessibility, and quality of survey data within developing countries, and to encourage the analysis and use of this data by national and international development decision makers, the research community, and other stakeholders.
+
+>To support this mission, the key objectives of the IHSN are:
+
+>Improved coordination of internationally sponsored survey programs, with emphasis on timing, sequencing, frequency, and cost-effectiveness 
+Availability of coordinated and practical technical and methodological guidelines for all stages of the survey life cycle 
+Availability of a central survey data catalog which would inform data users of the availability of survey and census data from multiple sources 
+Availability of standards, tools, and guidelines that would allow data producers to document, disseminate, and preserve microdata according to international standards and best practices 
+Improved collaboration between data producers and users 
+
+IHSN has a database of more than 7,483 surveys as of August 5, 2020.
+
+```{r ihsn}
+
+#####
+# The following code is blocked out, because the execution time is long
+#####
+
+# # pull all surveys from IHSN
+# ihsn_base_url <- "https://catalog.ihsn.org/index.php/api/catalog" #define url
+# study_request_ihsn<-fromJSON(paste(ihsn_base_url,"/search","?ps=10000", sep="")) # pull from url
+# study_df_ihsn <- study_request_ihsn$result$rows #convert to dataframe
+# 
+# #get list of survey ids
+# ihsn_series <- study_df_ihsn$idno
+# 
+# 
+# 
+# #use purr to loop over list of surveys and return some extra info
+# 
+# series_info <- function(series) {
+#       
+#     info <- fromJSON(paste('https://catalog.ihsn.org/index.php/api/catalog/',series, sep=""))
+#     info$dataset$metadata$study_desc$series_statement$series_name
+#       
+# }
+# 
+# #now produce a dataframe with the more info on survey
+# study_df_ihsn <- study_df_ihsn %>%
+#   mutate(series_info=map(ihsn_series, possibly(series_info, 
+#                                            otherwise = 'Something Wrong'
+#                                            )
+#                      )
+#   )
+# 
+# study_df_ihsn <- study_df_ihsn %>%
+#   mutate(across(is.list, as.character))
+# 
+# write_excel_csv(study_df_ihsn, paste(raw_dir, '1.4_DUAC', 'ihsn_citations.csv', sep="/"))
+
+# pull in dataset with citation counts
+study_df_ihsn <- read_csv(paste(raw_dir, '1.4_DUAC', 'ihsn_citations.csv', sep="/"))
+
+
+#categories surveys in IHSN
+study_df_ihsn <- study_df_ihsn %>%
+  mutate(topic=case_when(
+    grepl('Population|Housing|Censuses',series_info) ~ 'Population and Housing Censuses',
+    grepl('lfs',series_info) ~ 'Labor Force Surveys',
+    grepl('dhs|DHS|mics|MICS|whs|hea',series_info) ~ 'Health Surveys',
+    grepl('ies',series_info) ~ 'Income/Expenditure Surveys',
+    grepl('sems',series_info) ~ 'Socio/Economic Monitoring Surveys',
+    grepl('lsms', series_info) ~ 'Living Standards Measurement Study',
+    grepl('ag', series_info) ~ 'Agriculture Survey or Census',
+    grepl('en', series_info) ~ 'Enterprise Survey',
+    grepl('oth',series_info) ~ 'Other Household Surveys',
+    grepl('Opinion', series_info) ~ 'Opinion Survey',
+    TRUE ~ 'Other'
+  )) %>%
+  mutate(date=year_end,
+         country=nation)
+
+##########
+#Form measures of academic use
+##########
+
+#get population data to produce per-capita measure
+pop <-wbstats::wb(country="countries_only", 
+              indicator='SP.POP.TOTL',
+              startdate=2004,
+              enddate=2019,
+              removeNA=FALSE) %>%
+     transmute(
+       iso3c=iso3c,
+       country=country,
+       date=as.numeric(date),
+       population=value
+     )
+
+#get topics list
+topics_list <- unique(study_df_ihsn$topic)
+
+  #Now calculate our SPI score for this indicator
+  for (i in 2004:2019) {
+   temp <- study_df_ihsn %>%
+    filter(date<=i) %>% #get a list of all surveys conducted before the year
+    group_by(country, topic) %>%
+    summarise(total_downloads=sum(total_downloads))
+   
+   #add grand total
+   temp_tot <- study_df_ihsn %>%
+    filter(date<=i) %>% #get a list of all surveys conducted before the year
+    group_by(country) %>%
+    summarise(total_downloads=sum(total_downloads)) %>%
+    mutate(topic="Total")
+   
+  temp <- temp %>%
+    bind_rows(temp_tot) %>%
+    mutate(date=i) %>% 
+    pivot_wider(names_from='topic',
+                values_from='total_downloads') %>%
+    mutate(across(topics_list, ~if_else(is.na(.),0,.))) %>%
+    arrange(date, country)
+
+
+    assign(paste('academic_use_df',i,sep="_"), temp)
+  }
+
+  academic_use_df <- academic_use_df_2019
+
+  
+    
+for (i in 2004:2018) {
+    academic_use_df <- bind_rows(academic_use_df, get(paste('academic_use_df',i,sep="_")))
+  }
+  
+
+
+academic_use_df <- academic_use_df %>%
+  left_join(pop) %>%
+  right_join(spi_df_empty) %>%
+  filter(!is.na(income)) %>%
+  mutate(downloads_per_capita=1000*Total/population) %>% #create measure of downloads per 1,000,000 persons
+  mutate(downloads_per_capita=if_else(is.na(downloads_per_capita),0,downloads_per_capita)) %>%
+  group_by(date) %>%
+  mutate(academic_use_rank = rank(downloads_per_capita))
+
+
+academic_use_map <- academic_use_df %>%
+  filter(downloads_per_capita>0)
+
+
+```
+
+
+```{r ihsn_plots, echo=FALSE}
+
+
+#do the plots  
+   ggplot() +
+    geom_map(data = filter(academic_use_map, date==2019), aes(map_id = iso3c, fill = academic_use_rank), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+     geom_path(data = maps$boundaries,
+               aes(long, lat, group = group),
+               color = "white",
+               size = 0.1,
+               lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_distiller(
+      name=str_wrap('Country Ranking',10),
+      palette='Blues',
+      na.value='black',
+      direction = 1
+    )  +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap('Ranking in Survey Downloads Per Capita',100),
+      caption = 'Source: IHSN'
+    )
+   
+   filter(academic_use_map, date==2019) %>%
+    group_by(region) %>%
+    filter(region!='Aggregates') %>%
+    mutate(downloads_per_capita=mean(downloads_per_capita),
+           Label = paste(round(mean(downloads_per_capita)), sep="")) %>%
+    ggplot(aes(x=downloads_per_capita, y=region, fill=region)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste('Average Survey Downloads Per Thousand Persons', 'By Region', sep=" - "),100),
+      caption = 'Source: IHSN'
+      ) +
+      xlab('Downloads per Thousand Persons') +
+      theme_bw() +
+      theme(
+        legend.position = 'none'
+      )
+   
+  #line graph 
+  academic_use_map  %>%
+    right_join(spi_df_empty) %>%
+    group_by( date) %>%
+    mutate(downloads_per_capita=if_else(is.na(downloads_per_capita), 0, downloads_per_capita)) %>%
+    mutate(downloads_per_capita=mean(downloads_per_capita),
+           Label = paste(mean(downloads_per_capita),'/',n(), sep="")) %>%
+    ungroup() %>%
+    ggplot(aes(y=downloads_per_capita, x=date)) +
+      geom_point() +
+      geom_line(fill='blue') +
+      # geom_text_repel(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste('Average Survey Downloads Per Thousand Persons', 'By Date', sep=" - "),100),
+      caption = 'Source: IHSN'
+      ) +
+      expand_limits(y=c(0,100)) +
+      ylab('Downloads per Thousand Persons') +
+      theme_bw()   
+
+# 
+# #Do some basic plots
+# g1 <- study_df_ihsn %>%
+#     mutate(total=n()) %>%
+#     group_by(topic) %>%
+#     summarise(Percentage=100*n()/total,
+#            Label = paste(round(Percentage,0),'%', sep="")) %>%
+#     ggplot(aes(x=Percentage, y=topic, fill=topic)) +
+#       geom_bar(stat="identity",position='dodge') +
+#       geom_text(aes(label=Label), nudge_x = 1) +
+#       expand_limits(x=c(0,25)) +
+#       labs(
+#       title=str_wrap('Percentage of IHSN Surveys by Topic Across All Countries',100),
+#       caption = 'Source: IHSN'
+#       ) +
+#       theme_bw() +
+#       theme(
+#         legend.position = 'none'
+#       ) 
+# 
+# g2 <- study_df_ihsn %>%
+#     mutate(total= sum(total_downloads)) %>%
+#     group_by(topic) %>%
+#     summarise(share_downloads=100*sum(total_downloads)/total,
+#            Label = paste(round(share_downloads,0),'%', sep="")) %>%
+#     ggplot(aes(x=share_downloads, y=topic, fill=topic)) +
+#       geom_bar(stat="identity",position='dodge') +
+#       geom_text(aes(label=Label), nudge_x = 2) +
+#       expand_limits(x=c(0,50)) +
+#       labs(
+#       title=str_wrap('Share of Total Downloads of IHSN Surveys by Topic Across All Countries',100),
+#       caption = 'Source: IHSN'
+#       ) +
+#       xlab( 'Share of Total Downloads') +
+#       theme_bw() +
+#       theme(
+#         legend.position = 'none'
+#       ) 
+# 
+# print(g1)
+# print(g2)
+
+```
+
+
+## Indicator 1.5: Data use by international organizations   
+
+New indicator of level of congruence between UNSD and national database of SDG indicators. For each of the indicators calculate whether the number in the database for the most recent year is the same or different. The indicator is the percentage that are the same.
   
 # Data Services
 
@@ -156,26 +468,47 @@ e-GDDS websites.
 
 ```{r idds}
 
+
+Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/5.21.01.01.sdds?format=json&date=2004:2015&per_page=5000")
+Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+D2.2_DSDR_sci <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+  data.frame() %>%
+  transmute(
+    iso3c=countryiso3code,
+    country=country.value,
+    date=as.numeric(date),
+    SDDS=value
+  ) %>%
+  left_join(spi_df_empty) %>% #add on country metadata
+  filter(!is.na(income)) %>%
+  select(iso3c, country, date, SDDS  ) 
+
+
+
 #read in csv file.
 D2.2_DSDR <- read_csv(file = paste(raw_dir, '/2.1_DSDR/', "D2.1.GDDS.csv", sep="" )) %>%
   mutate(D2.1.GDDS=case_when(
     IDDS=="SDDS Plus" | IDDS=="SDDS"~ 1, 
     IDDS=="e-GDDS"~ 0.5,
-    TRUE ~ 0 
-  ))  %>%
-  select(iso3c, country, date, IDDS, D2.1.GDDS  ) %>%
+    TRUE ~ 0 ),
+    SDDS=case_when(
+     IDDS=="SDDS"~ 1, 
+    TRUE ~ 0 ))  %>%
+  bind_rows(D2.2_DSDR_sci) %>%
+  select(iso3c, country, date, IDDS,SDDS, D2.1.GDDS  ) %>%
   arrange(date, country)
 
 
-D2.2_DSDR_2019 <- D2.2_DSDR %>%
-  filter(date==2019) %>%
-  filter(D2.1.GDDS>0)
+D2.2_DSDR_map <- D2.2_DSDR %>%
+  filter(SDDS>0)
 
-spi_mapper('D2.2_DSDR_2019', 'IDDS', 'SDDS, SDDS Plus, or e-GDDS Data Standards in Place in 2019' )
+spi_mapper('D2.2_DSDR_map', 'SDDS', 'SDDS Data Standards in Place' )
 
 
 #add to spi databases
-spi_scores_df <- spi_scores_df %>%
+spi_df <- spi_df %>%
   left_join(D2.2_DSDR)
 
 ```
@@ -196,21 +529,63 @@ Our source for this indicator is Open Data Watch.  From Open Data watch:
 > between national statistical offices (NSOs) and data users. ODIN 2018/19 includes 178 countries, including most all OECD countries. Two-year comparisons are for all countries with
 > two years of data between 2015-2017. Scores can be compared across topics and countries.
 
+We use the Openness score from ODIN for this measure.  The score ranges from 0-100.  It contains scores along five dimensions:    
+  - Machine Readability   
+  - Non-Proprietary format    
+  - Download Options    
+  - Metadata Available    
+  - Terms of Use
+  
+A description for each of these five dimensions is below:
+
+#### Machine Readability
+
+>Openness element 1 measures whether data are available in a machine readable format such as XLS, XLSX, CSV, and JSON. Machine-readable file formats allow users to easily process data using a computer. When data are made available in formats that are not machine readable, users cannot easily access and modify the data, which severely restricts the scope of the data’s use. In many cases PDF versions of datasets within reports can be useful to users, as the text in conjunction with the tables gives context and explanation to the figures which helps less technical users understand the data. Because of this, ODIN assessments do not penalize countries for making datasets available in PDF or other non-machine readable formats, unless these formats are the only option for exporting data. Scores are not penalized for having identical datasets in both machine readable and non-readable formats. Compression formats do not affect machine readability scores, only non-proprietary scores (see next page). Scores are given by data category, not indicator.
+
+#### Non-Proprietary format    
+
+> For the elements of data openness, scoring is calculated independent of the data coverage.
+If data files are compressed in RAR format (which is proprietary), data for that indicator should be considered proprietary even if the enclosing files are in a non-proprietary format. Files compressed in ZIP format are not affected.
+
+#### Download Options    
+
+> Openness element 3 measures whether data are available with three different download options: bulk download, API, and user-select options.
+A bulk download is defined at the indicator level as: The ability to download all data recorded in ODIN for a particular indicator (all years, disaggregations, and subnational data) in one file, or multiple files that can be downloaded simultaneously. Bulk downloads are a key component of the Open Definition, which requires data to be “provided as a whole . . . and downloadable via the internet.”
+User-selectable download options are defined as: Users must be able to select an indicator and at least one other dimension to create a download or table. These dimensions could include time periods, geographic disaggregations, or other recommended disaggregations. An option to choose the file export format is not enough.
+API stands for Application Programming Interface. Ideally, APIs should be clearly displayed on the website. ODIN assumes APIs are available for the NSOs entire data collection used in ODIN, unless clearly stated. ODIN assessors do not register for use or test API functionality. For more information on APIs, see this guide. Scores are given by data category, not indicator.
+
+#### Metadata Available    
+
+> Openness element 4 measures whether metadata are made available. Scores are given by data category, not indicator. Metadata are defined at the indicator level as information about how the data are defined/calculated and collected. ODIN classifies metadata into three categories: (1) Not Available, (2) Incomplete, and (3) Complete. The following must be available to classify metadata as complete:
+• Definition of the indicator, or definition of key terms used in the indicator description (as applicable), or how the indicator was calculated.
+• Publication (date of upload), compilation date (date on front of report is not sufficient), or date dataset was last updated.
+• Name of data source (what agency collected the data).
+If the metadata only have one or two of the above elements, they are scored as incomplete
+
+#### Terms of Use
+
+> Openness element 5 measures whether data are available with an open terms of use. Generally, terms of use (TOU) will apply to an entire website or data portal (unless otherwise specified). In these cases, all data found on the same website and/or portal will receive the same score. If a portal is located on the same domain as the NSO website, the terms of use on the NSO site will apply. If the data are located on a portal or website on a different domain, another terms of use will need to be present. For a policy/ license to be accepted as a terms of use, it must clearly refer to the data found on the website. Terms of use that refer to nondata content (such as pictures, logos, etc.) of the website are not considered. A copyright symbol at the bottom of the page is not sufficient. A sentence indicating a recommended citation format is not sufficient.
+Terms of use are classified the following ways: (1) Not Available, (2) Restrictive, (3) Semi-Restrictive, and (4) Open.
+If the TOU contains one or more restrictive clauses, it receives 0 points and is classified as “restrictive.” Restrictive clauses include:
+
+For more details, consult the ODIN technical documentation:
+https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit#
 
 ```{r online_access}
 
   #read in ODIN data
-  for (i in 2016:2018) {
+  for (i in 2015:2018) {
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
         as_tibble(.name_repair = 'universal') %>%
-        mutate(date=i) 
+        mutate(date=i) %>%
+        filter(Data.categories=='All Categories')
 
 
     assign(paste('openness_df',i,sep="_"), temp)
   }
 
 #bind different years together
-openness_df <- bind_rows(openness_df_2016, openness_df_2017, openness_df_2018)
+openness_df <- bind_rows(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018)
 
 
 openness_df <- openness_df %>%
@@ -218,25 +593,831 @@ openness_df <- openness_df %>%
     rename(iso3c=Country.Code) %>%
     group_by( iso3c) %>%
     right_join(country_metadata) %>%
-    mutate(First.administrative.level=if_else(is.na(First.administrative.level), 0, First.administrative.level/18),
-           Second.administrative.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level/12))  
+    mutate(
+      across(c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore'),~if_else(is.na(.), 0, .)           )
+      
+           )  
+
+#add to spi dataframe
+spi_df <- spi_df %>%
+  left_join(openness_df)
+
+
+
 
 ```
 
+```{r open_plots, echo=FALSE}
+
+#do the plots  
+   ggplot() +
+    geom_map(data = filter(openness_df, date==2018), aes(map_id = iso3c, fill = Openness.subscore), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+     geom_path(data = maps$boundaries,
+               aes(long, lat, group = group),
+               color = "white",
+               size = 0.1,
+               lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_distiller(
+      name='Data Available',
+      palette='Blues',
+      na.value='black',
+      direction = 1
+    )  +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap('Data Availability for ODIN Openness Score',100),
+      caption = 'Source: ODIN'
+    )
+   
+   filter(openness_df, date==2018) %>%
+    group_by(region) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=mean(Openness.subscore),
+           Label = paste(round(mean(Openness.subscore)), sep="")) %>%
+    ggplot(aes(x=Percentage, y=region, fill=region)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste('Data Availability for ODIN Openness Score', 'By Region', sep=" - "),100),
+      caption = 'Source: ODIN'
+      ) +
+      theme_bw()
+   
+  #line graph 
+  openness_df  %>%
+    right_join(spi_df_empty) %>%
+    group_by( date) %>%
+    mutate(Openness.subscore=if_else(is.na(Openness.subscore), 0, Openness.subscore)) %>%
+    mutate(Percentage=mean(Openness.subscore),
+           Label = paste(sum(Openness.subscore),'/',n(), sep="")) %>%
+    ungroup() %>%
+    ggplot(aes(y=Percentage, x=date)) +
+      geom_point() +
+      geom_line(fill='blue') +
+      # geom_text_repel(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste('Openness Score', 'By Date', sep=" - "),100),
+      caption = 'Source: ODIN'
+      ) +
+      expand_limits(y=c(0,100)) +
+      theme_bw()   
+
+```
 
 ## Indicator 2.3: Advisory/ Analytical Services 
 
+No established source exists for this indicator.  This is experimental.
 
 ## Indicator 2.4: Data services
+
+
+
+NSO has a listing of surveys and microdata sets that can provide the necessary
+data and reference for follow-up.  Upon well-defined request and procedure per
+the national law and practice, users and practitioners can obtain the data
+collected from the households and businesses when needed.
+
+NADA is an open source microdata cataloging system, compliant with the Data Documentation Initiative (DDI) and Dublin Core’s RDF metadata standards. It serves as a portal for researchers to browse, search, compare, apply for access, and download relevant census or survey datasets, questionnaires, reports and other information.
+
+1 Point. Yes
+0 Points. No
+
+```{r nada}
+
+#read in csv file.
+D2.4_NADA <- read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.csv", sep="/" )) %>%
+  mutate(D4.2.NADA=case_when(
+    NADA==1 ~ 1, 
+    NADA==0 ~ 0, 
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, NADA,NADA_text, D4.2.NADA  ) %>%
+  arrange(date, country)
+
+D2.4_NADA_map <- D2.4_NADA %>%
+  filter(D4.2.NADA>0)
+
+spi_mapper('D2.4_NADA_map', 'D4.2.NADA', 'NADA in Place' )
+
+
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(D2.4_NADA)
+
+```
 
   
 # Data Products
 
 Cleaning for Data Products Indicators.  Data Products (4 Indicators):   
-  - 3.1_DPSS - Indicator 3.1: social statistics (SDG goals 1-6)     
-  - 3.2_DPES - Indicator 3.2: economic statistics (SDG goals 7-12)    
-  - 3.3_DPEN - Indicator 3.3 environmental statistics (SDG goals 13-15)     
-  - 3.4_DPIS - Indicator 3.4: institutional statistics (SDG goals 16-17)      
+  - 3.1_DPSS - Indicator 3.1: social statistics    
+  - 3.2_DPES - Indicator 3.2: economic statistics   
+  - 3.3_DPEN - Indicator 3.3 environmental statistics    
+  - 3.4_DPIS - Indicator 3.4: institutional statistics     
+
+
+Below is the list of AKI indicators:
+
+Indicator 3.1: social statistics  
+- AKI 3.1: Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)  
+- AKI 3.2: Food Insecurity Experience Scale 
+- AKI 3.3: Mortality rate, under-5 (per 1,000 live births)  
+- AKI 3.4: Proportion of children and young people in grades 2 or 3 achieving at least a minimum proficiency level in reading and mathematics, by sex.  
+- AKI 3.5: Maternal Mortality
+- AKI 3.6: People using safely managed drinking water services (% of population)  
+
+Indicator 3.2: economic statistics 
+- AKI 3.7: Access to electricity (% of population)  
+- AKI 3.8: Unemployment, total (% of total labor force)  
+- AKI 3.9: Manufacturing, value added (% of GDP)  
+- AKI 3.10: Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)  
+- AKI 3.14: Quarterly GDP
+
+Indicator 3.3 environmental statistics     
+- AKI 3.11: Level of water stress: freshwater withdrawal as a proportion of available freshwater resources  
+- AKI 3.12: Renewable energy consumption (% of total final energy consumption)  
+- AKI 3.13: Households and NPISHs Final consumption expenditure (current LCU) 
+
+Indicator 3.4: institutional statistics 
+- AKI 3.15: Debt service (PPG and IMF only, % of exports of goods, services and primary income) 
+
+```{r metadata_pull}
+
+# pull in some WDI metadata which will be used for constructing AKI indicators.
+# WDI metadata was gathered using previous vintages of WDI from 2016-19
+# Metadata was gathered and saved as csv files in the 011_data folder
+
+for (i in 2016:2019) {
+  temp <- read_csv(file = paste(raw_dir, "/metadata/WDI_metadata_",i,".csv", sep="" )) %>%
+    as_tibble(.name_repair='universal') %>%
+    mutate(National.accounts.reference.year=as.numeric(National.accounts.reference.year),
+           date=i)
+  
+    assign(paste("WDI_metadata",i,sep="_"), temp)
+}
+
+WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_2018, WDI_metadata_2019)
+```
+
+
+
+### AKI 3.1, 3.9, 3.10, 3.11, 3.12, 3.13
+
+First we will pull data for indicators coming straight from WDI.  For some indicators, we will use alternative sources.
+
+Indicators coming from the WDI directly are:  
+
+- AKI 3.1: Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)  
+- AKI 3.9: Manufacturing, value added (% of GDP)  
+- AKI 3.10: Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)  
+- AKI 3.11: Level of water stress: freshwater withdrawal as a proportion of available freshwater resources  
+- AKI 3.12: Renewable energy consumption (% of total final energy consumption)  
+- AKI 3.13: Households and NPISHs Final consumption expenditure (current LCU)  
+
+Scoring:
+
+1 Point. 3 or more values available within past 5 years	
+0.6 Points. 2 values available within past 5 years; 	
+0.3 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+```{r data_pulls, echo=TRUE}
+
+##########
+# Pull Tags for WDI Data
+##########
+
+# make request to World Bank API
+wdiRequest <- GET(url = "http://api.worldbank.org/v2/indicator?per_page=20000&format=json&source=2")
+wdiResponse <- content(wdiRequest, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+wdisJSON <- jsonlite::fromJSON(wdiResponse, flatten = TRUE) %>%
+    data.frame()
+
+EdStatsRequest <- GET(url = "http://api.worldbank.org/v2/indicator?per_page=20000&format=json&source=12")
+EdStatsResponse <- content(EdStatsRequest, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+EdStatsJSON <- jsonlite::fromJSON(EdStatsResponse, flatten = TRUE) %>%
+  data.frame()
+
+aki<- c(
+        'Pupils below minimum reading proficiency at end of primary (%). Low GAML threshold',
+        'People using safely managed drinking water services (% of population)',
+        'Unemployment, total (% of total labor force) (national estimate)' ,
+        'Manufacturing, value added (% of GDP)',
+        'Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)',
+        'Level of water stress: freshwater withdrawal as a proportion of available freshwater resources',
+        'Renewable energy consumption (% of total final energy consumption)',
+        'Households and NPISHs Final consumption expenditure (current LCU)',
+        'Debt service (PPG and IMF only, % of exports of goods, services and primary income)'  )
+
+get_tag_aki_df<-wdisJSON %>%
+  bind_rows(EdStatsJSON) %>%
+  filter((name %in% aki	)) %>%
+  arrange(factor(name, levels = aki)) %>%
+  select(id, name,  sourceOrganization) 
+
+#get WDI metadata infor
+cache_list<-wbstats::wbcache()
+country_list <- wbstats::wbcountries()
+
+aki_list<-get_tag_aki_df[,'id']
+
+for (reference_year in 2016:2019) {
+  temp <-wbstats::wb(country="countries_only", 
+              indicator=aki_list,
+              startdate=reference_year-5,
+              enddate=reference_year,
+              return_wide = T,
+              removeNA=FALSE) %>%
+          filter(((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% #filter out years outside reference window of 3 years     
+          write_excel_csv(path = paste(output_dir, "/D3.AKI_data_pull_",reference_year,".csv", sep="" )) %>%
+          mutate_at(.vars=aki_list, ~if_else(is.na(.),0,1)) %>% #create 0,1 variable for whether data point exists for country
+          group_by(iso3c, country) %>%
+          summarise_all((~(if(is.numeric(.)) sum(., na.rm = TRUE) else first(.)))) %>% #group by country to create one observation per country                 containing whether or not data point existed
+          mutate_at(.vars=aki_list, ~case_when(
+            .>=3 ~ 1,
+            .==2 ~ 0.6,
+            .==1 ~ 0.3,
+            .==0 ~ 0, 
+            TRUE ~ 0
+          )) %>% # 1 point for at least 3 values, 0.6 for 2 values, 0.3 for 1 values, 0 otherwise
+          mutate(date=reference_year) %>%
+          ungroup() %>%
+          select(iso3c, country, date,  aki_list) %>%
+          rename_at(aki_list, ~(paste('SPI.D3.',.,sep=""))) %>% #add 'D3.' as prefix before these indicators.
+          left_join(country_list) #attach country metadata
+
+
+  assign(paste("D3.AKI",reference_year,sep="_"), temp)
+}
+
+
+
+```
+
+### AKI 3.1: Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)
+
+The data will be pulled from the WDI and combined with metadata from the Povcalnet
+
+Scoring is as follows:
+Quality (0.5 points total):
+0.5 Point. Comparable data lasting at least two years within past 5 years	
+0 Points. No comparable data within past 5 years
+
+Frequency (0.5 points total):
+0.5 Point. 3 or more values available within past 5 years	
+0.3 Points. 2 values available within past 5 years; 	
+0.15 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+
+```{r 3.1}
+library(povcalnetR) 
+
+#the code below is based on public released code by povcalnet team:
+#https://github.com/worldbank/Global_Poverty_Blogs/blob/master/bg_povcalnet_comparability/R/comparability_breaks.R
+
+# some contants
+year_range <- 1990:2020
+metadata_path <- "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/506801/povcalnet_comparability.csv"
+
+# Load data ---------------------------------------------------------------
+
+metadata <- read_csv(metadata_path)
+cov_lkup <- c(3, 2, 1, 4)
+names(cov_lkup) <- c("N", "U", "R", "A")
+
+dat_lkup <- c(2,1)
+names(dat_lkup) <- c("income","consumption")
+
+
+pcn <- povcalnet()
+pcn$coveragetype <- cov_lkup[pcn$coveragetype]
+pcn$datatype <- dat_lkup[pcn$datatype]
+
+df <- pcn %>%
+  inner_join(metadata, by = c("countrycode", "year", "coveragetype", "datatype"))
+
+
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+  
+  temp1<-df %>%
+        filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
+        mutate(frequency=((reference_year-as.numeric(year))<=5) & (reference_year>=as.numeric(year))) %>% 
+        filter(frequency==TRUE) %>%
+        group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
+        summarise(SPI.QUAL.D3.POV=n())  %>%
+        ungroup() %>%
+        group_by(countrycode) %>% #now get a total by country with the max number of comparable estimates
+        summarise(SPI.QUAL.D3.POV=max(SPI.QUAL.D3.POV, na.rm=T)) %>%
+        mutate(SPI.QUAL.D3.POV=if_else(SPI.QUAL.D3.POV>=2,0.5,0)) #only give point if there is at least two observations that are comparable
+  
+  
+  temp <-df %>%
+          filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
+          mutate(frequency=((reference_year-as.numeric(year))<=5) & (reference_year>=as.numeric(year))) %>% 
+          mutate(SPI.FREQ.D3.POV=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
+          group_by(countryname,countrycode) %>%
+          summarise(SPI.FREQ.D3.POV=sum(SPI.FREQ.D3.POV, na.rm=T)) %>% 
+          mutate(SPI.FREQ.D3.POV=case_when(
+            SPI.FREQ.D3.POV>=3 ~ 0.5,
+            SPI.FREQ.D3.POV==2 ~ 0.3,
+            SPI.FREQ.D3.POV==1 ~ 0.15,
+            SPI.FREQ.D3.POV==0 ~ 0, 
+            TRUE ~ 0
+          )) %>%
+          left_join(temp1) %>% #now bring in quality dimension
+          mutate(SPI.QUAL.D3.POV=if_else(!is.na(SPI.QUAL.D3.POV),SPI.QUAL.D3.POV,0)) %>% #recode some missing values as zero, who had no observations in 5 year window
+          mutate(SPI.D3.POV=SPI.FREQ.D3.POV+SPI.QUAL.D3.POV) %>% 
+          mutate(date=reference_year,
+                 country=countryname,
+                 iso3c=countrycode) %>%
+          select( country,iso3c, date, starts_with('SPI.D3.POV')) 
+
+
+  assign(paste("D3.1.AKI",reference_year,sep="_"), temp)
+}
+
+D3.1.AKI <- bind_rows(D3.1.AKI_2016, D3.1.AKI_2017, D3.1.AKI_2018, D3.1.AKI_2019)
+
+
+
+```
+
+### AKI 3.2: Hunger
+
+We examine the Food Insecurity Experience Scale from the FAO (http://www.fao.org/faostat/en/#data/FS).  Data for food insecurity was pulled on May 1, 2020.
+
+Scoring
+1 Point. 3 or more values available within past 5 years	
+0.6 Points. 2 values available within past 5 years; 	
+0.3 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+
+```{r AKI_3.2}
+
+
+#Read in data from UN Inter-agency Group for Child Mortality Estimation
+
+D3.2.AKI.FIES <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.2.FIES.csv', sep="/")) %>%
+  rename(year_code="Year Code",
+         iso3c="ISO3 Code") %>%
+  mutate(date=as.numeric(str_extract(year_code, "^.{4}")),
+         SPI.D3.FIES=Value)
+
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+  temp <-D3.2.AKI.FIES %>%
+          filter(((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% #filter out years outside reference window of 5 years     
+          mutate(SPI.D3.FIES=if_else(is.na(SPI.D3.FIES),0,1)) %>% #create 0,1 variable for whether data point exists for country
+          group_by(iso3c) %>%
+          summarise_all((~(if(is.numeric(.)) sum(., na.rm = TRUE) else first(.)))) %>% #group by country to create one observation per country                 containing whether or not data point existed
+          mutate(SPI.D3.FIES=case_when(
+            SPI.D3.FIES>=3 ~ 1,
+            SPI.D3.FIES==2 ~ 0.6,
+            SPI.D3.FIES==1 ~ 0.3,
+            SPI.D3.FIES==0 ~ 0, 
+            TRUE ~ 0
+          )) %>% # 1 point for at least 3 values, 0.6 for 2 values, 0.3 for 1 values, 0 otherwise
+          mutate(date=reference_year) %>%
+          select( iso3c, date, starts_with('SPI.')) 
+
+
+  assign(paste("D3.2.AKI",reference_year,sep="_"), temp)
+}
+
+D3.2.AKI <- bind_rows(D3.2.AKI_2016, D3.2.AKI_2017, D3.2.AKI_2018, D3.2.AKI_2019)
+```
+
+
+
+### AKI 3.3: Mortality rate, under-5 (per 1,000 live births)  
+
+The data in WDI is modeled, based on HHS and Vital Registration.  We use the following as a source for raw data produced by national statistical offices that is used in this modeling.  
+
+https://childmortality.org/data 
+
+Data was pulled on April 13, 2020.
+
+Countries are ranked by source quality (admin data > survey > no data) and frequency.
+Score on this indicator has a max of 1 point with 0.5 points for source quality and 0.5 points for frequency.  Detailed scoring for source quality and frequency components are below.
+
+Quality (0.5 points total):
+0.5 Point. Vital Registration data available within past 5 years	
+0.25 Points. Survey Data availabe, but no Vital Registration data within past 5 years; 	
+0 Points. None within past 5 years
+
+Frequency (0.5 points total):
+0.5 Point. 3 or more values available within past 5 years	
+0.3 Points. 2 values available within past 5 years; 	
+0.15 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+
+```{r aki_3.3}
+
+#Read in data from UN Inter-agency Group for Child Mortality Estimation
+
+D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.3_child_mort_RAW_v01.csv', sep="/")) %>%
+  filter(INDICATOR=='Under-five mortality rate' & SEX=='Total') %>% #keep just observations for under 5 child mortality and for both sexes 
+  filter(OBS_STATUS=='Included in IGME') %>% # Also keep only surveys that met IGME criteria for inclusion as a nationally representative statistic
+  mutate(date=as.numeric(str_extract(TIME_PERIOD, "^.{4}")),
+         country=REF_AREA,
+         D3.CHLD.MORT=OBS_VALUE)
+
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+  temp <-D3.3.AKI.MORT %>%
+          mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
+          mutate(SPI.FREQ.D3.CHLD.MORT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
+          mutate(SPI.QUAL.D3.CHLD.MORT=case_when(
+                   reference_year-as.numeric(date)>=5 ~ 0, #outside 5 year window
+                   SERIES_METHOD=='Vital Registration' ~ 0.5,
+                   SERIES_METHOD!='Vital Registration' ~ 0.25,
+                   TRUE ~ as.numeric(NA)
+                 )) %>%
+          group_by(country) %>%
+          summarise(SPI.FREQ.D3.CHLD.MORT=sum(SPI.FREQ.D3.CHLD.MORT, na.rm=T),
+                    SPI.QUAL.D3.CHLD.MORT=max(SPI.QUAL.D3.CHLD.MORT, na.rm=T)) %>% 
+          mutate(SPI.FREQ.D3.CHLD.MORT=case_when(
+            SPI.FREQ.D3.CHLD.MORT>=3 ~ 0.5,
+            SPI.FREQ.D3.CHLD.MORT==2 ~ 0.3,
+            SPI.FREQ.D3.CHLD.MORT==1 ~ 0.15,
+            SPI.FREQ.D3.CHLD.MORT==0 ~ 0, 
+            TRUE ~ 0
+          )) %>%
+          mutate(SPI.D3.CHLD.MORT=SPI.FREQ.D3.CHLD.MORT+SPI.QUAL.D3.CHLD.MORT) %>% 
+          mutate(date=reference_year) %>%
+          select( country, date, starts_with('SPI.')) 
+
+
+  assign(paste("D3.3.AKI",reference_year,sep="_"), temp)
+}
+
+D3.3.AKI <- bind_rows(D3.3.AKI_2016, D3.3.AKI_2017, D3.3.AKI_2018, D3.3.AKI_2019)
+
+
+```
+
+
+```{r country_label_fixes, include=FALSE}
+
+#make country labels comparable to WDI
+D3.3.AKI <- D3.3.AKI %>%
+  mutate(country=case_when(
+    country=="Bahamas" ~ "Bahamas, The",                  
+    country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
+    country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
+    country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
+    country=="Congo"  ~ "Congo, Rep."        ,           
+    country=="Curacao"  ~  "Curacao"       ,                
+    country=="Czechia"   ~  "Czech Republic"     ,        
+    country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
+    country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
+    country=="United Kingdom"   ~  "United Kingdom"    ,         
+    country=="Gambia"    ~  "Gambia, The"     ,           
+    country=="Iran (Islamic Republic of)"  ~ "Iran, Islamic Rep." ,           
+    country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
+    country=="Republic of Korea"   ~ "Korea, Rep."   ,               
+    country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
+    country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
+    country=="Saint Lucia"   ~ "St. Lucia",
+    country=="Republic of Moldova"   ~  "Moldova"   ,                  
+    country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
+    country=="Slovakia"   ~  "Slovak Republic"             ,
+    country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
+    country=="United States of America"  ~ "United States"  ,                
+    country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
+    country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
+    country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
+    country=="Viet Nam"  ~ "Vietnam"        ,              
+    country=="Yemen"  ~ "Yemen, Rep.",
+    country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
+    TRUE ~ country
+  ))
+
+
+```
+
+
+
+
+```{r AKI_3.3, eval=FALSE, include=FALSE}
+EdStatsRequest_metadata <- GET(url = "https://api.worldbank.org/v2/country/all/indicator/SE.LPV.PRIM.BMP?footnote=y&per_page=30000&format=json")
+EdStatsResponse_metadata <- content(EdStatsRequest_metadata, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+EdStatsJSON_metadata <- jsonlite::fromJSON(EdStatsResponse_metadata, flatten = TRUE) %>%
+  data.frame() %>%
+  filter(str_length(footnote)>0)
+```
+
+
+### AKI 3.5 Maternal Mortality Ratio
+
+The data is sourced from the the Inter-Agency Group (200 countries) to improve time and country coverages. Tne national estimates with the source information are available at https://www.who.int/reproductivehealth/publications/maternal-mortality-2000-2017/en/.  The data was accessed on April 3, 2020.  This data was used for modelling maternal mortality, which are then fed into the modelled estimates on Maternal Mortality (SH.STA.MMRT) in the WDI.
+
+For our purposes, we will use the raw data from the country surveys as our data for the availability of key indicators, since the modelled estimates are produced out of sample, and thus not reflective of a country's national statistical system.
+
+Countries are ranked by source quality (admin data > survey > no data) and frequency.
+Score on this indicator has a max of 1 point with 0.5 points for source quality and 0.5 points for frequency.  Detailed scoring for source quality and frequency components are below.
+
+Quality (0.5 points total):
+0.5 Point. Vital Registration data available within past 5 years	
+0.25 Points. Survey Data or Census Data availabe, but no Vital Registration data within past 5 years; 	
+0 Points. None within past 5 years
+
+Frequency (0.5 points total):
+0.5 Point. 3 or more values available within past 5 years	
+0.3 Points. 2 values available within past 5 years; 	
+0.15 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+```{r AKI_3.5}
+
+
+#Read in data from UN Inter-agency Group 
+
+D3.5.AKI.MMR <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.5.BMat2019_datainputs.csv', sep="/")) %>%
+  filter(modelinclude=='TRUE') %>% #keep just observations that the UN inter-agency group deemed credible for use in modelling 
+  mutate(date=end,
+         iso3c=iso,
+         D3.MMRT=pm_obs)
+
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+  temp <-D3.5.AKI.MMR %>%
+          mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
+          mutate(SPI.FREQ.D3.MMRT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
+          mutate(SPI.QUAL.D3.MMRT=case_when(
+                   reference_year-as.numeric(date)>=5 ~ 0, #outside 5 year window
+                   type=='vr' ~ 0.5,
+                   type!='vr' ~ 0.25,
+                   TRUE ~ as.numeric(NA)
+                 )) %>%
+          group_by(iso3c) %>%
+          summarise(SPI.FREQ.D3.MMRT=sum(SPI.FREQ.D3.MMRT, na.rm=T),
+                    SPI.QUAL.D3.MMRT=max(SPI.QUAL.D3.MMRT, na.rm=T)) %>% 
+          mutate(SPI.FREQ.D3.MMRT=case_when(
+            SPI.FREQ.D3.MMRT>=3 ~ 0.5,
+            SPI.FREQ.D3.MMRT==2 ~ 0.3,
+            SPI.FREQ.D3.MMRT==1 ~ 0.15,
+            SPI.FREQ.D3.MMRT==0 ~ 0, 
+            TRUE ~ 0
+          )) %>%
+          mutate(SPI.D3.MMRT=SPI.FREQ.D3.MMRT+SPI.QUAL.D3.MMRT) %>% 
+          mutate(date=reference_year) %>%
+          select( iso3c, date, starts_with('SPI.')) 
+
+
+  assign(paste("D3.5.AKI",reference_year,sep="_"), temp)
+}
+
+D3.5.AKI <- bind_rows(D3.5.AKI_2016, D3.5.AKI_2017, D3.5.AKI_2018, D3.5.AKI_2019)
+
+```
+
+
+
+
+
+
+### AKI 3.7: Access to electricity (% of population) 
+
+Access to Electricity (% of population) has 99% coverage in the WDI database making it less useful for distinguishing between countries.  In order to improve the usefulness of this indicator, we are making use of data compiled by World Bank colleagues on surveys containing electricity items.  According to the access to electricity metadata, around 42 countries have no data and an imputed value is assigned based on the regional average.  By going to survey source data, we address this issue of imputation, which gives a misleading picture of availability for our purposes.  Below is the metadata from the WDI for methods for the access to electricity indicator.
+
+>Data for access to electricity are collected among different sources: mostly data from nationally representative household surveys (including national censuses) were used. Survey sources include Demographic and Health Surveys (DHS) and Living Standards Measurement Surveys (LSMS), Multi-Indicator Cluster Surveys (MICS), the World Health Survey (WHS), other nationally developed and implemented surveys, and various government agencies (for example, ministries of energy and utilities). Given the low frequency and the regional distribution of some surveys, a number of countries have gaps in available data. To develop the historical evolution and starting point of electrification rates, a simple modeling approach was adopted to fill in the missing data points - around 1990, around 2000, and around 2010. Therefore, a country can have a continuum of zero to three data points. There are 42 countries with zero data point and the weighted regional average was used as an estimate for electrification in each of the data periods. 170 countries have between one and three data points and missing data are estimated by using a model with region, country, and time variables. The model keeps the original observation if data is available for any of the time periods. This modeling approach allowed the estimation of electrification rates for 212 countries over these three time periods (Indicated as "Estimate"). Notation "Assumption" refers to the assumption of universal access in countries classified as developed by the United Nations. Data begins from the year in which the first survey data is available for each country.
+
+Scoring
+1 Point. 3 or more values available within past 5 years	
+0.6 Points. 2 values available within past 5 years; 	
+0.3 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+```{r D3.7_AKI}
+#read in file from rawdata folder
+D3.7.ELEC <- read_csv(file = paste(raw_dir, "3.2_DPES/D3.7.ELEC.csv", sep="/" )) %>%
+  rename(country=Country,
+         iso3c="Country code",
+         date=Time)
+
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+  temp <-D3.7.ELEC %>%
+          mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
+          mutate(SPI.D3.ELEC=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
+          group_by(country) %>%
+          summarise(SPI.D3.ELEC=sum(SPI.D3.ELEC, na.rm=T)) %>%
+          mutate(SPI.D3.ELEC=case_when(
+            SPI.D3.ELEC>=3 ~ 1,
+            SPI.D3.ELEC==2 ~ 0.6,
+            SPI.D3.ELEC==1 ~ 0.3,
+            SPI.D3.ELEC==0 ~ 0, 
+            TRUE ~ 0
+          )) %>%
+          mutate(date=reference_year) %>%
+          select( country, date, starts_with('SPI.')) 
+
+
+  assign(paste("D3.7.AKI",reference_year,sep="_"), temp)
+}
+
+D3.7.AKI <- bind_rows(D3.7.AKI_2016, D3.7.AKI_2017, D3.7.AKI_2018, D3.7.AKI_2019)
+```
+
+
+
+### AKI 3.14 Quarterly GDP
+
+Quarterly GDP numbers were pulled from the IMF website.
+
+After GDP by expenditure, quarterly GDP is probably the most important development to be made in a system of National Accounts, before the development of full sectoral accounts. IMF IFS has quarterly GDP from various sources, including governments and international agencies at https://data.imf.org/?sk=4C514D48-B6BA-49ED-8AB9-52B0C1A0179B
+
+Scoring
+1 Point. 3 or more values available within past 5 years	
+0.6 Points. 2 values available within past 5 years; 	
+0.3 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+
+
+```{r AKI_3.14}
+
+#read in file from rawdata folder
+D3.14.QUART.GDP <- read_csv(file = paste(raw_dir, "3.2_DPES/D3.14.QUART.GDP.csv", sep="/" ))
+
+#clean data and produce indicator for each year
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+temp <-D3.14.QUART.GDP %>%
+  mutate(date=as.numeric(str_sub(TIME_PERIOD,1,4))) %>%
+  mutate(iso2c=REF_AREA) %>%
+  mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
+  mutate(SPI.D3.QUART.GDP=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
+  group_by(iso2c, date) %>%
+  summarise(SPI.D3.QUART.GDP=max(SPI.D3.QUART.GDP, na.rm=T)) %>% 
+  group_by(iso2c) %>%
+  summarise(SPI.D3.QUART.GDP=sum(SPI.D3.QUART.GDP, na.rm=T)) %>% 
+  mutate(SPI.D3.QUART.GDP=case_when(
+    SPI.D3.QUART.GDP>=3 ~ 1,
+    SPI.D3.QUART.GDP==2 ~ 0.6,
+    SPI.D3.QUART.GDP==1 ~ 0.3,
+    SPI.D3.QUART.GDP==0 ~ 0, 
+    TRUE ~ 0
+  )) %>%
+  mutate(date=reference_year) %>%
+  select( iso2c, date, starts_with('SPI.D3.QUART.GDP')) 
+
+
+  assign(paste("D3.14.AKI",reference_year,sep="_"), temp)
+}
+
+D3.17.AKI <- bind_rows(D3.14.AKI_2016, D3.14.AKI_2017, D3.14.AKI_2018, D3.14.AKI_2019)  
+
+```
+
+### AKI 3.15 Debt service (PPG and IMF only, % of exports of goods, services and primary income)
+
+For this indicator, Debt service (PPG and IMF only, % of exports of goods, services and primary income), we will pull data from the WDI but modify the scoring using the WDI metadata on whether the external debt data is actual, estimated, or preliminary.  The status “as reported (actual)” indicates that the country was fully current in its reporting under the DRS and that World Bank staff are satisfied that the reported data give an adequate and fair representation of the country’s total public debt. “Preliminary” data are based on reported or collected information, but because of incompleteness or other reasons, an element of staff estimation is included. “Estimated” data indicate that countries are not current in their reporting and that a significant element of staff estimation has been necessary for producing the data tables. 
+
+Scoring is as follows:
+
+Frequency:
+
+0.5 Point. 3 or more values available within past 5 years	
+0.3 Points. 2 values available within past 5 years; 	
+0.15 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+Quality: 
+
+0.5 Points. Actual value
+0.3 Points. Preliminary value
+0.15 Points. Estimated value
+0 Points. No value
+
+```{r 3.15_debt}
+
+
+#reshape metaadata file
+metadata_3.15 <- WDI_metadata %>%
+  transmute(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
+            date=date,
+            External_debt_Reporting=External.debt.Reporting.status) %>%
+  mutate(SPI.QUAL.D3.DT.TDS.DPPF.XP.ZS= case_when(
+            External_debt_Reporting=='Actual' ~ 0.5,
+            External_debt_Reporting=='Preliminary' ~ 0.3,
+            External_debt_Reporting=='Estimate' ~ 0.15,
+            TRUE ~ 0
+          ))
+
+#pull data from wdi and merge with metadata
+for (reference_year in 2016:2019) {
+  temp <-wbstats::wb(country="countries_only", 
+              indicator='DT.TDS.DPPF.XP.ZS',
+              startdate=reference_year-5,
+              enddate=reference_year,
+              return_wide = T,
+              removeNA=FALSE) %>%
+          filter(((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% #filter out years outside reference window of 3 years     
+          mutate_at(.vars=c('DT.TDS.DPPF.XP.ZS'), ~if_else(is.na(.),0,1)) %>% #create 0,1 variable for whether data point exists for country
+          group_by(iso3c, country) %>%
+          summarise_all((~(if(is.numeric(.)) sum(., na.rm = TRUE) else first(.)))) %>% #group by country to create one observation per country                 containing whether or not data point existed
+          mutate(SPI.FREQ.D3.DT.TDS.DPPF.XP.ZS = case_when(
+            DT.TDS.DPPF.XP.ZS>=3 ~ 0.5,
+            DT.TDS.DPPF.XP.ZS==2 ~ 0.3,
+            DT.TDS.DPPF.XP.ZS==1 ~ 0.15,
+            DT.TDS.DPPF.XP.ZS==0 ~ 0, 
+            TRUE ~ 0
+          )) %>% # 0.5 point for at least 3 values, 0.3 for 2 values, 0.15 for 1 values, 0 otherwise
+          mutate(date=reference_year) %>%
+          left_join(metadata_3.15) %>% #attach country metadata 
+          mutate(SPI.QUAL.D3.DT.TDS.DPPF.XP.ZS= case_when(
+            External_debt_Reporting=='Actual' ~ 0.5,
+            External_debt_Reporting=='Preliminary' ~ 0.3,
+            External_debt_Reporting=='Estimate' ~ 0.15,
+            TRUE ~ 0
+          )) %>% # 0.5 point for actual, 0.3 for preliminary, 0.15 for estimate
+          mutate(
+                 SPI.D3.DT.TDS.DPPF.XP.ZS=(SPI.QUAL.D3.DT.TDS.DPPF.XP.ZS + SPI.FREQ.D3.DT.TDS.DPPF.XP.ZS)) %>%
+          ungroup() %>%
+          select(iso3c, country, date,  contains('D3.DT.TDS.DPPF.XP.ZS')) 
+
+
+
+  assign(paste("D3.15.AKI",reference_year,sep="_"), temp)
+}
+
+D3.15.AKI <- bind_rows(D3.15.AKI_2016, D3.15.AKI_2017, D3.15.AKI_2018, D3.15.AKI_2019)  
+
+```
+
+```{r aki_combine}
+
+
+
+
+#now combine AKI databases and write to csv
+D3.AKI <- bind_rows(D3.AKI_2016, D3.AKI_2017, D3.AKI_2018, D3.AKI_2019) %>%
+  left_join(D3.1.AKI) %>%
+  left_join(D3.2.AKI) %>%
+  left_join(D3.3.AKI) %>%
+  left_join(D3.5.AKI) %>%
+  left_join(D3.7.AKI) %>%
+  left_join(D3.15.AKI) %>%
+  left_join(D3.17.AKI) %>%
+  mutate_at(vars(starts_with('SPI.D3.')), ~if_else(is.na(.),0,as.numeric(.))) 
+
+
+spi_df <- spi_df %>%
+  left_join(D3.AKI)
+
+```
+
+```{r aki_plots}
+
+aki <- c(
+             SPI.D3.POV='Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)',
+             SPI.D3.FIES='Food Insecurity Experience Scale',
+             SPI.D3.CHLD.MORT='Mortality rate, under-5 (per 1,000 live births)', 
+             SPI.D3.SE.LPV.PRIM.BMP='Pupils below minimum reading proficiency at end of primary (%). Low GAML threshold',
+             SPI.D3.MMRT='Maternal Mortality',
+             SPI.D3.SH.H2O.SMDW.ZS='People using safely managed drinking water services (% of population)',
+             SPI.D3.ELEC='Access to electricity (% of population)',
+             SPI.D3.SL.UEM.TOTL.NE.ZS='Unemployment, total (% of total labor force) (national estimate)' ,
+             SPI.D3.NV.IND.MANF.ZS='Manufacturing, value added (% of GDP)',
+             SPI.D3.SI.SPR.PC40.ZG='Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)',
+             SPI.D3.ER.H2O.FWST.ZS='Level of water stress: freshwater withdrawal as a proportion of available freshwater resources',
+             SPI.D3.EG.FEC.RNEW.ZS='Renewable energy consumption (% of total final energy consumption)',
+             SPI.D3.NE.CON.PRVT.CN='Households and NPISHs Final consumption expenditure (current LCU)',
+             SPI.D3.QUART.GDP='Quarterly GDP',
+             SPI.D3.DT.TDS.DPPF.XP.ZS='Debt service (PPG and IMF only, % of exports of goods, services and primary income)'
+)
+
+
+for (ind in names(aki)) {
+  ind <- ind
+  names(aki)
+  print(ind)
+  temp_map <- D3.AKI %>%
+    filter(.data[[ind]] > 0)
+  
+  spi_mapper('temp_map', ind, aki[[ind]])
+}
+
+```
+
 
 # Data Sources
 
@@ -289,7 +1470,7 @@ cs_fun  <- function(data, input_var) {
   
   
   #Now calculate our SPI score for this indicator
-  for (i in 2016:2019) {
+  for (i in 2004:2019) {
    temp <- cs_df %>%
     mutate(date=i) %>%
     mutate(recency_indicator=((date>indicator_date)) ) %>% #restrict to censuses that do not occur after reference date
@@ -309,9 +1490,12 @@ cs_fun  <- function(data, input_var) {
     assign(paste('temp',i,sep="_"), temp)
   }
 
-  bind_rows(temp_2016, temp_2017, temp_2018, temp_2019)
-
+  temp <- temp_2019
   
+  for (i in 2004:2018) {
+    temp <- bind_rows(temp, get(paste('temp',i,sep="_")))
+  }
+  temp
 }
 
 #Population Censuses
@@ -366,15 +1550,14 @@ cs_df <- cs1_df %>%
   left_join(cs8_df) 
 
 #add to spi databases
-spi_scores_df <- spi_scores_df %>%
+spi_df <- spi_df %>%
   left_join(cs_df)
 
 #now do the figures for population censuses
-cs_df_2019 <- cs_df %>%
-  filter(date==2019) %>%
+cs_df_map <- cs_df %>%
   filter(!is.na(POPU.CENSUS))
 
-spi_mapper('cs_df_2019', 'POPU.CENSUS', 'Population Census Available in Past 20 Years in 2019' )
+spi_mapper('cs_df_map', 'POPU.CENSUS', 'Population Census Available in Past 20 Years in 2019' )
 
 
 ```
@@ -402,15 +1585,19 @@ aspire_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ASPIRE_sources.csv', sep="/
 
 #cleaning of aspire data
 aspire_df <- aspire_df_raw %>%
-    group_by( ccode) %>%
+    mutate(date=as.numeric(year)) %>%
+    group_by( ccode, date) %>%
     summarise(ben_count=mean(ben, na.rm=T),
               ben_exp=mean(exp_b, na.rm=T)) %>%
     rename(iso3c=ccode) %>%
     left_join(country_metadata) %>%
     mutate(ben_info=(!is.na(ben_count) | !is.na(ben_exp))
-           ) 
+           )
 
-spi_mapper('aspire_df', 'ben_info', 'Administrative Data Available on Beneficiary Counts or Expenditures in 2001-2018 using ASPIRE' )
+aspire_map <- aspire_df %>%
+  filter(ben_info==TRUE)
+
+spi_mapper('aspire_map', 'ben_info', 'Administrative Data Available on Beneficiary Counts or Expenditures using ASPIRE' )
 
 
 ```
@@ -435,7 +1622,8 @@ unesco_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','unesco_admin_sources.csv', 
 
 #cleaning of aspire data
 unesco_df <- unesco_df_raw %>%
-    group_by( LOCATION2017) %>%
+    mutate(date=TIME) %>%
+    group_by( LOCATION2017, date) %>%
     summarise(Value=mean(Value, na.rm=T)) %>%
     rename(iso3c=LOCATION2017) %>%
     left_join(country_metadata) %>%
@@ -461,37 +1649,30 @@ Source: World Bank WDI Metadata.
 
 ```{r crvs}
 
-Request_metadata <- GET(url = "https://api.worldbank.org/v2/sources/2/country/all/metadata?per_page=30000&format=json")
+Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/3.11.01.03.popreg?format=json&date=2004:2019&per_page=5000")
 Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
 
 # Parse the JSON content and convert it to a data frame.
-JSON_metadata <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
-  data.frame()
+crvs_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+  data.frame() %>%
+  transmute(
+    iso3c=countryiso3code,
+    country=country.value,
+    date=as.numeric(date),
+    crvs=value
+  ) %>%
+  left_join(spi_df_empty) #add on country metadata
 
-#do some conversion to produce a dataframe
-crvs_df <- JSON_metadata$source.concept %>%
-  data.frame() 
-
-#do some more cleaning and conversion
-crvs_df <- crvs_df$variable %>%
-  data.frame()   %>%
-  rename(iso3c=id) %>%
-  unnest(metatype) %>%
-  pivot_wider(
-    id_cols=iso3c,
-    names_from=id,
-    values_from=value
-  ) 
 
 # Manipulate and clean final data
 crvs_df <- crvs_df %>%
-  filter(!is.na(IncomeGroup)) %>% #keep just countries (drop aggregations)
-  rename(country=ShortName) 
+  filter(!is.na(income)) #keep just countries (drop aggregations)
+
 
 crvs_map <- crvs_df %>%
-  filter(!is.na(Vitalregistrationcomplete))
+  filter(!is.na(crvs))
 
-spi_mapper('crvs_map', 'Vitalregistrationcomplete', 'Complete Civil Registration & Vital Statistics Data Available According to WDI' )
+spi_mapper('crvs_map', 'crvs', 'Complete Civil Registration & Vital Statistics Data Available According to WDI' )
 
 
 ```
@@ -521,10 +1702,9 @@ ilo_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ILOSTAT_sources.csv', sep="/")
 
 #cleaning of aspire data
 ilo_df <- ilo_df_raw %>%
-  group_by(iso3c) %>%
+  group_by(iso3c, date) %>%
   summarise(Source.type=last(Source.type)) %>%
-  left_join(country_metadata)
-
+  left_join(country_metadata) 
   
 
 spi_mapper('ilo_df', 'Source.type', 'Labor Administrative Data Available According to ILO' )
@@ -594,24 +1774,43 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 
 ```{r geo}
 
-geo_df_raw <- read_csv(paste(raw_dir, '4.3_SOGS','ODIN_2018.csv', sep="/")) %>%
-  as_tibble(.name_repair = 'universal') 
+  #read in ODIN data
+  for (i in 2015:2018) {
+   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
+        as_tibble(.name_repair = 'universal') %>%
+        mutate(date=i) %>%
+        filter(Data.categories=='All Categories')
 
-geo_df <- geo_df_raw %>%
-  filter(Data.categories=='All Categories')
 
+    assign(paste('geo_df',i,sep="_"), temp)
+  }
+
+#bind different years together
+geo_df <- bind_rows(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018)
+
+
+#create geo scores
 geo_df <- geo_df %>%
-    select(Country.Code, First.administrative.level, Second.administrative.level) %>%
+    select(Country.Code, date, First.administrative.level, Second.administrative.level) %>%
     rename(iso3c=Country.Code) %>%
     group_by( iso3c) %>%
-    summarise(across(c('First.administrative.level', 'Second.administrative.level'),last)) %>%
     right_join(country_metadata) %>%
-    mutate(First.administrative.level=if_else(is.na(First.administrative.level), 0, First.administrative.level/18),
-           Second.administrative.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level/12))    
+    mutate(First.administrative.level=if_else(is.na(First.administrative.level), 0, First.administrative.level),
+           Second.administrative.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level))    
   
-  
+
+#add to spi df
+spi_df <- spi_df %>%
+  left_join(geo_df)
+
+ 
+   
+```
+```{r geo_plots, echo=FALSE}
+
+#do the plots  
    ggplot() +
-    geom_map(data = geo_df, aes(map_id = iso3c, fill = First.administrative.level), map = maps$countries) + 
+    geom_map(data = filter(geo_df, date==2018), aes(map_id = iso3c, fill = First.administrative.level), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -635,11 +1834,11 @@ geo_df <- geo_df %>%
       caption = 'Source: ODIN'
     )
    
-   geo_df %>%
+   filter(geo_df, date==2018) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(First.administrative.level),
-           Label = paste(round(100*mean(First.administrative.level)), sep="")) %>%
+    mutate(Percentage=mean(First.administrative.level),
+           Label = paste(round(mean(First.administrative.level)), sep="")) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
@@ -649,8 +1848,27 @@ geo_df <- geo_df %>%
       ) +
       theme_bw()
 
+  # #add line graph over time
+  geo_df  %>%
+    right_join(spi_df_empty) %>%
+    group_by( date) %>%
+    mutate(First.administrative.level=if_else(is.na(First.administrative.level), 0, First.administrative.level)) %>%
+    mutate(Percentage=mean(First.administrative.level),
+           Label = paste(sum(First.administrative.level),'/',n(), sep="")) %>%
+    ungroup() %>%
+    ggplot(aes(y=Percentage, x=date)) +
+      geom_point() +
+      geom_line(fill='blue') +
+      # geom_text_repel(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste('Data Availability Score at First Administrative Unit Level', 'By Date', sep=" - "),100),
+      caption = 'Source: ODIN'
+      ) +
+      expand_limits(y=c(0,100)) +
+      theme_bw()   
+   
    ggplot() +
-    geom_map(data = geo_df, aes(map_id = iso3c, fill = Second.administrative.level), map = maps$countries) + 
+    geom_map(data = filter(geo_df, date==2018), aes(map_id = iso3c, fill = Second.administrative.level), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -674,11 +1892,11 @@ geo_df <- geo_df %>%
       caption = 'Source: ODIN'
     )   
    
-    geo_df %>%
+    filter(geo_df, date==2018) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(Second.administrative.level),
-           Label = paste(round(100*mean(Second.administrative.level)), sep="")) %>%
+    mutate(Percentage=mean(Second.administrative.level),
+           Label = paste(round(mean(Second.administrative.level)), sep="")) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
@@ -687,7 +1905,26 @@ geo_df <- geo_df %>%
       caption = 'Source: ODIN'
       ) +
       theme_bw()
-   
+    
+    # #add line graph over time
+  geo_df  %>%
+    right_join(spi_df_empty) %>%
+    group_by( date) %>%
+    mutate(Second.administrative.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level)) %>%
+    mutate(Percentage=mean(Second.administrative.level),
+           Label = paste(sum(Second.administrative.level),'/',n(), sep="")) %>%
+    ungroup() %>%
+    ggplot(aes(y=Percentage, x=date)) +
+      geom_point() +
+      geom_line(fill='blue') +
+      # geom_text_repel(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste('Data Availability Score at Second Administrative Unit Level', 'By Date', sep=" - "),100),
+      caption = 'Source: ODIN'
+      ) +
+      expand_limits(y=c(0,100)) +
+      theme_bw()   
+
 ```
 
 
@@ -718,7 +1955,10 @@ google_df_raw <- read_csv(paste(raw_dir, '4.4_SOPC','Global_Mobility_Report.csv'
 
 #match to world bank country database
 google_df <- google_df_raw %>%
-  left_join(country_metadata, by=c('country_region_code'='iso2c'))
+  group_by(country_region_code) %>%
+  summarise(freq=n()) %>%
+  left_join(country_metadata, by=c('country_region_code'='iso2c')) %>%
+  mutate(date=2020)
 
 
 spi_mapper('google_df', 'date', 'Google Global Mobility Report Data' )
@@ -748,7 +1988,10 @@ apple_df <- apple_df_raw %>%
     country=="Taiwan" ~ "Taiwan, China",
     TRUE ~ country
   )) %>%
-  left_join(country_metadata)
+  group_by(country) %>%
+  summarise(freq=n()) %>%
+  left_join(country_metadata) %>%
+  mutate(date=2020)
 
 
 
