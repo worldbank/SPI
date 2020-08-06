@@ -1,0 +1,1618 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={Technical Documentation on Data Sources and Methods for Statistical Performance Indicators},
+            pdfauthor={Brian Stacy},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{Technical Documentation on Data Sources and Methods for Statistical
+Performance Indicators}
+\author{Brian Stacy}
+\date{2020-08-06}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+In this program, I will clean and reshape the raw data files in the
+01\_rawdata folder in order to produce the Statistical Performance
+Indicators.
+
+Below is an overview of the SPI framework.
+
+\begin{figure}
+\centering
+\includegraphics{SPI_dashboard.png}
+\caption{unchanged image}
+\end{figure}
+
+\hypertarget{key-discussion-points}{%
+\section{Key Discussion Points}\label{key-discussion-points}}
+
+Here are a few concerns that I have at the moment, but this is by no
+means an exhaustive list. Overall, there are some indicators with issues
+in terms of coverage across countries. There are also differences in the
+length of the time series for each indicator. Here is a detailed
+breakdown by indicator.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Dimension 1 needs more work adding source documents, NSO social media
+  accounts. It also needs work refining scoring methodology. This should
+  be discussed as a team.\\
+\item
+  Dimension 2 has no information for the Advisory/Analytical Services
+  dimension.
+\item
+  Dimension 3 is based on the 15 AKI indicators we defined for the
+  original SPI. This needs to be discussed, as John had proposed going
+  to NSO sites and collecting SDG indicator information. I abandoned
+  this approach, because there is no straightforward way of scraping
+  this info. To discuss as a team.\\
+\item
+  Dimension 4 needs more work and refinement particularly on the
+  Private/Citizen generated data section.\\
+\item
+  Dimension 5 also needs work with having a complete set of data for all
+  countries. There are major coverage gaps for all indicators, except
+  for the Standards dimension which comes from the SPI team.
+\end{enumerate}
+
+\hypertarget{data-use}{%
+\section{Data Use}\label{data-use}}
+
+Cleaning for Data Use Indicators. Data Use (5 Indicators):\\
+- 1.1\_DUNL - Indicator 1.1: Data use by national legislature\\
+- 1.2\_DUNE - Indicator 1.2: Data use by national executive branch\\
+- 1.3\_DUCS - Indicator 1.3: Data use by civil society\\
+- 1.4\_DUAC - Indicator 1.4: Data use by academia\\
+- 1.5\_DUIO - Indicator 1.5: Data use by international organizations
+
+\hypertarget{indicator-1.1-data-use-by-national-legislature}{%
+\subsection{Indicator 1.1: Data use by national
+legislature}\label{indicator-1.1-data-use-by-national-legislature}}
+
+Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity
+Development Outlook) using national legislature website as source.
+
+\hypertarget{indicator-1.2-data-use-by-national-executive-branch}{%
+\subsection{Indicator 1.2: Data use by national executive
+branch}\label{indicator-1.2-data-use-by-national-executive-branch}}
+
+Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity
+Development Outlook) using national development plans and poverty
+reduction plans as a source.
+
+Our main source for this is the FAOLEX database of legislation and
+policy documents maintained by the FAO.
+
+\includegraphics{01_data_prep_files/figure-latex/faolex_map-1.pdf}
+
+\hypertarget{indicator-1.3-data-use-by-civil-society}{%
+\subsection{Indicator 1.3: Data use by civil
+society}\label{indicator-1.3-data-use-by-civil-society}}
+
+Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity
+Development Outlook) using main social media platform in use in country
+as source.
+
+We are pulling data from Twitter at this point. We have only accessed a
+handful of accounts from NSOs, but this could be quickly scaled up.
+
+\includegraphics{01_data_prep_files/figure-latex/api_plots-1.pdf}
+
+\includegraphics{01_data_prep_files/figure-latex/twitter_map-1.pdf}
+
+\hypertarget{indicator-1.4-data-use-by-academia}{%
+\subsection{Indicator 1.4: Data use by
+academia}\label{indicator-1.4-data-use-by-academia}}
+
+The idea for this indicator is that countries should be producing
+statistical products that are utilized, in this case by academia. As a
+measure of this, we use the IHSN database on censuses and surveys
+conducted by counties and calculate a ranking of countries based on the
+total number of downloads of the censuses and surveys produced by that
+country on a per capita basis. In other words, we calculate the total
+number of downloads of censuses and surveys for a country, divided by
+the population of that country, to produce a ranking. Countries with low
+scores on this metric, may either be producing censuses and surveys that
+are not in high demand or are not producing or adding a sufficient
+number of censuses and surveys to IHSN to register highly on this
+measure.
+
+The source for this indicator is the IHSN.
+
+\begin{quote}
+The mission of the IHSN is to improve the availability, accessibility,
+and quality of survey data within developing countries, and to encourage
+the analysis and use of this data by national and international
+development decision makers, the research community, and other
+stakeholders.
+\end{quote}
+
+\begin{quote}
+To support this mission, the key objectives of the IHSN are:
+\end{quote}
+
+\begin{quote}
+Improved coordination of internationally sponsored survey programs, with
+emphasis on timing, sequencing, frequency, and cost-effectiveness
+Availability of coordinated and practical technical and methodological
+guidelines for all stages of the survey life cycle Availability of a
+central survey data catalog which would inform data users of the
+availability of survey and census data from multiple sources
+Availability of standards, tools, and guidelines that would allow data
+producers to document, disseminate, and preserve microdata according to
+international standards and best practices Improved collaboration
+between data producers and users
+\end{quote}
+
+IHSN has a database of more than 7,483 surveys as of August 5, 2020.
+
+\includegraphics{01_data_prep_files/figure-latex/ihsn_plots-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/ihsn_plots-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/ihsn_plots-3.pdf}
+\includegraphics{01_data_prep_files/figure-latex/ihsn_plots-4.pdf}
+\includegraphics{01_data_prep_files/figure-latex/ihsn_plots-5.pdf}
+
+\hypertarget{indicator-1.5-data-use-by-international-organizations}{%
+\subsection{Indicator 1.5: Data use by international
+organizations}\label{indicator-1.5-data-use-by-international-organizations}}
+
+New indicator of level of congruence between UNSD and national database
+of SDG indicators. For each of the indicators calculate whether the
+number in the database for the most recent year is the same or
+different. The indicator is the percentage that are the same.
+
+Note: \textgreater{} I met with significant technical challenges trying
+to compile this information. It would be a useful data collection
+exercise, but will require significant time and effort. Because this has
+not yet taken place, I have not produced indicators for this topic area.
+
+\begin{quote}
+An alternative would be to form this indicator using some of the quality
+metadata we have collected for the Availability of Key Indicators. This
+could include the poverty indicators, child mortality, maternal
+mortality, safely managed drinking water, electricity, and debt.
+\end{quote}
+
+\hypertarget{data-services}{%
+\section{Data Services}\label{data-services}}
+
+Cleaning for Data Services Indicators. Data Services (4 Indicators):\\
+- 2.1\_DSDR - Indicator 2.1: Data releases\\
+- 2.2\_DSOA - Indicator 2.2: Online access\\
+- 2.3\_DSAS - Indicator 2.3: Advisory/ Analytical Services\\
+- 2.4\_DSDS - Indicator 2.4: Data services
+
+\hypertarget{indicator-2.1-data-releases}{%
+\subsection{Indicator 2.1: Data
+Releases}\label{indicator-2.1-data-releases}}
+
+Data Dissemination Standard (SDDS) and electronic General Data
+Dissemination Standard (e-GDDS) were established by the International
+Monetary Fund (IMF) for member countries that have or that might seek
+access to international capital markets, to guide them in providing
+their economic and financial data to the public. Although subscription
+is voluntary, the subscribing member needs to be committed to observing
+the standard and provide information about its data and data
+dissemination practices (metadata). The metadata are posted on the IMF's
+SDDS and e-GDDS websites.
+
+1 Point. Subscribing to IMF SDDS+ or SDDS standards 0.5 Points.
+Subscribing to IMF e-GDDS standards 0 Points. Otherwise
+
+\includegraphics{01_data_prep_files/figure-latex/idds-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/idds-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/idds-3.pdf}
+
+\hypertarget{indicator-2.2-online-access}{%
+\subsection{Indicator 2.2: Online
+access}\label{indicator-2.2-online-access}}
+
+This indicator measures the richness and openness of online access.
+
+\hypertarget{source}{%
+\subsubsection{Source}\label{source}}
+
+Our source for this indicator is Open Data Watch. From Open Data watch:
+
+\begin{quote}
+The Open Data Inventory (ODIN) assesses the coverage and openness of
+official statistics to help identify gaps, promote open data policies,
+improve access, and encourage dialogue between national statistical
+offices (NSOs) and data users. ODIN 2018/19 includes 178 countries,
+including most all OECD countries. Two-year comparisons are for all
+countries with two years of data between 2015-2017. Scores can be
+compared across topics and countries.
+\end{quote}
+
+We use the Openness score from ODIN for this measure. The score ranges
+from 0-100. It contains scores along five dimensions:\\
+- Machine Readability\\
+- Non-Proprietary format\\
+- Download Options\\
+- Metadata Available\\
+- Terms of Use
+
+A description for each of these five dimensions is below:
+
+\hypertarget{machine-readability}{%
+\paragraph{Machine Readability}\label{machine-readability}}
+
+\begin{quote}
+Openness element 1 measures whether data are available in a machine
+readable format such as XLS, XLSX, CSV, and JSON. Machine-readable file
+formats allow users to easily process data using a computer. When data
+are made available in formats that are not machine readable, users
+cannot easily access and modify the data, which severely restricts the
+scope of the data's use. In many cases PDF versions of datasets within
+reports can be useful to users, as the text in conjunction with the
+tables gives context and explanation to the figures which helps less
+technical users understand the data. Because of this, ODIN assessments
+do not penalize countries for making datasets available in PDF or other
+non-machine readable formats, unless these formats are the only option
+for exporting data. Scores are not penalized for having identical
+datasets in both machine readable and non-readable formats. Compression
+formats do not affect machine readability scores, only non-proprietary
+scores (see next page). Scores are given by data category, not
+indicator.
+\end{quote}
+
+\hypertarget{non-proprietary-format}{%
+\paragraph{Non-Proprietary format}\label{non-proprietary-format}}
+
+\begin{quote}
+For the elements of data openness, scoring is calculated independent of
+the data coverage. If data files are compressed in RAR format (which is
+proprietary), data for that indicator should be considered proprietary
+even if the enclosing files are in a non-proprietary format. Files
+compressed in ZIP format are not affected.
+\end{quote}
+
+\hypertarget{download-options}{%
+\paragraph{Download Options}\label{download-options}}
+
+\begin{quote}
+Openness element 3 measures whether data are available with three
+different download options: bulk download, API, and user-select options.
+A bulk download is defined at the indicator level as: The ability to
+download all data recorded in ODIN for a particular indicator (all
+years, disaggregations, and subnational data) in one file, or multiple
+files that can be downloaded simultaneously. Bulk downloads are a key
+component of the Open Definition, which requires data to be ``provided
+as a whole . . . and downloadable via the internet.'' User-selectable
+download options are defined as: Users must be able to select an
+indicator and at least one other dimension to create a download or
+table. These dimensions could include time periods, geographic
+disaggregations, or other recommended disaggregations. An option to
+choose the file export format is not enough. API stands for Application
+Programming Interface. Ideally, APIs should be clearly displayed on the
+website. ODIN assumes APIs are available for the NSOs entire data
+collection used in ODIN, unless clearly stated. ODIN assessors do not
+register for use or test API functionality. For more information on
+APIs, see this guide. Scores are given by data category, not indicator.
+\end{quote}
+
+\hypertarget{metadata-available}{%
+\paragraph{Metadata Available}\label{metadata-available}}
+
+\begin{quote}
+Openness element 4 measures whether metadata are made available. Scores
+are given by data category, not indicator. Metadata are defined at the
+indicator level as information about how the data are defined/calculated
+and collected. ODIN classifies metadata into three categories: (1) Not
+Available, (2) Incomplete, and (3) Complete. The following must be
+available to classify metadata as complete: • Definition of the
+indicator, or definition of key terms used in the indicator description
+(as applicable), or how the indicator was calculated. • Publication
+(date of upload), compilation date (date on front of report is not
+sufficient), or date dataset was last updated. • Name of data source
+(what agency collected the data). If the metadata only have one or two
+of the above elements, they are scored as incomplete
+\end{quote}
+
+\hypertarget{terms-of-use}{%
+\paragraph{Terms of Use}\label{terms-of-use}}
+
+\begin{quote}
+Openness element 5 measures whether data are available with an open
+terms of use. Generally, terms of use (TOU) will apply to an entire
+website or data portal (unless otherwise specified). In these cases, all
+data found on the same website and/or portal will receive the same
+score. If a portal is located on the same domain as the NSO website, the
+terms of use on the NSO site will apply. If the data are located on a
+portal or website on a different domain, another terms of use will need
+to be present. For a policy/ license to be accepted as a terms of use,
+it must clearly refer to the data found on the website. Terms of use
+that refer to nondata content (such as pictures, logos, etc.) of the
+website are not considered. A copyright symbol at the bottom of the page
+is not sufficient. A sentence indicating a recommended citation format
+is not sufficient. Terms of use are classified the following ways: (1)
+Not Available, (2) Restrictive, (3) Semi-Restrictive, and (4) Open. If
+the TOU contains one or more restrictive clauses, it receives 0 points
+and is classified as ``restrictive.'' Restrictive clauses include:
+\end{quote}
+
+For more details, consult the ODIN technical documentation:
+\url{https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit\#}
+
+\includegraphics{01_data_prep_files/figure-latex/open_plots-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/open_plots-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/open_plots-3.pdf}
+
+\hypertarget{indicator-2.3-advisory-analytical-services}{%
+\subsection{Indicator 2.3: Advisory/ Analytical
+Services}\label{indicator-2.3-advisory-analytical-services}}
+
+No established source exists for this indicator. This is experimental.
+
+\hypertarget{indicator-2.4-data-services}{%
+\subsection{Indicator 2.4: Data
+services}\label{indicator-2.4-data-services}}
+
+NSO has a listing of surveys and microdata sets that can provide the
+necessary data and reference for follow-up. Upon well-defined request
+and procedure per the national law and practice, users and practitioners
+can obtain the data collected from the households and businesses when
+needed.
+
+NADA is an open source microdata cataloging system, compliant with the
+Data Documentation Initiative (DDI) and Dublin Core's RDF metadata
+standards. It serves as a portal for researchers to browse, search,
+compare, apply for access, and download relevant census or survey
+datasets, questionnaires, reports and other information.
+
+1 Point. Yes 0 Points. No
+
+\includegraphics{01_data_prep_files/figure-latex/nada-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/nada-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/nada-3.pdf}
+
+\hypertarget{data-products}{%
+\section{Data Products}\label{data-products}}
+
+Cleaning for Data Products Indicators. Data Products (4 Indicators):\\
+- 3.1\_DPSS - Indicator 3.1: social statistics\\
+- 3.2\_DPES - Indicator 3.2: economic statistics\\
+- 3.3\_DPEN - Indicator 3.3 environmental statistics\\
+- 3.4\_DPIS - Indicator 3.4: institutional statistics
+
+Below is the list of AKI indicators:
+
+\hypertarget{indicator-3.1-social-statistics}{%
+\subsection{Indicator 3.1: social
+statistics}\label{indicator-3.1-social-statistics}}
+
+\begin{itemize}
+\tightlist
+\item
+  AKI 3.1: Poverty headcount ratio at \$1.90 a day (2011 PPP) (\% of
+  population)\\
+\item
+  AKI 3.2: Food Insecurity Experience Scale
+\item
+  AKI 3.3: Mortality rate, under-5 (per 1,000 live births)\\
+\item
+  AKI 3.4: Proportion of children and young people in grades 2 or 3
+  achieving at least a minimum proficiency level in reading and
+  mathematics, by sex.\\
+\item
+  AKI 3.5: Maternal Mortality
+\item
+  AKI 3.6: People using safely managed drinking water services (\% of
+  population)
+\end{itemize}
+
+\hypertarget{indicator-3.2-economic-statistics}{%
+\subsection{Indicator 3.2: economic
+statistics}\label{indicator-3.2-economic-statistics}}
+
+\begin{itemize}
+\tightlist
+\item
+  AKI 3.7: Access to electricity (\% of population)\\
+\item
+  AKI 3.8: Unemployment, total (\% of total labor force)\\
+\item
+  AKI 3.9: Manufacturing, value added (\% of GDP)\\
+\item
+  AKI 3.10: Annualized average growth rate in per capita real survey
+  mean consumption or income, bottom 40\% of population (\%)\\
+\item
+  AKI 3.14: Quarterly GDP
+\end{itemize}
+
+\hypertarget{indicator-3.3-environmental-statistics}{%
+\subsection{Indicator 3.3 environmental
+statistics}\label{indicator-3.3-environmental-statistics}}
+
+\begin{itemize}
+\tightlist
+\item
+  AKI 3.11: Level of water stress: freshwater withdrawal as a proportion
+  of available freshwater resources\\
+\item
+  AKI 3.12: Renewable energy consumption (\% of total final energy
+  consumption)\\
+\item
+  AKI 3.13: Households and NPISHs Final consumption expenditure (current
+  LCU)
+\end{itemize}
+
+\hypertarget{indicator-3.4-institutional-statistics}{%
+\subsection{Indicator 3.4: institutional
+statistics}\label{indicator-3.4-institutional-statistics}}
+
+\begin{itemize}
+\tightlist
+\item
+  AKI 3.15: Debt service (PPG and IMF only, \% of exports of goods,
+  services and primary income)
+\end{itemize}
+
+\hypertarget{aki-3.1-3.9-3.10-3.11-3.12-3.13}{%
+\subsubsection{AKI 3.1, 3.9, 3.10, 3.11, 3.12,
+3.13}\label{aki-3.1-3.9-3.10-3.11-3.12-3.13}}
+
+First we will pull data for indicators coming straight from WDI. For
+some indicators, we will use alternative sources.
+
+Indicators coming from the WDI directly are:
+
+\begin{itemize}
+\tightlist
+\item
+  AKI 3.1: Poverty headcount ratio at \$1.90 a day (2011 PPP) (\% of
+  population)\\
+\item
+  AKI 3.9: Manufacturing, value added (\% of GDP)\\
+\item
+  AKI 3.10: Annualized average growth rate in per capita real survey
+  mean consumption or income, bottom 40\% of population (\%)\\
+\item
+  AKI 3.11: Level of water stress: freshwater withdrawal as a proportion
+  of available freshwater resources\\
+\item
+  AKI 3.12: Renewable energy consumption (\% of total final energy
+  consumption)\\
+\item
+  AKI 3.13: Households and NPISHs Final consumption expenditure (current
+  LCU)
+\end{itemize}
+
+Scoring:
+
+1 Point. 3 or more values available within past 5 years 0.6 Points. 2
+values available within past 5 years;\\
+0.3 Points. 1 values available within past 5 years;\\
+0 Points. None within past 5 years
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{##########}
+\CommentTok{# Pull Tags for WDI Data}
+\CommentTok{##########}
+
+\CommentTok{# make request to World Bank API}
+\NormalTok{wdiRequest <-}\StringTok{ }\KeywordTok{GET}\NormalTok{(}\DataTypeTok{url =} \StringTok{"http://api.worldbank.org/v2/indicator?per_page=20000&format=json&source=2"}\NormalTok{)}
+\NormalTok{wdiResponse <-}\StringTok{ }\KeywordTok{content}\NormalTok{(wdiRequest, }\DataTypeTok{as =} \StringTok{"text"}\NormalTok{, }\DataTypeTok{encoding =} \StringTok{"UTF-8"}\NormalTok{)}
+
+\CommentTok{# Parse the JSON content and convert it to a data frame.}
+\NormalTok{wdisJSON <-}\StringTok{ }\NormalTok{jsonlite}\OperatorTok{::}\KeywordTok{fromJSON}\NormalTok{(wdiResponse, }\DataTypeTok{flatten =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{data.frame}\NormalTok{()}
+
+\NormalTok{EdStatsRequest <-}\StringTok{ }\KeywordTok{GET}\NormalTok{(}\DataTypeTok{url =} \StringTok{"http://api.worldbank.org/v2/indicator?per_page=20000&format=json&source=12"}\NormalTok{)}
+\NormalTok{EdStatsResponse <-}\StringTok{ }\KeywordTok{content}\NormalTok{(EdStatsRequest, }\DataTypeTok{as =} \StringTok{"text"}\NormalTok{, }\DataTypeTok{encoding =} \StringTok{"UTF-8"}\NormalTok{)}
+
+\CommentTok{# Parse the JSON content and convert it to a data frame.}
+\NormalTok{EdStatsJSON <-}\StringTok{ }\NormalTok{jsonlite}\OperatorTok{::}\KeywordTok{fromJSON}\NormalTok{(EdStatsResponse, }\DataTypeTok{flatten =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{data.frame}\NormalTok{()}
+
+\NormalTok{aki<-}\StringTok{ }\KeywordTok{c}\NormalTok{(}
+        \StringTok{'Pupils below minimum reading proficiency at end of primary (%). Low GAML threshold'}\NormalTok{,}
+        \StringTok{'People using safely managed drinking water services (% of population)'}\NormalTok{,}
+        \StringTok{'Unemployment, total (% of total labor force) (national estimate)'}\NormalTok{ ,}
+        \StringTok{'Manufacturing, value added (% of GDP)'}\NormalTok{,}
+        \StringTok{'Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)'}\NormalTok{,}
+        \StringTok{'Level of water stress: freshwater withdrawal as a proportion of available freshwater resources'}\NormalTok{,}
+        \StringTok{'Renewable energy consumption (% of total final energy consumption)'}\NormalTok{,}
+        \StringTok{'Households and NPISHs Final consumption expenditure (current LCU)'}\NormalTok{,}
+        \StringTok{'Debt service (PPG and IMF only, % of exports of goods, services and primary income)'}\NormalTok{  )}
+
+\NormalTok{get_tag_aki_df<-wdisJSON }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{bind_rows}\NormalTok{(EdStatsJSON) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{((name }\OperatorTok{%in%}\StringTok{ }\NormalTok{aki )) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{factor}\NormalTok{(name, }\DataTypeTok{levels =}\NormalTok{ aki)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(id, name,  sourceOrganization) }
+
+\CommentTok{#get WDI metadata infor}
+\NormalTok{cache_list<-wbstats}\OperatorTok{::}\KeywordTok{wbcache}\NormalTok{()}
+\NormalTok{country_list <-}\StringTok{ }\NormalTok{wbstats}\OperatorTok{::}\KeywordTok{wbcountries}\NormalTok{()}
+
+\NormalTok{aki_list<-get_tag_aki_df[,}\StringTok{'id'}\NormalTok{]}
+
+\ControlFlowTok{for}\NormalTok{ (reference_year }\ControlFlowTok{in} \DecValTok{2016}\OperatorTok{:}\DecValTok{2019}\NormalTok{) \{}
+\NormalTok{  temp <-wbstats}\OperatorTok{::}\KeywordTok{wb}\NormalTok{(}\DataTypeTok{country=}\StringTok{"countries_only"}\NormalTok{, }
+              \DataTypeTok{indicator=}\NormalTok{aki_list,}
+              \DataTypeTok{startdate=}\NormalTok{reference_year}\DecValTok{-5}\NormalTok{,}
+              \DataTypeTok{enddate=}\NormalTok{reference_year,}
+              \DataTypeTok{return_wide =}\NormalTok{ T,}
+              \DataTypeTok{removeNA=}\OtherTok{FALSE}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{          }\KeywordTok{filter}\NormalTok{(((reference_year}\OperatorTok{-}\KeywordTok{as.numeric}\NormalTok{(date))}\OperatorTok{<=}\DecValTok{5}\NormalTok{) }\OperatorTok{&}\StringTok{ }\NormalTok{(reference_year}\OperatorTok{>=}\KeywordTok{as.numeric}\NormalTok{(date))) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#filter out years outside reference window of 3 years     }
+\StringTok{          }\KeywordTok{write_excel_csv}\NormalTok{(}\DataTypeTok{path =} \KeywordTok{paste}\NormalTok{(output_dir, }\StringTok{"/D3.AKI_data_pull_"}\NormalTok{,reference_year,}\StringTok{".csv"}\NormalTok{, }\DataTypeTok{sep=}\StringTok{""}\NormalTok{ )) }\OperatorTok{%>%}
+\StringTok{          }\KeywordTok{mutate_at}\NormalTok{(}\DataTypeTok{.vars=}\NormalTok{aki_list, }\OperatorTok{~}\KeywordTok{if_else}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(.),}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#create 0,1 variable for whether data point exists for country}
+\StringTok{          }\KeywordTok{group_by}\NormalTok{(iso3c, country) }\OperatorTok{%>%}
+\StringTok{          }\KeywordTok{summarise_all}\NormalTok{((}\OperatorTok{~}\NormalTok{(}\ControlFlowTok{if}\NormalTok{(}\KeywordTok{is.numeric}\NormalTok{(.)) }\KeywordTok{sum}\NormalTok{(., }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{) }\ControlFlowTok{else} \KeywordTok{first}\NormalTok{(.)))) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#group by country to create one observation per country                 containing whether or not data point existed}
+\StringTok{          }\KeywordTok{mutate_at}\NormalTok{(}\DataTypeTok{.vars=}\NormalTok{aki_list, }\OperatorTok{~}\KeywordTok{case_when}\NormalTok{(}
+\NormalTok{            .}\OperatorTok{>=}\DecValTok{3} \OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{,}
+\NormalTok{            .}\OperatorTok{==}\DecValTok{2} \OperatorTok{~}\StringTok{ }\FloatTok{0.6}\NormalTok{,}
+\NormalTok{            .}\OperatorTok{==}\DecValTok{1} \OperatorTok{~}\StringTok{ }\FloatTok{0.3}\NormalTok{,}
+\NormalTok{            .}\OperatorTok{==}\DecValTok{0} \OperatorTok{~}\StringTok{ }\DecValTok{0}\NormalTok{, }
+            \OtherTok{TRUE} \OperatorTok{~}\StringTok{ }\DecValTok{0}
+\NormalTok{          )) }\OperatorTok{%>%}\StringTok{ }\CommentTok{# 1 point for at least 3 values, 0.6 for 2 values, 0.3 for 1 values, 0 otherwise}
+\StringTok{          }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{date=}\NormalTok{reference_year) }\OperatorTok{%>%}
+\StringTok{          }\KeywordTok{ungroup}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{          }\KeywordTok{select}\NormalTok{(iso3c, country, date,  aki_list) }\OperatorTok{%>%}
+\StringTok{          }\KeywordTok{rename_at}\NormalTok{(aki_list, }\OperatorTok{~}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{'SPI.D3.'}\NormalTok{,.,}\DataTypeTok{sep=}\StringTok{""}\NormalTok{))) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#add 'D3.' as prefix before these indicators.}
+\StringTok{          }\KeywordTok{left_join}\NormalTok{(country_list) }\CommentTok{#attach country metadata}
+
+
+  \KeywordTok{assign}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"D3.AKI"}\NormalTok{,reference_year,}\DataTypeTok{sep=}\StringTok{"_"}\NormalTok{), temp)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{aki-3.1-poverty-headcount-ratio-at-1.90-a-day-2011-ppp-of-population}{%
+\subsubsection{AKI 3.1: Poverty headcount ratio at \$1.90 a day (2011
+PPP) (\% of
+population)}\label{aki-3.1-poverty-headcount-ratio-at-1.90-a-day-2011-ppp-of-population}}
+
+The data will be pulled from the WDI and combined with metadata from the
+Povcalnet
+
+Scoring is as follows: Quality (0.5 points total): 0.5 Point. Comparable
+data lasting at least two years within past 5 years\\
+0 Points. No comparable data within past 5 years
+
+Frequency (0.5 points total): 0.5 Point. 3 or more values available
+within past 5 years\\
+0.3 Points. 2 values available within past 5 years;\\
+0.15 Points. 1 values available within past 5 years;\\
+0 Points. None within past 5 years
+
+\hypertarget{aki-3.2-hunger}{%
+\subsubsection{AKI 3.2: Hunger}\label{aki-3.2-hunger}}
+
+We examine the Food Insecurity Experience Scale from the FAO
+(\url{http://www.fao.org/faostat/en/\#data/FS}). Data for food
+insecurity was pulled on May 1, 2020.
+
+Scoring 1 Point. 3 or more values available within past 5 years 0.6
+Points. 2 values available within past 5 years;\\
+0.3 Points. 1 values available within past 5 years;\\
+0 Points. None within past 5 years
+
+\hypertarget{aki-3.3-mortality-rate-under-5-per-1000-live-births}{%
+\subsubsection{AKI 3.3: Mortality rate, under-5 (per 1,000 live
+births)}\label{aki-3.3-mortality-rate-under-5-per-1000-live-births}}
+
+The data in WDI is modeled, based on HHS and Vital Registration. We use
+the following as a source for raw data produced by national statistical
+offices that is used in this modeling.
+
+\url{https://childmortality.org/data}
+
+Data was pulled on April 13, 2020.
+
+Countries are ranked by source quality (admin data \textgreater{} survey
+\textgreater{} no data) and frequency. Score on this indicator has a max
+of 1 point with 0.5 points for source quality and 0.5 points for
+frequency. Detailed scoring for source quality and frequency components
+are below.
+
+Quality (0.5 points total): 0.5 Point. Vital Registration data available
+within past 5 years\\
+0.25 Points. Survey Data availabe, but no Vital Registration data within
+past 5 years;\\
+0 Points. None within past 5 years
+
+Frequency (0.5 points total): 0.5 Point. 3 or more values available
+within past 5 years\\
+0.3 Points. 2 values available within past 5 years;\\
+0.15 Points. 1 values available within past 5 years;\\
+0 Points. None within past 5 years
+
+\hypertarget{aki-3.5-maternal-mortality-ratio}{%
+\subsubsection{AKI 3.5 Maternal Mortality
+Ratio}\label{aki-3.5-maternal-mortality-ratio}}
+
+The data is sourced from the the Inter-Agency Group (200 countries) to
+improve time and country coverages. Tne national estimates with the
+source information are available at
+\url{https://www.who.int/reproductivehealth/publications/maternal-mortality-2000-2017/en/}.
+The data was accessed on April 3, 2020. This data was used for modelling
+maternal mortality, which are then fed into the modelled estimates on
+Maternal Mortality (SH.STA.MMRT) in the WDI.
+
+For our purposes, we will use the raw data from the country surveys as
+our data for the availability of key indicators, since the modelled
+estimates are produced out of sample, and thus not reflective of a
+country's national statistical system.
+
+Countries are ranked by source quality (admin data \textgreater{} survey
+\textgreater{} no data) and frequency. Score on this indicator has a max
+of 1 point with 0.5 points for source quality and 0.5 points for
+frequency. Detailed scoring for source quality and frequency components
+are below.
+
+Quality (0.5 points total): 0.5 Point. Vital Registration data available
+within past 5 years\\
+0.25 Points. Survey Data or Census Data availabe, but no Vital
+Registration data within past 5 years;\\
+0 Points. None within past 5 years
+
+Frequency (0.5 points total): 0.5 Point. 3 or more values available
+within past 5 years\\
+0.3 Points. 2 values available within past 5 years;\\
+0.15 Points. 1 values available within past 5 years;\\
+0 Points. None within past 5 years
+
+\hypertarget{aki-3.7-access-to-electricity-of-population}{%
+\subsubsection{AKI 3.7: Access to electricity (\% of
+population)}\label{aki-3.7-access-to-electricity-of-population}}
+
+Access to Electricity (\% of population) has 99\% coverage in the WDI
+database making it less useful for distinguishing between countries. In
+order to improve the usefulness of this indicator, we are making use of
+data compiled by World Bank colleagues on surveys containing electricity
+items. According to the access to electricity metadata, around 42
+countries have no data and an imputed value is assigned based on the
+regional average. By going to survey source data, we address this issue
+of imputation, which gives a misleading picture of availability for our
+purposes. Below is the metadata from the WDI for methods for the access
+to electricity indicator.
+
+\begin{quote}
+Data for access to electricity are collected among different sources:
+mostly data from nationally representative household surveys (including
+national censuses) were used. Survey sources include Demographic and
+Health Surveys (DHS) and Living Standards Measurement Surveys (LSMS),
+Multi-Indicator Cluster Surveys (MICS), the World Health Survey (WHS),
+other nationally developed and implemented surveys, and various
+government agencies (for example, ministries of energy and utilities).
+Given the low frequency and the regional distribution of some surveys, a
+number of countries have gaps in available data. To develop the
+historical evolution and starting point of electrification rates, a
+simple modeling approach was adopted to fill in the missing data points
+- around 1990, around 2000, and around 2010. Therefore, a country can
+have a continuum of zero to three data points. There are 42 countries
+with zero data point and the weighted regional average was used as an
+estimate for electrification in each of the data periods. 170 countries
+have between one and three data points and missing data are estimated by
+using a model with region, country, and time variables. The model keeps
+the original observation if data is available for any of the time
+periods. This modeling approach allowed the estimation of
+electrification rates for 212 countries over these three time periods
+(Indicated as ``Estimate''). Notation ``Assumption'' refers to the
+assumption of universal access in countries classified as developed by
+the United Nations. Data begins from the year in which the first survey
+data is available for each country.
+\end{quote}
+
+Scoring 1 Point. 3 or more values available within past 5 years 0.6
+Points. 2 values available within past 5 years;\\
+0.3 Points. 1 values available within past 5 years;\\
+0 Points. None within past 5 years
+
+\hypertarget{aki-3.14-quarterly-gdp}{%
+\subsubsection{AKI 3.14 Quarterly GDP}\label{aki-3.14-quarterly-gdp}}
+
+Quarterly GDP numbers were pulled from the IMF website.
+
+After GDP by expenditure, quarterly GDP is probably the most important
+development to be made in a system of National Accounts, before the
+development of full sectoral accounts. IMF IFS has quarterly GDP from
+various sources, including governments and international agencies at
+\url{https://data.imf.org/?sk=4C514D48-B6BA-49ED-8AB9-52B0C1A0179B}
+
+Scoring 1 Point. 3 or more values available within past 5 years 0.6
+Points. 2 values available within past 5 years;\\
+0.3 Points. 1 values available within past 5 years;\\
+0 Points. None within past 5 years
+
+\hypertarget{aki-3.15-debt-service-ppg-and-imf-only-of-exports-of-goods-services-and-primary-income}{%
+\subsubsection{AKI 3.15 Debt service (PPG and IMF only, \% of exports of
+goods, services and primary
+income)}\label{aki-3.15-debt-service-ppg-and-imf-only-of-exports-of-goods-services-and-primary-income}}
+
+For this indicator, Debt service (PPG and IMF only, \% of exports of
+goods, services and primary income), we will pull data from the WDI but
+modify the scoring using the WDI metadata on whether the external debt
+data is actual, estimated, or preliminary. The status ``as reported
+(actual)'' indicates that the country was fully current in its reporting
+under the DRS and that World Bank staff are satisfied that the reported
+data give an adequate and fair representation of the country's total
+public debt. ``Preliminary'' data are based on reported or collected
+information, but because of incompleteness or other reasons, an element
+of staff estimation is included. ``Estimated'' data indicate that
+countries are not current in their reporting and that a significant
+element of staff estimation has been necessary for producing the data
+tables.
+
+Scoring is as follows:
+
+Frequency:
+
+0.5 Point. 3 or more values available within past 5 years\\
+0.3 Points. 2 values available within past 5 years;\\
+0.15 Points. 1 values available within past 5 years;\\
+0 Points. None within past 5 years
+
+Quality:
+
+0.5 Points. Actual value 0.3 Points. Preliminary value 0.15 Points.
+Estimated value 0 Points. No value
+
+\begin{verbatim}
+## [1] "SPI.D3.POV"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-3.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.FIES"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-4.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-5.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-6.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.CHLD.MORT"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-7.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-8.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-9.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.SE.LPV.PRIM.BMP"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-10.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-11.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-12.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.MMRT"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-13.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-14.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-15.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.SH.H2O.SMDW.ZS"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-16.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-17.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-18.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.ELEC"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-19.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-20.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-21.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.SL.UEM.TOTL.NE.ZS"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-22.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-23.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-24.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.NV.IND.MANF.ZS"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-25.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-26.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-27.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.SI.SPR.PC40.ZG"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-28.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-29.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-30.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.ER.H2O.FWST.ZS"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-31.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-32.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-33.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.EG.FEC.RNEW.ZS"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-34.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-35.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-36.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.NE.CON.PRVT.CN"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-37.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-38.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-39.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.QUART.GDP"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-40.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-41.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-42.pdf}
+
+\begin{verbatim}
+## [1] "SPI.D3.DT.TDS.DPPF.XP.ZS"
+\end{verbatim}
+
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-43.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-44.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aki_plots-45.pdf}
+
+\hypertarget{data-sources}{%
+\section{Data Sources}\label{data-sources}}
+
+Cleaning for the Data Sources Indicators. Data Sources (4 Indicators):\\
+- 4.1\_SOCS - Indicator 4.1: censuses and surveys\\
+- 4.2\_SOAD - Indicator 4.2: administrative data\\
+- 4.3\_SOGS - Indicator 4.3: geospatial data\\
+- 4.4\_SOPC - Indicator 4.4: private/citizen generated data
+
+\hypertarget{indicator-4.1-censuses-and-surveys}{%
+\subsection{Indicator 4.1: censuses and
+surveys}\label{indicator-4.1-censuses-and-surveys}}
+
+This indicator draws from data collected by the Statistical Performance
+Indicators team. The following censuses and surveys are considered:
+
+\begin{itemize}
+\tightlist
+\item
+  Population \& Housing census\\
+\item
+  Agriculture census\\
+\item
+  Business/establishment census\\
+\item
+  Household Survey on income/ consumption/ expenditure/ budget/
+  Integrated Survey\\
+\item
+  Agriculture survey\\
+\item
+  Labor Force Survey\\
+\item
+  Health/Demographic survey\\
+\item
+  Business/establishment survey
+\end{itemize}
+
+\includegraphics{01_data_prep_files/figure-latex/cs-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-3.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-4.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-5.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-6.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-7.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-8.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-9.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-10.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-11.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-12.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-13.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-14.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-15.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-16.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-17.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-18.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-19.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-20.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-21.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-22.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-23.pdf}
+\includegraphics{01_data_prep_files/figure-latex/cs-24.pdf}
+
+\hypertarget{indicator-4.2-administrative-data}{%
+\subsection{Indicator 4.2: administrative
+data}\label{indicator-4.2-administrative-data}}
+
+The following indicator checks whether administrative data is available
+for the following topic areas: Social Protection, Education, Population
+\& Health, and Labor
+
+\hypertarget{social-protection-admin-data}{%
+\subsubsection{Social Protection Admin
+Data}\label{social-protection-admin-data}}
+
+\begin{itemize}
+\tightlist
+\item
+  Atlas of Social Protection Indicators of Resilience and Equity
+  (ASPIRE) is compilation of Social Protection and Labor (SPL)
+  indicators to analyze scope and performance of SPL programs.\\
+\item
+  ASPIRE has indicators for 136 countries on:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Social assistance\\
+  \item
+    Social insurance\\
+  \item
+    Labor market programs
+  \end{itemize}
+\item
+  Based on both program-level administrative data and national household
+  survey data\\
+\item
+  Data extends from 2001 to 2018
+\end{itemize}
+
+\includegraphics{01_data_prep_files/figure-latex/aspire-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aspire-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/aspire-3.pdf}
+
+\hypertarget{education-admin-data}{%
+\subsubsection{Education Admin Data}\label{education-admin-data}}
+
+\begin{itemize}
+\item
+  UNESCO UIS has shared a database containing data we can use on
+  administrative data systems\\
+\item
+  Two areas:
+
+  \begin{itemize}
+  \item
+    Data tracking SDG 4.1.2 Administration of a
+    nationally-representative learning assessment (a) in Grade 2 or 3;
+    (b) at the end of primary education; and (c) at the end of lower
+    secondary education
+  \item
+    Data tracking whether countries produce the following from
+    administrative data sources:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Out-of-school rate by school age and sex\\
+    \item
+      4.2.2 Participation rate in organized learning (one year before
+      the official primary entry age), by sex
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\includegraphics{01_data_prep_files/figure-latex/uis-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/uis-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/uis-3.pdf}
+
+\hypertarget{population-health-admin-data}{%
+\subsubsection{Population \& Health Admin
+Data}\label{population-health-admin-data}}
+
+\begin{itemize}
+\tightlist
+\item
+  This indicator is formed using World Bank metadata on whether the
+  Civil Registration and Vital Statistics (CRVS) system is complete in
+  the country.
+\end{itemize}
+
+Civil registration is the act of recording and documenting of vital
+events in a person's life (including birth, marriage, divorce, adoption,
+and death and cause of death) and is a fundamental function of national
+governments. Birth registration establishes an individual's legal
+identity at birth. A legal identity, name, nationality, and proof of
+age, are important human rights. They enable individuals to be included
+in various government, social and private services, and include the
+right to vote, etc. Vital statistics are compiled using civil
+registration information on these vital events. The availability of
+reliable and up-to-date vital statistics depends on the level of
+development of civil registration programs. An effective civil
+registration and vital statistics (CRVS) system is critical for planning
+and monitoring programs across several sectors.
+
+By complete, that is representing 90 per cent or more of the events
+occurring in the specified year.
+
+Source: World Bank WDI Metadata.
+
+\includegraphics{01_data_prep_files/figure-latex/crvs-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/crvs-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/crvs-3.pdf}
+
+\hypertarget{labor-admin-data}{%
+\subsubsection{Labor Admin Data}\label{labor-admin-data}}
+
+\begin{itemize}
+\item
+  ILO shared database containing all administrative data sources used to
+  produce ILO statistics (ILOSTAT)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    May not be comprehensive of all administrative datasets available in
+    a country\\
+  \item
+    But gives some indication of whether labor statistics produced using
+    Admin data
+  \end{itemize}
+\item
+  Database contains the following admin sources:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Insurance records\\
+  \item
+    Labour inspectorate records\\
+  \item
+    Records of employers' organizations\\
+  \item
+    Employment office records
+  \item
+    Records of workers' organizations
+  \item
+    Other administrative records and related sources
+  \end{itemize}
+\item
+  Database extends from 2010 to 2019 and covers 177 countries
+\end{itemize}
+
+\includegraphics{01_data_prep_files/figure-latex/ilo-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/ilo-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/ilo-3.pdf}
+
+\hypertarget{indicator-4.3-geospatial-data}{%
+\subsection{Indicator 4.3: geospatial
+data}\label{indicator-4.3-geospatial-data}}
+
+New indicator based on references to geospatial data in metadata
+relating to content on NSO website
+
+\hypertarget{source-1}{%
+\subsubsection{Source}\label{source-1}}
+
+Our source for this indicator is Open Data Watch. From Open Data watch:
+
+\begin{quote}
+The Open Data Inventory (ODIN) assesses the coverage and openness of
+official statistics to help identify gaps, promote open data policies,
+improve access, and encourage dialogue between national statistical
+offices (NSOs) and data users. ODIN 2018/19 includes 178 countries,
+including most all OECD countries. Two-year comparisons are for all
+countries with two years of data between 2015-2017. Scores can be
+compared across topics and countries.
+\end{quote}
+
+We use their indicator on whether indicators are available at the first
+or second administrative level. To identify the first administrative
+levels, ODIN largely draws on the ISO 3166-2 standard. In many
+countries, first administrative levels refer to governorates, regions,
+or province. No official list exists for the second administrative level
+classifications. If geographical disaggregation exists that does not
+qualify as first administrative level, assume that the data are
+disaggregated to the second administrative level as long as the
+classification appears to be a further divisions of the first
+administrative level.
+
+Scoring for the ODIN indicators for geospatial information is below:
+
+\begin{itemize}
+\tightlist
+\item
+  1 point if all published data in a data category are available at
+  first/second administrative level.\\
+\item
+  0.5 points if some published data in a data category are available at
+  first/second administrative level.\\
+\item
+  0 points if no data are available at this level
+\end{itemize}
+
+There are 21 data categories.
+
+Social Statistics\\
+1. Population and Vital Statistics\\
+2. Education Facilities\\
+3. Education Outcomes\\
+4. Health Facilities\\
+5. Health Outcomes\\
+6. Reproductive Health\\
+7. Gender Statistics\\
+8. Crime and Justice Statistics\\
+9. Poverty Statistics
+
+Economic Statistics\\
+10. National Accounts\\
+11. Labor Statistics\\
+12. Price Indexes\\
+13. Government Finance\\
+14. Money and Banking\\
+15. International Trade\\
+16. Balance of Payments
+
+Environmental Statistics\\
+17. Land Use\\
+18. Resource Use\\
+19. Energy Use\\
+20. Pollution\\
+21. Built Environment
+
+For the first administrative unit: Money \& Banking, International
+Trade, and Balance of Payments are not scored for this element. For
+various indicators, lenient interpretations are used for first
+administrative divisions.
+
+For the second administrative unit: Money \& Banking, International
+Trade, Balance of Payments, National Accounts, Government Finance
+,Pollution, Energy Use, Price Indexes, and Resource Use are not scored
+for this element. For various indicators within categories, second
+administrative level data is not required as well.
+
+In the scores we present below, we show a score between 0 and 1 with a
+maximum score of 1, which would mean the country has geo data in full
+for 100\% of elements. A score of 0 indicates no data at all for any
+elements.
+
+More details on the geographic disaggregation considerations can be
+found in their technical manual:
+
+\url{https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit}
+
+\includegraphics{01_data_prep_files/figure-latex/geo_plots-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/geo_plots-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/geo_plots-3.pdf}
+\includegraphics{01_data_prep_files/figure-latex/geo_plots-4.pdf}
+\includegraphics{01_data_prep_files/figure-latex/geo_plots-5.pdf}
+\includegraphics{01_data_prep_files/figure-latex/geo_plots-6.pdf}
+
+\hypertarget{indicator-4.4-privatecitizen-generated-data}{%
+\subsection{Indicator 4.4: private/citizen generated
+data}\label{indicator-4.4-privatecitizen-generated-data}}
+
+New indicator based on references to private/citizen generated data in
+metadata relating to content on NSO website.
+
+\hypertarget{covid-mobility-data-availability}{%
+\subsubsection{Covid Mobility Data
+Availability}\label{covid-mobility-data-availability}}
+
+We have seen an increased use of private/citizen generated data during
+the COVID-19 pandemic. One way in which it has been used is for tracking
+mobility of citizens to understand the social distancing measures
+citizens are taking. As a measure of private/citizen generated data we
+make use of Apple and Google Mobility tracking data made publicly
+available during the pandemic.
+
+Source:
+
+Google LLC ``Google COVID-19 Community Mobility Reports''.
+\url{https://www.google.com/covid19/mobility/} Accessed: 2020-07-23.
+
+Apple ``Mobility Trends Reports''.
+\url{https://www.apple.com/covid19/mobility/} Accessed: 2020-07-23.
+
+\includegraphics{01_data_prep_files/figure-latex/4.4_SOPC-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/4.4_SOPC-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/4.4_SOPC-3.pdf}
+\includegraphics{01_data_prep_files/figure-latex/4.4_SOPC-4.pdf}
+\includegraphics{01_data_prep_files/figure-latex/4.4_SOPC-5.pdf}
+\includegraphics{01_data_prep_files/figure-latex/4.4_SOPC-6.pdf}
+
+\hypertarget{data-infrastructure}{%
+\section{Data Infrastructure}\label{data-infrastructure}}
+
+Data Infrastructure (5 Indicators):\\
+- 5.1\_DILG - Indicator 5.1: legislation and governance\\
+- 5.2\_DISM - Indicator 5.2: standards\\
+- 5.3\_DISK - Indicator 5.3: skills\\
+- 5.4\_DIPN - Indicator 5.4: partnerships\\
+- 5.5\_DIFI - Indicator 5.5: finance
+
+\hypertarget{indicator-5.1-legislation-and-governance}{%
+\subsection{Indicator 5.1: legislation and
+governance}\label{indicator-5.1-legislation-and-governance}}
+
+New indicator based on PARIS21 indicators on SDG 17.18.2 (national
+statistical legislation compliance with UN Fundamental Principles of
+Official Statistics), existence of National Statistical Council,
+national statistical strategy generation, national statistical plan.
+Also include some other legislative aspects that foster good use of
+statistics eg freedom of information, privacy/transparency, good
+governance (eg free and fair elections).
+
+This indicator measures whether the national statistical legislation
+complies with United Nations Fundamental Principles of Statistics (SDG
+17.18.2)
+
+Scores is 1 if the country has a national statistical legislation
+compliant with United Nations Fundamental Principles of Statistics.
+
+The source is Paris 21. Data accessed on August 6, 2020 from
+\url{https://statisticalcapacitymonitor.org/indicator/135}
+
+\includegraphics{01_data_prep_files/figure-latex/legislation_governance-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/legislation_governance-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/legislation_governance-3.pdf}
+\#\# Indicator 5.2: standards
+
+\hypertarget{system-of-national-accounts-in-use}{%
+\subsubsection{5.2.1 System of National Accounts in
+use}\label{system-of-national-accounts-in-use}}
+
+The national accounts data are compiled using the concepts, definitions,
+framework, and methodology of the System of National Account 2008
+(SNA2008) or European System of National and Regional Accounts (ESA
+2010). The manual has evolved to meet the changing economic structure,
+to follow systematic accounting and ensure international compatibility.
+
+Scoring: 1 point for using SNA2008 or ESA 2010, 0.5 points for using SNA
+1993 or ESA 1995, 0 points otherwise
+
+\hypertarget{national-accounts-base-year}{%
+\subsubsection{5.2.2 National Accounts base
+year}\label{national-accounts-base-year}}
+
+National accounts base year is the year used as the base period for
+constant price calculations in the country's national accounts. It is
+recommended that the base year of constant price estimates be changed
+periodically to reflect changes in economic structure and relative
+prices.
+
+1 point for chained price, 0.5 for reference period within past 10
+years, 0 points otherwise.
+
+\hypertarget{classification-of-national-industry}{%
+\subsubsection{5.2.3 Classification of national
+industry}\label{classification-of-national-industry}}
+
+The industrial production data are compiled using the International
+Standard Industrial Classification of All Economic Activities (ISIC)
+Rev.4 and Statistical Classification of Economic Activities in the
+European Community (NACE) Rev.2. ISIC Rev.4 is a standard classification
+of economic activities arranged so that entities can be classified per
+the activity they carry out using criteria such as input, output and use
+of the products produced, more emphasis has been given to the character
+of the production process in defining and delineating ISIC classes for
+international comparability. The manual and classification have changed
+to cover the complete scope of industrial production, employment, and
+GDP and other statistical areas.
+
+1 Point. Latest version is adopted (ISIC Rev 4, NACE Rev 2 or a
+compatible classification)
+
+0.5 Points. Previous version is used (ISIC Rev 3, NACE Rev 1 or a
+compatible classification)
+
+0 Points. Otherwise
+
+\hypertarget{cpi-base-year}{%
+\subsubsection{5.2.4 CPI base year}\label{cpi-base-year}}
+
+Consumer Price Index serves as indicators of inflation and reflects
+changes in the cost of acquiring a fixed basket of goods and services by
+the average consumer.\\
+Weights are usually derived from consumer expenditure surveys and the
+CPI base year refers to the year the weights were derived. It is
+recommended that the base year be changed periodically to reflect
+changes in expenditure structure.
+
+1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0
+points. Otherwise
+
+\hypertarget{classification-of-household-consumption}{%
+\subsubsection{5.2.5 Classification of household
+consumption}\label{classification-of-household-consumption}}
+
+Classification of Individual Consumption According to Purpose (COICOP)
+is used in household budget surveys, consumer price indices and
+international comparisons of gross domestic product (GDP) and its
+component expenditures.\\
+Although COICOP is not strictly linked to any particular model of
+consumer behavior, the classification is designed to broadly reflect
+differences in income elasticities. It is an integral part of the
+SNA1993 and more detailed subdivision of the classes provide
+comparability between countries and between statistics in these
+different areas.
+
+1 Point. Follow Classification of Individual Consumption by Purpose
+(COICOP) 0 Points. Otherwise
+
+\hypertarget{classification-of-status-of-employment}{%
+\subsubsection{5.2.6 Classification of status of
+employment}\label{classification-of-status-of-employment}}
+
+Classification of status of employment refers to employment data that
+are compiled using the current international standard International
+Classification of Status in Employment (ISCE-93). It classifies jobs
+with respect to the type of explicit or implicit contract of employment
+between the job holder and the economic unit in which he or she is
+employed. Therefore, it aims to provide the basis for production of
+internationally comparable statistics on the employment relationship,
+including the distinction between salaried employment and
+self-employment.
+
+1 Point. Follow International Labour Organization, International
+Classification of Status in Employment (ICSE-93) or 2012 North American
+Industry Classification System (NAICS). 0 Points Otherwise.
+
+\hypertarget{central-government-accounting-status}{%
+\subsubsection{5.2.7 Central government accounting
+status}\label{central-government-accounting-status}}
+
+Government finance accounting status refers to the accounting basis for
+reporting central government financial data. For many countries'
+government finance data, have been consolidated into one set of accounts
+capturing all the central government's fiscal activities and following
+noncash recording basis.\\
+Budgetary central government accounts do not necessarily include all
+central government units, the picture they provide of central government
+activities is usually incomplete.
+
+1 Point. Consolidated central government accounting follows noncash
+recording basis\\
+0.5 Points. Consolidated central government accounting follows cash
+recording basis\\
+0 Points. Otherwise
+
+\hypertarget{compilation-of-government-finance-statistics}{%
+\subsubsection{5.2.8 Compilation of government finance
+statistics}\label{compilation-of-government-finance-statistics}}
+
+(GFSM) in use for compiling the data. It provides guidelines on the
+institutional structure of governments and the presentation of fiscal
+data in a format similar to business accounting with a balance sheet and
+income statement plus guidelines on the treatment of exchange rate and
+other valuation adjustments. The latest manual GFSM2014 is harmonized
+with the SNA2008.
+
+1 Point. Follow the latest Government Finance Statistical Manual (2014)/
+ESA2010\\
+0.5 Points. Previous version is used (GFSM 2001)\\
+0 Points. Otherwise
+
+\hypertarget{compilation-of-monetary-and-financial-statistics}{%
+\subsubsection{5.2.9 Compilation of monetary and financial
+statistics}\label{compilation-of-monetary-and-financial-statistics}}
+
+Compilation of monetary and financial statistics refers to the Monetary
+and Financial Statistics Manual (MFSM) in use. It covers concepts,
+definitions, classifications of financial instruments and sectors, and
+accounting rules, and provides a comprehensive analytic framework for
+monetary and financial planning and policy determination. The Monetary
+and Finance Statistics: Compilation Guide (2008) provides detailed
+guidelines for the compilation of monetary and financial statistics in
+addition to MFSM.
+
+1 Point. Follow the latest Monetary and Finance Statistics Manual (2000)
+or Monetary and Finance Statistics: Compilation Guide (2008/2016) 0
+Points. Otherwise
+
+\hypertarget{business-process}{%
+\subsubsection{5.2.10 Business process}\label{business-process}}
+
+The Generic Statistical Business Process Model (GSBPM) aims to describe
+statistics production in a general and process-oriented way. It is used
+both within and between statistical offices as a common basis for work
+with statistics production in different ways, such as quality,
+efficiency, standardization, and process-orientation. It is used for all
+types of surveys, and ``business'' is not related to ``business
+statistics'' but refers to the statistical office, simply expressed.
+
+1 Point. GSBPM is in use 0 Points. Otherwise
+
+\hypertarget{create-overall-indicator}{%
+\subsubsection{Create Overall
+Indicator}\label{create-overall-indicator}}
+
+\includegraphics{01_data_prep_files/figure-latex/msc-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-3.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-4.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-5.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-6.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-7.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-8.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-9.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-10.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-11.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-12.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-13.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-14.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-15.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-16.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-17.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-18.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-19.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-20.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-21.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-22.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-23.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-24.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-25.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-26.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-27.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-28.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-29.pdf}
+\includegraphics{01_data_prep_files/figure-latex/msc-30.pdf}
+
+\hypertarget{indicator-5.3-skills}{%
+\subsection{Indicator 5.3: skills}\label{indicator-5.3-skills}}
+
+This indicator assesses the systematic use of statistical knowledge with
+statistical terms and indicators in national policy documents. It is a
+composite indicator consisting of 4 sub-indices that aim to reflect the
+relevance of statistical evidence. It comprises four main dimensions: i)
+Basic consideration; ii) Diagnosis and quantification; iii) Statistical
+Analysis; iv) Disaggregation.
+
+Score ranges from 0 to 100. The score is the weighted sum of each of the
+four components' scores, whose relative weight is reported in brackets:
+i) Basic Consideration (25\%); ii) Diagnosis and quantification (24\%);
+iii) Statistical Analysis (22\%); iv) Disaggregation (29\%).
+
+The source is Paris 21. Data accessed on August 6, 2020 from
+\url{https://statisticalcapacitymonitor.org/indicator/127}
+
+\includegraphics{01_data_prep_files/figure-latex/skill-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/skill-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/skill-3.pdf}
+
+\hypertarget{indicator-5.4-partnerships}{%
+\subsection{Indicator 5.4:
+partnerships}\label{indicator-5.4-partnerships}}
+
+No data is available for this indicator at this point.
+
+\hypertarget{indicator-5.5-finance}{%
+\subsection{Indicator 5.5: finance}\label{indicator-5.5-finance}}
+
+Indicator based on PARIS21 SDG indicators (SDG 17.18.3 (national
+statistical plan that is fully funded and under implementation) and SDG
+17.19.1 (value of resources made available to strengthen statistical
+capacity)). Could also incorporate indicator of NSO budget as a
+percentage of GDP.
+
+Source of this data is Paris21. Downloaded on August 6,2020 from
+\url{https://statisticalcapacitymonitor.org/indicator/138/}
+
+\includegraphics{01_data_prep_files/figure-latex/finance-1.pdf}
+\includegraphics{01_data_prep_files/figure-latex/finance-2.pdf}
+\includegraphics{01_data_prep_files/figure-latex/finance-3.pdf}
+
+\end{document}
