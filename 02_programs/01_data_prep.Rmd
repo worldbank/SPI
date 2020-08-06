@@ -1,12 +1,12 @@
 ---
-title: "Data Preparation and Cleaning"
+title: "Technical Documentation on Data Sources and Methods for Statistical Performance Indicators"
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: yes
   html_document:
     toc: yes
+  pdf_document:
+    toc: yes    
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +21,7 @@ library(Hmisc)
 library(httr)
 library(patchwork)
 library(ggrepel)
-
+library(lubridate)
 #set directories
 dir <- here()
 
@@ -154,6 +154,21 @@ spi_mapper  <- function(data, indicator, title) {
 
 In this program, I will clean and reshape the raw data files in the 01_rawdata folder in order to produce the Statistical Performance Indicators.
 
+Below is an overview of the SPI framework.
+
+![unchanged image](SPI_dashboard.png)
+
+
+# Key Discussion Points
+
+Here are a few concerns that I have at the moment, but this is by no means an exhaustive list.  Overall, there are some indicators with issues in terms of coverage across countries.  There are also differences in the length of the time series for each indicator.  Here is a detailed breakdown by indicator.
+
+1. Dimension 1 needs more work adding source documents, NSO social media accounts.  It also needs work refining scoring methodology.  This should be discussed as a team.   
+2. Dimension 2 has no information for the Advisory/Analytical Services dimension.
+3. Dimension 3 is based on the 15 AKI indicators we defined for the original SPI. This needs to be discussed, as John had proposed going to NSO sites and collecting SDG indicator information. I abandoned this approach, because there is no straightforward way of scraping this info.  To discuss as a team.   
+4. Dimension 4 needs more work and refinement particularly on the Private/Citizen generated data section.   
+5. Dimension 5 also needs work with having a complete set of data for all countries.  There are major coverage gaps for all indicators, except for the Standards dimension which comes from the SPI team.
+
 # Data Use 
 
 Cleaning for Data Use Indicators.  Data Use (5 Indicators):  
@@ -171,10 +186,209 @@ Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Developme
 
 Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using national development plans and poverty reduction plans as a source.
 
+Our main source for this is the FAOLEX database of legislation and policy documents maintained by the FAO.
+
+```{r faolex, include=FALSE}
+
+
+load(paste(raw_dir,"/1.2_DUNE/documentInfoNew Agri.Rdata", sep=""))
+
+#rename dataframe with document info
+documentInfo <- documentInfoNew
+
+#merge with WB compatible country codes
+ccodes <- read_csv(file=paste(raw_dir,"/1.2_DUNE/FAOSTAT_data_5-1-2020_country_codes.csv", sep="")) %>%
+  as_tibble(.name_repair='universal') %>%
+  mutate(iso3c=ISO3.Code) %>%
+  select(Country, iso3c) %>%
+  group_by(Country, iso3c) %>%
+  summarise_all(~first(.))
+
+documentInfo <- documentInfo %>%
+  mutate(Country = case_when(
+    Country=="Venezuela, Boliv. Rep. of" ~ "Venezuela (Bolivarian Republic of)",
+    Country=="Lao, People's Dem. Rep." ~ "Lao People's Democratic Republic",
+    Country=="China" ~ "China, mainland",
+    Country=="Moldova, Republic of" ~ "Republic of Moldova",
+    Country=="Tanzania, Un. Rep. of" ~ "United Republic of Tanzania",
+    Country=="Czech Republic" ~ "Czechia",
+    Country=="CÃ´te d'Ivoire" ~ "Côte d'Ivoire",
+    Country=="Iran, Islamic Republic of" ~ "Iran (Islamic Republic of)",
+    Country=="Micronesia, Fed. States" ~ "Micronesia (Federated States of)",
+    Country=="Palestinian Authority"  ~ "Palestine",
+    Country=="Congo, Dem. Rep. of"  ~ "Democratic Republic of the Congo",
+    Country=="Korea, Dem. People's Rep." ~ "Democratic People's Republic of Korea",
+    Country=="Korea, Republic of"  ~ "Republic of Korea",
+    TRUE ~ Country
+  )) %>% # fix some broken country names
+  left_join(ccodes) %>%
+  select(-Country)
+  
+
+
+documentInfo <- documentInfo %>%
+  left_join(country_metadata) %>%
+  select(colnames(country_metadata), everything())
+
+#do some basic cleaning
+documentInfo <- documentInfo %>%
+  mutate(Language.of.document=str_to_lower(Language.of.document),
+         Type.of.text=str_to_lower(Type.of.text),
+         Main.area=str_to_lower(Main.area),
+         Language.of.document=str_replace_all(Language.of.document,'[[:punct:]]',''),
+         Type.of.text=str_replace_all(Type.of.text,'[[:punct:]]',''),
+         Main.area=str_replace_all(Main.area,'[[:punct:]]',''))
+
+#keep just national policy and poverty reduction documents
+documentInfo <- documentInfo %>%
+  filter(grepl("national development", Main.area))
+
+#just keep english, french, and spanish documents for now
+documentInfo <- documentInfo %>%
+  filter(grepl("english|french|spanish|arabic|russian|portuguese|swedish", Language.of.document)) %>%
+  filter(!is.na(Language.of.document))
+
+# keep just since 2010
+documentInfo <- documentInfo %>%
+  filter(year>=2010)
+
+
+
+```
+```{r faolex_map, echo=FALSE, message=FALSE, warning=FALSE}
+
+# load data
+#Now map the result
+quality = "high"
+maps <- wbgmaps::wbgmaps[[quality]]
+
+
+  
+  faolex_map <- documentInfo %>%
+    group_by( country) %>%
+    summarise(across(everything(),first)) %>%
+    mutate(data_available=TRUE) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), FALSE, data_available)) 
+  
+  
+   ggplot() +
+    geom_map(data = faolex_map, aes(map_id = iso3c, fill = data_available), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+     geom_path(data = maps$boundaries,
+               aes(long, lat, group = group),
+               color = "white",
+               size = 0.1,
+               lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_brewer(
+      name='Data Available',
+      palette='Paired',
+      na.value='blue'
+    ) +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap('Availability of National Development Plan or Poverty Reduction Plan Documents by Country since 2010 from FAOLEX',150),
+      caption = 'Source: FAOLEX'
+    )
+
+
+
+
+
+```
 
 ## Indicator 1.3: Data use by civil society     
 
 Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using main social media platform in use in country as source.
+
+We are pulling data from Twitter at this point. We have only accessed a handful of accounts from NSOs, but this could be quickly scaled up.
+
+
+```{r api_plots, echo=FALSE, message=FALSE, warning=FALSE}
+
+if (exists('nso_tweets_df')) {
+  rm('nso_tweets_df')
+}
+
+load(paste(raw_dir, "/1.3_DUCS/twitter_pull_df.RData", sep=""))
+
+# dataframe by year and month
+nso_tweets_sum <- nso_tweets_df %>%
+  mutate(date=floor_date(as_date(time_stamp), "month")) %>%
+  group_by(country, iso3c, date) %>%
+  summarise(freq=n()) %>%
+  ungroup() %>%
+  # complete(country, date = full_seq(date, period = 1), fill = list(freq = 0)) %>%
+  filter(!is.na(country))
+
+####################################
+#Some summary stats and descriptive
+####################################
+
+#Years
+ggplot(data=nso_tweets_sum, aes(x=date, y=freq, group=country, color=country)) +
+  geom_point() +
+  geom_path() +
+  theme_bw() + 
+  labs(y='Number of Tweets') +
+  facet_wrap(~country, scales = "free_y") +
+  ggtitle(str_wrap("Counts of the Number of Tweets by NSO in Date",55))
+
+
+
+```
+
+```{r twitter_map, echo=FALSE, message=FALSE, warning=FALSE}
+
+# load data
+#Now map the result
+quality = "high"
+maps <- wbgmaps::wbgmaps[[quality]]
+
+country_metadata <- wbstats::wbcountries()
+  
+  twitter_map <- nso_tweets_sum %>%
+    group_by( country) %>%
+    summarise(across(everything(),first)) %>%
+    mutate(data_available=TRUE) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), FALSE, data_available)) 
+  
+  
+   ggplot() +
+    geom_map(data = twitter_map, aes(map_id = iso3c, fill = data_available), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+     geom_path(data = maps$boundaries,
+               aes(long, lat, group = group),
+               color = "white",
+               size = 0.1,
+               lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_brewer(
+      name='Data Available',
+      palette='Paired',
+      na.value='blue'
+    ) +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap('Availability of Twitter Account by Country since 2010',150),
+      caption = 'Source: Twitter'
+    )
+
+
+
+
+
+```
 
 ## Indicator 1.4: Data use by academia  
 
@@ -333,7 +547,46 @@ spi_df <- spi_df %>%
 
 
 ```{r ihsn_plots, echo=FALSE}
+# #Do some basic plots
+g1 <- study_df_ihsn %>%
+    mutate(total=n()) %>%
+    group_by(topic) %>%
+    summarise(Percentage=100*n()/total,
+           Label = paste(round(Percentage,0),'%', sep="")) %>%
+    ggplot(aes(x=Percentage, y=topic, fill=topic)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label), nudge_x = 1) +
+      expand_limits(x=c(0,25)) +
+      labs(
+      title=str_wrap('Percentage of IHSN Surveys by Topic Across All Countries',100),
+      caption = 'Source: IHSN'
+      ) +
+      theme_bw() +
+      theme(
+        legend.position = 'none'
+      )
 
+g2 <- study_df_ihsn %>%
+    mutate(total= sum(total_downloads)) %>%
+    group_by(topic) %>%
+    summarise(share_downloads=100*sum(total_downloads)/total,
+           Label = paste(round(share_downloads,0),'%', sep="")) %>%
+    ggplot(aes(x=share_downloads, y=topic, fill=topic)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label), nudge_x = 2) +
+      expand_limits(x=c(0,50)) +
+      labs(
+      title=str_wrap('Share of Total Downloads of IHSN Surveys by Topic Across All Countries',100),
+      caption = 'Source: IHSN'
+      ) +
+      xlab( 'Share of Total Downloads') +
+      theme_bw() +
+      theme(
+        legend.position = 'none'
+      )
+
+print(g1)
+print(g2)
 
 #do the plots  
    ggplot() +
@@ -400,46 +653,7 @@ spi_df <- spi_df %>%
       theme_bw()   
 
 # 
-# #Do some basic plots
-# g1 <- study_df_ihsn %>%
-#     mutate(total=n()) %>%
-#     group_by(topic) %>%
-#     summarise(Percentage=100*n()/total,
-#            Label = paste(round(Percentage,0),'%', sep="")) %>%
-#     ggplot(aes(x=Percentage, y=topic, fill=topic)) +
-#       geom_bar(stat="identity",position='dodge') +
-#       geom_text(aes(label=Label), nudge_x = 1) +
-#       expand_limits(x=c(0,25)) +
-#       labs(
-#       title=str_wrap('Percentage of IHSN Surveys by Topic Across All Countries',100),
-#       caption = 'Source: IHSN'
-#       ) +
-#       theme_bw() +
-#       theme(
-#         legend.position = 'none'
-#       ) 
-# 
-# g2 <- study_df_ihsn %>%
-#     mutate(total= sum(total_downloads)) %>%
-#     group_by(topic) %>%
-#     summarise(share_downloads=100*sum(total_downloads)/total,
-#            Label = paste(round(share_downloads,0),'%', sep="")) %>%
-#     ggplot(aes(x=share_downloads, y=topic, fill=topic)) +
-#       geom_bar(stat="identity",position='dodge') +
-#       geom_text(aes(label=Label), nudge_x = 2) +
-#       expand_limits(x=c(0,50)) +
-#       labs(
-#       title=str_wrap('Share of Total Downloads of IHSN Surveys by Topic Across All Countries',100),
-#       caption = 'Source: IHSN'
-#       ) +
-#       xlab( 'Share of Total Downloads') +
-#       theme_bw() +
-#       theme(
-#         legend.position = 'none'
-#       ) 
-# 
-# print(g1)
-# print(g2)
+
 
 ```
 
@@ -734,7 +948,7 @@ Cleaning for Data Products Indicators.  Data Products (4 Indicators):
 
 Below is the list of AKI indicators:
 
-Indicator 3.1: social statistics  
+## Indicator 3.1: social statistics  
 - AKI 3.1: Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)  
 - AKI 3.2: Food Insecurity Experience Scale 
 - AKI 3.3: Mortality rate, under-5 (per 1,000 live births)  
@@ -742,19 +956,19 @@ Indicator 3.1: social statistics
 - AKI 3.5: Maternal Mortality
 - AKI 3.6: People using safely managed drinking water services (% of population)  
 
-Indicator 3.2: economic statistics 
+## Indicator 3.2: economic statistics 
 - AKI 3.7: Access to electricity (% of population)  
 - AKI 3.8: Unemployment, total (% of total labor force)  
 - AKI 3.9: Manufacturing, value added (% of GDP)  
 - AKI 3.10: Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)  
 - AKI 3.14: Quarterly GDP
 
-Indicator 3.3 environmental statistics     
+## Indicator 3.3 environmental statistics     
 - AKI 3.11: Level of water stress: freshwater withdrawal as a proportion of available freshwater resources  
 - AKI 3.12: Renewable energy consumption (% of total final energy consumption)  
 - AKI 3.13: Households and NPISHs Final consumption expenditure (current LCU) 
 
-Indicator 3.4: institutional statistics 
+## Indicator 3.4: institutional statistics 
 - AKI 3.15: Debt service (PPG and IMF only, % of exports of goods, services and primary income) 
 
 ```{r metadata_pull}
@@ -2053,12 +2267,12 @@ The source is Paris 21.  Data accessed on August 6, 2020 from https://statistica
 ```{r legislation_governance}
 
 #read in csv file.
-D5.3_DISK <- read_csv(file = paste(raw_dir, "5.3_DISK","5.3_DISK.csv", sep="/" )) %>%
+D5.1_DILG <- read_csv(file = paste(raw_dir, "5.1_DILG","5.1_DILG.csv", sep="/" )) %>%
   as_tibble(.name_repair = 'universal') %>%
   transmute(
     country=Country,
     date=Year,
-    SPI.D5.3.skill=Data.Value
+    SPI.D5.1.LEGGOV=Data.Value
   ) %>%
     mutate(country=case_when(
     country=="Bahamas" ~ "Bahamas, The",                  
@@ -2091,13 +2305,13 @@ D5.3_DISK <- read_csv(file = paste(raw_dir, "5.3_DISK","5.3_DISK.csv", sep="/" )
     country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
     TRUE ~ country
   )) %>%
-  mutate(SPI.D5.3.skill=if_else(SPI.D5.3.skill=='no data',as.character(NA), SPI.D5.3.skill)) 
+  mutate(SPI.D5.1.LEGGOV=if_else(SPI.D5.1.LEGGOV=='no data',as.character(NA), SPI.D5.1.LEGGOV)) 
 
 
-D5.3_DISK_map <- D5.3_DISK %>%
-  filter(!is.na(SPI.D5.3.skill))
+D5.1_DILG_map <- D5.1_DILG %>%
+  filter(!is.na(SPI.D5.1.LEGGOV))
 
-spi_mapper('D5.3_DISK_map', 'SPI.D5.3.skill', 'Systematic use of statistical knowledge with statistical terms and indicators in national policy documents. Source: Paris21')
+spi_mapper('D5.1_DILG_map', 'SPI.D5.1.LEGGOV', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
 
 ```
 ## Indicator 5.2: standards 
