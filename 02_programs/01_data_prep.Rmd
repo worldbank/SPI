@@ -2,13 +2,15 @@
 title: "Data Preparation and Cleaning"
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
-output: 
-  html_document: 
+output:
+  pdf_document:
+    toc: yes
+  html_document:
     toc: yes
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.height=7, fig.width=10)
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, fig.height=7, fig.width=10)
 
 library(tidyverse)
 library(here)
@@ -19,8 +21,7 @@ library(Hmisc)
 library(httr)
 library(patchwork)
 library(ggrepel)
-library(jsonlite)
-library(forcats)
+
 #set directories
 dir <- here()
 
@@ -63,8 +64,8 @@ spi_mapper  <- function(data, indicator, title) {
  indicator<-indicator
 
   map_df <- get(data) %>%
-    group_by( country) %>%
     filter(date==max(date, na.rm=T)) %>%
+    group_by( country) %>%
     summarise(across(!! indicator,last)) %>%
     mutate(data_available=TRUE) %>%
     right_join(country_metadata) %>%
@@ -92,7 +93,7 @@ spi_mapper  <- function(data, indicator, title) {
     theme_map(base_size=12) +
     labs(
       title=str_wrap(title,100),
-      subtitle= 'Data Point is for last year available (typically 2019)',
+      subtitle= 'Data Point is for last year available (usually 2019)',
       caption = 'Source: SPI Indicators Raw Data.'
     )
   
@@ -108,7 +109,7 @@ spi_mapper  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
-      subtitle= 'Data Point is for last year available (typically 2019)',
+      subtitle= 'Data Point is for last year available (usually 2019)'
       ) +
       theme_bw()
 
@@ -177,7 +178,7 @@ Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Developme
 
 ## Indicator 1.4: Data use by academia  
 
-The idea for this indicator is that countries should be producing statistical products that are utilized by academia.  As a measure of this, we use the IHSN database on censuses and surveys conducted by counties and calculate a ranking of countries based on the total number of downloads of the censuses and surveys produced by that country on a per capita basis.  In other words, we calculate the total number of downloads of censuses and surveys for a country, divided by the population of that country, to produce a ranking.
+The idea for this indicator is that countries should be producing statistical products that are utilized, in this case by academia.  As a measure of this, we use the IHSN database on censuses and surveys conducted by counties and calculate a ranking of countries based on the total number of downloads of the censuses and surveys produced by that country on a per capita basis.  In other words, we calculate the total number of downloads of censuses and surveys for a country, divided by the population of that country, to produce a ranking.  Countries with low scores on this metric, may either be producing censuses and surveys that are not in high demand or are not producing or adding a sufficient number of censuses and surveys to IHSN to register highly on this measure.
 
 
 The source for this indicator is the IHSN.
@@ -194,7 +195,7 @@ Improved collaboration between data producers and users
 
 IHSN has a database of more than 7,483 surveys as of August 5, 2020.
 
-```{r ihsn}
+```{r ihsn, echo=FALSE}
 
 #####
 # The following code is blocked out, because the execution time is long
@@ -317,12 +318,16 @@ academic_use_df <- academic_use_df %>%
   mutate(downloads_per_capita=1000*Total/population) %>% #create measure of downloads per 1,000,000 persons
   mutate(downloads_per_capita=if_else(is.na(downloads_per_capita),0,downloads_per_capita)) %>%
   group_by(date) %>%
-  mutate(academic_use_rank = rank(downloads_per_capita))
+  mutate(academic_use_rank = rank(-downloads_per_capita)) %>%
+  select(country, iso3c, date,region, downloads_per_capita, academic_use_rank)
 
 
 academic_use_map <- academic_use_df %>%
   filter(downloads_per_capita>0)
 
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(academic_use_df)
 
 ```
 
@@ -347,7 +352,7 @@ academic_use_map <- academic_use_df %>%
       name=str_wrap('Country Ranking',10),
       palette='Blues',
       na.value='black',
-      direction = 1
+      direction = -1
     )  +
     coord_equal() +
     theme_map(base_size=12) +
@@ -359,8 +364,8 @@ academic_use_map <- academic_use_df %>%
    filter(academic_use_map, date==2019) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(downloads_per_capita=mean(downloads_per_capita),
-           Label = paste(round(mean(downloads_per_capita)), sep="")) %>%
+    summarise(downloads_per_capita=mean(downloads_per_capita, na.rm=T),
+           Label = paste(round(mean(downloads_per_capita, na.rm=T)), sep="")) %>%
     ggplot(aes(x=downloads_per_capita, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
@@ -379,8 +384,8 @@ academic_use_map <- academic_use_df %>%
     right_join(spi_df_empty) %>%
     group_by( date) %>%
     mutate(downloads_per_capita=if_else(is.na(downloads_per_capita), 0, downloads_per_capita)) %>%
-    mutate(downloads_per_capita=mean(downloads_per_capita),
-           Label = paste(mean(downloads_per_capita),'/',n(), sep="")) %>%
+    mutate(downloads_per_capita=mean(downloads_per_capita, na.rm=T),
+           Label = paste(mean(downloads_per_capita, na.rm=T),'/',n(), sep="")) %>%
     ungroup() %>%
     ggplot(aes(y=downloads_per_capita, x=date)) +
       geom_point() +
@@ -442,6 +447,11 @@ academic_use_map <- academic_use_df %>%
 ## Indicator 1.5: Data use by international organizations   
 
 New indicator of level of congruence between UNSD and national database of SDG indicators. For each of the indicators calculate whether the number in the database for the most recent year is the same or different. The indicator is the percentage that are the same.
+
+Note:
+> I met with significant technical challenges trying to compile this information.  It would be a useful data collection exercise, but will require significant time and effort.  Because this has not yet taken place, I have not produced indicators for this topic area.
+
+> An alternative would be to form this indicator using some of the quality metadata we have collected for the Availability of Key Indicators.  This could include the poverty indicators, child mortality, maternal mortality, safely managed drinking water, electricity, and debt.
   
 # Data Services
 
@@ -1441,7 +1451,6 @@ This indicator draws from data collected by the Statistical Performance Indicato
   - Business/establishment survey   
 
 
-We will just show the map and data for the population census, but others maps can be generated and this has been collected already by SPI team.
 
 ```{r cs}
 
@@ -1553,11 +1562,30 @@ cs_df <- cs1_df %>%
 spi_df <- spi_df %>%
   left_join(cs_df)
 
-#now do the figures for population censuses
-cs_df_map <- cs_df %>%
-  filter(!is.na(POPU.CENSUS))
-
+#now do the figures 
+cs_df_map <- cs_df %>%  filter(!is.na(POPU.CENSUS))
 spi_mapper('cs_df_map', 'POPU.CENSUS', 'Population Census Available in Past 20 Years in 2019' )
+
+cs_df_map <- cs_df %>%  filter(!is.na(AGRI.CENSUS))
+spi_mapper('cs_df_map', 'AGRI.CENSUS', 'Agriculture Census Available in Past 20 Years in 2019' )
+
+cs_df_map <- cs_df %>%  filter(!is.na(BIZZ.CENSUS))
+spi_mapper('cs_df_map', 'BIZZ.CENSUS', 'Business/Establishment Census Available in Past 20 Years in 2019' )
+
+cs_df_map <- cs_df %>%  filter(!is.na(HOUS.SURVEYS))
+spi_mapper('cs_df_map', 'HOUS.SURVEYS', 'Household Survey Available in Past 20 Years in 2019' )
+
+cs_df_map <- cs_df %>%  filter(!is.na(AGRI.SURVEYS))
+spi_mapper('cs_df_map', 'AGRI.SURVEYS', 'Agriculture Survey Available in Past 20 Years in 2019' )
+
+cs_df_map <- cs_df %>%  filter(!is.na(LABR.SURVEYS))
+spi_mapper('cs_df_map', 'LABR.SURVEYS', 'Labor Force Survey Available in Past 20 Years in 2019' )
+
+cs_df_map <- cs_df %>%  filter(!is.na(HLTH.SURVEYS))
+spi_mapper('cs_df_map', 'HLTH.SURVEYS', 'Health Survey Available in Past 20 Years in 2019' )
+
+cs_df_map <- cs_df %>%  filter(!is.na(BIZZ.SURVEYS))
+spi_mapper('cs_df_map', 'BIZZ.SURVEYS', 'Business Survey Available in Past 20 Years in 2019' )
 
 
 ```
@@ -2009,3 +2037,550 @@ Data Infrastructure (5 Indicators):
   - 5.3_DISK - Indicator 5.3: skills    
   - 5.4_DIPN - Indicator 5.4: partnerships    
   - 5.5_DIFI - Indicator 5.5: finance     
+
+
+## Indicator 5.1: legislation and governance   
+
+New indicator based on PARIS21 indicators on SDG 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Also include some other legislative aspects that foster good use of statistics eg freedom of information, privacy/transparency, good governance (eg free and fair elections).
+
+This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)
+
+Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics.
+
+The source is Paris 21.  Data accessed on August 6, 2020 from https://statisticalcapacitymonitor.org/indicator/135
+
+
+```{r legislation_governance}
+
+#read in csv file.
+D5.3_DISK <- read_csv(file = paste(raw_dir, "5.3_DISK","5.3_DISK.csv", sep="/" )) %>%
+  as_tibble(.name_repair = 'universal') %>%
+  transmute(
+    country=Country,
+    date=Year,
+    SPI.D5.3.skill=Data.Value
+  ) %>%
+    mutate(country=case_when(
+    country=="Bahamas" ~ "Bahamas, The",                  
+    country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
+    country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
+    country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
+    country=="Congo"  ~ "Congo, Rep."        ,           
+    country=="Curacao"  ~  "Curacao"       ,                
+    country=="Czechia"   ~  "Czech Republic"     ,        
+    country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
+    country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
+    country=="United Kingdom"   ~  "United Kingdom"    ,         
+    country=="Gambia"    ~  "Gambia, The"     ,           
+    country=="Iran (Islamic Republic of)"  ~ "Iran, Islamic Rep." ,           
+    country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
+    country=="Republic of Korea"   ~ "Korea, Rep."   ,               
+    country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
+    country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
+    country=="Saint Lucia"   ~ "St. Lucia",
+    country=="Republic of Moldova"   ~  "Moldova"   ,                  
+    country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
+    country=="Slovakia"   ~  "Slovak Republic"             ,
+    country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
+    country=="United States of America"  ~ "United States"  ,                
+    country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
+    country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
+    country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
+    country=="Viet Nam"  ~ "Vietnam"        ,              
+    country=="Yemen"  ~ "Yemen, Rep.",
+    country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
+    TRUE ~ country
+  )) %>%
+  mutate(SPI.D5.3.skill=if_else(SPI.D5.3.skill=='no data',as.character(NA), SPI.D5.3.skill)) 
+
+
+D5.3_DISK_map <- D5.3_DISK %>%
+  filter(!is.na(SPI.D5.3.skill))
+
+spi_mapper('D5.3_DISK_map', 'SPI.D5.3.skill', 'Systematic use of statistical knowledge with statistical terms and indicators in national policy documents. Source: Paris21')
+
+```
+## Indicator 5.2: standards 
+
+### 5.2.1 System of National Accounts in use
+
+ The national accounts data are compiled using the concepts, definitions, 
+ framework, and methodology of the System of National Account 2008 (SNA2008) 
+ or European System of National and Regional Accounts (ESA 2010).  The manual 
+ has evolved to meet the changing economic structure, to follow systematic accounting 
+ and ensure international compatibility. 
+ 
+ Scoring: 1 point for using SNA2008 or ESA 2010, 0.5 points for using SNA 1993 or ESA 1995, 0 points otherwise
+ 
+```{r snau}
+
+#read in csv file.
+D5.2.1.SNAU <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.1.SNAU.csv", sep="/" )) %>%
+  mutate(D5.2.1.SNAU=case_when(
+    SNAU=="SNA 2008" ~ 1, 
+    SNAU=="SNA 1993" ~ 0.5,
+    TRUE ~ 0 
+  )) %>%
+  arrange(date, country) %>%
+  select(iso3c, country, date,SNAU, D5.2.1.SNAU  ) 
+
+
+
+```
+ 
+
+### 5.2.2 National Accounts base year 
+
+National accounts base year is the year used as the base period for constant price 
+calculations in the country's national accounts.  It is recommended that the base year of 
+constant price estimates be changed periodically to reflect changes in economic structure and relative prices. 
+
+1 point for chained price, 0.5 for reference period within past 10 years, 0 points otherwise.
+
+```{r naby}
+
+#read in csv file.
+D5.2.2.NABY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.2.NABY.csv", sep="/" )) %>%
+  mutate(D5.2.2.NABY=case_when(
+    NABY=="Original chained constant price data are rescaled." ~ 1, 
+    (date-as.numeric(NABY))<=10 ~ 0.5, #within 10 years of reference period
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, NABY, D5.2.2.NABY  ) %>%
+  arrange(date, country)
+
+D5.2.2.NABY_wide <- D5.2.2.NABY %>%
+  pivot_wider(names_from=date,
+              names_sep = "_",
+              values_from=c('NABY', 'D5.2.2.NABY')
+              )
+
+
+
+```
+
+### 5.2.3 Classification of national industry
+
+ The industrial production data are compiled using the International Standard Industrial 
+ Classification of All Economic Activities (ISIC) Rev.4 and Statistical Classification of 
+ Economic Activities in the European Community (NACE) Rev.2.  ISIC Rev.4 is a standard classification 
+ of economic activities arranged so that entities can be classified per the activity they carry out 
+ using criteria such as input, output and use of the products produced, more emphasis has been given 
+ to the character of the production process in defining and delineating ISIC classes for international 
+ comparability.  The manual and classification have changed to cover the complete scope of industrial 
+ production, employment, and GDP and other statistical areas.
+
+1 Point. Latest version is adopted (ISIC Rev 4, NACE Rev 2 or a compatible classification)  
+
+0.5 Points.  Previous version is used (ISIC Rev 3, NACE Rev 1 or a compatible classification)
+
+0 Points. Otherwise
+
+```{r cnin}
+
+#read in csv file.
+D5.2.3.CNIN <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.3.CNIN.csv", sep="/" )) %>%
+  mutate(D5.2.3.CNIN=case_when(
+    str_to_lower(CNIN)=="nace rev2" | str_to_lower(CNIN)=="rev4" ~ 1, 
+    str_to_lower(CNIN)=="nace rev1" | str_to_lower(CNIN)=="rev3" ~ 0.5, 
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, CNIN, D5.2.3.CNIN  ) %>%
+  arrange(date, country)
+
+
+
+```
+
+### 5.2.4 CPI base year
+
+Consumer Price Index serves as indicators of inflation and reflects changes in the 
+ cost of acquiring a fixed basket of goods and services by the average consumer.  
+ Weights are usually derived from consumer expenditure surveys and the CPI base year 
+ refers to the year the weights were derived.  It is recommended that the base year be
+ changed periodically to reflect changes in expenditure structure.  
+ 
+ 1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 points. Otherwise
+ 
+```{r cpiby}
+
+#read in csv file.
+D5.2.4.CPIBY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.csv", sep="/" )) %>%
+  mutate(D5.2.4.CPIBY=case_when(
+    CPIBY=="annual chained" ~ 1, 
+    (date-as.numeric(CPIBY))<=10 ~ 0.5, #within 10 years of reference period
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, CPIBY, D5.2.4.CPIBY  ) %>%
+  arrange(date, country)
+
+
+
+```
+
+
+
+ 
+### 5.2.5 Classification of household consumption
+
+Classification of Individual Consumption According to Purpose (COICOP) 
+is used in household budget surveys, consumer price indices and international 
+comparisons of gross domestic product (GDP) and its component expenditures.  
+Although COICOP is not strictly linked to any particular model of consumer 
+behavior, the classification is designed to broadly reflect differences in 
+income elasticities.  It is an integral part of the SNA1993 and more detailed 
+subdivision of the classes provide comparability between countries and between 
+statistics in these different areas.    
+
+1 Point. Follow Classification of Individual Consumption by Purpose (COICOP)	0 Points.	Otherwise
+
+```{r hous}
+
+#read in csv file.
+D5.2.5.HOUS <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.csv", sep="/" )) %>%
+  mutate(D5.2.5.HOUS=case_when(
+    HOUS=="COICOP" ~ 1, 
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, HOUS, D5.2.5.HOUS  ) %>%
+  arrange(date, country)
+
+
+
+
+```
+
+
+
+
+### 5.2.6 Classification of status of employment 
+
+Classification of status of employment refers to employment data that are 
+ compiled using the current international standard International Classification 
+ of Status in Employment (ISCE-93).  It classifies jobs with respect to the type
+ of explicit or implicit contract of employment between the job holder and the 
+ economic unit in which he or she is employed.  Therefore, it aims to provide the
+ basis for production of internationally comparable statistics on the employment 
+ relationship, including the distinction between salaried employment and self-employment.  
+ 
+1 Point. Follow International Labour Organization, International Classification of Status in Employment (ICSE-93) or 2012 North American Industry Classification System (NAICS). 0 Points Otherwise. 
+ 
+```{r empl}
+
+#read in csv file.
+D5.2.6.EMPL <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.csv", sep="/" )) %>%
+  mutate(D5.2.6.EMPL=case_when(
+    EMPL=="ICSE-93" | EMPL=="NAICS" ~ 1, 
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, EMPL, D5.2.6.EMPL  ) %>%
+  arrange(date, country)
+
+
+
+
+```
+
+
+
+### 5.2.7 Central government accounting status
+
+Government finance accounting status refers to the accounting basis for 
+reporting central government financial data.  For many countries' government 
+finance data, have been consolidated into one set of accounts capturing all 
+the central government's fiscal activities and following noncash recording basis.  
+Budgetary central government accounts do not necessarily include all central government 
+units, the picture they provide of central government activities is usually incomplete.  
+
+1 Point. Consolidated central government accounting follows noncash recording basis	 
+0.5 Points. Consolidated central government accounting follows cash recording basis	 
+0 Points. Otherwise 
+
+```{r cgov}
+
+#read in csv file.
+D5.2.7.CGOV <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.csv", sep="/" )) %>%
+  mutate(D5.2.7.CGOV=case_when(
+    CGOV=="AC" ~ 1, 
+    CGOV=="CA" ~ 0.5,
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, CGOV, D5.2.7.CGOV  ) %>%
+  arrange(date, country)
+
+
+
+```
+
+### 5.2.8 Compilation of government finance statistics
+
+(GFSM) in use for compiling the data.  It provides guidelines on the institutional 
+structure of governments and the presentation of fiscal data in a format similar to 
+business accounting with a balance sheet and income statement plus guidelines on the 
+treatment of exchange rate and other valuation adjustments.  The latest manual GFSM2014 
+is harmonized with the SNA2008. 
+
+1 Point. Follow the latest Government Finance Statistical Manual (2014)/ ESA2010	
+0.5 Points. Previous version is used (GFSM 2001)	
+0 Points. Otherwise
+
+
+```{r fina}
+
+#read in csv file.
+D5.2.8.FINA <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.csv", sep="/" )) %>%
+  mutate(D5.2.8.FINA=case_when(
+    FINA=="2014" | FINA=="ESA 2010"~ 1, 
+    FINA=="2001" ~ 0.5,
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, FINA, D5.2.8.FINA  ) %>%
+  arrange(date, country)
+
+
+
+
+```
+
+
+
+### 5.2.9 Compilation of monetary and financial statistics
+
+Compilation of monetary and financial statistics refers to the Monetary and Financial Statistics Manual 
+(MFSM) in use.  It covers concepts, definitions, classifications of financial instruments and sectors, and 
+accounting rules, and provides a comprehensive analytic framework for monetary and financial planning and policy 
+determination.  The Monetary and Finance Statistics: Compilation Guide (2008) provides detailed guidelines for 
+the compilation of monetary and financial statistics in addition to MFSM. 
+
+1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
+0 Points. Otherwise
+
+```{r mony}
+
+#read in csv file.
+D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep="/" )) %>%
+  mutate(SPI.D5.2.9.MONY=case_when(
+    MONY=="MFSM 2000" | MONY=="MFSMCG 2016"~ 1, 
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, MONY, SPI.D5.2.9.MONY  ) %>%
+  arrange(date, country)
+
+
+
+
+```
+
+
+
+
+
+### 5.2.10 Business process
+
+The Generic Statistical Business Process Model (GSBPM) aims to describe 
+statistics production in a general and process-oriented way.  It is used 
+both within and between statistical offices as a common basis for work with 
+statistics production in different ways, such as quality, efficiency, standardization, 
+and process-orientation.  It is used for all types of surveys, and "business" is not 
+related to "business statistics" but refers to the statistical office, simply expressed.  
+
+1 Point. GSBPM is in use
+0 Points. Otherwise
+
+```{r gsbp}
+
+#read in csv file.
+D5.2.10.GSBP <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.csv", sep="/" )) %>%
+  mutate(SPI.D5.2.10.GSBP=case_when(
+    str_to_lower(GSBP)=="yes" ~ 1, 
+    TRUE ~ 0 
+  ))  %>%
+  select(iso3c, country, date, GSBP, SPI.D5.2.10.GSBP  ) %>%
+  arrange(date, country)
+
+
+
+
+```
+
+
+### Create Overall Indicator
+
+```{r msc}
+# join datasets together based on country and date
+D5.2.MSC <- D5.2.1.SNAU %>%
+  left_join(D5.2.2.NABY) %>%
+  left_join(D5.2.3.CNIN) %>%
+  left_join(D5.2.4.CPIBY) %>%
+  left_join(D5.2.5.HOUS) %>%
+  left_join(D5.2.6.EMPL) %>%
+  left_join(D5.2.7.CGOV) %>%
+  left_join(D5.2.8.FINA) %>%
+  left_join(D5.2.9.MONY) %>%
+  left_join(D5.2.10.GSBP) %>%
+  select(iso3c, country, date, everything()) 
+#Now calculate MSC score which is the average across the 12 indicators
+D5.2.MSC <- D5.2.MSC %>%
+  mutate(SPI.D5.2.MSC=100*rowMeans(.[grep(x=colnames(D5.2.MSC), 
+                                              pattern="SPI.D5.2")], na.rm=TRUE)) %>%
+  arrange(date, iso3c) 
+
+
+
+#now do the figures 
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SNAU))
+spi_mapper('msc_df_map', 'SNAU', 'System of National Accounts in use in 2019' )
+
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(NABY))
+spi_mapper('msc_df_map', 'NABY', 'National Accounts base year in 2019' )
+
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(CNIN))
+spi_mapper('msc_df_map', 'CNIN', 'Classification of national industry in 2019' )
+
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(CPIBY))
+spi_mapper('msc_df_map', 'CPIBY', 'CPI base year in 2019' )
+
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(HOUS))
+spi_mapper('msc_df_map', 'HOUS', 'Classification of household consumption in 2019' )
+
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(EMPL))
+spi_mapper('msc_df_map', 'EMPL', 'Classification of status of employment in 2019' )
+
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(CGOV))
+spi_mapper('msc_df_map', 'CGOV', 'Central government accounting status in 2019' )
+
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(FINA))
+spi_mapper('msc_df_map', 'FINA', 'Compilation of government finance statistics in 2019' )
+
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(MONY))
+spi_mapper('msc_df_map', 'MONY', 'Compilation of monetary and financial statistics in 2019' )
+
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(GSBP))
+spi_mapper('msc_df_map', 'GSBP', 'Business process in 2019' )
+
+```
+
+
+
+## Indicator 5.3: skills 
+
+This indicator assesses the systematic use of statistical knowledge with statistical terms and indicators in national policy documents. It is a composite indicator consisting of 4 sub-indices that aim to reflect the relevance of statistical evidence. It comprises four main dimensions: i) Basic consideration; ii) Diagnosis and quantification; iii) Statistical Analysis; iv) Disaggregation.
+
+Score ranges from 0 to 100. The score is the weighted sum of each of the four components' scores, whose relative weight is reported in brackets: i) Basic Consideration (25%); ii) Diagnosis and quantification (24%); iii) Statistical Analysis (22%); iv) Disaggregation (29%).
+
+The source is Paris 21.  Data accessed on August 6, 2020 from https://statisticalcapacitymonitor.org/indicator/127
+
+
+```{r skill}
+
+#read in csv file.
+D5.3_DISK <- read_csv(file = paste(raw_dir, "5.3_DISK","5.3_DISK.csv", sep="/" )) %>%
+  as_tibble(.name_repair = 'universal') %>%
+  transmute(
+    country=Country,
+    date=Year,
+    SPI.D5.3.skill=Data.Value
+  ) %>%
+    mutate(country=case_when(
+    country=="Bahamas" ~ "Bahamas, The",                  
+    country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
+    country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
+    country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
+    country=="Congo"  ~ "Congo, Rep."        ,           
+    country=="Curacao"  ~  "Curacao"       ,                
+    country=="Czechia"   ~  "Czech Republic"     ,        
+    country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
+    country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
+    country=="United Kingdom"   ~  "United Kingdom"    ,         
+    country=="Gambia"    ~  "Gambia, The"     ,           
+    country=="Iran (Islamic Republic of)"  ~ "Iran, Islamic Rep." ,           
+    country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
+    country=="Republic of Korea"   ~ "Korea, Rep."   ,               
+    country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
+    country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
+    country=="Saint Lucia"   ~ "St. Lucia",
+    country=="Republic of Moldova"   ~  "Moldova"   ,                  
+    country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
+    country=="Slovakia"   ~  "Slovak Republic"             ,
+    country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
+    country=="United States of America"  ~ "United States"  ,                
+    country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
+    country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
+    country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
+    country=="Viet Nam"  ~ "Vietnam"        ,              
+    country=="Yemen"  ~ "Yemen, Rep.",
+    country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
+    TRUE ~ country
+  )) %>%
+  mutate(SPI.D5.3.skill=if_else(SPI.D5.3.skill=='no data',as.character(NA), SPI.D5.3.skill)) 
+
+
+D5.3_DISK_map <- D5.3_DISK %>%
+  filter(!is.na(SPI.D5.3.skill))
+
+spi_mapper('D5.3_DISK_map', 'SPI.D5.3.skill', 'Systematic use of statistical knowledge with statistical terms and indicators in national policy documents. Source: Paris21')
+
+```
+
+## Indicator 5.4: partnerships
+
+No data is available for this indicator at this point.
+  
+## Indicator 5.5: finance
+
+
+Indicator based on PARIS21 SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation) and SDG 17.19.1 (value of resources made available to strengthen statistical capacity)). Could also incorporate indicator of NSO budget as a percentage of GDP.
+
+Source of this data is Paris21.  Downloaded on August 6,2020 from https://statisticalcapacitymonitor.org/indicator/138/
+
+```{r finance}
+
+#read in csv file.
+D5.5_DIFI <- read_csv(file = paste(raw_dir, "5.5_DIFI","D5.5_DIFI.csv", sep="/" )) %>%
+  as_tibble(.name_repair = 'universal') %>%
+  transmute(
+    country=Country,
+    date=Year,
+    SPI.D5.5.finance=Data.Value
+  ) %>%
+    mutate(country=case_when(
+    country=="Bahamas" ~ "Bahamas, The",                  
+    country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
+    country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
+    country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
+    country=="Congo"  ~ "Congo, Rep."        ,           
+    country=="Curacao"  ~  "Curacao"       ,                
+    country=="Czechia"   ~  "Czech Republic"     ,        
+    country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
+    country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
+    country=="United Kingdom"   ~  "United Kingdom"    ,         
+    country=="Gambia"    ~  "Gambia, The"     ,           
+    country=="Iran (Islamic Republic of)"  ~ "Iran, Islamic Rep." ,           
+    country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
+    country=="Republic of Korea"   ~ "Korea, Rep."   ,               
+    country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
+    country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
+    country=="Saint Lucia"   ~ "St. Lucia",
+    country=="Republic of Moldova"   ~  "Moldova"   ,                  
+    country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
+    country=="Slovakia"   ~  "Slovak Republic"             ,
+    country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
+    country=="United States of America"  ~ "United States"  ,                
+    country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
+    country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
+    country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
+    country=="Viet Nam"  ~ "Vietnam"        ,              
+    country=="Yemen"  ~ "Yemen, Rep.",
+    country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
+    TRUE ~ country
+  )) %>%
+  mutate(SPI.D5.5.finance=if_else(SPI.D5.5.finance=='no data',as.character(NA), SPI.D5.5.finance)) 
+
+
+D5.5_DIFI_map <- D5.5_DIFI %>%
+  filter(!is.na(SPI.D5.5.finance))
+
+spi_mapper('D5.5_DIFI_map', 'SPI.D5.5.finance', 'Statistical plan fully funded. Source: Paris21')
+
+```
+
