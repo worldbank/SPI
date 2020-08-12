@@ -253,6 +253,8 @@ documentInfo <- documentInfo %>%
 
 
 ```
+
+
 ```{r faolex_map, echo=FALSE, message=FALSE, warning=FALSE}
 
 # load data
@@ -538,8 +540,8 @@ academic_use_map <- academic_use_df %>%
   filter(downloads_per_capita>0)
 
 #add to spi databases
-spi_df <- spi_df %>%
-  left_join(academic_use_df)
+# spi_df <- spi_df %>%
+#   left_join(academic_use_df)
 
 ```
 
@@ -695,7 +697,7 @@ Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator
 Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
 
 # Parse the JSON content and convert it to a data frame.
-D2.2_DSDR_sci <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+D2.1_DSDR_sci <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
   data.frame() %>%
   transmute(
     iso3c=countryiso3code,
@@ -710,8 +712,8 @@ D2.2_DSDR_sci <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
 
 
 #read in csv file.
-D2.2_DSDR <- read_csv(file = paste(raw_dir, '/2.1_DSDR/', "D2.1.GDDS.csv", sep="" )) %>%
-  mutate(D2.1.GDDS=case_when(
+D2.1_DSDR <- read_csv(file = paste(raw_dir, '/2.1_DSDR/', "D2.1.GDDS.csv", sep="" )) %>%
+  mutate(SPI.D2.1.GDDS=case_when(
     IDDS=="SDDS Plus" | IDDS=="SDDS"~ 1, 
     IDDS=="e-GDDS"~ 0.5,
     TRUE ~ 0 ),
@@ -719,19 +721,20 @@ D2.2_DSDR <- read_csv(file = paste(raw_dir, '/2.1_DSDR/', "D2.1.GDDS.csv", sep="
      IDDS=="SDDS"~ 1, 
     TRUE ~ 0 ))  %>%
   bind_rows(D2.2_DSDR_sci) %>%
-  select(iso3c, country, date, IDDS,SDDS, D2.1.GDDS  ) %>%
+  rename(RAW.D2.1.IDDS=IDDS) %>%
+  select(iso3c, country, date, RAW.D2.1.IDDS, SPI.D2.1.GDDS  ) %>%
   arrange(date, country)
 
 
-D2.2_DSDR_map <- D2.2_DSDR %>%
-  filter(SDDS>0)
+D2.1_DSDR_map <- D2.2_DSDR %>%
+  filter(RAW.D2.1.IDDS>0)
 
-spi_mapper('D2.2_DSDR_map', 'SDDS', 'SDDS Data Standards in Place' )
+spi_mapper('D2.1_DSDR_map', 'SPI.D2.1.GDDS', 'SDDS Data Standards in Place' )
 
 
 #add to spi databases
 spi_df <- spi_df %>%
-  left_join(D2.2_DSDR)
+  left_join(D2.1_DSDR)
 
 ```
 
@@ -819,6 +822,18 @@ openness_df <- openness_df %>%
       across(c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore'),~if_else(is.na(.), 0, .)           )
       
            )  
+
+#do some quick renaming and formatting
+openness_df_temp1 <- openness_df %>% 
+  rename_with(~paste('RAW',., sep="."), .cols=c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore') ) 
+
+
+openness_df_temp2 <- openness_df %>% 
+  mutate(across(c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore'), ~./100)) %>%
+  rename_with(~paste('SPI',., sep="."), .cols=c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore') ) 
+
+openness_df <- openness_df_temp1 %>%
+  left_join(openness_df_temp2)
 
 #add to spi dataframe
 spi_df <- spi_df %>%
@@ -914,18 +929,20 @@ NADA is an open source microdata cataloging system, compliant with the Data Docu
 
 #read in csv file.
 D2.4_NADA <- read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.csv", sep="/" )) %>%
-  mutate(D4.2.NADA=case_when(
+  mutate(SPI.D2.4.NADA=case_when(
     NADA==1 ~ 1, 
     NADA==0 ~ 0, 
     TRUE ~ 0 
   ))  %>%
-  select(iso3c, country, date, NADA,NADA_text, D4.2.NADA  ) %>%
+  rename(RAW.D2.4.NADA=NADA,
+         RAW.D2.4.NADA_text=NADA_text) %>%
+  select(iso3c, country, date, RAW.D2.4.NADA,RAW.D2.4.NADA_text, SPI.D2.4.NADA  ) %>%
   arrange(date, country)
 
 D2.4_NADA_map <- D2.4_NADA %>%
-  filter(D4.2.NADA>0)
+  filter(SPI.D2.4.NADA>0)
 
-spi_mapper('D2.4_NADA_map', 'D4.2.NADA', 'NADA in Place' )
+spi_mapper('D2.4_NADA_map', 'RAW.D2.4.NADA', 'NADA in Place' )
 
 
 #add to spi databases
@@ -1721,42 +1738,42 @@ cs_fun  <- function(data, input_var) {
 
 #Population Censuses
 cs1_df <-cs_fun('D4.1.1.CEN.POPU', 'POPU.CENSUS') %>%
-  rename(POPU.CENSUS=input_var,
+  rename(RAW.D4.1.1.POPU.CENSUS=input_var,
          SPI.D4.1.1.POPU=indicator)
 
 #Agriculture census  
 cs2_df <-cs_fun('D4.1.2.CEN.AGRI', 'AGRI.CENSUS') %>%
-  rename(AGRI.CENSUS=input_var,
+  rename(RAW.D4.1.2.AGRI.CENSUS=input_var,
          SPI.D4.1.2.AGRI=indicator)
 
 #Business/establishment census 
 cs3_df <-cs_fun('D4.1.3.CEN.BIZZ', 'BIZZ.CENSUS') %>%
-  rename(BIZZ.CENSUS=input_var,
+  rename(RAW.D4.1.3.BIZZ.CENSUS=input_var,
          SPI.D4.1.3.BIZZ=indicator)
 
 #Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey
 cs4_df <-cs_fun('D4.1.4.SVY.HOUS', 'HOUS.SURVEYS') %>%
-  rename(HOUS.SURVEYS=input_var,
+  rename(RAW.D4.1.4.HOUS.SURVEYS=input_var,
          SPI.D4.1.4.HOUS=indicator)
 
 #Agriculture survey 
 cs5_df <-cs_fun('D4.1.5.SVY.AGRI', 'AGRI.SURVEYS') %>%
-  rename(AGRI.SURVEYS=input_var,
+  rename(RAW.D4.1.5.AGRI.SURVEYS=input_var,
          SPI.D4.1.5.AGSVY=indicator)
 
 #Labor Force Survey 
 cs6_df <-cs_fun('D4.1.6.SVY.LABR', 'LABR.SURVEYS') %>%
-  rename(LABR.SURVEYS=input_var,
+  rename(RAW.D4.1.6.LABR.SURVEYS=input_var,
          SPI.D4.1.6.LABR=indicator)
 
 #Health/Demographic survey
 cs7_df <-cs_fun('D4.1.7.SVY.HLTH', 'HLTH.SURVEYS') %>%
-  rename(HLTH.SURVEYS=input_var,
+  rename(RAW.D4.1.7.HLTH.SURVEYS=input_var,
          SPI.D4.1.7.HLTH=indicator)
 
 #Business/establishment survey  
 cs8_df <-cs_fun('D4.1.8.SVY.BIZZ', 'BIZZ.SURVEYS') %>%
-  rename(BIZZ.SURVEYS=input_var,
+  rename(RAW.D4.1.8.BIZZ.SURVEYS=input_var,
          SPI.D4.1.8.BZSVY=indicator)
 
 
@@ -1775,29 +1792,29 @@ spi_df <- spi_df %>%
   left_join(cs_df)
 
 #now do the figures 
-cs_df_map <- cs_df %>%  filter(!is.na(POPU.CENSUS))
-spi_mapper('cs_df_map', 'POPU.CENSUS', 'Population Census Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.1.POPU.CENSUS))
+spi_mapper('cs_df_map', 'RAW.D4.1.1.POPU.CENSUS', 'Population Census Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(AGRI.CENSUS))
-spi_mapper('cs_df_map', 'AGRI.CENSUS', 'Agriculture Census Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.2.AGRI.CENSUS))
+spi_mapper('cs_df_map', 'RAW.D4.1.2.AGRI.CENSUS', 'Agriculture Census Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(BIZZ.CENSUS))
-spi_mapper('cs_df_map', 'BIZZ.CENSUS', 'Business/Establishment Census Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.3.BIZZ.CENSUS))
+spi_mapper('cs_df_map', 'RAW.D4.1.3.BIZZ.CENSUS', 'Business/Establishment Census Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(HOUS.SURVEYS))
-spi_mapper('cs_df_map', 'HOUS.SURVEYS', 'Household Survey Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.4.HOUS.SURVEYS))
+spi_mapper('cs_df_map', 'RAW.D4.1.4.HOUS.SURVEYS', 'Household Survey Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(AGRI.SURVEYS))
-spi_mapper('cs_df_map', 'AGRI.SURVEYS', 'Agriculture Survey Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.5.AGRI.SURVEYS))
+spi_mapper('cs_df_map', 'RAW.D4.1.5.AGRI.SURVEYS', 'Agriculture Survey Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(LABR.SURVEYS))
-spi_mapper('cs_df_map', 'LABR.SURVEYS', 'Labor Force Survey Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.6.LABR.SURVEYS))
+spi_mapper('cs_df_map', 'RAW.D4.1.6.LABR.SURVEYS', 'Labor Force Survey Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(HLTH.SURVEYS))
-spi_mapper('cs_df_map', 'HLTH.SURVEYS', 'Health Survey Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.7.HLTH.SURVEYS))
+spi_mapper('cs_df_map', 'RAW.D4.1.7.HLTH.SURVEYS', 'Health Survey Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(BIZZ.SURVEYS))
-spi_mapper('cs_df_map', 'BIZZ.SURVEYS', 'Business Survey Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.8.BIZZ.SURVEYS))
+spi_mapper('cs_df_map', 'RAW.D4.1.8.BIZZ.SURVEYS', 'Business Survey Available in Past 20 Years in 2019' )
 
 
 ```
@@ -1834,10 +1851,24 @@ aspire_df <- aspire_df_raw %>%
     mutate(ben_info=(!is.na(ben_count) | !is.na(ben_exp))
            )
 
-aspire_map <- aspire_df %>%
-  filter(ben_info==TRUE)
 
-spi_mapper('aspire_map', 'ben_info', 'Administrative Data Available on Beneficiary Counts or Expenditures using ASPIRE' )
+#apply carryforward to fill in missing values
+aspire_df <- aspire_df %>%
+  group_by(iso3c) %>%
+  mutate(ben_info_filled=if_else(ben_info==TRUE,as.numeric(ben_info), as.numeric(NA))) %>%
+  fill(ben_info_filled, .direction='down') %>%
+  mutate(SPI.D4.2.1.SPL=if_else(is.na(ben_info_filled),0, ben_info_filled),
+         RAW.D4.2.1.SPL=ben_info) %>%
+  select(c('iso3c', 'country', 'date', 'RAW.D4.2.1.SPL', 'SPI.D4.2.1.SPL')  )
+
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(aspire_df)
+
+aspire_map <- aspire_df %>%
+  filter(RAW.D4.2.1.SPL==TRUE)
+
+spi_mapper('aspire_map', 'RAW.D4.2.1.SPL', 'Administrative Data Available on Beneficiary Counts or Expenditures using ASPIRE' )
 
 
 ```
@@ -1867,12 +1898,21 @@ unesco_df <- unesco_df_raw %>%
     summarise(Value=mean(Value, na.rm=T)) %>%
     rename(iso3c=LOCATION2017) %>%
     left_join(country_metadata) %>%
-    mutate(available=(!is.na(Value))
+    mutate(edu_admin_available=(!is.na(Value))
            ) %>%
-    filter(available==TRUE)
+    mutate(SPI.D4.2.2.EDU=as.numeric(edu_admin_available),
+           RAW.D4.2.2.EDU=edu_admin_available) %>%
+  select(c('iso3c', 'country', 'date', 'RAW.D4.2.2.EDU', 'SPI.D4.2.2.EDU')  )
+
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(unesco_df)
+
+unesco_map <- unesco_df %>%
+  filter(RAW.D4.2.2.EDU==TRUE)
   
 
-spi_mapper('unesco_df', 'available', 'Education Administrative Data Available According to UIS' )
+spi_mapper('unesco_map', 'RAW.D4.2.2.EDU', 'Education Administrative Data Available According to UIS' )
 
 
 ```
@@ -1901,18 +1941,25 @@ crvs_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
     date=as.numeric(date),
     crvs=value
   ) %>%
+  mutate(SPI.D4.2.3.CRVS=crvs,
+         RAW.D4.2.3.CRVS=crvs) %>%
   left_join(spi_df_empty) #add on country metadata
 
 
 # Manipulate and clean final data
 crvs_df <- crvs_df %>%
-  filter(!is.na(income)) #keep just countries (drop aggregations)
+  filter(!is.na(income)) %>% #keep just countries (drop aggregations)
+  select(c('iso3c', 'country', 'date', 'RAW.D4.2.3.CRVS', 'SPI.D4.2.3.CRVS')  )
+
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(crvs_df)
 
 
 crvs_map <- crvs_df %>%
-  filter(!is.na(crvs))
+  filter(!is.na(RAW.D4.2.3.CRVS))
 
-spi_mapper('crvs_map', 'crvs', 'Complete Civil Registration & Vital Statistics Data Available According to WDI' )
+spi_mapper('crvs_map', 'RAW.D4.2.3.CRVS', 'Complete Civil Registration & Vital Statistics Data Available According to WDI' )
 
 
 ```
@@ -1942,12 +1989,32 @@ ilo_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ILOSTAT_sources.csv', sep="/")
 
 #cleaning of aspire data
 ilo_df <- ilo_df_raw %>%
+  filter(!grepl('legislation',Source)) %>% # filter out labor legislation, which is included but not reflective of needs.
   group_by(iso3c, date) %>%
-  summarise(Source.type=last(Source.type)) %>%
+  summarise(ILO.Source.type=last(Source.type)) %>%
   left_join(country_metadata) 
-  
 
-spi_mapper('ilo_df', 'Source.type', 'Labor Administrative Data Available According to ILO' )
+
+#apply carryforward to fill in missing values
+ilo_df <- ilo_df %>%
+  right_join(spi_df_empty) %>%
+  arrange(iso3c, date) %>%
+  group_by(iso3c) %>%
+  mutate(ILO.Source.type.filled=if_else(!is.na(ILO.Source.type),1, as.numeric(NA))) %>%
+  fill(ILO.Source.type.filled, .direction='down') %>%
+  mutate(SPI.D4.2.4.LBR=if_else(is.na(ILO.Source.type.filled),0, ILO.Source.type.filled),
+         RAW.D4.2.4.LBR=ILO.Source.type) %>%
+  select(c('iso3c', 'country', 'date', 'RAW.D4.2.4.LBR', 'SPI.D4.2.4.LBR')  )
+
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(ilo_df)  
+
+
+ilo_map <- ilo_df %>%
+  filter(SPI.D4.2.4.LBR==1)
+
+spi_mapper('ilo_map', 'SPI.D4.2.4.LBR', 'Labor Administrative Data Available According to ILO' )
 
 
 ```
@@ -2035,9 +2102,21 @@ geo_df <- geo_df %>%
     rename(iso3c=Country.Code) %>%
     group_by( iso3c) %>%
     right_join(country_metadata) %>%
-    mutate(First.administrative.level=if_else(is.na(First.administrative.level), 0, First.administrative.level),
-           Second.administrative.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level))    
+    mutate(RAW.D4.3.GEO.first.admin.level=if_else(is.na(First.administrative.level), 0, First.administrative.level),
+           RAW.D4.3.GEO.second.admin.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level))    
   
+
+#do some quick renaming and formatting
+geo_df_temp1 <- geo_df %>% 
+  rename_with(~paste('RAW',., sep="."), .cols=c('RAW.D4.3.GEO.first.admin.level', 'RAW.D4.3.GEO.second.admin.level') ) 
+
+
+geo_df_temp2 <- geo_df %>% 
+  mutate(across(c('RAW.D4.3.GEO.first.admin.level', 'RAW.D4.3.GEO.second.admin.level'), ~./100)) %>%
+  rename_with(~paste('SPI',., sep="."), .cols=c('RAW.D4.3.GEO.first.admin.level', 'RAW.D4.3.GEO.second.admin.level') ) 
+
+geo_df <- geo_df_temp1 %>%
+  left_join(geo_df_temp2)
 
 #add to spi df
 spi_df <- spi_df %>%
@@ -2328,13 +2407,14 @@ spi_mapper('D5.1_DILG_map', 'SPI.D5.1.LEGGOV', 'National statistical legislation
 
 #read in csv file.
 D5.2.1.SNAU <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.1.SNAU.csv", sep="/" )) %>%
-  mutate(D5.2.1.SNAU=case_when(
+  mutate(SPI.D5.2.1.SNAU=case_when(
     SNAU=="SNA 2008" ~ 1, 
     SNAU=="SNA 1993" ~ 0.5,
     TRUE ~ 0 
-  )) %>%
+  ),
+      RAW.D5.2.1.SNAU=SNAU) %>%
   arrange(date, country) %>%
-  select(iso3c, country, date,SNAU, D5.2.1.SNAU  ) 
+  select(iso3c, country, date,RAW.D5.2.1.SNAU, SPI.D5.2.1.SNAU  ) 
 
 
 
@@ -2353,19 +2433,15 @@ constant price estimates be changed periodically to reflect changes in economic 
 
 #read in csv file.
 D5.2.2.NABY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.2.NABY.csv", sep="/" )) %>%
-  mutate(D5.2.2.NABY=case_when(
+  mutate(SPI.D5.2.2.NABY=case_when(
     NABY=="Original chained constant price data are rescaled." ~ 1, 
     (date-as.numeric(NABY))<=10 ~ 0.5, #within 10 years of reference period
     TRUE ~ 0 
-  ))  %>%
-  select(iso3c, country, date, NABY, D5.2.2.NABY  ) %>%
+  ),
+  RAW.D5.2.1.NABY=NABY)  %>%
+  select(iso3c, country, date, RAW.D5.2.1.NABY, SPI.D5.2.2.NABY  ) %>%
   arrange(date, country)
 
-D5.2.2.NABY_wide <- D5.2.2.NABY %>%
-  pivot_wider(names_from=date,
-              names_sep = "_",
-              values_from=c('NABY', 'D5.2.2.NABY')
-              )
 
 
 
@@ -2392,12 +2468,13 @@ D5.2.2.NABY_wide <- D5.2.2.NABY %>%
 
 #read in csv file.
 D5.2.3.CNIN <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.3.CNIN.csv", sep="/" )) %>%
-  mutate(D5.2.3.CNIN=case_when(
+  mutate(SPI.D5.2.3.CNIN=case_when(
     str_to_lower(CNIN)=="nace rev2" | str_to_lower(CNIN)=="rev4" ~ 1, 
     str_to_lower(CNIN)=="nace rev1" | str_to_lower(CNIN)=="rev3" ~ 0.5, 
     TRUE ~ 0 
-  ))  %>%
-  select(iso3c, country, date, CNIN, D5.2.3.CNIN  ) %>%
+  ),
+  RAW.D5.2.3.CNIN=CNIN)  %>%
+  select(iso3c, country, date, RAW.D5.2.3.CNIN, SPI.D5.2.3.CNIN  ) %>%
   arrange(date, country)
 
 
@@ -2418,12 +2495,13 @@ Consumer Price Index serves as indicators of inflation and reflects changes in t
 
 #read in csv file.
 D5.2.4.CPIBY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.csv", sep="/" )) %>%
-  mutate(D5.2.4.CPIBY=case_when(
+  mutate(SPI.D5.2.4.CPIBY=case_when(
     CPIBY=="annual chained" ~ 1, 
     (date-as.numeric(CPIBY))<=10 ~ 0.5, #within 10 years of reference period
     TRUE ~ 0 
-  ))  %>%
-  select(iso3c, country, date, CPIBY, D5.2.4.CPIBY  ) %>%
+  ),
+  RAW.D5.2.4.CPIBY=CPIBY)  %>%
+  select(iso3c, country, date, RAW.D5.2.4.CPIBY, SPI.D5.2.4.CPIBY  ) %>%
   arrange(date, country)
 
 
@@ -2450,11 +2528,12 @@ statistics in these different areas.
 
 #read in csv file.
 D5.2.5.HOUS <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.csv", sep="/" )) %>%
-  mutate(D5.2.5.HOUS=case_when(
+  mutate(SPI.D5.2.5.HOUS=case_when(
     HOUS=="COICOP" ~ 1, 
     TRUE ~ 0 
-  ))  %>%
-  select(iso3c, country, date, HOUS, D5.2.5.HOUS  ) %>%
+  ),
+  RAW.D5.2.5.HOUS=HOUS)  %>%
+  select(iso3c, country, date, RAW.D5.2.5.HOUS, SPI.D5.2.5.HOUS  ) %>%
   arrange(date, country)
 
 
@@ -2481,11 +2560,12 @@ Classification of status of employment refers to employment data that are
 
 #read in csv file.
 D5.2.6.EMPL <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.csv", sep="/" )) %>%
-  mutate(D5.2.6.EMPL=case_when(
+  mutate(SPI.D5.2.6.EMPL=case_when(
     EMPL=="ICSE-93" | EMPL=="NAICS" ~ 1, 
     TRUE ~ 0 
-  ))  %>%
-  select(iso3c, country, date, EMPL, D5.2.6.EMPL  ) %>%
+  ),
+  RAW.D5.2.6.EMPL=EMPL)  %>%
+  select(iso3c, country, date, RAW.D5.2.6.EMPL, SPI.D5.2.6.EMPL  ) %>%
   arrange(date, country)
 
 
@@ -2512,12 +2592,13 @@ units, the picture they provide of central government activities is usually inco
 
 #read in csv file.
 D5.2.7.CGOV <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.csv", sep="/" )) %>%
-  mutate(D5.2.7.CGOV=case_when(
+  mutate(SPI.D5.2.7.CGOV=case_when(
     CGOV=="AC" ~ 1, 
     CGOV=="CA" ~ 0.5,
     TRUE ~ 0 
-  ))  %>%
-  select(iso3c, country, date, CGOV, D5.2.7.CGOV  ) %>%
+  ),
+  RAW.D5.2.7.CGOV=CGOV)  %>%
+  select(iso3c, country, date, RAW.D5.2.7.CGOV, SPI.D5.2.7.CGOV  ) %>%
   arrange(date, country)
 
 
@@ -2541,12 +2622,13 @@ is harmonized with the SNA2008.
 
 #read in csv file.
 D5.2.8.FINA <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.csv", sep="/" )) %>%
-  mutate(D5.2.8.FINA=case_when(
+  mutate(SPI.D5.2.8.FINA=case_when(
     FINA=="2014" | FINA=="ESA 2010"~ 1, 
     FINA=="2001" ~ 0.5,
     TRUE ~ 0 
-  ))  %>%
-  select(iso3c, country, date, FINA, D5.2.8.FINA  ) %>%
+  ),
+  RAW.D5.2.8.FINA=FINA)  %>%
+  select(iso3c, country, date, RAW.D5.2.8.FINA, SPI.D5.2.8.FINA  ) %>%
   arrange(date, country)
 
 
@@ -2574,8 +2656,9 @@ D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep=
   mutate(SPI.D5.2.9.MONY=case_when(
     MONY=="MFSM 2000" | MONY=="MFSMCG 2016"~ 1, 
     TRUE ~ 0 
-  ))  %>%
-  select(iso3c, country, date, MONY, SPI.D5.2.9.MONY  ) %>%
+  ),
+  RAW.D5.2.9.MONY=MONY)  %>%
+  select(iso3c, country, date, RAW.D5.2.9.MONY, SPI.D5.2.9.MONY  ) %>%
   arrange(date, country)
 
 
@@ -2606,8 +2689,9 @@ D5.2.10.GSBP <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.csv", se
   mutate(SPI.D5.2.10.GSBP=case_when(
     str_to_lower(GSBP)=="yes" ~ 1, 
     TRUE ~ 0 
-  ))  %>%
-  select(iso3c, country, date, GSBP, SPI.D5.2.10.GSBP  ) %>%
+  ),
+  RAW.D5.2.10.GSBP=GSBP)  %>%
+  select(iso3c, country, date, RAW.D5.2.10.GSBP, SPI.D5.2.10.GSBP  ) %>%
   arrange(date, country)
 
 
@@ -2638,37 +2722,40 @@ D5.2.MSC <- D5.2.MSC %>%
   arrange(date, iso3c) 
 
 
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(D5.2.MSC)
 
 #now do the figures 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SNAU))
-spi_mapper('msc_df_map', 'SNAU', 'System of National Accounts in use in 2019' )
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.1.SNAU))
+spi_mapper('msc_df_map', 'RAW.D5.2.1.SNAU', 'System of National Accounts in use in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(NABY))
-spi_mapper('msc_df_map', 'NABY', 'National Accounts base year in 2019' )
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.2.NABY))
+spi_mapper('msc_df_map', 'RAW.D5.2.2.NABY', 'National Accounts base year in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(CNIN))
-spi_mapper('msc_df_map', 'CNIN', 'Classification of national industry in 2019' )
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.3.CNIN))
+spi_mapper('msc_df_map', 'RAW.D5.2.3.CNIN', 'Classification of national industry in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(CPIBY))
-spi_mapper('msc_df_map', 'CPIBY', 'CPI base year in 2019' )
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.4.CPIBY))
+spi_mapper('msc_df_map', 'RAW.D5.2.4.CPIBY', 'CPI base year in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(HOUS))
-spi_mapper('msc_df_map', 'HOUS', 'Classification of household consumption in 2019' )
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.5.HOUS))
+spi_mapper('msc_df_map', 'RAW.D5.2.5.HOUS', 'Classification of household consumption in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(EMPL))
-spi_mapper('msc_df_map', 'EMPL', 'Classification of status of employment in 2019' )
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.6.EMPL))
+spi_mapper('msc_df_map', 'RAW.D5.2.6.EMPL', 'Classification of status of employment in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(CGOV))
-spi_mapper('msc_df_map', 'CGOV', 'Central government accounting status in 2019' )
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.7.CGOV))
+spi_mapper('msc_df_map', 'RAW.D5.2.7.CGOV', 'Central government accounting status in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(FINA))
-spi_mapper('msc_df_map', 'FINA', 'Compilation of government finance statistics in 2019' )
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.8.FINA))
+spi_mapper('msc_df_map', 'RAW.D5.2.8.FINA', 'Compilation of government finance statistics in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(MONY))
-spi_mapper('msc_df_map', 'MONY', 'Compilation of monetary and financial statistics in 2019' )
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.9.MONY))
+spi_mapper('msc_df_map', 'RAW.D5.2.9.MONY', 'Compilation of monetary and financial statistics in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(GSBP))
-spi_mapper('msc_df_map', 'GSBP', 'Business process in 2019' )
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.10.GSBP))
+spi_mapper('msc_df_map', 'RAW.D5.2.10.GSBP', 'Business process in 2019' )
 
 ```
 
@@ -2793,6 +2880,16 @@ D5.5_DIFI_map <- D5.5_DIFI %>%
   filter(!is.na(SPI.D5.5.finance))
 
 spi_mapper('D5.5_DIFI_map', 'SPI.D5.5.finance', 'Statistical plan fully funded. Source: Paris21')
+
+```
+
+
+
+```{r save}
+# save final dataset
+spi_df_final <- spi_df %>%
+  select(colnames(country_metadata), starts_with("SPI"), starts_with("RAW"))
+
 
 ```
 
