@@ -825,12 +825,12 @@ openness_df <- openness_df %>%
 
 #do some quick renaming and formatting
 openness_df_temp1 <- openness_df %>% 
-  rename_with(~paste('RAW',., sep="."), .cols=c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore') ) 
+  rename_with(~paste('RAW.D2.2',., sep="."), .cols=c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore') ) 
 
 
 openness_df_temp2 <- openness_df %>% 
   mutate(across(c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore'), ~./100)) %>%
-  rename_with(~paste('SPI',., sep="."), .cols=c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore') ) 
+  rename_with(~paste('SPI.D2.2',., sep="."), .cols=c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore') ) 
 
 openness_df <- openness_df_temp1 %>%
   left_join(openness_df_temp2)
@@ -848,7 +848,7 @@ spi_df <- spi_df %>%
 
 #do the plots  
    ggplot() +
-    geom_map(data = filter(openness_df, date==2018), aes(map_id = iso3c, fill = Openness.subscore), map = maps$countries) + 
+    geom_map(data = filter(openness_df, date==2018), aes(map_id = iso3c, fill = RAW.D2.2.Openness.subscore), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -875,8 +875,8 @@ spi_df <- spi_df %>%
    filter(openness_df, date==2018) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=mean(Openness.subscore),
-           Label = paste(round(mean(Openness.subscore)), sep="")) %>%
+    mutate(Percentage=mean(RAW.D2.2.Openness.subscore),
+           Label = paste(round(mean(RAW.D2.2.Openness.subscore)), sep="")) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
@@ -890,9 +890,9 @@ spi_df <- spi_df %>%
   openness_df  %>%
     right_join(spi_df_empty) %>%
     group_by( date) %>%
-    mutate(Openness.subscore=if_else(is.na(Openness.subscore), 0, Openness.subscore)) %>%
-    mutate(Percentage=mean(Openness.subscore),
-           Label = paste(sum(Openness.subscore),'/',n(), sep="")) %>%
+    mutate(RAW.D2.2.Openness.subscore=if_else(is.na(RAW.D2.2.Openness.subscore), 0, RAW.D2.2.Openness.subscore)) %>%
+    mutate(Percentage=mean(RAW.D2.2.Openness.subscore),
+           Label = paste(sum(RAW.D2.2.Openness.subscore),'/',n(), sep="")) %>%
     ungroup() %>%
     ggplot(aes(y=Percentage, x=date)) +
       geom_point() +
@@ -2102,18 +2102,18 @@ geo_df <- geo_df %>%
     rename(iso3c=Country.Code) %>%
     group_by( iso3c) %>%
     right_join(country_metadata) %>%
-    mutate(RAW.D4.3.GEO.first.admin.level=if_else(is.na(First.administrative.level), 0, First.administrative.level),
-           RAW.D4.3.GEO.second.admin.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level))    
+    mutate(D4.3.GEO.first.admin.level=if_else(is.na(First.administrative.level), 0, First.administrative.level),
+           D4.3.GEO.second.admin.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level))    
   
 
 #do some quick renaming and formatting
 geo_df_temp1 <- geo_df %>% 
-  rename_with(~paste('RAW',., sep="."), .cols=c('RAW.D4.3.GEO.first.admin.level', 'RAW.D4.3.GEO.second.admin.level') ) 
+  rename_with(~paste('RAW',., sep="."), .cols=c('D4.3.GEO.first.admin.level', 'D4.3.GEO.second.admin.level') ) 
 
 
 geo_df_temp2 <- geo_df %>% 
-  mutate(across(c('RAW.D4.3.GEO.first.admin.level', 'RAW.D4.3.GEO.second.admin.level'), ~./100)) %>%
-  rename_with(~paste('SPI',., sep="."), .cols=c('RAW.D4.3.GEO.first.admin.level', 'RAW.D4.3.GEO.second.admin.level') ) 
+  mutate(across(c('D4.3.GEO.first.admin.level', 'D4.3.GEO.second.admin.level'), ~./100)) %>%
+  rename_with(~paste('SPI',., sep="."), .cols=c('D4.3.GEO.first.admin.level', 'D4.3.GEO.second.admin.level') ) 
 
 geo_df <- geo_df_temp1 %>%
   left_join(geo_df_temp2)
@@ -2129,7 +2129,7 @@ spi_df <- spi_df %>%
 
 #do the plots  
    ggplot() +
-    geom_map(data = filter(geo_df, date==2018), aes(map_id = iso3c, fill = First.administrative.level), map = maps$countries) + 
+    geom_map(data = filter(geo_df, date==2018), aes(map_id = iso3c, fill = RAW.D4.3.GEO.first.admin.level), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -2156,8 +2156,8 @@ spi_df <- spi_df %>%
    filter(geo_df, date==2018) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=mean(First.administrative.level),
-           Label = paste(round(mean(First.administrative.level)), sep="")) %>%
+    mutate(Percentage=mean(RAW.D4.3.GEO.first.admin.level),
+           Label = paste(round(mean(RAW.D4.3.GEO.first.admin.level)), sep="")) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
@@ -2171,9 +2171,9 @@ spi_df <- spi_df %>%
   geo_df  %>%
     right_join(spi_df_empty) %>%
     group_by( date) %>%
-    mutate(First.administrative.level=if_else(is.na(First.administrative.level), 0, First.administrative.level)) %>%
-    mutate(Percentage=mean(First.administrative.level),
-           Label = paste(sum(First.administrative.level),'/',n(), sep="")) %>%
+    mutate(RAW.D4.3.GEO.first.admin.level=if_else(is.na(RAW.D4.3.GEO.first.admin.level), 0, RAW.D4.3.GEO.first.admin.level)) %>%
+    mutate(Percentage=mean(RAW.D4.3.GEO.first.admin.level),
+           Label = paste(sum(RAW.D4.3.GEO.first.admin.level),'/',n(), sep="")) %>%
     ungroup() %>%
     ggplot(aes(y=Percentage, x=date)) +
       geom_point() +
@@ -2187,7 +2187,7 @@ spi_df <- spi_df %>%
       theme_bw()   
    
    ggplot() +
-    geom_map(data = filter(geo_df, date==2018), aes(map_id = iso3c, fill = Second.administrative.level), map = maps$countries) + 
+    geom_map(data = filter(geo_df, date==2018), aes(map_id = iso3c, fill = RAW.D4.3.GEO.second.admin.level), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -2214,8 +2214,8 @@ spi_df <- spi_df %>%
     filter(geo_df, date==2018) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=mean(Second.administrative.level),
-           Label = paste(round(mean(Second.administrative.level)), sep="")) %>%
+    mutate(Percentage=mean(RAW.D4.3.GEO.second.admin.level),
+           Label = paste(round(mean(RAW.D4.3.GEO.second.admin.level)), sep="")) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
@@ -2229,9 +2229,9 @@ spi_df <- spi_df %>%
   geo_df  %>%
     right_join(spi_df_empty) %>%
     group_by( date) %>%
-    mutate(Second.administrative.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level)) %>%
-    mutate(Percentage=mean(Second.administrative.level),
-           Label = paste(sum(Second.administrative.level),'/',n(), sep="")) %>%
+    mutate(RAW.D4.3.GEO.second.admin.level=if_else(is.na(RAW.D4.3.GEO.second.admin.level), 0, RAW.D4.3.GEO.second.admin.level)) %>%
+    mutate(Percentage=mean(RAW.D4.3.GEO.second.admin.level),
+           Label = paste(sum(RAW.D4.3.GEO.second.admin.level),'/',n(), sep="")) %>%
     ungroup() %>%
     ggplot(aes(y=Percentage, x=date)) +
       geom_point() +
@@ -2438,8 +2438,8 @@ D5.2.2.NABY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.2.NABY.csv", sep=
     (date-as.numeric(NABY))<=10 ~ 0.5, #within 10 years of reference period
     TRUE ~ 0 
   ),
-  RAW.D5.2.1.NABY=NABY)  %>%
-  select(iso3c, country, date, RAW.D5.2.1.NABY, SPI.D5.2.2.NABY  ) %>%
+  RAW.D5.2.2.NABY=NABY)  %>%
+  select(iso3c, country, date, RAW.D5.2.2.NABY, SPI.D5.2.2.NABY  ) %>%
   arrange(date, country)
 
 
@@ -2888,7 +2888,12 @@ spi_mapper('D5.5_DIFI_map', 'SPI.D5.5.finance', 'Statistical plan fully funded. 
 ```{r save}
 # save final dataset
 spi_df_final <- spi_df %>%
-  select(colnames(country_metadata), starts_with("SPI"), starts_with("RAW"))
+  select(country, iso3c, date, starts_with("SPI"), starts_with("RAW")) %>%
+  right_join(spi_df_empty)
+
+#write to csv
+spi_df_final %>%
+  write_excel_csv( path = paste(output_dir, 'SPI_data.csv'))
 
 
 ```
