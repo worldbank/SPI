@@ -8,7 +8,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, fig.height=7, fig.width=10)
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.height=7, fig.width=10)
 
 library(tidyverse)
 library(here)
@@ -20,7 +20,8 @@ library(httr)
 library(patchwork)
 library(ggrepel)
 library(lubridate)
-library(httr)
+library(haven)
+
 #set directories
 dir <- here()
 
@@ -2350,7 +2351,7 @@ D5.1_DILG <- read_csv(file = paste(raw_dir, "5.1_DILG","5.1_DILG.csv", sep="/" )
   transmute(
     country=Country,
     date=Year,
-    SPI.D5.1.LEGGOV=Data.Value
+    SPI.5.1.DILG=Data.Value
   ) %>%
     mutate(country=case_when(
     country=="Bahamas" ~ "Bahamas, The",                  
@@ -2383,13 +2384,19 @@ D5.1_DILG <- read_csv(file = paste(raw_dir, "5.1_DILG","5.1_DILG.csv", sep="/" )
     country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
     TRUE ~ country
   )) %>%
-  mutate(SPI.D5.1.LEGGOV=if_else(SPI.D5.1.LEGGOV=='no data',as.character(NA), SPI.D5.1.LEGGOV)) 
+  mutate(RAW.5.1.DILG=if_else(SPI.5.1.DILG=='no data',as.character(NA), SPI.5.1.DILG),
+         SPI.5.1.DILG=if_else(SPI.5.1.DILG=='no data',as.numeric(NA), as.numeric(SPI.5.1.DILG))) %>%
+  right_join(spi_df_empty)
+
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(D5.1_DILG)
 
 
 D5.1_DILG_map <- D5.1_DILG %>%
-  filter(!is.na(SPI.D5.1.LEGGOV))
+  filter(!is.na(SPI.5.1.DILG))
 
-spi_mapper('D5.1_DILG_map', 'SPI.D5.1.LEGGOV', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
+spi_mapper('D5.1_DILG_map', 'SPI.5.1.DILG', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
 
 ```
 ## Indicator 5.2: standards 
@@ -2779,7 +2786,7 @@ D5.3_DISK <- read_csv(file = paste(raw_dir, "5.3_DISK","5.3_DISK.csv", sep="/" )
   transmute(
     country=Country,
     date=Year,
-    SPI.D5.3.skill=Data.Value
+    SPI.5.3.DISK=Data.Value
   ) %>%
     mutate(country=case_when(
     country=="Bahamas" ~ "Bahamas, The",                  
@@ -2812,13 +2819,19 @@ D5.3_DISK <- read_csv(file = paste(raw_dir, "5.3_DISK","5.3_DISK.csv", sep="/" )
     country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
     TRUE ~ country
   )) %>%
-  mutate(SPI.D5.3.skill=if_else(SPI.D5.3.skill=='no data',as.character(NA), SPI.D5.3.skill)) 
+  mutate(RAW.5.3.DISK=if_else(SPI.5.3.DISK=='no data',as.character(NA), SPI.5.3.DISK),
+         SPI.5.3.DISK=if_else(SPI.5.3.DISK=='no data',as.numeric(NA), as.numeric(SPI.5.3.DISK))/100) %>%
+  right_join(spi_df_empty)
+
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(D5.3_DISK)
 
 
 D5.3_DISK_map <- D5.3_DISK %>%
-  filter(!is.na(SPI.D5.3.skill))
+  filter(!is.na(SPI.5.3.DISK))
 
-spi_mapper('D5.3_DISK_map', 'SPI.D5.3.skill', 'Systematic use of statistical knowledge with statistical terms and indicators in national policy documents. Source: Paris21')
+spi_mapper('D5.3_DISK_map', 'SPI.5.3.DISK', 'Systematic use of statistical knowledge with statistical terms and indicators in national policy documents. Source: Paris21')
 
 ```
 
@@ -2841,7 +2854,7 @@ D5.5_DIFI <- read_csv(file = paste(raw_dir, "5.5_DIFI","D5.5_DIFI.csv", sep="/" 
   transmute(
     country=Country,
     date=Year,
-    SPI.D5.5.finance=Data.Value
+    SPI.5.5.DIFI=Data.Value
   ) %>%
     mutate(country=case_when(
     country=="Bahamas" ~ "Bahamas, The",                  
@@ -2874,13 +2887,22 @@ D5.5_DIFI <- read_csv(file = paste(raw_dir, "5.5_DIFI","D5.5_DIFI.csv", sep="/" 
     country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
     TRUE ~ country
   )) %>%
-  mutate(SPI.D5.5.finance=if_else(SPI.D5.5.finance=='no data',as.character(NA), SPI.D5.5.finance)) 
+  mutate(RAW.5.5.DIFI=if_else(SPI.5.5.DIFI=='no data',as.character(NA), SPI.5.5.DIFI),
+         SPI.5.5.DIFI=if_else(SPI.5.5.DIFI=='no data',as.numeric(NA), as.numeric(SPI.5.5.DIFI))) %>%
+  right_join(spi_df_empty)
+
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(D5.5_DIFI)
+
+
+
 
 
 D5.5_DIFI_map <- D5.5_DIFI %>%
-  filter(!is.na(SPI.D5.5.finance))
+  filter(!is.na(SPI.5.5.DIFI))
 
-spi_mapper('D5.5_DIFI_map', 'SPI.D5.5.finance', 'Statistical plan fully funded. Source: Paris21')
+spi_mapper('D5.5_DIFI_map', 'SPI.5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
 
 ```
 
@@ -2890,12 +2912,32 @@ spi_mapper('D5.5_DIFI_map', 'SPI.D5.5.finance', 'Statistical plan fully funded. 
 # save final dataset
 spi_df_final <- spi_df %>%
   select(country, iso3c, date, starts_with("SPI"), starts_with("RAW")) %>%
-  right_join(spi_df_empty)
+  right_join(spi_df_empty) %>%
+  arrange(country,-date)
 
 #write to csv
 spi_df_final %>%
-  write_excel_csv( path = paste(output_dir, 'SPI_data.csv'))
+  write_excel_csv( path = paste(output_dir, 'SPI_data.csv', sep="/"))
 
+#label data
+#read in metadata
+names_df <- data.frame('source_id'=colnames(spi_df_final))
+
+spi_meta <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep="")) %>%
+  right_join(names_df) %>%
+  mutate(source_name=if_else(is.na(source_name), paste(source_id), source_name)) %>%
+  arrange(factor(source_id, levels=colnames(spi_df_final)))
+
+#label data
+
+label(spi_df_final) = as.list(spi_meta$source_name)
+
+
+#write to stata
+spi_df_final %>%
+  rename_with(~gsub(".","_",.x, fixed=TRUE)) %>%
+  select(-lat,-long) %>%
+  write_dta( path = paste(output_dir, 'SPI_data.dta', sep="/"))
 
 ```
 
