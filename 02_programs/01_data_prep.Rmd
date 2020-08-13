@@ -20,6 +20,7 @@ library(httr)
 library(patchwork)
 library(ggrepel)
 library(lubridate)
+library(httr)
 #set directories
 dir <- here()
 
@@ -720,13 +721,13 @@ D2.1_DSDR <- read_csv(file = paste(raw_dir, '/2.1_DSDR/', "D2.1.GDDS.csv", sep="
     SDDS=case_when(
      IDDS=="SDDS"~ 1, 
     TRUE ~ 0 ))  %>%
-  bind_rows(D2.2_DSDR_sci) %>%
+  bind_rows(D2.1_DSDR_sci) %>%
   rename(RAW.D2.1.IDDS=IDDS) %>%
   select(iso3c, country, date, RAW.D2.1.IDDS, SPI.D2.1.GDDS  ) %>%
   arrange(date, country)
 
 
-D2.1_DSDR_map <- D2.2_DSDR %>%
+D2.1_DSDR_map <- D2.1_DSDR %>%
   filter(RAW.D2.1.IDDS>0)
 
 spi_mapper('D2.1_DSDR_map', 'SPI.D2.1.GDDS', 'SDDS Data Standards in Place' )
