@@ -1,3 +1,0 @@
-"0",""
-"0","cs_df_map <- cs_df %>%  filter(!is.na(AGRI.CENSUS))"
-"0","spi_mapper('cs_df_map', 'AGRI.CENSUS', 'Agriculture Census Available in Past 20 Years in 2019' )"

@@ -1,15 +1,70 @@
-"0","knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, fig.height=7, fig.width=10)"
+"0","knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.height=7, fig.width=10)"
 "0",""
 "0","library(tidyverse)"
 "0","library(here)"
+"2","here() starts at C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1
+"
 "0","library(wbggeo)"
+"2","Loading required package: wbgcharts
+"
+"2","Loading required package: extrafont
+"
+"2","Registering fonts with R
+"
 "0","library(wbgmaps)"
 "0","library(ggthemes)"
 "0","library(Hmisc)"
+"2","Loading required package: lattice
+"
+"2","Loading required package: survival
+"
+"2","Loading required package: Formula
+"
+"2","
+Attaching package: ‘Hmisc’
+
+"
+"2","The following object is masked from ‘package:plotly’:
+
+    subplot
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    src, summarize
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    format.pval, units
+
+"
 "0","library(httr)"
+"2","
+Attaching package: ‘httr’
+
+"
+"2","The following object is masked from ‘package:plotly’:
+
+    config
+
+"
 "0","library(patchwork)"
+"2","package ‘patchwork’ was built under R version 4.0.2"
 "0","library(ggrepel)"
 "0","library(lubridate)"
+"2","package ‘lubridate’ was built under R version 4.0.2"
+"2","
+Attaching package: ‘lubridate’
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    date, intersect, setdiff, union
+
+"
+"0","library(haven)"
+"2","package ‘haven’ was built under R version 4.0.2"
 "0","#set directories"
 "0","dir <- here()"
 "0",""

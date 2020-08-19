@@ -1,3 +1,0 @@
-"0",""
-"0","msc_df_map <- D5.2.MSC %>%  filter(!is.na(EMPL))"
-"0","spi_mapper('msc_df_map', 'EMPL', 'Classification of status of employment in 2019' )"

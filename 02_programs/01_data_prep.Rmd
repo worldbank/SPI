@@ -1681,6 +1681,61 @@ This indicator draws from data collected by the Statistical Performance Indicato
   - Health/Demographic survey   
   - Business/establishment survey   
 
+```{r cs_2}
+
+Request_metadata <- GET(url = "https://api.worldbank.org/v2/sources/2/country/all/metadata?per_page=30000&format=json")
+Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+JSON_metadata <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+  data.frame()
+
+#do some conversion to produce a dataframe
+df <- JSON_metadata$source.concept %>%
+  data.frame() 
+
+#do some more cleaning and conversion
+df <- df$variable %>%
+  data.frame()   %>%
+  rename(iso3c=id) %>%
+  unnest(metatype) %>%
+  pivot_wider(
+    id_cols=iso3c,
+    names_from=id,
+    values_from=value
+  ) 
+
+census_df <- df %>%
+  mutate(country=ShortName) %>%
+  filter(!is.na(IncomeGroup)) %>%
+  mutate(indicator_date=as.numeric(Latestpopulationcensus))
+
+#Now calculate our SPI score for this indicator
+for (i in 2016:2019) {
+  temp <- census_df %>%
+    mutate(date=i) %>%
+    mutate(last_val=str_extract(Latestpopulationcensus, "\\d{4}") )%>%
+    mutate(last_val=as.numeric(last_val)) %>%
+    mutate(indicator=case_when(
+      (date-last_val<=10) & (date-last_val>0) ~ 1,
+      (date-last_val<=20) & (date-last_val>0) ~ 0.5,
+      TRUE ~ 0 )
+    )  %>%
+    ungroup() %>%
+    select(c('iso3c', 'country', 'date', 'last_val', 'indicator')  ) %>%
+    arrange(date, country)
+  
+  
+  assign(paste('temp',i,sep="_"), temp)
+}
+
+temp <- temp_2019
+
+for (i in 2016:2018) {
+  temp <- bind_rows(temp, get(paste('temp',i,sep="_")))
+}
+temp
+```
 
 
 ```{r cs}
@@ -2909,10 +2964,21 @@ spi_mapper('D5.5_DIFI_map', 'SPI.5.5.DIFI', 'Statistical plan fully funded. Sour
 
 
 ```{r save}
+
+#add in population
+pop_df <- wbstats::wb(country="all",
+             indicator='SP.POP.TOTL',
+             startdate=2004,
+             enddate=2019) %>%
+  mutate(date=as.numeric(date)) %>%
+  mutate(population=value) %>%
+  select(country, date, population)
+
 # save final dataset
 spi_df_final <- spi_df %>%
   select(country, iso3c, date, starts_with("SPI"), starts_with("RAW")) %>%
   right_join(spi_df_empty) %>%
+  left_join(pop_df) %>%
   arrange(country,-date)
 
 #write to csv
