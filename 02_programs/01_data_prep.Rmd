@@ -661,14 +661,699 @@ print(g2)
 
 
 ## Indicator 1.5: Data use by international organizations   
+Below is the list of AKI indicators:
 
-New indicator of level of congruence between UNSD and national database of SDG indicators. For each of the indicators calculate whether the number in the database for the most recent year is the same or different. The indicator is the percentage that are the same.
+- AKI 1.5.1: Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)  
+- AKI 1.5.2: Food Insecurity Experience Scale 
+- AKI 1.5.3: Mortality rate, under-5 (per 1,000 live births)  
+- AKI 1.5.4: Proportion of children and young people in grades 2 or 3 achieving at least a minimum proficiency level in reading and mathematics, by sex.  
+- AKI 1.5.5: Maternal Mortality
+- AKI 1.5.6: People using safely managed drinking water services (% of population)  
 
-Note:
-> I met with significant technical challenges trying to compile this information.  It would be a useful data collection exercise, but will require significant time and effort.  Because this has not yet taken place, I have not produced indicators for this topic area.
+- AKI 1.5.7: Access to electricity (% of population)  
+- AKI 1.5.8: Unemployment, total (% of total labor force)  
+- AKI 1.5.9: Manufacturing, value added (% of GDP)  
+- AKI 1.5.10: Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)  
 
-> An alternative would be to form this indicator using some of the quality metadata we have collected for the Availability of Key Indicators.  This could include the poverty indicators, child mortality, maternal mortality, safely managed drinking water, electricity, and debt.
+- AKI 1.5.11: Level of water stress: freshwater withdrawal as a proportion of available freshwater resources  
+- AKI 1.5.12: Renewable energy consumption (% of total final energy consumption)  
+- AKI 1.5.13: Households and NPISHs Final consumption expenditure (current LCU) 
+
+- AKI 1.5.14: Quarterly GDP
+- AKI 1.5.15: Debt service (PPG and IMF only, % of exports of goods, services and primary income) 
+
+```{r metadata_pull}
+
+# pull in some WDI metadata which will be used for constructing AKI indicators.
+# WDI metadata was gathered using previous vintages of WDI from 2016-19
+# Metadata was gathered and saved as csv files in the 011_data folder
+
+for (i in 2016:2019) {
+  temp <- read_csv(file = paste(raw_dir, "/metadata/WDI_metadata_",i,".csv", sep="" )) %>%
+    as_tibble(.name_repair='universal') %>%
+    mutate(National.accounts.reference.year=as.numeric(National.accounts.reference.year),
+           date=i)
   
+    assign(paste("WDI_metadata",i,sep="_"), temp)
+}
+
+WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_2018, WDI_metadata_2019)
+```
+
+
+
+### AKI 1.5.1, 1.5.9, 1.5, 1.5.11, 1.5.12, 1.5.13
+
+First we will pull data for indicators coming straight from WDI.  For some indicators, we will use alternative sources.
+
+Indicators coming from the WDI directly are:  
+
+- AKI 1.5.1: Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)  
+- AKI 1.5.9: Manufacturing, value added (% of GDP)  
+- AKI 1.5.10: Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)  
+- AKI 1.5.11: Level of water stress: freshwater withdrawal as a proportion of available freshwater resources  
+- AKI 1.5.12: Renewable energy consumption (% of total final energy consumption)  
+- AKI 1.5.13: Households and NPISHs Final consumption expenditure (current LCU)  
+
+Scoring:
+
+1 Point. 3 or more values available within past 5 years	
+0.6 Points. 2 values available within past 5 years; 	
+0.3 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+```{r data_pulls, echo=TRUE}
+
+##########
+# Pull Tags for WDI Data
+##########
+
+# make request to World Bank API
+wdiRequest <- GET(url = "http://api.worldbank.org/v2/indicator?per_page=20000&format=json&source=2")
+wdiResponse <- content(wdiRequest, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+wdisJSON <- jsonlite::fromJSON(wdiResponse, flatten = TRUE) %>%
+    data.frame()
+
+EdStatsRequest <- GET(url = "http://api.worldbank.org/v2/indicator?per_page=20000&format=json&source=12")
+EdStatsResponse <- content(EdStatsRequest, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+EdStatsJSON <- jsonlite::fromJSON(EdStatsResponse, flatten = TRUE) %>%
+  data.frame()
+
+aki<- c(
+        'Pupils below minimum reading proficiency at end of primary (%). Low GAML threshold',
+        'People using safely managed drinking water services (% of population)',
+        'Unemployment, total (% of total labor force) (national estimate)' ,
+        'Manufacturing, value added (% of GDP)',
+        'Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)',
+        'Level of water stress: freshwater withdrawal as a proportion of available freshwater resources',
+        'Renewable energy consumption (% of total final energy consumption)',
+        'Households and NPISHs Final consumption expenditure (current LCU)',
+        'Debt service (PPG and IMF only, % of exports of goods, services and primary income)'  )
+
+get_tag_aki_df<-wdisJSON %>%
+  bind_rows(EdStatsJSON) %>%
+  filter((name %in% aki	)) %>%
+  arrange(factor(name, levels = aki)) %>%
+  select(id, name,  sourceOrganization) 
+
+#get WDI metadata infor
+cache_list<-wbstats::wbcache()
+country_list <- wbstats::wbcountries()
+
+aki_list<-get_tag_aki_df[,'id']
+
+for (reference_year in 2016:2019) {
+  temp <-wbstats::wb(country="countries_only", 
+              indicator=aki_list,
+              startdate=reference_year-5,
+              enddate=reference_year,
+              return_wide = T,
+              removeNA=FALSE) %>%
+          filter(((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% #filter out years outside reference window of 3 years     
+          write_excel_csv(path = paste(output_dir, "/D3.AKI_data_pull_",reference_year,".csv", sep="" )) %>%
+          mutate_at(.vars=aki_list, ~if_else(is.na(.),0,1)) %>% #create 0,1 variable for whether data point exists for country
+          group_by(iso3c, country) %>%
+          summarise_all((~(if(is.numeric(.)) sum(., na.rm = TRUE) else first(.)))) %>% #group by country to create one observation per country                 containing whether or not data point existed
+          mutate_at(.vars=aki_list, ~case_when(
+            .>=3 ~ 1,
+            .==2 ~ 0.6,
+            .==1 ~ 0.3,
+            .==0 ~ 0, 
+            TRUE ~ 0
+          )) %>% # 1 point for at least 3 values, 0.6 for 2 values, 0.3 for 1 values, 0 otherwise
+          mutate(date=reference_year) %>%
+          ungroup() %>%
+          select(iso3c, country, date,  aki_list) %>%
+          rename_at(aki_list, ~(paste('SPI.D1.5.',.,sep=""))) %>% #add 'D3.' as prefix before these indicators.
+          left_join(country_list) #attach country metadata
+
+
+  assign(paste("D3.AKI",reference_year,sep="_"), temp)
+}
+
+
+
+```
+
+### AKI 1.5.1: Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)
+
+The data will be pulled from the WDI and combined with metadata from the Povcalnet
+
+Scoring is as follows:
+Quality (0.5 points total):
+0.5 Point. Comparable data lasting at least two years within past 5 years	
+0 Points. No comparable data within past 5 years
+
+Frequency (0.5 points total):
+0.5 Point. 3 or more values available within past 5 years	
+0.3 Points. 2 values available within past 5 years; 	
+0.15 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+
+```{r 3.1}
+library(povcalnetR) 
+
+#the code below is based on public released code by povcalnet team:
+#https://github.com/worldbank/Global_Poverty_Blogs/blob/master/bg_povcalnet_comparability/R/comparability_breaks.R
+
+# some contants
+year_range <- 1990:2020
+metadata_path <- "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/506801/povcalnet_comparability.csv"
+
+# Load data ---------------------------------------------------------------
+
+metadata <- read_csv(metadata_path)
+cov_lkup <- c(3, 2, 1, 4)
+names(cov_lkup) <- c("N", "U", "R", "A")
+
+dat_lkup <- c(2,1)
+names(dat_lkup) <- c("income","consumption")
+
+
+pcn <- povcalnet()
+pcn$coveragetype <- cov_lkup[pcn$coveragetype]
+pcn$datatype <- dat_lkup[pcn$datatype]
+
+df <- pcn %>%
+  inner_join(metadata, by = c("countrycode", "year", "coveragetype", "datatype"))
+
+
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+  
+  temp1<-df %>%
+        filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
+        mutate(frequency=((reference_year-as.numeric(year))<=5) & (reference_year>=as.numeric(year))) %>% 
+        filter(frequency==TRUE) %>%
+        group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
+        summarise(SPI.QUAL.D1.5.POV=n())  %>%
+        ungroup() %>%
+        group_by(countrycode) %>% #now get a total by country with the max number of comparable estimates
+        summarise(SPI.QUAL.D1.5.POV=max(SPI.QUAL.D1.5.POV, na.rm=T)) %>%
+        mutate(SPI.QUAL.D1.5.POV=if_else(SPI.QUAL.D1.5.POV>=2,0.5,0)) #only give point if there is at least two observations that are comparable
+  
+  
+  temp <-df %>%
+          filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
+          mutate(frequency=((reference_year-as.numeric(year))<=5) & (reference_year>=as.numeric(year))) %>% 
+          mutate(SPI.FREQ.D1.5.POV=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
+          group_by(countryname,countrycode) %>%
+          summarise(SPI.FREQ.D1.5.POV=sum(SPI.FREQ.D1.5.POV, na.rm=T)) %>% 
+          mutate(SPI.FREQ.D1.5.POV=case_when(
+            SPI.FREQ.D1.5.POV>=3 ~ 0.5,
+            SPI.FREQ.D1.5.POV==2 ~ 0.3,
+            SPI.FREQ.D1.5.POV==1 ~ 0.15,
+            SPI.FREQ.D1.5.POV==0 ~ 0, 
+            TRUE ~ 0
+          )) %>%
+          left_join(temp1) %>% #now bring in quality dimension
+          mutate(SPI.QUAL.D1.5.POV=if_else(!is.na(SPI.QUAL.D1.5.POV),SPI.QUAL.D1.5.POV,0)) %>% #recode some missing values as zero, who had no observations in 5 year window
+          mutate(SPI.D1.5.POV=SPI.FREQ.D1.5.POV+SPI.QUAL.D1.5.POV) %>% 
+          mutate(date=reference_year,
+                 country=countryname,
+                 iso3c=countrycode) %>%
+          select( country,iso3c, date, starts_with('SPI.D1.5.POV')) 
+
+
+  assign(paste("D3.1.AKI",reference_year,sep="_"), temp)
+}
+
+D3.1.AKI <- bind_rows(D3.1.AKI_2016, D3.1.AKI_2017, D3.1.AKI_2018, D3.1.AKI_2019)
+
+
+
+```
+
+### AKI 1.5.2: Hunger
+
+We examine the Food Insecurity Experience Scale from the FAO (http://www.fao.org/faostat/en/#data/FS).  Data for food insecurity was pulled on May 1, 2020.
+
+Scoring
+1 Point. 3 or more values available within past 5 years	
+0.6 Points. 2 values available within past 5 years; 	
+0.3 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+
+```{r AKI_3.2}
+
+
+#Read in data from UN Inter-agency Group for Child Mortality Estimation
+
+D3.2.AKI.FIES <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.2.FIES.csv', sep="/")) %>%
+  rename(year_code="Year Code",
+         iso3c="ISO3 Code") %>%
+  mutate(date=as.numeric(str_extract(year_code, "^.{4}")),
+         SPI.D1.5.FIES=Value)
+
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+  temp <-D3.2.AKI.FIES %>%
+          filter(((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% #filter out years outside reference window of 5 years     
+          mutate(SPI.D1.5.FIES=if_else(is.na(SPI.D1.5.FIES),0,1)) %>% #create 0,1 variable for whether data point exists for country
+          group_by(iso3c) %>%
+          summarise_all((~(if(is.numeric(.)) sum(., na.rm = TRUE) else first(.)))) %>% #group by country to create one observation per country                 containing whether or not data point existed
+          mutate(SPI.D1.5.FIES=case_when(
+            SPI.D1.5.FIES>=3 ~ 1,
+            SPI.D1.5.FIES==2 ~ 0.6,
+            SPI.D1.5.FIES==1 ~ 0.3,
+            SPI.D1.5.FIES==0 ~ 0, 
+            TRUE ~ 0
+          )) %>% # 1 point for at least 3 values, 0.6 for 2 values, 0.3 for 1 values, 0 otherwise
+          mutate(date=reference_year) %>%
+          select( iso3c, date, starts_with('SPI.')) 
+
+
+  assign(paste("D3.2.AKI",reference_year,sep="_"), temp)
+}
+
+D3.2.AKI <- bind_rows(D3.2.AKI_2016, D3.2.AKI_2017, D3.2.AKI_2018, D3.2.AKI_2019)
+```
+
+
+
+### AKI 1.5.3: Mortality rate, under-5 (per 1,000 live births)  
+
+The data in WDI is modeled, based on HHS and Vital Registration.  We use the following as a source for raw data produced by national statistical offices that is used in this modeling.  
+
+https://childmortality.org/data 
+
+Data was pulled on April 13, 2020.
+
+Countries are ranked by source quality (admin data > survey > no data) and frequency.
+Score on this indicator has a max of 1 point with 0.5 points for source quality and 0.5 points for frequency.  Detailed scoring for source quality and frequency components are below.
+
+Quality (0.5 points total):
+0.5 Point. Vital Registration data available within past 5 years	
+0.25 Points. Survey Data availabe, but no Vital Registration data within past 5 years; 	
+0 Points. None within past 5 years
+
+Frequency (0.5 points total):
+0.5 Point. 3 or more values available within past 5 years	
+0.3 Points. 2 values available within past 5 years; 	
+0.15 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+
+```{r aki_3.3}
+
+#Read in data from UN Inter-agency Group for Child Mortality Estimation
+
+D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.3_child_mort_RAW_v01.csv', sep="/")) %>%
+  filter(INDICATOR=='Under-five mortality rate' & SEX=='Total') %>% #keep just observations for under 5 child mortality and for both sexes 
+  filter(OBS_STATUS=='Included in IGME') %>% # Also keep only surveys that met IGME criteria for inclusion as a nationally representative statistic
+  mutate(date=as.numeric(str_extract(TIME_PERIOD, "^.{4}")),
+         country=REF_AREA,
+         D3.CHLD.MORT=OBS_VALUE)
+
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+  temp <-D3.3.AKI.MORT %>%
+          mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
+          mutate(SPI.FREQ.D1.5.CHLD.MORT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
+          mutate(SPI.QUAL.D1.5.CHLD.MORT=case_when(
+                   reference_year-as.numeric(date)>=5 ~ 0, #outside 5 year window
+                   SERIES_METHOD=='Vital Registration' ~ 0.5,
+                   SERIES_METHOD!='Vital Registration' ~ 0.25,
+                   TRUE ~ as.numeric(NA)
+                 )) %>%
+          group_by(country) %>%
+          summarise(SPI.FREQ.D1.5.CHLD.MORT=sum(SPI.FREQ.D1.5.CHLD.MORT, na.rm=T),
+                    SPI.QUAL.D1.5.CHLD.MORT=max(SPI.QUAL.D1.5.CHLD.MORT, na.rm=T)) %>% 
+          mutate(SPI.FREQ.D1.5.CHLD.MORT=case_when(
+            SPI.FREQ.D1.5.CHLD.MORT>=3 ~ 0.5,
+            SPI.FREQ.D1.5.CHLD.MORT==2 ~ 0.3,
+            SPI.FREQ.D1.5.CHLD.MORT==1 ~ 0.15,
+            SPI.FREQ.D1.5.CHLD.MORT==0 ~ 0, 
+            TRUE ~ 0
+          )) %>%
+          mutate(SPI.D1.5.CHLD.MORT=SPI.FREQ.D1.5.CHLD.MORT+SPI.QUAL.D1.5.CHLD.MORT) %>% 
+          mutate(date=reference_year) %>%
+          select( country, date, starts_with('SPI.')) 
+
+
+  assign(paste("D3.3.AKI",reference_year,sep="_"), temp)
+}
+
+D3.3.AKI <- bind_rows(D3.3.AKI_2016, D3.3.AKI_2017, D3.3.AKI_2018, D3.3.AKI_2019)
+
+
+```
+
+
+```{r country_label_fixes, include=FALSE}
+
+#make country labels comparable to WDI
+D3.3.AKI <- D3.3.AKI %>%
+  mutate(country=case_when(
+    country=="Bahamas" ~ "Bahamas, The",                  
+    country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
+    country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
+    country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
+    country=="Congo"  ~ "Congo, Rep."        ,           
+    country=="Curacao"  ~  "Curacao"       ,                
+    country=="Czechia"   ~  "Czech Republic"     ,        
+    country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
+    country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
+    country=="United Kingdom"   ~  "United Kingdom"    ,         
+    country=="Gambia"    ~  "Gambia, The"     ,           
+    country=="Iran (Islamic Republic of)"  ~ "Iran, Islamic Rep." ,           
+    country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
+    country=="Republic of Korea"   ~ "Korea, Rep."   ,               
+    country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
+    country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
+    country=="Saint Lucia"   ~ "St. Lucia",
+    country=="Republic of Moldova"   ~  "Moldova"   ,                  
+    country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
+    country=="Slovakia"   ~  "Slovak Republic"             ,
+    country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
+    country=="United States of America"  ~ "United States"  ,                
+    country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
+    country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
+    country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
+    country=="Viet Nam"  ~ "Vietnam"        ,              
+    country=="Yemen"  ~ "Yemen, Rep.",
+    country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
+    TRUE ~ country
+  ))
+
+
+```
+
+
+
+
+```{r AKI_3.3, eval=FALSE, include=FALSE}
+EdStatsRequest_metadata <- GET(url = "https://api.worldbank.org/v2/country/all/indicator/SE.LPV.PRIM.BMP?footnote=y&per_page=30000&format=json")
+EdStatsResponse_metadata <- content(EdStatsRequest_metadata, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+EdStatsJSON_metadata <- jsonlite::fromJSON(EdStatsResponse_metadata, flatten = TRUE) %>%
+  data.frame() %>%
+  filter(str_length(footnote)>0)
+```
+
+
+### AKI 1.5.5 Maternal Mortality Ratio
+
+The data is sourced from the the Inter-Agency Group (200 countries) to improve time and country coverages. Tne national estimates with the source information are available at https://www.who.int/reproductivehealth/publications/maternal-mortality-2000-2017/en/.  The data was accessed on April 3, 2020.  This data was used for modelling maternal mortality, which are then fed into the modelled estimates on Maternal Mortality (SH.STA.MMRT) in the WDI.
+
+For our purposes, we will use the raw data from the country surveys as our data for the availability of key indicators, since the modelled estimates are produced out of sample, and thus not reflective of a country's national statistical system.
+
+Countries are ranked by source quality (admin data > survey > no data) and frequency.
+Score on this indicator has a max of 1 point with 0.5 points for source quality and 0.5 points for frequency.  Detailed scoring for source quality and frequency components are below.
+
+Quality (0.5 points total):
+0.5 Point. Vital Registration data available within past 5 years	
+0.25 Points. Survey Data or Census Data availabe, but no Vital Registration data within past 5 years; 	
+0 Points. None within past 5 years
+
+Frequency (0.5 points total):
+0.5 Point. 3 or more values available within past 5 years	
+0.3 Points. 2 values available within past 5 years; 	
+0.15 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+```{r AKI_3.5}
+
+
+#Read in data from UN Inter-agency Group 
+
+D3.5.AKI.MMR <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.5.BMat2019_datainputs.csv', sep="/")) %>%
+  filter(modelinclude=='TRUE') %>% #keep just observations that the UN inter-agency group deemed credible for use in modelling 
+  mutate(date=end,
+         iso3c=iso,
+         D3.MMRT=pm_obs)
+
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+  temp <-D3.5.AKI.MMR %>%
+          mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
+          mutate(SPI.FREQ.D1.5.MMRT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
+          mutate(SPI.QUAL.D1.5.MMRT=case_when(
+                   reference_year-as.numeric(date)>=5 ~ 0, #outside 5 year window
+                   type=='vr' ~ 0.5,
+                   type!='vr' ~ 0.25,
+                   TRUE ~ as.numeric(NA)
+                 )) %>%
+          group_by(iso3c) %>%
+          summarise(SPI.FREQ.D1.5.MMRT=sum(SPI.FREQ.D1.5.MMRT, na.rm=T),
+                    SPI.QUAL.D1.5.MMRT=max(SPI.QUAL.D1.5.MMRT, na.rm=T)) %>% 
+          mutate(SPI.FREQ.D1.5.MMRT=case_when(
+            SPI.FREQ.D1.5.MMRT>=3 ~ 0.5,
+            SPI.FREQ.D1.5.MMRT==2 ~ 0.3,
+            SPI.FREQ.D1.5.MMRT==1 ~ 0.15,
+            SPI.FREQ.D1.5.MMRT==0 ~ 0, 
+            TRUE ~ 0
+          )) %>%
+          mutate(SPI.D1.5.MMRT=SPI.FREQ.D1.5.MMRT+SPI.QUAL.D1.5.MMRT) %>% 
+          mutate(date=reference_year) %>%
+          select( iso3c, date, starts_with('SPI.')) 
+
+
+  assign(paste("D3.5.AKI",reference_year,sep="_"), temp)
+}
+
+D3.5.AKI <- bind_rows(D3.5.AKI_2016, D3.5.AKI_2017, D3.5.AKI_2018, D3.5.AKI_2019)
+
+```
+
+
+
+
+
+
+### AKI 1.5.7: Access to electricity (% of population) 
+
+Access to Electricity (% of population) has 99% coverage in the WDI database making it less useful for distinguishing between countries.  In order to improve the usefulness of this indicator, we are making use of data compiled by World Bank colleagues on surveys containing electricity items.  According to the access to electricity metadata, around 42 countries have no data and an imputed value is assigned based on the regional average.  By going to survey source data, we address this issue of imputation, which gives a misleading picture of availability for our purposes.  Below is the metadata from the WDI for methods for the access to electricity indicator.
+
+>Data for access to electricity are collected among different sources: mostly data from nationally representative household surveys (including national censuses) were used. Survey sources include Demographic and Health Surveys (DHS) and Living Standards Measurement Surveys (LSMS), Multi-Indicator Cluster Surveys (MICS), the World Health Survey (WHS), other nationally developed and implemented surveys, and various government agencies (for example, ministries of energy and utilities). Given the low frequency and the regional distribution of some surveys, a number of countries have gaps in available data. To develop the historical evolution and starting point of electrification rates, a simple modeling approach was adopted to fill in the missing data points - around 1990, around 2000, and around 2010. Therefore, a country can have a continuum of zero to three data points. There are 42 countries with zero data point and the weighted regional average was used as an estimate for electrification in each of the data periods. 170 countries have between one and three data points and missing data are estimated by using a model with region, country, and time variables. The model keeps the original observation if data is available for any of the time periods. This modeling approach allowed the estimation of electrification rates for 212 countries over these three time periods (Indicated as "Estimate"). Notation "Assumption" refers to the assumption of universal access in countries classified as developed by the United Nations. Data begins from the year in which the first survey data is available for each country.
+
+Scoring
+1 Point. 3 or more values available within past 5 years	
+0.6 Points. 2 values available within past 5 years; 	
+0.3 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+```{r D3.7_AKI}
+#read in file from rawdata folder
+D3.7.ELEC <- read_csv(file = paste(raw_dir, "3.2_DPES/D3.7.ELEC.csv", sep="/" )) %>%
+  rename(country=Country,
+         iso3c="Country code",
+         date=Time)
+
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+  temp <-D3.7.ELEC %>%
+          mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
+          mutate(SPI.D1.5.ELEC=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
+          group_by(country) %>%
+          summarise(SPI.D1.5.ELEC=sum(SPI.D1.5.ELEC, na.rm=T)) %>%
+          mutate(SPI.D1.5.ELEC=case_when(
+            SPI.D1.5.ELEC>=3 ~ 1,
+            SPI.D1.5.ELEC==2 ~ 0.6,
+            SPI.D1.5.ELEC==1 ~ 0.3,
+            SPI.D1.5.ELEC==0 ~ 0, 
+            TRUE ~ 0
+          )) %>%
+          mutate(date=reference_year) %>%
+          select( country, date, starts_with('SPI.')) 
+
+
+  assign(paste("D3.7.AKI",reference_year,sep="_"), temp)
+}
+
+D3.7.AKI <- bind_rows(D3.7.AKI_2016, D3.7.AKI_2017, D3.7.AKI_2018, D3.7.AKI_2019)
+```
+
+
+
+### AKI 1.5.14 Quarterly GDP
+
+Quarterly GDP numbers were pulled from the IMF website.
+
+After GDP by expenditure, quarterly GDP is probably the most important development to be made in a system of National Accounts, before the development of full sectoral accounts. IMF IFS has quarterly GDP from various sources, including governments and international agencies at https://data.imf.org/?sk=4C514D48-B6BA-49ED-8AB9-52B0C1A0179B
+
+Scoring
+1 Point. 3 or more values available within past 5 years	
+0.6 Points. 2 values available within past 5 years; 	
+0.3 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+
+
+```{r AKI_3.14}
+
+#read in file from rawdata folder
+D3.14.QUART.GDP <- read_csv(file = paste(raw_dir, "3.2_DPES/D3.14.QUART.GDP.csv", sep="/" ))
+
+#clean data and produce indicator for each year
+#Now loop from 2016 and 2019, keeping just data inside last 5 years.
+for (reference_year in 2016:2019) {
+temp <-D3.14.QUART.GDP %>%
+  mutate(date=as.numeric(str_sub(TIME_PERIOD,1,4))) %>%
+  mutate(iso2c=REF_AREA) %>%
+  mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
+  mutate(SPI.D1.5.QUART.GDP=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
+  group_by(iso2c, date) %>%
+  summarise(SPI.D1.5.QUART.GDP=max(SPI.D1.5.QUART.GDP, na.rm=T)) %>% 
+  group_by(iso2c) %>%
+  summarise(SPI.D1.5.QUART.GDP=sum(SPI.D1.5.QUART.GDP, na.rm=T)) %>% 
+  mutate(SPI.D1.5.QUART.GDP=case_when(
+    SPI.D1.5.QUART.GDP>=3 ~ 1,
+    SPI.D1.5.QUART.GDP==2 ~ 0.6,
+    SPI.D1.5.QUART.GDP==1 ~ 0.3,
+    SPI.D1.5.QUART.GDP==0 ~ 0, 
+    TRUE ~ 0
+  )) %>%
+  mutate(date=reference_year) %>%
+  select( iso2c, date, starts_with('SPI.D1.5.QUART.GDP')) 
+
+
+  assign(paste("D3.14.AKI",reference_year,sep="_"), temp)
+}
+
+D3.17.AKI <- bind_rows(D3.14.AKI_2016, D3.14.AKI_2017, D3.14.AKI_2018, D3.14.AKI_2019)  
+
+```
+
+### AKI 1.5.15 Debt service (PPG and IMF only, % of exports of goods, services and primary income)
+
+For this indicator, Debt service (PPG and IMF only, % of exports of goods, services and primary income), we will pull data from the WDI but modify the scoring using the WDI metadata on whether the external debt data is actual, estimated, or preliminary.  The status “as reported (actual)” indicates that the country was fully current in its reporting under the DRS and that World Bank staff are satisfied that the reported data give an adequate and fair representation of the country’s total public debt. “Preliminary” data are based on reported or collected information, but because of incompleteness or other reasons, an element of staff estimation is included. “Estimated” data indicate that countries are not current in their reporting and that a significant element of staff estimation has been necessary for producing the data tables. 
+
+Scoring is as follows:
+
+Frequency:
+
+0.5 Point. 3 or more values available within past 5 years	
+0.3 Points. 2 values available within past 5 years; 	
+0.15 Points. 1 values available within past 5 years; 	
+0 Points. None within past 5 years
+
+Quality: 
+
+0.5 Points. Actual value
+0.3 Points. Preliminary value
+0.15 Points. Estimated value
+0 Points. No value
+
+```{r 3.15_debt}
+
+
+#reshape metaadata file
+metadata_3.15 <- WDI_metadata %>%
+  transmute(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
+            date=date,
+            External_debt_Reporting=External.debt.Reporting.status) %>%
+  mutate(SPI.QUAL.D1.5.DT.TDS.DPPF.XP.ZS= case_when(
+            External_debt_Reporting=='Actual' ~ 0.5,
+            External_debt_Reporting=='Preliminary' ~ 0.3,
+            External_debt_Reporting=='Estimate' ~ 0.15,
+            TRUE ~ 0
+          ))
+
+#pull data from wdi and merge with metadata
+for (reference_year in 2016:2019) {
+  temp <-wbstats::wb(country="countries_only", 
+              indicator='DT.TDS.DPPF.XP.ZS',
+              startdate=reference_year-5,
+              enddate=reference_year,
+              return_wide = T,
+              removeNA=FALSE) %>%
+          filter(((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% #filter out years outside reference window of 3 years     
+          mutate_at(.vars=c('DT.TDS.DPPF.XP.ZS'), ~if_else(is.na(.),0,1)) %>% #create 0,1 variable for whether data point exists for country
+          group_by(iso3c, country) %>%
+          summarise_all((~(if(is.numeric(.)) sum(., na.rm = TRUE) else first(.)))) %>% #group by country to create one observation per country                 containing whether or not data point existed
+          mutate(SPI.FREQ.D1.5.DT.TDS.DPPF.XP.ZS = case_when(
+            DT.TDS.DPPF.XP.ZS>=3 ~ 0.5,
+            DT.TDS.DPPF.XP.ZS==2 ~ 0.3,
+            DT.TDS.DPPF.XP.ZS==1 ~ 0.15,
+            DT.TDS.DPPF.XP.ZS==0 ~ 0, 
+            TRUE ~ 0
+          )) %>% # 0.5 point for at least 3 values, 0.3 for 2 values, 0.15 for 1 values, 0 otherwise
+          mutate(date=reference_year) %>%
+          left_join(metadata_3.15) %>% #attach country metadata 
+          mutate(SPI.QUAL.D1.5.DT.TDS.DPPF.XP.ZS= case_when(
+            External_debt_Reporting=='Actual' ~ 0.5,
+            External_debt_Reporting=='Preliminary' ~ 0.3,
+            External_debt_Reporting=='Estimate' ~ 0.15,
+            TRUE ~ 0
+          )) %>% # 0.5 point for actual, 0.3 for preliminary, 0.15 for estimate
+          mutate(
+                 SPI.D1.5.DT.TDS.DPPF.XP.ZS=(SPI.QUAL.D1.5.DT.TDS.DPPF.XP.ZS + SPI.FREQ.D1.5.DT.TDS.DPPF.XP.ZS)) %>%
+          ungroup() %>%
+          select(iso3c, country, date,  contains('D3.DT.TDS.DPPF.XP.ZS')) 
+
+
+
+  assign(paste("D3.15.AKI",reference_year,sep="_"), temp)
+}
+
+D3.15.AKI <- bind_rows(D3.15.AKI_2016, D3.15.AKI_2017, D3.15.AKI_2018, D3.15.AKI_2019)  
+
+```
+
+```{r aki_combine}
+
+
+
+
+#now combine AKI databases and write to csv
+D3.AKI <- bind_rows(D3.AKI_2016, D3.AKI_2017, D3.AKI_2018, D3.AKI_2019) %>%
+  left_join(D3.1.AKI) %>%
+  left_join(D3.2.AKI) %>%
+  left_join(D3.3.AKI) %>%
+  left_join(D3.5.AKI) %>%
+  left_join(D3.7.AKI) %>%
+  left_join(D3.15.AKI) %>%
+  left_join(D3.17.AKI) %>%
+  mutate_at(vars(starts_with('SPI.D1.5.')), ~if_else(is.na(.),0,as.numeric(.))) 
+
+
+spi_df <- spi_df %>%
+  left_join(D3.AKI)
+
+```
+
+```{r aki_plots}
+
+aki <- c(
+             SPI.D1.5.POV='Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)',
+             SPI.D1.5.FIES='Food Insecurity Experience Scale',
+             SPI.D1.5.CHLD.MORT='Mortality rate, under-5 (per 1,000 live births)', 
+             SPI.D1.5.SE.LPV.PRIM.BMP='Pupils below minimum reading proficiency at end of primary (%). Low GAML threshold',
+             SPI.D1.5.MMRT='Maternal Mortality',
+             SPI.D1.5.SH.H2O.SMDW.ZS='People using safely managed drinking water services (% of population)',
+             SPI.D1.5.ELEC='Access to electricity (% of population)',
+             SPI.D1.5.SL.UEM.TOTL.NE.ZS='Unemployment, total (% of total labor force) (national estimate)' ,
+             SPI.D1.5.NV.IND.MANF.ZS='Manufacturing, value added (% of GDP)',
+             SPI.D1.5.SI.SPR.PC40.ZG='Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)',
+             SPI.D1.5.ER.H2O.FWST.ZS='Level of water stress: freshwater withdrawal as a proportion of available freshwater resources',
+             SPI.D1.5.EG.FEC.RNEW.ZS='Renewable energy consumption (% of total final energy consumption)',
+             SPI.D1.5.NE.CON.PRVT.CN='Households and NPISHs Final consumption expenditure (current LCU)',
+             SPI.D1.5.QUART.GDP='Quarterly GDP',
+             SPI.D1.5.DT.TDS.DPPF.XP.ZS='Debt service (PPG and IMF only, % of exports of goods, services and primary income)'
+)
+
+
+for (ind in names(aki)) {
+  ind <- ind
+  names(aki)
+  print(ind)
+  temp_map <- D3.AKI %>%
+    filter(.data[[ind]] > 0)
+  
+  spi_mapper('temp_map', ind, aki[[ind]])
+}
+
+```
+
+
 # Data Services
 
 
@@ -956,706 +1641,86 @@ spi_df <- spi_df %>%
   
 # Data Products
 
-Cleaning for Data Products Indicators.  Data Products (4 Indicators):   
-  - 3.1_DPSS - Indicator 3.1: social statistics    
-  - 3.2_DPES - Indicator 3.2: economic statistics   
-  - 3.3_DPEN - Indicator 3.3 environmental statistics    
-  - 3.4_DPIS - Indicator 3.4: institutional statistics     
+Cleaning for Data Products Indicators.  Data Products (17 Indicators):   
+
+- GOAL 1: No Poverty    
+- GOAL 2: Zero Hunger   
+- GOAL 3: Good Health and Well-beingq   
+- GOAL 4: Quality Education   
+- GOAL 5: Gender Equality   
+- GOAL 6: Clean Water and Sanitation    
+- GOAL 7: Affordable and Clean Energy   
+- GOAL 8: Decent Work and Economic Growth   
+- GOAL 9: Industry, Innovation and Infrastructure   
+- GOAL 10: Reduced Inequality   
+- GOAL 11: Sustainable Cities and Communities   
+- GOAL 12: Responsible Consumption and Production   
+- GOAL 13: Climate Action   
+- GOAL 14: Life Below Water   
+- GOAL 15: Life on Land   
+- GOAL 16: Peace and Justice Strong Institutions    
+- GOAL 17: Partnerships to achieve the Goal   
 
 
-Below is the list of AKI indicators:
 
-## Indicator 3.1: social statistics  
-- AKI 3.1: Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)  
-- AKI 3.2: Food Insecurity Experience Scale 
-- AKI 3.3: Mortality rate, under-5 (per 1,000 live births)  
-- AKI 3.4: Proportion of children and young people in grades 2 or 3 achieving at least a minimum proficiency level in reading and mathematics, by sex.  
-- AKI 3.5: Maternal Mortality
-- AKI 3.6: People using safely managed drinking water services (% of population)  
 
-## Indicator 3.2: economic statistics 
-- AKI 3.7: Access to electricity (% of population)  
-- AKI 3.8: Unemployment, total (% of total labor force)  
-- AKI 3.9: Manufacturing, value added (% of GDP)  
-- AKI 3.10: Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)  
-- AKI 3.14: Quarterly GDP
+## Scoring Approach
 
-## Indicator 3.3 environmental statistics     
-- AKI 3.11: Level of water stress: freshwater withdrawal as a proportion of available freshwater resources  
-- AKI 3.12: Renewable energy consumption (% of total final energy consumption)  
-- AKI 3.13: Households and NPISHs Final consumption expenditure (current LCU) 
-
-## Indicator 3.4: institutional statistics 
-- AKI 3.15: Debt service (PPG and IMF only, % of exports of goods, services and primary income) 
-
-```{r metadata_pull}
-
-# pull in some WDI metadata which will be used for constructing AKI indicators.
-# WDI metadata was gathered using previous vintages of WDI from 2016-19
-# Metadata was gathered and saved as csv files in the 011_data folder
-
-for (i in 2016:2019) {
-  temp <- read_csv(file = paste(raw_dir, "/metadata/WDI_metadata_",i,".csv", sep="" )) %>%
-    as_tibble(.name_repair='universal') %>%
-    mutate(National.accounts.reference.year=as.numeric(National.accounts.reference.year),
-           date=i)
+  1. Download the latest SDG indicator data from UN Stats (https://unstats.un.org/sdgs/indicators/en/#) using their API   
   
-    assign(paste("WDI_metadata",i,sep="_"), temp)
-}
-
-WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_2018, WDI_metadata_2019)
-```
-
-
-
-### AKI 3.1, 3.9, 3.10, 3.11, 3.12, 3.13
-
-First we will pull data for indicators coming straight from WDI.  For some indicators, we will use alternative sources.
-
-Indicators coming from the WDI directly are:  
-
-- AKI 3.1: Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)  
-- AKI 3.9: Manufacturing, value added (% of GDP)  
-- AKI 3.10: Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)  
-- AKI 3.11: Level of water stress: freshwater withdrawal as a proportion of available freshwater resources  
-- AKI 3.12: Renewable energy consumption (% of total final energy consumption)  
-- AKI 3.13: Households and NPISHs Final consumption expenditure (current LCU)  
-
-Scoring:
-
-1 Point. 3 or more values available within past 5 years	
-0.6 Points. 2 values available within past 5 years; 	
-0.3 Points. 1 values available within past 5 years; 	
-0 Points. None within past 5 years
-
-```{r data_pulls, echo=TRUE}
-
-##########
-# Pull Tags for WDI Data
-##########
-
-# make request to World Bank API
-wdiRequest <- GET(url = "http://api.worldbank.org/v2/indicator?per_page=20000&format=json&source=2")
-wdiResponse <- content(wdiRequest, as = "text", encoding = "UTF-8")
-
-# Parse the JSON content and convert it to a data frame.
-wdisJSON <- jsonlite::fromJSON(wdiResponse, flatten = TRUE) %>%
-    data.frame()
-
-EdStatsRequest <- GET(url = "http://api.worldbank.org/v2/indicator?per_page=20000&format=json&source=12")
-EdStatsResponse <- content(EdStatsRequest, as = "text", encoding = "UTF-8")
-
-# Parse the JSON content and convert it to a data frame.
-EdStatsJSON <- jsonlite::fromJSON(EdStatsResponse, flatten = TRUE) %>%
-  data.frame()
-
-aki<- c(
-        'Pupils below minimum reading proficiency at end of primary (%). Low GAML threshold',
-        'People using safely managed drinking water services (% of population)',
-        'Unemployment, total (% of total labor force) (national estimate)' ,
-        'Manufacturing, value added (% of GDP)',
-        'Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)',
-        'Level of water stress: freshwater withdrawal as a proportion of available freshwater resources',
-        'Renewable energy consumption (% of total final energy consumption)',
-        'Households and NPISHs Final consumption expenditure (current LCU)',
-        'Debt service (PPG and IMF only, % of exports of goods, services and primary income)'  )
-
-get_tag_aki_df<-wdisJSON %>%
-  bind_rows(EdStatsJSON) %>%
-  filter((name %in% aki	)) %>%
-  arrange(factor(name, levels = aki)) %>%
-  select(id, name,  sourceOrganization) 
-
-#get WDI metadata infor
-cache_list<-wbstats::wbcache()
-country_list <- wbstats::wbcountries()
-
-aki_list<-get_tag_aki_df[,'id']
-
-for (reference_year in 2016:2019) {
-  temp <-wbstats::wb(country="countries_only", 
-              indicator=aki_list,
-              startdate=reference_year-5,
-              enddate=reference_year,
-              return_wide = T,
-              removeNA=FALSE) %>%
-          filter(((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% #filter out years outside reference window of 3 years     
-          write_excel_csv(path = paste(output_dir, "/D3.AKI_data_pull_",reference_year,".csv", sep="" )) %>%
-          mutate_at(.vars=aki_list, ~if_else(is.na(.),0,1)) %>% #create 0,1 variable for whether data point exists for country
-          group_by(iso3c, country) %>%
-          summarise_all((~(if(is.numeric(.)) sum(., na.rm = TRUE) else first(.)))) %>% #group by country to create one observation per country                 containing whether or not data point existed
-          mutate_at(.vars=aki_list, ~case_when(
-            .>=3 ~ 1,
-            .==2 ~ 0.6,
-            .==1 ~ 0.3,
-            .==0 ~ 0, 
-            TRUE ~ 0
-          )) %>% # 1 point for at least 3 values, 0.6 for 2 values, 0.3 for 1 values, 0 otherwise
-          mutate(date=reference_year) %>%
-          ungroup() %>%
-          select(iso3c, country, date,  aki_list) %>%
-          rename_at(aki_list, ~(paste('SPI.D3.',.,sep=""))) %>% #add 'D3.' as prefix before these indicators.
-          left_join(country_list) #attach country metadata
-
-
-  assign(paste("D3.AKI",reference_year,sep="_"), temp)
-}
-
-
-
-```
-
-### AKI 3.1: Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)
-
-The data will be pulled from the WDI and combined with metadata from the Povcalnet
-
-Scoring is as follows:
-Quality (0.5 points total):
-0.5 Point. Comparable data lasting at least two years within past 5 years	
-0 Points. No comparable data within past 5 years
-
-Frequency (0.5 points total):
-0.5 Point. 3 or more values available within past 5 years	
-0.3 Points. 2 values available within past 5 years; 	
-0.15 Points. 1 values available within past 5 years; 	
-0 Points. None within past 5 years
-
-
-```{r 3.1}
-library(povcalnetR) 
-
-#the code below is based on public released code by povcalnet team:
-#https://github.com/worldbank/Global_Poverty_Blogs/blob/master/bg_povcalnet_comparability/R/comparability_breaks.R
-
-# some contants
-year_range <- 1990:2020
-metadata_path <- "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/506801/povcalnet_comparability.csv"
-
-# Load data ---------------------------------------------------------------
-
-metadata <- read_csv(metadata_path)
-cov_lkup <- c(3, 2, 1, 4)
-names(cov_lkup) <- c("N", "U", "R", "A")
-
-dat_lkup <- c(2,1)
-names(dat_lkup) <- c("income","consumption")
-
-
-pcn <- povcalnet()
-pcn$coveragetype <- cov_lkup[pcn$coveragetype]
-pcn$datatype <- dat_lkup[pcn$datatype]
-
-df <- pcn %>%
-  inner_join(metadata, by = c("countrycode", "year", "coveragetype", "datatype"))
-
-
-#Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2016:2019) {
+  2. Transform the data so that for each indicator we can create a score documenting whether a value exists for the country in a year, whether the value is based on country data, country data adjusted, estimated, or modelled data according the UN Stats metadata. **This will only include tier 1 indicators**.    
   
-  temp1<-df %>%
-        filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
-        mutate(frequency=((reference_year-as.numeric(year))<=5) & (reference_year>=as.numeric(year))) %>% 
-        filter(frequency==TRUE) %>%
-        group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
-        summarise(SPI.QUAL.D3.POV=n())  %>%
-        ungroup() %>%
-        group_by(countrycode) %>% #now get a total by country with the max number of comparable estimates
-        summarise(SPI.QUAL.D3.POV=max(SPI.QUAL.D3.POV, na.rm=T)) %>%
-        mutate(SPI.QUAL.D3.POV=if_else(SPI.QUAL.D3.POV>=2,0.5,0)) #only give point if there is at least two observations that are comparable
+  3. Combine the resulting data into a single set of indicators for use in the Statistical Performance Indicators dashboard and index
+
+Below is a paraphrased description from the UN stats webpage (https://unstats.un.org/sdgs/indicators/indicators-list/):
+
+The global indicator framework for Sustainable Development Goals was developed by the Inter-Agency and Expert Group on SDG Indicators (IAEG-SDGs) and agreed upon at the 48th session of the United Nations Statistical Commission held in March 2017.
+
+The global indicator framework includes 231 unique indicators. Please note that the total number of indicators listed in the global indicator framework of SDG indicators is 247. However, twelve indicators repeat under two or three different targets.
+
+For each value of the indicator, the responsible international agency has been requested to indicate whether the national data were adjusted, estimated, modelled or are the result of global monitoring. The “nature” of the data in the SDG database is determined as follows:
+
+
+  * Country data (C): Produced and disseminated by the country (including data adjusted by the country to meet international standards);    
+  
+  * Country data adjusted (CA): Produced and provided by the country, but adjusted by the international agency for international comparability to comply with internationally agreed standards, definitions and classifications;    
+  
+  * Estimated (E): Estimated based on national data, such as surveys or administrative records, or other sources but on the same variable being estimated, produced by the international agency when country data for some year(s) is not available, when multiple sources exist, or when there are data quality issues;    
+  
+  * Modelled (M): Modelled by the agency on the basis of other covariates when there is a complete lack of data on the variable being estimated;    
+  
+  * Global monitoring data (G): Produced on a regular basis by the designated agency for global monitoring, based on country data. There is no corresponding figure at the country level.
+
+# Scoring
+
+For each indicator, we will produce a value for each country with the following coding scheme:    
+
+  * **1 Point**: Indicator exists and the value is based on the **country**, **country data adjusted**, or **estimated or Global Monitoring** data    
+  * **0 Points**: Indicator **based on modelled data or does not exists**
   
   
-  temp <-df %>%
-          filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
-          mutate(frequency=((reference_year-as.numeric(year))<=5) & (reference_year>=as.numeric(year))) %>% 
-          mutate(SPI.FREQ.D3.POV=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
-          group_by(countryname,countrycode) %>%
-          summarise(SPI.FREQ.D3.POV=sum(SPI.FREQ.D3.POV, na.rm=T)) %>% 
-          mutate(SPI.FREQ.D3.POV=case_when(
-            SPI.FREQ.D3.POV>=3 ~ 0.5,
-            SPI.FREQ.D3.POV==2 ~ 0.3,
-            SPI.FREQ.D3.POV==1 ~ 0.15,
-            SPI.FREQ.D3.POV==0 ~ 0, 
-            TRUE ~ 0
-          )) %>%
-          left_join(temp1) %>% #now bring in quality dimension
-          mutate(SPI.QUAL.D3.POV=if_else(!is.na(SPI.QUAL.D3.POV),SPI.QUAL.D3.POV,0)) %>% #recode some missing values as zero, who had no observations in 5 year window
-          mutate(SPI.D3.POV=SPI.FREQ.D3.POV+SPI.QUAL.D3.POV) %>% 
-          mutate(date=reference_year,
-                 country=countryname,
-                 iso3c=countrycode) %>%
-          select( country,iso3c, date, starts_with('SPI.D3.POV')) 
-
-
-  assign(paste("D3.1.AKI",reference_year,sep="_"), temp)
-}
-
-D3.1.AKI <- bind_rows(D3.1.AKI_2016, D3.1.AKI_2017, D3.1.AKI_2018, D3.1.AKI_2019)
-
-
-
-```
-
-### AKI 3.2: Hunger
-
-We examine the Food Insecurity Experience Scale from the FAO (http://www.fao.org/faostat/en/#data/FS).  Data for food insecurity was pulled on May 1, 2020.
-
-Scoring
-1 Point. 3 or more values available within past 5 years	
-0.6 Points. 2 values available within past 5 years; 	
-0.3 Points. 1 values available within past 5 years; 	
-0 Points. None within past 5 years
-
-
-```{r AKI_3.2}
-
-
-#Read in data from UN Inter-agency Group for Child Mortality Estimation
-
-D3.2.AKI.FIES <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.2.FIES.csv', sep="/")) %>%
-  rename(year_code="Year Code",
-         iso3c="ISO3 Code") %>%
-  mutate(date=as.numeric(str_extract(year_code, "^.{4}")),
-         SPI.D3.FIES=Value)
-
-#Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2016:2019) {
-  temp <-D3.2.AKI.FIES %>%
-          filter(((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% #filter out years outside reference window of 5 years     
-          mutate(SPI.D3.FIES=if_else(is.na(SPI.D3.FIES),0,1)) %>% #create 0,1 variable for whether data point exists for country
-          group_by(iso3c) %>%
-          summarise_all((~(if(is.numeric(.)) sum(., na.rm = TRUE) else first(.)))) %>% #group by country to create one observation per country                 containing whether or not data point existed
-          mutate(SPI.D3.FIES=case_when(
-            SPI.D3.FIES>=3 ~ 1,
-            SPI.D3.FIES==2 ~ 0.6,
-            SPI.D3.FIES==1 ~ 0.3,
-            SPI.D3.FIES==0 ~ 0, 
-            TRUE ~ 0
-          )) %>% # 1 point for at least 3 values, 0.6 for 2 values, 0.3 for 1 values, 0 otherwise
-          mutate(date=reference_year) %>%
-          select( iso3c, date, starts_with('SPI.')) 
-
-
-  assign(paste("D3.2.AKI",reference_year,sep="_"), temp)
-}
-
-D3.2.AKI <- bind_rows(D3.2.AKI_2016, D3.2.AKI_2017, D3.2.AKI_2018, D3.2.AKI_2019)
-```
-
-
-
-### AKI 3.3: Mortality rate, under-5 (per 1,000 live births)  
-
-The data in WDI is modeled, based on HHS and Vital Registration.  We use the following as a source for raw data produced by national statistical offices that is used in this modeling.  
-
-https://childmortality.org/data 
-
-Data was pulled on April 13, 2020.
-
-Countries are ranked by source quality (admin data > survey > no data) and frequency.
-Score on this indicator has a max of 1 point with 0.5 points for source quality and 0.5 points for frequency.  Detailed scoring for source quality and frequency components are below.
-
-Quality (0.5 points total):
-0.5 Point. Vital Registration data available within past 5 years	
-0.25 Points. Survey Data availabe, but no Vital Registration data within past 5 years; 	
-0 Points. None within past 5 years
-
-Frequency (0.5 points total):
-0.5 Point. 3 or more values available within past 5 years	
-0.3 Points. 2 values available within past 5 years; 	
-0.15 Points. 1 values available within past 5 years; 	
-0 Points. None within past 5 years
-
-
-```{r aki_3.3}
-
-#Read in data from UN Inter-agency Group for Child Mortality Estimation
-
-D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.3_child_mort_RAW_v01.csv', sep="/")) %>%
-  filter(INDICATOR=='Under-five mortality rate' & SEX=='Total') %>% #keep just observations for under 5 child mortality and for both sexes 
-  filter(OBS_STATUS=='Included in IGME') %>% # Also keep only surveys that met IGME criteria for inclusion as a nationally representative statistic
-  mutate(date=as.numeric(str_extract(TIME_PERIOD, "^.{4}")),
-         country=REF_AREA,
-         D3.CHLD.MORT=OBS_VALUE)
-
-#Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2016:2019) {
-  temp <-D3.3.AKI.MORT %>%
-          mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
-          mutate(SPI.FREQ.D3.CHLD.MORT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
-          mutate(SPI.QUAL.D3.CHLD.MORT=case_when(
-                   reference_year-as.numeric(date)>=5 ~ 0, #outside 5 year window
-                   SERIES_METHOD=='Vital Registration' ~ 0.5,
-                   SERIES_METHOD!='Vital Registration' ~ 0.25,
-                   TRUE ~ as.numeric(NA)
-                 )) %>%
-          group_by(country) %>%
-          summarise(SPI.FREQ.D3.CHLD.MORT=sum(SPI.FREQ.D3.CHLD.MORT, na.rm=T),
-                    SPI.QUAL.D3.CHLD.MORT=max(SPI.QUAL.D3.CHLD.MORT, na.rm=T)) %>% 
-          mutate(SPI.FREQ.D3.CHLD.MORT=case_when(
-            SPI.FREQ.D3.CHLD.MORT>=3 ~ 0.5,
-            SPI.FREQ.D3.CHLD.MORT==2 ~ 0.3,
-            SPI.FREQ.D3.CHLD.MORT==1 ~ 0.15,
-            SPI.FREQ.D3.CHLD.MORT==0 ~ 0, 
-            TRUE ~ 0
-          )) %>%
-          mutate(SPI.D3.CHLD.MORT=SPI.FREQ.D3.CHLD.MORT+SPI.QUAL.D3.CHLD.MORT) %>% 
-          mutate(date=reference_year) %>%
-          select( country, date, starts_with('SPI.')) 
-
-
-  assign(paste("D3.3.AKI",reference_year,sep="_"), temp)
-}
-
-D3.3.AKI <- bind_rows(D3.3.AKI_2016, D3.3.AKI_2017, D3.3.AKI_2018, D3.3.AKI_2019)
-
-
-```
-
-
-```{r country_label_fixes, include=FALSE}
-
-#make country labels comparable to WDI
-D3.3.AKI <- D3.3.AKI %>%
-  mutate(country=case_when(
-    country=="Bahamas" ~ "Bahamas, The",                  
-    country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
-    country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
-    country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
-    country=="Congo"  ~ "Congo, Rep."        ,           
-    country=="Curacao"  ~  "Curacao"       ,                
-    country=="Czechia"   ~  "Czech Republic"     ,        
-    country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
-    country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
-    country=="United Kingdom"   ~  "United Kingdom"    ,         
-    country=="Gambia"    ~  "Gambia, The"     ,           
-    country=="Iran (Islamic Republic of)"  ~ "Iran, Islamic Rep." ,           
-    country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
-    country=="Republic of Korea"   ~ "Korea, Rep."   ,               
-    country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
-    country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
-    country=="Saint Lucia"   ~ "St. Lucia",
-    country=="Republic of Moldova"   ~  "Moldova"   ,                  
-    country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
-    country=="Slovakia"   ~  "Slovak Republic"             ,
-    country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
-    country=="United States of America"  ~ "United States"  ,                
-    country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
-    country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
-    country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
-    country=="Viet Nam"  ~ "Vietnam"        ,              
-    country=="Yemen"  ~ "Yemen, Rep.",
-    country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
-    TRUE ~ country
-  ))
-
-
-```
-
-
-
-
-```{r AKI_3.3, eval=FALSE, include=FALSE}
-EdStatsRequest_metadata <- GET(url = "https://api.worldbank.org/v2/country/all/indicator/SE.LPV.PRIM.BMP?footnote=y&per_page=30000&format=json")
-EdStatsResponse_metadata <- content(EdStatsRequest_metadata, as = "text", encoding = "UTF-8")
-
-# Parse the JSON content and convert it to a data frame.
-EdStatsJSON_metadata <- jsonlite::fromJSON(EdStatsResponse_metadata, flatten = TRUE) %>%
-  data.frame() %>%
-  filter(str_length(footnote)>0)
-```
-
-
-### AKI 3.5 Maternal Mortality Ratio
-
-The data is sourced from the the Inter-Agency Group (200 countries) to improve time and country coverages. Tne national estimates with the source information are available at https://www.who.int/reproductivehealth/publications/maternal-mortality-2000-2017/en/.  The data was accessed on April 3, 2020.  This data was used for modelling maternal mortality, which are then fed into the modelled estimates on Maternal Mortality (SH.STA.MMRT) in the WDI.
-
-For our purposes, we will use the raw data from the country surveys as our data for the availability of key indicators, since the modelled estimates are produced out of sample, and thus not reflective of a country's national statistical system.
-
-Countries are ranked by source quality (admin data > survey > no data) and frequency.
-Score on this indicator has a max of 1 point with 0.5 points for source quality and 0.5 points for frequency.  Detailed scoring for source quality and frequency components are below.
-
-Quality (0.5 points total):
-0.5 Point. Vital Registration data available within past 5 years	
-0.25 Points. Survey Data or Census Data availabe, but no Vital Registration data within past 5 years; 	
-0 Points. None within past 5 years
-
-Frequency (0.5 points total):
-0.5 Point. 3 or more values available within past 5 years	
-0.3 Points. 2 values available within past 5 years; 	
-0.15 Points. 1 values available within past 5 years; 	
-0 Points. None within past 5 years
-
-```{r AKI_3.5}
-
-
-#Read in data from UN Inter-agency Group 
-
-D3.5.AKI.MMR <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.5.BMat2019_datainputs.csv', sep="/")) %>%
-  filter(modelinclude=='TRUE') %>% #keep just observations that the UN inter-agency group deemed credible for use in modelling 
-  mutate(date=end,
-         iso3c=iso,
-         D3.MMRT=pm_obs)
-
-#Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2016:2019) {
-  temp <-D3.5.AKI.MMR %>%
-          mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
-          mutate(SPI.FREQ.D3.MMRT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
-          mutate(SPI.QUAL.D3.MMRT=case_when(
-                   reference_year-as.numeric(date)>=5 ~ 0, #outside 5 year window
-                   type=='vr' ~ 0.5,
-                   type!='vr' ~ 0.25,
-                   TRUE ~ as.numeric(NA)
-                 )) %>%
-          group_by(iso3c) %>%
-          summarise(SPI.FREQ.D3.MMRT=sum(SPI.FREQ.D3.MMRT, na.rm=T),
-                    SPI.QUAL.D3.MMRT=max(SPI.QUAL.D3.MMRT, na.rm=T)) %>% 
-          mutate(SPI.FREQ.D3.MMRT=case_when(
-            SPI.FREQ.D3.MMRT>=3 ~ 0.5,
-            SPI.FREQ.D3.MMRT==2 ~ 0.3,
-            SPI.FREQ.D3.MMRT==1 ~ 0.15,
-            SPI.FREQ.D3.MMRT==0 ~ 0, 
-            TRUE ~ 0
-          )) %>%
-          mutate(SPI.D3.MMRT=SPI.FREQ.D3.MMRT+SPI.QUAL.D3.MMRT) %>% 
-          mutate(date=reference_year) %>%
-          select( iso3c, date, starts_with('SPI.')) 
-
-
-  assign(paste("D3.5.AKI",reference_year,sep="_"), temp)
-}
-
-D3.5.AKI <- bind_rows(D3.5.AKI_2016, D3.5.AKI_2017, D3.5.AKI_2018, D3.5.AKI_2019)
-
-```
-
-
-
-
-
-
-### AKI 3.7: Access to electricity (% of population) 
-
-Access to Electricity (% of population) has 99% coverage in the WDI database making it less useful for distinguishing between countries.  In order to improve the usefulness of this indicator, we are making use of data compiled by World Bank colleagues on surveys containing electricity items.  According to the access to electricity metadata, around 42 countries have no data and an imputed value is assigned based on the regional average.  By going to survey source data, we address this issue of imputation, which gives a misleading picture of availability for our purposes.  Below is the metadata from the WDI for methods for the access to electricity indicator.
-
->Data for access to electricity are collected among different sources: mostly data from nationally representative household surveys (including national censuses) were used. Survey sources include Demographic and Health Surveys (DHS) and Living Standards Measurement Surveys (LSMS), Multi-Indicator Cluster Surveys (MICS), the World Health Survey (WHS), other nationally developed and implemented surveys, and various government agencies (for example, ministries of energy and utilities). Given the low frequency and the regional distribution of some surveys, a number of countries have gaps in available data. To develop the historical evolution and starting point of electrification rates, a simple modeling approach was adopted to fill in the missing data points - around 1990, around 2000, and around 2010. Therefore, a country can have a continuum of zero to three data points. There are 42 countries with zero data point and the weighted regional average was used as an estimate for electrification in each of the data periods. 170 countries have between one and three data points and missing data are estimated by using a model with region, country, and time variables. The model keeps the original observation if data is available for any of the time periods. This modeling approach allowed the estimation of electrification rates for 212 countries over these three time periods (Indicated as "Estimate"). Notation "Assumption" refers to the assumption of universal access in countries classified as developed by the United Nations. Data begins from the year in which the first survey data is available for each country.
-
-Scoring
-1 Point. 3 or more values available within past 5 years	
-0.6 Points. 2 values available within past 5 years; 	
-0.3 Points. 1 values available within past 5 years; 	
-0 Points. None within past 5 years
-
-```{r D3.7_AKI}
-#read in file from rawdata folder
-D3.7.ELEC <- read_csv(file = paste(raw_dir, "3.2_DPES/D3.7.ELEC.csv", sep="/" )) %>%
-  rename(country=Country,
-         iso3c="Country code",
-         date=Time)
-
-#Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2016:2019) {
-  temp <-D3.7.ELEC %>%
-          mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
-          mutate(SPI.D3.ELEC=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
-          group_by(country) %>%
-          summarise(SPI.D3.ELEC=sum(SPI.D3.ELEC, na.rm=T)) %>%
-          mutate(SPI.D3.ELEC=case_when(
-            SPI.D3.ELEC>=3 ~ 1,
-            SPI.D3.ELEC==2 ~ 0.6,
-            SPI.D3.ELEC==1 ~ 0.3,
-            SPI.D3.ELEC==0 ~ 0, 
-            TRUE ~ 0
-          )) %>%
-          mutate(date=reference_year) %>%
-          select( country, date, starts_with('SPI.')) 
-
-
-  assign(paste("D3.7.AKI",reference_year,sep="_"), temp)
-}
-
-D3.7.AKI <- bind_rows(D3.7.AKI_2016, D3.7.AKI_2017, D3.7.AKI_2018, D3.7.AKI_2019)
-```
-
-
-
-### AKI 3.14 Quarterly GDP
-
-Quarterly GDP numbers were pulled from the IMF website.
-
-After GDP by expenditure, quarterly GDP is probably the most important development to be made in a system of National Accounts, before the development of full sectoral accounts. IMF IFS has quarterly GDP from various sources, including governments and international agencies at https://data.imf.org/?sk=4C514D48-B6BA-49ED-8AB9-52B0C1A0179B
-
-Scoring
-1 Point. 3 or more values available within past 5 years	
-0.6 Points. 2 values available within past 5 years; 	
-0.3 Points. 1 values available within past 5 years; 	
-0 Points. None within past 5 years
-
-
-
-```{r AKI_3.14}
-
-#read in file from rawdata folder
-D3.14.QUART.GDP <- read_csv(file = paste(raw_dir, "3.2_DPES/D3.14.QUART.GDP.csv", sep="/" ))
-
-#clean data and produce indicator for each year
-#Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2016:2019) {
-temp <-D3.14.QUART.GDP %>%
-  mutate(date=as.numeric(str_sub(TIME_PERIOD,1,4))) %>%
-  mutate(iso2c=REF_AREA) %>%
-  mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
-  mutate(SPI.D3.QUART.GDP=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
-  group_by(iso2c, date) %>%
-  summarise(SPI.D3.QUART.GDP=max(SPI.D3.QUART.GDP, na.rm=T)) %>% 
-  group_by(iso2c) %>%
-  summarise(SPI.D3.QUART.GDP=sum(SPI.D3.QUART.GDP, na.rm=T)) %>% 
-  mutate(SPI.D3.QUART.GDP=case_when(
-    SPI.D3.QUART.GDP>=3 ~ 1,
-    SPI.D3.QUART.GDP==2 ~ 0.6,
-    SPI.D3.QUART.GDP==1 ~ 0.3,
-    SPI.D3.QUART.GDP==0 ~ 0, 
-    TRUE ~ 0
-  )) %>%
-  mutate(date=reference_year) %>%
-  select( iso2c, date, starts_with('SPI.D3.QUART.GDP')) 
-
-
-  assign(paste("D3.14.AKI",reference_year,sep="_"), temp)
-}
-
-D3.17.AKI <- bind_rows(D3.14.AKI_2016, D3.14.AKI_2017, D3.14.AKI_2018, D3.14.AKI_2019)  
-
-```
-
-### AKI 3.15 Debt service (PPG and IMF only, % of exports of goods, services and primary income)
-
-For this indicator, Debt service (PPG and IMF only, % of exports of goods, services and primary income), we will pull data from the WDI but modify the scoring using the WDI metadata on whether the external debt data is actual, estimated, or preliminary.  The status “as reported (actual)” indicates that the country was fully current in its reporting under the DRS and that World Bank staff are satisfied that the reported data give an adequate and fair representation of the country’s total public debt. “Preliminary” data are based on reported or collected information, but because of incompleteness or other reasons, an element of staff estimation is included. “Estimated” data indicate that countries are not current in their reporting and that a significant element of staff estimation has been necessary for producing the data tables. 
-
-Scoring is as follows:
-
-Frequency:
-
-0.5 Point. 3 or more values available within past 5 years	
-0.3 Points. 2 values available within past 5 years; 	
-0.15 Points. 1 values available within past 5 years; 	
-0 Points. None within past 5 years
-
-Quality: 
-
-0.5 Points. Actual value
-0.3 Points. Preliminary value
-0.15 Points. Estimated value
-0 Points. No value
-
-```{r 3.15_debt}
-
-
-#reshape metaadata file
-metadata_3.15 <- WDI_metadata %>%
-  transmute(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
-            date=date,
-            External_debt_Reporting=External.debt.Reporting.status) %>%
-  mutate(SPI.QUAL.D3.DT.TDS.DPPF.XP.ZS= case_when(
-            External_debt_Reporting=='Actual' ~ 0.5,
-            External_debt_Reporting=='Preliminary' ~ 0.3,
-            External_debt_Reporting=='Estimate' ~ 0.15,
-            TRUE ~ 0
-          ))
-
-#pull data from wdi and merge with metadata
-for (reference_year in 2016:2019) {
-  temp <-wbstats::wb(country="countries_only", 
-              indicator='DT.TDS.DPPF.XP.ZS',
-              startdate=reference_year-5,
-              enddate=reference_year,
-              return_wide = T,
-              removeNA=FALSE) %>%
-          filter(((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% #filter out years outside reference window of 3 years     
-          mutate_at(.vars=c('DT.TDS.DPPF.XP.ZS'), ~if_else(is.na(.),0,1)) %>% #create 0,1 variable for whether data point exists for country
-          group_by(iso3c, country) %>%
-          summarise_all((~(if(is.numeric(.)) sum(., na.rm = TRUE) else first(.)))) %>% #group by country to create one observation per country                 containing whether or not data point existed
-          mutate(SPI.FREQ.D3.DT.TDS.DPPF.XP.ZS = case_when(
-            DT.TDS.DPPF.XP.ZS>=3 ~ 0.5,
-            DT.TDS.DPPF.XP.ZS==2 ~ 0.3,
-            DT.TDS.DPPF.XP.ZS==1 ~ 0.15,
-            DT.TDS.DPPF.XP.ZS==0 ~ 0, 
-            TRUE ~ 0
-          )) %>% # 0.5 point for at least 3 values, 0.3 for 2 values, 0.15 for 1 values, 0 otherwise
-          mutate(date=reference_year) %>%
-          left_join(metadata_3.15) %>% #attach country metadata 
-          mutate(SPI.QUAL.D3.DT.TDS.DPPF.XP.ZS= case_when(
-            External_debt_Reporting=='Actual' ~ 0.5,
-            External_debt_Reporting=='Preliminary' ~ 0.3,
-            External_debt_Reporting=='Estimate' ~ 0.15,
-            TRUE ~ 0
-          )) %>% # 0.5 point for actual, 0.3 for preliminary, 0.15 for estimate
-          mutate(
-                 SPI.D3.DT.TDS.DPPF.XP.ZS=(SPI.QUAL.D3.DT.TDS.DPPF.XP.ZS + SPI.FREQ.D3.DT.TDS.DPPF.XP.ZS)) %>%
-          ungroup() %>%
-          select(iso3c, country, date,  contains('D3.DT.TDS.DPPF.XP.ZS')) 
-
-
-
-  assign(paste("D3.15.AKI",reference_year,sep="_"), temp)
-}
-
-D3.15.AKI <- bind_rows(D3.15.AKI_2016, D3.15.AKI_2017, D3.15.AKI_2018, D3.15.AKI_2019)  
-
-```
-
-```{r aki_combine}
-
-
-
-
-#now combine AKI databases and write to csv
-D3.AKI <- bind_rows(D3.AKI_2016, D3.AKI_2017, D3.AKI_2018, D3.AKI_2019) %>%
-  left_join(D3.1.AKI) %>%
-  left_join(D3.2.AKI) %>%
-  left_join(D3.3.AKI) %>%
-  left_join(D3.5.AKI) %>%
-  left_join(D3.7.AKI) %>%
-  left_join(D3.15.AKI) %>%
-  left_join(D3.17.AKI) %>%
-  mutate_at(vars(starts_with('SPI.D3.')), ~if_else(is.na(.),0,as.numeric(.))) 
-
-
-spi_df <- spi_df %>%
-  left_join(D3.AKI)
-
-```
-
-```{r aki_plots}
-
-aki <- c(
-             SPI.D3.POV='Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)',
-             SPI.D3.FIES='Food Insecurity Experience Scale',
-             SPI.D3.CHLD.MORT='Mortality rate, under-5 (per 1,000 live births)', 
-             SPI.D3.SE.LPV.PRIM.BMP='Pupils below minimum reading proficiency at end of primary (%). Low GAML threshold',
-             SPI.D3.MMRT='Maternal Mortality',
-             SPI.D3.SH.H2O.SMDW.ZS='People using safely managed drinking water services (% of population)',
-             SPI.D3.ELEC='Access to electricity (% of population)',
-             SPI.D3.SL.UEM.TOTL.NE.ZS='Unemployment, total (% of total labor force) (national estimate)' ,
-             SPI.D3.NV.IND.MANF.ZS='Manufacturing, value added (% of GDP)',
-             SPI.D3.SI.SPR.PC40.ZG='Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)',
-             SPI.D3.ER.H2O.FWST.ZS='Level of water stress: freshwater withdrawal as a proportion of available freshwater resources',
-             SPI.D3.EG.FEC.RNEW.ZS='Renewable energy consumption (% of total final energy consumption)',
-             SPI.D3.NE.CON.PRVT.CN='Households and NPISHs Final consumption expenditure (current LCU)',
-             SPI.D3.QUART.GDP='Quarterly GDP',
-             SPI.D3.DT.TDS.DPPF.XP.ZS='Debt service (PPG and IMF only, % of exports of goods, services and primary income)'
-)
-
-
-for (ind in names(aki)) {
-  ind <- ind
-  names(aki)
-  print(ind)
-  temp_map <- D3.AKI %>%
-    filter(.data[[ind]] > 0)
-  
-  spi_mapper('temp_map', ind, aki[[ind]])
-}
+# API
+
+Now we will pull data from the UN Stats API (https://unstats.un.org/SDGAPI/swagger/).  We will keep only the tier 1 indicators
+
+```{r unstats}
+
+un_sdg_df <- read_csv(paste(output_dir,'/un_sdg_df.csv',sep=""))
+
+stats_df <- un_sdg_df %>%
+  filter(between(date,2015,2019) ) %>%
+    group_by( iso3c, goal,target) %>%
+    summarise(ind_quality=100*max(ind_quality), #get a measure by country of whether indicator exists at all over 5 years
+              ind_available=100*max(!is.na(ind_value))
+    ) %>%
+    group_by(iso3c,goal) %>%
+    summarise(ind_quality=round(mean(ind_quality, na.rm=T),1), #get an average of this across countries
+            ind_available=round(mean(ind_available, na.rm=T),1)
+            ) %>%
+  left_join(country_metadata) %>%
+  filter(!is.na(region)) %>%
+  mutate(goal=paste('SDG Goal', goal, sep=" ")) %>%
+  select(iso3c, country,region, income, goal,ind_available, ind_quality)
 
 ```
 
