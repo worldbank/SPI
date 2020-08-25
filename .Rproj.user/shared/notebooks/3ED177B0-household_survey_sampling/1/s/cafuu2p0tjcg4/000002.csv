@@ -1,0 +1,13 @@
+"0",""
+"0","sample_dir <- ""C:/Users/wb469649/WBG/Ezequiel Molina - Dashboard (Team Folder)/Country_Work/Pakistan_Punjab/2019/Documents/Household Survey"""
+"0","  "
+"0","sample_file <- ""Copy of Rural Sampling Frame - (Greater than 10 Household VIllages).xlsx"""
+"0",""
+"0","df <- read_excel(path=paste(sample_dir, sample_file, sep=""/""))"
+"2","New names:
+* `` -> ...8
+"
+"0","colnames(df) <- tolower(colnames(df))"
+"0",""
+"0","set.seed(63235)"
+"0",""

@@ -1,0 +1,31 @@
+"0","knitr::opts_chunk$set(echo = TRUE)"
+"0",""
+"0","library(rgdal)"
+"2","package ‘rgdal’ was built under R version 4.0.2"
+"2","Loading required package: sp
+"
+"2","rgdal: version: 1.5-10, (SVN revision 1006)
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 3.0.4, released 2020/01/28
+Path to GDAL shared files: C:/Users/wb469649/OneDrive - WBG/Documents/R/win-library/4.0/rgdal/gdal
+GDAL binary built with GEOS: TRUE 
+Loaded PROJ runtime: Rel. 6.3.1, February 10th, 2020, [PJ_VERSION: 631]
+Path to PROJ shared files: C:/Users/wb469649/OneDrive - WBG/Documents/R/win-library/4.0/rgdal/proj
+Linking to sp version:1.4-2
+To mute warnings of possible GDAL/OSR exportToProj4() degradation,
+use options(""rgdal_show_exportToProj4_warnings""=""none"") before loading rgdal.
+"
+"0","library(tidyverse)"
+"0","library(readxl)"
+"0","library(leaflet)"
+"0","library(kableExtra)"
+"2","
+Attaching package: ‘kableExtra’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    group_rows
+
+"
+"0","library(DT)"

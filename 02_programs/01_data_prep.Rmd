@@ -46,6 +46,10 @@ spi_df_empty <- bind_rows(replicate(length(span), wbstats::wbcountries(), simpli
 
 spi_df <- spi_df_empty
 
+#read list of iso3c codes for matching from UN (https://unstats.un.org/unsd/methodology/m49/)
+iso3c <- read_csv(paste(raw_dir,'metadata/iso_codes.csv', sep="/"),
+                  col_types=list(col_character(), col_character(), col_character()))
+
 ```
 
 ```{r programs, include=FALSE}
@@ -143,6 +147,18 @@ spi_mapper  <- function(data, indicator, title) {
 }
 
 
+#define function to pull data from UN Stats and return
+un_pull <- function(series,start, end) {
+  # jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&timePeriodStart=',start,'&timePeriodEnd=',end,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
+      jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
+
+    as_tibble() %>%
+    mutate(date=timePeriodStart) %>%
+    right_join(iso3c)
+    
+}  
+
+
 
 ```
 
@@ -157,6 +173,28 @@ In this program, I will clean and reshape the raw data files in the 01_rawdata f
 Below is an overview of the SPI framework.
 
 ![unchanged image](SPI_dashboard.png)
+# Handling missing data
+
+It is likely that for the initial launch of the Dashboard there will be several types of missing data.
+
+In the absence of any new data, the existing material collected for the Statistical Performance Index could be used to populate an initial dashboard as follows:
+
+•	Data use dimension: leave blank
+
+•	Data services dimension: use scores for SPI “dissemination practices and openness” dimension
+
+•	Data products dimension: use scores for SPI “availability of key indicators” dimension
+
+•	Data sources dimension: use scores for SPI “censuses and surveys” dimension
+
+•	Data infrastructure dimension: use scores for SPI “methodology, standard and classifications” dimension
+
+Indeed, a first iteration Dashboard and toolkit can be demonstrated using this existing data. As new methods are developed and data are collected, the Dashboard can progressively be populated.
+Where it has not been possible to develop and implement a methodology for the dashboard tile concerned, this should be left blank to signify that this is an important issue that has not yet been quantified in a way that meets the criteria for the Dashboard. This will provide an incentive for a research agenda and possibly surveys and other mechanisms to fill the gap for a particular purpose eg a country assessment.
+
+Where it has been possible to develop and implement a methodology but it has not been possible to find data for a specific country, even though it is known to exist, the Dashboard tile for that country should also be left blank and weighting between tiles conducted on the basis of the tiles that are present.
+
+In some situations, missing data represents a zero score, for example if there is no evidence that geospatial data is used by the country’s statistical system. In such cases a score of zero should be recorded and used in the generation of indicators, weightings and rankings.
 
 
 # Key Discussion Points
@@ -1699,28 +1737,17 @@ For each indicator, we will produce a value for each country with the following 
   * **0 Points**: Indicator **based on modelled data or does not exists**
   
   
-# API
-
-Now we will pull data from the UN Stats API (https://unstats.un.org/SDGAPI/swagger/).  We will keep only the tier 1 indicators
+Because of the large data files and runtime of the program to calculate these indicators, the code to produce these indicators is in a separate file.  https://github.com/stacybri/UN_Stats_SDG_Indicators_SPI/blob/master/02_programs/un_stats_cleaning.Rmd
 
 ```{r unstats}
 
-un_sdg_df <- read_csv(paste(output_dir,'/un_sdg_df.csv',sep=""))
+un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data.csv',sep=""))
 
-stats_df <- un_sdg_df %>%
-  filter(between(date,2015,2019) ) %>%
-    group_by( iso3c, goal,target) %>%
-    summarise(ind_quality=100*max(ind_quality), #get a measure by country of whether indicator exists at all over 5 years
-              ind_available=100*max(!is.na(ind_value))
-    ) %>%
-    group_by(iso3c,goal) %>%
-    summarise(ind_quality=round(mean(ind_quality, na.rm=T),1), #get an average of this across countries
-            ind_available=round(mean(ind_available, na.rm=T),1)
-            ) %>%
-  left_join(country_metadata) %>%
-  filter(!is.na(region)) %>%
-  mutate(goal=paste('SDG Goal', goal, sep=" ")) %>%
-  select(iso3c, country,region, income, goal,ind_available, ind_quality)
+
+
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(un_sdg_df)
 
 ```
 
@@ -2454,59 +2481,67 @@ Data Infrastructure (5 Indicators):
 
 ## Indicator 5.1: legislation and governance   
 
-New indicator based on PARIS21 indicators on SDG 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Also include some other legislative aspects that foster good use of statistics eg freedom of information, privacy/transparency, good governance (eg free and fair elections).
+The legislation and governance indicator will be drawn from SDG indicator 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Also include some other legislative aspects that foster good use of statistics eg freedom of information, privacy/transparency, good governance (eg free and fair elections).
 
 This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)
 
-Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics.
+Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics.  Scores of 0 or scores with missing values are treated the same (both given a score of zero).
 
-The source is Paris 21.  Data accessed on August 6, 2020 from https://statisticalcapacitymonitor.org/indicator/135
+The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Date()`
 
 
 ```{r legislation_governance}
 
-#read in csv file.
-D5.1_DILG <- read_csv(file = paste(raw_dir, "5.1_DILG","5.1_DILG.csv", sep="/" )) %>%
-  as_tibble(.name_repair = 'universal') %>%
-  transmute(
-    country=Country,
-    date=Year,
-    SPI.5.1.DILG=Data.Value
-  ) %>%
-    mutate(country=case_when(
-    country=="Bahamas" ~ "Bahamas, The",                  
-    country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
-    country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
-    country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
-    country=="Congo"  ~ "Congo, Rep."        ,           
-    country=="Curacao"  ~  "Curacao"       ,                
-    country=="Czechia"   ~  "Czech Republic"     ,        
-    country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
-    country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
-    country=="United Kingdom"   ~  "United Kingdom"    ,         
-    country=="Gambia"    ~  "Gambia, The"     ,           
-    country=="Iran (Islamic Republic of)"  ~ "Iran, Islamic Rep." ,           
-    country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
-    country=="Republic of Korea"   ~ "Korea, Rep."   ,               
-    country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
-    country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
-    country=="Saint Lucia"   ~ "St. Lucia",
-    country=="Republic of Moldova"   ~  "Moldova"   ,                  
-    country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
-    country=="Slovakia"   ~  "Slovak Republic"             ,
-    country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
-    country=="United States of America"  ~ "United States"  ,                
-    country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
-    country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
-    country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
-    country=="Viet Nam"  ~ "Vietnam"        ,              
-    country=="Yemen"  ~ "Yemen, Rep.",
-    country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
-    TRUE ~ country
-  )) %>%
-  mutate(RAW.5.1.DILG=if_else(SPI.5.1.DILG=='no data',as.character(NA), SPI.5.1.DILG),
-         SPI.5.1.DILG=if_else(SPI.5.1.DILG=='no data',as.numeric(NA), as.numeric(SPI.5.1.DILG))) %>%
-  right_join(spi_df_empty)
+
+D5.1_DILG <- un_pull('SG_STT_FPOS', '2004', '2019') %>%
+  select(iso3c, date,value) %>%
+  right_join(spi_df_empty) %>%
+  mutate(RAW.5.1.DILG=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
+         SPI.5.1.DILG=if_else((is.na(value) | value=="NaN"),0, as.numeric(value))) %>%
+  select(-value)
+# 
+# #read in csv file.
+# D5.1_DILG2 <- read_csv(file = paste(raw_dir, "5.1_DILG","5.1_DILG.csv", sep="/" )) %>%
+#   as_tibble(.name_repair = 'universal') %>%
+#   transmute(
+#     country=Country,
+#     date=Year,
+#     SPI.5.1.DILG=Data.Value
+#   ) %>%
+#     mutate(country=case_when(
+#     country=="Bahamas" ~ "Bahamas, The",                  
+#     country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
+#     country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
+#     country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
+#     country=="Congo"  ~ "Congo, Rep."        ,           
+#     country=="Curacao"  ~  "Curacao"       ,                
+#     country=="Czechia"   ~  "Czech Republic"     ,        
+#     country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
+#     country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
+#     country=="United Kingdom"   ~  "United Kingdom"    ,         
+#     country=="Gambia"    ~  "Gambia, The"     ,           
+#     country=="Iran (Islamic Republic of)"  ~ "Iran, Islamic Rep." ,           
+#     country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
+#     country=="Republic of Korea"   ~ "Korea, Rep."   ,               
+#     country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
+#     country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
+#     country=="Saint Lucia"   ~ "St. Lucia",
+#     country=="Republic of Moldova"   ~  "Moldova"   ,                  
+#     country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
+#     country=="Slovakia"   ~  "Slovak Republic"             ,
+#     country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
+#     country=="United States of America"  ~ "United States"  ,                
+#     country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
+#     country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
+#     country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
+#     country=="Viet Nam"  ~ "Vietnam"        ,              
+#     country=="Yemen"  ~ "Yemen, Rep.",
+#     country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
+#     TRUE ~ country
+#   )) %>%
+#   mutate(RAW.5.1.DILG=if_else(SPI.5.1.DILG=='no data',as.character(NA), SPI.5.1.DILG),
+#          SPI.5.1.DILG=if_else(SPI.5.1.DILG=='no data',as.numeric(NA), as.numeric(SPI.5.1.DILG))) %>%
+#   right_join(spi_df_empty)
 
 #add to spi databases
 spi_df <- spi_df %>%
@@ -2514,9 +2549,9 @@ spi_df <- spi_df %>%
 
 
 D5.1_DILG_map <- D5.1_DILG %>%
-  filter(!is.na(SPI.5.1.DILG))
+  filter(!is.na(RAW.5.1.DILG))
 
-spi_mapper('D5.1_DILG_map', 'SPI.5.1.DILG', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
+spi_mapper('D5.1_DILG_map', 'RAW.5.1.DILG', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
 
 ```
 ## Indicator 5.2: standards 
@@ -2962,54 +2997,66 @@ No data is available for this indicator at this point.
 ## Indicator 5.5: finance
 
 
-Indicator based on PARIS21 SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation) and SDG 17.19.1 (value of resources made available to strengthen statistical capacity)). Could also incorporate indicator of NSO budget as a percentage of GDP.
+Indicator based on  SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). This indicator measures whether the national statistical plan under implementation is fully funded. It relates to SDG 17.18.3 and is based on the annual Status Report on National Strategies for the Development of Statistics (NSDS).
 
-Source of this data is Paris21.  Downloaded on August 6,2020 from https://statisticalcapacitymonitor.org/indicator/138/
+Scores is 1 if the country has a national statistical plan that is fully funded and under implementation.  Scores of 0 or scores with missing values are treated the same (both given a score of zero).
+
+The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Date()`
+
+Source of this data is UNSD and Paris21.  Downloaded on August 6,2020 from https://statisticalcapacitymonitor.org/indicator/138/
 
 ```{r finance}
 
-#read in csv file.
-D5.5_DIFI <- read_csv(file = paste(raw_dir, "5.5_DIFI","D5.5_DIFI.csv", sep="/" )) %>%
-  as_tibble(.name_repair = 'universal') %>%
-  transmute(
-    country=Country,
-    date=Year,
-    SPI.5.5.DIFI=Data.Value
-  ) %>%
-    mutate(country=case_when(
-    country=="Bahamas" ~ "Bahamas, The",                  
-    country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
-    country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
-    country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
-    country=="Congo"  ~ "Congo, Rep."        ,           
-    country=="Curacao"  ~  "Curacao"       ,                
-    country=="Czechia"   ~  "Czech Republic"     ,        
-    country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
-    country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
-    country=="United Kingdom"   ~  "United Kingdom"    ,         
-    country=="Gambia"    ~  "Gambia, The"     ,           
-    country=="Iran (Islamic Republic of)"  ~ "Iran, Islamic Rep." ,           
-    country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
-    country=="Republic of Korea"   ~ "Korea, Rep."   ,               
-    country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
-    country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
-    country=="Saint Lucia"   ~ "St. Lucia",
-    country=="Republic of Moldova"   ~  "Moldova"   ,                  
-    country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
-    country=="Slovakia"   ~  "Slovak Republic"             ,
-    country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
-    country=="United States of America"  ~ "United States"  ,                
-    country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
-    country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
-    country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
-    country=="Viet Nam"  ~ "Vietnam"        ,              
-    country=="Yemen"  ~ "Yemen, Rep.",
-    country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
-    TRUE ~ country
-  )) %>%
-  mutate(RAW.5.5.DIFI=if_else(SPI.5.5.DIFI=='no data',as.character(NA), SPI.5.5.DIFI),
-         SPI.5.5.DIFI=if_else(SPI.5.5.DIFI=='no data',as.numeric(NA), as.numeric(SPI.5.5.DIFI))) %>%
-  right_join(spi_df_empty)
+#pull from unsd api
+D5.5_DIFI <- un_pull('SG_STT_NSDSFND', '2004', '2019') %>%
+  select(iso3c, date,value) %>%
+  right_join(spi_df_empty) %>%
+  mutate(RAW.5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
+         SPI.5.5.DIFI=if_else((is.na(value) | value=="NaN"),0, as.numeric(value))) %>%
+  select(-value)
+
+# #read in csv file.
+# D5.5_DIFI <- read_csv(file = paste(raw_dir, "5.5_DIFI","D5.5_DIFI.csv", sep="/" )) %>%
+#   as_tibble(.name_repair = 'universal') %>%
+#   transmute(
+#     country=Country,
+#     date=Year,
+#     SPI.5.5.DIFI=Data.Value
+#   ) %>%
+#     mutate(country=case_when(
+#     country=="Bahamas" ~ "Bahamas, The",                  
+#     country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
+#     country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
+#     country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
+#     country=="Congo"  ~ "Congo, Rep."        ,           
+#     country=="Curacao"  ~  "Curacao"       ,                
+#     country=="Czechia"   ~  "Czech Republic"     ,        
+#     country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
+#     country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
+#     country=="United Kingdom"   ~  "United Kingdom"    ,         
+#     country=="Gambia"    ~  "Gambia, The"     ,           
+#     country=="Iran (Islamic Republic of)"  ~ "Iran, Islamic Rep." ,           
+#     country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
+#     country=="Republic of Korea"   ~ "Korea, Rep."   ,               
+#     country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
+#     country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
+#     country=="Saint Lucia"   ~ "St. Lucia",
+#     country=="Republic of Moldova"   ~  "Moldova"   ,                  
+#     country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
+#     country=="Slovakia"   ~  "Slovak Republic"             ,
+#     country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
+#     country=="United States of America"  ~ "United States"  ,                
+#     country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
+#     country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
+#     country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
+#     country=="Viet Nam"  ~ "Vietnam"        ,              
+#     country=="Yemen"  ~ "Yemen, Rep.",
+#     country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
+#     TRUE ~ country
+#   )) %>%
+#   mutate(RAW.5.5.DIFI=if_else(SPI.5.5.DIFI=='no data',as.character(NA), SPI.5.5.DIFI),
+#          SPI.5.5.DIFI=if_else(SPI.5.5.DIFI=='no data',as.numeric(NA), as.numeric(SPI.5.5.DIFI))) %>%
+#   right_join(spi_df_empty)
 
 #add to spi databases
 spi_df <- spi_df %>%
@@ -3020,9 +3067,9 @@ spi_df <- spi_df %>%
 
 
 D5.5_DIFI_map <- D5.5_DIFI %>%
-  filter(!is.na(SPI.5.5.DIFI))
+  filter(!is.na(RAW.5.5.DIFI))
 
-spi_mapper('D5.5_DIFI_map', 'SPI.5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
+spi_mapper('D5.5_DIFI_map', 'RAW.5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
 
 ```
 
