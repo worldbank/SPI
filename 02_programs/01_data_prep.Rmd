@@ -70,14 +70,14 @@ spi_mapper  <- function(data, indicator, title) {
   map_df <- get(data) %>%
     filter(date==max(date, na.rm=T)) %>%
     group_by( country) %>%
-    summarise(across(!! indicator,last)) %>%
-    mutate(data_available=TRUE) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
     right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), FALSE, data_available))    
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
   
    p1 <- ggplot() +
-    geom_map(data = map_df, aes(map_id = iso3c, fill = data_available), map = maps$countries) + 
+    geom_map(data = map_df, aes(map_id = iso3c, fill = 100*data_available), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -88,25 +88,23 @@ spi_mapper  <- function(data, indicator, title) {
               linetype = maps$boundaries$linetype) +
     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
     scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
-    scale_fill_brewer(
-      name='Data Available',
-      palette='Paired',
-      na.value='blue'
-    )  +
+  scale_fill_distiller(palette = "RdYlGn",
+                       direction=1)  +
     coord_equal() +
     theme_map(base_size=12) +
     labs(
       title=str_wrap(title,100),
       subtitle= 'Data Point is for last year available (usually 2019)',
-      caption = 'Source: SPI Indicators Raw Data.'
+      caption = 'Source: SPI Indicator.',
+      fill='SPI Indicator Value'
     )
   
   #add histogram by region 
   p2 <- map_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(data_available),
-           Label = paste(sum(data_available),'/',n(), sep="")) %>%
+    mutate(Percentage=100*mean(data_available, na.rm=T),
+           Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
@@ -115,16 +113,34 @@ spi_mapper  <- function(data, indicator, title) {
       caption = 'Source: SPI Indicators Raw Data',
       subtitle= 'Data Point is for last year available (usually 2019)'
       ) +
+      expand_limits(x=c(0,100)) +
       theme_bw()
 
+  #by income
+    p3 <- map_df %>%
+    group_by(income) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=100*mean(data_available, na.rm=T),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=income, fill=income)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Income', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (usually 2019)'
+      ) +
+      expand_limits(x=c(0,100)) +
+      theme_bw()
+    
   # #add line graph over time
-  p3 <- get(data)  %>%
-    mutate(data_available=TRUE) %>%
-    right_join(spi_df_empty) %>%
+  p4 <- get(data)  %>%
+    rename(data_available=!! indicator) %>%
+    # right_join(spi_df_empty) %>%
     group_by( date) %>%
-    mutate(data_available=if_else(is.na(data_available), FALSE, data_available)) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
     mutate(Percentage=100*mean(data_available),
-           Label = paste(sum(data_available),'/',n(), sep="")) %>%
+           Label = paste(round(Percentage,0))) %>%
     ungroup() %>%
     ggplot(aes(y=Percentage, x=date)) +
       geom_point() +
@@ -143,7 +159,8 @@ spi_mapper  <- function(data, indicator, title) {
   
   print(p3)
 
-     
+  print(p4)
+    
 }
 
 
@@ -1708,7 +1725,7 @@ Cleaning for Data Products Indicators.  Data Products (17 Indicators):
   
   2. Transform the data so that for each indicator we can create a score documenting whether a value exists for the country in a year, whether the value is based on country data, country data adjusted, estimated, or modelled data according the UN Stats metadata. **This will only include tier 1 indicators**.    
   
-  3. Combine the resulting data into a single set of indicators for use in the Statistical Performance Indicators dashboard and index
+  3. Combine the resulting data into a single set of indicators for use in the Statistical Performance Indicators dashboard and index by calculating the average across SDGs.  This results in 17 total indicators.  One for each SDG, which is the share of indicators with a value meeting quality criteria defined below.
 
 Below is a paraphrased description from the UN stats webpage (https://unstats.un.org/sdgs/indicators/indicators-list/):
 
@@ -1748,6 +1765,30 @@ un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data.csv',sep=""))
 #add to spi databases
 spi_df <- spi_df %>%
   left_join(un_sdg_df)
+
+#map the values
+un_sdg_map <- un_sdg_df %>%
+  select(country, date, starts_with("SPI")) 
+
+spi_mapper('un_sdg_map','SPI.D3.1','Goal 1: No Poverty')
+spi_mapper('un_sdg_map','SPI.D3.2','Goal 2: No Hunger')
+spi_mapper('un_sdg_map','SPI.D3.3','Goal 3: Good Health and Well-being')
+spi_mapper('un_sdg_map','SPI.D3.4','Goal 4: Quality Education  ')
+spi_mapper('un_sdg_map','SPI.D3.5','Goal 5: Gender Equality ')
+spi_mapper('un_sdg_map','SPI.D3.6','Goal 6: Clean Water and Sanitation ')
+spi_mapper('un_sdg_map','SPI.D3.7','Goal 7: Affordable and Clean Energy')
+spi_mapper('un_sdg_map','SPI.D3.8','Goal 8: Decent Work and Economic Growth  ')
+spi_mapper('un_sdg_map','SPI.D3.9','Goal 9: Industry, Innovation and Infrastructure ')
+spi_mapper('un_sdg_map','SPI.D3.10','Goal 10: Reduced Inequality   ')
+spi_mapper('un_sdg_map','SPI.D3.11','Goal 11: Sustainable Cities and Communities')
+spi_mapper('un_sdg_map','SPI.D3.12','Goal 12: Responsible Consumption and Production   ')
+spi_mapper('un_sdg_map','SPI.D3.13','Goal 13: Climate Action')
+spi_mapper('un_sdg_map','SPI.D3.14','Goal 14: Life Below Water')
+spi_mapper('un_sdg_map','SPI.D3.15','Goal 15: Life on Land')
+spi_mapper('un_sdg_map','SPI.D3.16','Goal 16: Peace and Justice Strong Institutions')
+spi_mapper('un_sdg_map','SPI.D3.17','Goal 17: Partnerships to achieve the Goal  ')
+
+  
 
 ```
 
@@ -1941,29 +1982,29 @@ spi_df <- spi_df %>%
   left_join(cs_df)
 
 #now do the figures 
-cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.1.POPU.CENSUS))
-spi_mapper('cs_df_map', 'RAW.D4.1.1.POPU.CENSUS', 'Population Census Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.1.POPU))
+spi_mapper('cs_df_map', 'SPI.D4.1.1.POPU', 'Population Census Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.2.AGRI.CENSUS))
-spi_mapper('cs_df_map', 'RAW.D4.1.2.AGRI.CENSUS', 'Agriculture Census Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.2.AGRI))
+spi_mapper('cs_df_map', 'SPI.D4.1.2.AGRI', 'Agriculture Census Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.3.BIZZ.CENSUS))
-spi_mapper('cs_df_map', 'RAW.D4.1.3.BIZZ.CENSUS', 'Business/Establishment Census Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.3.BIZZ))
+spi_mapper('cs_df_map', 'SPI.D4.1.3.BIZZ', 'Business/Establishment Census Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.4.HOUS.SURVEYS))
-spi_mapper('cs_df_map', 'RAW.D4.1.4.HOUS.SURVEYS', 'Household Survey Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.4.HOUS))
+spi_mapper('cs_df_map', 'SPI.D4.1.4.HOUS', 'Household Survey Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.5.AGRI.SURVEYS))
-spi_mapper('cs_df_map', 'RAW.D4.1.5.AGRI.SURVEYS', 'Agriculture Survey Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.5.AGSVY))
+spi_mapper('cs_df_map', 'SPI.D4.1.5.AGSVY', 'Agriculture Survey Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.6.LABR.SURVEYS))
-spi_mapper('cs_df_map', 'RAW.D4.1.6.LABR.SURVEYS', 'Labor Force Survey Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.6.LABR))
+spi_mapper('cs_df_map', 'SPI.D4.1.6.LABR', 'Labor Force Survey Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.7.HLTH.SURVEYS))
-spi_mapper('cs_df_map', 'RAW.D4.1.7.HLTH.SURVEYS', 'Health Survey Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.7.HLTH))
+spi_mapper('cs_df_map', 'SPI.D4.1.7.HLTH', 'Health Survey Available in Past 20 Years in 2019' )
 
-cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.8.BIZZ.SURVEYS))
-spi_mapper('cs_df_map', 'RAW.D4.1.8.BIZZ.SURVEYS', 'Business Survey Available in Past 20 Years in 2019' )
+cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.8.BZSVY))
+spi_mapper('cs_df_map', 'SPI.D4.1.8.BZSVY', 'Business Survey Available in Past 20 Years in 2019' )
 
 
 ```
@@ -2017,7 +2058,7 @@ spi_df <- spi_df %>%
 aspire_map <- aspire_df %>%
   filter(RAW.D4.2.1.SPL==TRUE)
 
-spi_mapper('aspire_map', 'RAW.D4.2.1.SPL', 'Administrative Data Available on Beneficiary Counts or Expenditures using ASPIRE' )
+spi_mapper('aspire_map', 'SPI.D4.2.1.SPL', 'Administrative Data Available on Beneficiary Counts or Expenditures using ASPIRE' )
 
 
 ```
@@ -2061,7 +2102,7 @@ unesco_map <- unesco_df %>%
   filter(RAW.D4.2.2.EDU==TRUE)
   
 
-spi_mapper('unesco_map', 'RAW.D4.2.2.EDU', 'Education Administrative Data Available According to UIS' )
+spi_mapper('unesco_map', 'SPI.D4.2.2.EDU', 'Education Administrative Data Available According to UIS' )
 
 
 ```
@@ -2090,7 +2131,7 @@ crvs_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
     date=as.numeric(date),
     crvs=value
   ) %>%
-  mutate(SPI.D4.2.3.CRVS=crvs,
+  mutate(SPI.D4.2.3.CRVS=as.numeric(crvs),
          RAW.D4.2.3.CRVS=crvs) %>%
   left_join(spi_df_empty) #add on country metadata
 
@@ -2106,9 +2147,9 @@ spi_df <- spi_df %>%
 
 
 crvs_map <- crvs_df %>%
-  filter(!is.na(RAW.D4.2.3.CRVS))
+  filter(!is.na(SPI.D4.2.3.CRVS))
 
-spi_mapper('crvs_map', 'RAW.D4.2.3.CRVS', 'Complete Civil Registration & Vital Statistics Data Available According to WDI' )
+spi_mapper('crvs_map', 'SPI.D4.2.3.CRVS', 'Complete Civil Registration & Vital Statistics Data Available According to WDI' )
 
 
 ```
@@ -2429,7 +2470,7 @@ google_df <- google_df_raw %>%
   mutate(date=2020)
 
 
-spi_mapper('google_df', 'date', 'Google Global Mobility Report Data' )
+#spi_mapper('google_df', 'date', 'Google Global Mobility Report Data' )
 
 
 #####
@@ -2463,7 +2504,7 @@ apple_df <- apple_df_raw %>%
 
 
 
-spi_mapper('apple_df', 'date', 'Apple Mobility Report Data' )
+#spi_mapper('apple_df', 'date', 'Apple Mobility Report Data' )
 
 ```
 
@@ -2551,7 +2592,7 @@ spi_df <- spi_df %>%
 D5.1_DILG_map <- D5.1_DILG %>%
   filter(!is.na(RAW.5.1.DILG))
 
-spi_mapper('D5.1_DILG_map', 'RAW.5.1.DILG', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
+spi_mapper('D5.1_DILG_map', 'SPI.5.1.DILG', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
 
 ```
 ## Indicator 5.2: standards 
@@ -2891,34 +2932,34 @@ spi_df <- spi_df %>%
 
 #now do the figures 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.1.SNAU))
-spi_mapper('msc_df_map', 'RAW.D5.2.1.SNAU', 'System of National Accounts in use in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.1.SNAU', 'System of National Accounts in use in 2019' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.2.NABY))
-spi_mapper('msc_df_map', 'RAW.D5.2.2.NABY', 'National Accounts base year in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.2.NABY', 'National Accounts base year in 2019' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.3.CNIN))
-spi_mapper('msc_df_map', 'RAW.D5.2.3.CNIN', 'Classification of national industry in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.3.CNIN', 'Classification of national industry in 2019' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.4.CPIBY))
-spi_mapper('msc_df_map', 'RAW.D5.2.4.CPIBY', 'CPI base year in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.4.CPIBY', 'CPI base year in 2019' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.5.HOUS))
-spi_mapper('msc_df_map', 'RAW.D5.2.5.HOUS', 'Classification of household consumption in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.5.HOUS', 'Classification of household consumption in 2019' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.6.EMPL))
-spi_mapper('msc_df_map', 'RAW.D5.2.6.EMPL', 'Classification of status of employment in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.6.EMPL', 'Classification of status of employment in 2019' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.7.CGOV))
-spi_mapper('msc_df_map', 'RAW.D5.2.7.CGOV', 'Central government accounting status in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.7.CGOV', 'Central government accounting status in 2019' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.8.FINA))
-spi_mapper('msc_df_map', 'RAW.D5.2.8.FINA', 'Compilation of government finance statistics in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.8.FINA', 'Compilation of government finance statistics in 2019' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.9.MONY))
-spi_mapper('msc_df_map', 'RAW.D5.2.9.MONY', 'Compilation of monetary and financial statistics in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics in 2019' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.10.GSBP))
-spi_mapper('msc_df_map', 'RAW.D5.2.10.GSBP', 'Business process in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.10.GSBP', 'Business process in 2019' )
 
 ```
 
@@ -3069,7 +3110,7 @@ spi_df <- spi_df %>%
 D5.5_DIFI_map <- D5.5_DIFI %>%
   filter(!is.na(RAW.5.5.DIFI))
 
-spi_mapper('D5.5_DIFI_map', 'RAW.5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
+spi_mapper('D5.5_DIFI_map', 'SPI.5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
 
 ```
 
@@ -3117,5 +3158,17 @@ spi_df_final %>%
   select(-lat,-long) %>%
   write_dta( path = paste(output_dir, 'SPI_data.dta', sep="/"))
 
+```
+
+```{r basic_analysis}
+#basic analysis
+
+library(corrr)
+
+spi_df_final_cor <- spi_df_final %>%
+  filter(date==2018) %>%
+  select(contains("SPI.")) %>%
+  correlate()
+  
 ```
 
