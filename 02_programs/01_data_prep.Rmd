@@ -89,7 +89,8 @@ spi_mapper  <- function(data, indicator, title) {
     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
     scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
   scale_fill_distiller(palette = "RdYlGn",
-                       direction=1)  +
+                       direction=1,
+                       limits = c(0,100))  +
     coord_equal() +
     theme_map(base_size=12) +
     labs(
@@ -2467,10 +2468,11 @@ google_df <- google_df_raw %>%
   group_by(country_region_code) %>%
   summarise(freq=n()) %>%
   left_join(country_metadata, by=c('country_region_code'='iso2c')) %>%
-  mutate(date=2020)
+  mutate(date=2020,
+         value=1)
 
 
-#spi_mapper('google_df', 'date', 'Google Global Mobility Report Data' )
+spi_mapper('google_df', 'value', 'Google Global Mobility Report Data' )
 
 
 #####
@@ -2500,11 +2502,12 @@ apple_df <- apple_df_raw %>%
   group_by(country) %>%
   summarise(freq=n()) %>%
   left_join(country_metadata) %>%
-  mutate(date=2020)
+  mutate(date=2020,
+         value=1)
 
 
 
-#spi_mapper('apple_df', 'date', 'Apple Mobility Report Data' )
+spi_mapper('apple_df', 'value', 'Apple Mobility Report Data' )
 
 ```
 
