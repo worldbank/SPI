@@ -27,6 +27,7 @@ SPI.D2.2.Metadata.available,ODIN Metadata Availability score,Indicator 2.2,Onlin
 SPI.D2.2.Terms.of.use,ODIN Terms of Use score,Indicator 2.2,Online access,ODW Open Data Index score
 SPI.D2.2.Openness.subscore,ODIN Open Data Openness score,Indicator 2.2,Online access,ODW Open Data Index score
 SPI.D2.3.DSAS,NSO Website,Indicator 2.3,Advisory/ Analytical Services,New indicator of number of non-recurring products on NSO website (ad hoc/experimental rather than regular releases). The indicator is the number of products found.
+SPI.D2.4.NADA,NADA metadata,Indicator 2.4,Data services,NADA/NSO websites
 SPI.D3.1.POV,GOAL 1: No Poverty,Indicator 3.1,SDG Goal 1,Fraction of Indicators in Goal 1 with value produced by countries statistical system
 SPI.D3.2.HNGR,GOAL 2: Zero Hunger,Indicator 3.2,SDG Goal 2,Fraction of Indicators in Goal 2 with value produced by countries statistical system
 SPI.D3.3.HLTH,GOAL 3: Good Health and Well-being,Indicator 3.3,SDG Goal 3,Fraction of Indicators in Goal 3 with value produced by countries statistical system
@@ -43,7 +44,7 @@ SPI.D3.13.CLMT,GOAL 13: Climate Action,Indicator 3.13,SDG Goal 13,Fraction of In
 SPI.D3.14.LFWT,GOAL 14: Life Below Water,Indicator 3.14,SDG Goal 14,Fraction of Indicators in Goal 14 with value produced by countries statistical system
 SPI.D3.15.LAND,GOAL 15: Life on Land,Indicator 3.15,SDG Goal 15,Fraction of Indicators in Goal 15 with value produced by countries statistical system
 SPI.D3.16.INST,GOAL 16: Peace and Justice Strong Institutions,Indicator 3.16,SDG Goal 16,Fraction of Indicators in Goal 16 with value produced by countries statistical system
-SPI.D3.17.PTNS,GOAL 17: Partnerships to achieve the Goal,Indicator 3.17,SDG Goal 17,Fraction of Indicators in Goal 17 with value produced by countries statistical system
+SPI.D3.17.PTNS,GOAL 17: Partnerships to achieve the Goal,Indicator 3.17,SDG Goal 17,Fraction of Indicators in Goal 17 with value produced by countries statistical system
 SPI.D2.4.NADA,NADA metadata,Indicator 2.4,Data services,NADA/NSO websites
 SPI.D4.1.1.POPU,Population & Housing census,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
 SPI.D4.1.2.AGRI,Agriculture census,Indicator 4.1,censuses and surveys,SPI scores for sources dimension

@@ -1759,9 +1759,26 @@ Because of the large data files and runtime of the program to calculate these in
 
 ```{r unstats}
 
-un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data.csv',sep=""))
-
-
+un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data.csv',sep="")) %>%
+  rename(SPI.D3.1.POV   = SPI.D3.1,
+         SPI.D3.2.HNGR  = SPI.D3.2,
+         SPI.D3.3.HLTH  = SPI.D3.3,
+         SPI.D3.4.EDUC  = SPI.D3.4,
+         SPI.D3.5.GEND  = SPI.D3.5,
+         SPI.D3.6.WTRS  = SPI.D3.6,
+         SPI.D3.7.ENRG  = SPI.D3.7,
+         SPI.D3.8.WORK  = SPI.D3.8,
+         SPI.D3.9.INDY  = SPI.D3.9,
+         SPI.D3.10.NEQL = SPI.D3.10,
+         SPI.D3.11.CITY = SPI.D3.11,
+         SPI.D3.12.CNSP = SPI.D3.12,
+         SPI.D3.13.CLMT = SPI.D3.13,
+         SPI.D3.14.LFWT = SPI.D3.14,
+         SPI.D3.15.LAND = SPI.D3.15,
+         SPI.D3.16.INST = SPI.D3.16,
+         SPI.D3.17.PTNS = SPI.D3.17
+) %>%
+  select(country, date, starts_with("SPI")) 
 
 #add to spi databases
 spi_df <- spi_df %>%
@@ -1771,23 +1788,23 @@ spi_df <- spi_df %>%
 un_sdg_map <- un_sdg_df %>%
   select(country, date, starts_with("SPI")) 
 
-spi_mapper('un_sdg_map','SPI.D3.1','Goal 1: No Poverty')
-spi_mapper('un_sdg_map','SPI.D3.2','Goal 2: No Hunger')
-spi_mapper('un_sdg_map','SPI.D3.3','Goal 3: Good Health and Well-being')
-spi_mapper('un_sdg_map','SPI.D3.4','Goal 4: Quality Education  ')
-spi_mapper('un_sdg_map','SPI.D3.5','Goal 5: Gender Equality ')
-spi_mapper('un_sdg_map','SPI.D3.6','Goal 6: Clean Water and Sanitation ')
-spi_mapper('un_sdg_map','SPI.D3.7','Goal 7: Affordable and Clean Energy')
-spi_mapper('un_sdg_map','SPI.D3.8','Goal 8: Decent Work and Economic Growth  ')
-spi_mapper('un_sdg_map','SPI.D3.9','Goal 9: Industry, Innovation and Infrastructure ')
-spi_mapper('un_sdg_map','SPI.D3.10','Goal 10: Reduced Inequality   ')
-spi_mapper('un_sdg_map','SPI.D3.11','Goal 11: Sustainable Cities and Communities')
-spi_mapper('un_sdg_map','SPI.D3.12','Goal 12: Responsible Consumption and Production   ')
-spi_mapper('un_sdg_map','SPI.D3.13','Goal 13: Climate Action')
-spi_mapper('un_sdg_map','SPI.D3.14','Goal 14: Life Below Water')
-spi_mapper('un_sdg_map','SPI.D3.15','Goal 15: Life on Land')
-spi_mapper('un_sdg_map','SPI.D3.16','Goal 16: Peace and Justice Strong Institutions')
-spi_mapper('un_sdg_map','SPI.D3.17','Goal 17: Partnerships to achieve the Goal  ')
+spi_mapper('un_sdg_map','SPI.D3.1.POV','Goal 1: No Poverty')
+spi_mapper('un_sdg_map','SPI.D3.2.HNGR','Goal 2: No Hunger')
+spi_mapper('un_sdg_map','SPI.D3.3.HLTH','Goal 3: Good Health and Well-being')
+spi_mapper('un_sdg_map','SPI.D3.4.EDUC','Goal 4: Quality Education  ')
+spi_mapper('un_sdg_map','SPI.D3.5.GEND','Goal 5: Gender Equality ')
+spi_mapper('un_sdg_map','SPI.D3.6.WTRS','Goal 6: Clean Water and Sanitation ')
+spi_mapper('un_sdg_map','SPI.D3.7.ENRG','Goal 7: Affordable and Clean Energy')
+spi_mapper('un_sdg_map','SPI.D3.8.WORK','Goal 8: Decent Work and Economic Growth  ')
+spi_mapper('un_sdg_map','SPI.D3.9.INDY','Goal 9: Industry, Innovation and Infrastructure ')
+spi_mapper('un_sdg_map','SPI.D3.10.NEQL','Goal 10: Reduced Inequality   ')
+spi_mapper('un_sdg_map','SPI.D3.11.CITY','Goal 11: Sustainable Cities and Communities')
+spi_mapper('un_sdg_map','SPI.D3.12.CNSP','Goal 12: Responsible Consumption and Production   ')
+spi_mapper('un_sdg_map','SPI.D3.13.CLMT','Goal 13: Climate Action')
+spi_mapper('un_sdg_map','SPI.D3.14.LFWT','Goal 14: Life Below Water')
+spi_mapper('un_sdg_map','SPI.D3.15.LAND','Goal 15: Life on Land')
+spi_mapper('un_sdg_map','SPI.D3.16.INST','Goal 16: Peace and Justice Strong Institutions')
+spi_mapper('un_sdg_map','SPI.D3.17.PTNS','Goal 17: Partnerships to achieve the Goal  ')
 
   
 

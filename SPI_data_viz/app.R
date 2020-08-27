@@ -36,7 +36,9 @@ countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
                                      what = "sp")
 
 #country info
-country_info <- wbcountries() %>%
+country_info <- wb_countries() %>%
+    mutate(income=income_level,
+           lending=lending_type) %>%
     select(iso3c, region, income, lending)
 
 
@@ -70,8 +72,8 @@ ui <- navbarPage("Statistical Performance Indicators",
                               h3('Indicators Over Time'),
                               selectizeInput("over_time",
                                              "Choose Indicator to Plot Over Time",
-                                             choices=as.character(metadata$descript),
-                                             selected="Indicator 3.1: social statistics - Availability of Poverty headcount ratio at $1.90 a day"
+                                             choices=as.character(metadata$descript)
+                                             
                               ),
                               withSpinner(plotlyOutput('plot_time',
                                                        width = '70%')),

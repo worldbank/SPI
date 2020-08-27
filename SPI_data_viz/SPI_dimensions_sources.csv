@@ -4,6 +4,21 @@ SPI.D1.2.DUNE,FAOLEX + NSO Website,Indicator 1.2,Data use by national executive 
 SPI.D1.3.DUCS,New Indicator,Indicator 1.3,Data use by civil society,Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using main social media platform in use in country as source.
 SPI.D1.4.DUAC,New Indicator,Indicator 1.4,Data use by academia,PARIS21 citations indicator
 SPI.D1.5.DUIO,New Indicator,Indicator 1.5,Data use by international organisations,New indicator of level of congruence between UNSD and national database of SDG indicators. For each of the indicators calculate whether the number in the database for the most recent year is the same or different. The indicator is the percentage that are the same.
+SPI.D1.5.POV,Availability of Poverty headcount ratio at $1.90 a day ,Indicator 1.5,Data use by international organisations,SDG goals 1-6
+SPI.D1.5.FIES,Availability of Food Insecurity Experience Scale,Indicator 1.5,Data use by international organisations,SDG goals 1-7
+SPI.D1.5.CHLD.MORT,"Availability of Mortality rate, under-5 (per 1,000 live births)",Indicator 1.5,Data use by international organisations,SDG goals 1-8
+SPI.D1.5.SE.LPV.PRIM.BMP,Availability of Pupils below minimum reading proficiency at end of primary,Indicator 1.5,Data use by international organisations,SDG goals 1-9
+SPI.D1.5.MMRT,Availability of Maternal Mortality,Indicator 1.5,Data use by international organisations,SDG goals 1-10
+SPI.D1.5.SH.H2O.SMDW.ZS,Availability of People using safely managed drinking water services,Indicator 1.5,Data use by international organisations,SDG goals 1-11
+SPI.D1.5.ELEC,Availability of Access to electricity (% of population),Indicator 1.5,Data use by international organisations,SDG goals 7-12
+SPI.D1.5.SL.UEM.TOTL.NE.ZS,"Availability of Unemployment, total (% of total labor force) ",Indicator 1.5,Data use by international organisations,SDG goals 7-13
+SPI.D1.5.NV.IND.MANF.ZS,"Availability of Manufacturing, value added (% of GDP)",Indicator 1.5,Data use by international organisations,SDG goals 7-14
+SPI.D1.5.SI.SPR.PC40.ZG,"Availability of Annualized average growth rate mean consumption or income, bottom 40%",Indicator 1.5,Data use by international organisations,SDG goals 7-15
+SPI.D1.5.NE.CON.PRVT.CN,Availability of Households and NPISHs Final consumption expenditure,Indicator 1.5,Data use by international organisations,SDG goals 7-16
+SPI.D1.5.QUART.GDP,Availability of Quarterly GDP,Indicator 1.5,Data use by international organisations,SDG goals 7-17
+SPI.D1.5.ER.H2O.FWST.ZS,Availability of Level of water stress,Indicator 1.5,Data use by international organisations,SDG goals 13-15
+SPI.D1.5.EG.FEC.RNEW.ZS,Availability of Renewable energy consumption,Indicator 1.5,Data use by international organisations,SDG goals 13-16
+SPI.D1.5.DT.TDS.DPPF.XP.ZS,Availability of Debt service,Indicator 1.5,Data use by international organisations,SDG goals 16-17
 SPI.D2.1.GDDS,SDDS/e-GDDS subscription,Indicator 2.1,Data releases,IMF GDDS compliance indicator
 SPI.D2.2.Machine.readable,ODIN Machine Readability Score,Indicator 2.2,Online access,ODW Open Data Index score
 SPI.D2.2.Non.proprietary,ODIN Non Proprietary Data Format score,Indicator 2.2,Online access,ODW Open Data Index score
@@ -13,21 +28,24 @@ SPI.D2.2.Terms.of.use,ODIN Terms of Use score,Indicator 2.2,Online access,ODW Op
 SPI.D2.2.Openness.subscore,ODIN Open Data Openness score,Indicator 2.2,Online access,ODW Open Data Index score
 SPI.D2.3.DSAS,NSO Website,Indicator 2.3,Advisory/ Analytical Services,New indicator of number of non-recurring products on NSO website (ad hoc/experimental rather than regular releases). The indicator is the number of products found.
 SPI.D2.4.NADA,NADA metadata,Indicator 2.4,Data services,NADA/NSO websites
-SPI.D3.POV,Availability of Poverty headcount ratio at $1.90 a day ,Indicator 3.1,social statistics,SDG goals 1-6
-SPI.D3.FIES,Availability of Food Insecurity Experience Scale,Indicator 3.1,social statistics,SDG goals 1-7
-SPI.D3.CHLD.MORT,"Availability of Mortality rate, under-5 (per 1,000 live births)",Indicator 3.1,social statistics,SDG goals 1-8
-SPI.D3.SE.LPV.PRIM.BMP,Availability of Pupils below minimum reading proficiency at end of primary,Indicator 3.1,social statistics,SDG goals 1-9
-SPI.D3.MMRT,Availability of Maternal Mortality,Indicator 3.1,social statistics,SDG goals 1-10
-SPI.D3.SH.H2O.SMDW.ZS,Availability of People using safely managed drinking water services,Indicator 3.1,social statistics,SDG goals 1-11
-SPI.D3.ELEC,Availability of Access to electricity (% of population),Indicator 3.2,economic statistics,SDG goals 7-12
-SPI.D3.SL.UEM.TOTL.NE.ZS,"Availability of Unemployment, total (% of total labor force) ",Indicator 3.2,economic statistics,SDG goals 7-13
-SPI.D3.NV.IND.MANF.ZS,"Availability of Manufacturing, value added (% of GDP)",Indicator 3.2,economic statistics,SDG goals 7-14
-SPI.D3.SI.SPR.PC40.ZG,"Availability of Annualized average growth rate mean consumption or income, bottom 40%",Indicator 3.2,economic statistics,SDG goals 7-15
-SPI.D3.NE.CON.PRVT.CN,Availability of Households and NPISHs Final consumption expenditure,Indicator 3.2,economic statistics,SDG goals 7-16
-SPI.D3.QUART.GDP,Availability of Quarterly GDP,Indicator 3.2,economic statistics,SDG goals 7-17
-SPI.D3.ER.H2O.FWST.ZS,Availability of Level of water stress,Indicator 3.3 ,environmental statistics,SDG goals 13-15
-SPI.D3.EG.FEC.RNEW.ZS,Availability of Renewable energy consumption,Indicator 3.3 ,environmental statistics,SDG goals 13-16
-SPI.D3.DT.TDS.DPPF.XP.ZS,Availability of Debt service,Indicator 3.4,institutional statistics,SDG goals 16-17
+SPI.D3.1.POV,GOAL 1: No Poverty,Indicator 3.1,SDG Goal 1,Fraction of Indicators in Goal 1 with value produced by countries statistical system
+SPI.D3.2.HNGR,GOAL 2: Zero Hunger,Indicator 3.2,SDG Goal 2,Fraction of Indicators in Goal 2 with value produced by countries statistical system
+SPI.D3.3.HLTH,GOAL 3: Good Health and Well-being,Indicator 3.3,SDG Goal 3,Fraction of Indicators in Goal 3 with value produced by countries statistical system
+SPI.D3.4.EDUC,GOAL 4: Quality Education,Indicator 3.4,SDG Goal 4,Fraction of Indicators in Goal 4 with value produced by countries statistical system
+SPI.D3.5.GEND,GOAL 5: Gender Equality,Indicator 3.5,SDG Goal 5,Fraction of Indicators in Goal 5 with value produced by countries statistical system
+SPI.D3.6.WTRS,GOAL 6: Clean Water and Sanitation,Indicator 3.6,SDG Goal 6,Fraction of Indicators in Goal 6 with value produced by countries statistical system
+SPI.D3.7.ENRG,GOAL 7: Affordable and Clean Energy,Indicator 3.7,SDG Goal 7,Fraction of Indicators in Goal 7 with value produced by countries statistical system
+SPI.D3.8.WORK,GOAL 8: Decent Work and Economic Growth,Indicator 3.8,SDG Goal 8,Fraction of Indicators in Goal 8 with value produced by countries statistical system
+SPI.D3.9.INDY,"GOAL 9: Industry, Innovation and Infrastructure",Indicator 3.9,SDG Goal 9,Fraction of Indicators in Goal 9 with value produced by countries statistical system
+SPI.D3.10.NEQL,GOAL 10: Reduced Inequality,Indicator 3.10,SDG Goal 10,Fraction of Indicators in Goal 10 with value produced by countries statistical system
+SPI.D3.11.CITY,GOAL 11: Sustainable Cities and Communities,Indicator 3.11,SDG Goal 11,Fraction of Indicators in Goal 11 with value produced by countries statistical system
+SPI.D3.12.CNSP,GOAL 12: Responsible Consumption and Production,Indicator 3.12,SDG Goal 12,Fraction of Indicators in Goal 12 with value produced by countries statistical system
+SPI.D3.13.CLMT,GOAL 13: Climate Action,Indicator 3.13,SDG Goal 13,Fraction of Indicators in Goal 13 with value produced by countries statistical system
+SPI.D3.14.LFWT,GOAL 14: Life Below Water,Indicator 3.14,SDG Goal 14,Fraction of Indicators in Goal 14 with value produced by countries statistical system
+SPI.D3.15.LAND,GOAL 15: Life on Land,Indicator 3.15,SDG Goal 15,Fraction of Indicators in Goal 15 with value produced by countries statistical system
+SPI.D3.16.INST,GOAL 16: Peace and Justice Strong Institutions,Indicator 3.16,SDG Goal 16,Fraction of Indicators in Goal 16 with value produced by countries statistical system
+SPI.D3.17.PTNS,GOAL 17: Partnerships to achieve the Goal,Indicator 3.17,SDG Goal 17,Fraction of Indicators in Goal 17 with value produced by countries statistical system
+SPI.D2.4.NADA,NADA metadata,Indicator 2.4,Data services,NADA/NSO websites
 SPI.D4.1.1.POPU,Population & Housing census,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
 SPI.D4.1.2.AGRI,Agriculture census,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
 SPI.D4.1.3.BIZZ,Business/establishment census,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
