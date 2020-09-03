@@ -91,12 +91,17 @@ RAW.D4.1.5.AGRI.SURVEYS,Years of Agriculture survey,Indicator 4.1,censuses and s
 RAW.D4.1.6.LABR.SURVEYS,Years of Labor Force Survey,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
 RAW.D4.1.7.HLTH.SURVEYS,Years of Health/Demographic survey,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
 RAW.D4.1.8.BIZZ.SURVEYS,Years of Business/establishment survey,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
-RAW.D4.2.1.SPL,Years of Social Protection Admin (ASPIRE),Indicator 4.2,administrative data,"indicator on quality of vital registration data plus score based on density of administrative data available on key World Bank, UNESCO and ILO databases"
-RAW.D4.2.2.EDU.NAS,Years of Education (UNESCO),Indicator 4.2,administrative data,Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education 
-RAW.D4.2.2.EDU.OOS,Years of Education (UNESCO),Indicator 4.2,administrative data,administrative data available on Out-of-school rate by school age and sex
-RAW.D4.2.2.EDU.ORGL,Years of Education (UNESCO),Indicator 4.2,administrative data,"administrative data available on Participation rate in organized learning (one year before the official primary entry age), by sex"
-RAW.D4.2.3.CRVS,Years of CRVS (WDI),Indicator 4.2,administrative data,"indicator on quality of vital registration data plus score based on density of administrative data available on key World Bank, UNESCO and ILO databases"
-RAW.D4.2.4.LBR,Years of Labor Admin (ILO),Indicator 4.2,administrative data,"indicator on quality of vital registration data plus score based on density of administrative data available on key World Bank, UNESCO and ILO databases"
+RAW.D4.2.1.SPL,Administrative Data for Social Protection Admin (ASPIRE),Indicator 4.2,administrative data,Density of administrative data available on ASPIRE databases
+RAW.D4.2.2.EDU.NAS,Administrative Data for Education (UNESCO),Indicator 4.2,administrative data,Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education 
+RAW.D4.2.2.EDU.OOS,Administrative Data for Education (UNESCO),Indicator 4.2,administrative data,administrative data available on Out-of-school rate by school age and sex
+RAW.D4.2.2.EDU.ORGL,Administrative Data for Education (UNESCO),Indicator 4.2,administrative data,"administrative data available on Participation rate in organized learning (one year before the official primary entry age), by sex"
+RAW.D4.2.3.CRVS,Administrative Data for CRVS (WDI),Indicator 4.2,administrative data,indicator on quality of vital registration data
+RAW.D4.2.4.LBR.INSUR,Administrative Data for Labor Admin (ILO),Indicator 4.2,administrative data,Administrative Data from ILO on Insurance records 
+RAW.D4.2.4.LBR.INSP,Administrative Data for Labor Admin (ILO),Indicator 4.2,administrative data,Administrative Data from ILO on Labour inspectorate records 
+RAW.D4.2.4.LBR.EMPORG,Administrative Data for Labor Admin (ILO),Indicator 4.2,administrative data,Administrative Data from ILO on Records of employers' organizations
+RAW.D4.2.4.LBR.EMPOFF,Administrative Data for Labor Admin (ILO),Indicator 4.2,administrative data,Administrative Data from ILO on Employment office records
+RAW.D4.2.4.LBR.WRKORG,Administrative Data for Labor Admin (ILO),Indicator 4.2,administrative data,Administrative Data from ILO on Records of workers' organizations
+RAW.D4.2.4.LBR.OTHER,Administrative Data for Labor Admin (ILO),Indicator 4.2,administrative data,Administrative Data from ILO on Other administrative records
 RAW.D4.3.GEO.first.admin.level,Raw score for Geospatial data available at 1st Admin Level,Indicator 3.3 ,environmental statistics,SDG goals 13-15
 RAW.D4.3.GEO.second.admin.level,Raw score for Geospatial data available at 2nd Admin Level,Indicator 3.3 ,environmental statistics,SDG goals 13-16
 RAW.5.1.DILG,Raw info for Legislation Indicator based on PARIS21 indicators on SDG 17.18.2,Indicator 5.1,Legislation and governance,"New indicator based on PARIS21 indicators on SDG 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Also include some other legislative aspects that foster good use of statistics eg freedom of information, privacy/transparency, good governance (eg free and fair elections)."

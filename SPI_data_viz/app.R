@@ -350,7 +350,7 @@ server <- function(input, output) {
         names(corr_names) = metadata_tab3_overall$descript
         
         #calculate correlations between teacher practices
-        df_corr_plot <-    round(cor(select(corr_df,corr_names), use="complete.obs"), 2)
+        df_corr_plot <-    round(cor(select(corr_df,corr_names), use="pairwise.complete.obs"), 2)
         
         #plot the correlation in a nicely formatted table
         pcorr<- ggcorrplot(df_corr_plot,
