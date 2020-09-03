@@ -1,0 +1,10 @@
+"0","
+D5.1_DILG <- un_pull('SG_STT_FPOS', '2004', '2019') %>%
+  mutate(RAW.5.1.DILG=value,
+         SPI.5.1.DILG=if_else(is.na(value),0, as.numeric(value))) %>%
+  select(iso3c, date,SPI.5.1.DILG,RAW.5.1.DILG) %<%
+  right_join(spi_df_empty)
+"
+"2","Error in un_pull(""SG_STT_FPOS"", ""2004"", ""2019"") %>% mutate(RAW.5.1.DILG = value,  : 
+  could not find function ""%<%""
+"

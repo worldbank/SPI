@@ -21,7 +21,7 @@ library(patchwork)
 library(ggrepel)
 library(lubridate)
 library(haven)
-
+library(cld2)
 #set directories
 dir <- here()
 
@@ -247,13 +247,33 @@ Our main source for this is the FAOLEX database of legislation and policy docume
 ```{r faolex, include=FALSE}
 
 
-load(paste(raw_dir,"/1.2_DUNE/documentInfoNew Agri.Rdata", sep=""))
+#load(paste(dir,"/Data/documentInfoNew Agri.Rdata", sep=""))
+documentInfoNew <- readxl::read_excel(paste(dir,"/01_raw_data/1.2_DUNE/Faolex_inventory.xlsx", sep=""),
+                                      col_types = c('text','text','text','text','text','text','text','text','date','date','text')) %>%
+  as_tibble(.name_repair = 'universal') %>%
+    mutate(Language.of.document=detect_language(Title, lang_code=FALSE), #check language      
+           Language.of.document=str_to_lower(Language.of.document),
+         Type.of.text=str_to_lower(Type.of.text),
+         Main.area=str_to_lower(Primary.subject),
+         Type.of.text=str_replace_all(Type.of.text,'[[:punct:]]',''),
+         Main.area=str_replace_all(Main.area,'[[:punct:]]',''),
+         url=Rel.file) 
+
+#Now fix up the languages
+documentInfoNew <- documentInfoNew %>%
+  group_by(Country) %>%
+  mutate(Language.of.document.typ=first(Language.of.document),
+         Language.of.document=if_else(is.na(Language.of.document),Language.of.document.typ,Language.of.document), #replace language with language of another document in same country if missing
+         Language.of.document=if_else(Language.of.document=='galican','spanish',Language.of.document), # correct one issue where galican was a recommended language
+         Language.of.document=if_else(is.na(Language.of.document),'english',Language.of.document)) #as last resort, assume english document
+  
+
 
 #rename dataframe with document info
 documentInfo <- documentInfoNew
 
 #merge with WB compatible country codes
-ccodes <- read_csv(file=paste(raw_dir,"/1.2_DUNE/FAOSTAT_data_5-1-2020_country_codes.csv", sep="")) %>%
+ccodes <- read_csv(file=paste(dir, "/01_raw_data/1.2_DUNE/FAOSTAT_data_5-1-2020_country_codes.csv", sep="")) %>%
   as_tibble(.name_repair='universal') %>%
   mutate(iso3c=ISO3.Code) %>%
   select(Country, iso3c) %>%
@@ -280,7 +300,8 @@ documentInfo <- documentInfo %>%
   left_join(ccodes) %>%
   select(-Country)
   
-
+#merge with official world bank metadata
+country_metadata <- wbstats::wbcountries()
 
 documentInfo <- documentInfo %>%
   left_join(country_metadata) %>%
@@ -293,20 +314,14 @@ documentInfo <- documentInfo %>%
          Main.area=str_to_lower(Main.area),
          Language.of.document=str_replace_all(Language.of.document,'[[:punct:]]',''),
          Type.of.text=str_replace_all(Type.of.text,'[[:punct:]]',''),
-         Main.area=str_replace_all(Main.area,'[[:punct:]]',''))
+         Main.area=str_replace_all(Main.area,'[[:punct:]]',''),
+         date=year(Date.of.original.text))
 
-#keep just national policy and poverty reduction documents
+#keep just national policy and poverty reduction documents after year 2000
 documentInfo <- documentInfo %>%
-  filter(grepl("national development", Main.area))
-
-#just keep english, french, and spanish documents for now
-documentInfo <- documentInfo %>%
-  filter(grepl("english|french|spanish|arabic|russian|portuguese|swedish", Language.of.document)) %>%
-  filter(!is.na(Language.of.document))
-
-# keep just since 2010
-documentInfo <- documentInfo %>%
-  filter(year>=2010)
+  filter(grepl("national development", Main.area)) %>%
+  filter(Type.of.text=='policy') %>%
+  filter(date>=2010)
 
 
 
@@ -1752,14 +1767,17 @@ For each value of the indicator, the responsible international agency has been r
 For each indicator, we will produce a value for each country with the following coding scheme:    
 
   * **1 Point**: Indicator exists and the value is based on the **country**, **country data adjusted**, or **estimated or Global Monitoring** data    
-  * **0 Points**: Indicator **based on modelled data or does not exists**
+  * **0 Points**: Indicator **based on modeled data or does not exists**
   
+We give countries no credit for modeled data, because the country did not produce indicators in a form that was directly usable for reporting on an SDG indicator.
+  
+When we average over all indicators in a goal to get a score, we compute a 5 year moving average to avoid year to year variability in reporting for SDGs.  The overall score for an SDG is then the 5 year average of the percentage of indicator values based on **country**, **country data adjusted**, or **estimated or Global Monitoring** data that were available for the SDG.
   
 Because of the large data files and runtime of the program to calculate these indicators, the code to produce these indicators is in a separate file.  https://github.com/stacybri/UN_Stats_SDG_Indicators_SPI/blob/master/02_programs/un_stats_cleaning.Rmd
 
 ```{r unstats}
 
-un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data.csv',sep="")) %>%
+un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data_5yr.csv',sep="")) %>%
   rename(SPI.D3.1.POV   = SPI.D3.1,
          SPI.D3.2.HNGR  = SPI.D3.2,
          SPI.D3.3.HLTH  = SPI.D3.3,
@@ -2073,8 +2091,7 @@ aspire_df <- aspire_df %>%
 spi_df <- spi_df %>%
   left_join(aspire_df)
 
-aspire_map <- aspire_df %>%
-  filter(RAW.D4.2.1.SPL==TRUE)
+aspire_map <- aspire_df
 
 spi_mapper('aspire_map', 'SPI.D4.2.1.SPL', 'Administrative Data Available on Beneficiary Counts or Expenditures using ASPIRE' )
 
@@ -2085,40 +2102,64 @@ spi_mapper('aspire_map', 'SPI.D4.2.1.SPL', 'Administrative Data Available on Ben
 ### Education Admin Data
 
 * UNESCO UIS has shared a database containing data we can use on administrative data systems    
-* Two areas:    
+* We score countries based on whether there is:
 
   * Data tracking SDG 4.1.2 Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education    
   
-  * Data tracking whether countries produce the following from administrative data sources:   
-  
-      * Out-of-school rate by school age and sex    
-      * 4.2.2 Participation rate in organized learning (one year before the official primary entry age), by sex  
+  * Data tracking whether countries produce the following from administrative data sources:
+
+      * Out-of-school rate by school age and sex
+      * 4.2.2 Participation rate in organized learning (one year before the official primary entry age), by sex
+
+In order to score this indicator, we calculate the fraction of the three types of indicators that were produced in a country in a year.
 
 ```{r uis, message=FALSE, warning=FALSE}
 
-#read data
-unesco_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','unesco_admin_sources.csv', sep="/"))
+#read data from UNESCO API
+#get list of indicators to download
+indicators <- 'ADMI_GRADE2OR3PRIM_READ+ADMI_ENDOFPRIM_READ+ADMI_ENDOFLOWERSEC_READ+ADMI_GRADE2OR3PRIM_MAT+ADMI_ENDOFPRIM_MAT+ADMI_ENDOFLOWERSEC_MAT+ROFST_1_CP+ROFST_1_F_CP+ROFST_1_M_CP+ROFST_2_CP+ROFST_2_F_CP+ROFST_2_M_CP+ROFST_3_CP+ROFST_3_F_CP+ROFST_3_M_CP+ROFST_1T2_CP+ROFST_1T2_F_CP+ROFST_1T2_M_CP+ROFST_2T3_CP+ROFST_2T3_F_CP+ROFST_2T3_M_CP+ROFST_1T3_CP+ROFST_1T3_F_CP+ROFST_1T3_M_CP+NERA_AGM1_CP+NERA_AGM1_F_CP+NERA_AGM1_M_CP.'
 
-#cleaning of aspire data
+#get list of countries
+countries <- 'AFG+ALB+DZA+ASM+AND+AGO+AIA+ATG+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BMU+BTN+BOL+BIH+BWA+BRA+VGB+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CYM+CAF+TCD+CHL+CHN+HKG+MAC+COL+COM+COG+COK+CRI+CIV+HRV+CUB+CUW+CYP+CZE+PRK+COD+DNK+DJI+DMA+DOM+ECU+EGY+SLV+GNQ+ERI+EST+SWZ+ETH+FJI+FIN+FRA+GUF+PYF+GAB+GMB+GEO+DEU+GHA+GIB+GRC+GRL+GRD+GLP+GUM+GTM+GIN+GNB+GUY+HTI+VAT+HND+HUN+ISL+IND+IDN+IRN+IRQ+IRL+ISR+ITA+JAM+JPN+JOR+KAZ+KEN+KIR+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LIE+LTU+LUX+MDG+MWI+MYS+MDV+MLI+MLT+MHL+MTQ+MRT+MUS+MEX+FSM+MCO+MNG+MNE+MSR+MAR+MOZ+MMR+NAM+NRU+NPL+NLD+ANT+NCL+NZL+NIC+NER+NGA+NIU+MKD+NOR+OMN+PAK+PLW+PSE+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+KOR+MDA+REU+ROU+RUS+RWA+SHN+KNA+LCA+SPM+VCT+WSM+SMR+STP+SAU+SEN+SRB+SYC+SLE+SGP+SXM+SVK+SVN+SLB+SOM+ZAF+SSD+ESP+LKA+SDN+XDN+SUR+SWE+CHE+SYR+TJK+THA+TLS+TGO+TKL+TON+TTO+TUN+TUR+TKM+TCA+TUV+UGA+UKR+ARE+GBR+TZA+USA+URY+UZB+VUT+VEN+VNM+WLF+YEM+ZMB+ZWE+SDG+40675+40330+40334+40344+40606+40617+40603+40614+40618+40612+40616+40619+40611+40613+40630+40650+40651+40656+40642+40620+40640+UIS+40510+40525+40530+40505+40515+40520+40500+40535+40540+40550+WB+40044+40042+40030+40043+40041/all'
+
+start <- '2004'
+end <- '2019'
+
+#build the API query
+url <- paste('http://data.uis.unesco.org/RestSDMX/sdmx.ashx/GetData/SDG4_DS/',indicators, countries,'?startTime=',start,'&endTime=',end,sep="")
+
+#read the data
+unesco_df_raw <- readsdmx::read_sdmx(url)
+
+#cleaning of unesco data
 unesco_df <- unesco_df_raw %>%
-    mutate(date=TIME) %>%
-    group_by( LOCATION2017, date) %>%
-    summarise(Value=mean(Value, na.rm=T)) %>%
+    mutate(date=as.numeric(Time)) %>%
+    mutate(type = case_when( #categorize based on whether they are assessment, out of school, or participation data
+      grepl('ADMI', SDG_IND) ~ "NAS", #Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education 
+      grepl('ROFST', SDG_IND) ~ "OOS", # Out-of-school rate by school age and sex
+      grepl('NERA', SDG_IND) ~ "ORGL" # Participation rate in organized learning (one year before the official primary entry age), by sex
+    )) %>%
+    mutate(edu_admin_available=(ObsValue!=NaN & !is.na(ObsValue))) %>% #get a variable for wehther admin based value exists for indicator
+    group_by( LOCATION2017,type, date) %>%
+    summarise(edu_admin_available=mean(as.numeric(edu_admin_available))) %>% #c
+    ungroup() %>%
+    pivot_wider(
+      names_from='type',
+      names_glue="RAW.D4.2.2.EDU.{type}",
+      values_from='edu_admin_available',
+      values_fill=0
+    ) %>%
     rename(iso3c=LOCATION2017) %>%
-    left_join(country_metadata) %>%
-    mutate(edu_admin_available=(!is.na(Value))
-           ) %>%
-    mutate(SPI.D4.2.2.EDU=as.numeric(edu_admin_available),
-           RAW.D4.2.2.EDU=edu_admin_available) %>%
-  select(c('iso3c', 'country', 'date', 'RAW.D4.2.2.EDU', 'SPI.D4.2.2.EDU')  )
+    right_join(spi_df_empty) %>%
+    mutate(across(starts_with('RAW.D4.2.2.EDU'),~if_else(is.na(.),0,.))) %>%
+    mutate(SPI.D4.2.2.EDU=(RAW.D4.2.2.EDU.NAS+RAW.D4.2.2.EDU.OOS+RAW.D4.2.2.EDU.ORGL)/3) %>%
+  select(c('iso3c', 'country', 'date', 'RAW.D4.2.2.EDU.NAS','RAW.D4.2.2.EDU.OOS','RAW.D4.2.2.EDU.ORGL', 'SPI.D4.2.2.EDU')  )
 
 #add to spi databases
 spi_df <- spi_df %>%
   left_join(unesco_df)
 
-unesco_map <- unesco_df %>%
-  filter(RAW.D4.2.2.EDU==TRUE)
-  
+unesco_map <- unesco_df 
 
 spi_mapper('unesco_map', 'SPI.D4.2.2.EDU', 'Education Administrative Data Available According to UIS' )
 
@@ -2137,11 +2178,48 @@ Source: World Bank WDI Metadata.
 
 ```{r crvs}
 
-Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/3.11.01.03.popreg?format=json&date=2004:2019&per_page=5000")
+#get data directly from WDI metadata
+Request_metadata <- GET(url = "https://api.worldbank.org/v2/sources/2/country/all/metadata?per_page=30000&format=json")
 Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
 
 # Parse the JSON content and convert it to a data frame.
-crvs_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+JSON_metadata <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+  data.frame()
+
+#do some conversion to produce a dataframe
+df <- JSON_metadata$source.concept %>%
+  data.frame() 
+
+#do some more cleaning and conversion
+df <- df$variable %>%
+  data.frame()   %>%
+  rename(iso3c=id) %>%
+  unnest(metatype) %>%
+  pivot_wider(
+    id_cols=iso3c,
+    names_from=id,
+    values_from=value
+  ) 
+
+# Manipulate and clean final data
+df <- df %>%
+  filter(!is.na(IncomeGroup))  #keep just countries (drop aggregations)
+  
+df$SPI.D4.2.3.CRVS<-as.numeric(grepl("Yes", df$Vitalregistrationcomplete)) #create 0,1 variable for vital registration
+
+crvs_df <- df %>%
+  mutate(date=2019,
+         country=TableName,
+         RAW.D4.2.3.CRVS=Vitalregistrationcomplete) %>%
+  select(c('iso3c', 'country', 'date', 'RAW.D4.2.3.CRVS', 'SPI.D4.2.3.CRVS')  )
+
+
+#pull old data from SCI
+Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/3.11.01.03.popreg?format=json&date=2004:2018&per_page=5000")
+Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+crvs_df2 <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
   data.frame() %>%
   transmute(
     iso3c=countryiso3code,
@@ -2150,22 +2228,25 @@ crvs_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
     crvs=value
   ) %>%
   mutate(SPI.D4.2.3.CRVS=as.numeric(crvs),
-         RAW.D4.2.3.CRVS=crvs) %>%
+         RAW.D4.2.3.CRVS=as.character(crvs)) %>%
   left_join(spi_df_empty) #add on country metadata
 
 
 # Manipulate and clean final data
-crvs_df <- crvs_df %>%
+crvs_df2 <- crvs_df2 %>%
   filter(!is.na(income)) %>% #keep just countries (drop aggregations)
   select(c('iso3c', 'country', 'date', 'RAW.D4.2.3.CRVS', 'SPI.D4.2.3.CRVS')  )
+
+#join updated data with SCI data
+crvs_df <- crvs_df %>%
+  bind_rows(crvs_df2)
 
 #add to spi databases
 spi_df <- spi_df %>%
   left_join(crvs_df)
 
 
-crvs_map <- crvs_df %>%
-  filter(!is.na(SPI.D4.2.3.CRVS))
+crvs_map <- crvs_df 
 
 spi_mapper('crvs_map', 'SPI.D4.2.3.CRVS', 'Complete Civil Registration & Vital Statistics Data Available According to WDI' )
 
@@ -2188,7 +2269,9 @@ spi_mapper('crvs_map', 'SPI.D4.2.3.CRVS', 'Complete Civil Registration & Vital S
   * Records of workers' organizations
   * Other administrative records and related sources
   
-* Database extends from 2010 to 2019 and covers 177 countries
+* Database extends from 2010 to 2019 and covers 177 countries. 
+
+To produce a score, we calculate the percentage of these six admin sources above that are available for a country in a given year.  
 
 ```{r ilo, message=FALSE, warning=FALSE}
 
@@ -2219,8 +2302,7 @@ spi_df <- spi_df %>%
   left_join(ilo_df)  
 
 
-ilo_map <- ilo_df %>%
-  filter(SPI.D4.2.4.LBR==1)
+ilo_map <- ilo_df 
 
 spi_mapper('ilo_map', 'SPI.D4.2.4.LBR', 'Labor Administrative Data Available According to ILO' )
 
@@ -3152,7 +3234,7 @@ spi_df_final <- spi_df %>%
   select(country, iso3c, date, starts_with("SPI"), starts_with("RAW")) %>%
   right_join(spi_df_empty) %>%
   left_join(pop_df) %>%
-  arrange(country,-date)
+  arrange(-date,country)
 
 #write to csv
 spi_df_final %>%

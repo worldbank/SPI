@@ -45,7 +45,6 @@ SPI.D3.14.LFWT,GOAL 14: Life Below Water,Indicator 3.14,SDG Goal 14,Fraction of 
 SPI.D3.15.LAND,GOAL 15: Life on Land,Indicator 3.15,SDG Goal 15,Fraction of Indicators in Goal 15 with value produced by countries statistical system
 SPI.D3.16.INST,GOAL 16: Peace and Justice Strong Institutions,Indicator 3.16,SDG Goal 16,Fraction of Indicators in Goal 16 with value produced by countries statistical system
 SPI.D3.17.PTNS,GOAL 17: Partnerships to achieve the Goal,Indicator 3.17,SDG Goal 17,Fraction of Indicators in Goal 17 with value produced by countries statistical system
-SPI.D2.4.NADA,NADA metadata,Indicator 2.4,Data services,NADA/NSO websites
 SPI.D4.1.1.POPU,Population & Housing census,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
 SPI.D4.1.2.AGRI,Agriculture census,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
 SPI.D4.1.3.BIZZ,Business/establishment census,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
@@ -93,7 +92,9 @@ RAW.D4.1.6.LABR.SURVEYS,Years of Labor Force Survey,Indicator 4.1,censuses and s
 RAW.D4.1.7.HLTH.SURVEYS,Years of Health/Demographic survey,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
 RAW.D4.1.8.BIZZ.SURVEYS,Years of Business/establishment survey,Indicator 4.1,censuses and surveys,SPI scores for sources dimension
 RAW.D4.2.1.SPL,Years of Social Protection Admin (ASPIRE),Indicator 4.2,administrative data,"indicator on quality of vital registration data plus score based on density of administrative data available on key World Bank, UNESCO and ILO databases"
-RAW.D4.2.2.EDU,Years of Education (UNESCO),Indicator 4.2,administrative data,"indicator on quality of vital registration data plus score based on density of administrative data available on key World Bank, UNESCO and ILO databases"
+RAW.D4.2.2.EDU.NAS,Years of Education (UNESCO),Indicator 4.2,administrative data,Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education 
+RAW.D4.2.2.EDU.OOS,Years of Education (UNESCO),Indicator 4.2,administrative data,administrative data available on Out-of-school rate by school age and sex
+RAW.D4.2.2.EDU.ORGL,Years of Education (UNESCO),Indicator 4.2,administrative data,"administrative data available on Participation rate in organized learning (one year before the official primary entry age), by sex"
 RAW.D4.2.3.CRVS,Years of CRVS (WDI),Indicator 4.2,administrative data,"indicator on quality of vital registration data plus score based on density of administrative data available on key World Bank, UNESCO and ILO databases"
 RAW.D4.2.4.LBR,Years of Labor Admin (ILO),Indicator 4.2,administrative data,"indicator on quality of vital registration data plus score based on density of administrative data available on key World Bank, UNESCO and ILO databases"
 RAW.D4.3.GEO.first.admin.level,Raw score for Geospatial data available at 1st Admin Level,Indicator 3.3 ,environmental statistics,SDG goals 13-15
