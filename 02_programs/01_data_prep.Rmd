@@ -1,9 +1,12 @@
 ---
-title: "Technical Documentation on Data Sources and Methods for Statistical Performance Indicators"
+title: Technical Documentation on Data Sources and Methods for Statistical Performance
+  Indicators
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
 output:
   html_document:
+    toc: yes
+  pdf_document:
     toc: yes
 ---
 
@@ -734,16 +737,15 @@ print(g2)
 
 ## Indicator 1.5: Data use by international organizations   
 
-The following indicator will measure how useful data sources produced in national statistics systems are for international organizations.  We gather three measures of how useful or reliable country produced measures are for international organizations.  One on comparability of poverty estimates for the World Bank reporting on international poverty.  A second on statistics on child mortality for the UN Inter-agency Group for Child Mortality Estimation.  A third on accuracy of debt reporting as classified by the World Bank.  Each of these will be described in greater detail below.  
+The following indicator will measure how useful data sources produced in national statistics systems are for international organizations.  We gather three measures of how useful or reliable country produced measures are for international organizations.  The first on comparability of poverty estimates for the World Bank reporting on international poverty.  A second on statistics on child mortality for the UN Inter-agency Group for Child Mortality Estimation.  A third on accuracy of debt reporting as classified by the World Bank.  Each of these will be described in greater detail below.  
 
 While these three indicators are not comprehensive of all statistics produced by countries, they do provide some indication of whether countries are producing estimates that are useful to international organizations for their reporting and monitoring efforts.
 
-### SPI 1.5.1: Poverty Comparability
+### Poverty Comparability
 
 The first measure examines whether comparable poverty estimates are produced by countries over time.  The World Bank's Povcalnet has introduced a comparability indicator for whether the country produces comparable poverty estimates over time.  https://blogs.worldbank.org/opendata/apples-apples-povcalnet-introduces-new-comparability-indicator.  This metadata has been compiled by the Country Poverty Economists in the World Bank’s Poverty and Equity Global Practice.  From the Povcalnet team:
 
-| As countries frequently improve household surveys and measurement methodologies, strict comparability of poverty estimates over time is often limited. Strictly comparable poverty estimates within a country require a 
-| consistent production process, including the sampling frame, questionnaires, the methodological construction of the welfare aggregates and poverty lines, a consistent deflation of prices in time and space, among many | other considerations. Thus, the assessment of comparability is country-dependent and relies on the knowledge of the Country Poverty Economist and Regional Poverty Teams of the Poverty Global Practice, as well as close | dialogue with national data producers with intimate knowledge of the survey design and methodology. Within a country, we assume comparability of poverty estimates over time unless there is a known change to survey    | methodology, measurement or data structure. More details on the comparability metadata database can be found in Atamanov et al. (2019) (section 4). The database can be downloaded in csv.
+    As countries frequently improve household surveys and measurement methodologies, strict comparability of poverty estimates over time is often limited. Strictly comparable poverty estimates within a country require a consistent production process, including the sampling frame, questionnaires, the methodological construction of the welfare aggregates and poverty lines, a consistent deflation of prices in time and space, among many  other considerations. Thus, the assessment of comparability is country-dependent and relies on the knowledge of the Country Poverty Economist and Regional Poverty Teams of the Poverty Global Practice, as well as close  dialogue with national data producers with intimate knowledge of the survey design and methodology. Within a country, we assume comparability of poverty estimates over time unless there is a known change to survey     methodology, measurement or data structure. More details on the comparability metadata database can be found in Atamanov et al. (2019) (section 4). The database can be downloaded in csv.
 
 
 
@@ -896,50 +898,6 @@ Data was pulled on April 13, 2020.
 ```{r aki_3.3}
 
 #Read in data from UN Inter-agency Group for Child Mortality Estimation
-# 
-# D3.3.AKI.MORT.QUAL <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.3_child_mort_RAW_v01.csv', sep="/")) %>%
-#   filter(INDICATOR=='Under-five mortality rate' & SEX=='Total') %>% #keep just observations for under 5 child mortality and for both sexes 
-#   mutate(date=as.numeric(str_extract(TIME_PERIOD, "^.{4}")),
-#          country=REF_AREA,
-#          D3.CHLD.MORT=OBS_VALUE)  %>%
-#   group_by(country, date) %>%
-#   mutate(LOWER_BOUND=max(LOWER_BOUND, na.rm=T),
-#          UPPER_BOUND=max(UPPER_BOUND, na.rm=T)) %>%
-#   filter(!between(OBS_VALUE, LOWER_BOUND,UPPER_BOUND)) %>%  # Also keep only surveys that were within the 90% confidence interval produced by UN IGME
-#   filter(OBS_STATUS!='Normal value') %>% #drop the modelled estimates, which trivially satisfy
-# 
-# #Now loop from 2016 and 2019, keeping just data inside last 5 years.
-# for (reference_year in 2004:2019) {
-#   temp <-D3.3.AKI.MORT.QUAL %>%
-#           mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% 
-#           mutate(SPI.FREQ.D1.5.CHLD.MORT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
-#           mutate(SPI.QUAL.D1.5.CHLD.MORT=case_when(
-#                    reference_year-as.numeric(date)>=5 ~ 0, #outside 5 year window
-#                    SERIES_METHOD=='Vital Registration' ~ 0.5,
-#                    SERIES_METHOD!='Vital Registration' ~ 0.25,
-#                    TRUE ~ as.numeric(NA)
-#                  )) %>%
-#           group_by(country) %>%
-#           summarise(SPI.FREQ.D1.5.CHLD.MORT=sum(SPI.FREQ.D1.5.CHLD.MORT, na.rm=T),
-#                     SPI.QUAL.D1.5.CHLD.MORT=max(SPI.QUAL.D1.5.CHLD.MORT, na.rm=T)) %>% 
-#           mutate(SPI.FREQ.D1.5.CHLD.MORT=case_when(
-#             SPI.FREQ.D1.5.CHLD.MORT>=3 ~ 0.5,
-#             SPI.FREQ.D1.5.CHLD.MORT==2 ~ 0.3,
-#             SPI.FREQ.D1.5.CHLD.MORT==1 ~ 0.15,
-#             SPI.FREQ.D1.5.CHLD.MORT==0 ~ 0, 
-#             TRUE ~ 0
-#           )) %>%
-#           mutate(SPI.D1.5.CHLD.MORT=SPI.FREQ.D1.5.CHLD.MORT+SPI.QUAL.D1.5.CHLD.MORT) %>% 
-#           mutate(date=reference_year) %>%
-#           select( country, date, starts_with('SPI.')) 
-# 
-# 
-#   assign(paste("D3.3.AKI",reference_year,sep="_"), temp)
-# }
-# 
-# D3.3.AKI <- bind_rows(D3.3.AKI_2016, D3.3.AKI_2017, D3.3.AKI_2018, D3.3.AKI_2019)
-# 
-
 
 
 
@@ -955,12 +913,6 @@ for (reference_year in 2004:2019) {
   temp <-D3.3.AKI.MORT %>%
           mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>%
           mutate(SPI.FREQ.D1.5.CHLD.MORT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
-          mutate(SPI.QUAL.D1.5.CHLD.MORT=case_when(
-                   reference_year-as.numeric(date)>=5 ~ 0, #outside 5 year window
-                   SERIES_METHOD=='Vital Registration' ~ 0.5,
-                   SERIES_METHOD!='Vital Registration' ~ 0.25,
-                   TRUE ~ as.numeric(NA)
-                 )) %>%
           group_by(country) %>%
           summarise(SPI.FREQ.D1.5.CHLD.MORT=sum(SPI.FREQ.D1.5.CHLD.MORT, na.rm=T)) %>%
           mutate(SPI.FREQ.D1.5.CHLD.MORT=case_when(
@@ -1213,7 +1165,7 @@ D3.3.AKI <- D3.3.AKI %>%
 
 <!-- ``` -->
 
-### AKI 1.5.15 Debt service (PPG and IMF only, % of exports of goods, services and primary income)
+###  Debt service (PPG and IMF only, % of exports of goods, services and primary income)
 
 For this indicator, Debt service (PPG and IMF only, % of exports of goods, services and primary income), we will pull data from the WDI but modify the scoring using the WDI metadata on whether the external debt data is actual, estimated, or preliminary.  The status “as reported (actual)” indicates that the country was fully current in its reporting under the DRS and that World Bank staff are satisfied that the reported data give an adequate and fair representation of the country’s total public debt. “Preliminary” data are based on reported or collected information, but because of incompleteness or other reasons, an element of staff estimation is included. “Estimated” data indicate that countries are not current in their reporting and that a significant element of staff estimation has been necessary for producing the data tables. 
 
@@ -1256,13 +1208,15 @@ WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_201
 D3.15.AKI <- WDI_metadata %>%
   transmute(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
             date=date,
-            External_debt_Reporting=External.debt.Reporting.status) %>%
+            External_debt_Reporting=External.debt.Reporting.status,
+            Income.Group=Income.Group) %>%
   mutate(SPI.D1.5.DT.TDS.DPPF.XP.ZS= case_when(
             External_debt_Reporting=='Actual' ~ 1,
             External_debt_Reporting=='Preliminary' ~ 0.67,
             External_debt_Reporting=='Estimate' ~ 0.33,
             TRUE ~ 0
-          )) %>%
+          )) %>% 
+  mutate(SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else((Income.Group=="High income" & is.na(External_debt_Reporting)),1,SPI.D1.5.DT.TDS.DPPF.XP.ZS)) %>% #fix an issue where high income countries are not judged on their debt reporting
   ungroup() %>%
   select(iso3c, date,  contains('SPI.D1.5.DT.TDS.DPPF.XP.ZS')) 
 
@@ -1290,19 +1244,7 @@ spi_df <- spi_df %>%
 
 aki <- c(
              SPI.D1.5.POV='Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)',
-             SPI.D1.5.FIES='Food Insecurity Experience Scale',
              SPI.D1.5.CHLD.MORT='Mortality rate, under-5 (per 1,000 live births)', 
-             SPI.D1.5.SE.LPV.PRIM.BMP='Pupils below minimum reading proficiency at end of primary (%). Low GAML threshold',
-             SPI.D1.5.MMRT='Maternal Mortality',
-             SPI.D1.5.SH.H2O.SMDW.ZS='People using safely managed drinking water services (% of population)',
-             SPI.D1.5.ELEC='Access to electricity (% of population)',
-             SPI.D1.5.SL.UEM.TOTL.NE.ZS='Unemployment, total (% of total labor force) (national estimate)' ,
-             SPI.D1.5.NV.IND.MANF.ZS='Manufacturing, value added (% of GDP)',
-             SPI.D1.5.SI.SPR.PC40.ZG='Annualized average growth rate in per capita real survey mean consumption or income, bottom 40% of population (%)',
-             SPI.D1.5.ER.H2O.FWST.ZS='Level of water stress: freshwater withdrawal as a proportion of available freshwater resources',
-             SPI.D1.5.EG.FEC.RNEW.ZS='Renewable energy consumption (% of total final energy consumption)',
-             SPI.D1.5.NE.CON.PRVT.CN='Households and NPISHs Final consumption expenditure (current LCU)',
-             SPI.D1.5.QUART.GDP='Quarterly GDP',
              SPI.D1.5.DT.TDS.DPPF.XP.ZS='Debt service (PPG and IMF only, % of exports of goods, services and primary income)'
 )
 
@@ -1744,6 +1686,117 @@ This indicator draws from data collected by the Statistical Performance Indicato
   - Labor Force Survey    
   - Health/Demographic survey   
   - Business/establishment survey   
+  
+### Scoring details
+
+#### Population & Housing census
+
+Population censuses collect data on the size, distribution and composition of population and 
+information on a broad range of social and economic characteristics of the population.  It also 
+provides sampling frames for household and other surveys.  Housing censuses provide information 
+on the supply of housing units, the structural characteristics and facilities, and health and the 
+development of normal family living conditions.  Data obtained as part of the population census, 
+including data on homeless persons, are often used in the presentation and analysis of the results 
+of the housing census.  It is recommended that population and housing censuses be conducted at least every 10 years. 
+
+1 Point. Population census done within last 10 years	
+0.5 Points. Population census done within last 20 years	
+0 Points. Otherwise
+
+####  Agriculture census
+
+Agriculture censuses collect information on agricultural activities, such as
+size of holding, land tenure, land use, employment and production, and provide
+basic structural data and sampling frames for agricultural surveys.  Censuses
+of agriculture normally involves collecting key structural data by complete
+enumeration of all agricultural holdings, in combination with more detailed
+structural data using sampling methods.  It is recommended that agricultural
+censuses be conducted at least every 10 years.
+
+1 Point.  census done within last 10 years	
+0.5 Points.  census done within last 20 years	
+0 Points. Otherwise
+
+#### Business/establishment census
+
+Business/establishment censuses provide valuable information on all economic
+activities, number of employed and size of establishments in the economy.
+Business Register information is establishment-based and includes business
+location, organization type (e.g. subsidiary or parent), industry
+classification, and operating data (e.g., receipts and employment).
+
+1 Point.  census done within last 10 years	
+0.5 Points.  census done within last 20 years	
+0 Points. Otherwise
+
+#### Household Survey on income/consumption/expenditure/budget/Integrated Survey 
+
+These surveys collect data on household income (including income in kind),
+consumption and expenditure.  They typically include income, expenditure, and
+consumption surveys, household budget surveys, integrated surveys.  It is
+recommended that surveys on income and expenditure be conducted at least every
+3 to 5 years.
+
+1 Point. 3 or more surveys done within past 10 years	
+0.6 Points. 2 surveys done within past 10 years; 	
+0.3 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
+
+
+#### Agriculture survey
+
+Agricultural surveys refer to surveys of agricultural holdings based on the
+sampling frames established by the agricultural census.  These are surveys on
+agricultural land, production, crops and livestock, aquaculture, labor and
+cost, and time use.  Some issues, such as gender and food security, are of
+interest to most agriculture surveys.
+
+1 Point. 3 or more surveys done within past 10 years	
+0.6 Points. 2 surveys done within past 10 years; 	
+0.3 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
+
+####  Labor Force Survey 
+
+Labor force survey is a standard household-based survey of work-related
+statistics at the national and sub-national employment or unemployment levels,
+rates or trends.  The surveys also provide the characteristics of the employed
+or unemployed, including labor force status by age or gender, breakdowns
+between employees and the self-employed, public versus private sector
+employment, multiple job-holding, hiring, job creation, and duration of
+unemployment.
+
+1 Point. 3 or more surveys done within past 10 years	
+0.6 Points. 2 surveys done within past 10 years; 	
+0.3 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
+
+####  Health/Demographic survey
+
+Health surveys collect information on various aspects of health of
+populations, such as health expenditure, access, utilization, and outcomes.
+They typically include Demographic and Health Surveys.  It is recommended that
+health surveys be conducted at least every 3 to 5 years.
+
+1 Point. 3 or more surveys done within past 10 years	
+0.6 Points. 2 surveys done within past 10 years; 	
+0.3 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
+
+####  Business/establishment survey
+
+The business/establishment survey provides information on employment, hours,
+and earnings of employees from a sample of business establishments including
+private and public, entities that are classified based on an establishment's
+principal activity from the business or establishment census.  Establishment
+surveys include surveys of businesses, farms, and institutions.  They may ask
+for information about the establishment itself and/or employee characteristics
+and demographics.
+
+1 Point. 3 or more surveys done within past 10 years	
+0.6 Points. 2 surveys done within past 10 years; 	
+0.3 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 ```{r cs_2}
 
@@ -1804,7 +1857,7 @@ temp
 
 ```{r cs}
 
-cs_fun  <- function(data, input_var) {
+census_fun  <- function(data, input_var) {
   
   data <- data
   input_var <- input_var
@@ -1857,43 +1910,97 @@ cs_fun  <- function(data, input_var) {
   temp
 }
 
+
+
+survey_fun  <- function(data, input_var) {
+  
+  data <- data
+  input_var <- input_var
+
+  #read in csv file.
+  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, ".csv", sep="" )) %>%
+    group_by(iso3c, country) %>% 
+    rename(input_var = !! input_var) %>%
+    nest() %>% # The next chunk of code will split our string with the years of the census (i.e. "2000, 2010") in to separate rows.  We will then aggregate up.
+    mutate(
+      temp_col = map(
+        data, 
+        ~ str_extract_all(.x$input_var, "\\d{4}") %>% 
+          flatten() %>% 
+          map_chr(~return(.x)) %>% 
+          as_tibble()
+      )
+    ) %>% 
+    unnest(keep_empty = TRUE) %>% # Now we have a database with the observations equal to Country*Census observations.  From here we can calculate latest census, etc.
+    mutate(indicator_date=as.numeric(value)) 
+  
+  
+  
+  #Now calculate our SPI score for this indicator
+  for (i in 2004:2019) {
+   temp <- cs_df %>%
+    mutate(date=i) %>%
+    mutate(recency_indicator=((date-indicator_date<=10) & (date-indicator_date>0)) ) %>% #restrict to surveys inside 10 year period
+    group_by(iso3c, country, date, input_var) %>% #group by country and create indicator for how many surveys over 10 year period
+    summarise(indicator=case_when(
+    sum(recency_indicator)>=3 ~ 1, 
+    sum(recency_indicator)==2 ~ 0.6, 
+    sum(recency_indicator)==1 ~ 0.3, 
+    TRUE ~ 0 )) %>%
+     ungroup() %>%
+    select(c('iso3c', 'country', 'date', 'input_var', 'indicator')  ) %>%
+    arrange(date, country)
+
+
+    assign(paste('temp',i,sep="_"), temp)
+  }
+
+  temp <- temp_2019
+  
+  for (i in 2004:2018) {
+    temp <- bind_rows(temp, get(paste('temp',i,sep="_")))
+  }
+  temp
+}
+
+
 #Population Censuses
-cs1_df <-cs_fun('D4.1.1.CEN.POPU', 'POPU.CENSUS') %>%
+cs1_df <-census_fun('D4.1.1.CEN.POPU', 'POPU.CENSUS') %>%
   rename(RAW.D4.1.1.POPU.CENSUS=input_var,
          SPI.D4.1.1.POPU=indicator)
 
 #Agriculture census  
-cs2_df <-cs_fun('D4.1.2.CEN.AGRI', 'AGRI.CENSUS') %>%
+cs2_df <-census_fun('D4.1.2.CEN.AGRI', 'AGRI.CENSUS') %>%
   rename(RAW.D4.1.2.AGRI.CENSUS=input_var,
          SPI.D4.1.2.AGRI=indicator)
 
 #Business/establishment census 
-cs3_df <-cs_fun('D4.1.3.CEN.BIZZ', 'BIZZ.CENSUS') %>%
+cs3_df <-census_fun('D4.1.3.CEN.BIZZ', 'BIZZ.CENSUS') %>%
   rename(RAW.D4.1.3.BIZZ.CENSUS=input_var,
          SPI.D4.1.3.BIZZ=indicator)
 
 #Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey
-cs4_df <-cs_fun('D4.1.4.SVY.HOUS', 'HOUS.SURVEYS') %>%
+cs4_df <-survey_fun('D4.1.4.SVY.HOUS', 'HOUS.SURVEYS') %>%
   rename(RAW.D4.1.4.HOUS.SURVEYS=input_var,
          SPI.D4.1.4.HOUS=indicator)
 
 #Agriculture survey 
-cs5_df <-cs_fun('D4.1.5.SVY.AGRI', 'AGRI.SURVEYS') %>%
+cs5_df <-survey_fun('D4.1.5.SVY.AGRI', 'AGRI.SURVEYS') %>%
   rename(RAW.D4.1.5.AGRI.SURVEYS=input_var,
          SPI.D4.1.5.AGSVY=indicator)
 
 #Labor Force Survey 
-cs6_df <-cs_fun('D4.1.6.SVY.LABR', 'LABR.SURVEYS') %>%
+cs6_df <-survey_fun('D4.1.6.SVY.LABR', 'LABR.SURVEYS') %>%
   rename(RAW.D4.1.6.LABR.SURVEYS=input_var,
          SPI.D4.1.6.LABR=indicator)
 
 #Health/Demographic survey
-cs7_df <-cs_fun('D4.1.7.SVY.HLTH', 'HLTH.SURVEYS') %>%
+cs7_df <-survey_fun('D4.1.7.SVY.HLTH', 'HLTH.SURVEYS') %>%
   rename(RAW.D4.1.7.HLTH.SURVEYS=input_var,
          SPI.D4.1.7.HLTH=indicator)
 
 #Business/establishment survey  
-cs8_df <-cs_fun('D4.1.8.SVY.BIZZ', 'BIZZ.SURVEYS') %>%
+cs8_df <-survey_fun('D4.1.8.SVY.BIZZ', 'BIZZ.SURVEYS') %>%
   rename(RAW.D4.1.8.BIZZ.SURVEYS=input_var,
          SPI.D4.1.8.BZSVY=indicator)
 
@@ -1923,19 +2030,19 @@ cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.3.BIZZ))
 spi_mapper('cs_df_map', 'SPI.D4.1.3.BIZZ', 'Business/Establishment Census Available in Past 20 Years in 2019' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.4.HOUS))
-spi_mapper('cs_df_map', 'SPI.D4.1.4.HOUS', 'Household Survey Available in Past 20 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.4.HOUS', 'Household Survey Availablility in Past 10 Years in 2019' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.5.AGSVY))
-spi_mapper('cs_df_map', 'SPI.D4.1.5.AGSVY', 'Agriculture Survey Available in Past 20 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.5.AGSVY', 'Agriculture Survey Availablility in Past 10 Years in 2019' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.6.LABR))
-spi_mapper('cs_df_map', 'SPI.D4.1.6.LABR', 'Labor Force Survey Available in Past 20 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.6.LABR', 'Labor Force Survey Availablility in Past 10 Years in 2019' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.7.HLTH))
-spi_mapper('cs_df_map', 'SPI.D4.1.7.HLTH', 'Health Survey Available in Past 20 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.7.HLTH', 'Health Survey Availablility in Past 10 Years in 2019' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.8.BZSVY))
-spi_mapper('cs_df_map', 'SPI.D4.1.8.BZSVY', 'Business Survey Available in Past 20 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.8.BZSVY', 'Business Survey Availablility in Past 10 Years in 2019' )
 
 
 ```
@@ -2985,11 +3092,7 @@ D5.2.MSC <- D5.2.1.SNAU %>%
   left_join(D5.2.8.FINA) %>%
   left_join(D5.2.9.MONY) %>%
   left_join(D5.2.10.GSBP) %>%
-  select(iso3c, country, date, everything()) 
-#Now calculate MSC score which is the average across the 12 indicators
-D5.2.MSC <- D5.2.MSC %>%
-  mutate(SPI.D5.2.MSC=100*rowMeans(.[grep(x=colnames(D5.2.MSC), 
-                                              pattern="SPI.D5.2")], na.rm=TRUE)) %>%
+  select(iso3c, country, date, everything()) %>%
   arrange(date, iso3c) 
 
 
