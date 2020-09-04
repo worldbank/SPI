@@ -4,9 +4,9 @@ title: Technical Documentation on Data Sources and Methods for Statistical Perfo
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
 output:
-  html_document:
-    toc: yes
   pdf_document:
+    toc: yes
+  html_document:
     toc: yes
 ---
 
@@ -219,15 +219,15 @@ Where it has been possible to develop and implement a methodology but it has not
 In some situations, missing data represents a zero score, for example if there is no evidence that geospatial data is used by the country’s statistical system. In such cases a score of zero should be recorded and used in the generation of indicators, weightings and rankings.
 
 
-# Key Discussion Points
+<!-- # Key Discussion Points -->
 
-Here are a few concerns that I have at the moment, but this is by no means an exhaustive list.  Overall, there are some indicators with issues in terms of coverage across countries.  There are also differences in the length of the time series for each indicator.  Here is a detailed breakdown by indicator.
+<!-- Here are a few concerns that I have at the moment, but this is by no means an exhaustive list.  Overall, there are some indicators with issues in terms of coverage across countries.  There are also differences in the length of the time series for each indicator.  Here is a detailed breakdown by indicator. -->
 
-1. Dimension 1 needs more work adding source documents, NSO social media accounts.  It also needs work refining scoring methodology.  This should be discussed as a team.   
-2. Dimension 2 has no information for the Advisory/Analytical Services dimension.
-3. Dimension 3 is based on the 15 AKI indicators we defined for the original SPI. This needs to be discussed, as John had proposed going to NSO sites and collecting SDG indicator information. I abandoned this approach, because there is no straightforward way of scraping this info.  To discuss as a team.   
-4. Dimension 4 needs more work and refinement particularly on the Private/Citizen generated data section.   
-5. Dimension 5 also needs work with having a complete set of data for all countries.  There are major coverage gaps for all indicators, except for the Standards dimension which comes from the SPI team.
+<!-- 1. Dimension 1 needs more work adding source documents, NSO social media accounts.  It also needs work refining scoring methodology.  This should be discussed as a team.    -->
+<!-- 2. Dimension 2 has no information for the Advisory/Analytical Services dimension. -->
+<!-- 3. Dimension 3 is based on the 15 AKI indicators we defined for the original SPI. This needs to be discussed, as John had proposed going to NSO sites and collecting SDG indicator information. I abandoned this approach, because there is no straightforward way of scraping this info.  To discuss as a team.    -->
+<!-- 4. Dimension 4 needs more work and refinement particularly on the Private/Citizen generated data section.    -->
+<!-- 5. Dimension 5 also needs work with having a complete set of data for all countries.  There are major coverage gaps for all indicators, except for the Standards dimension which comes from the SPI team. -->
 
 # Data Use 
 
@@ -1228,7 +1228,8 @@ D3.15.AKI <- WDI_metadata %>%
 
 
 #now combine AKI databases and write to csv
-D3.AKI <- D3.1.AKI %>%
+D3.AKI <- spi_df_empty %>%
+  left_join(D3.1.AKI) %>%
   left_join(D3.3.AKI) %>%
   left_join(D3.15.AKI) %>%
   right_join(spi_df_empty) %>%
@@ -1254,7 +1255,7 @@ for (ind in names(aki)) {
   names(aki)
   print(ind)
   temp_map <- D3.AKI %>%
-    filter(.data[[ind]] > 0)
+    filter(.data[[ind]] >= 0)
   
   spi_mapper('temp_map', ind, aki[[ind]])
 }
@@ -2006,7 +2007,8 @@ cs8_df <-survey_fun('D4.1.8.SVY.BIZZ', 'BIZZ.SURVEYS') %>%
 
 
 #brind all censuses and surveys together
-cs_df <- cs1_df %>%
+cs_df <- spi_df_empty %>%
+  left_join(cs1_df) %>%
   left_join(cs2_df) %>%
   left_join(cs3_df) %>%
   left_join(cs4_df) %>%
@@ -2626,7 +2628,7 @@ Apple "Mobility Trends Reports".
 https://www.apple.com/covid19/mobility/ Accessed: 2020-07-23.
 
 
-```{r 4.4_SOPC, fig.height=7, fig.width=9, message=FALSE, warning=FALSE}
+```{r 4_SOPC, fig.height=7, fig.width=9, message=FALSE, warning=FALSE}
 #####
 # Google
 #####
@@ -3082,7 +3084,8 @@ D5.2.10.GSBP <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.csv", se
 
 ```{r msc}
 # join datasets together based on country and date
-D5.2.MSC <- D5.2.1.SNAU %>%
+D5.2.MSC <- spi_df_empty %>%
+  left_join(D5.2.1.SNAU) %>%
   left_join(D5.2.2.NABY) %>%
   left_join(D5.2.3.CNIN) %>%
   left_join(D5.2.4.CPIBY) %>%

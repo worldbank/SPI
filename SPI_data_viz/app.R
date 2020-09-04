@@ -65,7 +65,7 @@ ui <- navbarPage("Statistical Performance Indicators",
                               
                               # If not using custom CSS, set height of leafletOutput to a number instead of percent
                               withSpinner(leafletOutput("spi_map_overall"
-                                                        , width = "100%", height = "800px")),
+                                                        , width = "90%", height = "600px")),
                               
                               h3('Summary Statistics of Indicators'),
                               withSpinner(DT::dataTableOutput("summary_stats_overall")),
@@ -76,10 +76,10 @@ ui <- navbarPage("Statistical Performance Indicators",
                                              
                               ),
                               withSpinner(plotlyOutput('plot_time',
-                                                       width = '70%')),
+                                                       width = '80%')),
                               
                               h3('Correlations of Indicators'),
-                              withSpinner(plotOutput('corrplot_overall', width = "100%", height = "900px")),
+                              withSpinner(plotOutput('corrplot_overall', width = "80%", height = "400px")),
                               # Shiny versions prior to 0.11 should use class = "modal" instead.
                               absolutePanel(id = "controls_overall", class = "panel panel-default", fixed = FALSE,
                                             draggable = FALSE, top = 150, left = "auto", right = 20, bottom = "auto",
@@ -327,7 +327,7 @@ server <- function(input, output) {
             extensions = 'Buttons', options=list(
                 dom = 'Bfrtip',
                 buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
-                pageLength = 60)) 
+                pageLength = 70)) 
         
         
         
