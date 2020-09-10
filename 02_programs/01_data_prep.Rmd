@@ -1550,7 +1550,7 @@ spi_df <- spi_df %>%
   
 # Data Products
 
-Cleaning for Data Products Indicators.  Data Products (17 Indicators):   
+Cleaning for Data Products Indicators.  Data Products (16 Indicators):   
 
 - GOAL 1: No Poverty    
 - GOAL 2: Zero Hunger   
@@ -1565,7 +1565,7 @@ Cleaning for Data Products Indicators.  Data Products (17 Indicators):
 - GOAL 11: Sustainable Cities and Communities   
 - GOAL 12: Responsible Consumption and Production   
 - GOAL 13: Climate Action   
-- GOAL 14: Life Below Water   
+- **GOAL 14: Life Below Water is excluded because this indicator is not relevant for landlocked countries**   
 - GOAL 15: Life on Land   
 - GOAL 16: Peace and Justice Strong Institutions    
 - GOAL 17: Partnerships to achieve the Goal   
@@ -1634,7 +1634,8 @@ un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data_5yr.csv',sep="")) %>
          SPI.D3.16.INST = SPI.D3.16,
          SPI.D3.17.PTNS = SPI.D3.17
 ) %>%
-  select(country, date, starts_with("SPI")) 
+  select(country, date, starts_with("SPI")) %>%
+  select(-SPI.D3.14.LFWT)
 
 #add to spi databases
 spi_df <- spi_df %>%
@@ -1657,7 +1658,7 @@ spi_mapper('un_sdg_map','SPI.D3.10.NEQL','Goal 10: Reduced Inequality   ')
 spi_mapper('un_sdg_map','SPI.D3.11.CITY','Goal 11: Sustainable Cities and Communities')
 spi_mapper('un_sdg_map','SPI.D3.12.CNSP','Goal 12: Responsible Consumption and Production   ')
 spi_mapper('un_sdg_map','SPI.D3.13.CLMT','Goal 13: Climate Action')
-spi_mapper('un_sdg_map','SPI.D3.14.LFWT','Goal 14: Life Below Water')
+#spi_mapper('un_sdg_map','SPI.D3.14.LFWT','Goal 14: Life Below Water')
 spi_mapper('un_sdg_map','SPI.D3.15.LAND','Goal 15: Life on Land')
 spi_mapper('un_sdg_map','SPI.D3.16.INST','Goal 16: Peace and Justice Strong Institutions')
 spi_mapper('un_sdg_map','SPI.D3.17.PTNS','Goal 17: Partnerships to achieve the Goal  ')
