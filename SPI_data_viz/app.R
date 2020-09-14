@@ -65,7 +65,7 @@ ui <- navbarPage("Statistical Performance Indicators",
                               
                               # If not using custom CSS, set height of leafletOutput to a number instead of percent
                               withSpinner(leafletOutput("spi_map_overall"
-                                                        , width = "90%", height = "600px")),
+                                                        , width = "90%", height = "700px")),
                               
                               h3('Summary Statistics of Indicators'),
                               withSpinner(DT::dataTableOutput("summary_stats_overall")),

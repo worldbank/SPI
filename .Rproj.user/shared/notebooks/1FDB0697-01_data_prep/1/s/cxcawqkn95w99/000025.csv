@@ -1,3 +1,0 @@
-"0",""
-"0","msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.8.FINA))"
-"0","spi_mapper('msc_df_map', 'SPI.D5.2.8.FINA', 'Compilation of government finance statistics in 2019' )"

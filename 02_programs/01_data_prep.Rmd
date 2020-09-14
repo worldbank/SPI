@@ -2076,24 +2076,27 @@ aspire_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ASPIRE_sources.csv', sep="/
 #cleaning of aspire data
 aspire_df <- aspire_df_raw %>%
     mutate(date=as.numeric(year)) %>%
+    filter(!is.na(date)) %>%
     group_by( ccode, date) %>%
-    summarise(ben_count=mean(ben, na.rm=T),
-              ben_exp=mean(exp_b, na.rm=T)) %>%
+    summarise(ben_count_avail=(!is.na(mean(ben, na.rm=T))),
+              ben_exp_avail=(!is.na(mean(exp_b, na.rm=T)))) %>%
     rename(iso3c=ccode) %>%
     left_join(country_metadata) %>%
-    mutate(ben_info=(!is.na(ben_count) | !is.na(ben_exp))
+    mutate(ben_info_avail=(ben_count_avail==TRUE | ben_exp_avail==TRUE)
            )
+
+write_excel_csv(aspire_df, paste(output_dir, 'SPL_admin_data_availability.csv', sep="/"))
 
 #create 5 year moving average
 aspire_fun <- function(date_start, date_end) {
   temp <- aspire_df %>%
       filter(between(date,date_start,date_end) ) %>%  
       group_by(iso3c, country) %>%
-      mutate(ben_info=if_else(ben_info==TRUE,as.numeric(ben_info), 0)) %>%
-      summarise(ben_info=round(mean(ben_info),1) #get an average of this across countries
+      mutate(ben_info_avail=if_else(ben_info_avail==TRUE,as.numeric(ben_info_avail), 0)) %>%
+      summarise(ben_info_avail=round(mean(ben_info_avail),1) #get an average of this across countries
               ) %>%
-      mutate(SPI.D4.2.1.SPL=if_else(is.na(ben_info),0, ben_info),
-            RAW.D4.2.1.SPL=ben_info) %>%
+      mutate(SPI.D4.2.1.SPL=if_else(is.na(ben_info_avail),0, ben_info_avail),
+            RAW.D4.2.1.SPL=ben_info_avail) %>%
       mutate(date=date_end) %>%
       select(c('iso3c', 'country', 'date', 'RAW.D4.2.1.SPL', 'SPI.D4.2.1.SPL')  )
       

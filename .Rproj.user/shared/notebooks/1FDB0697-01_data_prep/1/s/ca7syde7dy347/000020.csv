@@ -1,3 +1,0 @@
-"0",""
-"0","cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.7.HLTH))"
-"0","spi_mapper('cs_df_map', 'SPI.D4.1.7.HLTH', 'Health Survey Available in Past 20 Years in 2019' )"
