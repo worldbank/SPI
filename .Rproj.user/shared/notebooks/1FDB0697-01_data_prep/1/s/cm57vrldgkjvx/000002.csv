@@ -14,6 +14,7 @@
 "0",""
 "0","  map_df <- get(data) %>%"
 "0","    filter(date==max(date, na.rm=T)) %>%"
+"0","    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data."
 "0","    group_by( country) %>%"
 "0","    #summarise(across(!! indicator,last)) %>%"
 "0","    rename(data_available=!! indicator) %>%"

@@ -4,9 +4,9 @@ title: Technical Documentation on Data Sources and Methods for Statistical Perfo
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: yes
   html_document:
+    toc: yes
+  pdf_document:
     toc: yes
 ---
 
@@ -73,6 +73,7 @@ spi_mapper  <- function(data, indicator, title) {
 
   map_df <- get(data) %>%
     filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
     group_by( country) %>%
     #summarise(across(!! indicator,last)) %>%
     rename(data_available=!! indicator) %>%
@@ -244,140 +245,147 @@ Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Developme
 
 ## Indicator 1.2: Data use by national executive branch
 
-Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using national development plans and poverty reduction plans as a source.
+Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using voluntary national review plans as a source.
 
-Our main source for this is the FAOLEX database of legislation and policy documents maintained by the FAO.
-
-```{r faolex, include=FALSE}
+Our main source for this is the UN Voluntary National Reviews (VNR) Database (https://sustainabledevelopment.un.org/vnrs/).
 
 
-#load(paste(dir,"/Data/documentInfoNew Agri.Rdata", sep=""))
-documentInfoNew <- readxl::read_excel(paste(dir,"/01_raw_data/1.2_DUNE/Faolex_inventory.xlsx", sep=""),
-                                      col_types = c('text','text','text','text','text','text','text','text','date','date','text')) %>%
-  as_tibble(.name_repair = 'universal') %>%
-    mutate(Language.of.document=detect_language(Title, lang_code=FALSE), #check language      
-           Language.of.document=str_to_lower(Language.of.document),
-         Type.of.text=str_to_lower(Type.of.text),
-         Main.area=str_to_lower(Primary.subject),
-         Type.of.text=str_replace_all(Type.of.text,'[[:punct:]]',''),
-         Main.area=str_replace_all(Main.area,'[[:punct:]]',''),
-         url=Rel.file) 
+The indicator for each data use by the national executive branch is formed by:   
+  1.	Searches the documents for references to a set of keywords related to each SDG goal     
+  2.	Searches the documents for the subset of references that also include statistics, by searching for numeric values (excluding references to years)    
+  3.	Calculates the ratio between the two
 
-#Now fix up the languages
-documentInfoNew <- documentInfoNew %>%
-  group_by(Country) %>%
-  mutate(Language.of.document.typ=first(Language.of.document),
-         Language.of.document=if_else(is.na(Language.of.document),Language.of.document.typ,Language.of.document), #replace language with language of another document in same country if missing
-         Language.of.document=if_else(Language.of.document=='galican','spanish',Language.of.document), # correct one issue where galican was a recommended language
-         Language.of.document=if_else(is.na(Language.of.document),'english',Language.of.document)) #as last resort, assume english document
-  
+The ratio captures density of discussion of each topic in each document assessed.  The keywords are based on indicators found in the World Bank's World Development Indicators (WDI).  
+
+```{r vnr}
+#load data
+vnr_use_df <- read_csv(paste(raw_dir, "/1.2_DUNE/UN_VNR_use_of_numbers.csv", sep="")) %>%
+  group_by(country) %>%
+  filter(year==max(year, na.rm=T)) %>%
+  mutate(date=2019)
 
 
-#rename dataframe with document info
-documentInfo <- documentInfoNew
+vnr_use_merge <- vnr_use_df %>% 
+  group_by(country, date, name) %>%
+  summarise(SPI.D1.2.VNR=wtd.mean(freq_of_numbers, w=freq_of_terms))
 
-#merge with WB compatible country codes
-ccodes <- read_csv(file=paste(dir, "/01_raw_data/1.2_DUNE/FAOSTAT_data_5-1-2020_country_codes.csv", sep="")) %>%
-  as_tibble(.name_repair='universal') %>%
-  mutate(iso3c=ISO3.Code) %>%
-  select(Country, iso3c) %>%
-  group_by(Country, iso3c) %>%
-  summarise_all(~first(.))
 
-documentInfo <- documentInfo %>%
-  mutate(Country = case_when(
-    Country=="Venezuela, Boliv. Rep. of" ~ "Venezuela (Bolivarian Republic of)",
-    Country=="Lao, People's Dem. Rep." ~ "Lao People's Democratic Republic",
-    Country=="China" ~ "China, mainland",
-    Country=="Moldova, Republic of" ~ "Republic of Moldova",
-    Country=="Tanzania, Un. Rep. of" ~ "United Republic of Tanzania",
-    Country=="Czech Republic" ~ "Czechia",
-    Country=="CÃ´te d'Ivoire" ~ "Côte d'Ivoire",
-    Country=="Iran, Islamic Republic of" ~ "Iran (Islamic Republic of)",
-    Country=="Micronesia, Fed. States" ~ "Micronesia (Federated States of)",
-    Country=="Palestinian Authority"  ~ "Palestine",
-    Country=="Congo, Dem. Rep. of"  ~ "Democratic Republic of the Congo",
-    Country=="Korea, Dem. People's Rep." ~ "Democratic People's Republic of Korea",
-    Country=="Korea, Republic of"  ~ "Republic of Korea",
-    TRUE ~ Country
-  )) %>% # fix some broken country names
-  left_join(ccodes) %>%
-  select(-Country)
-  
-#merge with official world bank metadata
-country_metadata <- wbstats::wbcountries()
+#add to spi databases
+spi_df <- spi_df %>%
+  left_join(vnr_use_merge)
 
-documentInfo <- documentInfo %>%
-  left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything())
+#map the VNR data
 
-#do some basic cleaning
-documentInfo <- documentInfo %>%
-  mutate(Language.of.document=str_to_lower(Language.of.document),
-         Type.of.text=str_to_lower(Type.of.text),
-         Main.area=str_to_lower(Main.area),
-         Language.of.document=str_replace_all(Language.of.document,'[[:punct:]]',''),
-         Type.of.text=str_replace_all(Type.of.text,'[[:punct:]]',''),
-         Main.area=str_replace_all(Main.area,'[[:punct:]]',''),
-         date=year(Date.of.original.text))
+#overall score
+spi_mapper('vnr_use_merge', 'SPI.D1.2.VNR', 'Overall Score for Use of Numbers in VNRs')
 
-#keep just national policy and poverty reduction documents after year 2000
-documentInfo <- documentInfo %>%
-  filter(grepl("national development", Main.area)) %>%
-  filter(Type.of.text=='policy') %>%
-  filter(date>=2010)
 
+# #SDG 1
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 1") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 1')
+# 
+# #SDG 2
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 2") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 2')
+# 
+# #SDG 3
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 3") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 3')
+# 
+# #SDG 4
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 4") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 4')
+# 
+# #SDG 5
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 5") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 5')
+# 
+# #SDG 6
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 6") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 6')
+# 
+# #SDG 7
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 7") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 7')
+# 
+# #SDG 8
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 8") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 8')
+# 
+# #SDG 9
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 9") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 9')
+# 
+# #SDG 10
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 10") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 10')
+# 
+# #SDG 11
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 11") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 11')
+# 
+# #SDG 12
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 12") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 12')
+# 
+# #SDG 13
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 13") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 13')
+# 
+# #SDG 14
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 14") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 14')
+# 
+# #SDG 15
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 15") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 15')
+# 
+# #SDG 16
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 16") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 16')
+# 
+# #SDG 17
+# vnr_map <- vnr_use_df %>%
+#   filter(SDG=="SDG 17") 
+# 
+# spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 17')
 
 
 ```
 
 
-```{r faolex_map, echo=FALSE, message=FALSE, warning=FALSE}
-
-# load data
-#Now map the result
-quality = "high"
-maps <- wbgmaps::wbgmaps[[quality]]
-
-
-  
-  faolex_map <- documentInfo %>%
-    group_by( country) %>%
-    summarise(across(everything(),first)) %>%
-    mutate(data_available=TRUE) %>%
-    right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), FALSE, data_available)) 
-  
-  
-   ggplot() +
-    geom_map(data = faolex_map, aes(map_id = iso3c, fill = data_available), map = maps$countries) + 
-    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
-    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
-     geom_path(data = maps$boundaries,
-               aes(long, lat, group = group),
-               color = "white",
-               size = 0.1,
-               lineend = maps$boundaries$lineend,
-              linetype = maps$boundaries$linetype) +
-    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
-    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
-    scale_fill_brewer(
-      name='Data Available',
-      palette='Paired',
-      na.value='blue'
-    ) +
-    coord_equal() +
-    theme_map(base_size=12) +
-    labs(
-      title=str_wrap('Availability of National Development Plan or Poverty Reduction Plan Documents by Country since 2010 from FAOLEX',150),
-      caption = 'Source: FAOLEX'
-    )
-
-
-
-
-
-```
 
 ## Indicator 1.3: Data use by civil society     
 
@@ -386,7 +394,8 @@ Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Developme
 We are pulling data from Twitter at this point. We have only accessed a handful of accounts from NSOs, but this could be quickly scaled up.
 
 
-```{r api_plots, echo=FALSE, message=FALSE, warning=FALSE}
+
+```{r api_plots, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 if (exists('nso_tweets_df')) {
   rm('nso_tweets_df')
@@ -420,7 +429,7 @@ ggplot(data=nso_tweets_sum, aes(x=date, y=freq, group=country, color=country)) +
 
 ```
 
-```{r twitter_map, echo=FALSE, message=FALSE, warning=FALSE}
+```{r twitter_map, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 # load data
 #Now map the result
@@ -486,7 +495,7 @@ Improved collaboration between data producers and users
 
 IHSN has a database of more than 7,483 surveys as of August 5, 2020.
 
-```{r ihsn, echo=FALSE}
+```{r ihsn, eval=FALSE, include=FALSE}
 
 #####
 # The following code is blocked out, because the execution time is long
@@ -623,7 +632,7 @@ academic_use_map <- academic_use_df %>%
 ```
 
 
-```{r ihsn_plots, echo=FALSE}
+```{r ihsn_plots, eval=FALSE, include=FALSE}
 # #Do some basic plots
 g1 <- study_df_ihsn %>%
     mutate(total=n()) %>%
@@ -784,6 +793,7 @@ pcn$coveragetype <- cov_lkup[pcn$coveragetype]
 pcn$datatype <- dat_lkup[pcn$datatype]
 
 df <- pcn %>%
+  mutate(countrycode=as.character(countrycode)) %>%
   inner_join(metadata, by = c("countrycode", "year", "coveragetype", "datatype"))
 
 
@@ -3291,9 +3301,10 @@ spi_mapper('D5.5_DIFI_map', 'SPI.5.5.DIFI', 'Statistical plan fully funded. Sour
 
 ```
 
+## Final Dataset
 
-
-```{r save}
+Below we will append the data together and save the final files to gether.
+```{r append}
 
 #add in population
 pop_df <- wbstats::wb(country="all",
@@ -3304,12 +3315,20 @@ pop_df <- wbstats::wb(country="all",
   mutate(population=value) %>%
   select(country, date, population)
 
-# save final dataset
+# create final dataset
 spi_df_final <- spi_df %>%
   select(country, iso3c, date, starts_with("SPI"), starts_with("RAW")) %>%
   right_join(spi_df_empty) %>%
   left_join(pop_df) %>%
   arrange(-date,country)
+
+#create an overall index score for research purposes
+
+
+```
+
+```{r save}
+
 
 #write to csv
 spi_df_final %>%
@@ -3339,6 +3358,84 @@ spi_df_final %>%
 
 ```
 
+
+
+
+# Annex
+
+## Overall Index Score
+
+For research purposes, we create an index combining several of the indicators together to get an overview of country performance
+
+```{r index}
+
+# create index dataset
+spi_index_df <- spi_df %>%
+  select(country, iso3c, date, starts_with("SPI"), income, region) %>%
+  right_join(spi_df_empty) %>%
+  left_join(pop_df) %>%
+  arrange(-date,country)
+
+#Drop certain indicators that don't make cut
+spi_index_df <- spi_index_df %>%
+  select(-starts_with('SPI.D1'), -SPI.5.3.DISK)
+
+
+
+#first index 
+# just take a simple numeric average acorss all indicators
+# I will forward fill all indicators if they are missing
+index_1 <- spi_index_df %>%
+  arrange(country, date) %>%
+  group_by(country) %>%
+  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
+  mutate(across(c("SPI.D2.1.GDDS","SPI.D2.4.NADA","SPI.D4.1.1.POPU","SPI.D4.1.2.AGRI","SPI.D4.1.3.BIZZ","SPI.D4.1.4.HOUS","SPI.D4.1.5.AGSVY",
+                  "SPI.D4.1.6.LABR","SPI.D4.1.7.HLTH","SPI.D4.1.8.BZSVY", "SPI.D4.2.1.SPL",
+                  "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D4.2.4.LBR", "SPI.5.1.DILG", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
+                  "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
+                  "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP" ),
+                ~if_else((is.na(.) & income=="High income"),1,.)                )) %>% #fill in the missing values for HICs with 1s
+  mutate(SPI.INDEX=rowMeans(across(starts_with("SPI")), na.rm=FALSE),
+         SPI.INDEX.DIM2=rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
+         SPI.INDEX.DIM3=rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),
+         SPI.INDEX.DIM4=rowMeans(across(starts_with("SPI.D4")), na.rm=FALSE),
+         SPI.INDEX.DIM5=rowMeans(across(starts_with("SPI.D5")), na.rm=FALSE)
+         ) %>% #
+  arrange(-date, country) %>%
+  select(country, iso3c, date, starts_with('SPI.INDEX'), everything())
+
+spi_mapper('index_1','SPI.INDEX','Overall SPI using Simple Index Averaging Over All Indicators.  Equal Weight for Each Indicator.  Fill Forward/Ignore Missing Values')
+
+#display top 25
+index_disp <- index_1 %>%
+  ungroup() %>%
+  filter(date==2019) %>%
+  arrange(-SPI.INDEX) %>%
+  mutate(across(starts_with('SPI.INDEX'),~100*.),
+         across(starts_with('SPI.INDEX'),round,1)) %>%
+  select(country, iso3c, date, starts_with('SPI.INDEX'))
+
+DT::datatable(index_disp, caption='Overall SPI using Simple Index Averaging Over All Indicators.  Equal Weight for Each Indicator.  Fill Forward/Ignore Missing Values',
+                      rownames=TRUE,
+                      colnames = c("Country", "ISO3C", "Date", "SPI Index Value",
+                                   "Dimension 2: Data Services",
+                                   "Dimension 3: Data Products ",
+                                   "Dimension 4: Data Sources",
+                                   "Dimension 5: Data Infrastructure"
+                                   ),
+                      class='cell-border stripe',
+                      escape = FALSE,
+                      extensions = c ('Buttons', 'FixedHeader'), options=list(
+                          dom = 'Bfrtip',
+                          buttons = c('copy', 'csv', 'excel'),
+                          pageLength = 25,
+                          scrollX = TRUE, 
+                          paging=FALSE,
+                          ordering=F)) 
+```
+
+
+
 ```{r basic_analysis}
 #basic analysis
 
@@ -3351,3 +3448,137 @@ spi_df_final_cor <- spi_df_final %>%
   
 ```
 
+
+
+
+
+```{r faolex, eval=FALSE, include=FALSE}
+
+
+#load(paste(dir,"/Data/documentInfoNew Agri.Rdata", sep=""))
+documentInfoNew <- readxl::read_excel(paste(dir,"/01_raw_data/1.2_DUNE/Faolex_inventory.xlsx", sep=""),
+                                      col_types = c('text','text','text','text','text','text','text','text','date','date','text')) %>%
+  as_tibble(.name_repair = 'universal') %>%
+    mutate(Language.of.document=detect_language(Title, lang_code=FALSE), #check language      
+           Language.of.document=str_to_lower(Language.of.document),
+         Type.of.text=str_to_lower(Type.of.text),
+         Main.area=str_to_lower(Primary.subject),
+         Type.of.text=str_replace_all(Type.of.text,'[[:punct:]]',''),
+         Main.area=str_replace_all(Main.area,'[[:punct:]]',''),
+         url=Rel.file) 
+
+#Now fix up the languages
+documentInfoNew <- documentInfoNew %>%
+  group_by(Country) %>%
+  mutate(Language.of.document.typ=first(Language.of.document),
+         Language.of.document=if_else(is.na(Language.of.document),Language.of.document.typ,Language.of.document), #replace language with language of another document in same country if missing
+         Language.of.document=if_else(Language.of.document=='galican','spanish',Language.of.document), # correct one issue where galican was a recommended language
+         Language.of.document=if_else(is.na(Language.of.document),'english',Language.of.document)) #as last resort, assume english document
+  
+
+
+#rename dataframe with document info
+documentInfo <- documentInfoNew
+
+#merge with WB compatible country codes
+ccodes <- read_csv(file=paste(dir, "/01_raw_data/1.2_DUNE/FAOSTAT_data_5-1-2020_country_codes.csv", sep="")) %>%
+  as_tibble(.name_repair='universal') %>%
+  mutate(iso3c=ISO3.Code) %>%
+  select(Country, iso3c) %>%
+  group_by(Country, iso3c) %>%
+  summarise_all(~first(.))
+
+documentInfo <- documentInfo %>%
+  mutate(Country = case_when(
+    Country=="Venezuela, Boliv. Rep. of" ~ "Venezuela (Bolivarian Republic of)",
+    Country=="Lao, People's Dem. Rep." ~ "Lao People's Democratic Republic",
+    Country=="China" ~ "China, mainland",
+    Country=="Moldova, Republic of" ~ "Republic of Moldova",
+    Country=="Tanzania, Un. Rep. of" ~ "United Republic of Tanzania",
+    Country=="Czech Republic" ~ "Czechia",
+    Country=="CÃ´te d'Ivoire" ~ "Côte d'Ivoire",
+    Country=="Iran, Islamic Republic of" ~ "Iran (Islamic Republic of)",
+    Country=="Micronesia, Fed. States" ~ "Micronesia (Federated States of)",
+    Country=="Palestinian Authority"  ~ "Palestine",
+    Country=="Congo, Dem. Rep. of"  ~ "Democratic Republic of the Congo",
+    Country=="Korea, Dem. People's Rep." ~ "Democratic People's Republic of Korea",
+    Country=="Korea, Republic of"  ~ "Republic of Korea",
+    TRUE ~ Country
+  )) %>% # fix some broken country names
+  left_join(ccodes) %>%
+  select(-Country)
+  
+#merge with official world bank metadata
+country_metadata <- wbstats::wbcountries()
+
+documentInfo <- documentInfo %>%
+  left_join(country_metadata) %>%
+  select(colnames(country_metadata), everything())
+
+#do some basic cleaning
+documentInfo <- documentInfo %>%
+  mutate(Language.of.document=str_to_lower(Language.of.document),
+         Type.of.text=str_to_lower(Type.of.text),
+         Main.area=str_to_lower(Main.area),
+         Language.of.document=str_replace_all(Language.of.document,'[[:punct:]]',''),
+         Type.of.text=str_replace_all(Type.of.text,'[[:punct:]]',''),
+         Main.area=str_replace_all(Main.area,'[[:punct:]]',''),
+         date=year(Date.of.original.text))
+
+#keep just national policy and poverty reduction documents after year 2000
+documentInfo <- documentInfo %>%
+  filter(grepl("national development", Main.area)) %>%
+  filter(Type.of.text=='policy') %>%
+  filter(date>=2010)
+
+
+
+```
+
+
+```{r faolex_map, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+
+# load data
+#Now map the result
+quality = "high"
+maps <- wbgmaps::wbgmaps[[quality]]
+
+
+  
+  faolex_map <- documentInfo %>%
+    group_by( country) %>%
+    summarise(across(everything(),first)) %>%
+    mutate(data_available=TRUE) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), FALSE, data_available)) 
+  
+  
+   ggplot() +
+    geom_map(data = faolex_map, aes(map_id = iso3c, fill = data_available), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+     geom_path(data = maps$boundaries,
+               aes(long, lat, group = group),
+               color = "white",
+               size = 0.1,
+               lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_brewer(
+      name='Data Available',
+      palette='Paired',
+      na.value='blue'
+    ) +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap('Availability of National Development Plan or Poverty Reduction Plan Documents by Country since 2010 from FAOLEX',150),
+      caption = 'Source: FAOLEX'
+    )
+
+
+
+
+
+```
