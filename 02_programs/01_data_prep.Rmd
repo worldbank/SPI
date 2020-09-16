@@ -1810,40 +1810,22 @@ and demographics.
 0.3 Points. 1 survey done within past 10 years; 	
 0 Points. None within past 10 years
 
-```{r cs_2}
+```{r pop_ag_censuses}
 
-Request_metadata <- GET(url = "https://api.worldbank.org/v2/sources/2/country/all/metadata?per_page=30000&format=json")
-Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+#pull data for population and agriculture census from WDI metadata
 
-# Parse the JSON content and convert it to a data frame.
-JSON_metadata <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
-  data.frame()
+df <- WDI_metadata
 
-#do some conversion to produce a dataframe
-df <- JSON_metadata$source.concept %>%
-  data.frame() 
+# Manipulate and clean final data
+df <- df %>%
+  filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
+  
 
-#do some more cleaning and conversion
-df <- df$variable %>%
-  data.frame()   %>%
-  rename(iso3c=id) %>%
-  unnest(metatype) %>%
-  pivot_wider(
-    id_cols=iso3c,
-    names_from=id,
-    values_from=value
-  ) 
-
-census_df <- df %>%
-  mutate(country=ShortName) %>%
-  filter(!is.na(IncomeGroup)) %>%
-  mutate(indicator_date=as.numeric(Latestpopulationcensus))
-
-#Now calculate our SPI score for this indicator
-for (i in 2016:2019) {
-  temp <- census_df %>%
-    mutate(date=i) %>%
-    mutate(last_val=str_extract(Latestpopulationcensus, "\\d{4}") )%>%
+pop_census_df <- df %>%
+  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
+         country=Table.Name) %>%
+  select(c('iso3c', 'country', 'date',  'Latest.population.census')  ) %>%
+  mutate(last_val=str_extract(Latest.population.census, "\\d{4}") )%>%
     mutate(last_val=as.numeric(last_val)) %>%
     mutate(indicator=case_when(
       (date-last_val<=10) & (date-last_val>0) ~ 1,
@@ -1851,19 +1833,27 @@ for (i in 2016:2019) {
       TRUE ~ 0 )
     )  %>%
     ungroup() %>%
-    select(c('iso3c', 'country', 'date', 'last_val', 'indicator')  ) %>%
+    select(c('iso3c', 'country', 'date', 'Latest.population.census', 'indicator')  ) %>%
     arrange(date, country)
   
+ag_census_df <- df %>%
+  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
+         country=Table.Name) %>%
+  select(c('iso3c', 'country', 'date',  'Latest.agricultural.census')  ) %>%
+  mutate(last_val=str_extract(Latest.agricultural.census, "\\d{4}") )%>%
+    mutate(last_val=as.numeric(last_val)) %>%
+    mutate(indicator=case_when(
+      (date-last_val<=10) & (date-last_val>0) ~ 1,
+      (date-last_val<=20) & (date-last_val>0) ~ 0.5,
+      TRUE ~ 0 )
+    )  %>%
+    ungroup() %>%
+    select(c('iso3c', 'country', 'date', 'Latest.agricultural.census', 'indicator')  ) %>%
+    arrange(date, country)
   
-  assign(paste('temp',i,sep="_"), temp)
-}
+    
 
-temp <- temp_2019
 
-for (i in 2016:2018) {
-  temp <- bind_rows(temp, get(paste('temp',i,sep="_")))
-}
-temp
 ```
 
 
@@ -1977,13 +1967,13 @@ survey_fun  <- function(data, input_var) {
 
 
 #Population Censuses
-cs1_df <-census_fun('D4.1.1.CEN.POPU', 'POPU.CENSUS') %>%
-  rename(RAW.D4.1.1.POPU.CENSUS=input_var,
+cs1_df <-pop_census_df %>%
+  rename(RAW.D4.1.1.POPU.CENSUS=Latest.population.census,
          SPI.D4.1.1.POPU=indicator)
 
 #Agriculture census  
-cs2_df <-census_fun('D4.1.2.CEN.AGRI', 'AGRI.CENSUS') %>%
-  rename(RAW.D4.1.2.AGRI.CENSUS=input_var,
+cs2_df <-ag_census_df %>%
+  rename(RAW.D4.1.2.AGRI.CENSUS=Latest.agricultural.census,
          SPI.D4.1.2.AGRI=indicator)
 
 #Business/establishment census 
@@ -2242,44 +2232,46 @@ Source: World Bank WDI Metadata.
 
 ```{r crvs}
 
-#get data directly from WDI metadata
-Request_metadata <- GET(url = "https://api.worldbank.org/v2/sources/2/country/all/metadata?per_page=30000&format=json")
-Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+#get data directly from WDI metadata.  Vintages are stored in metadata folder
+# Request_metadata <- GET(url = "https://api.worldbank.org/v2/sources/2/country/all/metadata?per_page=30000&format=json")
+# Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+# 
+# # Parse the JSON content and convert it to a data frame.
+# JSON_metadata <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+#   data.frame()
+# 
+# #do some conversion to produce a dataframe
+# df <- JSON_metadata$source.concept %>%
+#   data.frame() 
+# 
+# #do some more cleaning and conversion
+# df <- df$variable %>%
+#   data.frame()   %>%
+#   rename(iso3c=id) %>%
+#   unnest(metatype) %>%
+#   pivot_wider(
+#     id_cols=iso3c,
+#     names_from=id,
+#     values_from=value
+#   ) 
 
-# Parse the JSON content and convert it to a data frame.
-JSON_metadata <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
-  data.frame()
-
-#do some conversion to produce a dataframe
-df <- JSON_metadata$source.concept %>%
-  data.frame() 
-
-#do some more cleaning and conversion
-df <- df$variable %>%
-  data.frame()   %>%
-  rename(iso3c=id) %>%
-  unnest(metatype) %>%
-  pivot_wider(
-    id_cols=iso3c,
-    names_from=id,
-    values_from=value
-  ) 
+df <- WDI_metadata
 
 # Manipulate and clean final data
 df <- df %>%
-  filter(!is.na(IncomeGroup))  #keep just countries (drop aggregations)
+  filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
   
-df$SPI.D4.2.3.CRVS<-as.numeric(grepl("Yes", df$Vitalregistrationcomplete)) #create 0,1 variable for vital registration
+df$SPI.D4.2.3.CRVS<-as.numeric(grepl("Yes", df$Vital.registration.complete)) #create 0,1 variable for vital registration
 
 crvs_df <- df %>%
-  mutate(date=2019,
-         country=TableName,
-         RAW.D4.2.3.CRVS=Vitalregistrationcomplete) %>%
+  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
+         country=Table.Name,
+         RAW.D4.2.3.CRVS=Vital.registration.complete) %>%
   select(c('iso3c', 'country', 'date', 'RAW.D4.2.3.CRVS', 'SPI.D4.2.3.CRVS')  )
 
 
 #pull old data from SCI
-Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/3.11.01.03.popreg?format=json&date=2004:2018&per_page=5000")
+Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/3.11.01.03.popreg?format=json&date=2004:2015&per_page=5000")
 Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
 
 # Parse the JSON content and convert it to a data frame.
@@ -2642,7 +2634,7 @@ Apple "Mobility Trends Reports".
 https://www.apple.com/covid19/mobility/ Accessed: 2020-07-23.
 
 
-```{r 4_SOPC, fig.height=7, fig.width=9, message=FALSE, warning=FALSE}
+```{r 4_SOPC, eval=FALSE, fig.height=7, fig.width=9, message=FALSE, warning=FALSE, include=FALSE}
 #####
 # Google
 #####
@@ -2727,8 +2719,8 @@ The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Dat
 D5.1_DILG <- un_pull('SG_STT_FPOS', '2004', '2019') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
-  mutate(RAW.5.1.DILG=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
-         SPI.5.1.DILG=if_else((is.na(value) | value=="NaN"),0, as.numeric(value))) %>%
+  mutate(RAW.D5.1.DILG=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
+         SPI.D5.1.DILG=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value))) %>%
   select(-value)
 # 
 # #read in csv file.
@@ -2780,9 +2772,9 @@ spi_df <- spi_df %>%
 
 
 D5.1_DILG_map <- D5.1_DILG %>%
-  filter(!is.na(RAW.5.1.DILG))
+  filter(!is.na(SPI.D5.1.DILG))
 
-spi_mapper('D5.1_DILG_map', 'SPI.5.1.DILG', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
+spi_mapper('D5.1_DILG_map', 'SPI.D5.1.DILG', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
 
 ```
 ## Indicator 5.2: standards 
@@ -3169,7 +3161,7 @@ D5.3_DISK <- read_csv(file = paste(raw_dir, "5.3_DISK","5.3_DISK.csv", sep="/" )
   transmute(
     country=Country,
     date=Year,
-    SPI.5.3.DISK=Data.Value
+    SPI.D5.3.DISK=Data.Value
   ) %>%
     mutate(country=case_when(
     country=="Bahamas" ~ "Bahamas, The",                  
@@ -3202,8 +3194,8 @@ D5.3_DISK <- read_csv(file = paste(raw_dir, "5.3_DISK","5.3_DISK.csv", sep="/" )
     country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
     TRUE ~ country
   )) %>%
-  mutate(RAW.5.3.DISK=if_else(SPI.5.3.DISK=='no data',as.character(NA), SPI.5.3.DISK),
-         SPI.5.3.DISK=if_else(SPI.5.3.DISK=='no data',as.numeric(NA), as.numeric(SPI.5.3.DISK))/100) %>%
+  mutate(RAW.D5.3.DISK=if_else(SPI.D5.3.DISK=='no data',as.character(NA), SPI.D5.3.DISK),
+         SPI.D5.3.DISK=if_else(SPI.D5.3.DISK=='no data',as.numeric(NA), as.numeric(SPI.D5.3.DISK))/100) %>%
   right_join(spi_df_empty)
 
 #add to spi databases
@@ -3212,9 +3204,9 @@ spi_df <- spi_df %>%
 
 
 D5.3_DISK_map <- D5.3_DISK %>%
-  filter(!is.na(SPI.5.3.DISK))
+  filter(!is.na(SPI.D5.3.DISK))
 
-spi_mapper('D5.3_DISK_map', 'SPI.5.3.DISK', 'Systematic use of statistical knowledge with statistical terms and indicators in national policy documents. Source: Paris21')
+spi_mapper('D5.3_DISK_map', 'SPI.D5.3.DISK', 'Systematic use of statistical knowledge with statistical terms and indicators in national policy documents. Source: Paris21')
 
 ```
 
@@ -3231,7 +3223,7 @@ Scores is 1 if the country has a national statistical plan that is fully funded 
 
 The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Date()`
 
-Source of this data is UNSD and Paris21.  Downloaded on August 6,2020 from https://statisticalcapacitymonitor.org/indicator/138/
+Source of this data is UNSD and Paris21.  
 
 ```{r finance}
 
@@ -3239,8 +3231,8 @@ Source of this data is UNSD and Paris21.  Downloaded on August 6,2020 from https
 D5.5_DIFI <- un_pull('SG_STT_NSDSFND', '2004', '2019') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
-  mutate(RAW.5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
-         SPI.5.5.DIFI=if_else((is.na(value) | value=="NaN"),0, as.numeric(value))) %>%
+  mutate(RAW.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
+         SPI.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value))) %>%
   select(-value)
 
 # #read in csv file.
@@ -3295,9 +3287,9 @@ spi_df <- spi_df %>%
 
 
 D5.5_DIFI_map <- D5.5_DIFI %>%
-  filter(!is.na(RAW.5.5.DIFI))
+  filter(!is.na(SPI.D5.5.DIFI))
 
-spi_mapper('D5.5_DIFI_map', 'SPI.5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
+spi_mapper('D5.5_DIFI_map', 'SPI.D5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
 
 ```
 
@@ -3376,38 +3368,50 @@ spi_index_df <- spi_df %>%
   left_join(pop_df) %>%
   arrange(-date,country)
 
-#Drop certain indicators that don't make cut
+#Drop certain indicators that don't make cut because of imcomplete coverage usually
 spi_index_df <- spi_index_df %>%
-  select(-starts_with('SPI.D1'), -SPI.5.3.DISK)
+  select(-starts_with('SPI.D1'), -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level,-SPI.D5.1.DILG,-SPI.D5.5.DIFI)
 
+
+
+#get a list of oecd countries
+oecd_country_query <-  GET(url = "https://api.worldbank.org/v2/country?region=OED&format=json") %>%
+  content(Request_metadata, as = "text", encoding = "UTF-8") %>%
+  jsonlite::fromJSON( flatten = TRUE) 
+
+#do some conversion to produce a dataframe
+oecd_country_df <- oecd_country_query[[2]] %>%
+  as_tibble() 
+  
+  
 
 
 #first index 
 # just take a simple numeric average acorss all indicators
 # I will forward fill all indicators if they are missing
-index_1 <- spi_index_df %>%
+spi_index_df <- spi_index_df %>%
   arrange(country, date) %>%
   group_by(country) %>%
   mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
   mutate(across(c("SPI.D2.1.GDDS","SPI.D2.4.NADA","SPI.D4.1.1.POPU","SPI.D4.1.2.AGRI","SPI.D4.1.3.BIZZ","SPI.D4.1.4.HOUS","SPI.D4.1.5.AGSVY",
                   "SPI.D4.1.6.LABR","SPI.D4.1.7.HLTH","SPI.D4.1.8.BZSVY", "SPI.D4.2.1.SPL",
-                  "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D4.2.4.LBR", "SPI.5.1.DILG", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
+                  "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D4.2.4.LBR", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
                   "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
                   "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP" ),
-                ~if_else((is.na(.) & income=="High income"),1,.)                )) %>% #fill in the missing values for HICs with 1s
+                ~if_else((is.na(.) & (country %in% oecd_country_df$name)),1,.)                )) %>% #fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
   mutate(SPI.INDEX=rowMeans(across(starts_with("SPI")), na.rm=FALSE),
          SPI.INDEX.DIM2=rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
          SPI.INDEX.DIM3=rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),
          SPI.INDEX.DIM4=rowMeans(across(starts_with("SPI.D4")), na.rm=FALSE),
          SPI.INDEX.DIM5=rowMeans(across(starts_with("SPI.D5")), na.rm=FALSE)
          ) %>% #
-  arrange(-date, country) %>%
+  arrange(-date, -SPI.INDEX) %>%
   select(country, iso3c, date, starts_with('SPI.INDEX'), everything())
 
-spi_mapper('index_1','SPI.INDEX','Overall SPI using Simple Index Averaging Over All Indicators.  Equal Weight for Each Indicator.  Fill Forward/Ignore Missing Values')
+spi_mapper('spi_index_df','SPI.INDEX','Overall SPI using Simple Index Averaging Over All Indicators.  Equal Weight for Each Indicator.  Fill Forward/Ignore Missing Values')
 
 #display top 25
-index_disp <- index_1 %>%
+index_disp <- spi_index_df %>%
   ungroup() %>%
   filter(date==2019) %>%
   arrange(-SPI.INDEX) %>%
@@ -3436,16 +3440,135 @@ DT::datatable(index_disp, caption='Overall SPI using Simple Index Averaging Over
 
 
 
-```{r basic_analysis}
-#basic analysis
+```{r sci, include=FALSE}
 
-library(corrr)
+#pull SCI values
 
-spi_df_final_cor <- spi_df_final %>%
-  filter(date==2018) %>%
-  select(contains("SPI.")) %>%
-  correlate()
-  
+Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/IQ.SCI.OVRL?format=json&date=2004:2019&per_page=5000")
+Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+sci_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+  data.frame() %>%
+  transmute(
+    iso3c=countryiso3code,
+    country=country.value,
+    date=as.numeric(date),
+    SCI=value
+  ) %>%
+  left_join(spi_df_empty) %>% #add on country metadata
+  filter(!is.na(income)) %>%
+  select(iso3c, country, date, SCI  ) %>%
+  group_by(date) %>%
+  arrange(-SCI) %>%
+  mutate(SCI_rank=rank(-SCI),
+         SCI_rank=if_else(is.na(SCI),as.numeric(NA),SCI_rank))
+
+```
+
+```{r odin, include=FALSE}
+
+  #read in ODIN data
+  for (i in 2015:2018) {
+   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
+        as_tibble(.name_repair = 'universal') %>%
+        mutate(date=i) %>%
+        filter(Data.categories=='All Categories')
+
+
+    assign(paste('odin_df',i,sep="_"), temp)
+  }
+
+#bind different years together
+odin_df <- bind_rows(odin_df_2015, odin_df_2016, odin_df_2017, odin_df_2018)
+
+
+odin_df <- odin_df %>%
+    select(Country.Code, date, Overall.score) %>%
+    rename(iso3c=Country.Code,
+           ODIN_score=Overall.score) %>%
+    group_by(date) %>%
+    arrange(-ODIN_score) %>%
+    mutate(ODIN_rank=rank(-ODIN_score, na.last='NA')) %>% 
+  right_join(spi_df_empty) %>%
+  arrange(country, date) %>%
+  group_by(country) %>%
+  mutate(across(starts_with("ODIN"), na.locf, na.rm=FALSE)) %>%
+  select(country, date, starts_with("ODIN"))
+
+
+
+```
+
+
+
+```{r comparisons, echo=FALSE}
+
+
+
+#display top 25
+sci_spi_disp <- spi_index_df %>%
+  ungroup() %>%
+  filter(date %in% c(2016:2019)) %>%
+  arrange(-SPI.INDEX) %>%
+  mutate(across(starts_with('SPI.INDEX'),~100*.),
+         across(starts_with('SPI.INDEX'),round,1)) %>%
+  select(country, iso3c, date, income, region, SPI.INDEX) %>%
+  left_join(sci_df) %>%
+  left_join(odin_df)
+
+### Scatterplot SCI SPI
+spi_sci_plot <- ggplot(sci_spi_disp, aes(x=SPI.INDEX,y=SCI, color=region, alpha=date)) +
+  # geom_point() +
+  geom_text(aes(label=iso3c)) +
+  theme_bw() +
+  labs(
+    title='Scatterplot of Statistical Capacity Index on SPI Index'
+  )
+
+spi_sci_plot
+
+
+
+### Scatterplot ODIN SPI
+spi_odin_plot <- ggplot(sci_spi_disp, aes(x=SPI.INDEX,y=ODIN_score, color=region, alpha=date)) +
+  # geom_point() +
+  geom_text(aes(label=iso3c)) +
+  theme_bw() +
+  labs(
+    title='Scatterplot of Open Data Watch Index on SPI Index'
+  )
+
+spi_odin_plot
+
+cor(sci_spi_disp$SPI.INDEX,sci_spi_disp$SCI, use='pairwise.complete.obs')
+cor(sci_spi_disp$SPI.INDEX,sci_spi_disp$ODIN_score, use='pairwise.complete.obs')
+
+
+
+
+
+DT::datatable(sci_spi_disp, caption='Overall SPI using Simple Index Averaging Over All Indicators.  Equal Weight for Each Indicator.  Fill Forward/Ignore Missing Values',
+                      rownames=TRUE,
+                      colnames = c("Country", "ISO3C", "Date", "Income Group","Region",
+                                   "SPI Index Value",
+                                   "Statistical Capacity Index",
+                                   "Statistical Capacity Index Rank",
+                                   "Open Data Watch Overall Score",
+                                   "Open Data Watch Overall Rank"
+                                   ),
+                      class='cell-border stripe',
+                      escape = FALSE,
+                      extensions = c ('Buttons', 'FixedHeader'), options=list(
+                          dom = 'Bfrtip',
+                          buttons = c('copy', 'csv', 'excel'),
+                          pageLength = 25,
+                          scrollX = TRUE, 
+                          paging=FALSE,
+                          ordering=F)) 
+
+
+
 ```
 
 

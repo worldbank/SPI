@@ -82,7 +82,8 @@
 # csv files
 !/**/**/*.csv
 
-
+# png files
+!/02_programs/*.png
 
 # stata files
 !/R/**/*outputs/*.dta
