@@ -1,7 +1,7 @@
 ﻿iso3c,iso2c,country,capital,long,lat,regionID,region_iso2c,region,adminID,admin_iso2c,admin,incomeID,income_iso2c,income,lendingID,lending_iso2c,lending,date,CNIN
 AFG,AF,Afghanistan,Kabul,69.1761,34.5228,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2016,na
-AFG,AF,Afghanistan,Kabul,69.1761,34.5228,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2017,"NA"
-AFG,AF,Afghanistan,Kabul,69.1761,34.5228,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2018,"NA"
+AFG,AF,Afghanistan,Kabul,69.1761,34.5228,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2017,NA
+AFG,AF,Afghanistan,Kabul,69.1761,34.5228,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2018,NA
 AFG,AF,Afghanistan,Kabul,69.1761,34.5228,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2019,na
 AGO,AO,Angola,Luanda,13.242,-8.81155,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2016,rev4
 AGO,AO,Angola,Luanda,13.242,-8.81155,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2017,Rev4
@@ -137,10 +137,10 @@ COL,CO,Colombia,Bogota,-74.082,4.60987,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,
 COL,CO,Colombia,Bogota,-74.082,4.60987,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,rev4
 COL,CO,Colombia,Bogota,-74.082,4.60987,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,rev4
 COL,CO,Colombia,Bogota,-74.082,4.60987,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,rev4
-COM,KM,Comoros,Moroni,43.2418,-11.6986,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2016,"NA"
-COM,KM,Comoros,Moroni,43.2418,-11.6986,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,"NA"
-COM,KM,Comoros,Moroni,43.2418,-11.6986,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,"NA"
-COM,KM,Comoros,Moroni,43.2418,-11.6986,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2019,"NA"
+COM,KM,Comoros,Moroni,43.2418,-11.6986,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2016,NA
+COM,KM,Comoros,Moroni,43.2418,-11.6986,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,NA
+COM,KM,Comoros,Moroni,43.2418,-11.6986,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,NA
+COM,KM,Comoros,Moroni,43.2418,-11.6986,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2019,NA
 CPV,CV,Cabo Verde,Praia,-23.5087,14.9218,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2016,ISIC rev2
 CPV,CV,Cabo Verde,Praia,-23.5087,14.9218,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2017,ISIC rev2
 CPV,CV,Cabo Verde,Praia,-23.5087,14.9218,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2018,ISIC rev2
@@ -185,10 +185,10 @@ EGY,EG,"Egypt, Arab Rep.",Cairo,31.2461,30.0982,MEA,ZQ,Middle East & North Afric
 EGY,EG,"Egypt, Arab Rep.",Cairo,31.2461,30.0982,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2017,rev4
 EGY,EG,"Egypt, Arab Rep.",Cairo,31.2461,30.0982,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2018,rev4
 EGY,EG,"Egypt, Arab Rep.",Cairo,31.2461,30.0982,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2019,rev4
-ERI,ER,Eritrea,Asmara,38.9183,15.3315,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,"NA"
-ERI,ER,Eritrea,Asmara,38.9183,15.3315,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,"NA"
-ERI,ER,Eritrea,Asmara,38.9183,15.3315,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,"NA"
-ERI,ER,Eritrea,Asmara,38.9183,15.3315,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,"NA"
+ERI,ER,Eritrea,Asmara,38.9183,15.3315,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,NA
+ERI,ER,Eritrea,Asmara,38.9183,15.3315,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,NA
+ERI,ER,Eritrea,Asmara,38.9183,15.3315,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,NA
+ERI,ER,Eritrea,Asmara,38.9183,15.3315,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,NA
 ESP,ES,Spain,Madrid,-3.70327,40.4167,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2016,rev4
 ESP,ES,Spain,Madrid,-3.70327,40.4167,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2017,Rev4
 ESP,ES,Spain,Madrid,-3.70327,40.4167,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2018,Rev4
@@ -209,10 +209,10 @@ FJI,FJ,Fiji,Suva,178.399,-18.1149,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & 
 FRA,FR,France,Paris,2.35097,48.8566,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2016,rev4
 FRA,FR,France,Paris,2.35097,48.8566,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2017,Rev4
 FRA,FR,France,Paris,2.35097,48.8566,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2018,Rev4
-FSM,FM,"Micronesia, Fed. Sts.",Palikir,158.185,6.91771,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2016,"NA"
-FSM,FM,"Micronesia, Fed. Sts.",Palikir,158.185,6.91771,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,"NA"
-FSM,FM,"Micronesia, Fed. Sts.",Palikir,158.185,6.91771,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,"NA"
-FSM,FM,"Micronesia, Fed. Sts.",Palikir,158.185,6.91771,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2019,"NA"
+FSM,FM,"Micronesia, Fed. Sts.",Palikir,158.185,6.91771,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2016,NA
+FSM,FM,"Micronesia, Fed. Sts.",Palikir,158.185,6.91771,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,NA
+FSM,FM,"Micronesia, Fed. Sts.",Palikir,158.185,6.91771,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,NA
+FSM,FM,"Micronesia, Fed. Sts.",Palikir,158.185,6.91771,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2019,NA
 GAB,GA,Gabon,Libreville,9.45162,0.38832,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,rev3
 GAB,GA,Gabon,Libreville,9.45162,0.38832,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,rev3
 GAB,GA,Gabon,Libreville,9.45162,0.38832,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,rev3
@@ -240,10 +240,10 @@ GNB,GW,Guinea-Bissau,Bissau,-15.1804,11.8037,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,S
 GNB,GW,Guinea-Bissau,Bissau,-15.1804,11.8037,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,ISIC rev2
 GNB,GW,Guinea-Bissau,Bissau,-15.1804,11.8037,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,ISIC rev2
 GNB,GW,Guinea-Bissau,Bissau,-15.1804,11.8037,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,ISIC rev2
-GNQ,GQ,Equatorial Guinea,Malabo,8.7741,3.7523,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,"NA"
-GNQ,GQ,Equatorial Guinea,Malabo,8.7741,3.7523,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,"NA"
-GNQ,GQ,Equatorial Guinea,Malabo,8.7741,3.7523,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,"NA"
-GNQ,GQ,Equatorial Guinea,Malabo,8.7741,3.7523,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,"NA"
+GNQ,GQ,Equatorial Guinea,Malabo,8.7741,3.7523,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,NA
+GNQ,GQ,Equatorial Guinea,Malabo,8.7741,3.7523,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,NA
+GNQ,GQ,Equatorial Guinea,Malabo,8.7741,3.7523,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,NA
+GNQ,GQ,Equatorial Guinea,Malabo,8.7741,3.7523,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,NA
 GRC,GR,Greece,Athens,23.7166,37.9792,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2016,rev4
 GRC,GR,Greece,Athens,23.7166,37.9792,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2017,Rev4
 GRC,GR,Greece,Athens,23.7166,37.9792,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2018,Rev4
@@ -268,8 +268,8 @@ HRV,HR,Croatia,Zagreb,15.9614,45.8069,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,
 HRV,HR,Croatia,Zagreb,15.9614,45.8069,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2018,Rev4
 HRV,HR,Croatia,Zagreb,15.9614,45.8069,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2019,rev4
 HTI,HT,Haiti,Port-au-Prince,-72.3288,18.5392,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,na
-HTI,HT,Haiti,Port-au-Prince,-72.3288,18.5392,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,"NA"
-HTI,HT,Haiti,Port-au-Prince,-72.3288,18.5392,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,"NA"
+HTI,HT,Haiti,Port-au-Prince,-72.3288,18.5392,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,NA
+HTI,HT,Haiti,Port-au-Prince,-72.3288,18.5392,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,NA
 HTI,HT,Haiti,Port-au-Prince,-72.3288,18.5392,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,na
 HUN,HU,Hungary,Budapest,19.0408,47.4984,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2016,rev4
 HUN,HU,Hungary,Budapest,19.0408,47.4984,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2017,Rev4
@@ -343,13 +343,13 @@ KOR,KR,"Korea, Rep.",Seoul,126.957,37.5323,EAS,Z4,East Asia & Pacific,NA,NA,NA,H
 KWT,KW,Kuwait,Kuwait City,47.9824,29.3721,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2016,rev3
 KWT,KW,Kuwait,Kuwait City,47.9824,29.3721,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2017,rev3
 KWT,KW,Kuwait,Kuwait City,47.9824,29.3721,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2018,rev3
-LAO,LA,Lao PDR,Vientiane,102.177,18.5826,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2016,"NA"
-LAO,LA,Lao PDR,Vientiane,102.177,18.5826,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,"NA"
-LAO,LA,Lao PDR,Vientiane,102.177,18.5826,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,"NA"
-LAO,LA,Lao PDR,Vientiane,102.177,18.5826,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2019,"NA"
+LAO,LA,Lao PDR,Vientiane,102.177,18.5826,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2016,NA
+LAO,LA,Lao PDR,Vientiane,102.177,18.5826,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,NA
+LAO,LA,Lao PDR,Vientiane,102.177,18.5826,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,NA
+LAO,LA,Lao PDR,Vientiane,102.177,18.5826,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2019,NA
 LBN,LB,Lebanon,Beirut,35.5134,33.8872,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,na
-LBN,LB,Lebanon,Beirut,35.5134,33.8872,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,"NA"
-LBN,LB,Lebanon,Beirut,35.5134,33.8872,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,"NA"
+LBN,LB,Lebanon,Beirut,35.5134,33.8872,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,NA
+LBN,LB,Lebanon,Beirut,35.5134,33.8872,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,NA
 LBN,LB,Lebanon,Beirut,35.5134,33.8872,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,na
 LBR,LR,Liberia,Monrovia,-10.7957,6.30039,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,rev3
 LBR,LR,Liberia,Monrovia,-10.7957,6.30039,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,rev3
@@ -392,18 +392,18 @@ MDG,MG,Madagascar,Antananarivo,45.7167,-20.4667,SSF,ZG,Sub-Saharan Africa ,SSA,Z
 MDG,MG,Madagascar,Antananarivo,45.7167,-20.4667,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,ISIC rev2
 MDG,MG,Madagascar,Antananarivo,45.7167,-20.4667,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,ISIC rev2
 MDG,MG,Madagascar,Antananarivo,45.7167,-20.4667,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,ISIC rev2
-MDV,MV,Maldives,Male,73.5109,4.1742,SAS,8S,South Asia,SAS,8S,South Asia,UMC,XT,Upper middle income,IDX,XI,IDA,2016,"NA"
-MDV,MV,Maldives,Male,73.5109,4.1742,SAS,8S,South Asia,SAS,8S,South Asia,UMC,XT,Upper middle income,IDX,XI,IDA,2017,"NA"
-MDV,MV,Maldives,Male,73.5109,4.1742,SAS,8S,South Asia,SAS,8S,South Asia,UMC,XT,Upper middle income,IDX,XI,IDA,2018,"NA"
+MDV,MV,Maldives,Male,73.5109,4.1742,SAS,8S,South Asia,SAS,8S,South Asia,UMC,XT,Upper middle income,IDX,XI,IDA,2016,NA
+MDV,MV,Maldives,Male,73.5109,4.1742,SAS,8S,South Asia,SAS,8S,South Asia,UMC,XT,Upper middle income,IDX,XI,IDA,2017,NA
+MDV,MV,Maldives,Male,73.5109,4.1742,SAS,8S,South Asia,SAS,8S,South Asia,UMC,XT,Upper middle income,IDX,XI,IDA,2018,NA
 MDV,MV,Maldives,Male,73.5109,4.1742,SAS,8S,South Asia,SAS,8S,South Asia,UMC,XT,Upper middle income,IDX,XI,IDA,2019,rev4
 MEX,MX,Mexico,Mexico City,-99.1276,19.427,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,rev4
 MEX,MX,Mexico,Mexico City,-99.1276,19.427,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,Rev4
 MEX,MX,Mexico,Mexico City,-99.1276,19.427,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,Rev4
 MEX,MX,Mexico,Mexico City,-99.1276,19.427,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,rev4
-MHL,MH,Marshall Islands,Majuro,171.135,7.11046,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2016,"NA"
-MHL,MH,Marshall Islands,Majuro,171.135,7.11046,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2017,"NA"
-MHL,MH,Marshall Islands,Majuro,171.135,7.11046,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2018,"NA"
-MHL,MH,Marshall Islands,Majuro,171.135,7.11046,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2019,"NA"
+MHL,MH,Marshall Islands,Majuro,171.135,7.11046,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2016,NA
+MHL,MH,Marshall Islands,Majuro,171.135,7.11046,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2017,NA
+MHL,MH,Marshall Islands,Majuro,171.135,7.11046,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2018,NA
+MHL,MH,Marshall Islands,Majuro,171.135,7.11046,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2019,NA
 MKD,MK,North Macedonia,Skopje,21.4361,42.0024,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,rev4
 MKD,MK,North Macedonia,Skopje,21.4361,42.0024,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,nace rev2
 MKD,MK,North Macedonia,Skopje,21.4361,42.0024,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,nace rev2
@@ -416,8 +416,8 @@ MLT,MT,Malta,Valletta,14.5189,35.9042,MEA,ZQ,Middle East & North Africa,NA,NA,NA
 MLT,MT,Malta,Valletta,14.5189,35.9042,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2017,Rev4
 MLT,MT,Malta,Valletta,14.5189,35.9042,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2018,Rev4
 MMR,MM,Myanmar,Naypyidaw,95.9562,21.914,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2016,na
-MMR,MM,Myanmar,Naypyidaw,95.9562,21.914,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,"NA"
-MMR,MM,Myanmar,Naypyidaw,95.9562,21.914,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,"NA"
+MMR,MM,Myanmar,Naypyidaw,95.9562,21.914,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,NA
+MMR,MM,Myanmar,Naypyidaw,95.9562,21.914,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,NA
 MMR,MM,Myanmar,Naypyidaw,95.9562,21.914,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2019,na
 MNE,ME,Montenegro,Podgorica,19.2595,42.4602,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,rev4
 MNE,ME,Montenegro,Podgorica,19.2595,42.4602,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,Rev4
@@ -447,10 +447,10 @@ MYS,MY,Malaysia,Kuala Lumpur,101.684,3.12433,EAS,Z4,East Asia & Pacific,EAP,4E,E
 MYS,MY,Malaysia,Kuala Lumpur,101.684,3.12433,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,Rev4
 MYS,MY,Malaysia,Kuala Lumpur,101.684,3.12433,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,Rev4
 MYS,MY,Malaysia,Kuala Lumpur,101.684,3.12433,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,rev4
-NAM,"NA",Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,rev3
-NAM,"NA",Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,rev3
-NAM,"NA",Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,rev3
-NAM,"NA",Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,rev3
+NAM,NA,Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,rev3
+NAM,NA,Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,rev3
+NAM,NA,Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,rev3
+NAM,NA,Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,rev3
 NER,NE,Niger,Niamey,2.1073,13.514,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,rev3
 NER,NE,Niger,Niamey,2.1073,13.514,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,Rev3
 NER,NE,Niger,Niamey,2.1073,13.514,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,Rev3
@@ -473,10 +473,10 @@ NPL,NP,Nepal,Kathmandu,85.3157,27.6939,SAS,8S,South Asia,SAS,8S,South Asia,LIC,X
 NPL,NP,Nepal,Kathmandu,85.3157,27.6939,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2017,rev3
 NPL,NP,Nepal,Kathmandu,85.3157,27.6939,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2018,rev3
 NPL,NP,Nepal,Kathmandu,85.3157,27.6939,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2019,rev3
-NRU,NR,Nauru,Yaren District,166.920867,-0.5477,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,"NA"
-NRU,NR,Nauru,Yaren District,166.920867,-0.5477,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,"NA"
-NRU,NR,Nauru,Yaren District,166.920867,-0.5477,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,"NA"
-NRU,NR,Nauru,Yaren District,166.920867,-0.5477,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,"NA"
+NRU,NR,Nauru,Yaren District,166.920867,-0.5477,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,NA
+NRU,NR,Nauru,Yaren District,166.920867,-0.5477,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,NA
+NRU,NR,Nauru,Yaren District,166.920867,-0.5477,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,NA
+NRU,NR,Nauru,Yaren District,166.920867,-0.5477,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,NA
 NZL,NZ,New Zealand,Wellington,174.776,-41.2865,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2016,rev4
 NZL,NZ,New Zealand,Wellington,174.776,-41.2865,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2017,Rev4
 NZL,NZ,New Zealand,Wellington,174.776,-41.2865,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2018,Rev4
@@ -499,14 +499,14 @@ PHL,PH,Philippines,Manila,121.035,14.5515,EAS,Z4,East Asia & Pacific,EAP,4E,East
 PHL,PH,Philippines,Manila,121.035,14.5515,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2017,rev3
 PHL,PH,Philippines,Manila,121.035,14.5515,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2018,rev3
 PHL,PH,Philippines,Manila,121.035,14.5515,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2019,rev3
-PLW,PW,Palau,Koror,134.479,7.34194,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2016,"NA"
-PLW,PW,Palau,Koror,134.479,7.34194,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2017,"NA"
-PLW,PW,Palau,Koror,134.479,7.34194,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2018,"NA"
+PLW,PW,Palau,Koror,134.479,7.34194,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2016,NA
+PLW,PW,Palau,Koror,134.479,7.34194,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2017,NA
+PLW,PW,Palau,Koror,134.479,7.34194,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2018,NA
 PLW,PW,Palau,Koror,134.479,7.34194,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2019,rev4
-PNG,PG,Papua New Guinea,Port Moresby,147.194,-9.47357,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2016,"NA"
-PNG,PG,Papua New Guinea,Port Moresby,147.194,-9.47357,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2017,"NA"
-PNG,PG,Papua New Guinea,Port Moresby,147.194,-9.47357,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2018,"NA"
-PNG,PG,Papua New Guinea,Port Moresby,147.194,-9.47357,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2019,"NA"
+PNG,PG,Papua New Guinea,Port Moresby,147.194,-9.47357,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2016,NA
+PNG,PG,Papua New Guinea,Port Moresby,147.194,-9.47357,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2017,NA
+PNG,PG,Papua New Guinea,Port Moresby,147.194,-9.47357,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2018,NA
+PNG,PG,Papua New Guinea,Port Moresby,147.194,-9.47357,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2019,NA
 POL,PL,Poland,Warsaw,21.02,52.26,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2016,rev4
 POL,PL,Poland,Warsaw,21.02,52.26,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2017,Rev4
 POL,PL,Poland,Warsaw,21.02,52.26,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2018,Rev4
@@ -567,17 +567,17 @@ SMR,SM,San Marino,San Marino,12.4486,43.9322,ECS,Z7,Europe & Central Asia,NA,NA,
 SMR,SM,San Marino,San Marino,12.4486,43.9322,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2017,nace rev1
 SMR,SM,San Marino,San Marino,12.4486,43.9322,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2018,nace rev1
 SOM,SO,Somalia,Mogadishu,45.3254,2.07515,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,na
-SOM,SO,Somalia,Mogadishu,45.3254,2.07515,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,"NA"
-SOM,SO,Somalia,Mogadishu,45.3254,2.07515,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,"NA"
+SOM,SO,Somalia,Mogadishu,45.3254,2.07515,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,NA
+SOM,SO,Somalia,Mogadishu,45.3254,2.07515,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,NA
 SOM,SO,Somalia,Mogadishu,45.3254,2.07515,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,na
 SRB,RS,Serbia,Belgrade,20.4656,44.8024,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,rev4
 SRB,RS,Serbia,Belgrade,20.4656,44.8024,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,Rev4
 SRB,RS,Serbia,Belgrade,20.4656,44.8024,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,Rev4
 SRB,RS,Serbia,Belgrade,20.4656,44.8024,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,rev4
-SSD,SS,South Sudan,Juba,31.6,4.85,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,"NA"
-SSD,SS,South Sudan,Juba,31.6,4.85,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,"NA"
-SSD,SS,South Sudan,Juba,31.6,4.85,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,"NA"
-SSD,SS,South Sudan,Juba,31.6,4.85,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,"NA"
+SSD,SS,South Sudan,Juba,31.6,4.85,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,NA
+SSD,SS,South Sudan,Juba,31.6,4.85,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,NA
+SSD,SS,South Sudan,Juba,31.6,4.85,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,NA
+SSD,SS,South Sudan,Juba,31.6,4.85,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,NA
 STP,ST,Sao Tome and Principe,Sao Tome,6.6071,0.20618,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2016,rev3
 STP,ST,Sao Tome and Principe,Sao Tome,6.6071,0.20618,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,rev3
 STP,ST,Sao Tome and Principe,Sao Tome,6.6071,0.20618,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,rev3
@@ -607,10 +607,10 @@ SYR,SY,Syrian Arab Republic,Damascus,36.3119,33.5146,MEA,ZQ,Middle East & North 
 SYR,SY,Syrian Arab Republic,Damascus,36.3119,33.5146,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,rev3
 SYR,SY,Syrian Arab Republic,Damascus,36.3119,33.5146,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,rev3
 SYR,SY,Syrian Arab Republic,Damascus,36.3119,33.5146,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,rev3
-TCD,TD,Chad,N'Djamena,15.0445,12.1048,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,"NA"
-TCD,TD,Chad,N'Djamena,15.0445,12.1048,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,"NA"
-TCD,TD,Chad,N'Djamena,15.0445,12.1048,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,"NA"
-TCD,TD,Chad,N'Djamena,15.0445,12.1048,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,"NA"
+TCD,TD,Chad,N'Djamena,15.0445,12.1048,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,NA
+TCD,TD,Chad,N'Djamena,15.0445,12.1048,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,NA
+TCD,TD,Chad,N'Djamena,15.0445,12.1048,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,NA
+TCD,TD,Chad,N'Djamena,15.0445,12.1048,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,NA
 TGO,TG,Togo,Lome,1.2255,6.1228,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,rev4
 TGO,TG,Togo,Lome,1.2255,6.1228,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,Rev4
 TGO,TG,Togo,Lome,1.2255,6.1228,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,Rev4
@@ -620,12 +620,12 @@ THA,TH,Thailand,Bangkok,100.521,13.7308,EAS,Z4,East Asia & Pacific,EAP,4E,East A
 THA,TH,Thailand,Bangkok,100.521,13.7308,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,rev4
 THA,TH,Thailand,Bangkok,100.521,13.7308,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,rev4
 TJK,TJ,Tajikistan,Dushanbe,68.7864,38.5878,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,na
-TJK,TJ,Tajikistan,Dushanbe,68.7864,38.5878,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,"NA"
-TJK,TJ,Tajikistan,Dushanbe,68.7864,38.5878,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,"NA"
+TJK,TJ,Tajikistan,Dushanbe,68.7864,38.5878,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,NA
+TJK,TJ,Tajikistan,Dushanbe,68.7864,38.5878,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,NA
 TJK,TJ,Tajikistan,Dushanbe,68.7864,38.5878,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,na
 TKM,TM,Turkmenistan,Ashgabat,58.3794,37.9509,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,na
-TKM,TM,Turkmenistan,Ashgabat,58.3794,37.9509,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,"NA"
-TKM,TM,Turkmenistan,Ashgabat,58.3794,37.9509,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,"NA"
+TKM,TM,Turkmenistan,Ashgabat,58.3794,37.9509,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,NA
+TKM,TM,Turkmenistan,Ashgabat,58.3794,37.9509,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,NA
 TKM,TM,Turkmenistan,Ashgabat,58.3794,37.9509,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,na
 TLS,TL,Timor-Leste,Dili,125.567,-8.56667,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2016,rev4
 TLS,TL,Timor-Leste,Dili,125.567,-8.56667,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2017,rev4
@@ -648,16 +648,16 @@ TUR,TR,Turkey,Ankara,32.3606,39.7153,ECS,Z7,Europe & Central Asia,ECA,7E,Europe 
 TUR,TR,Turkey,Ankara,32.3606,39.7153,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,Rev4
 TUR,TR,Turkey,Ankara,32.3606,39.7153,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,rev4
 TUV,TV,Tuvalu,Funafuti,179.089567,-8.6314877,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2016,na
-TUV,TV,Tuvalu,Funafuti,179.089567,-8.6314877,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2017,"NA"
-TUV,TV,Tuvalu,Funafuti,179.089567,-8.6314877,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2018,"NA"
+TUV,TV,Tuvalu,Funafuti,179.089567,-8.6314877,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2017,NA
+TUV,TV,Tuvalu,Funafuti,179.089567,-8.6314877,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2018,NA
 TUV,TV,Tuvalu,Funafuti,179.089567,-8.6314877,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2019,na
 TZA,TZ,Tanzania,Dodoma,35.7382,-6.17486,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,rev3
 TZA,TZ,Tanzania,Dodoma,35.7382,-6.17486,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,rev3
 TZA,TZ,Tanzania,Dodoma,35.7382,-6.17486,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,rev3
 TZA,TZ,Tanzania,Dodoma,35.7382,-6.17486,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,rev3
 UGA,UG,Uganda,Kampala,32.5729,0.314269,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,na
-UGA,UG,Uganda,Kampala,32.5729,0.314269,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,"NA"
-UGA,UG,Uganda,Kampala,32.5729,0.314269,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,"NA"
+UGA,UG,Uganda,Kampala,32.5729,0.314269,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,NA
+UGA,UG,Uganda,Kampala,32.5729,0.314269,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,NA
 UGA,UG,Uganda,Kampala,32.5729,0.314269,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,na
 UKR,UA,Ukraine,Kiev,30.5038,50.4536,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2016,rev4
 UKR,UA,Ukraine,Kiev,30.5038,50.4536,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2017,Rev4
@@ -687,8 +687,8 @@ VNM,VN,Vietnam,Hanoi,105.825,21.0069,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia
 VNM,VN,Vietnam,Hanoi,105.825,21.0069,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2018,rev4
 VNM,VN,Vietnam,Hanoi,105.825,21.0069,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2019,rev4
 VUT,VU,Vanuatu,Port-Vila,168.321,-17.7404,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2016,na
-VUT,VU,Vanuatu,Port-Vila,168.321,-17.7404,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,"NA"
-VUT,VU,Vanuatu,Port-Vila,168.321,-17.7404,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,"NA"
+VUT,VU,Vanuatu,Port-Vila,168.321,-17.7404,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2017,NA
+VUT,VU,Vanuatu,Port-Vila,168.321,-17.7404,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2018,NA
 VUT,VU,Vanuatu,Port-Vila,168.321,-17.7404,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2019,na
 WSM,WS,Samoa,Apia,-171.752,-13.8314,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2016,rev3
 WSM,WS,Samoa,Apia,-171.752,-13.8314,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2017,rev3
@@ -714,3 +714,13 @@ ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Sa
 ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2017,rev3
 ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2018,rev3
 ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2019,rev3
+BHR,BH,Bahrain,Manama,50.5354,26.1921,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,rev3
+BRB,BB,Barbados,Bridgetown,-59.6105,13.0935,LCN,ZJ,Latin America & Caribbean ,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,rev3
+CZE,CZ,Czech Republic,Prague,14.4205,50.0878,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,rev4
+GRC,GR,Greece,Athens,23.7166,37.9792,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,rev4
+HUN,HU,Hungary,Budapest,19.0408,47.4984,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,rev4
+LTU,LT,Lithuania,Vilnius,25.2799,54.6896,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NACE Rev2
+LVA,LV,Latvia,Riga,24.1048,56.9465,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NACE Rev2
+OMN,OM,Oman,Muscat,58.5874,23.6105,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,rev3
+SAU,SA,Saudi Arabia,Riyadh,46.6977,24.6748,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,rev4
+SVK,SK,Slovak Republic,Bratislava,17.1073,48.1484,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NACE Rev2

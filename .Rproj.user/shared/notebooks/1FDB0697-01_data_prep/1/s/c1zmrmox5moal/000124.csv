@@ -1,0 +1,8 @@
+"0","#Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey
+cs4_df <-survey_fun('D4.1.4.SVY.HOUS', 'RAW.D4.1.4.HOUS.SURVEYS') %>%
+  rename(RAW.D4.1.4.HOUS.SURVEYS=input_var,
+         SPI.D4.1.4.HOUS=indicator)
+"
+"2","Error: Can't rename columns that don't exist.
+[31mx[39m Column `RAW.D4.1.4.HOUS.SURVEYS` doesn't exist.
+"

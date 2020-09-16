@@ -448,10 +448,10 @@ MYS,MY,Malaysia,Kuala Lumpur,101.684,3.12433,EAS,Z4,East Asia & Pacific,EAP,4E,E
 MYS,MY,Malaysia,Kuala Lumpur,101.684,3.12433,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,0,NA
 MYS,MY,Malaysia,Kuala Lumpur,101.684,3.12433,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,1,NA
 MYS,MY,Malaysia,Kuala Lumpur,101.684,3.12433,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,1,https://www.dosm.gov.my/v1/index.php?r=column/cone&menu_id=eHo2akdCZzZsU212VTBSNlRyaDhvQT09
-NAM,"NA",Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,1,NA
-NAM,"NA",Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,1,NA
-NAM,"NA",Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,1,NA
-NAM,"NA",Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,1,https://nsa.org.na/page/central-data-catalogue/
+NAM,NA,Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,1,NA
+NAM,NA,Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,1,NA
+NAM,NA,Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,1,NA
+NAM,NA,Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,1,https://nsa.org.na/page/central-data-catalogue/
 NER,NE,Niger,Niamey,2.1073,13.514,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2016,1,NA
 NER,NE,Niger,Niamey,2.1073,13.514,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2017,1,NA
 NER,NE,Niger,Niamey,2.1073,13.514,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2018,1,NA
@@ -717,3 +717,13 @@ ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Sa
 ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2017,0,NA
 ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2018,1,NA
 ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2019,1,http://www.nada.zimstat.co.zw/nada/index.php/catalog/central
+BHR,BH,Bahrain,Manama,50.5354,26.1921,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,1,https://www.data.gov.bh/en/ResourceCenter
+BRB,BB,Barbados,Bridgetown,-59.6105,13.0935,LCN,ZJ,Latin America & Caribbean ,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,0,http://www.barstats.gov.bb/
+CZE,CZ,Czech Republic,Prague,14.4205,50.0878,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,1,https://www.czso.cz/csu/vykazy/setreni_u_domacnosti
+GRC,GR,Greece,Athens,23.7166,37.9792,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,1,https://www.statistics.gr/en/public-use-files
+HUN,HU,Hungary,Budapest,19.0408,47.4984,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,1,http://www.ksh.hu/data_access_safe_centre_access
+LTU,LT,Lithuania,Vilnius,25.2799,54.6896,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,1,https://osp.stat.gov.lt/viesos-duomenu-rinkmenos
+LVA,LV,Latvia,Riga,24.1048,56.9465,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,1,https://www.csb.gov.lv/en/statistics/data-researchers-and-schools/public-use-files
+OMN,OM,Oman,Muscat,58.5874,23.6105,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,0,https://data.gov.om/
+SAU,SA,Saudi Arabia,Riyadh,46.6977,24.6748,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,1,https://www.stats.gov.sa/ar/854-0
+SVK,SK,Slovak Republic,Bratislava,17.1073,48.1484,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,1,https://slovak.statistics.sk/wps/portal/ext/metadata/surveys/!ut/p/z1/jY_LDoIwEEW_xS_okMGCyxYNHQvy0AboxrAyJFpdGBP_XkJc6MLK7CY5d85cZlnLrOsfw6m_D1fXn8e9s_xYRRRLGQgouN4AbXOp18UuiPecNROQpEKFUQYQZ-kSSChTrypEEMjsnDz8GAHz8h7A-s83zH4rINcJEJKqpKgDoPAN-Cr-k3Tjk9GHQiUSqOal0eUBAXFq4QVuF2NaGEr3FIsXt-QFzA!!/#Z7_Q7I8BB1A00HCB0IR6PUKPT3033

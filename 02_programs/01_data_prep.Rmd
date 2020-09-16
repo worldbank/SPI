@@ -15,6 +15,10 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.height=7, f
 
 library(tidyverse)
 library(here)
+# devtools::install_github("worldbank/wbgviz", subdir = "wbgdata")
+# devtools::install_github("worldbank/wbgviz", subdir = "wbgcharts")
+# devtools::install_github("worldbank/wbgviz", subdir = "wbggeo")
+# devtools::install_github("worldbank/wbgviz", subdir = "wbgmaps")
 library(wbggeo)
 library(wbgmaps)
 library(ggthemes)
@@ -1296,6 +1300,7 @@ e-GDDS websites.
 0 Points. Otherwise
 
 
+
 ```{r idds}
 
 
@@ -1317,20 +1322,33 @@ D2.1_DSDR_sci <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
 
 
 
-#read in csv file.
-D2.1_DSDR <- read_csv(file = paste(raw_dir, '/2.1_DSDR/', "D2.1.GDDS.csv", sep="" )) %>%
+#read in metadata file.
+
+#pull data for several of the standards from WDI metadata
+
+df <- WDI_metadata
+
+# Manipulate and clean final data
+df <- df %>%
+  filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
+
+
+D2.1_DSDR <- df %>%
+  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
+         country=Table.Name) %>%
+  select(c('iso3c', 'country', 'date',  'IMF.data.dissemination.standard')  ) %>%
+  mutate(IDDS=IMF.data.dissemination.standard) %>%
   mutate(SPI.D2.1.GDDS=case_when(
-    IDDS=="SDDS Plus" | IDDS=="SDDS"~ 1, 
-    IDDS=="e-GDDS"~ 0.5,
+    IDDS=="Special Data Dissemination Standard Plus (SDDS+)" | IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
+    IDDS=="Enhanced General Data Dissemination System (e-GDDS)"~ 0.5,
     TRUE ~ 0 ),
     SDDS=case_when(
-     IDDS=="SDDS"~ 1, 
+     IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
     TRUE ~ 0 ))  %>%
   bind_rows(D2.1_DSDR_sci) %>%
   rename(RAW.D2.1.IDDS=IDDS) %>%
   select(iso3c, country, date, RAW.D2.1.IDDS, SPI.D2.1.GDDS  ) %>%
-  arrange(date, country)
-
+  arrange(date, country) 
 
 D2.1_DSDR_map <- D2.1_DSDR %>%
   filter(RAW.D2.1.IDDS>0)
@@ -1341,6 +1359,9 @@ spi_mapper('D2.1_DSDR_map', 'SPI.D2.1.GDDS', 'SDDS Data Standards in Place' )
 #add to spi databases
 spi_df <- spi_df %>%
   left_join(D2.1_DSDR)
+
+
+
 
 ```
 
@@ -2779,6 +2800,19 @@ spi_mapper('D5.1_DILG_map', 'SPI.D5.1.DILG', 'National statistical legislation c
 ```
 ## Indicator 5.2: standards 
 
+```{r standards_meta}
+
+#pull data for several of the standards from WDI metadata
+
+df <- WDI_metadata
+
+# Manipulate and clean final data
+df <- df %>%
+  filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
+
+```
+
+
 ### 5.2.1 System of National Accounts in use
 
  The national accounts data are compiled using the concepts, definitions, 
@@ -2791,17 +2825,21 @@ spi_mapper('D5.1_DILG_map', 'SPI.D5.1.DILG', 'National statistical legislation c
  
 ```{r snau}
 
-#read in csv file.
-D5.2.1.SNAU <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.1.SNAU.csv", sep="/" )) %>%
+#read in metadata file.
+D5.2.1.SNAU <- df %>%
+  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
+         country=Table.Name) %>%
+  select(c('iso3c', 'country', 'date',  'System.of.National.Accounts')  ) %>%
+  mutate(SNAU=System.of.National.Accounts) %>%
+  mutate(SNAU=str_extract(SNAU, "\\d{4}") ) %>%
   mutate(SPI.D5.2.1.SNAU=case_when(
-    SNAU=="SNA 2008" ~ 1, 
-    SNAU=="SNA 1993" ~ 0.5,
+    SNAU=="2008" ~ 1, 
+    SNAU=="1993" ~ 0.5,
     TRUE ~ 0 
   ),
-      RAW.D5.2.1.SNAU=SNAU) %>%
+      RAW.D5.2.1.SNAU=System.of.National.Accounts) %>%
   arrange(date, country) %>%
   select(iso3c, country, date,RAW.D5.2.1.SNAU, SPI.D5.2.1.SNAU  ) 
-
 
 
 ```
@@ -2817,11 +2855,20 @@ constant price estimates be changed periodically to reflect changes in economic 
 
 ```{r naby}
 
-#read in csv file.
-D5.2.2.NABY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.2.NABY.csv", sep="/" )) %>%
+
+  
+
+D5.2.2.NABY <- df %>%
+  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
+         country=Table.Name) %>%
+  select(c('iso3c', 'country', 'date',  'National.accounts.base.year')  ) %>%
+  mutate(NABY=National.accounts.base.year) %>%
+  mutate(NABY_dates=gsub("\\d{2}/","",NABY) ) %>%
+  mutate(NABY_dates=str_extract(NABY_dates, "\\d{4}") ) %>%
+  mutate(NABY_dates=if_else(NABY=="20015/2016","2016",NABY_dates)) %>% #fix an issue in WDI metadata
   mutate(SPI.D5.2.2.NABY=case_when(
     NABY=="Original chained constant price data are rescaled." ~ 1, 
-    (date-as.numeric(NABY))<=10 ~ 0.5, #within 10 years of reference period
+    (date-as.numeric(NABY_dates))<=10 ~ 0.5, #within 10 years of reference period
     TRUE ~ 0 
   ),
   RAW.D5.2.2.NABY=NABY)  %>%
@@ -3398,7 +3445,7 @@ spi_index_df <- spi_index_df %>%
                   "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D4.2.4.LBR", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
                   "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
                   "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP" ),
-                ~if_else((is.na(.) & (country %in% oecd_country_df$name)),1,.)                )) %>% #fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
+                ~if_else((is.na(.) & (country %in% c(oecd_country_df$name,'Singapore'))),1,.)                )) %>% #fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
   mutate(SPI.INDEX=rowMeans(across(starts_with("SPI")), na.rm=FALSE),
          SPI.INDEX.DIM2=rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
          SPI.INDEX.DIM3=rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),
