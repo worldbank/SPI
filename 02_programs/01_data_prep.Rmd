@@ -36,6 +36,9 @@ dir <- here()
 raw_dir <- paste(dir, '01_raw_data', sep="/")
 output_dir <- paste(dir, '03_output_data', sep="/")
 
+#parameters
+window=5 #set the window for the moving averages
+
 ```
 
 ```{r spi_df}
@@ -1646,7 +1649,7 @@ Because of the large data files and runtime of the program to calculate these in
 
 ```{r unstats}
 
-un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data_5yr.csv',sep="")) %>%
+un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data_',window,'yr.csv',sep="")) %>%
   rename(SPI.D3.1.POV   = SPI.D3.1,
          SPI.D3.2.HNGR  = SPI.D3.2,
          SPI.D3.3.HLTH  = SPI.D3.3,
@@ -1886,7 +1889,7 @@ census_fun  <- function(data, input_var) {
   input_var <- input_var
 
   #read in csv file.
-  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, ".csv", sep="" )) %>%
+  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
     group_by(iso3c, country) %>% 
     rename(input_var = !! input_var) %>%
     nest() %>% # The next chunk of code will split our string with the years of the census (i.e. "2000, 2010") in to separate rows.  We will then aggregate up.
@@ -1900,9 +1903,17 @@ census_fun  <- function(data, input_var) {
       )
     ) %>% 
     unnest(keep_empty = TRUE) %>% # Now we have a database with the observations equal to Country*Census observations.  From here we can calculate latest census, etc.
-    mutate(indicator_date=as.numeric(value)) 
+    mutate(indicator_date=as.numeric(value)) %>%
+    select('country','indicator_date','input_var')
   
-  
+    #append IHSN data on surveys
+  cs_df <- cs_df %>%
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_IHSN.csv", sep="" ))) %>%
+    group_by(country, indicator_date) %>%
+    summarise(input_var=first(na.omit(input_var)  ),
+            ihsn_dates=first(na.omit(ihsn_dates)  ) 
+             )
+    
   
   #Now calculate our SPI score for this indicator
   for (i in 2004:2019) {
@@ -1910,15 +1921,17 @@ census_fun  <- function(data, input_var) {
     mutate(date=i) %>%
     mutate(recency_indicator=((date>indicator_date)) ) %>% #restrict to censuses that do not occur after reference date
     mutate(indicator_date=if_else(recency_indicator==TRUE, indicator_date, as.numeric(NA))) %>%
-    group_by(iso3c, country, date, database_last_updated, input_var ) %>%
-    summarise(last_val=max(indicator_date, na.rm=T)) %>%
+    group_by(country, date) %>%
+    summarise(last_val=max(indicator_date, na.rm=T),
+      input_var=first(input_var),
+      ihsn_dates=first(ihsn_dates)) %>%
     mutate(indicator=case_when(
       (date-last_val<=10) & (date-last_val>0) ~ 1,
       (date-last_val<=20) & (date-last_val>0) ~ 0.5,
       TRUE ~ 0 )
     )  %>%
      ungroup() %>%
-    select(c('iso3c', 'country', 'date', 'input_var', 'indicator')  ) %>%
+    select(c( 'country', 'date', 'input_var','ihsn_dates', 'indicator')  ) %>%
     arrange(date, country)
 
 
@@ -1940,8 +1953,8 @@ survey_fun  <- function(data, input_var) {
   data <- data
   input_var <- input_var
 
-  #read in csv file.
-  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, ".csv", sep="" )) %>%
+  #read in csv file that was manually collected.
+  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
     group_by(iso3c, country) %>% 
     rename(input_var = !! input_var) %>%
     nest() %>% # The next chunk of code will split our string with the years of the census (i.e. "2000, 2010") in to separate rows.  We will then aggregate up.
@@ -1955,24 +1968,36 @@ survey_fun  <- function(data, input_var) {
       )
     ) %>% 
     unnest(keep_empty = TRUE) %>% # Now we have a database with the observations equal to Country*Census observations.  From here we can calculate latest census, etc.
-    mutate(indicator_date=as.numeric(value)) 
+    mutate(indicator_date=as.numeric(value)) %>%
+    select('country','indicator_date','input_var')
   
-  
+  #append IHSN data on surveys
+  cs_df <- cs_df %>%
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_IHSN.csv", sep="" ),
+                       col_types = list(col_character(),col_double(), col_character()))) %>%
+    group_by(country, indicator_date) %>%
+    summarise(input_var=first(na.omit(input_var)  ),
+            ihsn_dates=first(na.omit(ihsn_dates)  ) 
+             )
+    
   
   #Now calculate our SPI score for this indicator
   for (i in 2004:2019) {
    temp <- cs_df %>%
     mutate(date=i) %>%
     mutate(recency_indicator=((date-indicator_date<=10) & (date-indicator_date>0)) ) %>% #restrict to surveys inside 10 year period
-    group_by(iso3c, country, date, input_var) %>% #group by country and create indicator for how many surveys over 10 year period
+    group_by( country, date) %>% #group by country and create indicator for how many surveys over 10 year period
     summarise(indicator=case_when(
-    sum(recency_indicator)>=3 ~ 1, 
-    sum(recency_indicator)==2 ~ 0.6, 
-    sum(recency_indicator)==1 ~ 0.3, 
-    TRUE ~ 0 )) %>%
-     ungroup() %>%
-    select(c('iso3c', 'country', 'date', 'input_var', 'indicator')  ) %>%
-    arrange(date, country)
+      sum(recency_indicator)>=3 ~ 1, 
+      sum(recency_indicator)==2 ~ 0.6, 
+      sum(recency_indicator)==1 ~ 0.3, 
+      TRUE ~ 0 ),
+      input_var=first(input_var),
+      ihsn_dates=first(ihsn_dates)) %>%
+  ungroup() %>%
+  select(c( 'country', 'date', 'input_var','ihsn_dates', 'indicator')  ) %>%
+  arrange(date, country)
+
 
 
     assign(paste('temp',i,sep="_"), temp)
@@ -1990,42 +2015,56 @@ survey_fun  <- function(data, input_var) {
 #Population Censuses
 cs1_df <-pop_census_df %>%
   rename(RAW.D4.1.1.POPU.CENSUS=Latest.population.census,
-         SPI.D4.1.1.POPU=indicator)
+         SPI.D4.1.1.POPU=indicator) %>%
+  select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Agriculture census  
 cs2_df <-ag_census_df %>%
   rename(RAW.D4.1.2.AGRI.CENSUS=Latest.agricultural.census,
-         SPI.D4.1.2.AGRI=indicator)
+         SPI.D4.1.2.AGRI=indicator) %>%
+  select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Business/establishment census 
 cs3_df <-census_fun('D4.1.3.CEN.BIZZ', 'BIZZ.CENSUS') %>%
   rename(RAW.D4.1.3.BIZZ.CENSUS=input_var,
-         SPI.D4.1.3.BIZZ=indicator)
+         RAW.D4.1.3.BIZZ.CENSUS_IHSN=ihsn_dates,
+         SPI.D4.1.3.BIZZ=indicator) %>%
+  select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey
 cs4_df <-survey_fun('D4.1.4.SVY.HOUS', 'HOUS.SURVEYS') %>%
   rename(RAW.D4.1.4.HOUS.SURVEYS=input_var,
-         SPI.D4.1.4.HOUS=indicator)
+         RAW.D4.1.4.HOUS.SURVEYS_IHSN=ihsn_dates,
+         SPI.D4.1.4.HOUS=indicator) %>%
+  select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Agriculture survey 
 cs5_df <-survey_fun('D4.1.5.SVY.AGRI', 'AGRI.SURVEYS') %>%
   rename(RAW.D4.1.5.AGRI.SURVEYS=input_var,
-         SPI.D4.1.5.AGSVY=indicator)
+         RAW.D4.1.5.AGRI.SURVEYS_IHSN=ihsn_dates,
+         SPI.D4.1.5.AGSVY=indicator) %>%
+  select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Labor Force Survey 
 cs6_df <-survey_fun('D4.1.6.SVY.LABR', 'LABR.SURVEYS') %>%
   rename(RAW.D4.1.6.LABR.SURVEYS=input_var,
-         SPI.D4.1.6.LABR=indicator)
+         RAW.D4.1.6.LABR.SURVEYS_IHSN=ihsn_dates,
+         SPI.D4.1.6.LABR=indicator) %>%
+  select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Health/Demographic survey
 cs7_df <-survey_fun('D4.1.7.SVY.HLTH', 'HLTH.SURVEYS') %>%
   rename(RAW.D4.1.7.HLTH.SURVEYS=input_var,
-         SPI.D4.1.7.HLTH=indicator)
+         RAW.D4.1.7.HLTH.SURVEYS_IHSN=ihsn_dates,
+         SPI.D4.1.7.HLTH=indicator) %>%
+  select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Business/establishment survey  
 cs8_df <-survey_fun('D4.1.8.SVY.BIZZ', 'BIZZ.SURVEYS') %>%
   rename(RAW.D4.1.8.BIZZ.SURVEYS=input_var,
-         SPI.D4.1.8.BZSVY=indicator)
+         RAW.D4.1.8.BIZZ.SURVEYS_IHSN=ihsn_dates,
+         SPI.D4.1.8.BZSVY=indicator) %>%
+  select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 
 #brind all censuses and surveys together
@@ -2128,12 +2167,12 @@ aspire_fun <- function(date_start, date_end) {
 
 
 ####
-# 5 Year moving average
+# X Year moving average
 ####
-#create this database for each year from 2004 to 2019 using a 5 year average
+#create this database for each year from 2004 to 2019 using a X year average
 for (i in c(2004:2019)) {
   
-  start=i-4
+  start=i-(window-1)
   end=i
   
   temp_df <- aspire_fun(start,end)
@@ -2212,7 +2251,7 @@ unesco_df <- unesco_df_raw %>%
     )) %>%
     mutate(edu_admin_available=(ObsValue!=NaN & !is.na(ObsValue))) %>% #get a variable for wehther admin based value exists for indicator
     group_by( LOCATION2017,type, date) %>%
-    summarise(edu_admin_available=mean(as.numeric(edu_admin_available))) %>% #five year rolling average
+    summarise(edu_admin_available=mean(as.numeric(edu_admin_available))) %>% 
     ungroup() %>%
     pivot_wider(
       names_from='type',
@@ -2225,7 +2264,7 @@ unesco_df <- unesco_df_raw %>%
     mutate(across(starts_with('RAW.D4.2.2.EDU'),~if_else(is.na(.),0,.))) %>%
     group_by(iso3c) %>%
     arrange(-date, iso3c) %>%
-    mutate(across(starts_with('RAW.D4.2.2.EDU'),~zoo::rollmean(.,k=5,fill=NA,align='left'),.names="{col}.MA5")) %>% #five year rolling average
+    mutate(across(starts_with('RAW.D4.2.2.EDU'),~zoo::rollmean(.,k=window,fill=NA,align='left'),.names="{col}.MA5")) %>% #X year rolling average
     ungroup() %>%
     mutate(SPI.D4.2.2.EDU=(RAW.D4.2.2.EDU.NAS.MA5+RAW.D4.2.2.EDU.OOS.MA5+RAW.D4.2.2.EDU.ORGL.MA5)/3) %>%
   select(c('iso3c', 'country', 'date', 'RAW.D4.2.2.EDU.NAS','RAW.D4.2.2.EDU.OOS','RAW.D4.2.2.EDU.ORGL', 'SPI.D4.2.2.EDU')  )
@@ -2392,7 +2431,7 @@ ilo_df <- ilo_df %>%
                                 RAW.D4.2.4.LBR.EMPORG_available)/6) %>%
   group_by(iso3c) %>%
   arrange(-date, iso3c) %>%
-  mutate(across(starts_with('ILO.Source.type.filled'),~zoo::rollmean(.,k=5,fill=NA,align='left'),.names="{col}.MA5")) %>% #five year rolling average
+  mutate(across(starts_with('ILO.Source.type.filled'),~zoo::rollmean(.,k=window,fill=NA,align='left'),.names="{col}.MA5")) %>% #X year rolling average
   ungroup() %>%
   mutate(SPI.D4.2.4.LBR=if_else(is.na(ILO.Source.type.filled.MA5),0, ILO.Source.type.filled.MA5)) %>%
   select(c('iso3c', 'country', 'date', 'SPI.D4.2.4.LBR'), starts_with('RAW.D4.2.4.LBR')  ) %>%
@@ -3157,34 +3196,34 @@ spi_df <- spi_df %>%
   left_join(D5.2.MSC)
 
 #now do the figures 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.1.SNAU))
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.1.SNAU))
 spi_mapper('msc_df_map', 'SPI.D5.2.1.SNAU', 'System of National Accounts in use in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.2.NABY))
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.2.NABY))
 spi_mapper('msc_df_map', 'SPI.D5.2.2.NABY', 'National Accounts base year in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.3.CNIN))
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.3.CNIN))
 spi_mapper('msc_df_map', 'SPI.D5.2.3.CNIN', 'Classification of national industry in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.4.CPIBY))
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.4.CPIBY))
 spi_mapper('msc_df_map', 'SPI.D5.2.4.CPIBY', 'CPI base year in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.5.HOUS))
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.5.HOUS))
 spi_mapper('msc_df_map', 'SPI.D5.2.5.HOUS', 'Classification of household consumption in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.6.EMPL))
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.6.EMPL))
 spi_mapper('msc_df_map', 'SPI.D5.2.6.EMPL', 'Classification of status of employment in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.7.CGOV))
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.7.CGOV))
 spi_mapper('msc_df_map', 'SPI.D5.2.7.CGOV', 'Central government accounting status in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.8.FINA))
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.8.FINA))
 spi_mapper('msc_df_map', 'SPI.D5.2.8.FINA', 'Compilation of government finance statistics in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.9.MONY))
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.9.MONY))
 spi_mapper('msc_df_map', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics in 2019' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.10.GSBP))
+msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.10.GSBP))
 spi_mapper('msc_df_map', 'SPI.D5.2.10.GSBP', 'Business process in 2019' )
 
 ```
@@ -3417,35 +3456,58 @@ spi_index_df <- spi_df %>%
 
 #Drop certain indicators that don't make cut because of imcomplete coverage usually
 spi_index_df <- spi_index_df %>%
-  select(-starts_with('SPI.D1'), -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level,-SPI.D5.1.DILG,-SPI.D5.5.DIFI)
+  select(-starts_with('SPI.D1'), -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level,-SPI.D5.1.DILG,-SPI.D5.5.DIFI, -SPI.D4.2.1.SPL, -SPI.D4.2.4.LBR) 
 
 
 
 #get a list of oecd countries
 oecd_country_query <-  GET(url = "https://api.worldbank.org/v2/country?region=OED&format=json") %>%
-  content(Request_metadata, as = "text", encoding = "UTF-8") %>%
+  content( as = "text", encoding = "UTF-8") %>%
   jsonlite::fromJSON( flatten = TRUE) 
 
 #do some conversion to produce a dataframe
 oecd_country_df <- oecd_country_query[[2]] %>%
   as_tibble() 
   
-  
-
+country_mod_list <- oecd_country_df$name  #fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
+country_mod_list <- c(country_mod_list, 'Singapore')
 
 #first index 
 # just take a simple numeric average acorss all indicators
 # I will forward fill all indicators if they are missing
+spi_index_simple <- spi_index_df %>%
+  arrange(country, date) %>%
+  group_by(country) %>%
+  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
+  mutate(across(c("SPI.D2.1.GDDS","SPI.D2.4.NADA","SPI.D4.1.1.POPU","SPI.D4.1.2.AGRI","SPI.D4.1.3.BIZZ","SPI.D4.1.4.HOUS","SPI.D4.1.5.AGSVY",
+                  "SPI.D4.1.6.LABR","SPI.D4.1.7.HLTH","SPI.D4.1.8.BZSVY",
+                  "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
+                  "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
+                  "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP" ),
+                ~if_else(( (income=='High income') & (country %in% country_mod_list)),1,.)                )) %>% 
+  mutate(SPI.INDEX=rowMeans(across(starts_with("SPI")), na.rm=FALSE),
+         SPI.INDEX.DIM2=rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
+         SPI.INDEX.DIM3=rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),
+         SPI.INDEX.DIM4=rowMeans(across(starts_with("SPI.D4")), na.rm=FALSE),
+         SPI.INDEX.DIM5=rowMeans(across(starts_with("SPI.D5")), na.rm=FALSE)
+         ) %>% #
+  arrange(-date, -SPI.INDEX) %>%
+  select(country, iso3c, date, starts_with('SPI.INDEX'), everything())
+
+
 spi_index_df <- spi_index_df %>%
   arrange(country, date) %>%
   group_by(country) %>%
   mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
   mutate(across(c("SPI.D2.1.GDDS","SPI.D2.4.NADA","SPI.D4.1.1.POPU","SPI.D4.1.2.AGRI","SPI.D4.1.3.BIZZ","SPI.D4.1.4.HOUS","SPI.D4.1.5.AGSVY",
-                  "SPI.D4.1.6.LABR","SPI.D4.1.7.HLTH","SPI.D4.1.8.BZSVY", "SPI.D4.2.1.SPL",
-                  "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D4.2.4.LBR", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
+                  "SPI.D4.1.6.LABR","SPI.D4.1.7.HLTH","SPI.D4.1.8.BZSVY",
+                  "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
                   "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
                   "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP" ),
-                ~if_else((is.na(.) & (country %in% c(oecd_country_df$name,'Singapore'))),1,.)                )) %>% #fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
+                ~if_else(( (income=='High income') & (country %in% country_mod_list)),1,.)                )) %>% 
+  mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))))
+
+
   mutate(SPI.INDEX=rowMeans(across(starts_with("SPI")), na.rm=FALSE),
          SPI.INDEX.DIM2=rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
          SPI.INDEX.DIM3=rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),

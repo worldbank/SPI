@@ -1,0 +1,97 @@
+"0",""
+"0","study_df_internal <- read_csv(paste(output_dir, ""microdata_library_surveys.csv"", sep=""/""))"
+"2","Parsed with column specification:
+cols(
+  id = [32mcol_double()[39m,
+  idno = [31mcol_character()[39m,
+  title = [31mcol_character()[39m,
+  nation = [31mcol_character()[39m,
+  authoring_entity = [31mcol_character()[39m,
+  form_model = [31mcol_character()[39m,
+  year_start = [32mcol_double()[39m,
+  year_end = [32mcol_double()[39m,
+  repositoryid = [31mcol_character()[39m,
+  repo_title = [31mcol_character()[39m,
+  created = [34mcol_datetime(format = """")[39m,
+  changed = [34mcol_datetime(format = """")[39m,
+  total_views = [32mcol_double()[39m,
+  total_downloads = [32mcol_double()[39m,
+  url = [31mcol_character()[39m,
+  series_info = [31mcol_character()[39m,
+  geog_coverage = [31mcol_character()[39m,
+  series_info_dat = [33mcol_logical()[39m
+)
+"
+"2","1 parsing failure.
+ row             col           expected          actual                                                                                                           file
+7493 series_info_dat 1/0/T/F/TRUE/FALSE Something Wrong 'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/01_raw_data/4.1_SOCS//microdata_library_surveys.csv'
+"
+"0","saver <- function(indicator,filename) {"
+"0","  "
+"0","  indicator<-indicator"
+"0",""
+"0","  "
+"0","survey_df <- study_df_internal %>%"
+"0","  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata"
+"0","  rename(country=nation,"
+"0","         indicator_date=year_end) %>% "
+"0","  mutate(country=case_when("
+"0","    country==""Gambia"" ~ ""Gambia, The"","
+"0","    TRUE ~ country"
+"0","  )) %>%"
+"0","  filter(grepl(indicator, series_info)) %>%"
+"0","  group_by(country, indicator_date) %>%"
+"0","  summarise(freq=n(),"
+"0","            title=first(title)) %>%"
+"0","  group_by(country) %>%"
+"0","  mutate(ihsn_dates = paste0(indicator_date, collapse = "", ""),"
+"0","         ihsn_title = paste0(title, collapse = ""; "")) %>%"
+"0","  select(country,indicator_date, ihsn_dates, ihsn_title)"
+"0","  "
+"0","    "
+"0","    "
+"0","  "
+"0","  write_excel_csv(survey_df, path = paste(output_dir, filename, sep="""")) #write to csv"
+"0","}"
+"0",""
+"0","saver('hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_IHSN.csv')"
+"2","`summarise()` regrouping output by 'country' (override with `.groups` argument)
+"
+"0","saver('ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_IHSN.csv')"
+"2","`summarise()` regrouping output by 'country' (override with `.groups` argument)
+"
+"0","saver('lfs' , 'D4.1.6.SVY.LABR_IHSN.csv')"
+"2","`summarise()` regrouping output by 'country' (override with `.groups` argument)
+"
+"0","saver('dhs|mics|whs|hea' , 'D4.1.7.SVY.HLTH_IHSN.csv')"
+"2","`summarise()` regrouping output by 'country' (override with `.groups` argument)
+"
+"0","saver('Business Survey' , 'D4.1.8.SVY.BIZZ_IHSN.csv')"
+"2","`summarise()` regrouping output by 'country' (override with `.groups` argument)
+"
+"0","#slightly modified code for estabilishment census"
+"0","survey_df <- study_df_internal %>%"
+"0","  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata"
+"0","  rename(country=nation,"
+"0","         indicator_date=year_end) %>% "
+"0","  mutate(country=case_when("
+"0","    country==""Gambia"" ~ ""Gambia, The"","
+"0","    TRUE ~ country"
+"0","  )) %>%"
+"0","  filter(grepl('en/census|Enterprise Census', series_info)) %>%"
+"0","  filter(!grepl('Survey|Encuesta', title)) %>% #drop some cases where establishment surveys were categorized as censuses"
+"0","  group_by(country, indicator_date) %>%"
+"0","  summarise(freq=n(),"
+"0","            title=first(title)) %>%"
+"0","  group_by(country) %>%"
+"0","  mutate(ihsn_dates = paste0(indicator_date, collapse = "", ""),"
+"0","         ihsn_title = paste0(title, collapse = ""; "")) %>%"
+"0","  select(country,indicator_date, ihsn_dates, ihsn_title)"
+"2","`summarise()` regrouping output by 'country' (override with `.groups` argument)
+"
+"0","  "
+"0","    "
+"0","    "
+"0","  "
+"0","  write_excel_csv(survey_df, path = paste(output_dir, 'D4.1.3.CEN.BIZZ_IHSN.csv', sep="""")) #write to csv"
+"0",""

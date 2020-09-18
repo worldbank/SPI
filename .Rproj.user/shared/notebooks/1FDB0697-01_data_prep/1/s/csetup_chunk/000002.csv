@@ -23,3 +23,6 @@
 "0","raw_dir <- paste(dir, '01_raw_data', sep=""/"")"
 "0","output_dir <- paste(dir, '03_output_data', sep=""/"")"
 "0",""
+"0","#parameters"
+"0","window=5 #set the window for the moving averages"
+"0",""
