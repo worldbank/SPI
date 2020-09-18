@@ -1,0 +1,5 @@
+"0",""
+"0","legislation_df <- spi_index_df %>%"
+"0","  select(country, date,SPI.D5.1.DILG )"
+"0",""
+"0","spi_mapper('legislation_df', 'SPI.D5.1.DILG', 'Statistical plan fully funded. Source: Paris21')"

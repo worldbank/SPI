@@ -4,9 +4,9 @@ title: Technical Documentation on Data Sources and Methods for Statistical Perfo
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
 output:
-  html_document:
-    toc: yes
   pdf_document:
+    toc: yes
+  html_document:
     toc: yes
 ---
 
@@ -1584,6 +1584,8 @@ spi_df <- spi_df %>%
   
 # Data Products
 
+
+
 Cleaning for Data Products Indicators.  Data Products (16 Indicators):   
 
 - GOAL 1: No Poverty    
@@ -1607,7 +1609,7 @@ Cleaning for Data Products Indicators.  Data Products (16 Indicators):
 
 
 
-## Scoring Approach
+## Indicators 3.1-3.4
 
   1. Download the latest SDG indicator data from UN Stats (https://unstats.un.org/sdgs/indicators/en/#) using their API   
   
@@ -2780,7 +2782,7 @@ D5.1_DILG <- un_pull('SG_STT_FPOS', '2004', '2019') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.1.DILG=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
-         SPI.D5.1.DILG=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value))) %>%
+         SPI.D5.1.DILG=if_else((is.na(value) | value=="NaN"),0, as.numeric(value))) %>%
   select(-value)
 # 
 # #read in csv file.
@@ -3318,7 +3320,7 @@ D5.5_DIFI <- un_pull('SG_STT_NSDSFND', '2004', '2019') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
-         SPI.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value))) %>%
+         SPI.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),0, as.numeric(value))) %>%
   select(-value)
 
 # #read in csv file.
@@ -3400,8 +3402,33 @@ spi_df_final <- spi_df %>%
   left_join(pop_df) %>%
   arrange(-date,country)
 
-#create an overall index score for research purposes
 
+####
+#lining up data to 2019 and filling in some values for OECD countries.  
+####
+#get a list of oecd countries
+oecd_country_query <-  GET(url = "https://api.worldbank.org/v2/country?region=OED&format=json") %>%
+  content( as = "text", encoding = "UTF-8") %>%
+  jsonlite::fromJSON( flatten = TRUE) 
+
+#do some conversion to produce a dataframe
+oecd_country_df <- oecd_country_query[[2]] %>%
+  as_tibble() 
+  
+country_mod_list <- oecd_country_df$name  #fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
+country_mod_list <- c(country_mod_list, 'Singapore')
+spi_df_final <- spi_df_final %>%
+  arrange(country, date) %>%
+  group_by(country) %>%
+  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
+  mutate(across(c("SPI.D2.1.GDDS","SPI.D2.4.NADA","SPI.D4.1.1.POPU","SPI.D4.1.2.AGRI","SPI.D4.1.3.BIZZ","SPI.D4.1.4.HOUS","SPI.D4.1.5.AGSVY",
+                  "SPI.D4.1.6.LABR","SPI.D4.1.7.HLTH","SPI.D4.1.8.BZSVY",
+                  "SPI.D5.1.DILG",
+                  "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
+                  "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
+                  "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP",
+                  "SPI.D5.5.DIFI"),
+                ~if_else(( (income=='High income') & (country %in% country_mod_list)),1,.)                )) 
 
 ```
 
@@ -3437,380 +3464,3 @@ spi_df_final %>%
 ```
 
 
-
-
-# Annex
-
-## Overall Index Score
-
-For research purposes, we create an index combining several of the indicators together to get an overview of country performance
-
-```{r index}
-
-# create index dataset
-spi_index_df <- spi_df %>%
-  select(country, iso3c, date, starts_with("SPI"), income, region) %>%
-  right_join(spi_df_empty) %>%
-  left_join(pop_df) %>%
-  arrange(-date,country)
-
-#Drop certain indicators that don't make cut because of imcomplete coverage usually
-spi_index_df <- spi_index_df %>%
-  select(-starts_with('SPI.D1'), -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level,-SPI.D5.1.DILG,-SPI.D5.5.DIFI, -SPI.D4.2.1.SPL, -SPI.D4.2.4.LBR) 
-
-
-
-#get a list of oecd countries
-oecd_country_query <-  GET(url = "https://api.worldbank.org/v2/country?region=OED&format=json") %>%
-  content( as = "text", encoding = "UTF-8") %>%
-  jsonlite::fromJSON( flatten = TRUE) 
-
-#do some conversion to produce a dataframe
-oecd_country_df <- oecd_country_query[[2]] %>%
-  as_tibble() 
-  
-country_mod_list <- oecd_country_df$name  #fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
-country_mod_list <- c(country_mod_list, 'Singapore')
-
-#first index 
-# just take a simple numeric average acorss all indicators
-# I will forward fill all indicators if they are missing
-spi_index_simple <- spi_index_df %>%
-  arrange(country, date) %>%
-  group_by(country) %>%
-  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
-  mutate(across(c("SPI.D2.1.GDDS","SPI.D2.4.NADA","SPI.D4.1.1.POPU","SPI.D4.1.2.AGRI","SPI.D4.1.3.BIZZ","SPI.D4.1.4.HOUS","SPI.D4.1.5.AGSVY",
-                  "SPI.D4.1.6.LABR","SPI.D4.1.7.HLTH","SPI.D4.1.8.BZSVY",
-                  "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
-                  "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
-                  "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP" ),
-                ~if_else(( (income=='High income') & (country %in% country_mod_list)),1,.)                )) %>% 
-  mutate(SPI.INDEX=rowMeans(across(starts_with("SPI")), na.rm=FALSE),
-         SPI.INDEX.DIM2=rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
-         SPI.INDEX.DIM3=rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),
-         SPI.INDEX.DIM4=rowMeans(across(starts_with("SPI.D4")), na.rm=FALSE),
-         SPI.INDEX.DIM5=rowMeans(across(starts_with("SPI.D5")), na.rm=FALSE)
-         ) %>% #
-  arrange(-date, -SPI.INDEX) %>%
-  select(country, iso3c, date, starts_with('SPI.INDEX'), everything())
-
-
-spi_index_df <- spi_index_df %>%
-  arrange(country, date) %>%
-  group_by(country) %>%
-  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
-  mutate(across(c("SPI.D2.1.GDDS","SPI.D2.4.NADA","SPI.D4.1.1.POPU","SPI.D4.1.2.AGRI","SPI.D4.1.3.BIZZ","SPI.D4.1.4.HOUS","SPI.D4.1.5.AGSVY",
-                  "SPI.D4.1.6.LABR","SPI.D4.1.7.HLTH","SPI.D4.1.8.BZSVY",
-                  "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
-                  "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
-                  "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP" ),
-                ~if_else(( (income=='High income') & (country %in% country_mod_list)),1,.)                )) %>% 
-  mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))))
-
-
-  mutate(SPI.INDEX=rowMeans(across(starts_with("SPI")), na.rm=FALSE),
-         SPI.INDEX.DIM2=rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
-         SPI.INDEX.DIM3=rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),
-         SPI.INDEX.DIM4=rowMeans(across(starts_with("SPI.D4")), na.rm=FALSE),
-         SPI.INDEX.DIM5=rowMeans(across(starts_with("SPI.D5")), na.rm=FALSE)
-         ) %>% #
-  arrange(-date, -SPI.INDEX) %>%
-  select(country, iso3c, date, starts_with('SPI.INDEX'), everything())
-
-spi_mapper('spi_index_df','SPI.INDEX','Overall SPI using Simple Index Averaging Over All Indicators.  Equal Weight for Each Indicator.  Fill Forward/Ignore Missing Values')
-
-#display top 25
-index_disp <- spi_index_df %>%
-  ungroup() %>%
-  filter(date==2019) %>%
-  arrange(-SPI.INDEX) %>%
-  mutate(across(starts_with('SPI.INDEX'),~100*.),
-         across(starts_with('SPI.INDEX'),round,1)) %>%
-  select(country, iso3c, date, starts_with('SPI.INDEX'))
-
-DT::datatable(index_disp, caption='Overall SPI using Simple Index Averaging Over All Indicators.  Equal Weight for Each Indicator.  Fill Forward/Ignore Missing Values',
-                      rownames=TRUE,
-                      colnames = c("Country", "ISO3C", "Date", "SPI Index Value",
-                                   "Dimension 2: Data Services",
-                                   "Dimension 3: Data Products ",
-                                   "Dimension 4: Data Sources",
-                                   "Dimension 5: Data Infrastructure"
-                                   ),
-                      class='cell-border stripe',
-                      escape = FALSE,
-                      extensions = c ('Buttons', 'FixedHeader'), options=list(
-                          dom = 'Bfrtip',
-                          buttons = c('copy', 'csv', 'excel'),
-                          pageLength = 25,
-                          scrollX = TRUE, 
-                          paging=FALSE,
-                          ordering=F)) 
-```
-
-
-
-```{r sci, include=FALSE}
-
-#pull SCI values
-
-Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/IQ.SCI.OVRL?format=json&date=2004:2019&per_page=5000")
-Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
-
-# Parse the JSON content and convert it to a data frame.
-sci_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
-  data.frame() %>%
-  transmute(
-    iso3c=countryiso3code,
-    country=country.value,
-    date=as.numeric(date),
-    SCI=value
-  ) %>%
-  left_join(spi_df_empty) %>% #add on country metadata
-  filter(!is.na(income)) %>%
-  select(iso3c, country, date, SCI  ) %>%
-  group_by(date) %>%
-  arrange(-SCI) %>%
-  mutate(SCI_rank=rank(-SCI),
-         SCI_rank=if_else(is.na(SCI),as.numeric(NA),SCI_rank))
-
-```
-
-```{r odin, include=FALSE}
-
-  #read in ODIN data
-  for (i in 2015:2018) {
-   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
-        as_tibble(.name_repair = 'universal') %>%
-        mutate(date=i) %>%
-        filter(Data.categories=='All Categories')
-
-
-    assign(paste('odin_df',i,sep="_"), temp)
-  }
-
-#bind different years together
-odin_df <- bind_rows(odin_df_2015, odin_df_2016, odin_df_2017, odin_df_2018)
-
-
-odin_df <- odin_df %>%
-    select(Country.Code, date, Overall.score) %>%
-    rename(iso3c=Country.Code,
-           ODIN_score=Overall.score) %>%
-    group_by(date) %>%
-    arrange(-ODIN_score) %>%
-    mutate(ODIN_rank=rank(-ODIN_score, na.last='NA')) %>% 
-  right_join(spi_df_empty) %>%
-  arrange(country, date) %>%
-  group_by(country) %>%
-  mutate(across(starts_with("ODIN"), na.locf, na.rm=FALSE)) %>%
-  select(country, date, starts_with("ODIN"))
-
-
-
-```
-
-
-
-```{r comparisons, echo=FALSE}
-
-
-
-#display top 25
-sci_spi_disp <- spi_index_df %>%
-  ungroup() %>%
-  filter(date %in% c(2016:2019)) %>%
-  arrange(-SPI.INDEX) %>%
-  mutate(across(starts_with('SPI.INDEX'),~100*.),
-         across(starts_with('SPI.INDEX'),round,1)) %>%
-  select(country, iso3c, date, income, region, SPI.INDEX) %>%
-  left_join(sci_df) %>%
-  left_join(odin_df)
-
-### Scatterplot SCI SPI
-spi_sci_plot <- ggplot(sci_spi_disp, aes(x=SPI.INDEX,y=SCI, color=region, alpha=date)) +
-  # geom_point() +
-  geom_text(aes(label=iso3c)) +
-  theme_bw() +
-  labs(
-    title='Scatterplot of Statistical Capacity Index on SPI Index'
-  )
-
-spi_sci_plot
-
-
-
-### Scatterplot ODIN SPI
-spi_odin_plot <- ggplot(sci_spi_disp, aes(x=SPI.INDEX,y=ODIN_score, color=region, alpha=date)) +
-  # geom_point() +
-  geom_text(aes(label=iso3c)) +
-  theme_bw() +
-  labs(
-    title='Scatterplot of Open Data Watch Index on SPI Index'
-  )
-
-spi_odin_plot
-
-cor(sci_spi_disp$SPI.INDEX,sci_spi_disp$SCI, use='pairwise.complete.obs')
-cor(sci_spi_disp$SPI.INDEX,sci_spi_disp$ODIN_score, use='pairwise.complete.obs')
-
-
-
-
-
-DT::datatable(sci_spi_disp, caption='Overall SPI using Simple Index Averaging Over All Indicators.  Equal Weight for Each Indicator.  Fill Forward/Ignore Missing Values',
-                      rownames=TRUE,
-                      colnames = c("Country", "ISO3C", "Date", "Income Group","Region",
-                                   "SPI Index Value",
-                                   "Statistical Capacity Index",
-                                   "Statistical Capacity Index Rank",
-                                   "Open Data Watch Overall Score",
-                                   "Open Data Watch Overall Rank"
-                                   ),
-                      class='cell-border stripe',
-                      escape = FALSE,
-                      extensions = c ('Buttons', 'FixedHeader'), options=list(
-                          dom = 'Bfrtip',
-                          buttons = c('copy', 'csv', 'excel'),
-                          pageLength = 25,
-                          scrollX = TRUE, 
-                          paging=FALSE,
-                          ordering=F)) 
-
-
-
-```
-
-
-
-
-
-```{r faolex, eval=FALSE, include=FALSE}
-
-
-#load(paste(dir,"/Data/documentInfoNew Agri.Rdata", sep=""))
-documentInfoNew <- readxl::read_excel(paste(dir,"/01_raw_data/1.2_DUNE/Faolex_inventory.xlsx", sep=""),
-                                      col_types = c('text','text','text','text','text','text','text','text','date','date','text')) %>%
-  as_tibble(.name_repair = 'universal') %>%
-    mutate(Language.of.document=detect_language(Title, lang_code=FALSE), #check language      
-           Language.of.document=str_to_lower(Language.of.document),
-         Type.of.text=str_to_lower(Type.of.text),
-         Main.area=str_to_lower(Primary.subject),
-         Type.of.text=str_replace_all(Type.of.text,'[[:punct:]]',''),
-         Main.area=str_replace_all(Main.area,'[[:punct:]]',''),
-         url=Rel.file) 
-
-#Now fix up the languages
-documentInfoNew <- documentInfoNew %>%
-  group_by(Country) %>%
-  mutate(Language.of.document.typ=first(Language.of.document),
-         Language.of.document=if_else(is.na(Language.of.document),Language.of.document.typ,Language.of.document), #replace language with language of another document in same country if missing
-         Language.of.document=if_else(Language.of.document=='galican','spanish',Language.of.document), # correct one issue where galican was a recommended language
-         Language.of.document=if_else(is.na(Language.of.document),'english',Language.of.document)) #as last resort, assume english document
-  
-
-
-#rename dataframe with document info
-documentInfo <- documentInfoNew
-
-#merge with WB compatible country codes
-ccodes <- read_csv(file=paste(dir, "/01_raw_data/1.2_DUNE/FAOSTAT_data_5-1-2020_country_codes.csv", sep="")) %>%
-  as_tibble(.name_repair='universal') %>%
-  mutate(iso3c=ISO3.Code) %>%
-  select(Country, iso3c) %>%
-  group_by(Country, iso3c) %>%
-  summarise_all(~first(.))
-
-documentInfo <- documentInfo %>%
-  mutate(Country = case_when(
-    Country=="Venezuela, Boliv. Rep. of" ~ "Venezuela (Bolivarian Republic of)",
-    Country=="Lao, People's Dem. Rep." ~ "Lao People's Democratic Republic",
-    Country=="China" ~ "China, mainland",
-    Country=="Moldova, Republic of" ~ "Republic of Moldova",
-    Country=="Tanzania, Un. Rep. of" ~ "United Republic of Tanzania",
-    Country=="Czech Republic" ~ "Czechia",
-    Country=="CÃ´te d'Ivoire" ~ "Côte d'Ivoire",
-    Country=="Iran, Islamic Republic of" ~ "Iran (Islamic Republic of)",
-    Country=="Micronesia, Fed. States" ~ "Micronesia (Federated States of)",
-    Country=="Palestinian Authority"  ~ "Palestine",
-    Country=="Congo, Dem. Rep. of"  ~ "Democratic Republic of the Congo",
-    Country=="Korea, Dem. People's Rep." ~ "Democratic People's Republic of Korea",
-    Country=="Korea, Republic of"  ~ "Republic of Korea",
-    TRUE ~ Country
-  )) %>% # fix some broken country names
-  left_join(ccodes) %>%
-  select(-Country)
-  
-#merge with official world bank metadata
-country_metadata <- wbstats::wbcountries()
-
-documentInfo <- documentInfo %>%
-  left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything())
-
-#do some basic cleaning
-documentInfo <- documentInfo %>%
-  mutate(Language.of.document=str_to_lower(Language.of.document),
-         Type.of.text=str_to_lower(Type.of.text),
-         Main.area=str_to_lower(Main.area),
-         Language.of.document=str_replace_all(Language.of.document,'[[:punct:]]',''),
-         Type.of.text=str_replace_all(Type.of.text,'[[:punct:]]',''),
-         Main.area=str_replace_all(Main.area,'[[:punct:]]',''),
-         date=year(Date.of.original.text))
-
-#keep just national policy and poverty reduction documents after year 2000
-documentInfo <- documentInfo %>%
-  filter(grepl("national development", Main.area)) %>%
-  filter(Type.of.text=='policy') %>%
-  filter(date>=2010)
-
-
-
-```
-
-
-```{r faolex_map, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-# load data
-#Now map the result
-quality = "high"
-maps <- wbgmaps::wbgmaps[[quality]]
-
-
-  
-  faolex_map <- documentInfo %>%
-    group_by( country) %>%
-    summarise(across(everything(),first)) %>%
-    mutate(data_available=TRUE) %>%
-    right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), FALSE, data_available)) 
-  
-  
-   ggplot() +
-    geom_map(data = faolex_map, aes(map_id = iso3c, fill = data_available), map = maps$countries) + 
-    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
-    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
-     geom_path(data = maps$boundaries,
-               aes(long, lat, group = group),
-               color = "white",
-               size = 0.1,
-               lineend = maps$boundaries$lineend,
-              linetype = maps$boundaries$linetype) +
-    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
-    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
-    scale_fill_brewer(
-      name='Data Available',
-      palette='Paired',
-      na.value='blue'
-    ) +
-    coord_equal() +
-    theme_map(base_size=12) +
-    labs(
-      title=str_wrap('Availability of National Development Plan or Poverty Reduction Plan Documents by Country since 2010 from FAOLEX',150),
-      caption = 'Source: FAOLEX'
-    )
-
-
-
-
-
-```
