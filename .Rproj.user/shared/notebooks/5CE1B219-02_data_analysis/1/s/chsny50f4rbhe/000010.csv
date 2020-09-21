@@ -1,8 +1,0 @@
-"0","vnr_table <- spi_income_table('spi_df_final', c('SPI.D1.2.VNR'),'2019')"
-"2","Joining, by = ""series""
-"
-"0","#export table to word"
-"0","ft <- flextable(vnr_table) %>%"
-"0","  add_header_lines(""Overall Score for Use of Numbers in VNRs"") "
-"0",""
-"0","FitFlextableToPage(ft)"

@@ -1,0 +1,6 @@
+"0",""
+"0","#SDG 16"
+"0","vnr_map <- vnr_use_df %>%"
+"0","  filter(SDG==""SDG 16"") "
+"0",""
+"0","spi_mapper('vnr_map', 'freq_of_numbers', 'Use of Numbers in VNRs for SDG 16')"

@@ -1,0 +1,72 @@
+"0","knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)"
+"0","library(tidyverse)"
+"0","library(flextable)"
+"2","package ‘flextable’ was built under R version 4.0.2"
+"2","
+Attaching package: ‘flextable’
+
+"
+"2","The following object is masked from ‘package:plotly’:
+
+    style
+
+"
+"2","The following objects are masked from ‘package:kableExtra’:
+
+    as_image, footnote
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    compose
+
+"
+"0","library(here)"
+"0","# devtools::install_github(""worldbank/wbgviz"", subdir = ""wbgdata"")"
+"0","# devtools::install_github(""worldbank/wbgviz"", subdir = ""wbgcharts"")"
+"0","# devtools::install_github(""worldbank/wbgviz"", subdir = ""wbggeo"")"
+"0","# devtools::install_github(""worldbank/wbgviz"", subdir = ""wbgmaps"")"
+"0","library(wbggeo)"
+"0","library(wbgmaps)"
+"0","library(ggthemes)"
+"0","library(Hmisc)"
+"0","library(httr)"
+"2","
+Attaching package: ‘httr’
+
+"
+"2","The following object is masked from ‘package:plotly’:
+
+    config
+
+"
+"0","library(patchwork)"
+"0","library(ggrepel)"
+"0","library(lubridate)"
+"2","package ‘lubridate’ was built under R version 4.0.2"
+"2","
+Attaching package: ‘lubridate’
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    date, intersect, setdiff, union
+
+"
+"0","library(haven)"
+"2","package ‘haven’ was built under R version 4.0.2"
+"0","library(zoo)"
+"2","
+Attaching package: ‘zoo’
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+"
+"0","#set directories"
+"0","dir <- here()"
+"0",""
+"0","raw_dir <- paste(dir, '01_raw_data', sep=""/"")"
+"0","output_dir <- paste(dir, '03_output_data', sep=""/"")"

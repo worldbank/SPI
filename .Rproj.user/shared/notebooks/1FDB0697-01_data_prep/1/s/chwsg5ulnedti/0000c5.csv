@@ -1,0 +1,4 @@
+"0",""
+"0","msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.10.GSBP))"
+"0","spi_mapper('msc_df_map', 'SPI.D5.2.10.GSBP', 'Business process in 2019' )"
+"0",""

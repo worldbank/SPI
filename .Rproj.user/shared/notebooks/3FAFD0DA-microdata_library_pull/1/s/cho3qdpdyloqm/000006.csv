@@ -1,0 +1,7 @@
+"0",""
+"0","#public studies from World Bank microdata library"
+"0","public_base_url <- ""http://microdata.worldbank.org/index.php/api/catalog"" #define url"
+"0","study_request_public<-fromJSON(paste(public_base_url,""/search"",""?ps=10000"", sep="""")) # pull from url"
+"0","study_df_public <- study_request_public$result$rows #convert to dataframe"
+"0","write_excel_csv(study_df_public, path = paste(output_dir, ""microdata_library_public_studies.csv"")) #write to csv"
+"0","gt(as_tibble(head(study_df_public[,1:5]))) #display top 5 rows of dataframe"
