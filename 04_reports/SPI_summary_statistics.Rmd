@@ -61,7 +61,6 @@ style_mono_accent(base_color = "#009FDA",
                   title_slide_background_position = 'bottom 25px right 25px;',
                   text_font_google = google_font('Roboto'),
                   text_font_size = '24px',
-                  
                   )
 
 #set directories
@@ -70,14 +69,29 @@ dir <- here()
 raw_dir <- paste(dir, '01_raw_data', sep="/")
 output_dir <- paste(dir, '03_output_data', sep="/")
 
+#weights (either unity (1) or population)
+wgt <- 1
+
 ```
 
 ```{r load, include=FALSE}
 
-
+#add in population
+pop_df <- wbstats::wb(country="all",
+             indicator='SP.POP.TOTL',
+             startdate=2004,
+             enddate=2019) %>%
+  mutate(date=as.numeric(date)) %>%
+  mutate(population=value) %>%
+  select(country, date, population) 
 
 #import data
-SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/"))
+SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
+    left_join(pop_df) %>%
+  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+
+
+
 
 
 
@@ -90,9 +104,9 @@ metadata <- data.frame(
 #get list of country info
 country_list <- wbstats::wbcountries()
 
+
 SPI_2019 <- SPI %>%
   filter(date==2019) %>%
-  mutate(weights=1) %>%  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
   filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
   mutate(ISO_A3_EH=iso3c) %>%
   mutate(across(contains("SPI"),~100*.))
@@ -111,9 +125,9 @@ SPI_2019 <- SPI %>%
 
 - Statistical Performance Indicators are tool for countries/donors to assess statistical system
 
-Goal was for SPI framework to:  
+Based on TAG feedback, goal was for SPI framework to:  
   - Be forward looking (relevant at least 15 years)   
-  - Measure low income systems, as well as advanced systems
+  - Measure less advanced systems, as well as more advanced systems
   - Cover entire national statistical system, not just NSO   
   - Give countries incentives to build modern statistical system
 
@@ -131,7 +145,7 @@ The SCI (in use since 2004) has three dimensions:
 
 --
 
-New Statistical Performance Indicators build on this:
+Based on Advisory Group comments, Statistical Performance Indicators build on this:
   - Includes same (or similar) indicators   
   - But also expands into new areas    
   - Open Data and Open Code   
@@ -230,7 +244,7 @@ New Statistical Performance Indicators build on this:
   
 # Data Products (4 Indicators) 
 
-For these indicators, we pull values from the UN SDG database, calculate the share of SDG indicators with a valid value per country
+For these indicators, we pull values from the UN SDG database, calculate the share of SDG indicators with a country produced value per country
 
   * **Indicator 3.1: Social Statistics:** 
     * *Average score for Goal 1-6 indicators*
@@ -239,7 +253,7 @@ For these indicators, we pull values from the UN SDG database, calculate the sha
   * **Indicator 3.3: Environmental Statistics:** 
     * *Average score for Goal 13-15 indicators*      
   * **Indicator 3.4: Institutional Statistics:**
-    **Average score for Goal 16-17 indicators*
+    * *Average score for Goal 16-17 indicators*
     
 ---
 
@@ -247,9 +261,9 @@ For these indicators, we pull values from the UN SDG database, calculate the sha
 
 
   * **Indicator 4.1: Censuses and Surveys:** 
-    * *Average score 10 Census and Survey Indicators*    
+    * *Average score of 8 Census and Survey Indicators*    
   * **Indicator 4.2: Administrative Data:** 
-    * *Complete CRVS, availability of SPL admin data (APSIRE), Education admin data (UNESCO), Labor admin data (ILO) *  
+    * *Complete CRVS, availability of SPL admin data (ASPIRE), Education admin data (UNESCO), Labor admin data (ILO) *  
   * **Indicator 4.3: Geospatial Data:**  
     * *Geospatial data available at 1st Admin Level according to ODIN* 
   * <span style="color:grey">Indicator 4.4: Private/citizen generated data:  
@@ -277,7 +291,12 @@ class: inverse, middle, center
 Overall Scores Across Countries
 
 
-  
+---
+# Overview Summary of Results
+
+  * Next, we will provide overview summary of results   
+  * Will present aggregate scores overall and for each dimension    
+  * Based on indicators we have collected, will show simple average across dimensions
 
 ---
 
@@ -358,7 +377,7 @@ spi_charts  <- function(data, indicator, title) {
     group_by( country) %>%
     #summarise(across(!! indicator,last)) %>%
     rename(data_available=!! indicator) %>%
-    select(country, date, data_available ) %>%
+    select(country, date, data_available, weights ) %>%
     right_join(country_metadata) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
@@ -367,7 +386,7 @@ spi_charts  <- function(data, indicator, title) {
   p2 <- map_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(data_available, na.rm=T),
+    mutate(Percentage=100*wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
@@ -375,7 +394,7 @@ spi_charts  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
-      subtitle= 'Data Point is for last year available (usually 2019)'
+      subtitle= 'Data Point is for last year available (2019)'
       ) +
       expand_limits(x=c(0,100)) +
       theme_bw()
@@ -384,7 +403,7 @@ spi_charts  <- function(data, indicator, title) {
     p3 <- map_df %>%
     group_by(income) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(data_available, na.rm=T),
+    mutate(Percentage=100*wtd.mean(data_available, weights=weights, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=income, fill=income)) +
       geom_bar(stat="identity",position='dodge') +
@@ -392,7 +411,7 @@ spi_charts  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
-      subtitle= 'Data Point is for last year available (usually 2019)'
+      subtitle= 'Data Point is for last year available (2019)'
       ) +
       expand_limits(x=c(0,100)) +
       theme_bw()
@@ -417,19 +436,21 @@ spi_charts  <- function(data, indicator, title) {
       expand_limits(y=c(0,100)) +
       theme_bw()
       
- (p2 + p3) 
+ (p2 / p3) 
     
 }
 
 
 spi_mapper(SPI.INDEX, 'Statistical Performance Indicators -  Overall Scores')
 
-spi_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
 
 
 ```
 
 ]
+
+--- 
+
 
 ```{css, echo=F}
     /* Table width = 100% max-width */
@@ -446,33 +467,16 @@ spi_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scor
 ```
 
 ---
+
 .center3[
-```{r region_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-
-
-
-p <- ggplot(data = SPI_2019, aes(y = region, x = SPI.INDEX,  color=region)) +
-              geom_point() +
-              geom_text(aes(label=country), position=position_jitter(width=.3,height=.3), check_overlap=T) +
-              theme_bw() +
-              ggtitle('Plot of SPI Overall Score by Region') +
-              xlab('SPI Overall Score') +
-              expand_limits(x=c(0,100)) +
-              theme(
-                axis.title.y = element_blank(),
-                legend.position = 'none'
-                
-              )
-            
-            
-        
-
-p
+```{r overall_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
 
 ```
+
+
 ]
 
-<!-- --- -->
 
 ```{r overall_sumstats, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
         #add function to produce weighted summary stats
@@ -592,6 +596,17 @@ spi_mapper(SPI.INDEX.DIM1, 'Statistical Performance Indicators - SPI Dimension 1
 ]
 
 ---
+.center3[
+```{r dim1_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('SPI','SPI.INDEX.DIM1','Statistical Performance Indicators -  Data Use Scores')
+
+```
+
+
+]
+
+
+---
 .center2[
 ```{r dimension_2_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 spi_mapper(SPI.INDEX.DIM2, 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
@@ -599,7 +614,15 @@ spi_mapper(SPI.INDEX.DIM2, 'Statistical Performance Indicators - SPI Dimension 2
 ```
 ]
 
+---
+.center3[
+```{r dim2_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('SPI','SPI.INDEX.DIM2','Statistical Performance Indicators -  Data Services Scores')
 
+```
+
+
+]
 
 ---
 .center2[
@@ -609,6 +632,18 @@ spi_mapper(SPI.INDEX.DIM3, 'Statistical Performance Indicators - SPI Dimension 3
 ```
 
 ]
+
+
+---
+.center3[
+```{r dim3_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('SPI','SPI.INDEX.DIM3','Statistical Performance Indicators -  Data Products Scores')
+
+```
+
+
+]
+
 ---
 .center2[
 ```{r dimension_4_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
@@ -618,9 +653,31 @@ spi_mapper(SPI.INDEX.DIM4, 'Statistical Performance Indicators - SPI Dimension 4
 ]
 ---
 
+
+.center3[
+```{r dim4_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('SPI','SPI.INDEX.DIM4','Statistical Performance Indicators -  Data Sources Scores')
+
+```
+
+
+]
+
+---
+
 .center2[
 ```{r dimension_5_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 spi_mapper(SPI.INDEX.DIM5, 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
 
 ```
+]
+
+---
+.center3[
+```{r dim5_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('SPI','SPI.INDEX.DIM5','Statistical Performance Indicators -  Data Infrastructure Scores')
+
+```
+
+
 ]
