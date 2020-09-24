@@ -30,6 +30,8 @@ dir <- here()
 
 input_dir <- paste(dir, '01_raw_data', sep="/")
 output_dir <- paste(dir, '01_raw_data','4.1_SOCS/', sep="/")
+
+country_metadata <- wbstats::wbcountries()
 ```
 
 ## Introduction
@@ -54,12 +56,14 @@ study_request_ihsn<-fromJSON(paste(ihsn_base_url,"/search","?ps=10000", sep=""))
 study_df_ihsn <- study_request_ihsn$result$rows #convert to dataframe
 write_excel_csv(study_df_ihsn, path = paste(output_dir, "ihsn_library_public_studies.csv")) #write to csv
 
-# # pull all studiy citatinos from IHSN
-# ihsn_citations_base_url <- "https://catalog.ihsn.org/index.php/api/citations" #define url
-# study_request_ihsn_citations<-fromJSON(paste(ihsn_citations_base_url,"/search","?ps=10000", sep="")) # pull from url
-# 
-# study_citations_df_ihsn <- study_request_ihsn_citations$result$rows #convert to dataframe
-# write_excel_csv(study_df_ihsn, path = paste(output_dir, "ihsn_library_public_studies.csv")) #write to csv
+
+#pull from ILO
+temp <- tempfile()
+ilo_base_url <- 'https://www.ilo.org/surveyLib/index.php/catalog/export/csv?ps=5000&collection[]=LFS' 
+download.file(ilo_base_url,temp)
+study_df_ilo <- read_csv(temp) #convert to dataframe
+write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv")) #write to csv
+
 
 
 
@@ -153,9 +157,9 @@ survey_df <- study_df_internal %>%
   summarise(freq=n(),
             title=first(title)) %>%
   group_by(country) %>%
-  mutate(ihsn_dates = paste0(indicator_date, collapse = ", "),
-         ihsn_title = paste0(title, collapse = "; ")) %>%
-  select(country,indicator_date, ihsn_dates, ihsn_title)
+  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
+         nada_title = paste0(title, collapse = "; ")) %>%
+  select(country,indicator_date, nada_dates, nada_title)
   
     
     
@@ -163,15 +167,50 @@ survey_df <- study_df_internal %>%
   write_excel_csv(survey_df, path = paste(output_dir, filename, sep="")) #write to csv
 }
 
-saver('hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_IHSN.csv')
+saver('hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
 
-saver('ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_IHSN.csv')
+saver('ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
 
-saver('lfs' , 'D4.1.6.SVY.LABR_IHSN.csv')
 
-saver('dhs|mics|whs|hea' , 'D4.1.7.SVY.HLTH_IHSN.csv')
 
-saver('Business Survey' , 'D4.1.8.SVY.BIZZ_IHSN.csv')
+ 
+ # use ILO for source of labor force surveys
+survey_df_ilo <- study_df_ilo %>%
+  rename(indicator_date=year_end) %>% 
+  mutate(iso3c=str_sub(idno,1,3)) %>%
+  mutate(iso3c=if_else(iso3c=='KOS','XKX',iso3c)) %>% #fix kosovo
+  select(iso3c, indicator_date) %>%
+  left_join(country_metadata) %>%
+  select(country, indicator_date)
+
+
+#add Microdatalib
+indicator<-'lfs'
+survey_df <- study_df_internal %>%
+  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
+  rename(country=nation,
+         indicator_date=year_end) %>% 
+  mutate(country=case_when(
+    country=="Gambia" ~ "Gambia, The",
+    TRUE ~ country
+  )) %>%
+  filter(grepl(indicator, series_info)) %>%
+  bind_rows(survey_df_ilo) %>%
+  group_by(country, indicator_date) %>%
+  summarise(freq=n(),
+            title=first(title)) %>%
+  group_by(country) %>%
+  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
+         nada_title = paste0(title, collapse = "; ")) %>%
+  select(country,indicator_date, nada_dates, nada_title)
+
+  write_excel_csv(survey_df, path = paste(output_dir, 'D4.1.6.SVY.LABR_NADA.csv', sep="")) #write to csv
+
+ # saver('lfs' , 'D4.1.6.SVY.LABR_NADA.csv')
+
+saver('dhs|mics|whs|hea' , 'D4.1.7.SVY.HLTH_NADA.csv')
+
+saver('Business Survey' , 'D4.1.8.SVY.BIZZ_NADA.csv')
 
 
 #slightly modified code for estabilishment census
@@ -189,14 +228,14 @@ survey_df <- study_df_internal %>%
   summarise(freq=n(),
             title=first(title)) %>%
   group_by(country) %>%
-  mutate(ihsn_dates = paste0(indicator_date, collapse = ", "),
-         ihsn_title = paste0(title, collapse = "; ")) %>%
-  select(country,indicator_date, ihsn_dates, ihsn_title)
+  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
+         nada_title = paste0(title, collapse = "; ")) %>%
+  select(country,indicator_date, nada_dates, nada_title)
   
     
     
   
-  write_excel_csv(survey_df, path = paste(output_dir, 'D4.1.3.CEN.BIZZ_IHSN.csv', sep="")) #write to csv
+  write_excel_csv(survey_df, path = paste(output_dir, 'D4.1.3.CEN.BIZZ_NADA.csv', sep="")) #write to csv
 
 ```
 

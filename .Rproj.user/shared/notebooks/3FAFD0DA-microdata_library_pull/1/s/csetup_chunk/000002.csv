@@ -1,23 +1,6 @@
 "0","knitr::opts_chunk$set(echo = TRUE)"
 "0","# Load Packages"
 "0","library(tidyverse)"
-"2","Registered S3 methods overwritten by 'dbplyr':
-  method         from
-  print.tbl_lazy     
-  print.tbl_sql      
-"
-"2","[37m-- [1mAttaching packages[22m --------------------------------------- tidyverse 1.3.0 --[39m
-"
-"2","[37m[32mv[37m [34mggplot2[37m 3.3.2     [32mv[37m [34mpurrr  [37m 0.3.4
-[32mv[37m [34mtibble [37m 3.0.1     [32mv[37m [34mdplyr  [37m 1.0.0
-[32mv[37m [34mtidyr  [37m 1.1.0     [32mv[37m [34mstringr[37m 1.4.0
-[32mv[37m [34mreadr  [37m 1.3.1     [32mv[37m [34mforcats[37m 0.5.0[39m
-"
-"2","package ‘ggplot2’ was built under R version 4.0.2"
-"2","[37m-- [1mConflicts[22m ------------------------------------------ tidyverse_conflicts() --
-[31mx[37m [34mdplyr[37m::[32mfilter()[37m masks [34mstats[37m::filter()
-[31mx[37m [34mdplyr[37m::[32mlag()[37m    masks [34mstats[37m::lag()[39m
-"
 "0","library(skimr)"
 "0","library(kableExtra)"
 "2","
@@ -31,11 +14,42 @@ Attaching package: ‘kableExtra’
 "
 "0","library(readxl)"
 "0","library(Hmisc)"
-"2","Loading required package: lattice
-"
-"2","Loading required package: survival
-"
-"2","Loading required package: Formula
-"
+"0","library(haven)"
+"0","library(gt)"
 "2","
+Attaching package: ‘gt’
+
 "
+"2","The following object is masked from ‘package:Hmisc’:
+
+    html
+
+"
+"0","library(httr)"
+"0","library(jsonlite)"
+"2","package ‘jsonlite’ was built under R version 4.0.2"
+"2","
+Attaching package: ‘jsonlite’
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    flatten
+
+"
+"0","library(tidytext)"
+"0","library(rsdmx)"
+"0","library(here)"
+"0","library(purrr)"
+"0","library(wbggeo)"
+"0","library(wbgmaps)"
+"0","library(ggthemes)"
+"0",""
+"0",""
+"0","# Directory for SPI csv files  to be created"
+"0","dir <- here()"
+"0",""
+"0","input_dir <- paste(dir, '01_raw_data', sep=""/"")"
+"0","output_dir <- paste(dir, '01_raw_data','4.1_SOCS/', sep=""/"")"
+"0",""
+"0","country_metadata <- wbstats::wbcountries()"

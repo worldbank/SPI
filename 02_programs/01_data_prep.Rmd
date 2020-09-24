@@ -1908,12 +1908,12 @@ census_fun  <- function(data, input_var) {
     mutate(indicator_date=as.numeric(value)) %>%
     select('country','indicator_date','input_var')
   
-    #append IHSN data on surveys
+    #append nada data on surveys
   cs_df <- cs_df %>%
-    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_IHSN.csv", sep="" ))) %>%
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_NADA.csv", sep="" ))) %>%
     group_by(country, indicator_date) %>%
     summarise(input_var=first(na.omit(input_var)  ),
-            ihsn_dates=first(na.omit(ihsn_dates)  ) 
+            nada_dates=first(na.omit(nada_dates)  ) 
              )
     
   
@@ -1926,14 +1926,14 @@ census_fun  <- function(data, input_var) {
     group_by(country, date) %>%
     summarise(last_val=max(indicator_date, na.rm=T),
       input_var=first(input_var),
-      ihsn_dates=first(ihsn_dates)) %>%
+      nada_dates=first(nada_dates)) %>%
     mutate(indicator=case_when(
       (date-last_val<=10) & (date-last_val>0) ~ 1,
       (date-last_val<=20) & (date-last_val>0) ~ 0.5,
       TRUE ~ 0 )
     )  %>%
      ungroup() %>%
-    select(c( 'country', 'date', 'input_var','ihsn_dates', 'indicator')  ) %>%
+    select(c( 'country', 'date', 'input_var','nada_dates', 'indicator')  ) %>%
     arrange(date, country)
 
 
@@ -1973,13 +1973,13 @@ survey_fun  <- function(data, input_var) {
     mutate(indicator_date=as.numeric(value)) %>%
     select('country','indicator_date','input_var')
   
-  #append IHSN data on surveys
+  #append nada data on surveys
   cs_df <- cs_df %>%
-    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_IHSN.csv", sep="" ),
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_NADA.csv", sep="" ),
                        col_types = list(col_character(),col_double(), col_character()))) %>%
     group_by(country, indicator_date) %>%
     summarise(input_var=first(na.omit(input_var)  ),
-            ihsn_dates=first(na.omit(ihsn_dates)  ) 
+            nada_dates=first(na.omit(nada_dates)  ) 
              )
     
   
@@ -1995,9 +1995,9 @@ survey_fun  <- function(data, input_var) {
       sum(recency_indicator)==1 ~ 0.3, 
       TRUE ~ 0 ),
       input_var=first(input_var),
-      ihsn_dates=first(ihsn_dates)) %>%
+      nada_dates=first(nada_dates)) %>%
   ungroup() %>%
-  select(c( 'country', 'date', 'input_var','ihsn_dates', 'indicator')  ) %>%
+  select(c( 'country', 'date', 'input_var','nada_dates', 'indicator')  ) %>%
   arrange(date, country)
 
 
@@ -2029,42 +2029,42 @@ cs2_df <-ag_census_df %>%
 #Business/establishment census 
 cs3_df <-census_fun('D4.1.3.CEN.BIZZ', 'BIZZ.CENSUS') %>%
   rename(RAW.D4.1.3.BIZZ.CENSUS=input_var,
-         RAW.D4.1.3.BIZZ.CENSUS_IHSN=ihsn_dates,
+         RAW.D4.1.3.BIZZ.CENSUS_nada=nada_dates,
          SPI.D4.1.3.BIZZ=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey
 cs4_df <-survey_fun('D4.1.4.SVY.HOUS', 'HOUS.SURVEYS') %>%
   rename(RAW.D4.1.4.HOUS.SURVEYS=input_var,
-         RAW.D4.1.4.HOUS.SURVEYS_IHSN=ihsn_dates,
+         RAW.D4.1.4.HOUS.SURVEYS_nada=nada_dates,
          SPI.D4.1.4.HOUS=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Agriculture survey 
 cs5_df <-survey_fun('D4.1.5.SVY.AGRI', 'AGRI.SURVEYS') %>%
   rename(RAW.D4.1.5.AGRI.SURVEYS=input_var,
-         RAW.D4.1.5.AGRI.SURVEYS_IHSN=ihsn_dates,
+         RAW.D4.1.5.AGRI.SURVEYS_nada=nada_dates,
          SPI.D4.1.5.AGSVY=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Labor Force Survey 
 cs6_df <-survey_fun('D4.1.6.SVY.LABR', 'LABR.SURVEYS') %>%
   rename(RAW.D4.1.6.LABR.SURVEYS=input_var,
-         RAW.D4.1.6.LABR.SURVEYS_IHSN=ihsn_dates,
+         RAW.D4.1.6.LABR.SURVEYS_nada=nada_dates,
          SPI.D4.1.6.LABR=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Health/Demographic survey
 cs7_df <-survey_fun('D4.1.7.SVY.HLTH', 'HLTH.SURVEYS') %>%
   rename(RAW.D4.1.7.HLTH.SURVEYS=input_var,
-         RAW.D4.1.7.HLTH.SURVEYS_IHSN=ihsn_dates,
+         RAW.D4.1.7.HLTH.SURVEYS_nada=nada_dates,
          SPI.D4.1.7.HLTH=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Business/establishment survey  
 cs8_df <-survey_fun('D4.1.8.SVY.BIZZ', 'BIZZ.SURVEYS') %>%
   rename(RAW.D4.1.8.BIZZ.SURVEYS=input_var,
-         RAW.D4.1.8.BIZZ.SURVEYS_IHSN=ihsn_dates,
+         RAW.D4.1.8.BIZZ.SURVEYS_nada=nada_dates,
          SPI.D4.1.8.BZSVY=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
