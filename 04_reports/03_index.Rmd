@@ -18,6 +18,7 @@ abstract: Recognizing the new challenges for national statistical systems in mon
   published since 2004. This short note briefly discusses  the  motivation behind
   the new SPI, describes some of its major features, and discusses  a  new index based
   on the indicators.
+bibliography: ./bibliography.bib
 ---
 
 
@@ -38,7 +39,6 @@ library(Hmisc)
 library(httr)
 library(patchwork)
 library(ggrepel)
-library(lubridate)
 library(haven)
 library(zoo)
 
@@ -47,6 +47,10 @@ dir <- here()
 
 raw_dir <- paste(dir, '01_raw_data', sep="/")
 output_dir <- paste(dir, '03_output_data', sep="/")
+
+#weights (either unity (1) or population)
+wgt <- 1
+
 ```
 
 # Motivation
@@ -93,8 +97,23 @@ The upcoming World Development Report will focus on Data for Better Lives, and i
 
 
 ```{r data, include=FALSE}
+
+#add in population
+pop_df <- wbstats::wb(country="all",
+             indicator='SP.POP.TOTL',
+             startdate=2004,
+             enddate=2019) %>%
+  mutate(date=as.numeric(date)) %>%
+  mutate(population=value) %>%
+  select(country, date, population) 
+
+
 #read in the SPI dataset
-spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/"))
+spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
+  left_join(pop_df) %>%
+  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+
+
 
 metadata <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep=""))
 
@@ -124,8 +143,10 @@ spi_mapper  <- function(data, indicator, title) {
     group_by( country) %>%
     #summarise(across(!! indicator,last)) %>%
     rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights) %>%
     right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
+
   
   
    p1 <- ggplot() +
@@ -156,7 +177,7 @@ spi_mapper  <- function(data, indicator, title) {
   p2 <- map_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(data_available, na.rm=T),
+    mutate(Percentage=100*wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
@@ -173,7 +194,7 @@ spi_mapper  <- function(data, indicator, title) {
     p3 <- map_df %>%
     group_by(income) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(data_available, na.rm=T),
+    mutate(Percentage=100*wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=income, fill=income)) +
       geom_bar(stat="identity",position='dodge') +
@@ -190,14 +211,14 @@ spi_mapper  <- function(data, indicator, title) {
   p4 <- get(data)  %>%
     rename(data_available=!! indicator) %>%
     # right_join(spi_df_empty) %>%
-    group_by( date) %>%
+    group_by(income, date) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
-    mutate(Percentage=100*mean(data_available, na.rm=T),
+    mutate(Percentage=100*wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ungroup() %>%
-    ggplot(aes(y=Percentage, x=date)) +
+    ggplot(aes(y=Percentage, x=date, color=income)) +
       geom_point() +
-      geom_line(fill='blue') +
+      geom_line() +
       # geom_text_repel(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Date', sep=" - "),100),
@@ -301,9 +322,9 @@ FitFlextableToPage <- function(ft, pgwidth = 6){
 
 For research purposes, we create an index combining several indicators together to get an overview of country performance.
 
-A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as dimensions. We refer to the 22 cells in the framwork in Figure 1 as indicators. Finally, each indicator may be composed of multiple sub-indicators. For instance, the indicator on censuses and surveys is made up sub-indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.
+A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as dimensions. We refer to the 22 cells in the framwork in Figure 1 as sub-dimensions. Finally, each sub-dimension may be composed of multiple indicators. For instance, the sub-dimension on censuses and surveys is made up indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.
 
-Below is the full set of indicators available to populate the index. along with the corresponding sub-indicators:
+Below is the full set of indicators available to populate the index. along with the corresponding sub-dimension:
 
 
 ```{r metadata_tab, eval=FALSE, include=FALSE}
@@ -347,8 +368,8 @@ index_tab <- flextable(metatable) %>%
   add_header_lines('SPI Sub-Indicator Metadata.') %>%
   set_header_labels(values=list(
                        source_id="ID",
-                       source_name="Sub-Indicator Name",
-                       SPI_indicator_id="Indicator",
+                       source_name="Indicator Name",
+                       SPI_indicator_id="Sub-Dimension",
                        spi_indicator_description="Brief Description"
                                    ))
   FitFlextableToPage(index_tab)
@@ -358,52 +379,52 @@ index_tab <- flextable(metatable) %>%
 
 ## Methodology
 
-The Index will contain only a subset of the sub-dimensions from our framework.  For dimensions excluded, we either lacked a source with a developed methodology or else the data collection for that measure was incomplete. This is described below:
+The Index will contain only a subset of the sub-dimensions from our framework.  For sub-dimensions excluded, we either lacked a source with a developed methodology or else the data collection for that measure was incomplete. This is described below:
 
-  * **Indicator 1.1: Data use by national legislature:**  *Not included because of lack of established methodology*   
-  * **Indicator 1.2: Data use by national executive branch:** *Not included because of lack of established methodology*      
-  * **Indicator 1.3: Data use by civil society:**  *Not included because of lack of established methodology*    
-  * **Indicator 1.4: Data use by academia:**  *Not included because of lack of established methodology*   
-  * **Indicator 1.5: Data use by international organizations:**  *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics for international agencies using metadata*    
+  * **Sub-Dimension 1.1: Data use by national legislature:**  *Not included because of lack of established methodology*   
+  * **Sub-Dimension 1.2: Data use by national executive branch:** *Not included because of lack of established methodology*      
+  * **Sub-Dimension 1.3: Data use by civil society:**  *Not included because of lack of established methodology*    
+  * **Sub-Dimension 1.4: Data use by academia:**  *Not included because of lack of established methodology*   
+  * **Sub-Dimension 1.5: Data use by international organizations:**  *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics for international agencies using metadata*    
 
   
-  * **Indicator 2.1: Data Releases:** *SPI.D2.1.GDDS -	SDDS/e-GDDS subscription*    
-  * **Indicator 2.2: Online access:** *SPI.D2.2.Openness.subscore	ODIN Open Data Openness score*   
-  * **Indicator 2.3: Advisory/ Analytical Services:**  *Not included because of lack of established methodology*    
-  * **Indicator 2.4: Data services:** *SPI.D2.4.NADA	NADA metadata*
+  * **Sub-Dimension 2.1: Data Releases:** *SPI.D2.1.GDDS -	SDDS/e-GDDS subscription*    
+  * **Sub-Dimension 2.2: Online access:** *SPI.D2.2.Openness.subscore	ODIN Open Data Openness score*   
+  * **Sub-Dimension 2.3: Advisory/ Analytical Services:**  *Not included because of lack of established methodology*    
+  * **Sub-Dimension 2.4: Data services:** *SPI.D2.4.NADA	NADA metadata*
   
-  * **Indicator 3.1: Social Statistics:** *Average score for Goal 1-6 indicators*
-  * **Indicator 3.2: Economic Statistics:** *Average score for Goal 7-12 indicators*  
-  * **Indicator 3.3: Environmental Statistics:**  *Average score for Goal 13-15 indicators*      
-  * **Indicator 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators*    
+  * **Sub-Dimension 3.1: Social Statistics:** *Average score for Goal 1-6 indicators*
+  * **Sub-Dimension 3.2: Economic Statistics:** *Average score for Goal 7-12 indicators*  
+  * **Sub-Dimension 3.3: Environmental Statistics:**  *Average score for Goal 13-15 indicators*      
+  * **Sub-Dimension 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators*    
 
-  * **Indicator 4.1: Censuses and Surveys:** *Average score Census and Survey Indicators indicators SPI.D4.1....*
-  * **Indicator 4.2: Administrative Data:** *Average score for CRVS indicator and Education (UNESCO) admin data indicator.  Social Protection and Labor admin data indicators not included because of lack of established methodolgy*  
-  * **Indicator 4.3: Geospatial Data:**  *SPI.D4.3.GEO.first.admin.level -	Geospatial data available at 1st Admin Level* 
-  * **Indicator 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology*   
+  * **Sub-Dimension 4.1: Censuses and Surveys:** *Average score Census and Survey Indicators indicators SPI.D4.1....*
+  * **Sub-Dimension 4.2: Administrative Data:** *Average score for CRVS indicator and Education (UNESCO) admin data indicator.  Social Protection and Labor admin data indicators not included because of lack of established methodolgy*  
+  * **Sub-Dimension 4.3: Geospatial Data:**  *SPI.D4.3.GEO.first.admin.level -	Geospatial data available at 1st Admin Level* 
+  * **Sub-Dimension 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology*   
   
-  * **Indicator 5.1: legislation and governance:**  *Not included because of insufficient country coverage*  
-  * **Indicator 5.2: Standards and Methods:** *Average score for Standards and Methods indicators SPI.D5.2....*  
-  * **Indicator 5.3: skills:**  *Not included because of lack of established methodology*    
-  * **Indicator 5.4: partnerships:**  *Not included because of lack of established methodology*    
-  * **Indicator 5.5: finance:**  *Not included because of insufficient country coverage* 
+  * **Sub-Dimension 5.1: legislation and governance:**  *Not included because of insufficient country coverage*  
+  * **Sub-Dimension 5.2: Standards and Methods:** *Average score for Standards and Methods indicators SPI.D5.2....*  
+  * **Sub-Dimension 5.3: skills:**  *Not included because of lack of established methodology*    
+  * **Sub-Dimension 5.4: partnerships:**  *Not included because of lack of established methodology*    
+  * **Sub-Dimension 5.5: finance:**  *Not included because of insufficient country coverage* 
   
 
-This process of eliminating some indicators due to lack of established methodology or country coverage results in 12 indicators. This includes 1 on data use, 3 on data services, 4 on data products, 3 on data sources, and 1 on data infrastructure.
+This process of eliminating some Sub-Dimension due to lack of established methodology or country coverage results in 12 Sub-Dimension This includes 1 on data use, 3 on data services, 4 on data products, 3 on data sources, and 1 on data infrastructure.
 
 ### Overall Score
 
 Our statistical performance indicators have a three level structure, and our overall score will be formed by sequentially aggregating each level.
 
-To begin we produce a score for each indicator, which is an unweighted average of the sub-indicators within that indicator.  For instance, the Census and Surveys indicator will be formed by taking the unweighted average of the Population Census score, the Agriculture Census score, the Business Census score, the Labor Force Survey score, the Health Survey score, etc.  
+To begin we produce a score for each sub-dimension, which is an unweighted average of the indicators within that indicator.  For instance, the Census and Surveys sub-dimension will be formed by taking the unweighted average of the Population Census score, the Agriculture Census score, the Business Census score, the Labor Force Survey score, the Health Survey score, etc.  
 
-$$ SPI.IND_{ctdi} = \sum_{j=1}^{N_J} \frac{SPI.SUB.IND_{ctdij}}{N_J} $$
+$$ SPI.SUB.DIM{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
 
-where $SPI.IND_{ctdi}$ is indicator i, in dimension d, in time period t, and country c.  $SPI.SUB.IND_{ctdim}$ is a sub-indicator (e.g. population census score).
+where $SPI.SUB.DIM{ctds}$ is sub-dimension s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
 
-After computing a score for the indicators, we then compute a dimension score, which is the unweighted average of the indicators in that dimension.
+After computing a score for the sub-dimensions, we then compute a dimension score, which is the unweighted average of the sub-dimensions in that dimension.
 
-$$ SPI.DIM_{ctd} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdi}}{N_I} $$
+$$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{SPI.SUB.DIM{ctds}}{N_S} $$
 
 
 After calculating the scores for each dimension The SPI index is the average across the 5 dimensions. 
@@ -414,13 +435,18 @@ The SPI index is scaled to have a maximum score of 100 and a minimum of 0. A sco
 
 $$ SPI.INDEX_{ct} = \sum_{d=1}^{N_D} \frac{SPI.DIM_{ctd}}{N_D} $$
 
-Where SPI.INDEX is the SPI overall index. SPI.DIM are the 5 SPI dimensions listed above. In the notation, c is a country, t is the date, d is a dimension.
+Where SPI.INDEX is the SPI overall index. SPI.DIM are the 5 SPI dimensions listed above. In the notation, c is a country, t is the date, d is a dimension.  
+
+The nested structure of our index and the summation methods used to build an overall score ensure the axiomatic properties outlined in [@cameron2019measuring].  These include symmetry, monotonicity, and subgroup decomposability.
 
 ## Handling Missing Data 
 
 For a full description of the methodology behind each specific sub-indicator, please consult the technical documentation.  However, we did follow an approach of handling missing values and lining up data, which I will describe in general terms below.  For indicators where we had a value for a previous year (say a value in 2018 but not 2019), we would fill in from the previous value.  For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator.
 
 For indicators where we had no data for any years, we chose not to impute a value.  In that case, the value for that indicator is null and the country will not have a value for any sub-dimensions or dimensions where that value is used.
+
+
+# Analysis
 
 
 ```{r spi_df}
@@ -460,7 +486,7 @@ country_mod_list <- oecd_country_df$name  #fill in the missing values for OECDs 
 country_mod_list <- c(country_mod_list, 'Singapore')
 # create index dataset
 spi_index_df_temp <- spi_df_final %>%
-  select(country, iso3c, date, starts_with("SPI"), income, region) %>%
+  select(country, iso3c, date, starts_with("SPI"), income, region, weights, population) %>%
   arrange(-date,country)
 
 #Drop certain indicators that don't make cut because of imcomplete coverage usually
@@ -554,7 +580,8 @@ spi_index_simple <- spi_index_df_temp %>%
                                      'SPI.INDEX.DIM5')), na.rm=FALSE)
          ) %>% #
   arrange(-date, -SPI.INDEX) %>%
-  select(country, iso3c, date, starts_with('SPI.INDEX'), everything())
+  select(country, iso3c, date, starts_with('SPI.INDEX'), everything()) %>%
+    filter(date>=2016) #2016 is first year with complete data 
 
   
 #display top 25
@@ -570,39 +597,44 @@ index_disp <- spi_index_df %>%
 spi_index_df %>%
   write_excel_csv(path=paste(output_dir, 'SPI_index.csv', sep="/"))
 
-spi_index_map <- spi_index_df %>%
-  select(country,date, SPI.INDEX)
 
-spi_mapper('spi_index_map','SPI.INDEX','Overall SPI  Index Averaging Over All Sub-Dimensions.  Equal Weight for Each Sub-Dimension.')
+
 
 
 ```
 
 
-```{r tab2, eval=FALSE, include=FALSE}
-####
-# create table
-####
-DT::datatable(index_disp, colnames = c(
-                       "Country", 
-                       "ISO3C", 
-                       "Date", 
-                       "SPI Index Value",
-                       "Dimension 1: Data Use",
-                       "Dimension 2: Data Services",
-                       "Dimension 3: Data Products ",
-                       "Dimension 4: Data Sources",
-                       "Dimension 5: Data Infrastructure"
-                                   ),
-              caption=htmltools::tags$caption(
-            style = 'caption-side: top; text-align: left;',
-            htmltools::em("Overall SPI  Index Averaging Over All Sub-Dimensions."))    ,
-            extensions = 'Buttons', options=list(
-                dom = 'Bfrtip',
-                buttons = c('copy', 'csv', 'excel' ),
-                pageLength = 218)) 
+```{r text_computations}
+
+#number of countries with data for SPI index
+n_countries <- spi_index_df %>%
+  filter(!is.na(SPI.INDEX) & date==2019) %>% #countries with value for SPI in 2019
+  nrow()
+
+# percentage of world population covered
+pop_covered <- spi_index_df %>%
+  filter(date==2019) %>%
+  mutate(covered=!is.na(SPI.INDEX)) %>%
+  mutate(covered_pop=if_else(covered==TRUE, population, 0)) %>%
+  ungroup() %>%
+  summarise(pop_covered=sum(covered_pop, na.rm=T)/sum(population, na.rm=T))
+
 
 ```
+
+
+Below we show a set of summary measures for our SPI index.  We begin by presenting a world map containing the SPI index values for 2019 for each country.  In total, we have `r n_countries` countries with sufficient data to compute an index value.  This set of countries covers `r 100*round(pop_covered$pop_covered,3)` percent of the world population.
+
+
+```{r sumstats}
+#show map and summary stats by region and income group
+
+spi_mapper('spi_index_df','SPI.INDEX','Overall SPI  Index Averaging Over All Sub-Dimensions.  Equal Weight for Each Sub-Dimension.')
+
+```
+
+
+
 
 # Comparison to the Statistical Capacity Indicators
 
@@ -746,7 +778,7 @@ spi_odin_plot
 
 # Comparison to Version 0 of the SPI
 
-As a final comparison, we compare our new SPI index to an index developed by Cameron, Dang, Dinc, Foster, and Lokshin (2019), which can be thought of as a version 0 of our SPI index.  The authors use similar data sources for their index.  However, there are some differences.
+As a final comparison, we compare our new SPI index to an index developed by [@cameron2019measuring], which can be thought of as a version 0 of our SPI index.  The authors use similar data sources for their index.  However, there are some differences.
 
 
 First, the similarities.  The methodology for constructing the index is the same.  Also, the censuses and surveys (Indicator 4.1) and standards and methods (Indicator 5.2) are identical.  The indicator for data releases (Indicator 2.1) and data services (Indicator 2.4) are pulled from the information collected in the fourth dimension on dissemination practices from version 0 of the SPI in Cameron et al. (2019).  Finally, both indicators include an indicator for Complete Vital Registration Statistics (CRVS).  The CRVS indicator is in the administrative data section of the new SPI index, while it was in the standards, methods, and classifications section of the SPI version 0.
@@ -783,11 +815,6 @@ spi_spi_plot
 
 
 
-Cameron,Grant James; Dang,Hai-Anh H.; Dinc,Mustafa; Foster,James Stephen; Lokshin,Michael M..2019.
-
-Measuring the Statistical Capacity of Nations (English). Policy Research working paper;no. WPS 8693;Paper is funded by the Knowledge for Change Program (KCP);Paper is funded by the Strategic Research Program (SRP) Washington, D.C. : World Bank Group. http://documents.worldbank.org/curated/en/304431546956224461/Measuring-the-Statistical-Capacity-of-Nations
-
-http://documents1.worldbank.org/curated/en/304431546956224461/pdf/WPS8693.pdf
 
 # Country SPI Index values
 
@@ -795,7 +822,9 @@ Full list of countries by their SPI Index Score in 2019
 
 ```{r tab1, echo=FALSE}
 
-index_tab <- flextable(index_disp) %>%
+index_tab <- index_disp %>%
+  select(country, iso3c, date, starts_with('SPI.INDEX')) %>%
+  flextable() %>%
   add_header_lines('Overall SPI  Index Averaging Over All Sub-Dimensions.') %>%
   set_header_labels(values=list(
                        country="Country", 
@@ -813,3 +842,6 @@ index_tab <- flextable(index_disp) %>%
 FitFlextableToPage(index_tab)
 
 ```
+
+# References
+
