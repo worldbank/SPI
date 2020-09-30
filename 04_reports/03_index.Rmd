@@ -41,6 +41,7 @@ library(patchwork)
 library(ggrepel)
 library(haven)
 library(zoo)
+library(estimatr)
 
 #set directories
 dir <- here()
@@ -399,7 +400,7 @@ The Index will contain only a subset of the sub-dimensions from our framework.  
   * **Sub-Dimension 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators*    
 
   * **Sub-Dimension 4.1: Censuses and Surveys:** *Average score Census and Survey Indicators indicators SPI.D4.1....*
-  * **Sub-Dimension 4.2: Administrative Data:** *Average score for CRVS indicator and Education (UNESCO) admin data indicator.  Social Protection and Labor admin data indicators not included because of lack of established methodolgy*  
+  * **Sub-Dimension 4.2: Administrative Data:** *Average score for CRVS indicator.  Social Protection, Education, and Labor admin data indicators not included because of lack of established methodolgy*  
   * **Sub-Dimension 4.3: Geospatial Data:**  *SPI.D4.3.GEO.first.admin.level -	Geospatial data available at 1st Admin Level* 
   * **Sub-Dimension 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology*   
   
@@ -491,7 +492,7 @@ spi_index_df_temp <- spi_df_final %>%
 
 #Drop certain indicators that don't make cut because of imcomplete coverage usually
 spi_index_df_temp <- spi_index_df_temp %>%
-  select( -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level,, -SPI.D4.2.1.SPL, -SPI.D4.2.4.LBR) 
+  select( -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level,, -SPI.D4.2.1.SPL, -SPI.D4.2.4.LBR,-SPI.D4.2.2.EDU) 
 
 
 
@@ -633,10 +634,86 @@ spi_mapper('spi_index_df','SPI.INDEX','Overall SPI  Index Averaging Over All Sub
 
 ```
 
+## Unique Values
+
+```{r unique_scores}
+
+#calculate the number of unique values in the SPI Index
+spi_index_2019 <- spi_index_df %>%
+  filter(date==2019) %>%
+  filter(!is.na(SPI.INDEX))
+
+unique_scores <-  length(unique(spi_index_2019$SPI.INDEX))
+
+#check unique values by dimension.
+unique_scores1 <-  length(unique(spi_index_2019$SPI.INDEX.DIM1))
+unique_scores2 <-  length(unique(spi_index_2019$SPI.INDEX.DIM2))
+unique_scores3 <-  length(unique(spi_index_2019$SPI.INDEX.DIM3))
+unique_scores4 <-  length(unique(spi_index_2019$SPI.INDEX.DIM4))
+unique_scores5 <-  length(unique(spi_index_2019$SPI.INDEX.DIM5))
+
+```
+
+
+As a check of the data, we calculate the number of unique scores for our SPI index. If our SPI index produces a large number of tied scores, for instance, then our index will be less able to distinguish between the statistical performance of countries.  When calculating the number of unique values for 2019, we find that there are `r unique_scores` unique scores for `r n_countries` countries.  This means there are `r n_countries-unique_scores` tied values.  When looking within each dimension.  
+
+When looking at each specific dimension, there are only `r unique_scores1` unique scores for Dimension 1 on data use.  The data use indicator is coming solely from dimension 1.5 on data use by international organizations.  For Dimension 2, there are `r unique_scores2` unique scores.  For Dimension 3, there are `r unique_scores3` unique scores.  There are `r unique_scores4` unique scores for dimension 4, and there are `r unique_scores5` unique scores for dimension 5.
 
 
 
-# Comparison to the Statistical Capacity Indicators
+
+## Relationship to GDP Per Capita
+
+Below, we will present the correlation between our SPI index and the log of GDP per capita.  The source for GDP per capita comes from the  World Bank's World Development Indicators (WDI) database (NY.GDP.PCAP.KD).  The GDP per capita numbers are in constant 2010 US$.  
+
+```{r log_gdp}
+
+gdp_df <- wbstats::wb_data(
+  indicator='NY.GDP.PCAP.KD',
+  start_date=2016,
+  end_date=2019
+    ) %>%
+  mutate(log_gdp_pcap=log(NY.GDP.PCAP.KD)) %>%
+  left_join(select(spi_index_df,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
+
+#get the correlation for 2019
+gdp_df_2019 <- gdp_df %>%
+  filter(date==2019) 
+
+corr_2019 <- cor(gdp_df_2019$log_gdp_pcap,gdp_df_2019$SPI.INDEX, use='pairwise.complete.obs')
+corr_2019_nontrans <- cor(gdp_df_2019$NY.GDP.PCAP.KD,gdp_df_2019$SPI.INDEX, use='pairwise.complete.obs')
+
+```
+
+We would expect a strong positive relationship between the income level of countries and their statistical system, as higher income countries would tend to have more resources available for statistical production.  In fact, there is a strong relationship between the two.  The correlation in 2019 between log GDP per capita and the SPI index is `r round(corr_2019,2)`.[^1]
+
+[^1]: To understand what effect taking the log has on this correlation, the correlation in 2019 between (non-logged) GDP per capita and the SPI index is `r round(corr_2019_nontrans,2)`. 
+
+Below we show the scatter plot of the relationship between log GDP per capita and our SPI index for the years 2016-2019.  In general, countries with higher per capita income tend to have better performing statistical systems according to our measure.  
+
+```{r gdp_plot}
+
+### Scatterplot log GDP SPI
+spi_gdp_plot <- ggplot(gdp_df, aes(x=100*SPI.INDEX,y=NY.GDP.PCAP.KD, color=region)) +
+  facet_wrap(~date) +
+  # geom_point() +
+  geom_text(aes(label=iso3c)) +
+  scale_y_log10(labels = scales::comma) +
+  theme_bw() +
+  labs(
+    title='Scatterplot of Log GDP Per Capita on SPI Index',
+    caption = 'Source: GDP Per Capita comes from World Bank WDI database (NY.GDP.PCAP.KD)'  
+  ) +
+  xlab('SPI Index value') +
+  ylab('Log GDP Per Capita') +
+  theme(legend.position = 'bottom')
+
+spi_gdp_plot
+
+```
+
+
+## Comparison to the Statistical Capacity Indicators
 
 
 
@@ -738,8 +815,11 @@ spi_sci_plot <- ggplot(comparison_df, aes(x=SPI.INDEX,y=SCI, color=region)) +
   geom_text(aes(label=iso3c)) +
   theme_bw() +
   labs(
-    title='Scatterplot of Statistical Capacity Index on SPI Index'
-  )
+    title='Scatterplot of Statistical Capacity Index (SCI) on SPI Index'
+  ) +
+  xlab('SPI Index value') +
+  ylab('SCI value') +
+  theme(legend.position = 'bottom')
 
 spi_sci_plot
 
@@ -747,7 +827,69 @@ spi_sci_plot
 ```
 
 
-# ODIN ranking comparison
+Finally, we show how the relationship to Log GDP per capita differs for the SCI and the SPI index using linear regression.  Heteroskedasticity robust standard errors shown.
+
+```{r sci_spi_reg}
+
+gdp_reg_df <- wbstats::wb_data(
+  indicator='NY.GDP.PCAP.KD',
+  start_date=2016,
+  end_date=2019
+    ) %>%
+  mutate(log_gdp_pcap=log(NY.GDP.PCAP.KD)) %>%
+  left_join(select(comparison_df,iso3c,date, region,SPI.INDEX,SCI,ODIN_score,SPI_v0)) #merge on SPI Index data
+  
+  
+#regress Log GDP SPI
+m_spi <- lm_robust(SPI.INDEX ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2")
+summary(m_spi)
+
+
+#regress Log GDP SCI
+m_sci <- lm_robust(SCI ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2")
+summary(m_sci)
+
+#regress Log GDP ODIN
+m_odin <- lm_robust(ODIN_score ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2")
+summary(m_odin)
+
+#regress Log GDP SPI_v0
+m_spi_v0 <- lm_robust(SPI_v0 ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2")
+summary(m_spi_v0)
+
+gdp_long <- gdp_reg_df %>%
+  pivot_longer(
+    cols = c('SPI.INDEX', 'SPI_v0', 'ODIN_score', 'SCI'),
+    names_to='index',
+    values_to='index_values'
+  ) %>%
+  mutate(
+    index_name=case_when(
+      index=='SPI.INDEX' ~ "SPI Index",
+      index=='SPI_v0' ~ "SPI Index Version 0",
+      index=='ODIN_score' ~ "Open Data Watch",
+      index=='SCI' ~ "SCI",
+      
+    )
+  ) %>%
+  filter(date==2018)
+
+ggplot(gdp_long, aes(x=log_gdp_pcap,y=index_values, color=region)) +
+  facet_wrap(~index_name) +
+  # geom_point() +
+  geom_text(aes(label=iso3c)) +
+  theme_bw() +
+  labs(
+    title='Scatterplot of Statistical Capacity Index (SCI) on SPI Index'
+  ) +
+  xlab('Log GDP Per Capita') +
+  ylab('Index Values') +
+  theme(legend.position = 'bottom')
+
+```
+
+
+## ODIN ranking comparison
 
 We compare the SPI index to the Open Data Watch rankings of country statistical systems (https://odin.opendatawatch.com/report/rankings).  The correlation between the SPI index and the ODIN index is `r round(cor(comparison_df$SPI.INDEX,comparison_df$ODIN_score, use='pairwise.complete.obs'),3)`
  
@@ -765,7 +907,10 @@ spi_odin_plot <- ggplot(comparison_df, aes(x=SPI.INDEX,y=ODIN_score, color=regio
   theme_bw() +
   labs(
     title='Scatterplot of Open Data Watch Index on SPI Index'
-  )
+  ) +
+  xlab('SPI Index value') +
+  ylab('ODIN value') +
+  theme(legend.position = 'bottom')
 
 spi_odin_plot
 
@@ -776,7 +921,7 @@ spi_odin_plot
 
 
 
-# Comparison to Version 0 of the SPI
+## Comparison to Version 0 of the SPI
 
 As a final comparison, we compare our new SPI index to an index developed by [@cameron2019measuring], which can be thought of as a version 0 of our SPI index.  The authors use similar data sources for their index.  However, there are some differences.
 
@@ -802,7 +947,10 @@ spi_spi_plot <- ggplot(comparison_df, aes(x=SPI.INDEX,y=SPI_v0, color=region)) +
   theme_bw() +
   labs(
     title='Scatterplot of SPI Version 0 Index on new SPI Index'
-  )
+  ) +
+  xlab('SPI Index value') +
+  ylab('SPI Version 0 value') +
+  theme(legend.position = 'bottom')
 
 spi_spi_plot
 
@@ -814,6 +962,75 @@ spi_spi_plot
 ```
 
 
+## Density Plots
+
+As another check, we present the distribution of scores across countries for each year and compare this distribution to a normal distribution.  This exercise checks for whether the distribution of our SPI index scores contains significant skew or fat tails.  There is some indication of a bunching of scores near the top of the distribution of SPI scores.  This is due to a large number of OECD countries possessing similar scores on our index.  This is not unexpected as OECD requires member countries to adhere to several methodological standardsand  to regularly report on a large set of indicators.  These countries also are composed of several of the highest income countries that tend to be on the frontier of statistical production.
+
+We also compare the distribution of our index to other measures of statistical performance.  These are the SCI, the Open Data Watch index (ODIN), and version 0 of the SPI index that was produced in [@cameron2019measuring] 
+
+```{r density}
+
+density_df <- comparison_df %>%
+  select(iso3c, date, SPI.INDEX, SPI_v0, ODIN_score, SCI) %>%
+  pivot_longer(
+    cols = c('SPI.INDEX', 'SPI_v0', 'ODIN_score', 'SCI'),
+    names_to='index',
+    values_to='index_values'
+  ) %>%
+  mutate(
+    index_name=case_when(
+      index=='SPI.INDEX' ~ "SPI Index",
+      index=='SPI_v0' ~ "SPI Index Version 0",
+      index=='ODIN_score' ~ "Open Data Watch",
+      index=='SCI' ~ "SCI",
+      
+    )
+  )
+
+#show the density of our SPI index
+ggplot(spi_index_df, aes(x = SPI.INDEX)) + 
+  facet_wrap(~date) +
+  geom_histogram( 
+                          aes(y=..density.., fill=..count..)) +
+  stat_function(fun = dnorm, 
+                color='red',
+                args = list(mean = mean(spi_index_df$SPI.INDEX, na.rm=T), sd = sd(spi_index_df$SPI.INDEX, na.rm=T))) +
+    theme_bw() +
+  labs(
+    title='Distribution of SPI Index across Countries',
+    color='Index Name'
+  ) +
+  xlab('SPI Index value') +
+  theme(legend.position = 'bottom')
+
+#show the density of our SPI index compared to other indices
+ggplot(density_df, aes(x = index_values, color=index_name)) + 
+  facet_wrap(~date) +
+  geom_density() +
+    theme_bw() +
+  labs(
+    title='Distribution of SPI Index and Alternative Indices across Countries',
+    color='Index Name'
+  ) +
+  xlab('Index value') +
+  theme(legend.position = 'bottom')
+
+```
+
+# Dimension Index Scores
+
+Next, we present the scores for each dimension that compose the SPI index (Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure).  These figure can help show where (which dimension) variation is coming from across countries and to see where countries may be struggling in specific areas.
+
+```{r dimensions_plot}
+
+spi_mapper('spi_index_df','SPI.INDEX.DIM1','Dimension 1: Data Use Scores')
+spi_mapper('spi_index_df','SPI.INDEX.DIM2','Dimension 2: Data Services Scores')
+spi_mapper('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
+spi_mapper('spi_index_df','SPI.INDEX.DIM4','Dimension 4: Data Sources Scores')
+spi_mapper('spi_index_df','SPI.INDEX.DIM5','Dimension 5: Data Infrastructure Scores')
+
+
+```
 
 
 # Country SPI Index values
@@ -823,19 +1040,18 @@ Full list of countries by their SPI Index Score in 2019
 ```{r tab1, echo=FALSE}
 
 index_tab <- index_disp %>%
-  select(country, iso3c, date, starts_with('SPI.INDEX')) %>%
+  filter(date==2019) %>%
+  select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) %>%
   flextable() %>%
-  add_header_lines('Overall SPI  Index Averaging Over All Sub-Dimensions.') %>%
+  add_header_lines('Overall SPI Index in 2019 and Dimension Scores.') %>%
   set_header_labels(values=list(
                        country="Country", 
-                       iso3c="ISO3C", 
-                       date="Date", 
                        SPI.INDEX="SPI Index Value",
-                       SPI.INDEX.DIM1="Dimension 1: Data Use",
-                       SPI.INDEX.DIM2="Dimension 2: Data Services",
-                       SPI.INDEX.DIM3="Dimension 3: Data Products ",
-                       SPI.INDEX.DIM4="Dimension 4: Data Sources",
-                       SPI.INDEX.DIM5="Dimension 5: Data Infrastructure"
+                       SPI.INDEX.DIM1="Dim 1: Data Use",
+                       SPI.INDEX.DIM2="Dim 2: Data Services",
+                       SPI.INDEX.DIM3="Dim 3: Data Products ",
+                       SPI.INDEX.DIM4="Dim 4: Data Sources",
+                       SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
                                    ))
   
 

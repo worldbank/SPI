@@ -2213,63 +2213,67 @@ spi_mapper('aspire_map', 'SPI.D4.2.1.SPL', 'Administrative Data Available on Ben
 
 ### Education Admin Data
 
-* UNESCO UIS has shared a database containing data we can use on administrative data systems    
+* UNESCO UIS has database containing data we can use on administrative data systems.  Database is accessible using the UIS bulk download service at https://apiportal.uis.unesco.org/bdds.  Data was last updated on September 29, 2020.  
+
 * We score countries based on whether there is:
 
   * Data tracking SDG 4.1.2 Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education    
   
-  * Data tracking whether countries produce the following from administrative data sources:
+  <!-- * Data tracking whether countries produce the following from administrative data sources: -->
 
-      * Out-of-school rate by school age and sex
-      * 4.2.2 Participation rate in organized learning (one year before the official primary entry age), by sex
+  <!--     * Out-of-school rate by school age and sex -->
+  <!--     * 4.2.2 Participation rate in organized learning (one year before the official primary entry age), by sex -->
 
-In order to score this indicator, we calculate the fraction of the three types of indicators that were produced in a country in a year.  In order to smooth out variation from year to year in reporting or conducting national assessments, we take a moving 5 year average.
+In order to score this indicator, we calculate the fraction of the indicators that were produced in a country in a year.  In order to smooth out variation from year to year in reporting or conducting national assessments, we take a moving 5 year average.
 
 ```{r uis, message=FALSE, warning=FALSE}
 
-#read data from UNESCO API
-#get list of indicators to download
-indicators <- 'ADMI_GRADE2OR3PRIM_READ+ADMI_ENDOFPRIM_READ+ADMI_ENDOFLOWERSEC_READ+ADMI_GRADE2OR3PRIM_MAT+ADMI_ENDOFPRIM_MAT+ADMI_ENDOFLOWERSEC_MAT+ROFST_1_CP+ROFST_1_F_CP+ROFST_1_M_CP+ROFST_2_CP+ROFST_2_F_CP+ROFST_2_M_CP+ROFST_3_CP+ROFST_3_F_CP+ROFST_3_M_CP+ROFST_1T2_CP+ROFST_1T2_F_CP+ROFST_1T2_M_CP+ROFST_2T3_CP+ROFST_2T3_F_CP+ROFST_2T3_M_CP+ROFST_1T3_CP+ROFST_1T3_F_CP+ROFST_1T3_M_CP+NERA_AGM1_CP+NERA_AGM1_F_CP+NERA_AGM1_M_CP.'
+# #read data from UNESCO API
+# #get list of indicators to download
+# indicators <- 'ADMI_GRADE2OR3PRIM_READ+ADMI_ENDOFPRIM_READ+ADMI_ENDOFLOWERSEC_READ+ADMI_GRADE2OR3PRIM_MAT+ADMI_ENDOFPRIM_MAT+ADMI_ENDOFLOWERSEC_MAT+ROFST_1_CP+ROFST_1_F_CP+ROFST_1_M_CP+ROFST_2_CP+ROFST_2_F_CP+ROFST_2_M_CP+ROFST_3_CP+ROFST_3_F_CP+ROFST_3_M_CP+ROFST_1T2_CP+ROFST_1T2_F_CP+ROFST_1T2_M_CP+ROFST_2T3_CP+ROFST_2T3_F_CP+ROFST_2T3_M_CP+ROFST_1T3_CP+ROFST_1T3_F_CP+ROFST_1T3_M_CP+NERA_AGM1_CP+NERA_AGM1_F_CP+NERA_AGM1_M_CP.'
+# 
+# #get list of countries
+# countries <- 'AFG+ALB+DZA+ASM+AND+AGO+AIA+ATG+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BMU+BTN+BOL+BIH+BWA+BRA+VGB+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CYM+CAF+TCD+CHL+CHN+HKG+MAC+COL+COM+COG+COK+CRI+CIV+HRV+CUB+CUW+CYP+CZE+PRK+COD+DNK+DJI+DMA+DOM+ECU+EGY+SLV+GNQ+ERI+EST+SWZ+ETH+FJI+FIN+FRA+GUF+PYF+GAB+GMB+GEO+DEU+GHA+GIB+GRC+GRL+GRD+GLP+GUM+GTM+GIN+GNB+GUY+HTI+VAT+HND+HUN+ISL+IND+IDN+IRN+IRQ+IRL+ISR+ITA+JAM+JPN+JOR+KAZ+KEN+KIR+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LIE+LTU+LUX+MDG+MWI+MYS+MDV+MLI+MLT+MHL+MTQ+MRT+MUS+MEX+FSM+MCO+MNG+MNE+MSR+MAR+MOZ+MMR+NAM+NRU+NPL+NLD+ANT+NCL+NZL+NIC+NER+NGA+NIU+MKD+NOR+OMN+PAK+PLW+PSE+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+KOR+MDA+REU+ROU+RUS+RWA+SHN+KNA+LCA+SPM+VCT+WSM+SMR+STP+SAU+SEN+SRB+SYC+SLE+SGP+SXM+SVK+SVN+SLB+SOM+ZAF+SSD+ESP+LKA+SDN+XDN+SUR+SWE+CHE+SYR+TJK+THA+TLS+TGO+TKL+TON+TTO+TUN+TUR+TKM+TCA+TUV+UGA+UKR+ARE+GBR+TZA+USA+URY+UZB+VUT+VEN+VNM+WLF+YEM+ZMB+ZWE+SDG+40675+40330+40334+40344+40606+40617+40603+40614+40618+40612+40616+40619+40611+40613+40630+40650+40651+40656+40642+40620+40640+UIS+40510+40525+40530+40505+40515+40520+40500+40535+40540+40550+WB+40044+40042+40030+40043+40041/all'
+# 
+# start <- '2000'
+# end <- '2019'
+# 
+# #build the API query
+# url <- paste('http://api.uis.unesco.org/sdmx.ashx/GetData/SDG4_DS/',indicators, countries,'?startTime=',start,'&endTime=',end,sep="")
+# 
+# #read the data
+# url <- 'https://api.uis.unesco.org/sdmx/data/UNESCO,SDG4,2.0/ADMIN.NB.._T._T._T.G2_3+GLAST............?startPeriod=2013&endPeriod=2019&format=csv-sdmx&locale=en&subscription-key=fd406abcbf3d4e318741b8537c92fe43'
 
-#get list of countries
-countries <- 'AFG+ALB+DZA+ASM+AND+AGO+AIA+ATG+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BMU+BTN+BOL+BIH+BWA+BRA+VGB+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CYM+CAF+TCD+CHL+CHN+HKG+MAC+COL+COM+COG+COK+CRI+CIV+HRV+CUB+CUW+CYP+CZE+PRK+COD+DNK+DJI+DMA+DOM+ECU+EGY+SLV+GNQ+ERI+EST+SWZ+ETH+FJI+FIN+FRA+GUF+PYF+GAB+GMB+GEO+DEU+GHA+GIB+GRC+GRL+GRD+GLP+GUM+GTM+GIN+GNB+GUY+HTI+VAT+HND+HUN+ISL+IND+IDN+IRN+IRQ+IRL+ISR+ITA+JAM+JPN+JOR+KAZ+KEN+KIR+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LIE+LTU+LUX+MDG+MWI+MYS+MDV+MLI+MLT+MHL+MTQ+MRT+MUS+MEX+FSM+MCO+MNG+MNE+MSR+MAR+MOZ+MMR+NAM+NRU+NPL+NLD+ANT+NCL+NZL+NIC+NER+NGA+NIU+MKD+NOR+OMN+PAK+PLW+PSE+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+KOR+MDA+REU+ROU+RUS+RWA+SHN+KNA+LCA+SPM+VCT+WSM+SMR+STP+SAU+SEN+SRB+SYC+SLE+SGP+SXM+SVK+SVN+SLB+SOM+ZAF+SSD+ESP+LKA+SDN+XDN+SUR+SWE+CHE+SYR+TJK+THA+TLS+TGO+TKL+TON+TTO+TUN+TUR+TKM+TCA+TUV+UGA+UKR+ARE+GBR+TZA+USA+URY+UZB+VUT+VEN+VNM+WLF+YEM+ZMB+ZWE+SDG+40675+40330+40334+40344+40606+40617+40603+40614+40618+40612+40616+40619+40611+40613+40630+40650+40651+40656+40642+40620+40640+UIS+40510+40525+40530+40505+40515+40520+40500+40535+40540+40550+WB+40044+40042+40030+40043+40041/all'
-
-start <- '2000'
-end <- '2019'
-
-#build the API query
-url <- paste('http://data.uis.unesco.org/RestSDMX/sdmx.ashx/GetData/SDG4_DS/',indicators, countries,'?startTime=',start,'&endTime=',end,sep="")
-
-#read the data
-unesco_df_raw <- readsdmx::read_sdmx(url)
+unesco_df_raw <- read_csv(file=paste(raw_dir, '4.2_SOAD','UIS_SDG_MONITOR', 'SDG_DATA_NATIONAL.csv', sep="/"))
 
 #cleaning of unesco data
 unesco_df <- unesco_df_raw %>%
-    mutate(date=as.numeric(Time)) %>%
+    rename(iso3c=COUNTRY_ID) %>%
+    mutate(date=as.numeric(YEAR)) %>%
     mutate(type = case_when( #categorize based on whether they are assessment, out of school, or participation data
-      grepl('ADMI', SDG_IND) ~ "NAS", #Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education 
-      grepl('ROFST', SDG_IND) ~ "OOS", # Out-of-school rate by school age and sex
-      grepl('NERA', SDG_IND) ~ "ORGL" # Participation rate in organized learning (one year before the official primary entry age), by sex
+      grepl('admi', INDICATOR_ID) ~ "NAS", #Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education 
+      # grepl('ROFST', SDG_IND) ~ "OOS", # Out-of-school rate by school age and sex
+      # grepl('NERA', SDG_IND) ~ "ORGL" # Participation rate in organized learning (one year before the official primary entry age), by sex
     )) %>%
-    mutate(edu_admin_available=(ObsValue!=NaN & !is.na(ObsValue))) %>% #get a variable for wehther admin based value exists for indicator
-    group_by( LOCATION2017,type, date) %>%
+   filter(type=="NAS") %>%
+    mutate(edu_admin_available=(VALUE==1)) %>% #get a variable for wehther admin based value exists for indicator
+    group_by( iso3c, date, type) %>%
     summarise(edu_admin_available=mean(as.numeric(edu_admin_available))) %>% 
     ungroup() %>%
     pivot_wider(
       names_from='type',
       names_glue="RAW.D4.2.2.EDU.{type}",
       values_from='edu_admin_available',
-      values_fill=0
+      values_fill=NA
     ) %>%
-    rename(iso3c=LOCATION2017) %>%
     right_join(spi_df_empty) %>%
     mutate(across(starts_with('RAW.D4.2.2.EDU'),~if_else(is.na(.),0,.))) %>%
     group_by(iso3c) %>%
     arrange(-date, iso3c) %>%
     mutate(across(starts_with('RAW.D4.2.2.EDU'),~zoo::rollmean(.,k=window,fill=NA,align='left'),.names="{col}.MA5")) %>% #X year rolling average
     ungroup() %>%
-    mutate(SPI.D4.2.2.EDU=(RAW.D4.2.2.EDU.NAS.MA5+RAW.D4.2.2.EDU.OOS.MA5+RAW.D4.2.2.EDU.ORGL.MA5)/3) %>%
-  select(c('iso3c', 'country', 'date', 'RAW.D4.2.2.EDU.NAS','RAW.D4.2.2.EDU.OOS','RAW.D4.2.2.EDU.ORGL', 'SPI.D4.2.2.EDU')  )
+    mutate(SPI.D4.2.2.EDU=(RAW.D4.2.2.EDU.NAS)) %>%
+  select(c('iso3c', 'country', 'date', 'RAW.D4.2.2.EDU.NAS', 'SPI.D4.2.2.EDU')  )
 
 #add to spi databases
 spi_df <- spi_df %>%
@@ -2319,11 +2323,33 @@ Source: World Bank WDI Metadata.
 
 df <- WDI_metadata
 
+
 # Manipulate and clean final data
 df <- df %>%
   filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
   
 df$SPI.D4.2.3.CRVS<-as.numeric(grepl("Yes", df$Vital.registration.complete)) #create 0,1 variable for vital registration
+
+# #read in data from UNSD database on SDGs
+# df_birth <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_BRTH90N.csv', sep="/")) %>% #Countries with birth registration data that are at least 90 percent complete (1 = YES; 0 = NO)	
+#   filter(date>=2015 & date<2019) %>%
+#   left_join(spi_df_empty) %>%
+#   transmute(
+#     iso3c=iso3c,
+#     country=country,
+#     date=date,
+#     SPI.D4.2.3.BRTH90=if_else(ind_value==1,1,0)
+#   )
+# 
+# df_death <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_DETH75N.csv', sep="/")) %>% #Countries with death registration data that are at least 75 percent complete (1 = YES; 0 = NO)	
+#   filter(date>=2015& date<2019) %>%
+#   left_join(spi_df_empty) %>%
+#     transmute(
+#     iso3c=iso3c,
+#     country=country,
+#     date=date,
+#     SPI.D4.2.3.DETH75=if_else(ind_value==1,1,0)
+#   )
 
 crvs_df <- df %>%
   mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
@@ -2367,6 +2393,7 @@ spi_df <- spi_df %>%
 crvs_map <- crvs_df 
 
 spi_mapper('crvs_map', 'SPI.D4.2.3.CRVS', 'Complete Civil Registration & Vital Statistics Data Available According to WDI' )
+
 
 
 ```

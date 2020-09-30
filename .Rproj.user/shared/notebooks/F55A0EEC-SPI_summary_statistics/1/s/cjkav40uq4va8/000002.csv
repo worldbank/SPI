@@ -1,0 +1,75 @@
+"0",""
+"0",""
+"0",""
+"0","#import data"
+"0","SPI_index <- read_csv(paste(output_dir, 'SPI_index.csv', sep=""/""))"
+"2","Parsed with column specification:
+cols(
+  .default = col_double(),
+  country = [31mcol_character()[39m,
+  iso3c = [31mcol_character()[39m,
+  income = [31mcol_character()[39m,
+  region = [31mcol_character()[39m
+)
+"
+"2","See spec(...) for full column specifications.
+"
+"0","SPI_df <- read_csv(paste(output_dir, 'SPI_Data.csv', sep=""/""))"
+"2","Parsed with column specification:
+cols(
+  .default = col_double(),
+  country = [31mcol_character()[39m,
+  iso3c = [31mcol_character()[39m,
+  RAW.D2.1.IDDS = [31mcol_character()[39m,
+  RAW.D2.4.NADA_text = [31mcol_character()[39m,
+  RAW.D4.1.1.POPU.CENSUS = [31mcol_character()[39m,
+  RAW.D4.1.2.AGRI.CENSUS = [31mcol_character()[39m,
+  RAW.D4.1.3.BIZZ.CENSUS = [31mcol_character()[39m,
+  RAW.D4.1.3.BIZZ.CENSUS_IHSN = [33mcol_logical()[39m,
+  RAW.D4.1.4.HOUS.SURVEYS = [31mcol_character()[39m,
+  RAW.D4.1.4.HOUS.SURVEYS_IHSN = [31mcol_character()[39m,
+  RAW.D4.1.5.AGRI.SURVEYS = [31mcol_character()[39m,
+  RAW.D4.1.5.AGRI.SURVEYS_IHSN = [31mcol_character()[39m,
+  RAW.D4.1.6.LABR.SURVEYS = [31mcol_character()[39m,
+  RAW.D4.1.6.LABR.SURVEYS_IHSN = [31mcol_character()[39m,
+  RAW.D4.1.7.HLTH.SURVEYS = [31mcol_character()[39m,
+  RAW.D4.1.7.HLTH.SURVEYS_IHSN = [31mcol_character()[39m,
+  RAW.D4.1.8.BIZZ.SURVEYS = [31mcol_character()[39m,
+  RAW.D4.1.8.BIZZ.SURVEYS_IHSN = [33mcol_logical()[39m,
+  RAW.D4.2.3.CRVS = [31mcol_character()[39m,
+  RAW.D4.2.4.LBR.OTHER = [31mcol_character()[39m
+  # ... with 29 more columns
+)
+"
+"2","See spec(...) for full column specifications.
+"
+"2","96 parsing failures.
+ row                         col           expected actual                                                                                   file
+1730 RAW.D4.1.3.BIZZ.CENSUS_IHSN 1/0/T/F/TRUE/FALSE   2006 'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/03_output_data/SPI_Data.csv'
+1731 RAW.D4.1.3.BIZZ.CENSUS_IHSN 1/0/T/F/TRUE/FALSE   2006 'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/03_output_data/SPI_Data.csv'
+1732 RAW.D4.1.3.BIZZ.CENSUS_IHSN 1/0/T/F/TRUE/FALSE   2006 'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/03_output_data/SPI_Data.csv'
+1733 RAW.D4.1.3.BIZZ.CENSUS_IHSN 1/0/T/F/TRUE/FALSE   2006 'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/03_output_data/SPI_Data.csv'
+1734 RAW.D4.1.3.BIZZ.CENSUS_IHSN 1/0/T/F/TRUE/FALSE   2006 'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/03_output_data/SPI_Data.csv'
+.... ........................... .................. ...... ......................................................................................
+See problems(...) for more details.
+"
+"0","#metadata "
+"0","metadata <- data.frame("
+"0","  series = c('SPI.INDEX', 'SPI.INDEX.DIM2', 'SPI.INDEX.DIM3', 'SPI.INDEX.DIM4', 'SPI.INDEX.DIM5'),"
+"0","  indicator_name = c('SPI Overall Score', 'Dimension 2: Data Services', 'Dimension 3: Data Products', 'Dimension 4: Data Sources', 'Dimension 5: Data Infrastructure')"
+"0",")"
+"0",""
+"0","#get list of country info"
+"0","country_list <- wbstats::wbcountries()"
+"2","`wbcountries()` is deprecated as of wbstats 1.0.0.
+Please use `wb_countries()` instead.
+[90mThis warning is displayed once every 8 hours.[39m
+[90mCall `lifecycle::last_warnings()` to see where this warning was generated.[39m"
+"0","SPI_2019 <- SPI %>%"
+"0","  filter(date==2019) %>%"
+"0","  mutate(weights=1) %>%  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates."
+"0","  filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%"
+"0","  mutate(ISO_A3_EH=iso3c) %>%"
+"0","  mutate(across(contains(""SPI""),~100*.))"
+"2","Error in eval(lhs, parent, parent) : object 'SPI' not found
+"
