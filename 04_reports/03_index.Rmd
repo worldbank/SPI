@@ -1,5 +1,5 @@
 ---
-title: 'Measuring the Statistical Performance of Countries: An Overview of the SPI  Index'
+title: 'Measuring the Statistical Performance of Countries: An Overview of the Statistical Performance Indicators and Index'
 author: "SPI Team"
 date: "`r Sys.Date()`"
 output:
@@ -42,7 +42,8 @@ library(ggrepel)
 library(haven)
 library(zoo)
 library(estimatr)
-
+library(ggpmisc)
+library(ggthemes)
 #set directories
 dir <- here()
 
@@ -70,7 +71,7 @@ The new Statistical Performance Indicators (SPI) builds on the SCI, which the Wo
 
 The new Statistical Performance Indicators (SPI) are designed to monitor how well countries statistical systems are meeting this purpose.  By helping countries and development partners identify the strengths and weaknesses of national statistical systems the SPI can support policy advice for countries about their national statistical systems, investment decisions for donors including the World Bank, benchmarking of national statistical systems, and advocacy for national statistics.  
 
-We identify five key drivers of a country’s statistical performance.  These are data use, data services, data products, data sources, and data infrastructure.
+We identify five key dimensions of a country’s statistical performance.  These are data use, data services, data products, data sources, and data infrastructure.
 
 Statistics have no value unless they are used. The first dimension of the Dashboard is therefore data use. A successful statistical system is one that produces data products that are highly used. 
 
@@ -81,14 +82,14 @@ The dialogue between users and suppliers in turn drives the design of statistica
 In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens.  The fourth dimension of the Dashboard is therefore data sources.  A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.
 
 For the cycle to be complete, capability needs continuously to be reviewed to ensure that it is enough to deliver the products, services and ultimately data use required. The fifth dimension of the SPI is therefore data infrastructure. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
-The 5 dimensions and associated 22 components of the SPI are as shown in Figure 1 below.
+The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 below.
 
-*Figure 1: The Dimensions and Components that Construct the New SPI*
+*Figure 1: The Dimensions and Pillars that Construct the New SPI*
 ![unchanged image](SPI_dashboard.png)
 
 Key characteristics of the SPI are: (i) uses only publicly accessible data; (ii) transparent methodology; (iii) easily replicable; (iv) provides a long-time series to track progress in performance; (v) captures outcomes and supporting elements; (vi) reflects the SDGs; (vii) facilitates at-a-glance comparisons on a global scale.
-We are collecting data on indicators for the 22 components above. For dissemination, the SPI will be presented both in the dashboard format above and as an index for each country. Some further details on the construction of the new SPI are provided in the Annex. These indicators should be interpreted as a work-in-progress and are being continuously improved by the team. 
-The upcoming World Development Report will focus on Data for Better Lives, and it will examine the tremendous potential of the changing data landscape to improve the lives of poor people and consider the backdoors that can harm people. The aim is to help bring this activity to a conclusion in time for the World Bank World Development Report that is due for publication in February 2021. Subsequent dissemination activities and spin-off products (e.g., toolkits, blogs) will run into April 2021.
+We are collecting data on indicators for the 22 pillars above. For dissemination, the SPI will be presented both in the dashboard format above and as an index for each country. Further details on the construction of the new SPI are provided in the remainder of the document.
+
 
 
 
@@ -117,6 +118,8 @@ spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
 
 
 metadata <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep=""))
+
+pillars <- read_csv(paste(raw_dir, '/metadata/SPI_pillars.csv', sep=""))
 
 ```
 
@@ -319,113 +322,87 @@ FitFlextableToPage <- function(ft, pgwidth = 6){
 
 ```
 
-# Index Description
-
-For research purposes, we create an index combining several indicators together to get an overview of country performance.
-
-A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as dimensions. We refer to the 22 cells in the framwork in Figure 1 as sub-dimensions. Finally, each sub-dimension may be composed of multiple indicators. For instance, the sub-dimension on censuses and surveys is made up indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.
-
-Below is the full set of indicators available to populate the index. along with the corresponding sub-dimension:
+# Pillars of the new SPI
 
 
-```{r metadata_tab, eval=FALSE, include=FALSE}
+A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as dimensions. We refer to the 22 cells in the framwork in Figure 1 as pillars. Finally, each pillar may be composed of multiple indicators. For instance, the pillar on censuses and surveys is made up indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.
+
+Below is a brief description of the 22 pillars in our framework.  A detailed description of the underlying indicators populating the pillars is also available in the annex.
+
+
+
+```{r metadata_tab1}
 ####
 # create table
 ####
 
-metatable <- metadata %>%
-  filter(grepl('SPI.D',source_id)) %>%
-  select(-spi_indicator_name)
-
-DT::datatable(metatable, colnames = c(
-                       "ID",
-                       "Indicator Name",
-                       "Sub-Dimension",
-                       "Brief Description"
-                                   ),
-              caption=htmltools::tags$caption(
-            style = 'caption-side: top; text-align: left;',
-            htmltools::em("SPI Sub-Indicator Metadata."))    ,
-            extensions = 'Buttons', options=list(
-                dom = 'Bfrtip',
-                buttons = c('copy', 'csv', 'excel' ),
-                pageLength = 218)) 
-```
+pillars <- pillars %>%
+  mutate(pillar=paste(pillar_number, pillar_name, sep=": ")) %>%
+  select(pillar, spi_indicator_description)
 
 
-
-```{r metadata_tab2}
-####
-# create table
-####
-
-metatable <- metadata %>%
-  filter(grepl('SPI.D',source_id)) %>%
-  select(-spi_indicator_name)
-
-
-
-index_tab <- flextable(metatable) %>%
-  add_header_lines('SPI Sub-Indicator Metadata.') %>%
+pillars_tab <- flextable(pillars) %>%
+  add_header_lines('SPI Pillars Metadata.') %>%
   set_header_labels(values=list(
-                       source_id="ID",
-                       source_name="Indicator Name",
-                       SPI_indicator_id="Sub-Dimension",
+                       pillar="Pillar",
                        spi_indicator_description="Brief Description"
-                                   ))
-  FitFlextableToPage(index_tab)
+                                   )) 
+
+FitFlextableToPage(pillars_tab) %>%
+  width(width=3.2) %>%
+  align( align = "left", part = "body")
 
 
 ```
 
-## Methodology
+# Index Methodology
 
-The Index will contain only a subset of the sub-dimensions from our framework.  For sub-dimensions excluded, we either lacked a source with a developed methodology or else the data collection for that measure was incomplete. This is described below:
+For research purposes, we create an index combining several indicators together to get an overview of country performance.  The Index will contain only a subset of the pillars from our framework.  For pillars excluded, we either lacked a source with a developed methodology or else the data collection for that measure was incomplete. This is described below:
 
-  * **Sub-Dimension 1.1: Data use by national legislature:**  *Not included because of lack of established methodology*   
-  * **Sub-Dimension 1.2: Data use by national executive branch:** *Not included because of lack of established methodology*      
-  * **Sub-Dimension 1.3: Data use by civil society:**  *Not included because of lack of established methodology*    
-  * **Sub-Dimension 1.4: Data use by academia:**  *Not included because of lack of established methodology*   
-  * **Sub-Dimension 1.5: Data use by international organizations:**  *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics for international agencies using metadata*    
+  * **Pillar 1.1: Data use by national legislature:**  *Not included because of lack of established methodology*   
+  * **Pillar 1.2: Data use by national executive branch:** *Not included because of lack of established methodology*      
+  * **Pillar 1.3: Data use by civil society:**  *Not included because of lack of established methodology*    
+  * **Pillar 1.4: Data use by academia:**  *Not included because of lack of established methodology*   
+  * **Pillar 1.5: Data use by international organizations:**  *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics for international agencies using metadata*    
 
   
-  * **Sub-Dimension 2.1: Data Releases:** *SPI.D2.1.GDDS -	SDDS/e-GDDS subscription*    
-  * **Sub-Dimension 2.2: Online access:** *SPI.D2.2.Openness.subscore	ODIN Open Data Openness score*   
-  * **Sub-Dimension 2.3: Advisory/ Analytical Services:**  *Not included because of lack of established methodology*    
-  * **Sub-Dimension 2.4: Data services:** *SPI.D2.4.NADA	NADA metadata*
+  * **Pillar 2.1: Data Releases:** *SPI.D2.1.GDDS -	SDDS/e-GDDS subscription*    
+  * **Pillar 2.2: Online access:** *SPI.D2.2.Openness.subscore	ODIN Open Data Openness score*   
+  * **Pillar 2.3: Advisory/ Analytical Services:**  *Not included because of lack of established methodology*    
+  * **Pillar 2.4: Data services:** *SPI.D2.4.NADA	NADA metadata*
   
-  * **Sub-Dimension 3.1: Social Statistics:** *Average score for Goal 1-6 indicators*
-  * **Sub-Dimension 3.2: Economic Statistics:** *Average score for Goal 7-12 indicators*  
-  * **Sub-Dimension 3.3: Environmental Statistics:**  *Average score for Goal 13-15 indicators*      
-  * **Sub-Dimension 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators*    
+  * **Pillar 3.1: Social Statistics:** *Average score for Goal 1-6 indicators*
+  * **Pillar 3.2: Economic Statistics:** *Average score for Goal 7-12 indicators*  
+  * **Pillar 3.3: Environmental Statistics:**  *Average score for Goal 13-15 indicators*      
+  * **Pillar 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators*    
 
-  * **Sub-Dimension 4.1: Censuses and Surveys:** *Average score Census and Survey Indicators indicators SPI.D4.1....*
-  * **Sub-Dimension 4.2: Administrative Data:** *Average score for CRVS indicator.  Social Protection, Education, and Labor admin data indicators not included because of lack of established methodolgy*  
-  * **Sub-Dimension 4.3: Geospatial Data:**  *SPI.D4.3.GEO.first.admin.level -	Geospatial data available at 1st Admin Level* 
-  * **Sub-Dimension 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology*   
+  * **Pillar 4.1: Censuses and Surveys:** *Average score Census and Survey Indicators indicators SPI.D4.1....*
+  * **Pillar 4.2: Administrative Data:** *Average score for CRVS indicator.  Social Protection, Education, and Labor admin data indicators not included because of lack of established methodolgy*  
+  * **Pillar 4.3: Geospatial Data:**  *SPI.D4.3.GEO.first.admin.level -	Geospatial data available at 1st Admin Level* 
+  * **Pillar 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology*   
   
-  * **Sub-Dimension 5.1: legislation and governance:**  *Not included because of insufficient country coverage*  
-  * **Sub-Dimension 5.2: Standards and Methods:** *Average score for Standards and Methods indicators SPI.D5.2....*  
-  * **Sub-Dimension 5.3: skills:**  *Not included because of lack of established methodology*    
-  * **Sub-Dimension 5.4: partnerships:**  *Not included because of lack of established methodology*    
-  * **Sub-Dimension 5.5: finance:**  *Not included because of insufficient country coverage* 
+  * **Pillar 5.1: legislation and governance:**  *Not included because of insufficient country coverage*  
+  * **Pillar 5.2: Standards and Methods:** *Average score for Standards and Methods indicators SPI.D5.2....*  
+  * **Pillar 5.3: skills:**  *Not included because of lack of established methodology*    
+  * **Pillar 5.4: partnerships:**  *Not included because of lack of established methodology*    
+  * **Pillar 5.5: finance:**  *Not included because of insufficient country coverage* 
   
 
-This process of eliminating some Sub-Dimension due to lack of established methodology or country coverage results in 12 Sub-Dimension This includes 1 on data use, 3 on data services, 4 on data products, 3 on data sources, and 1 on data infrastructure.
+This process of eliminating some pillars due to lack of established methodology or country coverage results in 12 pillars. This includes 1 on data use, 3 on data services, 4 on data products, 3 on data sources, and 1 on data infrastructure.
 
 ### Overall Score
 
 Our statistical performance indicators have a three level structure, and our overall score will be formed by sequentially aggregating each level.
 
-To begin we produce a score for each sub-dimension, which is an unweighted average of the indicators within that indicator.  For instance, the Census and Surveys sub-dimension will be formed by taking the unweighted average of the Population Census score, the Agriculture Census score, the Business Census score, the Labor Force Survey score, the Health Survey score, etc.  
+To begin we produce a score for each pillar, which is an unweighted average of the indicators within that pillar.  For instance, the Census and Surveys pillar will be formed by taking the unweighted average of the Population Census score, the Agriculture Census score, the Business Census score, the Labor Force Survey score, the Health Survey score, etc.  
 
-$$ SPI.SUB.DIM{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
+$$ SPI.PILLAR{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
 
-where $SPI.SUB.DIM{ctds}$ is sub-dimension s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
+where $SPI.PILLAR{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
 
-After computing a score for the sub-dimensions, we then compute a dimension score, which is the unweighted average of the sub-dimensions in that dimension.
+After computing a score for the pillar, we then compute a dimension score, which is the unweighted average of the pillars in that dimension.
 
-$$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{SPI.SUB.DIM{ctds}}{N_S} $$
+$$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{SPI.PILLAR{ctds}}{N_S} $$
 
 
 After calculating the scores for each dimension The SPI index is the average across the 5 dimensions. 
@@ -442,9 +419,9 @@ The nested structure of our index and the summation methods used to build an ove
 
 ## Handling Missing Data 
 
-For a full description of the methodology behind each specific sub-indicator, please consult the technical documentation.  However, we did follow an approach of handling missing values and lining up data, which I will describe in general terms below.  For indicators where we had a value for a previous year (say a value in 2018 but not 2019), we would fill in from the previous value.  For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator.
+For a full description of the methodology behind each specific indicator, please consult the technical documentation.  However, we did follow an approach of handling missing values and lining up data, which I will describe in general terms below.  For indicators where we had a value for a previous year (say a value in 2018 but not 2019), we would fill in from the previous value.  For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator.
 
-For indicators where we had no data for any years, we chose not to impute a value.  In that case, the value for that indicator is null and the country will not have a value for any sub-dimensions or dimensions where that value is used.
+For indicators where we had no data for any years, we chose not to impute a value.  In that case, the value for that indicator is null and the country will not have a value for any pillars or dimensions where that value is used.
 
 
 # Analysis
@@ -630,7 +607,7 @@ Below we show a set of summary measures for our SPI index.  We begin by presenti
 ```{r sumstats}
 #show map and summary stats by region and income group
 
-spi_mapper('spi_index_df','SPI.INDEX','Overall SPI  Index Averaging Over All Sub-Dimensions.  Equal Weight for Each Sub-Dimension.')
+spi_mapper('spi_index_df','SPI.INDEX','Overall SPI Index.')
 
 ```
 
@@ -662,56 +639,98 @@ When looking at each specific dimension, there are only `r unique_scores1` uniqu
 
 
 
-## Relationship to GDP Per Capita
+## Relationship to GDP Per Capita and the Human Capital Index
 
-Below, we will present the correlation between our SPI index and the log of GDP per capita.  The source for GDP per capita comes from the  World Bank's World Development Indicators (WDI) database (NY.GDP.PCAP.KD).  The GDP per capita numbers are in constant 2010 US$.  
+Below, we will present the correlation between our SPI index and the log of GDP per capita and the World Bank's Human Capital Index ([@hci2020]).  The source for GDP per capita comes from the  World Bank's World Development Indicators (WDI) database (NY.GDP.PCAP.KD).  The GDP per capita numbers are in constant 2010 US$.  
 
 ```{r log_gdp}
 
+#HCI
+hci_df <- wbstats::wb_data(country="countries_only", 
+              indicator='HD.HCI.OVRL',
+              start_date=2016,
+              end_date=2019,
+              return_wide = F) %>%
+  left_join(select(spi_index_df,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
+
+#get the correlation for 2019
+hci_df_2018 <- hci_df %>%
+  filter(date==2018) 
+
+
+
+
+hci_spi <- ggplot(data=hci_df_2018, aes(y=value, x=100*SPI.INDEX)) +
+  facet_wrap(~indicator) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  theme_bw() +
+  xlab('SPI Index value') +
+  ylab('Human Capital Index') +
+  stat_poly_eq(aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+                     label.x.npc = "right", label.y.npc = 0.1,
+                     formula = 'y~x', parse = TRUE, size = 4) +
+    theme(legend.position = 'bottom')
+
+
+#GDP
 gdp_df <- wbstats::wb_data(
   indicator='NY.GDP.PCAP.KD',
   start_date=2016,
-  end_date=2019
+  end_date=2019,
+  return_wide = F
     ) %>%
-  mutate(log_gdp_pcap=log(NY.GDP.PCAP.KD)) %>%
   left_join(select(spi_index_df,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
 
 #get the correlation for 2019
 gdp_df_2019 <- gdp_df %>%
   filter(date==2019) 
 
-corr_2019 <- cor(gdp_df_2019$log_gdp_pcap,gdp_df_2019$SPI.INDEX, use='pairwise.complete.obs')
-corr_2019_nontrans <- cor(gdp_df_2019$NY.GDP.PCAP.KD,gdp_df_2019$SPI.INDEX, use='pairwise.complete.obs')
+  gdp_spi <- ggplot(data=gdp_df_2019, aes(y=value, x=100*SPI.INDEX)) +
+  facet_wrap(~indicator) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  scale_y_log10(labels = scales::comma) +
+  theme_bw() +
+  xlab('SPI Index value') +
+  ylab('Log GDP Per Capita') +
+  theme(legend.position = 'bottom') +
+  stat_poly_eq(aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+                     
+                     label.x.npc = "right", label.y.npc = 0.1,
+                     formula = 'y~x', parse = TRUE, size = 4)
+  
+
+
+
+
+corr_hci_2018 <- cor(hci_df_2018$value,hci_df_2018$SPI.INDEX, use='pairwise.complete.obs')
+
+
+corr_2019 <- cor(log(gdp_df_2019$value),gdp_df_2019$SPI.INDEX, use='pairwise.complete.obs')
+corr_2019_nontrans <- cor(gdp_df_2019$value,gdp_df_2019$SPI.INDEX, use='pairwise.complete.obs')
 
 ```
 
-We would expect a strong positive relationship between the income level of countries and their statistical system, as higher income countries would tend to have more resources available for statistical production.  In fact, there is a strong relationship between the two.  The correlation in 2019 between log GDP per capita and the SPI index is `r round(corr_2019,2)`.[^1]
+We would expect a strong positive relationship between GDP per capita of countries and their statistical system, as higher income countries would tend to have more resources available for statistical production.  In fact, there is a strong relationship between the two.  The correlation in 2019 between log GDP per capita and the SPI index is `r round(corr_2019,2)`.[^1]
 
 [^1]: To understand what effect taking the log has on this correlation, the correlation in 2019 between (non-logged) GDP per capita and the SPI index is `r round(corr_2019_nontrans,2)`. 
 
-Below we show the scatter plot of the relationship between log GDP per capita and our SPI index for the years 2016-2019.  In general, countries with higher per capita income tend to have better performing statistical systems according to our measure.  
+Another measure of a country's development is the Human Capital Index (HCI) developed by the World Bank ([@hci2020]).  The Human Capital Index is designed to capture the amount of human capital a child born today can expect to attain by age 18 in a country.  The index combines a country's child mortality, learning adjusted years of schooling, adult survival rates & stunting into one index. For more details, visit the Human Capital Index website (https://www.worldbank.org/en/publication/human-capital).  Again, we would expect a strong positive relationship between a country's HCI value and their Statistical Performance Indicators index value, as countries with a more developed human capital stock are likely to have greater capacity to produce statistics.  Again, this is what we see.  The correlation between the 2018 value of the HCI (the latest value available at the time of this writing) and the 2018 value of the SPI index is `r round(corr_hci_2018,2)`.
+
+Below we show the scatter plot of the relationship between log GDP per capita, the HCI, and our SPI index for the years 2016-2019.  In general, countries with higher per capita income and higher levels of human capital tend to have better performing statistical systems according to our measure.  
 
 ```{r gdp_plot}
 
 ### Scatterplot log GDP SPI
-spi_gdp_plot <- ggplot(gdp_df, aes(x=100*SPI.INDEX,y=NY.GDP.PCAP.KD, color=region)) +
-  facet_wrap(~date) +
-  # geom_point() +
-  geom_text(aes(label=iso3c)) +
-  scale_y_log10(labels = scales::comma) +
-  theme_bw() +
-  labs(
-    title='Scatterplot of Log GDP Per Capita on SPI Index',
-    caption = 'Source: GDP Per Capita comes from World Bank WDI database (NY.GDP.PCAP.KD)'  
-  ) +
-  xlab('SPI Index value') +
-  ylab('Log GDP Per Capita') +
-  theme(legend.position = 'bottom')
-
-spi_gdp_plot
+gdp_spi + hci_spi   +
+  plot_annotation(
+    title='Plot of SPI Index on Human Capital Index and GDP per capita',
+    caption='Source: All indicators come from the World Bank.'
+    )
+  
 
 ```
-
 
 ## Comparison to the Statistical Capacity Indicators
 
@@ -841,21 +860,33 @@ gdp_reg_df <- wbstats::wb_data(
   
   
 #regress Log GDP SPI
-m_spi <- lm_robust(SPI.INDEX ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2")
-summary(m_spi)
-
-
+m_spi <- lm_robust(SPI.INDEX ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
 #regress Log GDP SCI
-m_sci <- lm_robust(SCI ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2")
-summary(m_sci)
+m_sci <- lm_robust(SCI ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
+
 
 #regress Log GDP ODIN
-m_odin <- lm_robust(ODIN_score ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2")
-summary(m_odin)
+m_odin <- lm_robust(ODIN_score ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
+
 
 #regress Log GDP SPI_v0
-m_spi_v0 <- lm_robust(SPI_v0 ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2")
-summary(m_spi_v0)
+m_spi_v0 <- lm_robust(SPI_v0 ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
+
+#combine SPI and SCI results together
+date_names <- grep("factor", names(coef(m_spi)), value = TRUE)
+names(date_names) <- gsub(".*)(.)", "Year: \\1", date_names)
+
+huxtable::huxreg('SPI Index'=m_spi, 'SCI'=m_sci, 'Open Data Watch'=m_odin, 'SPI Version 0'=m_spi_v0,
+       coefs=c('Log GDP per Capita'='log_gdp_pcap', date_names, 'Intercept'='(Intercept)'),
+       note='{stars}. Heteroskedasticity Robust Std Errors in Parenthesis',
+       number_format=2,
+       bold_signif=0.05) %>%
+  huxtable::set_caption('Linear Regressions of Alternate Statistical Performance Indices on Log GDP per Capita') %>%
+  huxtable::as_flextable() %>%
+  FitFlextableToPage() %>%
+  width(width=1.2)
+
+
 
 gdp_long <- gdp_reg_df %>%
   pivot_longer(
@@ -1033,7 +1064,9 @@ spi_mapper('spi_index_df','SPI.INDEX.DIM5','Dimension 5: Data Infrastructure Sco
 ```
 
 
-# Country SPI Index values
+# Annex
+
+## Country SPI Index values
 
 Full list of countries by their SPI Index Score in 2019
 
@@ -1056,6 +1089,34 @@ index_tab <- index_disp %>%
   
 
 FitFlextableToPage(index_tab)
+
+```
+
+## Indicator Metadata
+
+
+```{r metadata_tab2}
+####
+# create table
+####
+
+metatable <- metadata %>%
+  filter(grepl('SPI.D',source_id)) %>%
+  select(-spi_indicator_name,-source_id)
+
+
+
+index_tab <- flextable(metatable) %>%
+  add_header_lines('SPI Indicator Metadata.') %>%
+  set_header_labels(values=list(
+                       source_name="Indicator Name",
+                       SPI_indicator_id="Pillar",
+                       spi_indicator_description="Brief Description",
+                       spi_indicator_scoring="Scoring"
+                                   ))
+  FitFlextableToPage(index_tab) %>%
+  width(width=1.63)
+
 
 ```
 

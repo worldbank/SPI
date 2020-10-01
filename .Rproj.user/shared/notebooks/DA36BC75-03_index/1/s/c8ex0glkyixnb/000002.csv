@@ -16,7 +16,7 @@
 "0",""
 "0","#Drop certain indicators that don't make cut because of imcomplete coverage usually"
 "0","spi_index_df_temp <- spi_index_df_temp %>%"
-"0","  select( -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level,, -SPI.D4.2.1.SPL, -SPI.D4.2.4.LBR) "
+"0","  select( -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level,, -SPI.D4.2.1.SPL, -SPI.D4.2.4.LBR,-SPI.D4.2.2.EDU) "
 "0",""
 "0",""
 "0",""
