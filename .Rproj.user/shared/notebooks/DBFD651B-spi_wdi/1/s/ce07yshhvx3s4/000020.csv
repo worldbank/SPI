@@ -1,0 +1,89 @@
+"0","
+
+spi_reg_dif <- nested %>%
+  filter(indicator %in% c('IBRD loans and IDA credits (DOD, current US$)',
+                          'Use of IMF credit (DOD, current US$)',
+                          'Current account balance (% of GDP)',
+                          'Foreign direct investment, net (BoP, current US$)',
+                          'Foreign direct investment, net inflows (% of GDP)',
+                          'Access to electricity (% of population)',
+                          'Tax revenue (% of GDP)',
+                          'Interest payments (% of revenue)',
+                          'Depth of credit information index (0=low to 8=high)',
+                          'Strength of legal rights index (0=weak to 12=strong)',
+                          'Gross capital formation (% of GDP)',
+                          'Trade (% of GDP)',
+                          'GDP per capita (constant 2010 US$)',
+                          'Coverage of social protection and labor programs (% of population)',
+                          'Coverage of social safety net programs (% of population)',
+                          'School enrollment, primary (gross), gender parity index (GPI)',
+                          'Primary completion rate, total (% of relevant age group)',
+                          'Adjusted net enrollment rate, primary (% of primary school age children)',
+                          'Probability of dying among children ages 5-9 years (per 1,000)',
+                          'Mortality rate, under-5 (per 1,000 live births)',
+                          'Prevalence of stunting, height for age (% of children under 5)',
+                          'Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)',
+                          'Gini index (World Bank estimate)',
+                          'Unemployment, total (% of total labor force) (modeled ILO estimate)',
+                          'Mortality rate, infant (per 1,000 live births)',
+                          'Export value index (2000 = 100)'
+                          )) %>%
+  mutate(
+    spi_regs = map(data, ~feols(value~SPI.INDEX | country + date, data=.x)), #do regressions
+    spi_tidied=map(spi_regs,tidy), #now tidy up results to show r^2
+  ) %>%
+  unnest(spi_tidied) %>%
+  select(-data,-spi_regs) 
+"
+"2","NOTE: 159 observations removed because of NA values (Breakup: LHS: 0, RHS: 159, Fixed-effects: 0).
+"
+"2","NOTE: 54 observations removed because of NA values (Breakup: LHS: 0, RHS: 54, Fixed-effects: 0).
+"
+"2","NOTE: 1 observation removed because of NA values (Breakup: LHS: 0, RHS: 1, Fixed-effects: 0).
+"
+"2","NOTE: 1 observation removed because of NA values (Breakup: LHS: 0, RHS: 1, Fixed-effects: 0).
+"
+"2","NOTE: 84 observations removed because of NA values (Breakup: LHS: 0, RHS: 84, Fixed-effects: 0).
+"
+"2","NOTE: 111 observations removed because of NA values (Breakup: LHS: 0, RHS: 111, Fixed-effects: 0).
+"
+"2","NOTE: 128 observations removed because of NA values (Breakup: LHS: 0, RHS: 128, Fixed-effects: 0).
+"
+"2","NOTE: 94 observations removed because of NA values (Breakup: LHS: 0, RHS: 94, Fixed-effects: 0).
+"
+"2","NOTE: 102 observations removed because of NA values (Breakup: LHS: 0, RHS: 102, Fixed-effects: 0).
+"
+"2","NOTE: 143 observations removed because of NA values (Breakup: LHS: 0, RHS: 143, Fixed-effects: 0).
+"
+"2","NOTE: 12 observations removed because of NA values (Breakup: LHS: 0, RHS: 12, Fixed-effects: 0).
+"
+"2","NOTE: 90 observations removed because of NA values (Breakup: LHS: 0, RHS: 90, Fixed-effects: 0).
+"
+"2","NOTE: 37 observations removed because of NA values (Breakup: LHS: 0, RHS: 37, Fixed-effects: 0).
+"
+"2","NOTE: 35 observations removed because of NA values (Breakup: LHS: 0, RHS: 35, Fixed-effects: 0).
+"
+"2","NOTE: 120 observations removed because of NA values (Breakup: LHS: 0, RHS: 120, Fixed-effects: 0).
+"
+"2","NOTE: 120 observations removed because of NA values (Breakup: LHS: 0, RHS: 120, Fixed-effects: 0).
+"
+"2","NOTE: 12 observations removed because of NA values (Breakup: LHS: 0, RHS: 12, Fixed-effects: 0).
+"
+"2","NOTE: 5 observations removed because of NA values (Breakup: LHS: 0, RHS: 5, Fixed-effects: 0).
+"
+"2","NOTE: 55 observations removed because of NA values (Breakup: LHS: 0, RHS: 55, Fixed-effects: 0).
+"
+"2","NOTE: 120 observations removed because of NA values (Breakup: LHS: 0, RHS: 120, Fixed-effects: 0).
+"
+"2","NOTE: 65 observations removed because of NA values (Breakup: LHS: 0, RHS: 65, Fixed-effects: 0).
+"
+"2","NOTE: 111 observations removed because of NA values (Breakup: LHS: 0, RHS: 111, Fixed-effects: 0).
+"
+"2","NOTE: 44 observations removed because of NA values (Breakup: LHS: 0, RHS: 44, Fixed-effects: 0).
+"
+"2","NOTE: 117 observations removed because of NA values (Breakup: LHS: 0, RHS: 117, Fixed-effects: 0).
+"
+"2","NOTE: 111 observations removed because of NA values (Breakup: LHS: 0, RHS: 111, Fixed-effects: 0).
+"
+"2","NOTE: 37 observations removed because of NA values (Breakup: LHS: 0, RHS: 37, Fixed-effects: 0).
+"

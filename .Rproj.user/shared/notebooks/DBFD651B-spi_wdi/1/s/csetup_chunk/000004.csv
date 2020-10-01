@@ -1,0 +1,58 @@
+"0","knitr::opts_chunk$set(echo = TRUE)"
+"0","library(tidyverse)"
+"0","library(skimr)"
+"0","library(kableExtra)"
+"0","library(readxl)"
+"0","library(Hmisc)"
+"2","Loading required package: survival
+"
+"2","Loading required package: Formula
+"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"2","
+Attaching package: ‘Hmisc’
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    src, summarize
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    format.pval, units
+
+"
+"0","library(haven)"
+"0","library(lubridate)"
+"0","library(httr)"
+"0","library(jsonlite)"
+"0","library(wbstats)"
+"0","library(broom)"
+"0","library(ggpmisc)"
+"0","library(wbggeo)"
+"0","library(wbgmaps)"
+"0","library(ggthemes)"
+"0","library(patchwork)"
+"0","library(fixest)"
+"2","package ‘fixest’ was built under R version 4.0.2"
+"2","
+Attaching package: ‘fixest’
+
+"
+"2","The following object is masked from ‘package:Hmisc’:
+
+    errbar
+
+"
+"0","#pull date"
+"0",""
+"0","# Directory for SPI csv files that were previously created"
+"0","csv_dir <- ""C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/03_output_data/"""
+"0",""
+"0",""
+"0",""
+"0",""

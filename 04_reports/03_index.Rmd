@@ -172,7 +172,7 @@ spi_mapper  <- function(data, indicator, title) {
     theme_map(base_size=12) +
     labs(
       title=str_wrap(title,100),
-      subtitle= 'Data Point is for last year available (usually 2019)',
+      subtitle= 'Data Point is for last year available (2019)',
       caption = 'Source: SPI Indicator.',
       fill='SPI Indicator Value'
     )
@@ -189,11 +189,30 @@ spi_mapper  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
-      subtitle= 'Data Point is for last year available (usually 2019)'
+      subtitle= 'Data Point is for last year available (2019)'
       ) +
       expand_limits(x=c(0,100)) +
-      theme_bw()
+      theme_bw() +
+      theme(legend.position = 'top')
 
+
+  p2_alt <- map_df %>%
+    ungroup() %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=100*(data_available),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=region, color=region)) +
+      geom_point() +
+      geom_text(aes(label=country), position=position_jitter(width=.3,height=.3), check_overlap=T) +
+      labs(
+      title=str_wrap(paste(title, 'By Country', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      expand_limits(x=c(0,100)) +
+      theme_bw() +
+      theme(legend.position = 'top')  
+  
   #by income
     p3 <- map_df %>%
     group_by(income) %>%
@@ -206,10 +225,11 @@ spi_mapper  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
-      subtitle= 'Data Point is for last year available (usually 2019)'
+      subtitle= 'Data Point is for last year available (2019)'
       ) +
       expand_limits(x=c(0,100)) +
-      theme_bw()
+      theme_bw() +
+      theme(legend.position = 'top')
     
   # #add line graph over time
   p4 <- get(data)  %>%
@@ -229,11 +249,17 @@ spi_mapper  <- function(data, indicator, title) {
       caption = 'Source: SPI Indicators Raw Data'
       ) +
       expand_limits(y=c(0,100)) +
-      theme_bw()
+      theme_bw() +
+      theme(legend.position = 'top')
+  
+
+            
       
   print(p1)
   
   print(p2)
+  
+  print(p2_alt)
   
   print(p3)
 
@@ -607,7 +633,7 @@ Below we show a set of summary measures for our SPI index.  We begin by presenti
 ```{r sumstats}
 #show map and summary stats by region and income group
 
-spi_mapper('spi_index_df','SPI.INDEX','Overall SPI Index.')
+spi_mapper('spi_index_df','SPI.INDEX','Overall SPI Index')
 
 ```
 
@@ -667,7 +693,8 @@ hci_spi <- ggplot(data=hci_df_2018, aes(y=value, x=100*SPI.INDEX)) +
   theme_bw() +
   xlab('SPI Index value') +
   ylab('Human Capital Index') +
-  stat_poly_eq(aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+  stat_poly_eq(aes(label  = paste(stat(eq.label),
+                                stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
                      formula = 'y~x', parse = TRUE, size = 4) +
     theme(legend.position = 'bottom')
@@ -695,8 +722,8 @@ gdp_df_2019 <- gdp_df %>%
   xlab('SPI Index value') +
   ylab('Log GDP Per Capita') +
   theme(legend.position = 'bottom') +
-  stat_poly_eq(aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-                     
+  stat_poly_eq(aes(label = paste(stat(eq.label),
+                                stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
                      formula = 'y~x', parse = TRUE, size = 4)
   
@@ -731,6 +758,77 @@ gdp_spi + hci_spi   +
   
 
 ```
+
+## Country Changes in the Index
+
+
+
+```{r changes}
+#create a dataframe for the 2016 SPI to calculate changes since 2016
+spi_index_2016 <- spi_index_df %>%
+  filter(date==2016) %>%
+  filter(!is.na(SPI.INDEX)) %>%
+  mutate(SPI.INDEX.2016=100*SPI.INDEX) %>%
+  select(iso3c, country, region, SPI.INDEX.2016)
+
+spi_changes <- spi_index_2019 %>%
+  mutate(SPI.INDEX.2019=100*SPI.INDEX) %>%
+  select(iso3c, country,region, SPI.INDEX.2019) %>%
+  left_join(spi_index_2016)
+
+
+#correlation
+corr_2019_2016 <- cor(spi_changes$SPI.INDEX.2019,spi_changes$SPI.INDEX.2016, use='pairwise.complete.obs')
+
+
+```
+
+In order to assess how stable our index values are over time, next we will compare the index values in 2016 to the 2019 values.  Overall, the SPI index is quite stable over time.  The correlation between the 2016 value and the 2019 value is `r round(corr_2019_2016,2)`.
+
+```{r changes_plot}
+
+ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2019, color=region)) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm', color='blue') +
+  theme_bw() +
+  labs(
+    title='Scatterplot of 2019 SPI Index values & 2016 SPI Index values'
+  ) +
+  ylab('2019 SPI Index value') +
+  xlab('2016 SPI Index value') +
+  theme(legend.position = 'bottom') +
+    stat_poly_eq(aes(label = paste(stat(eq.label),
+                                stat(rr.label), sep = "*\", \"*")), 
+                     color='black',
+                     label.x.npc = "right", label.y.npc = 0.1,
+                     formula = 'y~x', parse = TRUE, size = 4)
+
+
+```
+
+```{r top_bottom_changes}
+
+top_changes <- spi_changes %>%
+  mutate(changes=SPI.INDEX.2019-SPI.INDEX.2016) %>%
+  arrange(-changes) %>%
+  select(country,SPI.INDEX.2019,SPI.INDEX.2016, changes) %>%
+  mutate(across(c('SPI.INDEX.2019','SPI.INDEX.2016', 'changes'),round,1))
+
+top_changes_tab <- flextable(head(top_changes,10)) %>%
+  add_header_lines('Top 10 Countries with Largest Changes from 2016-2019.') %>%
+  set_header_labels(values=list(
+                       country="Country",
+                       SPI.INDEX.2019="SPI Index Score 2019",
+                       SPI.INDEX.2016="SPI Index Score 2016",
+                       changes="Difference"
+                                   )) 
+
+FitFlextableToPage(top_changes_tab) %>%
+  width(width=1.2) %>%
+  align( align = "left", part = "body")
+
+```
+
 
 ## Comparison to the Statistical Capacity Indicators
 
@@ -828,16 +926,16 @@ We compare the SPI index to the older World Bank Statistical Capacity Indicators
 ```{r sci}
 
 ### Scatterplot SCI SPI
-spi_sci_plot <- ggplot(comparison_df, aes(x=SPI.INDEX,y=SCI, color=region)) +
+spi_sci_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=SCI, color=region)) +
   facet_wrap(~date) +
   # geom_point() +
   geom_text(aes(label=iso3c)) +
   theme_bw() +
   labs(
-    title='Scatterplot of Statistical Capacity Index (SCI) on SPI Index'
+    title='Scatterplot of Statistical Capacity Index (SCI) and SPI Index'
   ) +
-  xlab('SPI Index value') +
-  ylab('SCI value') +
+  ylab('SPI Index value') +
+  xlab('SCI value') +
   theme(legend.position = 'bottom')
 
 spi_sci_plot
@@ -931,7 +1029,7 @@ We compare the SPI index to the Open Data Watch rankings of country statistical 
  
 
 ### Scatterplot ODIN SPI
-spi_odin_plot <- ggplot(comparison_df, aes(x=SPI.INDEX,y=ODIN_score, color=region)) +
+spi_odin_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=ODIN_score, color=region)) +
   # geom_point() +
   facet_wrap(~date) +
   geom_text(aes(label=iso3c)) +
@@ -939,8 +1037,8 @@ spi_odin_plot <- ggplot(comparison_df, aes(x=SPI.INDEX,y=ODIN_score, color=regio
   labs(
     title='Scatterplot of Open Data Watch Index on SPI Index'
   ) +
-  xlab('SPI Index value') +
-  ylab('ODIN value') +
+  ylab('SPI Index value') +
+  xlab('ODIN value') +
   theme(legend.position = 'bottom')
 
 spi_odin_plot
@@ -971,7 +1069,7 @@ We compare the SPI index to the SPI version 0.  The correlation between the SPI 
 
 
 ### Scatterplot SPI SPI_v0
-spi_spi_plot <- ggplot(comparison_df, aes(x=SPI.INDEX,y=SPI_v0, color=region)) +
+spi_spi_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=SPI_v0, color=region)) +
   facet_wrap(~date) +
   # geom_point() +
   geom_text(aes(label=iso3c)) +
@@ -979,8 +1077,8 @@ spi_spi_plot <- ggplot(comparison_df, aes(x=SPI.INDEX,y=SPI_v0, color=region)) +
   labs(
     title='Scatterplot of SPI Version 0 Index on new SPI Index'
   ) +
-  xlab('SPI Index value') +
-  ylab('SPI Version 0 value') +
+  ylab('SPI Index value') +
+  xlab('SPI Version 0 value') +
   theme(legend.position = 'bottom')
 
 spi_spi_plot
@@ -1072,9 +1170,17 @@ Full list of countries by their SPI Index Score in 2019
 
 ```{r tab1, echo=FALSE}
 
+
+
+
+
+#make the table
 index_tab <- index_disp %>%
   filter(date==2019) %>%
-  select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) %>%
+  select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) 
+
+#make nice looking
+index_tab <- index_tab %>%
   flextable() %>%
   add_header_lines('Overall SPI Index in 2019 and Dimension Scores.') %>%
   set_header_labels(values=list(
@@ -1085,7 +1191,20 @@ index_tab <- index_disp %>%
                        SPI.INDEX.DIM3="Dim 3: Data Products ",
                        SPI.INDEX.DIM4="Dim 4: Data Sources",
                        SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
-                                   ))
+                                   )) %>%
+    bg(j = c('SPI.INDEX'), 
+       bg = scales::col_quantile("RdYlGn", domain=NULL, n=8)) %>%
+    bg(j = c('SPI.INDEX.DIM1'),
+       bg = scales::col_quantile("RdYlGn", domain=NULL, n=4)) %>%
+    bg(j = c('SPI.INDEX.DIM2'),
+       bg = scales::col_quantile("RdYlGn", domain=NULL, n=8)) %>%
+    bg(j = c('SPI.INDEX.DIM3'),
+       bg = scales::col_quantile("RdYlGn", domain=NULL, n=8)) %>%
+    bg(j = c('SPI.INDEX.DIM4'),
+       bg = scales::col_quantile("RdYlGn", domain=NULL, n=8)) %>%
+    bg(j = c('SPI.INDEX.DIM5'),
+       bg = scales::col_quantile("RdYlGn", domain=NULL, n=4))
+
   
 
 FitFlextableToPage(index_tab)
