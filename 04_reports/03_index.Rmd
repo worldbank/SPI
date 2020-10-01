@@ -686,13 +686,13 @@ hci_df_2018 <- hci_df %>%
 
 
 
-hci_spi <- ggplot(data=hci_df_2018, aes(y=value, x=100*SPI.INDEX)) +
+hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=100*SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
   theme_bw() +
-  xlab('SPI Index value') +
-  ylab('Human Capital Index') +
+  ylab('SPI Index value') +
+  xlab('Human Capital Index') +
   stat_poly_eq(aes(label  = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
@@ -713,14 +713,14 @@ gdp_df <- wbstats::wb_data(
 gdp_df_2019 <- gdp_df %>%
   filter(date==2019) 
 
-  gdp_spi <- ggplot(data=gdp_df_2019, aes(y=value, x=100*SPI.INDEX)) +
+  gdp_spi <- ggplot(data=gdp_df_2019, aes(x=value, y=100*SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  scale_y_log10(labels = scales::comma) +
+  scale_x_log10(labels = scales::comma) +
   theme_bw() +
-  xlab('SPI Index value') +
-  ylab('Log GDP Per Capita') +
+  ylab('SPI Index value') +
+  xlab('Log GDP Per Capita') +
   theme(legend.position = 'bottom') +
   stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
@@ -806,6 +806,7 @@ ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2019, color=region)) +
 
 ```
 
+
 ```{r top_bottom_changes}
 
 top_changes <- spi_changes %>%
@@ -814,6 +815,16 @@ top_changes <- spi_changes %>%
   select(country,SPI.INDEX.2019,SPI.INDEX.2016, changes) %>%
   mutate(across(c('SPI.INDEX.2019','SPI.INDEX.2016', 'changes'),round,1))
 
+top_mover <- as.character(top_changes[1,1])
+top_mover_change <- as.numeric(top_changes[1,4])
+```
+
+
+While the scores were relatively stable over time, some countries did see large improvements in their score from 2016-2017.  The country that improved most on our index from 2016 to 2019 was `r top_mover`. `r top_mover` improved by `r top_mover_change` points on our scale out of 100.  The table below shows the changes in our SPI index for the top 10 largest improvers.
+
+
+
+```{r top_bottom_changes_tab}
 top_changes_tab <- flextable(head(top_changes,10)) %>%
   add_header_lines('Top 10 Countries with Largest Changes from 2016-2019.') %>%
   set_header_labels(values=list(
@@ -826,13 +837,12 @@ top_changes_tab <- flextable(head(top_changes,10)) %>%
 FitFlextableToPage(top_changes_tab) %>%
   width(width=1.2) %>%
   align( align = "left", part = "body")
-
 ```
 
 
 ## Comparison to the Statistical Capacity Indicators
 
-
+Next, we compare our index to several other indices of statistical performance that have been created.  This will provide a sense of how rankings differ across measures, how they correlate with other outcomes, and how the distributions of scores compare.
 
 ```{r comparison, include=FALSE}
 
@@ -921,7 +931,7 @@ comparison_df <- spi_index_df %>%
 
 ```
 
-We compare the SPI index to the older World Bank Statistical Capacity Indicators (http://datatopics.worldbank.org/statisticalcapacity/SCIdashboard.aspx).  The correlation between the SPI index and the SCI  is `r round(cor(comparison_df$SPI.INDEX,comparison_df$SCI, use='pairwise.complete.obs'),3)`
+We compare the SPI index to the older World Bank Statistical Capacity Indicators (http://datatopics.worldbank.org/statisticalcapacity/SCIdashboard.aspx).  The correlation between the SPI index and the SCI  is `r round(cor(comparison_df$SPI.INDEX,comparison_df$SCI, use='pairwise.complete.obs'),3)`.
 
 ```{r sci}
 
@@ -944,10 +954,7 @@ spi_sci_plot
 ```
 
 
-Finally, we show how the relationship to Log GDP per capita differs for the SCI and the SPI index using linear regression.  Heteroskedasticity robust standard errors shown.
-
 ```{r sci_spi_reg}
-
 gdp_reg_df <- wbstats::wb_data(
   indicator='NY.GDP.PCAP.KD',
   start_date=2016,
@@ -969,6 +976,25 @@ m_odin <- lm_robust(ODIN_score ~ log_gdp_pcap + factor(date), data = gdp_reg_df,
 
 #regress Log GDP SPI_v0
 m_spi_v0 <- lm_robust(SPI_v0 ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
+
+m_spi_tidy <- broom::tidy(m_spi)
+m_spi_glance <- broom::glance(m_spi)
+
+spi_coef <- as.numeric(m_spi_tidy[2,2])
+spi_r2 <- as.numeric(m_spi_glance[1,1])
+
+```
+
+
+Next, we show how the relationship to Log GDP per capita differs for the SCI and the SPI index using linear regression.  We also include the Open Data Watch and the version of the Statistical Performance Index developed in [@cameron2019measuring].  While showing a strong relationship between an index and log GDP per capita does not mean the index is necessarily correct, and is certainly not necessarily causal, it does provide a face validity check of the index.  Heteroskedasticity robust standard errors are shown in the table.
+
+Overall, the new SPI index has the strongest relationship to GDP per capita.  The linear regression estimates indicate that a 1% increase in log GDP per capita is associated with a `r round(spi_coef,1)` point increase in our SPI index score.  The r-squared from this regression is `r round(spi_r2,2)`.
+
+
+
+```{r sci_spi_reg_tab}
+
+
 
 #combine SPI and SCI results together
 date_names <- grep("factor", names(coef(m_spi)), value = TRUE)
@@ -1009,7 +1035,7 @@ ggplot(gdp_long, aes(x=log_gdp_pcap,y=index_values, color=region)) +
   geom_text(aes(label=iso3c)) +
   theme_bw() +
   labs(
-    title='Scatterplot of Statistical Capacity Index (SCI) on SPI Index'
+    title='Scatterplot of Alternate Statistical Performance Indices on Log GDP per Capita'
   ) +
   xlab('Log GDP Per Capita') +
   ylab('Index Values') +
@@ -1166,13 +1192,25 @@ spi_mapper('spi_index_df','SPI.INDEX.DIM5','Dimension 5: Data Infrastructure Sco
 
 ## Country SPI Index values
 
-Full list of countries by their SPI Index Score in 2019
+Below, we present the full list of countries by their SPI Index Score in 2019.  The first column is the country name and the following columns are the overall SPI index score, and then the sub-scores for dimension 1,2,3,4 and 5.  
+
+The cells in the table are color coded based on the performance of countries on our index and the sub-scores of the dimensions.  Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into three groups:   
+
+* Emerging: Countries in the bottom 33% are classified in this group.  Shading is in red.  Countries in bottom half of this group are shown in dark red.  
+* Intermediate: Countries in the middle 33% are classified in this group.  Shading in yellow.  Countries in the bottom half of this group are shown in light yellow.    
+* Advanced:  Countries in the top 33% are classifed in this group.  Shading in green.  Countries in the bottom half of this group are shown in light green.
+
+
+
 
 ```{r tab1, echo=FALSE}
 
 
+#colors
+col_palette <- c("#D73027",  "#FC7F60", "#FFFF8C", 
+  "#E4ED40",  "#66BD63", "#1A9850")
 
-
+col_palette2 <- c("#D73027",  "#E4ED40",  "#1A9850")
 
 #make the table
 index_tab <- index_disp %>%
@@ -1193,17 +1231,17 @@ index_tab <- index_tab %>%
                        SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
                                    )) %>%
     bg(j = c('SPI.INDEX'), 
-       bg = scales::col_quantile("RdYlGn", domain=NULL, n=8)) %>%
+       bg = scales::col_quantile(col_palette, domain=NULL, n=6)) %>%
     bg(j = c('SPI.INDEX.DIM1'),
-       bg = scales::col_quantile("RdYlGn", domain=NULL, n=4)) %>%
+       bg = scales::col_quantile(col_palette2, domain=NULL, n=3)) %>%
     bg(j = c('SPI.INDEX.DIM2'),
-       bg = scales::col_quantile("RdYlGn", domain=NULL, n=8)) %>%
+       bg = scales::col_quantile(col_palette, domain=NULL, n=6)) %>%
     bg(j = c('SPI.INDEX.DIM3'),
-       bg = scales::col_quantile("RdYlGn", domain=NULL, n=8)) %>%
+       bg = scales::col_quantile(col_palette, domain=NULL, n=6)) %>%
     bg(j = c('SPI.INDEX.DIM4'),
-       bg = scales::col_quantile("RdYlGn", domain=NULL, n=8)) %>%
+       bg = scales::col_quantile(col_palette, domain=NULL, n=6)) %>%
     bg(j = c('SPI.INDEX.DIM5'),
-       bg = scales::col_quantile("RdYlGn", domain=NULL, n=4))
+       bg = scales::col_quantile(col_palette2, domain=NULL, n=3))
 
   
 

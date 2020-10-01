@@ -11,6 +11,7 @@
 "0","  left_join(spi_index_2016)"
 "0",""
 "0",""
+"0","#correlation"
 "0","corr_2019_2016 <- cor(spi_changes$SPI.INDEX.2019,spi_changes$SPI.INDEX.2016, use='pairwise.complete.obs')"
 "0",""
 "0",""
