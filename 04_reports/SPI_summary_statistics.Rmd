@@ -52,7 +52,7 @@ library(Hmisc)
 library(plotly)
 library(here)
 library(patchwork)
-
+library(ggpmisc)
 style_mono_accent(base_color = "#009FDA",
                   title_slide_background_color = 'white',
                   title_slide_text_color = '#002244',
@@ -767,22 +767,239 @@ p1
 ---
 class: inverse, middle, center
 
-Comparison of SPI Index to SCI
+Relationship of SPI Index to Other Outcomes
 
 
 ---
+  
+
+
+```{r comparison, include=FALSE}
+
+#pull SCI values
+
+Request_metadata <- httr::GET(url = "http://api.worldbank.org/v2/country/all/indicator/IQ.SCI.OVRL?format=json&date=2004:2019&per_page=5000")
+Response_metadata <- httr::content(Request_metadata, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+sci_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+  data.frame() %>%
+  transmute(
+    iso3c=countryiso3code,
+    country=country.value,
+    date=as.numeric(date),
+    SCI=value
+  ) %>%
+    select(iso3c, country, date, SCI  ) 
+
+#read in ODIN data
+  for (i in 2015:2018) {
+   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
+        as_tibble(.name_repair = 'universal') %>%
+        mutate(date=i) %>%
+        filter(Data.categories=='All Categories')
+
+
+    assign(paste('odin_df',i,sep="_"), temp)
+  }
+
+    #bind different years together
+odin_df <- bind_rows(odin_df_2015, odin_df_2016, odin_df_2017, odin_df_2018)
+
+
+odin_df <- odin_df %>%
+    select(Country.Code, date, Overall.score) %>%
+    rename(iso3c=Country.Code,
+           ODIN_score=Overall.score) %>%
+    group_by(date) %>%
+    arrange(-ODIN_score) %>%
+    mutate(ODIN_rank=rank(-ODIN_score, na.last='NA')) 
+
+
+#read in the old SPI
+SPI_v0_df <- readxl::read_excel(path='C:/Users/wb469649/OneDrive - WBG/DECIS/SPI_AKI/Data/FinalCopy of SPI SCORE 2016-2018-DW.xlsx', skip=2) %>%
+  transmute(
+    iso3c=Country,
+    SPI_2016=as.numeric(Overall...7),
+    SPI_2017=as.numeric(Overall...12),
+    SPI_2018=as.numeric(Overall...17)
+  ) %>%
+  pivot_longer(
+    cols=c('SPI_2016','SPI_2017','SPI_2018'),
+    names_to="date",
+    values_to = 'SPI_v0'
+  ) %>%
+  mutate(date=gsub('SPI_','',date),
+         date=as.numeric(date))
+
+
+#create one database
+comparison_df <- SPI %>%
+  ungroup() %>%
+  filter(date %in% c(2016:2019)) %>%
+  arrange(-SPI.INDEX) %>%
+  mutate(across(starts_with('SPI.INDEX'),~100*.),
+         across(starts_with('SPI.INDEX'),round,1)) %>%
+  select(country, iso3c, date, income, region, SPI.INDEX) %>%
+  left_join(sci_df) %>%
+  left_join(odin_df) %>%
+  left_join(SPI_v0_df)
+
+
+
+
+```
+
 # Comparison of SPI Index to SCI
 
   * Next, compare the SPI Index to the SCI    
-  * 
-  
-  Next, we compare our index to several other indices of statistical performance that have been created.  This will provide a sense of how rankings differ across measures, how they correlate with other outcomes, and how the distributions of scores compare.
+    * Can provide sense of how rankings differ across measures      
 
+  * Correlation between SPI index and SCI: `r round(cor(comparison_df$SPI.INDEX,comparison_df$SCI, use='pairwise.complete.obs'),3)`.   
+  * Correlation between SPI index and Open Data Watch index:  `r round(cor(comparison_df$SPI.INDEX,comparison_df$ODIN_score, use='pairwise.complete.obs'),3)`.    
+
+---
+
+.center3[
+```{r sci, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+
+scatter_df <- comparison_df %>%
+  filter(date==2018) %>%
+  pivot_longer(
+    cols = c('SCI','ODIN_score'),
+    names_to='alt_index',
+    values_to='index_values'
+  ) %>%
+  mutate(alt_index=if_else(alt_index=="SCI","SCI","Open Data Watch"))
+
+### Scatterplot SCI SPI
+spi_sci_plot <- ggplot(scatter_df, aes(y=SPI.INDEX,x=index_values)) +
+  facet_wrap(~alt_index,
+             scales='free') +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm', 
+              color='blue') +
+  theme_bw() + 
+  stat_poly_eq(aes(label = paste(stat(eq.label),
+                                stat(rr.label), sep = "*\", \"*")), 
+                     color='black',
+                     label.x.npc = "right", label.y.npc = 0.1,
+                     formula = 'y~x', parse = TRUE, size = 4) +
+  ylab('SPI Index value') +
+  xlab('Alternate index value') +
+  theme(legend.position = 'bottom') +
+  ggtitle('Scatterplot of Open Data Watch Index & SCI on SPI Index')
+
+spi_sci_plot
+
+
+
+```
+]
 ---
 
 
 
 
+    
+```{r log_gdp, echo=FALSE, message=FALSE}
+
+#HCI
+hci_df <- wbstats::wb_data(country="countries_only", 
+              indicator='HD.HCI.OVRL',
+              start_date=2016,
+              end_date=2019,
+              return_wide = F) %>%
+  left_join(select(SPI,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
+
+#get the correlation for 2019
+hci_df_2018 <- hci_df %>%
+  filter(date==2018) 
+
+
+
+
+hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=100*SPI.INDEX)) +
+  facet_wrap(~indicator) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  theme_bw() +
+  ylab('SPI Index value') +
+  xlab('Human Capital Index') +
+  stat_poly_eq(aes(label  = paste(stat(eq.label),
+                                stat(rr.label), sep = "*\", \"*")), 
+                     label.x.npc = "right", label.y.npc = 0.1,
+                     formula = 'y~x', parse = TRUE, size = 4) +
+    theme(legend.position = 'bottom')
+
+
+#GDP
+gdp_df <- wbstats::wb_data(
+  indicator='NY.GDP.PCAP.KD',
+  start_date=2016,
+  end_date=2019,
+  return_wide = F
+    ) %>%
+  left_join(select(SPI,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
+
+#get the correlation for 2019
+gdp_df_2019 <- gdp_df %>%
+  filter(date==2019) 
+
+  gdp_spi <- ggplot(data=gdp_df_2019, aes(x=value, y=100*SPI.INDEX)) +
+  facet_wrap(~indicator) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  scale_x_log10(labels = scales::comma) +
+  theme_bw() +
+  ylab('SPI Index value') +
+  xlab('Log GDP Per Capita') +
+  theme(legend.position = 'bottom') +
+  stat_poly_eq(aes(label = paste(stat(eq.label),
+                                stat(rr.label), sep = "*\", \"*")), 
+                     label.x.npc = "right", label.y.npc = 0.1,
+                     formula = 'y~x', parse = TRUE, size = 4)
+  
+
+
+
+
+corr_hci_2018 <- cor(hci_df_2018$value,hci_df_2018$SPI.INDEX, use='pairwise.complete.obs')
+
+
+corr_2019 <- cor(log(gdp_df_2019$value),gdp_df_2019$SPI.INDEX, use='pairwise.complete.obs')
+corr_2019_nontrans <- cor(gdp_df_2019$value,gdp_df_2019$SPI.INDEX, use='pairwise.complete.obs')
+
+```
+
+ # Comparison to GDP per capita & Human Capital Index
+
+  * Next, show relationship to Log GDP per capita and Human Capital Index      
+  * Would expect strong relationship between these and SPI Index
+
+  * Correlation between log GDP per capita and SPI index:  `r round(corr_2019,2)`    
+  * Correlation between HCI & SPI index: `r round(corr_hci_2018,2)`
+
+---
+
+.center3[
+```{r gdp_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+
+### Scatterplot log GDP SPI
+gdp_spi + hci_spi   +
+  plot_annotation(
+    title='Plot of SPI Index on Human Capital Index and GDP per capita',
+    caption='Source: All indicators come from the World Bank.'
+    )
+  
+
+```
+]
+
+
+
+
+  
 
 ---
 class: inverse, middle, center

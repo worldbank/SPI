@@ -162,30 +162,48 @@ spi_mapper  <- function(data, indicator, title) {
     right_join(country_metadata) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
 
+
+  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4,5)/6,na.rm=T)
   
+  SPI_map <- map_df %>%
+    mutate(spi_groups=case_when(
+      between(data_available, spi_groups_quantiles[5],100) ~ "Advanced-high",
+      between(data_available, spi_groups_quantiles[4],spi_groups_quantiles[5]) ~ "Advanced-low",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "Intermediate-high",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "Intermediate-low",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "Emerging-high",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Emerging-low"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Advanced-high","Advanced-low","Intermediate-high","Intermediate-low","Emerging-high", "Emerging-low"  )))  
   
-   p1 <- ggplot() +
-    geom_map(data = map_df, aes(map_id = iso3c, fill = 100*data_available), map = maps$countries) + 
+  #set color pallete
+  col_pal <- c("#1A9850",  "#66BD63", "#E4ED40", "#FFFF8C",  "#FC7F60","#D73027" )
+  names(col_pal) <- c("Advanced-high","Advanced-low","Intermediate-high","Intermediate-low","Emerging-high", "Emerging-low"  )
+  
+  p1<-ggplot() +
+    geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
-     geom_path(data = maps$boundaries,
-               aes(long, lat, group = group),
-               color = "white",
-               size = 0.1,
-               lineend = maps$boundaries$lineend,
+    geom_path(data = maps$boundaries,
+              aes(long, lat, group = group),
+              color = "white",
+              size = 0.1,
+              lineend = maps$boundaries$lineend,
               linetype = maps$boundaries$linetype) +
     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
     scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
-  scale_fill_distiller(palette = "RdYlGn",
-                       direction=1,
-                       limits = c(0,100))  +
+    scale_fill_manual(
+      name='SPI Score',
+      values=col_pal,
+      na.value='grey'
+    ) +
     coord_equal() +
     theme_map(base_size=12) +
     labs(
       title=str_wrap(title,100),
-      subtitle= 'Data Point is for last year available (2019)',
-      caption = 'Source: SPI Indicator.',
-      fill='SPI Indicator Value'
+      caption = 'Source: World Bank. Statistical Performance Indicators'
     )
   
   #add histogram by region 
@@ -685,6 +703,15 @@ pop_covered <- spi_index_df %>%
 
 
 Below we show a set of summary measures for our SPI index.  We begin by presenting a world map containing the SPI index values for 2019 for each country.  In total, we have `r n_countries` countries with sufficient data to compute an index value.  This set of countries covers `r 100*round(pop_covered$pop_covered,3)` percent of the world population.
+
+The map is color coded based on the performance of countries on our index.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
+
+Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into three groups:   
+
+* Emerging: Countries in the bottom 33% are classified in this group.  Shading is in red.  Countries in bottom half of this group are shown in dark red.  
+* Intermediate: Countries in the middle 33% are classified in this group.  Shading in yellow.  Countries in the bottom half of this group are shown in light yellow.    
+* Advanced:  Countries in the top 33% are classified in this group.  Shading in green.  Countries in the bottom half of this group are shown in light green.
+
 
 
 ```{r sumstats}
