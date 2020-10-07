@@ -7,16 +7,11 @@
 "0","  mutate(date=as.numeric(date)) %>%"
 "0","  mutate(population=value) %>%"
 "0","  select(country, date, population) "
-"0",""
-"0",""
-"0","#read in the SPI dataset"
-"0","spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep=""/"")) %>%"
-"0","  left_join(pop_df) %>%"
+"2","`wb()` is deprecated as of wbstats 1.0.0.
+Please use `wb_data()` instead.
+[90mThis warning is displayed once every 8 hours.[39m
+[90mCall `lifecycle::last_warnings()` to see where this warning was generated.[39m"
+"0","#import data"
+"0","SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep=""/"")) %>%"
+"0","    left_join(pop_df) %>%"
 "0","  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates."
-"0",""
-"0",""
-"0",""
-"0","metadata <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep=""""))"
-"0",""
-"0","pillars <- read_csv(paste(raw_dir, '/metadata/SPI_pillars.csv', sep=""""))"
-"0",""

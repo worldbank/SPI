@@ -1150,7 +1150,7 @@ spi_odin_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=ODIN_score, color=regio
   geom_text(aes(label=iso3c)) +
   theme_bw() +
   labs(
-    title='Scatterplot of Open Data Watch Index on SPI Index'
+    title='Scatterplot of SPI Index on Open Data Watch Index'
   ) +
   ylab('SPI Index value') +
   xlab('ODIN value') +
@@ -1190,7 +1190,7 @@ spi_spi_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=SPI_v0, color=region)) +
   geom_text(aes(label=iso3c)) +
   theme_bw() +
   labs(
-    title='Scatterplot of SPI Version 0 Index on new SPI Index'
+    title='Scatterplot of new SPI Index on SPI Version 0 Index'
   ) +
   ylab('SPI Index value') +
   xlab('SPI Version 0 value') +
