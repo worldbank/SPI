@@ -24,7 +24,7 @@ bibliography: ./bibliography.bib
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6)
 library(tidyverse)
 library(flextable)
 library(here)
@@ -60,7 +60,7 @@ wgt <- 1
 The primary purpose of the statistical system is to help users of statistics make better decisions or to hold those decision makers accountable. In the words of Principle 1 of the Fundamental Principles of Official Statistics, the statistics must “meet the test of practical utility”, serving “the Government, the economy and the public with data about the economic, demographic, social and environmental situation.” 
 The national statistical system, or NSS, plays a crucial role in modern economies. It provides stakeholders, ranging from policy makers to stock market analysts and the general public, with the latest data on the country’s socio-economic developments. At the international level, monitoring progress on global undertakings such as the recently established Sustainable Development Goals (SDGs) requires high-quality data that must be produced consistently across different national statistical systems. Assessing and improving the capacity of a country’s NSS has long been a part of the global agenda. Since the early 2000s, a few capacity assessment tools have been developed to identify the weaknesses and strengths of national statistical systems by other organizations including PARIS21, the Food and Agriculture Organization of the United Nations (FAO), the United Nations Economic Commission for Europe (UNECE), the United Nations Economic Commission for Africa (UNECA), and the U.S. Census Bureau.   
 
-The World Bank’s Statistical Capacity Index (SCI) is one such tool that has been widely employed. Several international and national agencies have adopted the SCI for measuring progress in statistical capacity building and related investments.   The World Bank mainstreamed the SCI in its monitoring and assessment framework and has adopted it as a baseline indicator in various projects at the country level. The SCI is based on publicly available data, and this has various advantages over other indexes of statistical capacity. A key advantage of the SCI is that it can provide assessment of a country’s statistical capacity in an internationally comparable and cost-effective manner. We provide in Table 1 more detailed comparison between the SCI and the statistical capacity measurement indexes of other organizations. Table 1 shows that the SCI is the only tool that provides comparable data across different countries over time. Further, the SCI covers the largest number of countries—146 countries starting from 2004 and has by far the widest coverage of country-level indicators.
+The World Bank’s Statistical Capacity Index (SCI) is one such tool that has been widely employed. Several international and national agencies have adopted the SCI for measuring progress in statistical capacity building and related investments.   The World Bank mainstreamed the SCI in its monitoring and assessment framework and has adopted it as a baseline indicator in various projects at the country level. The SCI is based on publicly available data, and this has various advantages over other indexes of statistical capacity. A key advantage of the SCI is that it can provide assessment of a country’s statistical capacity in an internationally comparable and cost-effective manner.
 
 Yet, there are several areas in which the existing SCI can be improved. First, it comprises of a limited number of indicators and includes no indicators of some important data sources, such as labor force surveys, establishment surveys, or administrative data. Second, it ignores the data dissemination practices of an NSS, which is one of the key features of data usage. Third, the SCI has been criticized for placing too much weight on statistical output and activities, while neglecting the infrastructure and resource components of statistical systems.  Finally, it is silent on whether the data products produced by the NSS are in high demand. 
 Since its launch in 2004, the SCI’s methodology and coverage have basically remained the same, while the global data landscape has changed significantly. NSSs have made significant advancements with data collection and dissemination practices. At the same time, the adoption of the Sustainable Development Goals (SDGs) set an ambitious development agenda for the next 15 years on ending poverty, protecting the planet, and ensuring prosperity for all by 2030. This, in turn, increased the demand for data and raised the bar for national statistical systems regarding their capacity to produce high-quality data. We thus propose to improve the current SCI to better suit the changing global data landscape.
@@ -167,20 +167,20 @@ spi_mapper  <- function(data, indicator, title) {
   
   SPI_map <- map_df %>%
     mutate(spi_groups=case_when(
-      between(data_available, spi_groups_quantiles[5],100) ~ "Advanced-high",
-      between(data_available, spi_groups_quantiles[4],spi_groups_quantiles[5]) ~ "Advanced-low",
-      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "Intermediate-high",
-      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "Intermediate-low",
-      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "Emerging-high",
-      between(data_available, 0,spi_groups_quantiles[1]) ~ "Emerging-low"
+      between(data_available, spi_groups_quantiles[5],100) ~ "High-top",
+      between(data_available, spi_groups_quantiles[4],spi_groups_quantiles[5]) ~ "High-bottom",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "Middle-top",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "Middle-bottom",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "Low-top",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Low-bottom"
       
     )) %>%
     mutate(spi_groups=factor(spi_groups, 
-                             levels=c("Advanced-high","Advanced-low","Intermediate-high","Intermediate-low","Emerging-high", "Emerging-low"  )))  
+                             levels=c("High-top","High-bottom","Middle-top","Middle-bottom","Low-top", "Low-bottom"  )))  
   
   #set color pallete
   col_pal <- c("#1A9850",  "#66BD63", "#E4ED40", "#FFFF8C",  "#FC7F60","#D73027" )
-  names(col_pal) <- c("Advanced-high","Advanced-low","Intermediate-high","Intermediate-low","Emerging-high", "Emerging-low"  )
+  names(col_pal) <- c("High-top","High-bottom","Middle-top","Middle-bottom","Low-top", "Low-bottom"  )
   
   p1<-ggplot() +
     geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
@@ -478,9 +478,9 @@ For research purposes, we create an index combining several indicators together 
   * **Pillar 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators*    
 
   * **Pillar 4.1: Censuses and Surveys:** *Average score Census and Survey Indicators indicators SPI.D4.1....*
-  * **Pillar 4.2: Administrative Data:** *Average score for CRVS indicator.  Social Protection, Education, and Labor admin data indicators not included because of lack of established methodolgy*  
-  * **Pillar 4.3: Geospatial Data:**  *SPI.D4.3.GEO.first.admin.level -	Geospatial data available at 1st Admin Level* 
-  * **Pillar 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology*   
+  * **Pillar 4.2: Administrative Data:** *Average score for CRVS indicator.  Social Protection, Education, and Labor admin data indicators not included because of lack of established methodolgy. While our team identified several promising sources for administrative data from the World Bank's ASPIRE team, UNESCO, and ILO, incomplete coverage across countries made us drop these indicators from our index.  A major research and data collection effort is needed to fill in this information, so that a more comprenhensive picture of administrative data availability can be produced.  *  
+  * **Pillar 4.3: Geospatial Data:**  *SPI.D4.3.GEO.first.admin.level -	Geospatial data available at 1st Admin Level.  Although, we view geospatial data availability at the sub-national level as a reasonable proxy for a country's geospatial data capability, and we are using this information in our index, this is another area where more research and efforts on data collection are needed.* 
+  * **Pillar 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology.  Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.*   
   
   * **Pillar 5.1: Legislation and governance:**  *Not included because of insufficient country coverage*  
   * **Pillar 5.2: Standards and Methods:** *Average score for Standards and Methods indicators SPI.D5.2....*  
@@ -501,10 +501,11 @@ $$ SPI.PILLAR{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
 
 where $SPI.PILLAR{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
 
-After computing a score for the pillar, we then compute a dimension score, which is the unweighted average of the pillars in that dimension.
+After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental staistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.
 
-$$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{SPI.PILLAR{ctds}}{N_S} $$
+$$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{\omega_{ds} \times SPI.PILLAR{ctds}}{N_S} $$
 
+$\omega_{ds}$ is the weight for pillar s in dimension d.
 
 After calculating the scores for each dimension The SPI index is the average across the 5 dimensions. 
 
@@ -649,7 +650,7 @@ spi_index_simple <- spi_index_df_temp %>%
   mutate(
          SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
          SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
-         SPI.INDEX.DIM3=rowMeans(across(starts_with("INDEX.SPI.D3")), na.rm=FALSE),
+         SPI.INDEX.DIM3=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
          SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
          SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
          SPI.INDEX=rowMeans(across(c('SPI.INDEX.DIM1',
@@ -708,9 +709,9 @@ The map is color coded based on the performance of countries on our index.  Give
 
 Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into three groups:   
 
-* Emerging: Countries in the bottom 33% are classified in this group.  Shading is in red.  Countries in bottom half of this group are shown in dark red.  
-* Intermediate: Countries in the middle 33% are classified in this group.  Shading in yellow.  Countries in the bottom half of this group are shown in light yellow.    
-* Advanced:  Countries in the top 33% are classified in this group.  Shading in green.  Countries in the bottom half of this group are shown in light green.
+* Low Performers: Countries in the bottom 33% are classified in this group.  Shading is in red.  Countries in bottom half of this group are shown in dark red.  
+* Middle Performers: Countries in the middle 33% are classified in this group.  Shading in yellow.  Countries in the bottom half of this group are shown in light yellow.    
+* High Performers:  Countries in the top 33% are classified in this group.  Shading in green.  Countries in the bottom half of this group are shown in light green.
 
 
 
@@ -1287,9 +1288,9 @@ The cells in the table are color coded based on the performance of countries on 
 
 Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into three groups:   
 
-* Emerging: Countries in the bottom 33% are classified in this group.  Shading is in red.  Countries in bottom half of this group are shown in dark red.  
-* Intermediate: Countries in the middle 33% are classified in this group.  Shading in yellow.  Countries in the bottom half of this group are shown in light yellow.    
-* Advanced:  Countries in the top 33% are classified in this group.  Shading in green.  Countries in the bottom half of this group are shown in light green.
+* Low Performers: Countries in the bottom 33% are classified in this group.  Shading is in red.  Countries in bottom half of this group are shown in dark red.  
+* Middle Performers: Countries in the middle 33% are classified in this group.  Shading in yellow.  Countries in the bottom half of this group are shown in light yellow.    
+* High Performers:  Countries in the top 33% are classified in this group.  Shading in green.  Countries in the bottom half of this group are shown in light green.
 
 
 

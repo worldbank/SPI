@@ -204,7 +204,7 @@ Based on comments, Statistical Performance Indicators build on this:
   4. Data Sources
       * Censuses and surveys, admin data, geospatial, private/citizen generated data      
   5. Data Infrastructure
-      * Legislation and Governance, standards, skill, partnerships, and finance
+      * Legislation and governance, standards & methods, skill, partnerships, and finance
 
 
 
@@ -274,15 +274,15 @@ For these pillars, we pull values from the UN SDG database, calculate the share 
 # Data Infrastructure (5 Pillars) 
 
 
-  * <span style="color:red"> Pillar 5.1: legislation and governance:     
+  * <span style="color:red"> Pillar 5.1: Legislation and Governance:     
     * *SDG 17.18.2 - National Statistical Legislation complies with UN Fundamental Principles of Statistics (PARIS21)*  
   * **Pillar 5.2: Standards and Methods:** 
     * *Average score for 10 Standards and Methods indicators*  
-  * <span style="color:grey"> Pillar 5.3: skills:  
+  * <span style="color:grey"> Pillar 5.3: Skills:  
     * *Considering PARIS21 measure of statistical literacy*    
-  * <span style="color:grey"> Pillar 5.4: partnerships:  
+  * <span style="color:grey"> Pillar 5.4: Partnerships:  
     * *Not included because of lack of established methodology*    
-  * <span style="color:red"> Pillar 5.5: finance:  
+  * <span style="color:red"> Pillar 5.5: Finance:  
     * *SDG 17.18.3 - Statistical Plan fully funded (PARIS21)*   
     
 ---
@@ -450,6 +450,7 @@ spi_charts  <- function(data, indicator, title) {
       title=str_wrap(paste(title, 'By Date', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data'
       ) +
+    
       expand_limits(y=c(0,100)) +
       theme_bw()
       
@@ -459,31 +460,51 @@ spi_charts  <- function(data, indicator, title) {
 
 spi_country_charts  <- function(data, indicator, title) {
   
- indicator<-indicator
+  indicator<-enquo(indicator)
 
-  map_df <- get(data) %>%
-    filter(date==max(date, na.rm=T)) %>%
-    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
-    group_by( country) %>%
-    #summarise(across(!! indicator,last)) %>%
-    rename(data_available=!! indicator) %>%
-    select(country, date, data_available, weights ) %>%
-    right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+  SPI_map <- SPI_2019 %>%
+    mutate(indicator = !! indicator) %>%
+    mutate(indicator = indicator) %>%
+    arrange(-indicator)
+    
+  
+  spi_groups_quantiles <- quantile(SPI_map$indicator, probs=c(1,2,3,4,5)/6,na.rm=T)
+  
+  SPI_map <- SPI_map %>%
+    mutate(spi_groups=case_when(
+      between(indicator, spi_groups_quantiles[5],100) ~ "Advanced-high",
+      between(indicator, spi_groups_quantiles[4],spi_groups_quantiles[5]) ~ "Advanced-low",
+      between(indicator, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "Intermediate-high",
+      between(indicator, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "Intermediate-low",
+      between(indicator, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "Emerging-high",
+      between(indicator, 0,spi_groups_quantiles[1]) ~ "Emerging-low"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Advanced-high","Advanced-low","Intermediate-high","Intermediate-low","Emerging-high", "Emerging-low"  )))  %>% 
+    select(iso3c, spi_groups, indicator) %>%
+    right_join(country_list)  
+  
+  #set color pallete
+  col_pal <- c("#1A9850",  "#66BD63", "#E4ED40", "#FFFF8C",  "#FC7F60","#D73027" )
+  names(col_pal) <- c("Advanced-high","Advanced-low","Intermediate-high","Intermediate-low","Emerging-high", "Emerging-low"  )
   
 
-  p2_alt <- map_df %>%
+  p2_alt <- SPI_map %>%
     ungroup() %>%
-    filter(region!='Aggregates') %>%
-    mutate(Percentage=100*(data_available),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=region, color=region)) +
+    ggplot(aes(x=indicator, y=region, color=spi_groups)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
       title=str_wrap(paste(title, 'By Country', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
       subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_color_manual(
+        name='SPI Score',
+        values=col_pal,
+        na.value='grey'
       ) +
       expand_limits(x=c(0,100)) +
       theme_bw() +
@@ -632,7 +653,7 @@ spi_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scor
 ---
 .center3[
 ```{r country_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
+spi_country_charts('SPI',SPI.INDEX,'Statistical Performance Indicators -  Overall Scores')
 
 ```
 
@@ -1140,7 +1161,7 @@ spi_charts('SPI','SPI.INDEX.DIM1','Statistical Performance Indicators -  Data Us
 ---
 .center3[
 ```{r dim1_country_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI','SPI.INDEX.DIM1','Statistical Performance Indicators -  Data Use Scores')
+spi_country_charts('SPI',SPI.INDEX.DIM1,'Statistical Performance Indicators -  Data Use Scores')
 
 ```
 
@@ -1159,7 +1180,7 @@ spi_charts('SPI','SPI.INDEX.DIM2','Statistical Performance Indicators -  Data Se
 ---
 .center3[
 ```{r dim2_country_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI','SPI.INDEX.DIM2','Statistical Performance Indicators -  Data Services Scores')
+spi_country_charts('SPI',SPI.INDEX.DIM2,'Statistical Performance Indicators -  Data Services Scores')
 
 ```
 ]
@@ -1176,7 +1197,7 @@ spi_charts('SPI','SPI.INDEX.DIM3','Statistical Performance Indicators -  Data Pr
 ---
 .center3[
 ```{r dim3_country_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI','SPI.INDEX.DIM3','Statistical Performance Indicators -  Data Products Scores')
+spi_country_charts('SPI',SPI.INDEX.DIM3,'Statistical Performance Indicators -  Data Products Scores')
 
 ```
 
@@ -1198,7 +1219,7 @@ spi_charts('SPI','SPI.INDEX.DIM4','Statistical Performance Indicators -  Data So
 
 .center3[
 ```{r dim4_country_chartss, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI','SPI.INDEX.DIM4','Statistical Performance Indicators -  Data Sources Scores')
+spi_country_charts('SPI',SPI.INDEX.DIM4,'Statistical Performance Indicators -  Data Sources Scores')
 
 ```
 
@@ -1216,7 +1237,7 @@ spi_charts('SPI','SPI.INDEX.DIM5','Statistical Performance Indicators -  Data In
 ---
 .center3[
 ```{r dim5_country_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI','SPI.INDEX.DIM5','Statistical Performance Indicators -  Data Infrastructure Scores')
+spi_country_charts('SPI',SPI.INDEX.DIM5,'Statistical Performance Indicators -  Data Infrastructure Scores')
 
 ```
 
