@@ -210,7 +210,7 @@ spi_mapper  <- function(data, indicator, title) {
   p2 <- map_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*wtd.mean(data_available, weights = weights, na.rm=T),
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
@@ -228,7 +228,7 @@ spi_mapper  <- function(data, indicator, title) {
   p2_alt <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*(data_available),
+    mutate(Percentage=(data_available),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=region, color=region)) +
       geom_point() +
@@ -248,7 +248,7 @@ spi_mapper  <- function(data, indicator, title) {
     p3 <- map_df %>%
     group_by(income) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*wtd.mean(data_available, weights = weights, na.rm=T),
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=income, fill=income)) +
       geom_bar(stat="identity",position='dodge') +
@@ -269,7 +269,7 @@ spi_mapper  <- function(data, indicator, title) {
     # right_join(spi_df_empty) %>%
     group_by(income, date) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
-    mutate(Percentage=100*wtd.mean(data_available, weights = weights, na.rm=T),
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ungroup() %>%
     ggplot(aes(y=Percentage, x=date, color=income)) +
@@ -316,14 +316,14 @@ spi_income_table <- function(data, indicator, reference_year) {
             group_by(income) %>%
             filter(!is.na(income)) %>%
             select(income, starts_with(indicator)) %>%
-            summarise_all(~round(100*mean(., na.rm=T),1)) 
+            summarise_all(~round(mean(., na.rm=T),1)) 
         
         #produce global number
         sumstats_gl<- df_overall %>%
             mutate(income='Global') %>%
             group_by(income) %>%
             select(income, starts_with(indicator)) %>%
-            summarise_all(~round(100*mean(., na.rm=T),1)) 
+            summarise_all(~round(mean(., na.rm=T),1)) 
         
         
         #transpose data
@@ -590,7 +590,7 @@ spi_index_simple <- spi_index_df_temp %>%
                   "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
                   "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
                   "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP" ),
-                ~if_else(( (income=='High income') & (country %in% country_mod_list)),1,.)                )) %>% 
+                ~if_else(( (income=='High income') & !is.na(.) & (country %in% country_mod_list)),1,.)                )) %>% 
   mutate(SPI.INDEX=rowMeans(across(starts_with("SPI")), na.rm=FALSE),
          SPI.INDEX.DIM2=rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
          SPI.INDEX.DIM3=rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),
@@ -614,7 +614,7 @@ spi_index_simple <- spi_index_df_temp %>%
                   "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
                   "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
                   "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP" ),
-                ~if_else(( (income=='High income') & (country %in% country_mod_list)),1,.)                )) %>% 
+                ~if_else(( (income=='High income') & !is.na(.) & (country %in% country_mod_list)),1,.)                )) %>% 
   select(country, iso3c, date, everything())
 
 
@@ -659,9 +659,10 @@ spi_index_simple <- spi_index_df_temp %>%
                                      'SPI.INDEX.DIM4',
                                      'SPI.INDEX.DIM5')), na.rm=FALSE)
          ) %>% #
+  mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
   arrange(-date, -SPI.INDEX) %>%
   select(country, iso3c, date, starts_with('SPI.INDEX'), everything()) %>%
-    filter(date>=2016) #2016 is first year with complete data 
+    filter(date>=2016) #2016 is first year with complete data
 
   
 #display top 25
@@ -669,16 +670,44 @@ index_disp <- spi_index_df %>%
   ungroup() %>%
   filter(date==2019) %>%
   arrange(-SPI.INDEX) %>%
-  mutate(across(starts_with('SPI.INDEX'),~100*.),
+  mutate(across(starts_with('SPI.INDEX'),~1*.),
          across(starts_with('SPI.INDEX'),round,1)) %>%
   select(country, iso3c, date, starts_with('SPI.INDEX'))
+
+
+```
+
+
+
+```{r saver, include=FALSE}
 
 
 spi_index_df %>%
   write_excel_csv(path=paste(output_dir, 'SPI_index.csv', sep="/"))
 
+#add stata labels and save a stata version
+#read in the data labels
+metadata_info <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep="")) %>%
+    mutate(descript=paste(SPI_indicator_id,": ", spi_indicator_name," - ",source_name , sep="")) %>%
+    select(source_id,  descript, spi_indicator_description)
 
+metadata_info <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep="")) %>%
+  bind_rows(metadata_info)
 
+#create a copy of the data to save to stata
+spi_index_dta <- spi_index_df
+
+#get a list of the labels and apply them
+labels <- metadata_info[match(colnames(spi_index_dta),metadata_info$source_id),2]
+labels <- labels$descript
+names(labels) <-colnames(spi_index_dta)
+  
+label(spi_index_dta) <- as.list(labels)
+
+#save stata compatible version with labels
+spi_index_dta %>%
+  janitor::clean_names() %>%
+  haven::write_dta(path=paste(output_dir, 'SPI_index.dta', sep="/"))
 
 
 ```
@@ -771,7 +800,7 @@ hci_df_2018 <- hci_df %>%
 
 
 
-hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=100*SPI.INDEX)) +
+hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
@@ -798,7 +827,7 @@ gdp_df <- wbstats::wb_data(
 gdp_df_2019 <- gdp_df %>%
   filter(date==2019) 
 
-  gdp_spi <- ggplot(data=gdp_df_2019, aes(x=value, y=100*SPI.INDEX)) +
+  gdp_spi <- ggplot(data=gdp_df_2019, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
@@ -853,11 +882,11 @@ gdp_spi + hci_spi   +
 spi_index_2016 <- spi_index_df %>%
   filter(date==2016) %>%
   filter(!is.na(SPI.INDEX)) %>%
-  mutate(SPI.INDEX.2016=100*SPI.INDEX) %>%
+  mutate(SPI.INDEX.2016=SPI.INDEX) %>%
   select(iso3c, country, region, SPI.INDEX.2016)
 
 spi_changes <- spi_index_2019 %>%
-  mutate(SPI.INDEX.2019=100*SPI.INDEX) %>%
+  mutate(SPI.INDEX.2019=SPI.INDEX) %>%
   select(iso3c, country,region, SPI.INDEX.2019) %>%
   left_join(spi_index_2016)
 
@@ -1004,7 +1033,7 @@ comparison_df <- spi_index_df %>%
   ungroup() %>%
   filter(date %in% c(2016:2019)) %>%
   arrange(-SPI.INDEX) %>%
-  mutate(across(starts_with('SPI.INDEX'),~100*.),
+  mutate(across(starts_with('SPI.INDEX'),~1*.),
          across(starts_with('SPI.INDEX'),round,1)) %>%
   select(country, iso3c, date, income, region, SPI.INDEX) %>%
   left_join(sci_df) %>%

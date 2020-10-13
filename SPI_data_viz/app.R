@@ -22,10 +22,14 @@ library(ggcorrplot)
 library(Hmisc)
 
 #read in data and metatdata
-SPI <- read_csv('SPI_data.csv')
+SPI <- read_csv('SPI_index.csv')
 metadata <- read_csv('SPI_dimensions_sources.csv') %>%
     mutate(descript=paste(SPI_indicator_id,": ", spi_indicator_name," - ",source_name , sep="")) %>%
     select(source_id,  descript, spi_indicator_description)
+
+metadata <- read_csv('SPI_index_sources.csv') %>%
+  bind_rows(metadata)
+
 
 #create named list, which can be useful later
 var.labels <- metadata$descript
@@ -39,7 +43,7 @@ countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
 country_info <- wb_countries() %>%
     mutate(income=income_level,
            lending=lending_type) %>%
-    select(iso3c, region, income, lending)
+    select(iso3c, country, region, income, lending)
 
 
 # Define UI for application that draws a histogram
@@ -89,7 +93,7 @@ ui <- navbarPage("Statistical Performance Indicators",
                                             selectizeInput("year_overall",
                                                            "Reference Year",
                                                            choices=c(2004:2019),
-                                                           selected=2018
+                                                           selected=2019
                                                            
                                             ),
                                             selectizeInput("income_groups_overall",
@@ -99,7 +103,8 @@ ui <- navbarPage("Statistical Performance Indicators",
                                                            multiple=T
                                             ),
                                             selectizeInput("color_choices_overall", "Choose Indicator to Color Map", 
-                                                           choices=metadata$descript) 
+                                                           choices=metadata$descript,
+                                                           selected='SPI.INDEX') 
                               )
                               
                           )
@@ -210,7 +215,7 @@ server <- function(input, output) {
     
     df_overall<- reactive({
         SPI %>%
-            select(iso3c, country,  income, date, starts_with('SPI'), population) %>%
+            select(iso3c, country, region,  income, date, starts_with('SPI'), population) %>%
             filter(date==input$year_overall) %>%
             filter(income %in% input$income_groups_overall) %>% #filter out income groups not selected
             mutate(ISO_A3_EH=iso3c) 
@@ -389,3 +394,156 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
+
+
+
+#country reports
+
+country_selected <- "Vietnam"
+
+
+df_overall<- 
+  SPI %>%
+  select(iso3c, country,region,  income, date, starts_with('SPI'), population) %>%
+  filter(date==2019) %>%
+  mutate(ISO_A3_EH=iso3c) 
+
+
+#need to get the aggregates for the income group and region
+country_select_info <- country_info %>%
+  filter(country==country_selected)
+
+region_name<-country_select_info$region
+income_name<-country_select_info$income
+
+#produce aggregation
+region_agg <- df_overall %>%
+  filter(region==region_name) %>%
+  summarise(across(starts_with('SPI'),~round(mean(as.numeric(.), na.rm=T),2))) %>%
+  mutate(country=region_name)
+
+income_agg <- df_overall %>%
+  filter(income==income_name) %>%
+  summarise(across(starts_with('SPI'),~round(mean(as.numeric(.), na.rm=T),2))) %>%
+  mutate(country=income_name)
+
+#lollipop chart
+lolli_df <- df_overall %>%
+  filter(country==country_selected) %>%
+  bind_rows(region_agg) %>%
+  bind_rows(income_agg) 
+
+
+#dimension 1
+lolli_df %>%
+  select(country, starts_with('SPI.D1')) %>%
+  pivot_longer(
+    cols = starts_with('SPI.D1'),
+    names_to = 'source_id',
+    values_to = 'values'
+  ) %>% left_join(metadata) %>%
+  filter(!is.na(source_name)) %>%
+  mutate(source_name=str_wrap(source_name, 20)) %>%
+  ggplot(aes(x=source_name, y=values, color=country)) +
+  geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=values), color="grey") +
+  geom_point(size=3) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank()
+  ) +
+  xlab("") +
+  ylab("Indicator")
+
+#dimension 2
+lolli_df %>%
+  select(country, starts_with('SPI.D2')) %>%
+  pivot_longer(
+    cols = starts_with('SPI.D2'),
+    names_to = 'source_id',
+    values_to = 'values'
+  ) %>% left_join(metadata) %>%
+  filter(!is.na(source_name)) %>%
+  mutate(source_name=str_wrap(source_name, 20)) %>%
+  ggplot(aes(x=source_name, y=values, color=country)) +
+  geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=values), color="grey") +
+  geom_point(size=3) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank()
+  ) +
+  xlab("") +
+  ylab("Indicator")
+
+
+#dimension 3
+lolli_df %>%
+  select(country, starts_with('SPI.D3')) %>%
+  pivot_longer(
+    cols = starts_with('SPI.D3'),
+    names_to = 'source_id',
+    values_to = 'values'
+  ) %>% left_join(metadata) %>%
+  filter(!is.na(source_name)) %>%
+  mutate(source_name=str_wrap(source_name, 20)) %>%
+  ggplot(aes(x=source_name, y=values, color=country)) +
+  geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=values), color="grey") +
+  geom_point(size=3) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank()
+  ) +
+  xlab("") +
+  ylab("Indicator")
+
+
+#dimension 4
+lolli_df %>%
+  select(country, starts_with('SPI.D4')) %>%
+  pivot_longer(
+    cols = starts_with('SPI.D4'),
+    names_to = 'source_id',
+    values_to = 'values'
+  ) %>% left_join(metadata) %>%
+  filter(!is.na(source_name)) %>%
+  mutate(source_name=str_wrap(source_name, 20)) %>%
+  ggplot(aes(x=source_name, y=values, color=country)) +
+  geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=values), color="grey") +
+  geom_point(size=3) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank()
+  ) +
+  xlab("") +
+  ylab("Indicator")
+
+
+#dimension 5
+lolli_df %>%
+  select(country, starts_with('SPI.D5')) %>%
+  pivot_longer(
+    cols = starts_with('SPI.D5'),
+    names_to = 'source_id',
+    values_to = 'values'
+  ) %>% left_join(metadata) %>%
+  filter(!is.na(source_name)) %>%
+  mutate(source_name=str_wrap(source_name, 20)) %>%
+  ggplot(aes(x=source_name, y=values, color=country)) +
+  geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=values), color="grey") +
+  geom_point(size=3) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank()
+  ) +
+  xlab("") +
+  ylab("Indicator")
