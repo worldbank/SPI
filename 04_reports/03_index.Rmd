@@ -3,14 +3,10 @@ title: 'Measuring the Statistical Performance of Countries: An Overview of the S
 author: "SPI Team"
 date: "`r Sys.Date()`"
 output:
-  word_document: 
+  bookdown::word_document2: 
     toc: yes
     fig_width: 9
     fig_height: 6
-  html_document:
-    theme: sandstone
-    fig_width: 9
-    fig_height: 7
 abstract: Recognizing the new challenges for national statistical systems in monitoring  the
   Sustainable Development Goals (SDGs), the World Bank is developing a new, improved  Statistical  Performance
   Indicators (SPI) to monitor progress of the statistical  performance  of countries.
@@ -24,7 +20,7 @@ bibliography: ./bibliography.bib
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.cap = "&nbsp;")
 library(tidyverse)
 library(flextable)
 library(here)
@@ -432,7 +428,7 @@ Below is a brief description of the 22 pillars in our framework.  A detailed des
 
 
 
-```{r metadata_tab1}
+```{r metadatatab1}
 ####
 # create table
 ####
@@ -501,7 +497,7 @@ $$ SPI.PILLAR{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
 
 where $SPI.PILLAR{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
 
-After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental staistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.
+After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental statistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.
 
 $$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{\omega_{ds} \times SPI.PILLAR{ctds}}{N_S} $$
 
@@ -525,6 +521,10 @@ For a full description of the methodology behind each specific indicator, please
 
 For indicators where we had no data for any years, we chose not to impute a value.  In that case, the value for that indicator is null and the country will not have a value for any pillars or dimensions where that value is used.
 
+
+## Process for Disputing the Data
+
+Countries will be given an opportunity to dispute the values that make up our indicators.  Our team takes every effort to make sure the data presented in ouf Statistical Performance Indicators are accurate, but it is possible that the sources we used to assign values for our indicators are not accurate despite these efforts.  Because of this, countries will have a window to provide documentation for any disputed values, and our team will be happy to adjust our scores based on this new information.  Precise details for this process will be made available in the future.
 
 # Analysis
 
@@ -709,7 +709,12 @@ spi_index_dta %>%
   janitor::clean_names() %>%
   haven::write_dta(path=paste(output_dir, 'SPI_index.dta', sep="/"))
 
-
+#save a copy with column labels as well to csv
+l <- lapply(spi_index_dta, attr, "label") # Gives you list of the labeled variables
+l <- as.data.frame(l, stringsAsFactors = F) # Convert list to dataframe
+spi_index_dta_lab <- rbind(l, spi_index_dta) %>%
+  write_excel_csv(path=paste(output_dir, 'SPI_index_labelled.csv', sep="/"),
+                  na="") # Bind the two
 ```
 
 
@@ -743,7 +748,7 @@ Countries shaded in dark red are the lowest performing, countries in dark green 
 * High Performers:  Countries in the top 33% are classified in this group.  Shading in green.  Countries in the bottom half of this group are shown in light green.
 
 
-
+Figure 5.1:
 ```{r sumstats}
 #show map and summary stats by region and income group
 
@@ -861,7 +866,7 @@ Another measure of a country's development is the Human Capital Index (HCI) deve
 
 Below we show the scatter plot of the relationship between log GDP per capita, the HCI, and our SPI index for the years 2016-2019.  In general, countries with higher per capita income and higher levels of human capital tend to have better performing statistical systems according to our measure.  
 
-```{r gdp_plot}
+```{r gdpplot}
 
 ### Scatterplot log GDP SPI
 gdp_spi + hci_spi   +
@@ -872,6 +877,100 @@ gdp_spi + hci_spi   +
   
 
 ```
+
+So as to highlight countries where this relationships do not hold as well, the next figure shows the 15 countries that most over-perform and the 15 countries that most under-perform on the SPI Index compared to their levels of GDP per capita and the Human Capital Index.  We would  not necessarily expect a perfect fit between our SPI index and GDP per capita and the Human Capital Index, as countries differ in the resources put into their statistical system, even conditional on their levels of development.  Highlighting outliers can sometimes be a useful exercise for determining whether a measure is identifying on the ground realities.  
+
+In order to produce this figure, we estimate an OLS regression of the SPI index in 2019 on log GDP per capita.  We then calculate the residual, which can be interpreted as the difference between the country's SPI index value and the expected index value based on their GDP per capita.  Countries with values of the residual greater than zero are over-performing based on their GDP per capita and countries with residuals less than zero are under-performing.  The corresponding figure for the Human Capital Index is calculated similarly, however in this case we do not take the log, as we did with GDP per capita.
+
+```{r overperformers}
+
+#get top 10 and bottom 10 over performers compared to gdp and hci
+
+## GDP
+#regress SPI on gdp
+m_spi <- lm(SPI.INDEX ~ log(value) , data = gdp_df_2019) 
+
+gdp_overperformers_df <- gdp_df_2019 %>%
+  modelr::add_residuals(m_spi) %>%
+  arrange(-resid) %>%
+  head(15)
+
+gdp_underperformers_df <- gdp_df_2019 %>%
+  modelr::add_residuals(m_spi) %>%
+  arrange(resid) %>%
+  head(15)
+
+
+gdp_overperformers_plot <-  gdp_overperformers_df %>%
+  bind_rows(gdp_underperformers_df) %>%
+  arrange(resid) %>%
+  mutate(country=factor(country, levels=country),
+         group=if_else(resid>=0, 'above','below')) %>%
+  ggplot(aes(x=country, y=resid, color=group)) +
+  geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +
+  geom_point(size=3) +
+  scale_color_manual(name="GDP per Capita",
+                     labels = c("Over-performers", "Under-performers"),
+                     values = c('above'="#1A9850", 'below'="#D73027")) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    legend.position = 'bottom'
+  ) +
+  xlab("") +
+  ylab("SPI (deviation)") +
+  ggtitle("GDP per capita")
+
+
+
+### HCI
+
+
+#regress SPI on hci
+m_spi_hci <- lm(SPI.INDEX ~ value , data = hci_df_2018) 
+
+hci_overperformers_df <- hci_df_2018 %>%
+  modelr::add_residuals(m_spi_hci) %>%
+  arrange(-resid) %>%
+  head(15)
+
+hci_underperformers_df <- hci_df_2018 %>%
+  modelr::add_residuals(m_spi_hci) %>%
+  arrange(resid) %>%
+  head(15)
+
+hci_overperformers_plot <-  hci_overperformers_df %>%
+  bind_rows(hci_underperformers_df) %>%
+  arrange(resid) %>%
+  mutate(country=factor(country, levels=country),
+         group=if_else(resid>=0, 'above','below')) %>%
+  ggplot(aes(x=country, y=resid, color=group)) +
+  geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +
+  geom_point(size=3) +
+  scale_color_manual(name="HCI",
+                     labels = c("Over-performers", "Under-performers"),
+                     values = c('above'="#1A9850", 'below'="#D73027")) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    legend.position = 'bottom'
+  ) +
+  xlab("") +
+  ylab("SPI (deviation)") +
+  ggtitle("Human Capital Index")
+
+
+
+gdp_overperformers_plot + hci_overperformers_plot +
+  plot_annotation(title='Top 15 Over/Under-Performers on SPI Index Compared to GDP per capita and Human Capital Index',
+                  caption=str_wrap('Over and under performers calculated for GDP per capita by using OLS regression of SPI Index in 2019 on Log GDP per capita and calculting residuals from this regression.  Over and Under performers for Human Capital Index calculated similarly.',100)
+                  )
+```
+
 
 ## Country Changes in the Index
 
@@ -899,7 +998,7 @@ corr_2019_2016 <- cor(spi_changes$SPI.INDEX.2019,spi_changes$SPI.INDEX.2016, use
 
 In order to assess how stable our index values are over time, next we will compare the index values in 2016 to the 2019 values.  Overall, the SPI index is quite stable over time.  The correlation between the 2016 value and the 2019 value is `r round(corr_2019_2016,2)`.
 
-```{r changes_plot}
+```{r changesplot}
 
 ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2019, color=region)) +
   geom_text(aes(label=iso3c)) +
@@ -938,7 +1037,7 @@ While the scores were relatively stable over time, some countries did see large 
 
 
 
-```{r top_bottom_changes_tab}
+```{r topbottomchangestab}
 top_changes_tab <- flextable(head(top_changes,10)) %>%
   add_header_lines('Top 10 Countries with Largest Changes from 2016-2019.') %>%
   set_header_labels(values=list(
@@ -1068,7 +1167,7 @@ spi_sci_plot
 ```
 
 
-```{r sci_spi_reg}
+```{r scispireg}
 gdp_reg_df <- wbstats::wb_data(
   indicator='NY.GDP.PCAP.KD',
   start_date=2016,
@@ -1111,7 +1210,7 @@ Overall, the new SPI index has the strongest relationship to GDP per capita.  Th
 
 
 
-```{r sci_spi_reg_tab}
+```{r scispiregtab}
 
 
 
@@ -1210,7 +1309,7 @@ We compare the SPI index to the SPI version 0.  The correlation between the SPI 
 
 
 
-```{r spi_v0, echo=FALSE}
+```{r spiv0, echo=FALSE}
 
 
 ### Scatterplot SPI SPI_v0
@@ -1277,6 +1376,11 @@ ggplot(spi_index_df, aes(x = SPI.INDEX)) +
   xlab('SPI Index value') +
   theme(legend.position = 'bottom')
 
+
+
+```
+
+```{r density2}
 #show the density of our SPI index compared to other indices
 ggplot(density_df, aes(x = index_values, color=index_name)) + 
   facet_wrap(~date) +
@@ -1288,21 +1392,42 @@ ggplot(density_df, aes(x = index_values, color=index_name)) +
   ) +
   xlab('Index value') +
   theme(legend.position = 'bottom')
-
 ```
+
 
 # Dimension Index Scores
 
 Next, we present the scores for each dimension that compose the SPI index (Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure).  These figures can help show where (which dimension) variation is coming from across countries and to see where countries may be struggling in specific areas.
 
-```{r dimensions_plot}
+Figure 6.1:
+```{r dimensionsplot1}
 
 spi_mapper('spi_index_df','SPI.INDEX.DIM1','Dimension 1: Data Use Scores')
-spi_mapper('spi_index_df','SPI.INDEX.DIM2','Dimension 2: Data Services Scores')
-spi_mapper('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
-spi_mapper('spi_index_df','SPI.INDEX.DIM4','Dimension 4: Data Sources Scores')
-spi_mapper('spi_index_df','SPI.INDEX.DIM5','Dimension 5: Data Infrastructure Scores')
 
+
+
+```
+
+Figure 6.2:
+```{r dimensionsplot2}
+spi_mapper('spi_index_df','SPI.INDEX.DIM2','Dimension 2: Data Services Scores')
+
+```
+
+Figure 6.3:
+```{r dimensionsplot3}
+spi_mapper('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
+
+```
+
+Figure 6.4:
+```{r dimensionsplot4}
+spi_mapper('spi_index_df','SPI.INDEX.DIM4','Dimension 4: Data Sources Scores')
+```
+
+Figure 6.5:
+```{r dimensionsplot5}
+spi_mapper('spi_index_df','SPI.INDEX.DIM5','Dimension 5: Data Infrastructure Scores')
 
 ```
 
@@ -1373,7 +1498,7 @@ FitFlextableToPage(index_tab)
 ## Indicator Metadata
 
 
-```{r metadata_tab2}
+```{r metadatatab2}
 ####
 # create table
 ####
