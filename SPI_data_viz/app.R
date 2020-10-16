@@ -415,10 +415,14 @@ server <- function(input, output) {
                  iso3c=if_else(ISO_A3_EH==-99,WB_A3,ISO_A3_EH)) %>%
             left_join(df_overall()) 
         
-        
+        palette_df <- df_overall() %>%
+          select(map_var())
 
+        brks <- quantile(palette_df[,1], probs=c(0,1,2,3,4,5,6)/6,na.rm=T)
         #create pallete
-        pal <- colorQuantile(c("#D73027",  "#FC7F60", "#FFFF8C", "#E4ED40",  "#66BD63","#1A9850" ), select(spi_map_overall@data, map_var())[,1], 6)
+        pal <- colorBin(c("#D73027",  "#FC7F60", "#FFFF8C", "#E4ED40",  "#66BD63","#1A9850" ), 
+                             bins=brks,
+                             na.color='grey')
         
         
         
