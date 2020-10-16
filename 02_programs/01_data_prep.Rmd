@@ -1892,7 +1892,11 @@ census_fun  <- function(data, input_var) {
   input_var <- input_var
 
   #read in csv file.
-  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
+  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_145.csv", sep="" )) %>% #bring in data collected for an original set of 145 countries, then an additional 10, then several more high income counries.
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_10.csv", sep="" ))) %>%
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_high.csv", sep="" ))) %>%            
+    write_excel_csv(path = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
+    distinct() %>%
     group_by(iso3c, country) %>% 
     rename(input_var = !! input_var) %>%
     nest() %>% # The next chunk of code will split our string with the years of the census (i.e. "2000, 2010") in to separate rows.  We will then aggregate up.
@@ -1957,7 +1961,11 @@ survey_fun  <- function(data, input_var) {
   input_var <- input_var
 
   #read in csv file that was manually collected.
-  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
+  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_145.csv", sep="" )) %>% #bring in data collected for an original set of 145 countries, then an additional 10, then several more high income counries.
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_10.csv", sep="" ))) %>%
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_high.csv", sep="" ))) %>%            
+    write_excel_csv(path = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
+    distinct() %>%
     group_by(iso3c, country) %>% 
     rename(input_var = !! input_var) %>%
     nest() %>% # The next chunk of code will split our string with the years of the census (i.e. "2000, 2010") in to separate rows.  We will then aggregate up.

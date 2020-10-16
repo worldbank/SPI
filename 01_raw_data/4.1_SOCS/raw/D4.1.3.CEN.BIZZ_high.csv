@@ -1,0 +1,37 @@
+﻿iso3c,iso2c,country,capital,long,lat,regionID,region_iso2c,region,adminID,admin_iso2c,admin,incomeID,income_iso2c,income,lendingID,lending_iso2c,lending,date,BIZZ.CENSUS,BIZZ.CENSUS_source
+AND,AD,Andorra,Andorra la Vella,1.5218,42.5075,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+ARE,AE,United Arab Emirates,Abu Dhabi,54.3705,24.4764,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+AUS,AU,Australia,Canberra,149.129,-35.282,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+AUT,AT,Austria,Vienna,16.3798,48.2201,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,"2001, 2011",http://www.statistik.at/web_de/dokumentationen/Wirtschaft/Unternehmenarbeitsstaetten/index.html
+BEL,BE,Belgium,Brussels,4.36761,50.8371,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+BHS,BS,"Bahamas, The",Nassau,-77.339,25.0661,LCN,ZJ,Latin America & Caribbean ,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+BRN,BN,Brunei Darussalam,Bandar Seri Begawan,114.946,4.94199,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,"2010, 2015, 2016, 2017",http://www.deps.gov.bn/SitePages/Census%20and%20Survey.aspx
+CAN,CA,Canada,Ottawa,-75.6919,45.4215,NAC,XU,North America,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+CHE,CH,Switzerland,Bern,7.44821,46.948,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,"1998, 2001, 2005, 2008",https://www.bfs.admin.ch/bfs/en/home/services/geostat/swiss-federal-statistics-geodata/business-employment/swiss-federal-business-census-1995-2008.html
+CYP,CY,Cyprus,Nicosia,33.3736,35.1676,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,"2000, 2005",https://www.mof.gov.cy/mof/cystat/statistics.nsf/AdvancedSearch_en?OpenForm&q=&p=1&w=&t=&s=Business%20Register&L=E&e=&i=1
+DEU,DE,Germany,Berlin,13.4115,52.5235,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+DNK,DK,Denmark,Copenhagen,12.5681,55.6763,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+ESP,ES,Spain,Madrid,-3.70327,40.4167,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+EST,EE,Estonia,Tallinn,24.7586,59.4392,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+FIN,FI,Finland,Helsinki,24.9525,60.1608,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+FRA,FR,France,Paris,2.35097,48.8566,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+GBR,GB,United Kingdom,London,-0.126236,51.5002,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+IRL,IE,Ireland,Dublin,-6.26749,53.3441,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+ISL,IS,Iceland,Reykjavik,-21.8952,64.1353,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+ISR,IL,Israel,NA,35.2035,31.7717,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+ITA,IT,Italy,Rome,12.4823,41.8955,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,"2001, 2011",http://siqual.istat.it/SIQual/visualizza.do?id=8888973
+JPN,JP,Japan,Tokyo,139.77,35.67,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,"1999, 2001, 2004, 2006, 2009, 2014","http://www.stat.go.jp/english/data/e-census/index.html
+http://www.stat.go.jp/english/data/jigyou/index.html"
+KOR,KR,"Korea, Rep.",Seoul,126.957,37.5323,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,"1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018",http://kostat.go.kr/portal/eng/surveyOutline/3/3/index.static
+KWT,KW,Kuwait,Kuwait City,47.9824,29.3721,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,2005,https://www.csb.gov.kw/Pages/Statistics?ID=8&ParentCatID=1
+LUX,LU,Luxembourg,Luxembourg,6.1296,49.61,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+MLT,MT,Malta,Valletta,14.5189,35.9042,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+NLD,NL,Netherlands,Amsterdam,4.89095,52.3738,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+NOR,NO,Norway,Oslo,10.7387,59.9138,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+NZL,NZ,New Zealand,Wellington,174.776,-41.2865,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+PRT,PT,Portugal,Lisbon,-9.13552,38.7072,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+QAT,QA,Qatar,Doha,51.5082,25.2948,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,"1997, 2004, 2008, 2010, 2015",https://www.psa.gov.qa/en/statistics1/StatisticsSite/Census/Pages/default.aspx
+SGP,SG,Singapore,Singapore,103.85,1.28941,EAS,Z4,East Asia & Pacific,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+SVN,SI,Slovenia,Ljubljana,14.5044,46.0546,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+SWE,SE,Sweden,Stockholm,18.0645,59.3327,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,NA
+USA,US,United States,Washington D.C.,-77.032,38.8895,NAC,XU,North America,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,"1997, 2002, 2007, 2012, 2017",https://www.census.gov/programs-surveys/economic-census.html
