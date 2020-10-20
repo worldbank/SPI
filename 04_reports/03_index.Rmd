@@ -1040,6 +1040,80 @@ FitFlextableToPage(top_changes_tab) %>%
 ```
 
 
+```{r anova, eval=FALSE, include=FALSE}
+
+#Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each pillar.
+
+anova_dim_df <- spi_index_df %>%
+  select(country, iso3c, date, starts_with("SPI.INDEX")) %>%
+  pivot_longer(
+    cols=starts_with("SPI.INDEX"),
+    names_to='Dimension',
+    values_to='value'
+  ) %>%
+  group_by(Dimension, date) %>%
+  nest() %>%
+  mutate(
+    std_dev=map(
+      data,
+      ~round(sd(.x$value, na.rm=T),2)
+    )
+  )
+  
+  
+anova_pillar_df <- spi_index_df %>%
+  mutate(INDEX.SPI.D1.5=SPI.INDEX.DIM1/100) %>%
+  select(country, iso3c, date, starts_with("INDEX")) %>%
+  pivot_longer(
+    cols=starts_with("INDEX"),
+    names_to='Pillar',
+    values_to='value'
+  ) %>%
+  group_by(Pillar, date) %>%
+  nest() %>%
+  mutate(
+    std_dev=map(
+      data,
+      ~round(sd(.x$value, na.rm=T),2)
+    )
+  )
+    
+  
+
+```
+
+
+```{r dim_corr, eval=FALSE, include=FALSE}
+
+corr_df <- spi_index_df %>%
+  ungroup() %>%
+  select(starts_with('SPI.INDEX'))
+
+#calculate correlations between teacher practices
+df_corr_plot <-    round(cor(corr_df, use="complete.obs"), 2) 
+
+#plot the correlation in a nicely formatted table
+pcorr<- ggcorrplot::ggcorrplot(df_corr_plot,
+                   outline.color = "white",
+                   ggtheme = theme_bw(),
+                   colors = c("#F8696B", "#FFEB84", "#63BE7B"),
+                   legend.title = "Correlation",
+                   title = "Correlation Between SPI Dimensions",
+                   lab=T) + 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
+  scale_y_discrete(labels = function(x) str_wrap(x, width = 16)) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 12),
+    axis.text.x = element_text(angle=45,vjust=.5)
+  ) +
+  labs( )
+
+pcorr
+
+```
+
+
 ## Comparison to the Statistical Capacity Indicators
 
 Next, we compare our index to several other indices of statistical performance that have been created.  This will provide a sense of how rankings differ across measures, how they correlate with other outcomes, and how the distributions of scores compare.

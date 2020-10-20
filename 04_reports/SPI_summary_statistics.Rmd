@@ -109,7 +109,7 @@ SPI_2019 <- SPI %>%
   filter(date==2019) %>%
   filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
   mutate(ISO_A3_EH=iso3c) %>%
-  mutate(across(contains("SPI"),~100*.))
+  mutate(across(contains("SPI"),~1.))
 
 #read in TopoJSON from World Bank
 #countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
@@ -322,39 +322,41 @@ data = SPI_2019
 
 
 
-spi_mapper <- function(indicator,title_text) {
+spi_mapper <- function(data, indicator, title) {
   
-  indicator<-enquo(indicator)
+ indicator<-indicator
 
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
+
+
+  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4,5)/6,na.rm=T)
   
-  SPI_map <- SPI_2019 %>%
-    mutate(indicator = !! indicator) %>%
-    mutate(indicator = indicator) %>%
-    arrange(-indicator)
-    
-  
-  spi_groups_quantiles <- quantile(SPI_map$indicator, probs=c(1,2,3,4,5)/6,na.rm=T)
-  
-  SPI_map <- SPI_map %>%
+  SPI_map <- map_df %>%
     mutate(spi_groups=case_when(
-      between(indicator, spi_groups_quantiles[5],100) ~ "Advanced-high",
-      between(indicator, spi_groups_quantiles[4],spi_groups_quantiles[5]) ~ "Advanced-low",
-      between(indicator, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "Intermediate-high",
-      between(indicator, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "Intermediate-low",
-      between(indicator, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "Emerging-high",
-      between(indicator, 0,spi_groups_quantiles[1]) ~ "Emerging-low"
+      between(data_available, spi_groups_quantiles[5],100) ~ "High-top",
+      between(data_available, spi_groups_quantiles[4],spi_groups_quantiles[5]) ~ "High-bottom",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "Middle-top",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "Middle-bottom",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "Low-top",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Low-bottom"
       
     )) %>%
     mutate(spi_groups=factor(spi_groups, 
-                             levels=c("Advanced-high","Advanced-low","Intermediate-high","Intermediate-low","Emerging-high", "Emerging-low"  )))  %>% 
-    select(iso3c, spi_groups, indicator) %>%
-    right_join(country_list)  
+                             levels=c("High-top","High-bottom","Middle-top","Middle-bottom","Low-top", "Low-bottom"  )))  
   
   #set color pallete
   col_pal <- c("#1A9850",  "#66BD63", "#E4ED40", "#FFFF8C",  "#FC7F60","#D73027" )
-  names(col_pal) <- c("Advanced-high","Advanced-low","Intermediate-high","Intermediate-low","Emerging-high", "Emerging-low"  )
+  names(col_pal) <- c("High-top","High-bottom","Middle-top","Middle-bottom","Low-top", "Low-bottom"  )
   
-  ggplot() +
+  p1<-ggplot() +
     geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
@@ -374,11 +376,10 @@ spi_mapper <- function(indicator,title_text) {
     coord_equal() +
     theme_map(base_size=12) +
     labs(
-      title=str_wrap(title_text,100),
+      title=str_wrap(title,100),
       caption = 'Source: World Bank. Statistical Performance Indicators'
     )
-
-
+  print(p1)
 }
 
 spi_charts  <- function(data, indicator, title) {
@@ -400,7 +401,7 @@ spi_charts  <- function(data, indicator, title) {
   p2 <- map_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*wtd.mean(data_available, weights = weights, na.rm=T),
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
@@ -419,7 +420,7 @@ spi_charts  <- function(data, indicator, title) {
     p3 <- map_df %>%
     group_by(income) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*wtd.mean(data_available, weights=weights, na.rm=T),
+    mutate(Percentage=wtd.mean(data_available, weights=weights, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=income, fill=income)) +
       geom_bar(stat="identity",position='dodge') +
@@ -439,7 +440,7 @@ spi_charts  <- function(data, indicator, title) {
     # right_join(spi_df_empty) %>%
     group_by( date) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
-    mutate(Percentage=100*mean(data_available, na.rm=T),
+    mutate(Percentage=mean(data_available, na.rm=T),
            Label = paste(round(Percentage,0))) %>%
     ungroup() %>%
     ggplot(aes(y=Percentage, x=date)) +
@@ -460,51 +461,29 @@ spi_charts  <- function(data, indicator, title) {
 
 spi_country_charts  <- function(data, indicator, title) {
   
-  indicator<-enquo(indicator)
 
-  
-  SPI_map <- SPI_2019 %>%
-    mutate(indicator = !! indicator) %>%
-    mutate(indicator = indicator) %>%
-    arrange(-indicator)
-    
-  
-  spi_groups_quantiles <- quantile(SPI_map$indicator, probs=c(1,2,3,4,5)/6,na.rm=T)
-  
-  SPI_map <- SPI_map %>%
-    mutate(spi_groups=case_when(
-      between(indicator, spi_groups_quantiles[5],100) ~ "Advanced-high",
-      between(indicator, spi_groups_quantiles[4],spi_groups_quantiles[5]) ~ "Advanced-low",
-      between(indicator, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "Intermediate-high",
-      between(indicator, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "Intermediate-low",
-      between(indicator, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "Emerging-high",
-      between(indicator, 0,spi_groups_quantiles[1]) ~ "Emerging-low"
-      
-    )) %>%
-    mutate(spi_groups=factor(spi_groups, 
-                             levels=c("Advanced-high","Advanced-low","Intermediate-high","Intermediate-low","Emerging-high", "Emerging-low"  )))  %>% 
-    select(iso3c, spi_groups, indicator) %>%
-    right_join(country_list)  
-  
-  #set color pallete
-  col_pal <- c("#1A9850",  "#66BD63", "#E4ED40", "#FFFF8C",  "#FC7F60","#D73027" )
-  names(col_pal) <- c("Advanced-high","Advanced-low","Intermediate-high","Intermediate-low","Emerging-high", "Emerging-low"  )
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
 
-  p2_alt <- SPI_map %>%
+  p2_alt <- map_df %>%
     ungroup() %>%
-    ggplot(aes(x=indicator, y=region, color=spi_groups)) +
+    ggplot(aes(x=data_available, y=region, color=region)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
       title=str_wrap(paste(title, 'By Country', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
       subtitle= 'Data Point is for last year available (2019)'
-      ) +
-      scale_color_manual(
-        name='SPI Score',
-        values=col_pal,
-        na.value='grey'
       ) +
       expand_limits(x=c(0,100)) +
       theme_bw() +
@@ -535,7 +514,7 @@ lending_charts <- function(data, indicator, title) {
   p2_alt3 <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*(data_available),
+    mutate(Percentage=(data_available),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=lending, color=lending)) +
       geom_point() +
@@ -594,7 +573,7 @@ fcs_charts <- function(data, indicator, title) {
   p2_alt2 <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=100*(data_available),
+    mutate(Percentage=(data_available),
            Label = paste(round(Percentage,0))) %>%
     ggplot(aes(x=Percentage, y=fcs, color=fcs)) +
       geom_point() +
@@ -615,7 +594,7 @@ p2_alt2
 }
 
 
-spi_mapper(SPI.INDEX, 'Statistical Performance Indicators -  Overall Scores')
+spi_mapper('SPI', 'SPI.INDEX', 'Statistical Performance Indicators -  Overall Scores')
 
 
 
@@ -653,7 +632,7 @@ spi_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scor
 ---
 .center3[
 ```{r country_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI',SPI.INDEX,'Statistical Performance Indicators -  Overall Scores')
+spi_country_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
 
 ```
 
@@ -843,7 +822,7 @@ comparison_df <- SPI %>%
   ungroup() %>%
   filter(date %in% c(2016:2019)) %>%
   arrange(-SPI.INDEX) %>%
-  mutate(across(starts_with('SPI.INDEX'),~100*.),
+  mutate(across(starts_with('SPI.INDEX'),~.),
          across(starts_with('SPI.INDEX'),round,1)) %>%
   select(country, iso3c, date, income, region, SPI.INDEX) %>%
   left_join(sci_df) %>%
@@ -1031,6 +1010,132 @@ corr_2019_nontrans <- cor(gdp_df_2019$value,gdp_df_2019$SPI.INDEX, use='pairwise
   ]
 
 ---
+
+.center3[
+```{r overperformers, echo=FALSE, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+
+#get top 10 and bottom 10 over performers compared to gdp and hci
+
+## GDP
+#regress SPI on gdp
+m_spi <- lm(SPI.INDEX ~ log(value) , data = gdp_df_2019) 
+
+gdp_overperformers_df <- gdp_df_2019 %>%
+  modelr::add_residuals(m_spi) %>%
+  arrange(-resid) %>%
+  head(15)
+
+gdp_underperformers_df <- gdp_df_2019 %>%
+  modelr::add_residuals(m_spi) %>%
+  arrange(resid) %>%
+  head(15)
+
+
+gdp_overperformers_plot <-  gdp_overperformers_df %>%
+  bind_rows(gdp_underperformers_df) %>%
+  arrange(resid) %>%
+  mutate(country=factor(country, levels=country),
+         group=if_else(resid>=0, 'above','below')) %>%
+  ggplot(aes(x=country, y=resid, color=group)) +
+  geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +
+  geom_point(size=3) +
+  scale_color_manual(name="GDP per Capita",
+                     labels = c("Over-performers", "Under-performers"),
+                     values = c('above'="#1A9850", 'below'="#D73027")) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    legend.position = 'bottom'
+  ) +
+  xlab("") +
+  ylab("SPI (deviation)") +
+  ggtitle("GDP per capita")
+
+
+
+### HCI
+
+
+#regress SPI on hci
+m_spi_hci <- lm(SPI.INDEX ~ value , data = hci_df_2018) 
+
+hci_overperformers_df <- hci_df_2018 %>%
+  modelr::add_residuals(m_spi_hci) %>%
+  arrange(-resid) %>%
+  head(15)
+
+hci_underperformers_df <- hci_df_2018 %>%
+  modelr::add_residuals(m_spi_hci) %>%
+  arrange(resid) %>%
+  head(15)
+
+hci_overperformers_plot <-  hci_overperformers_df %>%
+  bind_rows(hci_underperformers_df) %>%
+  arrange(resid) %>%
+  mutate(country=factor(country, levels=country),
+         group=if_else(resid>=0, 'above','below')) %>%
+  ggplot(aes(x=country, y=resid, color=group)) +
+  geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +
+  geom_point(size=3) +
+  scale_color_manual(name="HCI",
+                     labels = c("Over-performers", "Under-performers"),
+                     values = c('above'="#1A9850", 'below'="#D73027")) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    legend.position = 'bottom'
+  ) +
+  xlab("") +
+  ylab("SPI (deviation)") +
+  ggtitle("Human Capital Index")
+
+
+
+gdp_overperformers_plot + hci_overperformers_plot +
+  plot_annotation(title='Top 15 Over/Under-Performers on SPI Index Compared to GDP per capita and Human Capital Index',
+                  caption=str_wrap('Over and under performers calculated for GDP per capita by using OLS regression of SPI Index in 2019 on Log GDP per capita and calculting residuals from this regression.  Over and Under performers for Human Capital Index calculated similarly.',100)
+                  )
+```
+]
+---
+.center3[
+```{r dim_corr, echo=FALSE, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+
+corr_df <- SPI %>%
+  ungroup() %>%
+  select(starts_with('SPI.INDEX'))
+
+#calculate correlations between teacher practices
+df_corr_plot <-    round(cor(corr_df, use="complete.obs"), 2) 
+colnames(df_corr_plot) <- c('SPI Dimension 1','SPI Dimension 2','SPI Dimension 3','SPI Dimension 4','SPI Dimension 5','SPI Overall')
+rownames(df_corr_plot) <- c('SPI Dimension 1','SPI Dimension 2','SPI Dimension 3','SPI Dimension 4','SPI Dimension 5','SPI Overall')
+
+#plot the correlation in a nicely formatted table
+pcorr<- ggcorrplot::ggcorrplot(df_corr_plot,
+                   outline.color = "white",
+                   ggtheme = theme_bw(),
+                   colors = c("#F8696B", "#FFEB84", "#63BE7B"),
+                   legend.title = "Correlation",
+                   title = "Correlation Between SPI Dimensions",
+                   lab=T) + 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
+  scale_y_discrete(labels = function(x) str_wrap(x, width = 16)) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 12),
+    axis.text.x = element_text(angle=45,vjust=.5)
+  ) +
+  labs( )
+
+pcorr
+
+```
+]
+---
 class: inverse, middle, center
 
 Scores For Each Dimension Across Countries
@@ -1038,7 +1143,7 @@ Scores For Each Dimension Across Countries
 ---
 .center2[
 ```{r dimension_1_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper(SPI.INDEX.DIM1, 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
+spi_mapper('SPI', 'SPI.INDEX.DIM1', 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
 
 ```
 ]
@@ -1047,7 +1152,7 @@ spi_mapper(SPI.INDEX.DIM1, 'Statistical Performance Indicators - SPI Dimension 1
 ---
 .center2[
 ```{r dimension_2_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper(SPI.INDEX.DIM2, 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
+spi_mapper('SPI', 'SPI.INDEX.DIM2', 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
 
 ```
 ]
@@ -1057,7 +1162,7 @@ spi_mapper(SPI.INDEX.DIM2, 'Statistical Performance Indicators - SPI Dimension 2
 ---
 .center2[
 ```{r dimension_3_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper(SPI.INDEX.DIM3, 'Statistical Performance Indicators - SPI Dimension 3: Data Products')
+spi_mapper('SPI', 'SPI.INDEX.DIM3', 'Statistical Performance Indicators - SPI Dimension 3: Data Products')
 
 ```
 
@@ -1068,7 +1173,7 @@ spi_mapper(SPI.INDEX.DIM3, 'Statistical Performance Indicators - SPI Dimension 3
 ---
 .center2[
 ```{r dimension_4_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper(SPI.INDEX.DIM4, 'Statistical Performance Indicators - SPI Dimension 4: Data Sources')
+spi_mapper('SPI', 'SPI.INDEX.DIM4', 'Statistical Performance Indicators - SPI Dimension 4: Data Sources')
 
 ```
 ]
@@ -1078,7 +1183,7 @@ spi_mapper(SPI.INDEX.DIM4, 'Statistical Performance Indicators - SPI Dimension 4
 
 .center2[
 ```{r dimension_5_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper(SPI.INDEX.DIM5, 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
+spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
 
 ```
 ]
@@ -1161,7 +1266,7 @@ spi_charts('SPI','SPI.INDEX.DIM1','Statistical Performance Indicators -  Data Us
 ---
 .center3[
 ```{r dim1_country_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI',SPI.INDEX.DIM1,'Statistical Performance Indicators -  Data Use Scores')
+spi_country_charts('SPI','SPI.INDEX.DIM1','Statistical Performance Indicators -  Data Use Scores')
 
 ```
 
@@ -1180,7 +1285,7 @@ spi_charts('SPI','SPI.INDEX.DIM2','Statistical Performance Indicators -  Data Se
 ---
 .center3[
 ```{r dim2_country_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI',SPI.INDEX.DIM2,'Statistical Performance Indicators -  Data Services Scores')
+spi_country_charts('SPI','SPI.INDEX.DIM2','Statistical Performance Indicators -  Data Services Scores')
 
 ```
 ]
@@ -1197,7 +1302,7 @@ spi_charts('SPI','SPI.INDEX.DIM3','Statistical Performance Indicators -  Data Pr
 ---
 .center3[
 ```{r dim3_country_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI',SPI.INDEX.DIM3,'Statistical Performance Indicators -  Data Products Scores')
+spi_country_charts('SPI','SPI.INDEX.DIM3','Statistical Performance Indicators -  Data Products Scores')
 
 ```
 
@@ -1219,7 +1324,7 @@ spi_charts('SPI','SPI.INDEX.DIM4','Statistical Performance Indicators -  Data So
 
 .center3[
 ```{r dim4_country_chartss, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI',SPI.INDEX.DIM4,'Statistical Performance Indicators -  Data Sources Scores')
+spi_country_charts('SPI','SPI.INDEX.DIM4','Statistical Performance Indicators -  Data Sources Scores')
 
 ```
 
@@ -1237,7 +1342,7 @@ spi_charts('SPI','SPI.INDEX.DIM5','Statistical Performance Indicators -  Data In
 ---
 .center3[
 ```{r dim5_country_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI',SPI.INDEX.DIM5,'Statistical Performance Indicators -  Data Infrastructure Scores')
+spi_country_charts('SPI','SPI.INDEX.DIM5','Statistical Performance Indicators -  Data Infrastructure Scores')
 
 ```
 
