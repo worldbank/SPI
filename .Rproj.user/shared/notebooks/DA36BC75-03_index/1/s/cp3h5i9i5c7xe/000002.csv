@@ -1,0 +1,4 @@
+"0","#show map and summary stats by region and income group"
+"0",""
+"0","spi_country_charts('spi_index_df','SPI.INDEX',2019)"
+"0",""

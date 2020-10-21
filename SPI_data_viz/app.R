@@ -418,11 +418,11 @@ server <- function(input, output) {
         palette_df <- df_overall() %>%
           select(map_var())
 
-        brks <- quantile(palette_df[,1], probs=c(0,1,2,3,4,5,6)/6,na.rm=T)
+        brks <- quantile(palette_df[,1], probs=c(0,1,2,3,4,5)/5,na.rm=T)
         #create pallete
-        pal <- colorBin(c("#D73027",  "#FC7F60", "#FFFF8C", "#E4ED40",  "#66BD63","#1A9850" ), 
-                             bins=brks,
-                             na.color='grey')
+        pal <- colorBin(c("#D73027",  "#DE7B2B", "#E7BB25", "#BFCF28",  "#1A9850" ), 
+                          bins=brks,
+                          na.color='grey')
         
         
         
@@ -452,7 +452,7 @@ server <- function(input, output) {
             addLegend(pal=pal, 
                       values=~select(spi_map_overall@data, map_var())[,1], opacity=0.7, 
                       labFormat = function(type, cuts, p) {  # Here's the trick
-                        paste0(c("Low-bottom 50%","Low-top 50%","Middle-bottom 50%","Middle-top 50%","High-bottom 50%","High-top 50%"   ))
+                        paste0( c("Bottom 20%","2nd Quintile","3rd Quintile","4th Quintile","Top 20%" ))
                       },
                       title='Indicator value', position="bottomleft")        
     })
@@ -657,10 +657,9 @@ server <- function(input, output) {
       
 
         #colors
-        col_palette <- c("#D73027",  "#FC7F60", "#FFFF8C", 
-                         "#E4ED40",  "#66BD63", "#1A9850")
+        col_palette <- c("#D73027",  "#DE7B2B", "#E7BB25", "#BFCF28",  "#1A9850" )
         
-        col_palette2 <- c("#D73027",  "#E4ED40",  "#1A9850")
+        col_palette2 <- c("#D73027",  "#E7BB25",  "#1A9850")
         
         #recalculate index based on the weights
         dim_total <- input$dim_1 + input$dim_2 + input$dim_3 + input$dim_4 + input$dim_5
@@ -756,17 +755,17 @@ server <- function(input, output) {
         
         
         #calculate the breaks for the color coding
-        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4,5)/6,na.rm=T)
+        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
 
-        brks1 <- quantile(index_tab$SPI.INDEX.DIM1, probs=c(1,2,3,4,5)/6,na.rm=T)
+        brks1 <- quantile(index_tab$SPI.INDEX.DIM1, probs=c(1,2,3,4)/5,na.rm=T)
 
-        brks2 <- quantile(index_tab$SPI.INDEX.DIM2, probs=c(1,2,3,4,5)/6,na.rm=T)
+        brks2 <- quantile(index_tab$SPI.INDEX.DIM2, probs=c(1,2,3,4)/5,na.rm=T)
 
-        brks3 <- quantile(index_tab$SPI.INDEX.DIM3, probs=c(1,2,3,4,5)/6,na.rm=T)
+        brks3 <- quantile(index_tab$SPI.INDEX.DIM3, probs=c(1,2,3,4)/5,na.rm=T)
 
-        brks4 <- quantile(index_tab$SPI.INDEX.DIM4, probs=c(1,2,3,4,5)/6,na.rm=T)
+        brks4 <- quantile(index_tab$SPI.INDEX.DIM4, probs=c(1,2,3,4)/5,na.rm=T)
 
-        brks5 <- quantile(index_tab$SPI.INDEX.DIM5, probs=c(1,2,3,4,5)/6,na.rm=T)
+        brks5 <- quantile(index_tab$SPI.INDEX.DIM5, probs=c(1,2,3,4)/5,na.rm=T)
 
         #make nice looking table
         #make nice looking table

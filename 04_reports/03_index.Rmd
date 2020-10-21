@@ -159,24 +159,23 @@ spi_mapper  <- function(data, indicator, title) {
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
 
 
-  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4,5)/6,na.rm=T)
+  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
   
   SPI_map <- map_df %>%
     mutate(spi_groups=case_when(
-      between(data_available, spi_groups_quantiles[5],100) ~ "High-top",
-      between(data_available, spi_groups_quantiles[4],spi_groups_quantiles[5]) ~ "High-bottom",
-      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "Middle-top",
-      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "Middle-bottom",
-      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "Low-top",
-      between(data_available, 0,spi_groups_quantiles[1]) ~ "Low-bottom"
+      between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
       
     )) %>%
     mutate(spi_groups=factor(spi_groups, 
-                             levels=c("High-top","High-bottom","Middle-top","Middle-bottom","Low-top", "Low-bottom"  )))  
+                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
   
   #set color pallete
-  col_pal <- c("#1A9850",  "#66BD63", "#E4ED40", "#FFFF8C",  "#FC7F60","#D73027" )
-  names(col_pal) <- c("High-top","High-bottom","Middle-top","Middle-bottom","Low-top", "Low-bottom"  )
+  col_pal <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
   
   p1<-ggplot() +
     geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
@@ -201,7 +200,21 @@ spi_mapper  <- function(data, indicator, title) {
       title=str_wrap(title,100),
       caption = 'Source: World Bank. Statistical Performance Indicators'
     )
+ print(p1)
+}
+
+spi_charts  <- function(data, indicator, title) {
   
+    map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))  
+    
   #add histogram by region 
   p2 <- map_df %>%
     group_by(region) %>%
@@ -221,22 +234,22 @@ spi_mapper  <- function(data, indicator, title) {
       theme(legend.position = 'top')
 
 
-  p2_alt <- map_df %>%
-    ungroup() %>%
-    filter(region!='Aggregates') %>%
-    mutate(Percentage=(data_available),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=region, color=region)) +
-      geom_point() +
-      geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
-      labs(
-      title=str_wrap(paste(title, 'By Country', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
-      subtitle= 'Data Point is for last year available (2019)'
-      ) +
-      expand_limits(x=c(0,100)) +
-      theme_bw() +
-      theme(legend.position = 'top')  
+  # p2_alt <- map_df %>%
+  #   ungroup() %>%
+  #   filter(region!='Aggregates') %>%
+  #   mutate(Percentage=(data_available),
+  #          Label = paste(round(Percentage,0))) %>%
+  #   ggplot(aes(x=Percentage, y=region, color=region)) +
+  #     geom_point() +
+  #     geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+  #     labs(
+  #     title=str_wrap(paste(title, 'By Country', sep=" - "),100),
+  #     caption = 'Source: SPI Indicators Raw Data',
+  #     subtitle= 'Data Point is for last year available (2019)'
+  #     ) +
+  #     expand_limits(x=c(0,100)) +
+  #     theme_bw() +
+  #     theme(legend.position = 'top')  
   
   #by income
     income <- c("Low income", "Lower middle income","Upper middle income","High income")
@@ -283,74 +296,113 @@ spi_mapper  <- function(data, indicator, title) {
 
             
       
-  print(p1)
-  
+
   print(p2)
   
-  print(p2_alt)
-  
+
   print(p3)
 
   print(p4)
     
 }
 
-
-
-spi_income_table <- function(data, indicator, reference_year) {
-
-  indicator<-indicator
+spi_country_charts  <- function(data, indicator, title) {
   
-  
-  
-  df_overall <- get(data) %>%
-    filter(date==as.numeric(reference_year)) %>% 
-    select(country, iso3c, date, income, region, starts_with(indicator))
 
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  p2_alt <- map_df %>%
+    ungroup() %>%
+    ggplot(aes(x=data_available, y=region, color=region)) +
+      geom_point() +
+      geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+      labs(
+      title=str_wrap(paste(title, 'By Country', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      expand_limits(x=c(0,100)) +
+      theme_bw() +
+      theme(legend.position = 'top') 
+   
+p2_alt
+
+}
+
+spi_maturity_table <- function(data, indicators, reference_year) {
+
+      df_overall <- get(data) %>%
+      filter(date==as.numeric(reference_year)) %>% 
+      select(country, iso3c, date, income, region, all_of(indicators), SPI.INDEX) 
+    
+    
+    spi_groups_quantiles <- quantile(df_overall$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+    
+    df_overall <- df_overall %>%
+      mutate(spi_groups=case_when(
+        between(SPI.INDEX, spi_groups_quantiles[4],100) ~ "Top 20%",
+        between(SPI.INDEX, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+        between(SPI.INDEX, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+        between(SPI.INDEX, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+        between(SPI.INDEX, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      )) %>%
+      mutate(spi_groups=factor(spi_groups, 
+                               levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+    
     #produce by income
-        sumstats<- df_overall %>%
-            group_by(income) %>%
-            filter(!is.na(income)) %>%
-            select(income, starts_with(indicator)) %>%
-            summarise_all(~round(mean(., na.rm=T),1)) 
-        
-        #produce global number
-        sumstats_gl<- df_overall %>%
-            mutate(income='Global') %>%
-            group_by(income) %>%
-            select(income, starts_with(indicator)) %>%
-            summarise_all(~round(mean(., na.rm=T),1)) 
-        
-        
-        #transpose data
-        sumstats_df_long <-sumstats_gl %>%
-            bind_rows(sumstats) 
-        
-        sumstats_df <- as.data.frame(t(sumstats_df_long %>% select(-income)))
-        colnames(sumstats_df) = sumstats_df_long$income 
-        
-        
-        sumstats_df <- sumstats_df %>%
-            rownames_to_column() %>%
-            rename(series=rowname)
-        
-        
-        #create labels df
-        metadata_tab2_overall <- metadata %>% 
-            janitor::clean_names() %>%
-            transmute(series=source_id, 
-                      indicator_name=source_name)
-        
-        
-        #add variable label
-        sumstats_df <- sumstats_df %>%
-            left_join(metadata_tab2_overall) %>%
-            rename(Series=series,
-                   Label=indicator_name) %>%
-            mutate(Label=if_else(is.na(Label),Series,Label)) %>%
-            select(Label, c("Global","Low income", "Lower middle income", "Upper middle income","High income"))
+    sumstats<- df_overall %>%
+      group_by(spi_groups) %>%
+      filter(!is.na(spi_groups)) %>%
+      select(spi_groups, all_of(indicators)) %>%
+      summarise_all(~round(mean(., na.rm=T),2)) 
+    
+    #produce global number
+    sumstats_gl<- df_overall %>%
+      mutate(spi_groups='Global') %>%
+      group_by(spi_groups) %>%
+      select(spi_groups, all_of(indicators)) %>%
+      summarise_all(~round(mean(., na.rm=T),2)) 
+    
+    
+    #transpose data
+    sumstats_df_long <-sumstats 
+    
+    sumstats_df <- as.data.frame(t(sumstats_df_long %>% select(-spi_groups)))
+    colnames(sumstats_df) = sumstats_df_long$spi_groups 
+    
+    
+    sumstats_df <- sumstats_df %>%
+      rownames_to_column() %>%
+      rename(series=rowname)
+    
+    
+    #create labels df
+    metadata_tab2_overall <- metadata %>% 
+      janitor::clean_names() %>%
+      transmute(series=source_id, 
+                indicator_name=source_name)
+    
+    
+    #add variable label
+    sumstats_df <- sumstats_df %>%
+      left_join(metadata_tab2_overall) %>%
+      rename(Series=series,
+             Label=indicator_name) %>%
+      mutate(Label=if_else(is.na(Label),Series,Label)) %>%
+      select(Label, c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" ))
 
-        sumstats_df
+      sumstats_df
  
 
   }
@@ -487,9 +539,9 @@ For research purposes, we create an index combining several indicators together 
 
 This process of eliminating some pillars due to lack of established methodology or country coverage results in 12 pillars. This includes 1 on data use, 3 on data services, 4 on data products, 3 on data sources, and 1 on data infrastructure.
 
-## Overall Score
+## SPI Index Scoring
 
-Our statistical performance indicators have a three level structure, and our overall score will be formed by sequentially aggregating each level.
+Our statistical performance indicators have a three level structure, and our SPI Index score will be formed by sequentially aggregating each level.
 
 To begin we produce a score for each pillar, which is an unweighted average of the indicators within that pillar.  For instance, the Census and Surveys pillar will be formed by taking the unweighted average of the Population Census score, the Agriculture Census score, the Business Census score, the Labor Force Survey score, the Health Survey score, etc.  
 
@@ -511,7 +563,7 @@ The SPI index is scaled to have a maximum score of 100 and a minimum of 0. A sco
 
 $$ SPI.INDEX_{ct} = \sum_{d=1}^{N_D} \frac{SPI.DIM_{ctd}}{N_D} $$
 
-Where SPI.INDEX is the SPI overall index. SPI.DIM are the 5 SPI dimensions listed above. In the notation, c is a country, t is the date, d is a dimension.  
+Where SPI.INDEX is the SPI index. SPI.DIM are the 5 SPI dimensions listed above. In the notation, c is a country, t is the date, d is a dimension.  
 
 The nested structure of our index and the summation methods used to build an overall score ensure the axiomatic properties outlined in [@cameron2019measuring].  These include symmetry, monotonicity, and subgroup decomposability.
 
@@ -728,18 +780,121 @@ Below we show a set of summary measures for our SPI index.  We begin by presenti
 
 The map is color coded based on the performance of countries on our index.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
 
-Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into three groups:   
+Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
 
-* Low Performers: Countries in the bottom 33% are classified in this group.  Shading is in red.  Countries in bottom half of this group are shown in dark red.  
-* Middle Performers: Countries in the middle 33% are classified in this group.  Shading in yellow.  Countries in the bottom half of this group are shown in light yellow.    
-* High Performers:  Countries in the top 33% are classified in this group.  Shading in green.  Countries in the bottom half of this group are shown in light green.
+* **Most Mature**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#1A9850">green</span>.    
+* **Highly Mature**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#BFCF28"> light green</span>.    
+* **Maturing**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#E7BB25"> yellow</span>.  
+* **Less Mature**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#DE7B2B"> orange</span>.  
+* **Least Mature**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#D73027"> red </span>.   
 
 
-Figure 5.1:
-```{r sumstats}
+```{r map}
 #show map and summary stats by region and income group
 
-spi_mapper('spi_index_df','SPI.INDEX','Overall SPI Index')
+spi_mapper('spi_index_df','SPI.INDEX','SPI Index')
+
+```
+
+
+```{r maturitytable}
+
+indicators<-c("SPI.INDEX","SPI.D1.5.DT.TDS.DPPF.XP.ZS","SPI.D2.2.Openness.subscore","SPI.D3.1.POV",
+             "SPI.D4.1.1.POPU","SPI.D5.2.4.CPIBY")
+
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019) 
+
+spi_top <- as.numeric(maturity_tab[1,2])
+spi_bottom <- as.numeric(maturity_tab[1,6])
+
+debt_top <- as.numeric(maturity_tab[2,2])
+debt_bottom <- as.numeric(maturity_tab[2,6])
+
+census_top <- as.numeric(maturity_tab[5,2])
+census_bottom <- as.numeric(maturity_tab[5,6])
+
+```
+
+
+The maturity model reflects concrete differences between countries in their statistical systems.  On the SPI index itself, the countries scoring in the top 20% have an average SPI index score of `r spi_top`.  A maximum score of 100 would indicate that a country has every single element in place that we measure through our indicators.  Meanwhile, countries in the bottom 20% score significantly worse, with an average index scores of `r spi_bottom`.  To highlight a few specific indicators, we can also see that countries in the top 20% on average get nearly perfect scores in terms of the debt reporting to the world bank.  The top 20% of countries in the SPI index have an average score on their debt reporting of `r debt_top`, with a maximum score of 1 and minimum score of 0, while those in the bottom 20% on the SPI index have an average score of `r debt_bottom`.  To take another concrete example, when looking at scores on whether a population census has been conducted recently, countries in the top 20% score on average `r census_top` on our population census indicator, with a max score of 1 and minimum score of 0, while those in the bottom 20% on our SPI index indicator score `r census_bottom` on the population census indicator.  The table below shows differences across maturity groups for a select set of indicators.
+
+
+```{r maturitdisp}
+
+maturity_tab <- maturity_tab %>%
+  flextable() %>%
+  add_header_lines('Select SPI Indicator Scores by SPI Maturity Level') 
+
+FitFlextableToPage(maturity_tab) %>%
+  align( align = "left", part = "body")
+
+```
+
+
+## SPI Index by Region and Income Group
+
+There are large differences in the SPI index across World Bank regions and income groups.  Overall, North America has the highest average SPI index, while the Sub-Saharan Africa region has the lowest average score.^[All tables and figures show unweighted summary statistics (i.e. the summary statistics do not weight by population).] There is also a clear gradient with respect to income groups.  Countries classified as low income have lower scores on average than countries classified as middle income.  High income countries have the highest average SPI index score.  
+
+Finally, when looking over time, since 2016 the SPI index values are relatively stead across regions.  There has been some modest increase in the SPI index scores for middle income and high income countries, with little progress for low income countries.
+
+Figure 5.2.
+```{r spi_charts}
+#show map and summary stats by region and income group
+
+spi_charts('spi_index_df','SPI.INDEX','SPI Index')
+
+```
+
+
+```{r regionheterogeneity}
+#LAC
+lac_df <- spi_index_df %>%
+  filter(date==2019) %>%
+  filter(region=="Latin America & Caribbean") %>%
+  select(country, SPI.INDEX) %>%
+  filter(!is.na(SPI.INDEX))
+
+top_lac <- as.character(lac_df[1,1])
+top_lac_score <- round(as.numeric(lac_df[1,2]),1)
+
+bottom_lac <- as.character(lac_df[nrow(lac_df),1])
+bottom_lac_score <- round(as.numeric(lac_df[nrow(lac_df),2]),1)
+
+#SSA
+ssa_df <- spi_index_df %>%
+  filter(date==2019) %>%
+  filter(region=="Sub-Saharan Africa") %>%
+  select(country, SPI.INDEX) %>%
+  filter(!is.na(SPI.INDEX))
+
+top_ssa <- as.character(ssa_df[1,1])
+top_ssa_score <- round(as.numeric(ssa_df[1,2]),1)
+
+bottom_ssa <- as.character(ssa_df[nrow(ssa_df),1])
+bottom_ssa_score <- round(as.numeric(ssa_df[nrow(ssa_df),2]),1)
+
+#EAP
+eap_df <- spi_index_df %>%
+  filter(date==2019) %>%
+  filter(region=="East Asia & Pacific") %>%
+  select(country, SPI.INDEX) %>%
+  filter(!is.na(SPI.INDEX))
+
+top_eap <- as.character(eap_df[1,1])
+top_eap_score <- round(as.numeric(eap_df[1,2]),1)
+
+bottom_eap <- as.character(eap_df[nrow(eap_df),1])
+bottom_eap_score <- round(as.numeric(eap_df[nrow(eap_df),2]),1)
+
+```
+
+While there are large differences across regions, within regions there is significant variation in the SPI index.  For instance, in the Latin America & Caribbean World Bank region, `r top_lac` is the highest scoring country on the SPI index with a score of `r top_lac_score`.  However, `r bottom_lac`, the lowest scoring country in the region, earns a substantially lower score of `r bottom_lac_score`.  In Sub-Saharan Africa, the highest scoring country is `r top_ssa` with a score of `r top_ssa_score`, while the lowest scoring country is `r bottom_ssa` with a score of `r bottom_ssa_score`.  In the East Asia and Pacific region, the top scoreing country is `r top_eap` with a score of `r top_eap_score`, while the lowest scoring country is `r bottom_eap` with a score of `r bottom_eap_score`.
+
+Figure 5.3
+```{r spicountrycharts}
+#show map and summary stats by region and income group
+
+spi_country_charts('spi_index_df','SPI.INDEX','SPI Index')
 
 ```
 
@@ -1040,7 +1195,7 @@ FitFlextableToPage(top_changes_tab) %>%
 ```
 
 
-```{r anova, eval=FALSE, include=FALSE}
+```{r anova, echo=FALSE}
 
 #Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each pillar.
 
@@ -1501,11 +1656,13 @@ Below, we present the full list of countries by their SPI Index Score in 2019.  
 
 The cells in the table are color coded based on the performance of countries on our index and the sub-scores of the dimensions.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
 
-Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into three groups:   
+Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
 
-* Low Performers: Countries in the bottom 33% are classified in this group.  Shading is in red.  Countries in bottom half of this group are shown in dark red.  
-* Middle Performers: Countries in the middle 33% are classified in this group.  Shading in yellow.  Countries in the bottom half of this group are shown in light yellow.    
-* High Performers:  Countries in the top 33% are classified in this group.  Shading in green.  Countries in the bottom half of this group are shown in light green.
+* **Most Mature**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#1A9850">green</span>.    
+* **Highly Mature**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#BFCF28"> light green</span>.    
+* **Maturing**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#E7BB25"> yellow</span>.  
+* **Less Mature**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#DE7B2B"> orange</span>.  
+* **Least Mature**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#D73027"> red </span>.  
 
 
 
@@ -1514,10 +1671,9 @@ Countries shaded in dark red are the lowest performing, countries in dark green 
 
 
 #colors
-col_palette <- c("#D73027",  "#FC7F60", "#FFFF8C", 
-  "#E4ED40",  "#66BD63", "#1A9850")
+col_palette <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
 
-col_palette2 <- c("#D73027",  "#E4ED40",  "#1A9850")
+col_palette2 <- c("#1A9850",  "#E7BB25", "#D73027" )
 
 #make the table
 index_tab <- index_disp %>%
@@ -1527,7 +1683,7 @@ index_tab <- index_disp %>%
 #make nice looking
 index_tab <- index_tab %>%
   flextable() %>%
-  add_header_lines('Overall SPI Index in 2019 and Dimension Scores.') %>%
+  add_header_lines('SPI Index in 2019 and Dimension Scores.') %>%
   set_header_labels(values=list(
                        country="Country", 
                        SPI.INDEX="SPI Index Value",
@@ -1538,17 +1694,17 @@ index_tab <- index_tab %>%
                        SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
                                    )) %>%
     bg(j = c('SPI.INDEX'), 
-       bg = scales::col_quantile(col_palette, domain=NULL, n=6)) %>%
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.DIM1'),
-       bg = scales::col_quantile(col_palette2, domain=NULL, n=3)) %>%
+       bg = scales::col_quantile(col_palette2, domain=NULL, n=3, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.DIM2'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=6)) %>%
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.DIM3'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=6)) %>%
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.DIM4'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=6)) %>%
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.DIM5'),
-       bg = scales::col_quantile(col_palette2, domain=NULL, n=3))
+       bg = scales::col_quantile(col_palette2, domain=NULL, n=3, reverse=TRUE))
 
   
 

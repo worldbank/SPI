@@ -2301,7 +2301,10 @@ spi_mapper('unesco_map', 'SPI.D4.2.2.EDU', 'Education Administrative Data Availa
 
 Civil registration is the act of recording and documenting of vital events in a person’s life (including birth, marriage, divorce, adoption, and death and cause of death) and is a fundamental function of national governments. Birth registration establishes an individual’s legal identity at birth. A legal identity, name, nationality, and proof of age, are important human rights. They enable individuals to be included in various government, social and private services, and include the right to vote, etc. Vital statistics are compiled using civil registration information on these vital events. The availability of reliable and up-to-date vital statistics depends on the level of development of civil registration programs. An effective civil registration and vital statistics (CRVS) system is critical for planning and monitoring programs across several sectors. 
 
-By complete, that is representing 90 per cent or more of the events occurring in the specified year.
+Data comes from the UNSD Global SDG monitoring database.  Scoring is as follows:    
+1 Points. Both of at least 90% of births registered and at least 75% of deaths registered
+0.5 Points. One of at least 90% of births registered or at least 75% of deaths registered
+0 Points. Neither
 
 Source: World Bank WDI Metadata.  
 
@@ -2330,69 +2333,78 @@ Source: World Bank WDI Metadata.
 #     values_from=value
 #   ) 
 
-df <- WDI_metadata
-
-
-# Manipulate and clean final data
-df <- df %>%
-  filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
-  
-df$SPI.D4.2.3.CRVS<-as.numeric(grepl("Yes", df$Vital.registration.complete)) #create 0,1 variable for vital registration
-
-# #read in data from UNSD database on SDGs
-# df_birth <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_BRTH90N.csv', sep="/")) %>% #Countries with birth registration data that are at least 90 percent complete (1 = YES; 0 = NO)	
-#   filter(date>=2015 & date<2019) %>%
-#   left_join(spi_df_empty) %>%
-#   transmute(
-#     iso3c=iso3c,
-#     country=country,
-#     date=date,
-#     SPI.D4.2.3.BRTH90=if_else(ind_value==1,1,0)
-#   )
+# df <- WDI_metadata
 # 
-# df_death <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_DETH75N.csv', sep="/")) %>% #Countries with death registration data that are at least 75 percent complete (1 = YES; 0 = NO)	
-#   filter(date>=2015& date<2019) %>%
-#   left_join(spi_df_empty) %>%
-#     transmute(
-#     iso3c=iso3c,
-#     country=country,
-#     date=date,
-#     SPI.D4.2.3.DETH75=if_else(ind_value==1,1,0)
-#   )
+# 
+# # Manipulate and clean final data
+# df <- df %>%
+#   filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
+#   
+# df$SPI.D4.2.3.CRVS<-as.numeric(grepl("Yes", df$Vital.registration.complete)) #create 0,1 variable for vital registration
 
-crvs_df <- df %>%
-  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
-         country=Table.Name,
-         RAW.D4.2.3.CRVS=Vital.registration.complete) %>%
-  select(c('iso3c', 'country', 'date', 'RAW.D4.2.3.CRVS', 'SPI.D4.2.3.CRVS')  )
-
-
-#pull old data from SCI
-Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/3.11.01.03.popreg?format=json&date=2004:2015&per_page=5000")
-Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
-
-# Parse the JSON content and convert it to a data frame.
-crvs_df2 <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
-  data.frame() %>%
+#read in data from UNSD database on SDGs
+df_birth <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_BRTH90N.csv', sep="/")) %>% #Countries with birth registration data that are at least 90 percent complete (1 = YES; 0 = NO)
+  filter(date>=2015 & date<=2019) %>%
+  left_join(spi_df_empty) %>%
   transmute(
-    iso3c=countryiso3code,
-    country=country.value,
-    date=as.numeric(date),
-    crvs=value
-  ) %>%
-  mutate(SPI.D4.2.3.CRVS=as.numeric(crvs),
-         RAW.D4.2.3.CRVS=as.character(crvs)) %>%
-  left_join(spi_df_empty) #add on country metadata
+    iso3c=iso3c,
+    country=country,
+    date=date,
+    RAW.D4.2.3.BRTH90=ind_value,
+    SPI.D4.2.3.BRTH90=if_else(ind_value==1,0.5,0)
+  )
+
+df_death <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_DETH75N.csv', sep="/")) %>% #Countries with death registration data that are at least 75 percent complete (1 = YES; 0 = NO)
+  filter(date>=2015& date<=2019) %>%
+  left_join(spi_df_empty) %>%
+    transmute(
+    iso3c=iso3c,
+    country=country,
+    date=date,
+    RAW.D4.2.3.DETH75=ind_value,
+    SPI.D4.2.3.DETH75=if_else(ind_value==1,0.5,0)
+  )
+
+crvs_df <- df_birth %>%
+  left_join(df_death) %>%
+  
+  mutate(
+         SPI.D4.2.3.CRVS=SPI.D4.2.3.DETH75+SPI.D4.2.3.BRTH90) %>%
+  group_by(country) %>%
+  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>% #use carry forward to most recent value
+  mutate(across(starts_with("SPI"), ~if_else(is.na(.),0,.))) %>%
+  ungroup() %>%
+  select(c( 'country', 'date','RAW.D4.2.3.BRTH90', 'RAW.D4.2.3.DETH75', 'SPI.D4.2.3.CRVS')  ) 
 
 
-# Manipulate and clean final data
-crvs_df2 <- crvs_df2 %>%
-  filter(!is.na(income)) %>% #keep just countries (drop aggregations)
-  select(c('iso3c', 'country', 'date', 'RAW.D4.2.3.CRVS', 'SPI.D4.2.3.CRVS')  )
 
-#join updated data with SCI data
-crvs_df <- crvs_df %>%
-  bind_rows(crvs_df2)
+
+# #pull old data from SCI
+# Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/3.11.01.03.popreg?format=json&date=2004:2015&per_page=5000")
+# Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+# 
+# # Parse the JSON content and convert it to a data frame.
+# crvs_df2 <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+#   data.frame() %>%
+#   transmute(
+#     iso3c=countryiso3code,
+#     country=country.value,
+#     date=as.numeric(date),
+#     crvs=value
+#   ) %>%
+#   mutate(SPI.D4.2.3.CRVS=as.numeric(crvs),
+#          RAW.D4.2.3.CRVS=as.character(crvs)) %>%
+#   left_join(spi_df_empty) #add on country metadata
+# 
+# 
+# # Manipulate and clean final data
+# crvs_df2 <- crvs_df2 %>%
+#   filter(!is.na(income)) %>% #keep just countries (drop aggregations)
+#   select(c('iso3c', 'country', 'date', 'RAW.D4.2.3.CRVS', 'SPI.D4.2.3.CRVS')  )
+# 
+# #join updated data with SCI data
+# crvs_df <- crvs_df %>%
+#   bind_rows(crvs_df2)
 
 #add to spi databases
 spi_df <- spi_df %>%
