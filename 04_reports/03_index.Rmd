@@ -126,6 +126,11 @@ spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
 
 metadata <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep=""))
 
+metadata_full <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep="")) %>%
+  rename(source_name=descript) %>%
+  bind_rows(metadata)
+                             
+
 pillars <- read_csv(paste(raw_dir, '/metadata/SPI_pillars.csv', sep=""))
 
 ```
@@ -319,6 +324,7 @@ spi_country_charts  <- function(data, indicator, title) {
     rename(data_available=!! indicator) %>%
     select(country, date, data_available, weights ) %>%
     right_join(country_metadata) %>%
+    filter(region!="Aggregates") %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
 
@@ -332,6 +338,7 @@ spi_country_charts  <- function(data, indicator, title) {
       caption = 'Source: SPI Indicators Raw Data',
       subtitle= 'Data Point is for last year available (2019)'
       ) +
+      xlab('Score') +
       expand_limits(x=c(0,100)) +
       theme_bw() +
       theme(legend.position = 'top') 
@@ -388,7 +395,7 @@ spi_maturity_table <- function(data, indicators, reference_year) {
     
     
     #create labels df
-    metadata_tab2_overall <- metadata %>% 
+    metadata_tab2_overall <- metadata_full %>% 
       janitor::clean_names() %>%
       transmute(series=source_id, 
                 indicator_name=source_name)
@@ -578,7 +585,7 @@ For indicators where we had no data for any years, we chose not to impute a valu
 
 Countries will be given an opportunity to dispute the values that make up our indicators.  Our team takes every effort to make sure the data presented in ouf Statistical Performance Indicators are accurate, but it is possible that the sources we used to assign values for our indicators are not accurate despite these efforts.  Because of this, countries will have a window to provide documentation for any disputed values, and our team will be happy to adjust our scores based on this new information.  Precise details for this process will be made available in the future.
 
-# Analysis
+# SPI Index Scores
 
 
 ```{r spi_df}
@@ -898,6 +905,477 @@ spi_country_charts('spi_index_df','SPI.INDEX','SPI Index')
 
 ```
 
+## SPI Scores by Dimension
+
+Next, we present the scores for each dimension that compose the SPI index (Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure).  These figures can help show where/which dimension variation is coming from across countries and to see where countries may be struggling in specific areas.
+
+We apply the same maturity classification approach and apply it to each dimension separately, where we classify countries into quintiles.  For each dimension, we show the maturity levels of countries in a world map and then proceed to discussing scores by region.
+
+### Dimension 1: Data Use
+
+In the figure below we show a world map displaying the maturity levels based on dimension 1 on data use.  Again, the maturity levels shown are based on the quintiles of the Dimension 1 sub-score.  Overall, the high income countries in North America and Europe tend to rate most highly along this dimension.  
+
+```{r dimensionsplot1}
+
+spi_mapper('spi_index_df','SPI.INDEX.DIM1','Dimension 1: Data Use Scores')
+
+
+
+```
+
+When looking by country, there is significant dispersion within regions.  It is also notable that several countries including the United States, Mexico, Finland, and Costa Rica, among others, receive the maximum possible score in this dimension of 100.  Several countries score the minimum score as well, including the Syrian Arab Republic, South Sudan, Namibia, and Nauru, among others.
+
+```{r countrydimensionsplot1}
+
+spi_country_charts('spi_index_df','SPI.INDEX.DIM1','Dimension 1: Data Use Scores')
+
+
+
+```
+
+```{r maturitytable1}
+
+indicators<-c("SPI.INDEX.DIM1","SPI.D1.5.POV","SPI.D1.5.CHLD.MORT","SPI.D1.5.DT.TDS.DPPF.XP.ZS")
+
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019) 
+
+spi_top <- as.numeric(maturity_tab[1,2])
+spi_bottom <- as.numeric(maturity_tab[1,6])
+
+poverty_top <- as.numeric(maturity_tab[2,2])
+poverty_bottom <- as.numeric(maturity_tab[2,6])
+
+mort_top <- as.numeric(maturity_tab[3,2])
+mort_bottom <- as.numeric(maturity_tab[3,6])
+
+debt_top <- as.numeric(maturity_tab[4,2])
+debt_bottom <- as.numeric(maturity_tab[4,6])
+
+```
+
+
+The table below shows the average score on each indicator in Dimension 1 by maturity group.  Countries in the top 20% possess nearly all of the components in Dimension 1, while countries in the bottom 20%.  Countries in the bottom 20% in terms of maturity on Dimension 1 have an average of `r poverty_bottom` on the comparable poverty estimate indicator, an average of `r mort_bottom` on the availability of under 5 mortality data, and an average of `r debt_bottom` on debt reporting.
+
+
+```{r maturitdisp1}
+
+maturity_tab <- maturity_tab %>%
+  flextable() %>%
+  add_header_lines('Select SPI Indicator Scores by SPI Dimension 1 Maturity Level') 
+
+FitFlextableToPage(maturity_tab) %>%
+  align( align = "left", part = "body")
+
+```
+
+### Dimension 2: Data Services
+
+For dimension 2 on data services, again high income countries tend to score highest along this dimension.  India, Morocco, and the Philippines scored highly as well in this dimension. This dimension contains four indicators on quality of data releases, online accessibility, advisory and analytical services (not included due to lack of data), and the availability and use of data services.   
+
+```{r dimensionsplot2}
+spi_mapper('spi_index_df','SPI.INDEX.DIM2','Dimension 2: Data Services Scores')
+
+```
+The next figure shows the variation between countries within regions.  Again, there is substantial heterogeneity within regions on the Dimension 2 sub-score.
+
+```{r countrydimensionsplot2}
+
+spi_country_charts('spi_index_df','SPI.INDEX.DIM2','Dimension 2: Data Services Scores')
+
+
+
+```
+```{r maturitytable2}
+
+indicators<-c("SPI.INDEX.DIM2","SPI.D2.1.GDDS",
+              "SPI.D2.2.Machine.readable",      "SPI.D2.2.Non.proprietary",
+              "SPI.D2.2.Download.options",      "SPI.D2.2.Metadata.available",
+              "SPI.D2.2.Terms.of.use",          "SPI.D2.2.Openness.subscore",     "SPI.D2.4.NADA")
+
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019) 
+
+spi_top <- as.numeric(maturity_tab[1,2])
+spi_bottom <- as.numeric(maturity_tab[1,6])
+
+sdds_top <- as.numeric(maturity_tab[2,2])
+sdds_bottom <- as.numeric(maturity_tab[2,6])
+
+open_top <- as.numeric(maturity_tab[8,2])
+open_bottom <- as.numeric(maturity_tab[8,6])
+
+machine_bottom <- as.numeric(maturity_tab[3,6])
+
+nada_bottom <- as.numeric(maturity_tab[9,6])
+
+```
+
+
+In terms of specific indicators, the top 20% of countries in dimension 2 receive an average score of `r sdds_top` on our indicator measuring country adoption of the IMF's data dissemination standards, while those in the bottom 20% receive an average score of `r sdds_bottom`.  Countries in the bottom 20% receive an average data openness score, produced by Open Data Watch, of `r open_bottom`.  This indicator is made up of several sub-indicators including whether data is available in machine readable format, a non-proprietary format, has download options, metadata available, and terms of use.  For instance, in the bottom 20% of countries the score on whether data is available in a machine readable format is only `r machine_bottom` out of a maximum of 1.  Additionally, countries in the bottom 20% only score an average of `r nada_bottom` on our measure of whether metadata meeting the standards of the Database Documentation Initiative (DDI) is available on surveys conducted.^[For more information, see https://ddialliance.org/]
+
+
+
+```{r maturitdisp2}
+
+maturity_tab <- maturity_tab %>%
+  flextable() %>%
+  add_header_lines('Select SPI Indicator Scores by SPI Dimension 2 Maturity Level') 
+
+FitFlextableToPage(maturity_tab) %>%
+  align( align = "left", part = "body")
+
+```
+
+### Dimension 3: Data Products
+
+For the data products dimension, we examine whether countries are reporting data to monitor the SDG goals.  For this dimension, all indicators are produced from the UN Global SDG monitoring database. For this indicator, there is a weaker relationship between a country's income level and their performance in this dimension.  No countries receive a maximum score of 100, which would indicate that they report on every SDG indicator every year.  Additionally, no country scores 0, which would indicate that they have reported no information for any of the SDG indicators.
+
+While it is conceivable that some countries may have data values for these indicators on their NSO websites, for instance, rather than posted on the UN Global SDG monitoring database, we took the perspective that to produce a data product that is full usable a country's national statistical system should provide that information in an internationally comparable way.  And we have judged countries accordingly.  Additionally, for countries that have not reported values for SDG monitoring, but do possess a value, a simple way to improve their score on this dimension would be to submit all of their indicators to the UN database.  
+
+We exclude values that were produced by an international organization through modeling  We do include values that are either country reported, country adjusted, estimated, or is included as global monitoring data.  This is based on the UN SDG metadata.  For each value of the indicator, the responsible international agency has been requested to indicate whether the national data were adjusted, estimated, modeled or are the result of global monitoring. The “nature” of the data in the SDG database is determined as follows:
+
+  * Country data (C): Produced and disseminated by the country (including data adjusted by the country to meet international standards);
+
+  * Country data adjusted (CA): Produced and provided by the country, but adjusted by the international agency for international comparability to comply with internationally agreed standards, definitions and classifications;
+
+  * Estimated (E): Estimated based on national data, such as surveys or administrative records, or other sources but on the same variable being estimated, produced by the international agency when country data for some year(s) is not available, when multiple sources exist, or when there are data quality issues;
+
+  * Modeled (M): Modeled by the agency on the basis of other covariates when there is a complete lack of data on the variable being estimated;
+
+  * Global monitoring data (G): Produced on a regular basis by the designated agency for global monitoring, based on country data. There is no corresponding figure at the country level.
+
+```{r dimensionsplot3}
+spi_mapper('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
+
+```
+
+When looking at the country chart, again there is significant variability across countries.  
+
+```{r countrydimensionsplot3}
+
+spi_country_charts('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
+
+
+
+```
+
+
+```{r maturitytable3}
+
+indicators<-c("SPI.INDEX.DIM3","SPI.D3.1.POV",
+              "SPI.D3.2.HNGR",
+              "SPI.D3.3.HLTH",
+              "SPI.D3.4.EDUC",
+              "SPI.D3.5.GEND",
+              "SPI.D3.6.WTRS",
+              "SPI.D3.7.ENRG",
+              "SPI.D3.8.WORK",
+              "SPI.D3.9.INDY",
+              "SPI.D3.10.NEQL",
+              "SPI.D3.11.CITY",
+              "SPI.D3.12.CNSP",
+              "SPI.D3.15.LAND",
+              "SPI.D3.16.INST",
+              "SPI.D3.17.PTNS")
+
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019) 
+
+spi_top <- as.numeric(maturity_tab[1,2])
+spi_bottom <- as.numeric(maturity_tab[1,6])
+
+goal1_top <- as.numeric(maturity_tab[2,2])
+goal1_bottom <- as.numeric(maturity_tab[2,6])
+
+open_top <- as.numeric(maturity_tab[8,2])
+open_bottom <- as.numeric(maturity_tab[8,6])
+
+machine_bottom <- as.numeric(maturity_tab[3,6])
+
+nada_bottom <- as.numeric(maturity_tab[9,6])
+
+```
+
+
+Even countries in the top 20% of this indicator have significant room for improvement in reporting on the SDGs.  The average score for the top 20% on the dimension 3 sub-score is `r spi_top`, while for the bottom 20% the average is `r spi_bottom`.  When looking at the performance for a specific goals, for SDG 1 on poverty, the top 20% in terms of the dimension 3 sub-score receives an average of `r goal1_top` out of a maximum of 1.  Specifically, this means that when looking at reporting on SDG goals in a five year window since 2019, so from 2015-19, the top performing countries are only reporting `r 100*goal1_top` percent of the possible country by year possible observations.  The bottom 20% receive an average score of `r goal1_bottom`.  The table below shows the full set of breakdowns by SDG.
+
+
+
+```{r maturitdisp3}
+
+maturity_tab <- maturity_tab %>%
+  flextable() %>%
+  add_header_lines('Select SPI Indicator Scores by SPI Dimension 2 Maturity Level') 
+
+FitFlextableToPage(maturity_tab) %>%
+  align( align = "left", part = "body")
+
+```
+
+### Dimension 4: Data Sources
+
+Dimension 4 examines whether countries have the data sources available that are necessary to produce statistics for public use.  We examine three aspects of data sources: censuses and surveys, administrative data, and geospatial data.  Private and citizen generated data is another important area that we will incorporate when we are able make use of an established source.  For the censuses and surveys we examine, we score on both whether this source exists and how recently the source was produced, as both are needed for accurate reporting of current conditions.  For administrative data and geospatial data, we are using proxies available on the state of these data systems.
+
+
+
+```{r dimensionsplot4}
+spi_mapper('spi_index_df','SPI.INDEX.DIM4','Dimension 4: Data Sources Scores')
+```
+
+
+When looking at the country chart, again there is significant variability across countries.  No country receives the maximum score of 100, with many countries falling short particularly on our geospatial indicator.  Somalia is the only country that receives 0 points on this indicator, which is the minimum score.
+
+```{r countrydimensionsplot4}
+
+spi_country_charts('spi_index_df','SPI.INDEX.DIM4','Dimension 4: Data Sources Scores')
+
+
+
+```
+
+
+```{r maturitytable4}
+
+indicators<-c("SPI.INDEX.DIM4",
+              "SPI.D4.1.1.POPU",
+              "SPI.D4.1.2.AGRI",
+              "SPI.D4.1.3.BIZZ",
+              "SPI.D4.1.4.HOUS",
+              "SPI.D4.1.5.AGSVY",
+              "SPI.D4.1.6.LABR",
+              "SPI.D4.1.7.HLTH",
+              "SPI.D4.1.8.BZSVY",
+              "SPI.D4.2.3.CRVS",
+              "SPI.D4.3.GEO.first.admin.level")
+
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019) 
+
+spi_top <- as.numeric(maturity_tab[1,2])
+spi_bottom <- as.numeric(maturity_tab[1,6])
+
+pop_top <- as.numeric(maturity_tab[2,2])
+pop_bottom <- as.numeric(maturity_tab[2,6])
+pop_gap <- pop_top-pop_bottom
+
+business_gap <- as.numeric(maturity_tab[9,2])-as.numeric(maturity_tab[9,6])
+
+geo_top <- as.numeric(maturity_tab[11,2])
+geo_bottom <- as.numeric(maturity_tab[11,6])
+
+
+```
+
+
+Countries in the top 20% for dimension 4 have an average score of `r spi_top`, while countries in the bottom 20% have an average score of `r spi_bottom`.  The gap between the top 20% and bottom 20% for the population and housing census indicator is `r pop_gap` points on a scale from 0 to 1.  The gap for countries conducting a business/establishment survey is `r business_gap`.  The scores for even top performing countries on our geospatial indicator are low.  The average score for the top 20% in dimension 4 is `r geo_top`, while it is `r geo_bottom` for the bottom 20%.
+
+```{r maturitdisp4}
+
+maturity_tab <- maturity_tab %>%
+  flextable() %>%
+  add_header_lines('Select SPI Indicator Scores by SPI Dimension 4 Maturity Level') 
+
+FitFlextableToPage(maturity_tab) %>%
+  align( align = "left", part = "body")
+
+```
+
+### Dimension 5: Data Infrastructure
+
+The fifth dimension measures whether countries have the hard and soft infrastructure to produce the data sources, data products, and data services to produce useful data.  For the dimension 5 sub-score, we use only a set of ten methods, standards, and classifications.  We also have collected data on statistical legislation and governance, as well as finance, but these indicators currently lack adequate country coverage to include in our index.
+
+
+```{r maturitytable5}
+
+indicators<-c("SPI.INDEX.DIM5",
+              #"SPI.D5.1.DILG",
+              "SPI.D5.2.1.SNAU",
+              "SPI.D5.2.2.NABY",
+              "SPI.D5.2.3.CNIN",
+              "SPI.D5.2.4.CPIBY",
+              "SPI.D5.2.5.HOUS",
+              "SPI.D5.2.6.EMPL",
+              "SPI.D5.2.7.CGOV",
+              "SPI.D5.2.8.FINA",
+              "SPI.D5.2.9.MONY",
+              "SPI.D5.2.10.GSBP")
+              #"SPI.D5.5.DIFI")
+
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019) 
+
+spi_top <- as.numeric(maturity_tab[1,2])
+spi_bottom <- as.numeric(maturity_tab[1,6])
+
+5
+7
+8
+9
+11
+
+```
+
+Countries scoring in the top 20% tend to be concentrated among the high income countries.  These top scoring countries have an average score for dimension 5 of `r spi_top`, which is near the maximum score of 100.  Countries in the bottom 20% have an average score fo `r spi_bottom`.
+
+```{r dimensionsplot5}
+spi_mapper('spi_index_df','SPI.INDEX.DIM5','Dimension 5: Data Infrastructure Scores')
+
+```
+
+Several countries score the maximum of 100 in the data infrastructure dimension.  One country, Somalia, scores 0 points in this dimension.  
+
+```{r countrydimensionsplot5}
+
+spi_country_charts('spi_index_df','SPI.INDEX.DIM5','Dimension 5: Data Infrastructure Scores')
+
+
+
+```
+
+In the top 20%, the average score is near 100 across all the indicators in dimension 5.  In the bottom 20%, countries score on average close to zero points for the CPI base year, classification of status of employment, central government accounting status, compilation of government finance statistics, and business process indicators.  Bottom 20% countries, score above 0.5 points on the system of national accounts in use and compilation of monetary and financial statistics indicators.
+
+
+```{r maturitdisp5}
+
+maturity_tab <- maturity_tab %>%
+  flextable() %>%
+  add_header_lines('Select SPI Indicator Scores by SPI Dimension 5 Maturity Level') 
+
+FitFlextableToPage(maturity_tab) %>%
+  align( align = "left", part = "body")
+
+```
+
+### Correlations between SPI Dimensions
+
+In the following chart, we show the correlations between the SPI index and the SPI dimension sub-scores.  All dimensions are positively correlated with one another.  On the other hand, no dimension is perfectly correlated with any of the other dimensions, which would be a sign that a dimension was not provide additional information on the statistical performance of countries.  The dimension with the single highest correlation to the overall measure is dimension 1 on data use.  The indicator with the lowest overall correlation with the SPI index is dimension 3 on data products.
+
+```{r dimcorr, echo=FALSE}
+
+corr_df <- spi_index_df %>%
+  ungroup() %>%
+  select(starts_with('SPI.INDEX'))
+
+#calculate correlations between teacher practices
+df_corr_plot <-    round(cor(corr_df, use="complete.obs"), 2) 
+
+#plot the correlation in a nicely formatted table
+pcorr<- ggcorrplot::ggcorrplot(df_corr_plot,
+                   outline.color = "white",
+                   ggtheme = theme_bw(),
+                   colors = c("#F8696B", "#FFEB84", "#63BE7B"),
+                   legend.title = "Correlation",
+                   title = "Correlation Between SPI Dimensions",
+                   lab=T) + 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
+  scale_y_discrete(labels = function(x) str_wrap(x, width = 16)) +
+  theme_bw() +
+  theme(
+    text = element_text(size = 12),
+    axis.text.x = element_text(angle=45,vjust=.5)
+  ) +
+  labs( )
+
+pcorr
+
+```
+
+## SPI Index by Pillar and Indicator
+
+While there are large differences across regions, income groups, and countries in the SPI index, there are also differences across indicators in the strengths and weaknesses of countries that may have the same final score.  For instance, some countries may reach a final score by excelling in the area of data sources, while others may reach a final score by excelling in data infrastructure.  
+
+```{r anova, echo=FALSE}
+
+#Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each pillar.
+
+anova_dim_df <- spi_index_df %>%
+  select(country, iso3c, date, starts_with("SPI.INDEX")) %>%
+  pivot_longer(
+    cols=starts_with("SPI.INDEX"),
+    names_to='Dimension',
+    values_to='value'
+  ) %>%
+  group_by(Dimension, date) %>%
+  nest() %>%
+  mutate(
+    std_dev=map(
+      data,
+      ~round(sd(.x$value, na.rm=T),2),
+                ),
+    std_dev=as.numeric(std_dev)
+  ) %>%
+  left_join(metadata_full, by = c('Dimension'='source_id'))
+  
+
+anova_dim_plot <- anova_dim_df %>%
+  filter(date==2019) %>%
+  ggplot(aes(x=source_name, y=std_dev))  +
+  geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=std_dev), color="black") +
+  geom_point(size=3) +
+  # scale_color_manual(name="HCI",
+  #                    labels = c("Over-performers", "Under-performers"),
+  #                    values = c('above'="#1A9850", 'below'="#D73027")) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    legend.position = 'bottom'
+  ) +
+  xlab("") +
+  ylab("Standard Deviation") +
+  ggtitle("Variation in SPI Dimensions")
+
+anova_dim_plot
+
+```
+
+```{r anova2, echo=FALSE}
+
+#Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each pillar.
+
+anova_pillar_df <- spi_index_df %>%
+  mutate(INDEX.SPI.D1.5=SPI.INDEX.DIM1/100) %>%
+  select(country, iso3c, date, starts_with("INDEX")) %>%
+  pivot_longer(
+    cols=starts_with("INDEX"),
+    names_to='Pillar',
+    values_to='value'
+  ) %>%
+  group_by(Pillar, date) %>%
+  nest() %>%
+  mutate(
+    std_dev=map(
+      data,
+      ~round(sd(.x$value, na.rm=T),2)
+        ),
+    std_dev=as.numeric(std_dev)
+  ) %>%
+  left_join(pillars, by = c('Pillar'='pillar_id'))
+  
+    
+anova_pillar_plot <- anova_pillar_df %>%
+  filter(date==2019) %>%
+  ggplot(aes(x=Pillar, y=std_dev))  +
+  geom_segment( aes(x=Pillar ,xend=Pillar, y=0, yend=std_dev), color="black") +
+  geom_point(size=3) +
+  # scale_color_manual(name="HCI",
+  #                    labels = c("Over-performers", "Under-performers"),
+  #                    values = c('above'="#1A9850", 'below'="#D73027")) +
+  coord_flip() +
+  theme_bw() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    legend.position = 'bottom'
+  ) +
+  xlab("") +
+  ylab("Standard Deviation") +
+  ggtitle("Variation in SPI Pillars")
+
+anova_pillar_plot  
+
+```
+
+
+# Analysis
+
 ## Unique Values
 
 ```{r unique_scores}
@@ -1194,79 +1672,6 @@ FitFlextableToPage(top_changes_tab) %>%
   align( align = "left", part = "body")
 ```
 
-
-```{r anova, echo=FALSE}
-
-#Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each pillar.
-
-anova_dim_df <- spi_index_df %>%
-  select(country, iso3c, date, starts_with("SPI.INDEX")) %>%
-  pivot_longer(
-    cols=starts_with("SPI.INDEX"),
-    names_to='Dimension',
-    values_to='value'
-  ) %>%
-  group_by(Dimension, date) %>%
-  nest() %>%
-  mutate(
-    std_dev=map(
-      data,
-      ~round(sd(.x$value, na.rm=T),2)
-    )
-  )
-  
-  
-anova_pillar_df <- spi_index_df %>%
-  mutate(INDEX.SPI.D1.5=SPI.INDEX.DIM1/100) %>%
-  select(country, iso3c, date, starts_with("INDEX")) %>%
-  pivot_longer(
-    cols=starts_with("INDEX"),
-    names_to='Pillar',
-    values_to='value'
-  ) %>%
-  group_by(Pillar, date) %>%
-  nest() %>%
-  mutate(
-    std_dev=map(
-      data,
-      ~round(sd(.x$value, na.rm=T),2)
-    )
-  )
-    
-  
-
-```
-
-
-```{r dim_corr, eval=FALSE, include=FALSE}
-
-corr_df <- spi_index_df %>%
-  ungroup() %>%
-  select(starts_with('SPI.INDEX'))
-
-#calculate correlations between teacher practices
-df_corr_plot <-    round(cor(corr_df, use="complete.obs"), 2) 
-
-#plot the correlation in a nicely formatted table
-pcorr<- ggcorrplot::ggcorrplot(df_corr_plot,
-                   outline.color = "white",
-                   ggtheme = theme_bw(),
-                   colors = c("#F8696B", "#FFEB84", "#63BE7B"),
-                   legend.title = "Correlation",
-                   title = "Correlation Between SPI Dimensions",
-                   lab=T) + 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
-  scale_y_discrete(labels = function(x) str_wrap(x, width = 16)) +
-  theme_bw() +
-  theme(
-    text = element_text(size = 12),
-    axis.text.x = element_text(angle=45,vjust=.5)
-  ) +
-  labs( )
-
-pcorr
-
-```
 
 
 ## Comparison to the Statistical Capacity Indicators
@@ -1610,42 +2015,6 @@ ggplot(density_df, aes(x = index_values, color=index_name)) +
   theme(legend.position = 'bottom')
 ```
 
-
-# Dimension Index Scores
-
-Next, we present the scores for each dimension that compose the SPI index (Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure).  These figures can help show where (which dimension) variation is coming from across countries and to see where countries may be struggling in specific areas.
-
-Figure 6.1:
-```{r dimensionsplot1}
-
-spi_mapper('spi_index_df','SPI.INDEX.DIM1','Dimension 1: Data Use Scores')
-
-
-
-```
-
-Figure 6.2:
-```{r dimensionsplot2}
-spi_mapper('spi_index_df','SPI.INDEX.DIM2','Dimension 2: Data Services Scores')
-
-```
-
-Figure 6.3:
-```{r dimensionsplot3}
-spi_mapper('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
-
-```
-
-Figure 6.4:
-```{r dimensionsplot4}
-spi_mapper('spi_index_df','SPI.INDEX.DIM4','Dimension 4: Data Sources Scores')
-```
-
-Figure 6.5:
-```{r dimensionsplot5}
-spi_mapper('spi_index_df','SPI.INDEX.DIM5','Dimension 5: Data Infrastructure Scores')
-
-```
 
 
 # Annex
