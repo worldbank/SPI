@@ -299,11 +299,13 @@ Overall Scores Across Countries
 
   * Given imprecision inherent in calculations, we recommend color coding providing subdivisions of maturity
   
-Countries are grouped into three groups:   
+Countries are grouped into five groups:   
 
-* <span style="color:#D73027"> Emerging: </span> Countries in the bottom 33%.   
-* <span style="color:#E4ED40"> Intermediate: </span> Countries in the middle 33%. 
-* <span style="color:#1A9850"> Advanced: </span>  Countries in the top 33%.  
+* **Top 20%**:    Shading in <span style="color:#1A9850">green</span>.    
+* **4th Quantile**:  Shading in <span style="color:#BFCF28"> light green</span>.    
+* **3rd Quantile**:   Shading in <span style="color:#E7BB25"> yellow</span>.  
+* **2nd Quantile**:   Shading in <span style="color:#DE7B2B"> orange</span>.  
+* **Bottom 20%**:   Shading in <span style="color:#D73027"> red </span>.     
 
 
 ---
@@ -326,7 +328,7 @@ spi_mapper <- function(data, indicator, title) {
   
  indicator<-indicator
 
-  map_df <- get(data) %>%
+   map_df <- get(data) %>%
     filter(date==max(date, na.rm=T)) %>%
     filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
     group_by( country) %>%
@@ -337,24 +339,23 @@ spi_mapper <- function(data, indicator, title) {
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
 
 
-  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4,5)/6,na.rm=T)
+  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
   
   SPI_map <- map_df %>%
     mutate(spi_groups=case_when(
-      between(data_available, spi_groups_quantiles[5],100) ~ "High-top",
-      between(data_available, spi_groups_quantiles[4],spi_groups_quantiles[5]) ~ "High-bottom",
-      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "Middle-top",
-      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "Middle-bottom",
-      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "Low-top",
-      between(data_available, 0,spi_groups_quantiles[1]) ~ "Low-bottom"
+      between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
       
     )) %>%
     mutate(spi_groups=factor(spi_groups, 
-                             levels=c("High-top","High-bottom","Middle-top","Middle-bottom","Low-top", "Low-bottom"  )))  
+                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
   
   #set color pallete
-  col_pal <- c("#1A9850",  "#66BD63", "#E4ED40", "#FFFF8C",  "#FC7F60","#D73027" )
-  names(col_pal) <- c("High-top","High-bottom","Middle-top","Middle-bottom","Low-top", "Low-bottom"  )
+  col_pal <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
   
   p1<-ggplot() +
     geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
@@ -379,7 +380,7 @@ spi_mapper <- function(data, indicator, title) {
       title=str_wrap(title,100),
       caption = 'Source: World Bank. Statistical Performance Indicators'
     )
-  print(p1)
+ print(p1)
 }
 
 spi_charts  <- function(data, indicator, title) {

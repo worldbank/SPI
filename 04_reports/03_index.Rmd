@@ -54,11 +54,13 @@ wgt <- 1
 # Motivation
 
 The primary purpose of the statistical system is to help users of statistics make better decisions or to hold those decision makers accountable. In the words of Principle 1 of the Fundamental Principles of Official Statistics, the statistics must “meet the test of practical utility”, serving “the Government, the economy and the public with data about the economic, demographic, social and environmental situation.” 
+
 The national statistical system, or NSS, plays a crucial role in modern economies. It provides stakeholders, ranging from policy makers to stock market analysts and the general public, with the latest data on the country’s socio-economic developments. At the international level, monitoring progress on global undertakings such as the recently established Sustainable Development Goals (SDGs) requires high-quality data that must be produced consistently across different national statistical systems. Assessing and improving the capacity of a country’s NSS has long been a part of the global agenda. Since the early 2000s, a few capacity assessment tools have been developed to identify the weaknesses and strengths of national statistical systems by other organizations including PARIS21, the Food and Agriculture Organization of the United Nations (FAO), the United Nations Economic Commission for Europe (UNECE), the United Nations Economic Commission for Africa (UNECA), and the U.S. Census Bureau.   
 
 The World Bank’s Statistical Capacity Index (SCI) is one such tool that has been widely employed. Several international and national agencies have adopted the SCI for measuring progress in statistical capacity building and related investments.   The World Bank mainstreamed the SCI in its monitoring and assessment framework and has adopted it as a baseline indicator in various projects at the country level. The SCI is based on publicly available data, and this has various advantages over other indexes of statistical capacity. A key advantage of the SCI is that it can provide assessment of a country’s statistical capacity in an internationally comparable and cost-effective manner.
 
 Yet, there are several areas in which the existing SCI can be improved. First, it comprises of a limited number of indicators and includes no indicators of some important data sources, such as labor force surveys, establishment surveys, or administrative data. Second, it ignores the data dissemination practices of an NSS, which is one of the key features of data usage. Third, the SCI has been criticized for placing too much weight on statistical output and activities, while neglecting the infrastructure and resource components of statistical systems.  Finally, it is silent on whether the data products produced by the NSS are in high demand. 
+
 Since its launch in 2004, the SCI’s methodology and coverage have basically remained the same, while the global data landscape has changed significantly. NSSs have made significant advancements with data collection and dissemination practices. At the same time, the adoption of the Sustainable Development Goals (SDGs) set an ambitious development agenda for the next 15 years on ending poverty, protecting the planet, and ensuring prosperity for all by 2030. This, in turn, increased the demand for data and raised the bar for national statistical systems regarding their capacity to produce high-quality data. We thus propose to improve the current SCI to better suit the changing global data landscape.
 
 # Overview of the New SPI
@@ -88,19 +90,18 @@ The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 b
 A score against each element would facilitate:    
 
   1. Understanding of the maturity of the national statistical system in relation to others eg quintile groups of countries could be shown against each dimension    
-  2. This in turn would highlight relative strengths and weaknesses of the system and give an indication of the extent to which the official statistics could be relied upon   
+  
+  2. This in turn would highlight relative strengths and weaknesses of the system and give an indication of the extent to which the official statistics could be relied upon  
+  
   3. It would also point to which other countries the country in question could learn from as it seeks to improve and create incentives to develop in a forward looking rather than backward looking way   
-  4. Time series would allow assessments to be made of progress of the system and a start point for assessments of return on investment for funding given for capacity building    
+  
+  4. Time series would allow assessments to be made of progress of the system and a start point for assessments of return on investment for funding given for capacity building 
+  
   5. A dynamic view encouraging continuous improvement. As countries improve the bar for what good looks like would get higher     
 
 
 Key characteristics of the SPI are: (i) uses only publicly accessible data; (ii) transparent methodology; (iii) easily replicable; (iv) provides a long-time series to track progress in performance; (v) captures outcomes and supporting elements; (vi) reflects the SDGs; (vii) facilitates at-a-glance comparisons on a global scale.
 We are collecting data on indicators for the 22 pillars above. For dissemination, the SPI will be presented both in the dashboard format above and as an index for each country. Further details on the construction of the new SPI are provided in the remainder of the document.
-
-
-
-
-
 
 
 
@@ -220,6 +221,9 @@ spi_charts  <- function(data, indicator, title) {
     right_join(country_metadata) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))  
     
+    
+    
+    
   #add histogram by region 
   p2 <- map_df %>%
     group_by(region) %>%
@@ -327,10 +331,28 @@ spi_country_charts  <- function(data, indicator, title) {
     filter(region!="Aggregates") %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
+   spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+  
+  SPI_map <- map_df %>%
+    mutate(spi_groups=case_when(
+      between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+  
+  #set color pallete
+  col_pal <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
 
-  p2_alt <- map_df %>%
+  p2_alt <- SPI_map %>%
     ungroup() %>%
-    ggplot(aes(x=data_available, y=region, color=region)) +
+    ggplot(aes(x=data_available, y=region, color=spi_groups)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
@@ -340,6 +362,11 @@ spi_country_charts  <- function(data, indicator, title) {
       ) +
       xlab('Score') +
       expand_limits(x=c(0,100)) +
+      scale_color_manual(
+        name='SPI Score',
+        values=col_pal,
+        na.value='grey'
+      ) +
       theme_bw() +
       theme(legend.position = 'top') 
    
@@ -461,9 +488,13 @@ The data sources dimension is segmented between sources generated by the statist
 The data infrastructure dimension is segmented into hard and soft infrastructure segments itemizing essential cross cutting requirements for an effective statistical system. The segments are:   
 
   1. Legislation and governance covering the existence of laws and a functioning institutional framework for the statistical system    
+  
   2. Standards and methods addressing compliance with recognized frameworks and concepts   
+  
   3. Skills including level of skills within the statistical system and amongst users (statistical literacy)   
+  
   4. Partnerships reflecting the need for the statistical system to be inclusive and coherent    
+  
   5. Finance, both domestically and from donors    
   
 ## Indicators and weights    
@@ -471,14 +502,19 @@ The data infrastructure dimension is segmented into hard and soft infrastructure
 We are seeking answers to the questions:    
 
   1. What indicator (that we can measure in practice) could act as a proxy measure for the concept we are trying to capture?   
+  
   2. What weight can we assign to the indicator that allows this concept to be aggregated with others in a meaningful way?   
   
   There will be no right answer to these questions and the proposed approach makes a virtue of this by: 
   
   1. Allowing missing values and setting out how missing values are dealt with for the purposes of making comparisons over time and between countries    
+  
   2. Providing users the opportunity to apply their own weights    
+  
   3. Releasing the dashboard as a “Beta” and encouraging a research agenda to help fill in gaps and improve any elements   
+  
   4. Establishing a process for review that enables time series to be respected.   
+  
   5. Presenting the dashboard within a toolkit for understanding statistical performance   
 
 
@@ -511,9 +547,19 @@ FitFlextableToPage(pillars_tab) %>%
 
 ```
 
-# Index Methodology
+# SPI Data
 
-For research purposes, we create an index combining several indicators together to get an overview of country performance.  The Index will contain only a subset of the pillars from our framework.  For pillars excluded, we either lacked a source with a developed methodology or else the data collection for that measure was incomplete. This is described below:
+Thanks to a large scale data collection effort by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering 14 out of our 22 pillars for our dashboard.  These 52 indicators do allow us to provide data for each of our 5 dimensions on data use, data services, data products, data sources, and data infrastructure.  Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public.  Going forward, the international community must work together to fill these gaps.
+
+An area of particular concern is in the dimension of data use.  Currently, our dashboard only features data for one of the five pillars in data use.  That is on data use by international organizations.  We are currently blind as to whether statistical systems are providing useful data to their national governments (legislature and executive branches), to civil society, and to academia.  By closing this data gap, country national statistical offices (NSOs) can be better guided in whether the information they are providing is meeting their user's needs.  International organizations can help steer funding for capacity building in areas that are lacking.  And the virtuous data cycle can begin: where better investment leads to more effectiveness, then more innovation, higher value-added, and ultimately greater impact.
+
+Another area that needs improvement is in the measurement of advisory and analytical services provided by NSOs, such as data stewardship services and the ethical consideration of proposals.  By measuring this type of work done by NSOs that goes beyond producing data, the international community and the NSOs themselves can better assess whether this type of support is in place.
+
+In the area of data sources, more information is needed particularly in the areas of administrative data, geospatial data, and private and citizen generated data.  While we have measures of administrative data use, particularly on the development of civil registrations and vital statistics systems, we have an incomplete picture of whether the administrative data systems are in place to measure health, education, labor, and social protection program statistics.  For our geospatial indicator, we have a proxy measure of whether the country is able to produce indicators at the sub-national level, but we lack an understanding of how countries are using geospatial information in other ways, for instance using satellite data.  And while the world is increasingly awash with private and citizen generated data, such as on mobility, job searching, or social networking, we were unable to find a reliable source to measure how national statistical systems are incorporating this information.
+
+Finally, many of the soft components of data infrastructure lacked adequate data.  This includes the areas of skill (including data literacy) and partnerships between entities in the national statistical system.  We are making use of the PARIS21 led SDG indicator on whether statistical legislation met the standards of the UN fundamental Principles of Statistics in our dashboard, but were unable to use this in our index, because countries have not sufficiently reported to PARIS21 on this measure.  This is also true of the PARIS21 led SDG indicator on whether the national statistical system is fully funded.  Countries should be encouraged to report on this information.
+
+Below is a brief description of the information (or lack thereof) we have available for the pillars in our framework.  For pillars excluded, we either lacked a source with a developed methodology or else the data collection for that measure was incomplete. This is described below:
 
   * **Pillar 1.1: Data use by national legislature:**  *Not included because of lack of established methodology*   
   * **Pillar 1.2: Data use by national executive branch:** *Not included because of lack of established methodology*      
@@ -537,40 +583,40 @@ For research purposes, we create an index combining several indicators together 
   * **Pillar 4.3: Geospatial Data:**  *SPI.D4.3.GEO.first.admin.level -	Geospatial data available at 1st Admin Level.  Although, we view geospatial data availability at the sub-national level as a reasonable proxy for a country's geospatial data capability, and we are using this information in our index, this is another area where more research and efforts on data collection are needed.* 
   * **Pillar 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology.  Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.*   
   
-  * **Pillar 5.1: Legislation and governance:**  *Not included because of insufficient country coverage*  
-  * **Pillar 5.2: Standards and Methods:** *Average score for Standards and Methods indicators SPI.D5.2....*  
+  * **Pillar 5.1: Legislation and governance:**  *Included in dashboard, but not index because of insufficient country coverage*  
+  * **Pillar 5.2: Standards and Methods:** *Average score for Standards and Methods indicators*  
   * **Pillar 5.3: Skills:**  *Not included because of lack of established methodology*    
   * **Pillar 5.4: Partnerships:**  *Not included because of lack of established methodology*    
-  * **Pillar 5.5: Finance:**  *Not included because of insufficient country coverage* 
+  * **Pillar 5.5: Finance:**  *Included in dashboard, but not index because of insufficient country coverage* 
   
 
 This process of eliminating some pillars due to lack of established methodology or country coverage results in 12 pillars. This includes 1 on data use, 3 on data services, 4 on data products, 3 on data sources, and 1 on data infrastructure.
 
-## SPI Index Scoring
+# SPI Index Methodology 
 
-Our statistical performance indicators have a three level structure, and our SPI Index score will be formed by sequentially aggregating each level.
+We next produce an overall score by combining the indicators we have collected.  Our statistical performance indicators have a three level structure, and our SPI overall score will be formed by sequentially aggregating each level.
 
 To begin we produce a score for each pillar, which is an unweighted average of the indicators within that pillar.  For instance, the Census and Surveys pillar will be formed by taking the unweighted average of the Population Census score, the Agriculture Census score, the Business Census score, the Labor Force Survey score, the Health Survey score, etc.  
 
-$$ SPI.PILLAR{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
+$$ SPI.PILLAR_{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
 
-where $SPI.PILLAR{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
+where $SPI.PILLAR_{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
 
 After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental statistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.
 
-$$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{\omega_{ds} \times SPI.PILLAR{ctds}}{N_S} $$
+$$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{\omega_{ds} \times SPI.PILLAR_{ctds}}{N_S} $$
 
 $\omega_{ds}$ is the weight for pillar s in dimension d.
 
-After calculating the scores for each dimension The SPI index is the average across the 5 dimensions. 
+After calculating the scores for each dimension, the SPI overall score is the average across the 5 dimensions. 
 
-The SPI index is scaled to have a maximum score of 100 and a minimum of 0. A score of 100 would indicate that a country has every single element that we measure in place. A score of 0 indicates that none are in place. To be precise:
+The SPI overall score is scaled to have a maximum score of 100 and a minimum of 0. A score of 100 would indicate that a country has every single element that we measure in place. A score of 0 indicates that none are in place. To be precise:
 
 
 
 $$ SPI.INDEX_{ct} = \sum_{d=1}^{N_D} \frac{SPI.DIM_{ctd}}{N_D} $$
 
-Where SPI.INDEX is the SPI index. SPI.DIM are the 5 SPI dimensions listed above. In the notation, c is a country, t is the date, d is a dimension.  
+Where SPI.INDEX is the SPI overall score. SPI.DIM are the 5 SPI dimensions listed above. In the notation, c is a country, t is the date, d is a dimension.  
 
 The nested structure of our index and the summation methods used to build an overall score ensure the axiomatic properties outlined in [@cameron2019measuring].  These include symmetry, monotonicity, and subgroup decomposability.
 
@@ -585,7 +631,13 @@ For indicators where we had no data for any years, we chose not to impute a valu
 
 Countries will be given an opportunity to dispute the values that make up our indicators.  Our team takes every effort to make sure the data presented in ouf Statistical Performance Indicators are accurate, but it is possible that the sources we used to assign values for our indicators are not accurate despite these efforts.  Because of this, countries will have a window to provide documentation for any disputed values, and our team will be happy to adjust our scores based on this new information.  Precise details for this process will be made available in the future.
 
-# SPI Index Scores
+## Process for Updating Indicators
+
+While we feel our framework is comprehensive and is designed to capture the contours most statistical systems over at least the next 15 years, we fully recognize that our indicators themselves have room for improvement.  At launch, we will tag our version of our statistical performance indicators as version 1.0.  From there, we will likely have a 2-3 year cycle, where we continuously update the values of our indicators, but do not change the methodology for constructing them. At the end of the 2-3 year period, we may introduce a indicator or we may re-evaluate how our current indicators are constructed based on feedback from countries and other groups.  At that point, we will launch a major update as version 2.0, or version 3.0 as the sequence goes.  Smaller updates, where for instance we adjust a countries value based on the data dispute process we describe above, will be labeled with a decimal point as version 1.1 for instance.
+
+In order to be completely transparent, we will track all changes to our methodology through a publicly available github repository and we will publish all code and underlying data to produce our indicators.
+
+# SPI Overall Scores
 
 
 ```{r spi_df}
@@ -766,7 +818,7 @@ spi_index_dta_lab <- rbind(l, spi_index_dta) %>%
 
 ```{r text_computations}
 
-#number of countries with data for SPI index
+#number of countries with data for SPI overall score
 n_countries <- spi_index_df %>%
   filter(!is.na(SPI.INDEX) & date==2019) %>% #countries with value for SPI in 2019
   nrow()
@@ -783,23 +835,23 @@ pop_covered <- spi_index_df %>%
 ```
 
 
-Below we show a set of summary measures for our SPI index.  We begin by presenting a world map containing the SPI index values for 2019 for each country.  In total, we have `r n_countries` countries with sufficient data to compute an index value.  This set of countries covers `r 100*round(pop_covered$pop_covered,3)` percent of the world population.
+Below we show a set of summary measures for our SPI overall score.  We begin by presenting a world map containing the SPI overall score values for 2019 for each country.  In total, we have `r n_countries` countries with sufficient data to compute an index value.  This set of countries covers `r 100*round(pop_covered$pop_covered,3)` percent of the world population.
 
 The map is color coded based on the performance of countries on our index.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
 
 Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
 
-* **Most Mature**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#1A9850">green</span>.    
-* **Highly Mature**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#BFCF28"> light green</span>.    
-* **Maturing**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#E7BB25"> yellow</span>.  
-* **Less Mature**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#DE7B2B"> orange</span>.  
-* **Least Mature**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#D73027"> red </span>.   
+* **Top 20%**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#1A9850">green</span>.    
+* **4th Quantile**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#BFCF28"> light green</span>.    
+* **3rd Quantile**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#E7BB25"> yellow</span>.  
+* **2nd Quantile**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#DE7B2B"> orange</span>.  
+* **Bottom 20%**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#D73027"> red </span>.    
 
 
 ```{r map}
 #show map and summary stats by region and income group
 
-spi_mapper('spi_index_df','SPI.INDEX','SPI Index')
+spi_mapper('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
 
@@ -823,7 +875,7 @@ census_bottom <- as.numeric(maturity_tab[5,6])
 ```
 
 
-The maturity model reflects concrete differences between countries in their statistical systems.  On the SPI index itself, the countries scoring in the top 20% have an average SPI index score of `r spi_top`.  A maximum score of 100 would indicate that a country has every single element in place that we measure through our indicators.  Meanwhile, countries in the bottom 20% score significantly worse, with an average index scores of `r spi_bottom`.  To highlight a few specific indicators, we can also see that countries in the top 20% on average get nearly perfect scores in terms of the debt reporting to the world bank.  The top 20% of countries in the SPI index have an average score on their debt reporting of `r debt_top`, with a maximum score of 1 and minimum score of 0, while those in the bottom 20% on the SPI index have an average score of `r debt_bottom`.  To take another concrete example, when looking at scores on whether a population census has been conducted recently, countries in the top 20% score on average `r census_top` on our population census indicator, with a max score of 1 and minimum score of 0, while those in the bottom 20% on our SPI index indicator score `r census_bottom` on the population census indicator.  The table below shows differences across maturity groups for a select set of indicators.
+The maturity model reflects concrete differences between countries in their statistical systems.  On the SPI overall score itself, the countries scoring in the top 20% have an average SPI overall score of `r spi_top`.  A maximum score of 100 would indicate that a country has every single element in place that we measure through our indicators.  Meanwhile, countries in the bottom 20% score significantly worse, with an average index scores of `r spi_bottom`.  To highlight a few specific indicators, we can also see that countries in the top 20% on average get nearly perfect scores in terms of the debt reporting to the World Bank.  The top 20% of countries in the SPI overall score have an average score on their debt reporting of `r debt_top`, with a maximum score of 1 and minimum score of 0, while those in the bottom 20% on the SPI overall score have an average score of `r debt_bottom`.  To take another concrete example, when looking at scores on whether a population census has been conducted recently, countries in the top 20% score on average `r census_top` on our population census indicator, with a max score of 1 and minimum score of 0, while those in the bottom 20% on our SPI overall score receive `r census_bottom` points on the population census indicator.  The table below shows differences across maturity groups for a select set of indicators.
 
 
 ```{r maturitdisp}
@@ -838,17 +890,17 @@ FitFlextableToPage(maturity_tab) %>%
 ```
 
 
-## SPI Index by Region and Income Group
+## SPI Overall Score by Region and Income Group
 
-There are large differences in the SPI index across World Bank regions and income groups.  Overall, North America has the highest average SPI index, while the Sub-Saharan Africa region has the lowest average score.^[All tables and figures show unweighted summary statistics (i.e. the summary statistics do not weight by population).] There is also a clear gradient with respect to income groups.  Countries classified as low income have lower scores on average than countries classified as middle income.  High income countries have the highest average SPI index score.  
+There are large differences in the SPI overall score across World Bank regions and income groups.  Overall, North America has the highest average SPI overall score, while the Sub-Saharan Africa region has the lowest average score.^[All tables and figures show unweighted summary statistics (i.e. the summary statistics do not weight by population).] There is also a clear gradient with respect to income groups.  Countries classified as low income have lower scores on average than countries classified as middle income.  High income countries have the highest average SPI overall score score.  
 
-Finally, when looking over time, since 2016 the SPI index values are relatively stead across regions.  There has been some modest increase in the SPI index scores for middle income and high income countries, with little progress for low income countries.
+Finally, when looking over time, since 2016 the SPI overall score values are relatively stable across regions.  There has been some modest increase in the SPI overall score scores for middle income and high income countries, with little progress for low income countries.
 
 Figure 5.2.
 ```{r spi_charts}
 #show map and summary stats by region and income group
 
-spi_charts('spi_index_df','SPI.INDEX','SPI Index')
+spi_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
 
@@ -895,19 +947,19 @@ bottom_eap_score <- round(as.numeric(eap_df[nrow(eap_df),2]),1)
 
 ```
 
-While there are large differences across regions, within regions there is significant variation in the SPI index.  For instance, in the Latin America & Caribbean World Bank region, `r top_lac` is the highest scoring country on the SPI index with a score of `r top_lac_score`.  However, `r bottom_lac`, the lowest scoring country in the region, earns a substantially lower score of `r bottom_lac_score`.  In Sub-Saharan Africa, the highest scoring country is `r top_ssa` with a score of `r top_ssa_score`, while the lowest scoring country is `r bottom_ssa` with a score of `r bottom_ssa_score`.  In the East Asia and Pacific region, the top scoreing country is `r top_eap` with a score of `r top_eap_score`, while the lowest scoring country is `r bottom_eap` with a score of `r bottom_eap_score`.
+While there are large differences across regions, within regions there is significant variation in the SPI overall score.  For instance, in the Latin America & Caribbean World Bank region, `r top_lac` is the highest scoring country on the SPI overall score with a score of `r top_lac_score`.  However, `r bottom_lac`, the lowest scoring country in the region, earns a substantially lower score of `r bottom_lac_score`.  In Sub-Saharan Africa, the highest scoring country is `r top_ssa` with a score of `r top_ssa_score`, while the lowest scoring country is `r bottom_ssa` with a score of `r bottom_ssa_score`.  In the East Asia and Pacific region, the top scoring country is `r top_eap` with a score of `r top_eap_score`, while the lowest scoring country is `r bottom_eap` with a score of `r bottom_eap_score`.
 
 Figure 5.3
 ```{r spicountrycharts}
 #show map and summary stats by region and income group
 
-spi_country_charts('spi_index_df','SPI.INDEX','SPI Index')
+spi_country_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
 
 ## SPI Scores by Dimension
 
-Next, we present the scores for each dimension that compose the SPI index (Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure).  These figures can help show where/which dimension variation is coming from across countries and to see where countries may be struggling in specific areas.
+Next, we present the scores for each dimension that compose the SPI overall score (Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure).  These figures can help show where/which dimension variation is coming from across countries and to see where countries may be struggling in specific areas.
 
 We apply the same maturity classification approach and apply it to each dimension separately, where we classify countries into quintiles.  For each dimension, we show the maturity levels of countries in a world map and then proceed to discussing scores by region.
 
@@ -954,7 +1006,7 @@ debt_bottom <- as.numeric(maturity_tab[4,6])
 ```
 
 
-The table below shows the average score on each indicator in Dimension 1 by maturity group.  Countries in the top 20% possess nearly all of the components in Dimension 1, while countries in the bottom 20%.  Countries in the bottom 20% in terms of maturity on Dimension 1 have an average of `r poverty_bottom` on the comparable poverty estimate indicator, an average of `r mort_bottom` on the availability of under 5 mortality data, and an average of `r debt_bottom` on debt reporting.
+The table below shows the average score on each indicator in Dimension 1 by maturity group.  Countries in the top 20% possess nearly all of the components in Dimension 1, while countries in the bottom 20% are lacking in many areas.  Countries in the bottom 20% in terms of maturity on Dimension 1 have an average of `r poverty_bottom` on the comparable poverty estimate indicator, an average of `r mort_bottom` on the availability of under 5 mortality data, and an average of `r debt_bottom` on debt reporting.
 
 
 ```{r maturitdisp1}
@@ -976,6 +1028,7 @@ For dimension 2 on data services, again high income countries tend to score high
 spi_mapper('spi_index_df','SPI.INDEX.DIM2','Dimension 2: Data Services Scores')
 
 ```
+
 The next figure shows the variation between countries within regions.  Again, there is substantial heterogeneity within regions on the Dimension 2 sub-score.
 
 ```{r countrydimensionsplot2}
@@ -1203,11 +1256,7 @@ maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019)
 spi_top <- as.numeric(maturity_tab[1,2])
 spi_bottom <- as.numeric(maturity_tab[1,6])
 
-5
-7
-8
-9
-11
+
 
 ```
 
@@ -1244,7 +1293,7 @@ FitFlextableToPage(maturity_tab) %>%
 
 ### Correlations between SPI Dimensions
 
-In the following chart, we show the correlations between the SPI index and the SPI dimension sub-scores.  All dimensions are positively correlated with one another.  On the other hand, no dimension is perfectly correlated with any of the other dimensions, which would be a sign that a dimension was not provide additional information on the statistical performance of countries.  The dimension with the single highest correlation to the overall measure is dimension 1 on data use.  The indicator with the lowest overall correlation with the SPI index is dimension 3 on data products.
+In the following chart, we show the correlations between the SPI overall score and the SPI dimension sub-scores.  All dimensions are positively correlated with one another.  On the other hand, no dimension is perfectly correlated with any of the other dimensions, which would be a sign that a dimension was not provide additional information on the statistical performance of countries.  The dimension with the single highest correlation to the overall measure is dimension 1 on data use.  The indicator with the lowest overall correlation with the SPI overall score is dimension 3 on data products.
 
 ```{r dimcorr, echo=FALSE}
 
@@ -1276,11 +1325,142 @@ pcorr
 
 ```
 
-## SPI Index by Pillar and Indicator
+## SPI Scores by Pillar and Indicator
 
-While there are large differences across regions, income groups, and countries in the SPI index, there are also differences across indicators in the strengths and weaknesses of countries that may have the same final score.  For instance, some countries may reach a final score by excelling in the area of data sources, while others may reach a final score by excelling in data infrastructure.  
+While there are large differences across regions, income groups, and countries in the SPI overall score, there are also differences across indicators in the strengths and weaknesses of countries that may have the same final score.  For instance, some countries may reach a final score by excelling in the area of data sources, while others may reach a final score by excelling in data infrastructure.  While there are many paths that countries may take to reaching an SPI overall score and only by studying the pillars and indicators for a particular country in detail can you understand why a country gets a particular score, we can at least characterize which of the pillars and indicators are most responsible for differences between countries.
 
-```{r anova, echo=FALSE}
+In order to do so, we apply a leave-out approach to calculating our SPI overall scores, which can help us understand which pillars and indicators are most impactful.  The leave-out approach is similar in spirit to a jackknife approach (see [@miller1974jackknife] for an introduction), which has been used in a variety of situations to examine the sensitivity of estimates to leaving out specific observations. Specifically for our case, the leave-out approach consists of sequentially deleting indicators one at a time and recalculating the SPI overall scores.  By sequentially omitting indicators, we can calculate the total difference between the SPI overall score incorporating all indicators and an alternative SPI score that is calculated by omitting a single indicator.  We can then rank our pillars and indicators based on which produce the greatest total difference between our SPI overall score and the alternative score.
+
+Specifically, the approach is as follows:   
+
+1. Calculate the SPI overall score for each country using all pillars and indicators, $SPI.INDEX_{c}$.    
+  
+2. For each indicator $j=1,...,J$ do:   
+  
+  + Generate an alternative SPI score omitting indicator $j$, $SPI.INDEX^{-j}_{c}$.    
+    
+  + Calculate difference between the original score and the alternative score for each country in a year $t$, $e_{c}^{-j}=SPI.INDEX_{c}-SPI.INDEX^{-j}_{c}$ 
+    
+  + Calculate the mean absolute difference across all countries, $E^{-j}=\sum_{c=1}^{N_c} |e_{c}^{-j}|/C$ 
+    
+3. Sort indicators based on $E^{-j}$.
+
+
+```{r leave_out, include=FALSE}
+
+leave_out_fun <-  function(variables) {
+  
+spi_index_df_alt <- spi_index_df_temp %>%
+  arrange(country, date) %>%
+  group_by(country) %>%
+  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
+  mutate(across(starts_with(variables),~as.numeric(NA))) %>% #convert selected variable to missing values then begin calculation without them
+  select(country, iso3c, date, everything())
+
+
+
+#Create overall subscores corresponding to John's framework
+spi_index_df_alt <- spi_index_df_alt %>%
+  mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
+         INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
+         INDEX.SPI.D2.4=SPI.D2.4.NADA,
+         INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
+                                          "SPI.D3.2.HNGR",
+                                          "SPI.D3.3.HLTH",
+                                          "SPI.D3.4.EDUC",
+                                          "SPI.D3.5.GEND",
+                                          "SPI.D3.6.WTRS")), na.rm=TRUE),
+         INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
+                                          "SPI.D3.8.WORK",
+                                          "SPI.D3.9.INDY",
+                                          "SPI.D3.10.NEQL",
+                                          "SPI.D3.11.CITY",
+                                          "SPI.D3.12.CNSP")), na.rm=TRUE),         
+         INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
+                                          "SPI.D3.15.LAND" )), na.rm=TRUE),
+         INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
+                                          "SPI.D3.17.PTNS" )), na.rm=TRUE),
+         INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1')), na.rm=TRUE),
+         INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2')), na.rm=TRUE),
+         INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3')), na.rm=TRUE),
+         #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
+         INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2')), na.rm=TRUE),
+         #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
+  ) %>%
+  mutate(
+    SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=TRUE),
+    SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=TRUE),
+    SPI.INDEX.DIM3=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
+    SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=TRUE),
+    SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=TRUE),
+    SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.DIM1',
+                                    'SPI.INDEX.DIM2',
+                                    'SPI.INDEX.DIM3',
+                                    'SPI.INDEX.DIM4',
+                                    'SPI.INDEX.DIM5')), na.rm=TRUE)
+  ) %>% #
+  mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
+  arrange(-date, -SPI.INDEX.ALT) %>%
+  select(country, iso3c, date, SPI.INDEX.ALT) %>%
+  filter(date>=2016) #2016 is first year with complete data
+
+  #form database with both measures
+  spi_index_df %>%
+    select(country, iso3c, date, SPI.INDEX) %>%
+    left_join(spi_index_df_alt) %>%
+    ungroup() %>%
+    summarise(mean_abs_diff=mean(abs(SPI.INDEX-SPI.INDEX.ALT), na.rm=T))
+
+  
+}
+
+leave_out_df <- metadata_full %>%
+  filter(!grepl('SPI.INDEX|RAW.',source_id)) %>%
+  nest(source_id) %>%
+  mutate(
+    ABS.DIFF=map(
+      data,
+      ~leave_out_fun(.x$source_id)
+    )
+  ) %>%
+  unnest(ABS.DIFF)
+
+
+```
+
+
+```{r leaveoutplot, fig.height=15, fig.width=10}
+
+leave_out_df %>%
+  mutate(descript=str_wrap(paste(SPI_indicator_id,": ", source_name , sep=""),55)) %>%
+  filter(mean_abs_diff>0) %>%
+  arrange(mean_abs_diff) %>%
+  mutate(descript=factor(descript, levels=descript)) %>%
+  ggplot(aes(x=descript, y=mean_abs_diff, color=SPI_indicator_id)) +
+    geom_segment( aes(x=descript ,xend=descript, y=0, yend=mean_abs_diff)) +
+    geom_point(size=3) +
+    geom_text(aes(label=round(mean_abs_diff,2)),color='black', nudge_y=.2) +
+    coord_flip() +
+    theme_bw() +
+    theme(
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.y = element_blank(),
+      legend.position = 'none'
+    ) +
+    xlab("") +
+    ylab("Mean Absolute Difference") +
+    labs(
+      title="SPI Indicator Importance",
+      subtitle = "Mean absolute difference in SPI overall scores leaving out indicator",
+      caption="The leave-out approach consists of sequentially deleting pillars or indicators one at a time and recalculating the SPI overall scores."
+    )
+
+```
+
+The indicator that drives the single largest difference between the SPI overall score and an alternative score omitting the indicator is the civil registration and vital statistics (CRVS) indicator in Pillar 4.2 on administrative data.  This is closely followed by the indicator on whether NADA metadata is provided as a data service.  The indicators creating the smallest difference when omitted tend to the be the individual indicators in dimension 3 on data products.  The indicator with the single smallest difference is in Pillar 3:10 on SDG 10.
+
+
+```{r anova, eval=FALSE, include=FALSE}
 
 #Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each pillar.
 
@@ -1326,7 +1506,7 @@ anova_dim_plot
 
 ```
 
-```{r anova2, echo=FALSE}
+```{r anova2, eval=FALSE, include=FALSE}
 
 #Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each pillar.
 
@@ -1397,7 +1577,7 @@ unique_scores5 <-  length(unique(spi_index_2019$SPI.INDEX.DIM5))
 ```
 
 
-As a check of the data, we calculate the number of unique scores for our SPI index. If our SPI index produces a large number of tied scores, for instance, then our index will be less able to distinguish between the statistical performance of countries.  When calculating the number of unique values for 2019, we find that there are `r unique_scores` unique scores for `r n_countries` countries.  This means there are `r n_countries-unique_scores` tied values.  When looking within each dimension.  
+As a check of the data, we calculate the number of unique scores for our SPI overall score. If our SPI overall score produces a large number of tied scores, for instance, then our index will be less able to distinguish between the statistical performance of countries.  When calculating the number of unique values for 2019, we find that there are `r unique_scores` unique scores for `r n_countries` countries.  This means there are `r n_countries-unique_scores` tied values.  When looking within each dimension.  
 
 When looking at each specific dimension, there are only `r unique_scores1` unique scores for Dimension 1 on data use.  The data use indicator is coming solely from dimension 1.5 on data use by international organizations.  For Dimension 2, there are `r unique_scores2` unique scores.  For Dimension 3, there are `r unique_scores3` unique scores.  There are `r unique_scores4` unique scores for dimension 4, and there are `r unique_scores5` unique scores for dimension 5.
 
@@ -1406,7 +1586,7 @@ When looking at each specific dimension, there are only `r unique_scores1` uniqu
 
 ## Relationship to GDP Per Capita and the Human Capital Index
 
-Below, we will present the correlation between our SPI index and the log of GDP per capita and the World Bank's Human Capital Index ([@hci2020]).  The source for GDP per capita comes from the  World Bank's World Development Indicators (WDI) database (NY.GDP.PCAP.KD).  The GDP per capita numbers are in constant 2010 US$.  
+Below, we will present the correlation between our SPI overall score and the log of GDP per capita and the World Bank's Human Capital Index ([@hci2020]).  These relationships are meant as a face validity check between our index and other outcomes.  This analysis is not meant to necessarily establish a causal relationship, only to assess whether our index is correlated with other outcomes in ways we would expect.  The source for GDP per capita comes from the  World Bank's World Development Indicators (WDI) database (NY.GDP.PCAP.KD).  The GDP per capita numbers are in constant 2010 US$.  
 
 ```{r log_gdp}
 
@@ -1430,7 +1610,7 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
   theme_bw() +
-  ylab('SPI Index value') +
+  ylab('SPI Overall Score') +
   xlab('Human Capital Index') +
   stat_poly_eq(aes(label  = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
@@ -1458,7 +1638,7 @@ gdp_df_2019 <- gdp_df %>%
   geom_smooth(method='lm') +
   scale_x_log10(labels = scales::comma) +
   theme_bw() +
-  ylab('SPI Index value') +
+  ylab('SPI Overall Score') +
   xlab('Log GDP Per Capita') +
   theme(legend.position = 'bottom') +
   stat_poly_eq(aes(label = paste(stat(eq.label),
@@ -1478,29 +1658,29 @@ corr_2019_nontrans <- cor(gdp_df_2019$value,gdp_df_2019$SPI.INDEX, use='pairwise
 
 ```
 
-We would expect a strong positive relationship between GDP per capita of countries and their statistical system, as higher income countries would tend to have more resources available for statistical production.  In fact, there is a strong relationship between the two.  The correlation in 2019 between log GDP per capita and the SPI index is `r round(corr_2019,2)`.[^1]
+We would expect a strong positive relationship between GDP per capita of countries and their statistical system, as higher income countries would tend to have more resources available for statistical production.  In fact, there is a strong relationship between the two.  The correlation in 2019 between log GDP per capita and the SPI overall score is `r round(corr_2019,2)`.[^1]
 
-[^1]: To understand what effect taking the log has on this correlation, the correlation in 2019 between (non-logged) GDP per capita and the SPI index is `r round(corr_2019_nontrans,2)`. 
+[^1]: To understand what effect taking the log has on this correlation, the correlation in 2019 between (non-logged) GDP per capita and the SPI overall score is `r round(corr_2019_nontrans,2)`. 
 
-Another measure of a country's development is the Human Capital Index (HCI) developed by the World Bank ([@hci2020]).  The Human Capital Index is designed to capture the amount of human capital a child born today can expect to attain by age 18 in a country.  The index combines a country's child mortality, learning adjusted years of schooling, adult survival rates & stunting into one index. For more details, visit the Human Capital Index website (https://www.worldbank.org/en/publication/human-capital).  Again, we would expect a strong positive relationship between a country's HCI value and their Statistical Performance Indicators index value, as countries with a more developed human capital stock are likely to have greater capacity to produce statistics.  Again, this is what we see.  The correlation between the 2018 value of the HCI (the latest value available at the time of this writing) and the 2018 value of the SPI index is `r round(corr_hci_2018,2)`.
+Another measure of a country's development is the Human Capital Index (HCI) developed by the World Bank ([@hci2020]).  The Human Capital Index is designed to capture the amount of human capital a child born today can expect to attain by age 18 in a country.  The index combines a country's child mortality, learning adjusted years of schooling, adult survival rates & stunting into one index. For more details, visit the Human Capital Index website (https://www.worldbank.org/en/publication/human-capital).  Again, we would expect a strong positive relationship between a country's HCI value and their Statistical Performance Indicators index value, as countries with a more developed human capital stock are likely to have greater capacity to produce statistics.  Again, this is what we see.  The correlation between the 2018 value of the HCI (the latest value available at the time of this writing) and the 2018 value of the SPI overall score is `r round(corr_hci_2018,2)`.
 
-Below we show the scatter plot of the relationship between log GDP per capita, the HCI, and our SPI index for the years 2016-2019.  In general, countries with higher per capita income and higher levels of human capital tend to have better performing statistical systems according to our measure.  
+Below we show the scatter plot of the relationship between log GDP per capita, the HCI, and our SPI overall score for the years 2016-2019.  In general, countries with higher per capita income and higher levels of human capital tend to have better performing statistical systems according to our measure.  
 
 ```{r gdpplot}
 
 ### Scatterplot log GDP SPI
 gdp_spi + hci_spi   +
   plot_annotation(
-    title='Plot of SPI Index on Human Capital Index and GDP per capita',
+    title='Plot of SPI overall score on Human Capital Index and GDP per capita',
     caption='Source: All indicators come from the World Bank.'
     )
   
 
 ```
 
-So as to highlight countries where this relationships do not hold as well, the next figure shows the 15 countries that most over-perform and the 15 countries that most under-perform on the SPI Index compared to their levels of GDP per capita and the Human Capital Index.  We would  not necessarily expect a perfect fit between our SPI index and GDP per capita and the Human Capital Index, as countries differ in the resources put into their statistical system, even conditional on their levels of development.  Highlighting outliers can sometimes be a useful exercise for determining whether a measure is identifying on the ground realities.  
+So as to highlight countries where this relationships do not hold as well, the next figure shows the 15 countries that most over-perform and the 15 countries that most under-perform on the SPI Index compared to their levels of GDP per capita and the Human Capital Index.  We would  not necessarily expect a perfect fit between our SPI overall score and GDP per capita and the Human Capital Index, as countries differ in the resources put into their statistical system, even conditional on their levels of development.  Highlighting outliers can sometimes be a useful exercise for determining whether a measure is identifying on the ground realities.  
 
-In order to produce this figure, we estimate an OLS regression of the SPI index in 2019 on log GDP per capita.  We then calculate the residual, which can be interpreted as the difference between the country's SPI index value and the expected index value based on their GDP per capita.  Countries with values of the residual greater than zero are over-performing based on their GDP per capita and countries with residuals less than zero are under-performing.  The corresponding figure for the Human Capital Index is calculated similarly, however in this case we do not take the log, as we did with GDP per capita.
+In order to produce this figure, we estimate an OLS regression of the SPI overall score in 2019 on log GDP per capita.  We then calculate the residual, which can be interpreted as the difference between the country's SPI overall score value and the expected index value based on their GDP per capita.  Countries with values of the residual greater than zero are over-performing based on their GDP per capita and countries with residuals less than zero are under-performing.  The corresponding figure for the Human Capital Index is calculated similarly, however in this case we do not take the log, as we did with GDP per capita.
 
 ```{r overperformers}
 
@@ -1586,8 +1766,8 @@ hci_overperformers_plot <-  hci_overperformers_df %>%
 
 
 gdp_overperformers_plot + hci_overperformers_plot +
-  plot_annotation(title='Top 15 Over/Under-Performers on SPI Index Compared to GDP per capita and Human Capital Index',
-                  caption=str_wrap('Over and under performers calculated for GDP per capita by using OLS regression of SPI Index in 2019 on Log GDP per capita and calculting residuals from this regression.  Over and Under performers for Human Capital Index calculated similarly.',100)
+  plot_annotation(title='Top 15 Over/Under-Performers on SPI overall score compared to GDP per capita and Human Capital Index',
+                  caption=str_wrap('Over and under performers calculated for GDP per capita by using OLS regression of SPI overall score in 2019 on Log GDP per capita and calculting residuals from this regression.  Over and Under performers for Human Capital Index calculated similarly.',100)
                   )
 ```
 
@@ -1616,7 +1796,7 @@ corr_2019_2016 <- cor(spi_changes$SPI.INDEX.2019,spi_changes$SPI.INDEX.2016, use
 
 ```
 
-In order to assess how stable our index values are over time, next we will compare the index values in 2016 to the 2019 values.  Overall, the SPI index is quite stable over time.  The correlation between the 2016 value and the 2019 value is `r round(corr_2019_2016,2)`.
+In order to assess how stable our index values are over time, next we will compare the index values in 2016 to the 2019 values.  Overall, the SPI overall score is quite stable over time.  The correlation between the 2016 value and the 2019 value is `r round(corr_2019_2016,2)`.
 
 ```{r changesplot}
 
@@ -1625,10 +1805,10 @@ ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2019, color=region)) +
   geom_smooth(method='lm', color='blue') +
   theme_bw() +
   labs(
-    title='Scatterplot of 2019 SPI Index values & 2016 SPI Index values'
+    title='Scatterplot of 2019 SPI overall score  & 2016 SPI overall score '
   ) +
-  ylab('2019 SPI Index value') +
-  xlab('2016 SPI Index value') +
+  ylab('2019 SPI Overall Score') +
+  xlab('2016 SPI Overall Score') +
   theme(legend.position = 'bottom') +
     stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
@@ -1653,7 +1833,7 @@ top_mover_change <- as.numeric(top_changes[1,4])
 ```
 
 
-While the scores were relatively stable over time, some countries did see large improvements in their score from 2016-2019.  The country that improved most on our index from 2016 to 2019 was `r top_mover`. `r top_mover` improved by `r top_mover_change` points on our scale out of 100.  The table below shows the changes in our SPI index for the top 10 largest improvers.
+While the scores were relatively stable over time, some countries did see large improvements in their score from 2016-2019.  The country that improved most on our index from 2016 to 2019 was `r top_mover`. `r top_mover` improved by `r top_mover_change` points on our scale out of 100.  The table below shows the changes in our SPI overall score for the top 10 largest improvers.
 
 
 
@@ -1662,8 +1842,8 @@ top_changes_tab <- flextable(head(top_changes,10)) %>%
   add_header_lines('Top 10 Countries with Largest Changes from 2016-2019.') %>%
   set_header_labels(values=list(
                        country="Country",
-                       SPI.INDEX.2019="SPI Index Score 2019",
-                       SPI.INDEX.2016="SPI Index Score 2016",
+                       SPI.INDEX.2019="SPI Overall Score 2019",
+                       SPI.INDEX.2016="SPI Overall Score 2016",
                        changes="Difference"
                                    )) 
 
@@ -1674,9 +1854,11 @@ FitFlextableToPage(top_changes_tab) %>%
 
 
 
-## Comparison to the Statistical Capacity Indicators
+## Density Plots
 
-Next, we compare our index to several other indices of statistical performance that have been created.  This will provide a sense of how rankings differ across measures, how they correlate with other outcomes, and how the distributions of scores compare.
+As another check, we present the distribution of scores across countries for each year and compare this distribution to a normal distribution.  This exercise checks for whether the distribution of our SPI overall scores contains significant skew or fat tails.  There is some indication of a bunching of scores near the top of the distribution of SPI scores.  This is due to a large number of OECD countries possessing similar scores on our index.  This is not unexpected as OECD requires member countries to adhere to several methodological standards and  to regularly report on a large set of indicators.  These countries also are composed of several of the highest income countries that tend to be on the frontier of statistical production.
+
+
 
 ```{r comparison, include=FALSE}
 
@@ -1765,7 +1947,191 @@ comparison_df <- spi_index_df %>%
 
 ```
 
-We compare the SPI index to the older World Bank Statistical Capacity Indicators (http://datatopics.worldbank.org/statisticalcapacity/SCIdashboard.aspx).  The correlation between the SPI index and the SCI  is `r round(cor(comparison_df$SPI.INDEX,comparison_df$SCI, use='pairwise.complete.obs'),3)`.
+
+```{r density}
+
+density_df <- comparison_df %>%
+  select(iso3c, date, SPI.INDEX, SPI_v0, ODIN_score, SCI) %>%
+  pivot_longer(
+    cols = c('SPI.INDEX', 'SPI_v0', 'ODIN_score', 'SCI'),
+    names_to='index',
+    values_to='index_values'
+  ) %>%
+  mutate(
+    index_name=case_when(
+      index=='SPI.INDEX' ~ "SPI overall score",
+      index=='SPI_v0' ~ "SPI Index Version 0",
+      index=='ODIN_score' ~ "Open Data Watch",
+      index=='SCI' ~ "SCI",
+      
+    )
+  )
+
+#show the density of our SPI index
+ggplot(spi_index_df, aes(x = SPI.INDEX)) + 
+  facet_wrap(~date) +
+  geom_histogram( 
+                          aes(y=..density.., fill=..count..)) +
+  stat_function(fun = dnorm, 
+                color='red',
+                args = list(mean = mean(spi_index_df$SPI.INDEX, na.rm=T), sd = sd(spi_index_df$SPI.INDEX, na.rm=T))) +
+    theme_bw() +
+  labs(
+    title='Distribution of SPI overall score across Countries',
+    color='Index Name'
+  ) +
+  xlab('SPI overall score') +
+  theme(legend.position = 'bottom')
+
+
+
+```
+
+```{r density2}
+#show the density of our SPI index compared to other indices
+ggplot(density_df, aes(x = index_values, color=index_name)) + 
+  facet_wrap(~date) +
+  geom_density() +
+    theme_bw() +
+  labs(
+    title='Distribution of SPI overall score and alternative indices across countries',
+    color='Index Name'
+  ) +
+  xlab('Index value') +
+  theme(legend.position = 'bottom')
+```
+
+# Conclusion
+
+The new Statistical Performance Indicators (SPI) will replace the Statistical Capacity Index (SCI), which the World Bank has regularly published since 2004.  Although the goals are the same, to be a tool to measure the statistical systems of countries, the new SPI has expanded into new areas including on data use, administrative data, geospatial data, data services, and data infrastructure.  The SPI provides a forward looking framework that can help countries measure where they stand in several dimensions and offers an ambitious measurement agenda for the international community.
+
+The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system.  We also are committing to making our project open data and open code to build confidence in our work.  The data will also be updated on a yearly basis to track progress over time.
+
+More research and data collection is needed particularly in terms of data use.  And while we feel that our framework is comprehensive, we readily admit that our specific indicators measuring each pillar and dimension can be improved.  We hope one of the functions of our dashboard is as a call to arms for the international community to better measure these areas.
+
+<!-- We identify five key dimensions of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These dimensions can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining. -->
+
+Countries and international organizations need to know each national statistical system's current capabilities, and the new SPI is meant to help fill this gap.  Only then can the virtuous cycle of investment, effectiveness, innovation, value added and impact can begin.
+
+
+
+
+# Annex
+
+## Country SPI overall scores
+
+Below, we present the full list of countries by their SPI overall score in 2019.  The first column is the country name and the following columns are the overall SPI overall score, and then the sub-scores for dimension 1,2,3,4 and 5.  
+
+The cells in the table are color coded based on the performance of countries on our index and the sub-scores of the dimensions.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
+
+Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
+
+* **Top 20%**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#1A9850">green</span>.    
+* **4th Quantile**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#BFCF28"> light green</span>.    
+* **3rd Quantile**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#E7BB25"> yellow</span>.  
+* **2nd Quantile**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#DE7B2B"> orange</span>.  
+* **Bottom 20%**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#D73027"> red </span>.  
+
+
+
+
+```{r tab1, echo=FALSE}
+
+
+#colors
+col_palette <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+
+col_palette2 <- c("#1A9850",  "#E7BB25", "#D73027" )
+
+#make the table
+index_tab <- index_disp %>%
+  filter(date==2019) %>%
+  select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) 
+
+#make nice looking
+index_tab <- index_tab %>%
+  flextable() %>%
+  add_header_lines('SPI overall score in 2019 and Dimension Scores.') %>%
+  set_header_labels(values=list(
+                       country="Country", 
+                       SPI.INDEX="SPI overall score",
+                       SPI.INDEX.DIM1="Dim 1: Data Use",
+                       SPI.INDEX.DIM2="Dim 2: Data Services",
+                       SPI.INDEX.DIM3="Dim 3: Data Products ",
+                       SPI.INDEX.DIM4="Dim 4: Data Sources",
+                       SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
+                                   )) %>%
+    bg(j = c('SPI.INDEX'), 
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.DIM1'),
+       bg = scales::col_quantile(col_palette2, domain=NULL, n=3, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.DIM2'),
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.DIM3'),
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.DIM4'),
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.DIM5'),
+       bg = scales::col_quantile(col_palette2, domain=NULL, n=3, reverse=TRUE))
+
+  
+
+FitFlextableToPage(index_tab)
+
+```
+## Country SPI overall scores over time
+
+
+```{r tabtime, echo=FALSE}
+
+
+#colors
+col_palette <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+
+col_palette2 <- c("#1A9850",  "#E7BB25", "#D73027" )
+
+#make the table
+index_tab_time <- spi_index_df %>%
+  select(country, date, SPI.INDEX) %>%
+  mutate(SPI.INDEX=round(SPI.INDEX,1)) %>%
+  filter(!is.na(SPI.INDEX)) %>%
+  pivot_wider(
+    names_from=date,
+    values_from=SPI.INDEX,
+    names_prefix='SPI.INDEX.'
+  )
+
+#make nice looking
+index_tab_time <- index_tab_time %>%
+  flextable() %>%
+  add_header_lines('SPI overall scores over time') %>%
+  set_header_labels(values=list(
+                       country="Country", 
+                       SPI.INDEX.2019="2019",
+                       SPI.INDEX.2018="2018",
+                       SPI.INDEX.2017="2017",
+                       SPI.INDEX.2016="2016"
+                                   )) %>%
+    bg(j = c('SPI.INDEX.2019'), 
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.2018'),
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.2017'),
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.2016'),
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) 
+
+  
+
+FitFlextableToPage(index_tab_time)
+
+```
+
+## Comparison to other measures of statistical performance
+
+Next, we compare our index to several other indices of statistical performance that have been created.  This will provide a sense of how rankings differ across measures, how they correlate with other outcomes, and how the distributions of scores compare.  These are the SCI, the Open Data Watch index (ODIN), and version 0 of the SPI overall score that was produced in [@cameron2019measuring] 
+
+We first compare the SPI overall score to the older World Bank Statistical Capacity Index (http://datatopics.worldbank.org/statisticalcapacity/SCIdashboard.aspx).  The correlation between the SPI overall score and the SCI  is `r round(cor(comparison_df$SPI.INDEX,comparison_df$SCI, use='pairwise.complete.obs'),3)`.
 
 ```{r sci}
 
@@ -1776,9 +2142,9 @@ spi_sci_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=SCI, color=region)) +
   geom_text(aes(label=iso3c)) +
   theme_bw() +
   labs(
-    title='Scatterplot of Statistical Capacity Index (SCI) and SPI Index'
+    title='Scatterplot of Statistical Capacity Index (SCI) and SPI Overall Score'
   ) +
-  ylab('SPI Index value') +
+  ylab('SPI Overall Score') +
   xlab('SCI value') +
   theme(legend.position = 'bottom')
 
@@ -1825,9 +2191,9 @@ spi_r2 <- as.numeric(m_spi_glance[1,1])
 ```
 
 
-Next, we show how the relationship to Log GDP per capita differs for the SCI and the SPI index using linear regression.  We also include the Open Data Watch and the version of the Statistical Performance Index developed in [@cameron2019measuring].  While showing a strong relationship between an index and log GDP per capita does not mean the index is necessarily correct, and is certainly not necessarily causal, it does provide a face validity check of the index.  Heteroskedasticity robust standard errors are shown in the table.
+Next, we show how the relationship to Log GDP per capita differs for the SCI and the SPI overall score using linear regression.  We also include the Open Data Watch and the version of the Statistical Performance Index developed in [@cameron2019measuring].  While showing a strong relationship between an index and log GDP per capita does not mean the index is necessarily correct, and is certainly not necessarily causal, it does provide a face validity check of the index.  Heteroskedasticity robust standard errors are shown in the table.
 
-Overall, the new SPI index has the strongest relationship to GDP per capita.  The linear regression estimates indicate that a 1% increase in GDP per capita is associated with a `r round(spi_coef/100,1)` point increase in our SPI index score.  The r-squared from this regression is `r round(spi_r2,2)`.
+Overall, the new SPI overall score has the strongest relationship to GDP per capita.  The linear regression estimates indicate that a 1% increase in GDP per capita is associated with a `r round(spi_coef/100,1)` point increase in our SPI overall score.  The r-squared from this regression is `r round(spi_r2,2)`.
 
 
 
@@ -1839,7 +2205,7 @@ Overall, the new SPI index has the strongest relationship to GDP per capita.  Th
 date_names <- grep("factor", names(coef(m_spi)), value = TRUE)
 names(date_names) <- gsub(".*)(.)", "Year: \\1", date_names)
 
-huxtable::huxreg('SPI Index'=m_spi, 'SCI'=m_sci, 'Open Data Watch'=m_odin, 'SPI Version 0'=m_spi_v0,
+huxtable::huxreg('SPI overall score'=m_spi, 'SCI'=m_sci, 'Open Data Watch'=m_odin, 'SPI Version 0'=m_spi_v0,
        coefs=c('Log GDP per Capita'='log_gdp_pcap', date_names, 'Intercept'='(Intercept)'),
        note='{stars}. Heteroskedasticity Robust Std Errors in Parenthesis',
        number_format=2,
@@ -1859,7 +2225,7 @@ gdp_long <- gdp_reg_df %>%
   ) %>%
   mutate(
     index_name=case_when(
-      index=='SPI.INDEX' ~ "SPI Index",
+      index=='SPI.INDEX' ~ "SPI overall score",
       index=='SPI_v0' ~ "SPI Index Version 0",
       index=='ODIN_score' ~ "Open Data Watch",
       index=='SCI' ~ "SCI",
@@ -1883,9 +2249,8 @@ ggplot(gdp_long, aes(x=log_gdp_pcap,y=index_values, color=region)) +
 ```
 
 
-## ODIN ranking comparison
 
-We compare the SPI index to the Open Data Watch rankings of country statistical systems (https://odin.opendatawatch.com/report/rankings).  The correlation between the SPI index and the ODIN index is `r round(cor(comparison_df$SPI.INDEX,comparison_df$ODIN_score, use='pairwise.complete.obs'),3)`
+We compare the SPI overall score to the Open Data Watch rankings of country statistical systems (https://odin.opendatawatch.com/report/rankings).  The correlation between the SPI overall score and the ODIN index is `r round(cor(comparison_df$SPI.INDEX,comparison_df$ODIN_score, use='pairwise.complete.obs'),3)`
  
 
 
@@ -1900,9 +2265,9 @@ spi_odin_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=ODIN_score, color=regio
   geom_text(aes(label=iso3c)) +
   theme_bw() +
   labs(
-    title='Scatterplot of SPI Index on Open Data Watch Index'
+    title='Scatterplot of SPI overall score on Open Data Watch Index'
   ) +
-  ylab('SPI Index value') +
+  ylab('SPI overall score') +
   xlab('ODIN value') +
   theme(legend.position = 'bottom')
 
@@ -1915,18 +2280,16 @@ spi_odin_plot
 
 
 
-## Comparison to Version 0 of the SPI
-
-As a final comparison, we compare our new SPI index to an index developed by [@cameron2019measuring], which can be thought of as a version 0 of our SPI index.  The authors use similar data sources for their index.  However, there are some differences.
+As a final comparison, we compare our new SPI overall score to an index developed by [@cameron2019measuring], which can be thought of as a version 0 of our SPI overall score.  The authors use similar data sources for their index.  However, there are some differences.
 
 
-First, the similarities.  The methodology for constructing the index is the same.  Also, the censuses and surveys (Indicator 4.1) and standards and methods (Indicator 5.2) are identical.  The indicator for data releases (Indicator 2.1) and data services (Indicator 2.4) are pulled from the information collected in the fourth dimension on dissemination practices from version 0 of the SPI in Cameron et al. (2019).  Finally, both indicators include an indicator for Complete Vital Registration Statistics (CRVS).  The CRVS indicator is in the administrative data section of the new SPI index, while it was in the standards, methods, and classifications section of the SPI version 0.
+First, the similarities.  The methodology for constructing the index is the same.  Also, the censuses and surveys (Indicator 4.1) and standards and methods (Indicator 5.2) are identical.  The indicator for data releases (Indicator 2.1) and data services (Indicator 2.4) are pulled from the information collected in the fourth dimension on dissemination practices from version 0 of the SPI in Cameron et al. (2019).  Finally, both indicators include an indicator for Complete Vital Registration Statistics (CRVS).  The CRVS indicator is in the administrative data section of the new SPI overall score, while it was in the standards, methods, and classifications section of the SPI version 0.
 
 For the differences, SPI version 0 had four dimensions, namely: (i) Methodology, Standards and Classifications (MSC), which provides information on the technology being used by the NSS; (ii) Census and Surveys (CS), which describes the intermediate products of the NSS; (iii) Availability of Key Indicators (AKI), which focuses on key final products needed for policy; and (iv) Dissemination Practices and Openness (DPO), which evaluates the extent to which products are publicly disseminated. 
 
 The indicator on AKI, from version 0, is conceptually similar to our Data Products dimension in the new SPI, but uses different sources of data and the DPO section is similar to our data services section, but draw on some different sources in some cases.
 
-We compare the SPI index to the SPI version 0.  The correlation between the SPI index and the version 0 index is `r round(cor(comparison_df$SPI.INDEX,comparison_df$SPI_v0, use='pairwise.complete.obs'),3)`
+We compare the SPI overall score to the SPI version 0.  The correlation between the SPI overall score and the version 0 index is `r round(cor(comparison_df$SPI.INDEX,comparison_df$SPI_v0, use='pairwise.complete.obs'),3)`
 
 
 
@@ -1940,9 +2303,9 @@ spi_spi_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=SPI_v0, color=region)) +
   geom_text(aes(label=iso3c)) +
   theme_bw() +
   labs(
-    title='Scatterplot of new SPI Index on SPI Version 0 Index'
+    title='Scatterplot of new SPI overall score on SPI Version 0 Index'
   ) +
-  ylab('SPI Index value') +
+  ylab('SPI overall score') +
   xlab('SPI Version 0 value') +
   theme(legend.position = 'bottom')
 
@@ -1956,130 +2319,6 @@ spi_spi_plot
 ```
 
 
-## Density Plots
-
-As another check, we present the distribution of scores across countries for each year and compare this distribution to a normal distribution.  This exercise checks for whether the distribution of our SPI index scores contains significant skew or fat tails.  There is some indication of a bunching of scores near the top of the distribution of SPI scores.  This is due to a large number of OECD countries possessing similar scores on our index.  This is not unexpected as OECD requires member countries to adhere to several methodological standards and  to regularly report on a large set of indicators.  These countries also are composed of several of the highest income countries that tend to be on the frontier of statistical production.
-
-We also compare the distribution of our index to other measures of statistical performance.  These are the SCI, the Open Data Watch index (ODIN), and version 0 of the SPI index that was produced in [@cameron2019measuring] 
-
-```{r density}
-
-density_df <- comparison_df %>%
-  select(iso3c, date, SPI.INDEX, SPI_v0, ODIN_score, SCI) %>%
-  pivot_longer(
-    cols = c('SPI.INDEX', 'SPI_v0', 'ODIN_score', 'SCI'),
-    names_to='index',
-    values_to='index_values'
-  ) %>%
-  mutate(
-    index_name=case_when(
-      index=='SPI.INDEX' ~ "SPI Index",
-      index=='SPI_v0' ~ "SPI Index Version 0",
-      index=='ODIN_score' ~ "Open Data Watch",
-      index=='SCI' ~ "SCI",
-      
-    )
-  )
-
-#show the density of our SPI index
-ggplot(spi_index_df, aes(x = SPI.INDEX)) + 
-  facet_wrap(~date) +
-  geom_histogram( 
-                          aes(y=..density.., fill=..count..)) +
-  stat_function(fun = dnorm, 
-                color='red',
-                args = list(mean = mean(spi_index_df$SPI.INDEX, na.rm=T), sd = sd(spi_index_df$SPI.INDEX, na.rm=T))) +
-    theme_bw() +
-  labs(
-    title='Distribution of SPI Index across Countries',
-    color='Index Name'
-  ) +
-  xlab('SPI Index value') +
-  theme(legend.position = 'bottom')
-
-
-
-```
-
-```{r density2}
-#show the density of our SPI index compared to other indices
-ggplot(density_df, aes(x = index_values, color=index_name)) + 
-  facet_wrap(~date) +
-  geom_density() +
-    theme_bw() +
-  labs(
-    title='Distribution of SPI Index and Alternative Indices across Countries',
-    color='Index Name'
-  ) +
-  xlab('Index value') +
-  theme(legend.position = 'bottom')
-```
-
-
-
-# Annex
-
-## Country SPI Index values
-
-Below, we present the full list of countries by their SPI Index Score in 2019.  The first column is the country name and the following columns are the overall SPI index score, and then the sub-scores for dimension 1,2,3,4 and 5.  
-
-The cells in the table are color coded based on the performance of countries on our index and the sub-scores of the dimensions.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
-
-Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
-
-* **Most Mature**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#1A9850">green</span>.    
-* **Highly Mature**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#BFCF28"> light green</span>.    
-* **Maturing**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#E7BB25"> yellow</span>.  
-* **Less Mature**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#DE7B2B"> orange</span>.  
-* **Least Mature**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#D73027"> red </span>.  
-
-
-
-
-```{r tab1, echo=FALSE}
-
-
-#colors
-col_palette <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
-
-col_palette2 <- c("#1A9850",  "#E7BB25", "#D73027" )
-
-#make the table
-index_tab <- index_disp %>%
-  filter(date==2019) %>%
-  select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) 
-
-#make nice looking
-index_tab <- index_tab %>%
-  flextable() %>%
-  add_header_lines('SPI Index in 2019 and Dimension Scores.') %>%
-  set_header_labels(values=list(
-                       country="Country", 
-                       SPI.INDEX="SPI Index Value",
-                       SPI.INDEX.DIM1="Dim 1: Data Use",
-                       SPI.INDEX.DIM2="Dim 2: Data Services",
-                       SPI.INDEX.DIM3="Dim 3: Data Products ",
-                       SPI.INDEX.DIM4="Dim 4: Data Sources",
-                       SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
-                                   )) %>%
-    bg(j = c('SPI.INDEX'), 
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.DIM1'),
-       bg = scales::col_quantile(col_palette2, domain=NULL, n=3, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.DIM2'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.DIM3'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.DIM4'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.DIM5'),
-       bg = scales::col_quantile(col_palette2, domain=NULL, n=3, reverse=TRUE))
-
-  
-
-FitFlextableToPage(index_tab)
-
-```
 
 ## Indicator Metadata
 

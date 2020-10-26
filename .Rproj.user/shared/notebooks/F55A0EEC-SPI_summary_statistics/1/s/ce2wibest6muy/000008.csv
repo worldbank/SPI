@@ -1,0 +1,5 @@
+"0","spi_country_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')"
+"2","Error: arrange() failed at implicit mutate() step. 
+[31mx[39m Could not create a temporary column for `..1`.
+[34mi[39m `..1` is `-indicator`.
+"
