@@ -1103,6 +1103,15 @@ spi_mapper('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
 
 When looking at the country chart, again there is significant variability across countries.  
 
+
+```{r aggdimensionsplot3}
+
+spi_charts('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
+
+
+
+```
+
 ```{r countrydimensionsplot3}
 
 spi_country_charts('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
@@ -1160,6 +1169,197 @@ maturity_tab <- maturity_tab %>%
 
 FitFlextableToPage(maturity_tab) %>%
   align( align = "left", part = "body")
+
+```
+
+
+
+```{r index_3alt}
+
+
+
+#################
+# Nested Index with high income, OECD coutries top coded
+################
+  spi_index_df_dim3_alt <- spi_index_df_temp %>%
+  arrange(country, date) %>%
+  group_by(country) %>%
+  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
+  select(country, iso3c, date, everything()) %>%
+  mutate(across(starts_with("SPI.D3"),
+                ~if_else(( (income=='High income')  & (country %in% oecd_country_df$name)),1,.)                )) 
+
+
+
+#Create overall subscores corresponding to John's framework
+  spi_index_df_dim3_alt <- spi_index_df_dim3_alt %>%
+    mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
+         INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
+         INDEX.SPI.D2.4=SPI.D2.4.NADA,
+         INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
+                                            "SPI.D3.2.HNGR",
+                                            "SPI.D3.3.HLTH",
+                                            "SPI.D3.4.EDUC",
+                                            "SPI.D3.5.GEND",
+                                            "SPI.D3.6.WTRS"))),
+         INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
+                                            "SPI.D3.8.WORK",
+                                            "SPI.D3.9.INDY",
+                                            "SPI.D3.10.NEQL",
+                                            "SPI.D3.11.CITY",
+                                            "SPI.D3.12.CNSP"))),         
+         INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
+                                            "SPI.D3.15.LAND" ))),
+         INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
+                                            "SPI.D3.17.PTNS" ))),
+         INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1'))),
+         INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2'))),
+         INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3'))),
+         #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
+         INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2'))),
+         #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
+                 ) %>%
+  mutate(
+         SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+         SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
+         SPI.INDEX.DIM3.ALT=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
+         SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
+         SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+         SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.DIM1',
+                                     'SPI.INDEX.DIM2',
+                                     'SPI.INDEX.DIM3.ALT',
+                                     'SPI.INDEX.DIM4',
+                                     'SPI.INDEX.DIM5')), na.rm=FALSE)
+         ) %>% #
+  mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
+  arrange(-date, -SPI.INDEX.ALT) %>%
+  select(country, iso3c, date, starts_with('SPI.INDEX'), everything()) %>%
+    filter(date>=2016) #2016 is first year with complete data
+
+
+#################
+# Nested Index with high income coutries top coded
+################
+  spi_index_df_dim3_alt2 <- spi_index_df_temp %>%
+  arrange(country, date) %>%
+  group_by(country) %>%
+  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
+  select(country, iso3c, date, everything()) %>%
+  mutate(across(starts_with("SPI.D3"),
+                ~if_else(( (income=='High income')  ),1,.)                )) 
+
+
+
+#Create overall subscores corresponding to John's framework
+  spi_index_df_dim3_alt2 <- spi_index_df_dim3_alt2 %>%
+    mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
+         INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
+         INDEX.SPI.D2.4=SPI.D2.4.NADA,
+         INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
+                                            "SPI.D3.2.HNGR",
+                                            "SPI.D3.3.HLTH",
+                                            "SPI.D3.4.EDUC",
+                                            "SPI.D3.5.GEND",
+                                            "SPI.D3.6.WTRS"))),
+         INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
+                                            "SPI.D3.8.WORK",
+                                            "SPI.D3.9.INDY",
+                                            "SPI.D3.10.NEQL",
+                                            "SPI.D3.11.CITY",
+                                            "SPI.D3.12.CNSP"))),         
+         INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
+                                            "SPI.D3.15.LAND" ))),
+         INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
+                                            "SPI.D3.17.PTNS" ))),
+         INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1'))),
+         INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2'))),
+         INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3'))),
+         #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
+         INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2'))),
+         #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
+                 ) %>%
+  mutate(
+         SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+         SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
+         SPI.INDEX.DIM3.ALT2=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
+         SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
+         SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+         SPI.INDEX.ALT2=rowMeans(across(c('SPI.INDEX.DIM1',
+                                     'SPI.INDEX.DIM2',
+                                     'SPI.INDEX.DIM3.ALT2',
+                                     'SPI.INDEX.DIM4',
+                                     'SPI.INDEX.DIM5')), na.rm=FALSE)
+         ) %>% #
+  mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
+  arrange(-date, -SPI.INDEX.ALT2) %>%
+  select(country, iso3c, date, SPI.INDEX.ALT2,SPI.INDEX.DIM3.ALT2, income) %>%
+    mutate(weights=1) %>%
+    filter(date>=2016) #2016 is first year with complete data
+ 
+#merge the two indices and compare  
+index_compare <- spi_index_df_dim3_alt %>%
+  transmute(
+    country=country,
+    iso3c=iso3c,
+    date=date,
+    SPI.INDEX.ALT=SPI.INDEX.ALT
+  ) %>%
+  filter(date==2019) %>%
+  filter(!is.na(SPI.INDEX.ALT)) %>%
+  left_join(select(spi_index_df, country, date, SPI.INDEX) ) %>%
+  left_join(spi_index_df_dim3_alt2) %>%
+  select(-SPI.INDEX.DIM3.ALT2,-income)
+
+    spi_groups_quantiles <- quantile(index_compare$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+    spi_alt_groups_quantiles <- quantile(index_compare$SPI.INDEX.ALT, probs=c(1,2,3,4)/5,na.rm=T)
+    spi_alt2_groups_quantiles <- quantile(index_compare$SPI.INDEX.ALT2, probs=c(1,2,3,4)/5,na.rm=T)
+
+    index_compare <- index_compare %>%
+      mutate(spi_groups=case_when(
+        between(SPI.INDEX, spi_groups_quantiles[4],100) ~ "Top 20%",
+        between(SPI.INDEX, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+        between(SPI.INDEX, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+        between(SPI.INDEX, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+        between(SPI.INDEX, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      )) %>%
+      mutate(spi_groups=factor(spi_groups, 
+                               levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  %>%
+      mutate(spi_alt_groups=case_when(
+        between(SPI.INDEX.ALT, spi_alt_groups_quantiles[4],100) ~ "Top 20%",
+        between(SPI.INDEX.ALT, spi_alt_groups_quantiles[3],spi_alt_groups_quantiles[4]) ~ "4th Quintile",
+        between(SPI.INDEX.ALT, spi_alt_groups_quantiles[2],spi_alt_groups_quantiles[3]) ~ "3rd Quintile",
+        between(SPI.INDEX.ALT, spi_alt_groups_quantiles[1],spi_alt_groups_quantiles[2]) ~ "2nd Quintile",
+        between(SPI.INDEX.ALT, 0,spi_alt_groups_quantiles[1]) ~ "Bottom 20%"
+      )) %>%
+      mutate(spi_alt_groups=factor(spi_alt_groups, 
+                               levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" ))) %>%
+      mutate(spi_alt2_groups=case_when(
+        between(SPI.INDEX.ALT2, spi_alt2_groups_quantiles[4],100) ~ "Top 20%",
+        between(SPI.INDEX.ALT2, spi_alt2_groups_quantiles[3],spi_alt2_groups_quantiles[4]) ~ "4th Quintile",
+        between(SPI.INDEX.ALT2, spi_alt2_groups_quantiles[2],spi_alt2_groups_quantiles[3]) ~ "3rd Quintile",
+        between(SPI.INDEX.ALT2, spi_alt2_groups_quantiles[1],spi_alt2_groups_quantiles[2]) ~ "2nd Quintile",
+        between(SPI.INDEX.ALT2, 0,spi_alt2_groups_quantiles[1]) ~ "Bottom 20%"
+      )) %>%
+      mutate(spi_alt2_groups=factor(spi_alt2_groups, 
+                               levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" ))) %>%
+      mutate(weights=1)
+
+
+```
+
+```{r index_compare_plot}
+
+
+spi_charts('spi_index_df_dim3_alt', 'SPI.INDEX.DIM3.ALT','Dimension 3: Data Products - OECD High Income Top Coded')
+
+
+```
+
+```{r index_compare_plot2}
+
+
+spi_charts('spi_index_df_dim3_alt2', 'SPI.INDEX.DIM3.ALT2','Dimension 3: Data Products - All High Income Top Coded')
+
 
 ```
 
@@ -2124,6 +2324,53 @@ index_tab_time <- index_tab_time %>%
   
 
 FitFlextableToPage(index_tab_time)
+
+```
+
+## Country maturity group differences if top coding high income OECD
+
+
+```{r tabrecode, echo=FALSE}
+
+
+#colors
+col_palette <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+
+col_palette2 <- c("#1A9850",  "#E7BB25", "#D73027" )
+
+#make the table
+index_tab_recode <- index_compare %>%
+  mutate(SPI.INDEX=round(SPI.INDEX,1),
+         SPI.INDEX.ALT=round(SPI.INDEX.ALT,1),
+         SPI.INDEX.ALT2=round(SPI.INDEX.ALT2,1)) %>%
+  select(country, SPI.INDEX, spi_groups, SPI.INDEX.ALT, spi_alt_groups, SPI.INDEX.ALT2, spi_alt2_groups)
+#make nice looking
+index_tab_recode <- index_tab_recode %>%
+  flextable() %>%
+  add_header_lines('SPI overall scores over time') %>%
+  set_header_labels(values=list(
+                       country="Country", 
+                       SPI.INDEX="SPI Overall Score",
+                       spi_groups="SPI Maturity Grouping",
+                       SPI.INDEX.ALT="SPI Overall Score: Top Coding OECD High Income Countries for Dimension 3.",
+                       spi_alt_groups="SPI Maturity Grouping: Top Coding OECD High Income",
+                       SPI.INDEX.ALT2="SPI Overall Score: Top Coding All High Income Countries for Dimension 3.",
+                       spi_alt2_groups="SPI Maturity Grouping: Top Coding All High Income"
+                                   )) %>%
+    bg(j = c('SPI.INDEX'), 
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('spi_groups'),
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE), source = 'SPI.INDEX') %>%
+    bg(j = c('SPI.INDEX.ALT'), 
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('spi_alt_groups'),
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE), source = 'SPI.INDEX.ALT') %>%
+    bg(j = c('SPI.INDEX.ALT2'), 
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('spi_alt2_groups'),
+       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE), source = 'SPI.INDEX.ALT2')   
+
+FitFlextableToPage(index_tab_recode)
 
 ```
 

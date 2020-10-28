@@ -535,6 +535,51 @@ p2_alt3
  
 }
 
+lending_chart_aggregate <- function(data, indicator, title) { 
+
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  lending_list <- c("Not classified", "IBRD", "Blend", "IDA" )
+  
+  
+
+  p2_alt3 <- map_df %>%
+    group_by(lending) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=lending, fill=lending)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = lending_list) +
+      expand_limits(x=c(0,100)) +
+      theme_bw() +
+      theme(legend.position = 'top') 
+   
+p2_alt3 
+  
+ 
+}
+
+
+
 fcs_charts <- function(data, indicator, title) { 
   #FY21 Fragile and conflict-affected situations (http://pubdocs.worldbank.org/en/888211594267968803/FCSList-FY21.pdf)
   high_intensity_conflict <- c('Afghanistan', 'Libya', 'Somalia', 'Syrian Arab Republic' )
@@ -555,6 +600,13 @@ fcs_charts <- function(data, indicator, title) {
     filter(date==max(date, na.rm=T)) %>%
     filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
     mutate(fcs=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "FCS country",
+      country %in% medium_intensity_conflict ~ "FCS country",
+      country %in% high_institutional_social_fragility ~ "FCS country",
+      country %in% small_states ~ "FCS country",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    mutate(fcs_detail=case_when( #create indicators for Fragile and Conflict-affected Situations
       country %in% high_intensity_conflict ~ "High-Intensity Conflict",
       country %in% medium_intensity_conflict ~ "Medium-Intensity Conflict",
       country %in% high_institutional_social_fragility ~ "High Institutional & Social Fragility",
@@ -564,12 +616,13 @@ fcs_charts <- function(data, indicator, title) {
     group_by( country) %>%
     #summarise(across(!! indicator,last)) %>%
     rename(data_available=!! indicator) %>%
-    select(country,fcs, date, data_available, weights ) %>%
+    select(country,fcs,fcs_detail, date, data_available, weights ) %>%
     right_join(country_metadata) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
 
   fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
+  fcs_list <- c("FCS country","Non-FCS country")
 
   p2_alt2 <- map_df %>%
     ungroup() %>%
@@ -589,6 +642,76 @@ fcs_charts <- function(data, indicator, title) {
       theme_bw() +
       theme(legend.position = 'top') 
    
+p2_alt2 
+  
+ 
+}
+
+
+fcs_chart_aggregate <- function(data, indicator, title) { 
+  #FY21 Fragile and conflict-affected situations (http://pubdocs.worldbank.org/en/888211594267968803/FCSList-FY21.pdf)
+  high_intensity_conflict <- c('Afghanistan', 'Libya', 'Somalia', 'Syrian Arab Republic' )
+  
+  medium_intensity_conflict <- c('Burkina Faso', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.',
+                                 'Iraq','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan','Yemen, Rep.')
+  
+  high_institutional_social_fragility <- c('Burundi','Congo, Rep.','Eritrea','Gambia, The','Guinea-Bissau',
+                                           'Haiti','Kosovo','Lao PDR','Lebanon','Liberia','Papua New Guinea',
+                                           'Sudan','Venezuela, RB','West Bank and Gaza','Zimbabwe')
+  
+  small_states <- c('Comoros','Kiribati','Marshall Islands','Micronesia, Fed. Sts.','Solomon Islands','Timor-Leste','Tuvalu')
+  
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    mutate(fcs=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "FCS country",
+      country %in% medium_intensity_conflict ~ "FCS country",
+      country %in% high_institutional_social_fragility ~ "FCS country",
+      country %in% small_states ~ "FCS country",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    mutate(fcs_detail=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "High-Intensity Conflict",
+      country %in% medium_intensity_conflict ~ "Medium-Intensity Conflict",
+      country %in% high_institutional_social_fragility ~ "High Institutional & Social Fragility",
+      country %in% small_states ~ "Small States",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country,fcs,fcs_detail, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
+  fcs_list <- c("FCS country","Non-FCS country")
+
+  p2_alt2 <- map_df %>%
+    group_by(fcs) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=fcs, fill=fcs)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = fcs_list) +
+      expand_limits(x=c(0,100)) +
+      theme_bw() +
+      theme(legend.position = 'top') 
+  
+  
+  
 p2_alt2 
   
  
@@ -744,6 +867,59 @@ p1
       format='html') %>%
   kable_styling(bootstrap_options = c('hover', 'striped'))
   
+```
+]
+
+---
+class: inverse, middle, center
+
+Scores For Each Dimension Across Countries
+
+---
+.center2[
+```{r dimension_1_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM1', 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
+
+```
+]
+
+
+---
+.center2[
+```{r dimension_2_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM2', 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
+
+```
+]
+
+
+
+---
+.center2[
+```{r dimension_3_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM3', 'Statistical Performance Indicators - SPI Dimension 3: Data Products')
+
+```
+
+]
+
+
+
+---
+.center2[
+```{r dimension_4_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM4', 'Statistical Performance Indicators - SPI Dimension 4: Data Sources')
+
+```
+]
+
+
+---
+
+.center2[
+```{r dimension_5_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
+
 ```
 ]
 
@@ -1136,59 +1312,6 @@ pcorr
 
 ```
 ]
----
-class: inverse, middle, center
-
-Scores For Each Dimension Across Countries
-
----
-.center2[
-```{r dimension_1_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM1', 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
-
-```
-]
-
-
----
-.center2[
-```{r dimension_2_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM2', 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
-
-```
-]
-
-
-
----
-.center2[
-```{r dimension_3_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM3', 'Statistical Performance Indicators - SPI Dimension 3: Data Products')
-
-```
-
-]
-
-
-
----
-.center2[
-```{r dimension_4_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM4', 'Statistical Performance Indicators - SPI Dimension 4: Data Sources')
-
-```
-]
-
-
----
-
-.center2[
-```{r dimension_5_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
-
-```
-]
-
 
 
 
@@ -1198,10 +1321,16 @@ class: inverse, middle, center
 Supplementary Charts and Figures
 
 ---
-
 ---
 .center3[
 ```{r lending_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+lending_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
+
+```
+]
+---
+.center3[
+```{r lending_charts2, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 lending_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
 
 ```
@@ -1210,6 +1339,15 @@ lending_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall 
 ---
 .center3[
 ```{r fcs_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+fcs_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
+
+```
+
+
+]
+---
+.center3[
+```{r fcs_charts2, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 fcs_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
 
 ```
