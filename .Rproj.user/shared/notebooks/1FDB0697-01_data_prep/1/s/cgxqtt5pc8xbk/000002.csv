@@ -1,0 +1,23 @@
+"0","D5.2.9.MONY <- read_csv(file = paste(raw_dir, ""5.2_DISM"",""D5.2.9.MONY.csv"", sep=""/"" )) %>%
+  mutate(SPI.D5.2.9.MONY=case_when(
+    MONY==""MFSM 2000"" | MONY==""MFSMCG 2016""~ 1, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.9.MONY=MONY)  %>%
+  select(iso3c, country, date, RAW.D5.2.9.MONY, SPI.D5.2.9.MONY  ) %>%
+  arrange(date, country)
+
+#####
+# IMF Data
+#####
+
+#use alternative data source provided by the IMF
+
+#read in data from IMF
+D5.2.9.MONY.IMF <-   read_excel(path=paste(raw_dir, ""5.2_DISM"",""2020.11.04_Compiled Data for World Bank.xlsx"", sep=""/"" ),
+                               sheet =0""7. MFS Compilation status"",
+"
+"2","Error: unexpected string constant in:
+""D5.2.9.MONY.IMF <-   read_excel(path=paste(raw_dir, ""5.2_DISM"",""2020.11.04_Compiled Data for World Bank.xlsx"", sep=""/"" ),
+                               sheet =0""7. MFS Compilation status""""
+"

@@ -30,6 +30,8 @@ library(lubridate)
 library(haven)
 library(cld2)
 library(zoo)
+library(readxl)
+
 #set directories
 dir <- here()
 
@@ -773,6 +775,7 @@ Quality (1 points total):
 1 Point. Comparable data lasting at least two years within past 5 years	
 0 Points. No comparable data within past 5 years
 
+Note: Because poverty surveys are reported with a lag, we start measuring whether comparable poverty data is available two years prior.  So for 2019, the window starts from 2017 to give countries time to prepare poverty estimates based on surveys.
 
 
 ```{r 3.1}
@@ -809,7 +812,7 @@ for (reference_year in 2004:2019) {
   
   temp<-df %>%
         filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
-        mutate(frequency=((reference_year-as.numeric(year))<=5) & (reference_year>=as.numeric(year))) %>% 
+        mutate(frequency=((reference_year-as.numeric(year))<=7) & (reference_year>=as.numeric(year))) %>% 
         filter(frequency==TRUE) %>%
         group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
         summarise(SPI.D1.5.POV=n())  %>%
@@ -2899,6 +2902,9 @@ df <- WDI_metadata
 df <- df %>%
   filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
 
+#pull IMF country codes for merging
+imf_codes <- read_csv(file=paste(raw_dir, "metadata","IMF_country_codes.csv", sep="/" ))
+
 ```
 
 
@@ -3026,6 +3032,78 @@ D5.2.4.CPIBY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.csv", se
   select(iso3c, country, date, RAW.D5.2.4.CPIBY, SPI.D5.2.4.CPIBY  ) %>%
   arrange(date, country)
 
+#####
+# IMF Data
+#####
+
+#use alternative data source provided by the IMF
+
+#read in data on when the weights were last updated to measure if annual chain linking is done
+D5.2.4.COICOP.WGT <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet = "COICOP Month_Last Change",
+                               skip=2
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country_revised
+  ) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes)
+  
+  
+#read in last time the CPI reference period is updated to fill in rest of info  
+D5.2.4.CPI.REF <-  read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet = "CPI Reference Period Review"
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%
+  rename(IMF_country=country) %>%
+  left_join(D5.2.4.COICOP.WGT) #merge CPI weights
+  
+#now calculate whether annual chain linking is used and CPI base year from scratch using this info
+D5.2.4.CPIBY.IMF.RAW <- D5.2.4.CPI.REF %>%
+  filter(!is.na(iso3c)) %>%
+  mutate(CPI_ref_period=str_sub(CPI.reference.period.review,1,4),
+         CPI_ref_period=as.numeric(CPI_ref_period),
+         CPI_weight_change=str_sub(last_change,1,4),
+         CPI_weight_change=as.numeric(CPI_weight_change)) %>%
+  mutate(RAW.D5.2.4.CPIBY.IMF=if_else((CPI_weight_change>=2019 & CPI_ref_period<2020), "annual chained",as.character(CPI_ref_period))) %>%
+  mutate(RAW.D5.2.4.CPIBY.IMF=if_else((iso3c=='AUS' | iso3c=='NZL'),"annual chained",as.character(RAW.D5.2.4.CPIBY.IMF))) #replace Australia and New Zealand as annual chain linking.  They use quarterly cpi releases and do not show up in this dataset
+  
+#score from 2010 to 2019  
+if (exists('D5.2.4.CPIBY.IMF')) {
+    rm(D5.2.4.CPIBY.IMF)
+} 
+
+for (i in c(2015:2019)) {
+  temp <- D5.2.4.CPIBY.IMF.RAW %>%
+    mutate(date=i) %>%
+    mutate(SPI.D5.2.4.CPIBY.IMF=case_when(
+      RAW.D5.2.4.CPIBY.IMF=="annual chained" ~ 1, 
+      (date-as.numeric(RAW.D5.2.4.CPIBY.IMF))<=10 ~ 0.5, #within 10 years of reference period
+      TRUE ~ 0 
+    )) %>%
+    select(iso3c, date, RAW.D5.2.4.CPIBY.IMF, SPI.D5.2.4.CPIBY.IMF  ) %>%
+    arrange(date, iso3c)
+  
+  if (!exists('D5.2.4.CPIBY.IMF')) {
+    D5.2.4.CPIBY.IMF <- temp
+  } else {
+    D5.2.4.CPIBY.IMF <- D5.2.4.CPIBY.IMF %>%
+      bind_rows(temp)
+  }
+  
+}
+
+
+
+#update based on IMF data.  Use manually collected value when other value not available
+D5.2.4.CPIBY <- D5.2.4.CPIBY %>%
+  full_join(D5.2.4.CPIBY.IMF) %>%
+  mutate(SPI.D5.2.4.CPIBY=if_else(!is.na(SPI.D5.2.4.CPIBY.IMF),SPI.D5.2.4.CPIBY.IMF,SPI.D5.2.4.CPIBY)) %>%
+  select(-country,-SPI.D5.2.4.CPIBY.IMF) 
+
+
 
 
 ```
@@ -3058,9 +3136,38 @@ D5.2.5.HOUS <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.csv", sep=
   select(iso3c, country, date, RAW.D5.2.5.HOUS, SPI.D5.2.5.HOUS  ) %>%
   arrange(date, country)
 
+#####
+# IMF Data
+#####
 
+#use alternative data source provided by the IMF
 
-
+#read in data on COICOP from IMF
+D5.2.5.HOUS.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet = "3. Household Consump Class",
+                               skip=0
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.5.HOUS.IMF=case_when(
+    Status=="CIOCOP" ~ 1, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.5.HOUS.IMF=Status) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c, RAW.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS.IMF ) %>%
+  mutate(date=2019)
+  
+  
+D5.2.5.HOUS <-  D5.2.5.HOUS %>%
+  full_join(D5.2.5.HOUS.IMF) %>%
+  mutate(SPI.D5.2.5.HOUS=if_else(is.na(SPI.D5.2.5.HOUS),SPI.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-country,-SPI.D5.2.5.HOUS.IMF) %>%
+  arrange(date, iso3c) 
 ```
 
 
@@ -3123,7 +3230,39 @@ D5.2.7.CGOV <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.csv", sep=
   select(iso3c, country, date, RAW.D5.2.7.CGOV, SPI.D5.2.7.CGOV  ) %>%
   arrange(date, country)
 
+#####
+# IMF Data
+#####
 
+#use alternative data source provided by the IMF
+
+#read in data from IMF
+D5.2.7.CGOV.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet = "5. Cntrl Gct Acct Status",
+                               skip=6
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.7.CGOV.IMF=case_when(
+    General.Government..consolidated.=="AC" ~ 1, 
+    General.Government..consolidated.=="CA" ~ 0.5,
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.7.CGOV.IMF=General.Government..consolidated.) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c, RAW.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV.IMF ) %>%
+  mutate(date=2019)
+  
+  
+D5.2.7.CGOV <-  D5.2.7.CGOV %>%
+  full_join(D5.2.7.CGOV.IMF) %>%
+  mutate(SPI.D5.2.7.CGOV=if_else(is.na(SPI.D5.2.7.CGOV),SPI.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-country,-SPI.D5.2.7.CGOV.IMF) %>%
+  arrange(date, iso3c)
 
 ```
 
@@ -3183,7 +3322,38 @@ D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep=
   select(iso3c, country, date, RAW.D5.2.9.MONY, SPI.D5.2.9.MONY  ) %>%
   arrange(date, country)
 
+#####
+# IMF Data
+#####
 
+#use alternative data source provided by the IMF
+
+#read in data from IMF
+D5.2.9.MONY.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet ="7. MFS Compilation status",
+                               skip=0
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.9.MONY.IMF=case_when(
+    grepl('MFSM 2000',Monetary.and.Financial.Statistics..MFS..Reporting.Status) ~ 1, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.9.MONY.IMF=Monetary.and.Financial.Statistics..MFS..Reporting.Status) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) %>%
+  mutate(date=2019)
+  
+  
+D5.2.9.MONY <-  D5.2.9.MONY %>%
+  full_join(D5.2.9.MONY.IMF) %>%
+  mutate(SPI.D5.2.9.MONY=if_else(is.na(SPI.D5.2.9.MONY),SPI.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-country,-SPI.D5.2.9.MONY.IMF) %>%
+  arrange(date, iso3c)
 
 
 ```
@@ -3472,8 +3642,7 @@ spi_df_final <- spi_df_final %>%
   mutate(across(c("SPI.D1.5.POV",
                   "SPI.D2.1.GDDS",
                   "SPI.D5.1.DILG",
-                  "SPI.D5.2.1.SNAU", "SPI.D5.2.2.NABY", "SPI.D5.2.1.SNAU","SPI.D5.2.2.NABY",                
-                  "SPI.D5.2.3.CNIN", "SPI.D5.2.4.CPIBY", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL","SPI.D5.2.7.CGOV", "SPI.D5.2.8.FINA",
+                  "SPI.D5.2.3.CNIN", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL", "SPI.D5.2.8.FINA",
                   "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP",
                   "SPI.D5.5.DIFI"),
                 ~if_else(( (income=='High income')  & (country %in% country_mod_list)),1,.)                )) 

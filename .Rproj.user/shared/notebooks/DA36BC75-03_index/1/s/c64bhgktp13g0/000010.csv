@@ -1,0 +1,16 @@
+"0","leave_out_df <- metadata_full %>%
+  filter(!grepl('SPI.INDEX|RAW.',source_id)) %>%
+  nest(source_id) %>%
+  mutate(
+    ABS.DIFF=map(
+      data,
+      ~leave_out_fun(.x$source_id)
+    ),
+    mean_abs_diff=ABS.DIFF$mean_abs_diff
+    
+  )
+"
+"2","
+"
+"2","
+"

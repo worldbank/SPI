@@ -1,3 +1,0 @@
-"0",""
-"0","cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.4.HOUS))"
-"0","spi_mapper('cs_df_map', 'SPI.D4.1.4.HOUS', 'Household Survey Availablility in Past 10 Years in 2019' )"

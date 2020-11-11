@@ -1,0 +1,7 @@
+"0",""
+"0","### Scatterplot log GDP SPI"
+"0","gdp_spi + hci_spi   +"
+"0","  plot_annotation("
+"0","    title='Plot of SPI overall score on Human Capital Index and GDP per capita',"
+"0","    caption='Source: All indicators come from the World Bank.'"
+"0","    )"

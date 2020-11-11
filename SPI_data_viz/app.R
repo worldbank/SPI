@@ -420,7 +420,7 @@ server <- function(input, output) {
 
         brks <- quantile(palette_df[,1], probs=c(0,1,2,3,4,5)/5,na.rm=T)
         #create pallete
-        pal <- colorBin(c("#D73027",  "#DE7B2B", "#E7BB25", "#BFCF28",  "#1A9850" ), 
+        pal <- colorBin(c("#ff9f1c","#ffbf69","#f1dc76","#acece7","#2ec4b6"), 
                           bins=brks,
                           na.color='grey')
         
@@ -657,9 +657,9 @@ server <- function(input, output) {
       
 
         #colors
-        col_palette <- c("#D73027",  "#DE7B2B", "#E7BB25", "#BFCF28",  "#1A9850" )
+        col_palette <- c("#ff9f1c","#ffbf69","#f1dc76","#acece7","#2ec4b6")
         
-        col_palette2 <- c("#D73027",  "#E7BB25",  "#1A9850")
+        col_palette2 <- c("#FFBE0B",  "#E7BB25",  "#1A9850")
         
         #recalculate index based on the weights
         dim_total <- input$dim_1 + input$dim_2 + input$dim_3 + input$dim_4 + input$dim_5

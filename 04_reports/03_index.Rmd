@@ -1796,7 +1796,7 @@ hci_df <- wbstats::wb_data(country="countries_only",
               start_date=2016,
               end_date=2019,
               return_wide = F) %>%
-  left_join(select(spi_index_df,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
+  left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
 
 #get the correlation for 2019
 hci_df_2018 <- hci_df %>%
@@ -1826,7 +1826,7 @@ gdp_df <- wbstats::wb_data(
   end_date=2019,
   return_wide = F
     ) %>%
-  left_join(select(spi_index_df,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
+  left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
 
 #get the correlation for 2019
 gdp_df_2019 <- gdp_df %>%
@@ -1888,7 +1888,12 @@ In order to produce this figure, we estimate an OLS regression of the SPI overal
 
 ## GDP
 #regress SPI on gdp
-m_spi <- lm(SPI.INDEX ~ log(value) , data = gdp_df_2019) 
+
+indicator <- 'SPI.INDEX'
+
+form <- paste(indicator, " ~ log(value)", sep="")
+
+m_spi <- lm(form , data = gdp_df_2019) 
 
 gdp_overperformers_df <- gdp_df_2019 %>%
   modelr::add_residuals(m_spi) %>%
@@ -1929,7 +1934,7 @@ gdp_overperformers_plot <-  gdp_overperformers_df %>%
 
 
 #regress SPI on hci
-m_spi_hci <- lm(SPI.INDEX ~ value , data = hci_df_2018) 
+m_spi_hci <- lm(form , data = hci_df_2018) 
 
 hci_overperformers_df <- hci_df_2018 %>%
   modelr::add_residuals(m_spi_hci) %>%
