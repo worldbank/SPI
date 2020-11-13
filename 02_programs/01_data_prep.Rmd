@@ -3643,7 +3643,7 @@ spi_df_final <- spi_df_final %>%
                   "SPI.D2.1.GDDS",
                   "SPI.D5.1.DILG",
                   "SPI.D5.2.3.CNIN", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL", "SPI.D5.2.8.FINA",
-                  "SPI.D5.2.9.MONY", "SPI.D5.2.10.GSBP",
+                  "SPI.D5.2.10.GSBP",
                   "SPI.D5.5.DIFI"),
                 ~if_else(( (income=='High income')  & (country %in% country_mod_list)),1,.)                )) 
 

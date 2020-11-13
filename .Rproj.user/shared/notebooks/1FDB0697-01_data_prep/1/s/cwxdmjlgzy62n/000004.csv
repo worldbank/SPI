@@ -41,6 +41,6 @@
 "0","D5.2.7.CGOV <-  D5.2.7.CGOV %>%"
 "0","  full_join(D5.2.7.CGOV.IMF) %>%"
 "0","  mutate(SPI.D5.2.7.CGOV=if_else(is.na(SPI.D5.2.7.CGOV),SPI.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries"
-"0","  select(-country) %>%"
+"0","  select(-country,-SPI.D5.2.7.CGOV.IMF) %>%"
 "0","  arrange(date, iso3c)"
 "0",""

@@ -1,0 +1,1151 @@
+---
+title: "Statistical Performance Indicators: Methods, Standards, Classifications from IMF"
+author: "SPI Team"
+institute: "World Bank, Development Data Group"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    fig_width: 5
+    fig_height: 4
+    fig_caption: true
+    background-size: contain;
+    css: xaringan-themer.css
+---
+
+<style>
+
+.center2 {
+  margin: 0;
+  position: absolute;
+  top: -80px;
+  right: 0;  
+  width: 800px;
+  height: 800px;
+}
+.center3 {
+  margin: 0;
+  position: absolute;
+  top: -20px;
+  right: 20px;  
+  width: 800px;
+  height: 800px;
+}
+.reduced{
+   font-size: 0.5em;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+library(xaringanthemer)
+library(wbggeo)
+library(wbgmaps)
+library(ggthemes)
+library(Hmisc)
+library(here)
+library(patchwork)
+library(ggpmisc)
+library(jsonlite)
+library(httr)
+library(readxl)
+style_mono_accent(base_color = "#009FDA",
+                  title_slide_background_color = 'white',
+                  title_slide_text_color = '#002244',
+                  title_slide_background_image = 'WB_logo.png',
+                  title_slide_background_size = '7',
+                  title_slide_background_position = 'bottom 25px right 25px;',
+                  text_font_google = google_font('Roboto'),
+                  text_font_size = '24px',
+                  )
+
+#set directories
+dir <- here()
+
+raw_dir <- paste(dir, '01_raw_data', sep="/")
+output_dir <- paste(dir, '03_output_data', sep="/")
+
+#weights (either unity (1) or population)
+wgt <- 1
+
+```
+
+
+
+---
+
+
+```{r spi_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+#Now map the result
+quality = "high"
+maps <- wbgmaps::wbgmaps[[quality]]
+
+
+country_metadata <- wbstats::wbcountries()
+
+
+
+spi_mapper <- function(data, indicator, title) {
+  
+ indicator<-indicator
+
+   map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
+
+
+  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+  
+  SPI_map <- map_df %>%
+    mutate(spi_groups=case_when(
+      between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+  
+  #set color pallete
+  col_pal <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+  #names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
+  p1<-ggplot() +
+    geom_map(data = SPI_map, aes(map_id = iso3c, fill = data_available), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+    geom_path(data = maps$boundaries,
+              aes(long, lat, group = group),
+              color = "white",
+              size = 0.1,
+              lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_gradient(
+      low='#90e0ef',
+      high='#023e8a',
+      name='Score',
+      na.value='grey'
+    ) +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap(title,100),
+      caption = 'Source: IMF/World Bank'
+    ) + 
+    theme(
+          #legend.position = "top",
+          #legend.direction = "horizontal",
+          #legend.justification = c(0.5, 1),
+          #legend.key.width = unit(1.5, "lines"),
+          #legend.text = element_text(margin=margin(0,3,0,0,"lines")),
+          title=element_text(size=18)
+          #legend.margin = margin(0,0,0,1,"lines")
+    )
+ print(p1)
+}
+
+spi_charts  <- function(data, indicator, title) {
+  
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  #add histogram by region 
+  p2 <- map_df %>%
+    group_by(region) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Percentage,2))) %>%
+    ggplot(aes(x=Percentage, y=region, fill=region)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Region', sep=" - "),100),
+      caption = 'Source: IMF/World Bank',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      expand_limits(x=c(0,1)) +
+      theme_bw()
+  
+  #by income
+    income <- c("Low income", "Lower middle income","Upper middle income","High income")
+
+    p3 <- map_df %>%
+    group_by(income) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=wtd.mean(data_available, weights=weights, na.rm=T),
+           Label = paste(round(Percentage,2))) %>%
+    ggplot(aes(x=Percentage, y=income, fill=income)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Income', sep=" - "),100),
+      caption = 'Source: IMF/World Bank',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = income) +
+      expand_limits(x=c(0,1)) +
+      theme_bw()
+    
+  # #add line graph over time
+  p4 <- get(data)  %>%
+    rename(data_available=!! indicator) %>%
+    # right_join(spi_df_empty) %>%
+    group_by( date) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
+    mutate(Percentage=mean(data_available, na.rm=T),
+           Label = paste(round(Percentage,2))) %>%
+    ungroup() %>%
+    ggplot(aes(y=Percentage, x=date)) +
+      geom_point() +
+      geom_line(fill='blue') +
+      # geom_text_repel(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Date', sep=" - "),100),
+      caption = 'Source: IMF/World Bank'
+      ) +
+    
+      expand_limits(y=c(0,1)) +
+      theme_bw()
+      
+ (p2 / p3) 
+    
+}
+
+spi_country_charts  <- function(data, indicator, title) {
+  
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  p2_alt <- map_df %>%
+    ungroup() %>%
+    ggplot(aes(x=data_available, y=region, color=region)) +
+      geom_point() +
+      geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+      labs(
+      title=str_wrap(paste(title, 'By Country', sep=" - "),100),
+      caption = 'Source: IMF/World Bank',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      expand_limits(x=c(0,1)) +
+      theme_bw() +
+      theme(legend.position = 'top') 
+   
+p2_alt
+
+}
+
+lending_charts <- function(data, indicator, title) { 
+
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  lending_list <- c("Not classified", "IBRD", "Blend", "IDA" )
+  
+  p2_alt3 <- map_df %>%
+    ungroup() %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=(data_available),
+           Label = paste(round(Percentage,2))) %>%
+    ggplot(aes(x=Percentage, y=lending, color=lending)) +
+      geom_point() +
+      geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+      labs(
+      title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
+      caption = 'Source: IMF/World Bank',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = lending_list) +
+      expand_limits(x=c(0,1)) +
+      theme_bw() +
+      theme(legend.position = 'top') 
+   
+p2_alt3 
+  
+ 
+}
+
+lending_chart_aggregate <- function(data, indicator, title) { 
+
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  lending_list <- c("Not classified", "IBRD", "Blend", "IDA" )
+  
+  
+
+  p2_alt3 <- map_df %>%
+    group_by(lending) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Percentage,2))) %>%
+    ggplot(aes(x=Percentage, y=lending, fill=lending)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
+      caption = 'Source: IMF/World Bank',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = lending_list) +
+      expand_limits(x=c(0,1)) +
+      theme_bw() +
+      theme(legend.position = 'top') 
+   
+p2_alt3 
+  
+ 
+}
+
+
+
+fcs_charts <- function(data, indicator, title) { 
+  #FY21 Fragile and conflict-affected situations (http://pubdocs.worldbank.org/en/888211594267968803/FCSList-FY21.pdf)
+  high_intensity_conflict <- c('Afghanistan', 'Libya', 'Somalia', 'Syrian Arab Republic' )
+  
+  medium_intensity_conflict <- c('Burkina Faso', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.',
+                                 'Iraq','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan','Yemen, Rep.')
+  
+  high_institutional_social_fragility <- c('Burundi','Congo, Rep.','Eritrea','Gambia, The','Guinea-Bissau',
+                                           'Haiti','Kosovo','Lao PDR','Lebanon','Liberia','Papua New Guinea',
+                                           'Sudan','Venezuela, RB','West Bank and Gaza','Zimbabwe')
+  
+  small_states <- c('Comoros','Kiribati','Marshall Islands','Micronesia, Fed. Sts.','Solomon Islands','Timor-Leste','Tuvalu')
+  
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    mutate(fcs=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "FCS country",
+      country %in% medium_intensity_conflict ~ "FCS country",
+      country %in% high_institutional_social_fragility ~ "FCS country",
+      country %in% small_states ~ "FCS country",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    mutate(fcs_detail=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "High-Intensity Conflict",
+      country %in% medium_intensity_conflict ~ "Medium-Intensity Conflict",
+      country %in% high_institutional_social_fragility ~ "High Institutional & Social Fragility",
+      country %in% small_states ~ "Small States",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country,fcs,fcs_detail, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
+  fcs_list <- c("FCS country","Non-FCS country")
+
+  p2_alt2 <- map_df %>%
+    ungroup() %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=(data_available),
+           Label = paste(round(Percentage,2))) %>%
+    ggplot(aes(x=Percentage, y=fcs, color=fcs)) +
+      geom_point() +
+      geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+      labs(
+      title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
+      caption = 'Source: IMF/World Bank',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = fcs_list) +
+      expand_limits(x=c(0,1)) +
+      theme_bw() +
+      theme(legend.position = 'top') 
+   
+p2_alt2 
+  
+ 
+}
+
+
+fcs_chart_aggregate <- function(data, indicator, title) { 
+  #FY21 Fragile and conflict-affected situations (http://pubdocs.worldbank.org/en/888211594267968803/FCSList-FY21.pdf)
+  high_intensity_conflict <- c('Afghanistan', 'Libya', 'Somalia', 'Syrian Arab Republic' )
+  
+  medium_intensity_conflict <- c('Burkina Faso', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.',
+                                 'Iraq','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan','Yemen, Rep.')
+  
+  high_institutional_social_fragility <- c('Burundi','Congo, Rep.','Eritrea','Gambia, The','Guinea-Bissau',
+                                           'Haiti','Kosovo','Lao PDR','Lebanon','Liberia','Papua New Guinea',
+                                           'Sudan','Venezuela, RB','West Bank and Gaza','Zimbabwe')
+  
+  small_states <- c('Comoros','Kiribati','Marshall Islands','Micronesia, Fed. Sts.','Solomon Islands','Timor-Leste','Tuvalu')
+  
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    mutate(fcs=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "FCS country",
+      country %in% medium_intensity_conflict ~ "FCS country",
+      country %in% high_institutional_social_fragility ~ "FCS country",
+      country %in% small_states ~ "FCS country",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    mutate(fcs_detail=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "High-Intensity Conflict",
+      country %in% medium_intensity_conflict ~ "Medium-Intensity Conflict",
+      country %in% high_institutional_social_fragility ~ "High Institutional & Social Fragility",
+      country %in% small_states ~ "Small States",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country,fcs,fcs_detail, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
+  fcs_list <- c("FCS country","Non-FCS country")
+
+  p2_alt2 <- map_df %>%
+    group_by(fcs) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Percentage,2))) %>%
+    ggplot(aes(x=Percentage, y=fcs, fill=fcs)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
+      caption = 'Source: IMF/World Bank',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = fcs_list) +
+      expand_limits(x=c(0,1)) +
+      theme_bw() +
+      theme(legend.position = 'top') 
+  
+  
+  
+p2_alt2 
+  
+ 
+}
+```
+
+
+
+
+```{r standards_meta, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+#pull data for several of the standards from WDI metadata
+
+# df <- WDI_metadata
+# 
+# # Manipulate and clean final data
+# df <- df %>%
+#   filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
+
+#pull IMF country codes for merging
+imf_codes <- read_csv(file=paste(raw_dir, "metadata","IMF_country_codes.csv", sep="/" ))
+
+```
+
+
+
+---
+## Indicator 2.1: Data Releases
+
+Data Dissemination Standard (SDDS) and electronic General Data Dissemination Standard (e-GDDS) were 
+established by the International Monetary Fund (IMF) for member countries that have or that might seek 
+access to international capital markets, to guide them in providing their economic and financial data to the public.
+Although subscription is voluntary, the subscribing member needs to be committed to observing the standard and provide
+information about its data and data dissemination practices (metadata).  The metadata are posted on the IMF's SDDS and 
+e-GDDS websites.       
+
+1 Point. Subscribing to IMF SDDS+ or SDDS standards	
+0.5 Points. Subscribing to IMF e-GDDS standards	
+0 Points. Otherwise
+
+```{r spi_df, include=FALSE}
+
+# This block of code will create a blank SPI dataset (only containing country info) that will be appended to when each indicator is added.
+# There will be two indicators added for each dimension
+# 1. An indicator with a score between 0-1 for each dimension
+# 2. An indicator with the raw (unscored) values of the indicators
+# The unit for this database will be country*year
+
+span <- c(2004:2019)
+
+spi_df_empty <- bind_rows(replicate(length(span), wbstats::wbcountries(), simplify = FALSE), .id='date') %>%
+  mutate(date=as.numeric(date)+span[1]-1) %>%
+  filter(region!="Aggregates") # take out the aggregates (LAC, SAR, etc)
+
+spi_df <- spi_df_empty
+
+#read list of iso3c codes for matching from UN (https://unstats.un.org/unsd/methodology/m49/)
+iso3c <- read_csv(paste(raw_dir,'metadata/iso_codes.csv', sep="/"),
+                  col_types=list(col_character(), col_character(), col_character()))
+
+```
+
+```{r metadata_pull, include=FALSE}
+
+# pull in some WDI metadata which will be used for constructing AKI indicators.
+# WDI metadata was gathered using previous vintages of WDI from 2016-19
+# Metadata was gathered and saved as csv files in the 011_data folder
+
+for (i in 2016:2019) {
+  temp <- read_csv(file = paste(raw_dir, "/metadata/WDI_metadata_",i,".csv", sep="" )) %>%
+    as_tibble(.name_repair='universal') %>%
+    mutate(National.accounts.reference.year=as.numeric(National.accounts.reference.year),
+           date=i)
+  
+    assign(paste("WDI_metadata",i,sep="_"), temp)
+}
+
+WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_2018, WDI_metadata_2019)
+```
+
+
+```{r idds, include=FALSE}
+
+
+Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/5.21.01.01.sdds?format=json&date=2004:2015&per_page=5000")
+Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+D2.1_DSDR_sci <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+  data.frame() %>%
+  transmute(
+    iso3c=countryiso3code,
+    country=country.value,
+    date=as.numeric(date),
+    SDDS=value
+  ) %>%
+  left_join(spi_df_empty) %>% #add on country metadata
+  filter(!is.na(income)) %>%
+  select(iso3c, country, date, SDDS  ) 
+
+
+
+#read in metadata file.
+
+#pull data for several of the standards from WDI metadata
+
+df <- WDI_metadata
+
+# Manipulate and clean final data
+df <- df %>%
+  filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
+
+
+D2.1_DSDR <- df %>%
+  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
+         country=Table.Name) %>%
+  select(c('iso3c', 'country', 'date',  'IMF.data.dissemination.standard')  ) %>%
+  mutate(IDDS=IMF.data.dissemination.standard) %>%
+  mutate(SPI.D2.1.GDDS=case_when(
+    IDDS=="Special Data Dissemination Standard Plus (SDDS+)" | IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
+    IDDS=="Enhanced General Data Dissemination System (e-GDDS)"~ 0.5,
+    TRUE ~ 0 ),
+    SDDS=case_when(
+     IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
+    TRUE ~ 0 ))  %>%
+  bind_rows(D2.1_DSDR_sci) %>%
+  rename(RAW.D2.1.IDDS=IDDS) %>%
+  select(iso3c, country, date, RAW.D2.1.IDDS, SPI.D2.1.GDDS  ) %>%
+  arrange(date, country) 
+
+
+
+
+
+
+
+
+
+```
+---
+.center2[
+```{r maps_2.1, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+D2.1_DSDR <- D2.1_DSDR %>%
+  left_join(wbstats::wb_countries()) %>%
+  mutate(weights=1)
+
+spi_mapper('D2.1_DSDR', 'SPI.D2.1.GDDS', 'Data Dissemination Standards')
+
+
+
+```
+]
+
+---
+## Indicator 2.1: Data Releases (ALT)
+
+Data Dissemination Standard (SDDS) and electronic General Data Dissemination Standard (e-GDDS) were 
+established by the International Monetary Fund (IMF) for member countries that have or that might seek 
+access to international capital markets, to guide them in providing their economic and financial data to the public.
+Although subscription is voluntary, the subscribing member needs to be committed to observing the standard and provide
+information about its data and data dissemination practices (metadata).  The metadata are posted on the IMF's SDDS and 
+e-GDDS websites.       
+
+1 Point. Subscribing to IMF SDDS+, SDDS, or e-GDDS standards with SDMX Data Available	
+0.5 Points. e-GDDS standards, but no SDMX   
+0 Points. Otherwise
+---
+```{r gdds, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+#####
+# IMF Data
+#####
+
+#use alternative data source provided by the IMF
+
+#read in data on when the weights were last updated to measure if annual chain linking is done
+D2.1_DSDR.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet = "8. SDDS_E-GDDS Subscription",
+                               skip=0
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country
+  ) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes)
+
+D2.1_DSDR.IMF <- D2.1_DSDR.IMF %>%
+  select(c('iso3c',   'Dissemination.Standard', 'SDMX.Data.Available' )  ) %>%
+  right_join(wbstats::wb_countries()) %>%
+  mutate(date=2019) %>%
+  mutate(IDDS=Dissemination.Standard) %>%
+  mutate(SPI.D2.1.GDDS=case_when(
+    SDMX.Data.Available=='Yes' | IDDS=="SDDS" ~ 1, 
+    IDDS=="e-GDDS" ~ 0.5,
+    TRUE ~ 0 ))  %>%
+  rename(RAW.D2.1.IDDS=IDDS) %>%
+  select(iso3c,country, date, RAW.D2.1.IDDS, SPI.D2.1.GDDS  ) 
+
+
+```
+---
+
+.center2[
+```{r maps_2.1b, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+D2.1_DSDR.IMF <- D2.1_DSDR.IMF %>%
+  mutate(weights=1)
+
+spi_mapper('D2.1_DSDR.IMF', 'SPI.D2.1.GDDS', 'Data Dissemination Standards')
+
+
+
+```
+
+]
+---
+
+.center3[
+```{r charts_2.1, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('D2.1_DSDR', 'SPI.D2.1.GDDS', 'Data Dissemination Standards')
+
+```
+
+]
+---
+### 5.2.4 CPI base year
+
+Consumer Price Index serves as indicators of inflation and reflects changes in the 
+ cost of acquiring a fixed basket of goods and services by the average consumer.  
+ Weights are usually derived from consumer expenditure surveys and the CPI base year 
+ refers to the year the weights were derived.  It is recommended that the base year be
+ changed periodically to reflect changes in expenditure structure.  
+ 
+ 1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 points. Otherwise
+ 
+```{r cpiby, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+#read in csv file.
+D5.2.4.CPIBY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.csv", sep="/" )) %>%
+  mutate(SPI.D5.2.4.CPIBY=case_when(
+    CPIBY=="annual chained" ~ 1, 
+    (date-as.numeric(CPIBY))<=10 ~ 0.5, #within 10 years of reference period
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.4.CPIBY=CPIBY)  %>%
+  select(iso3c, country, date, RAW.D5.2.4.CPIBY, SPI.D5.2.4.CPIBY  ) %>%
+  arrange(date, country)
+
+#####
+# IMF Data
+#####
+
+#use alternative data source provided by the IMF
+
+#read in data on when the weights were last updated to measure if annual chain linking is done
+D5.2.4.COICOP.WGT <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet = "COICOP Month_Last Change",
+                               skip=2
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country_revised
+  ) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes)
+  
+  
+#read in last time the CPI reference period is updated to fill in rest of info  
+D5.2.4.CPI.REF <-  read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet = "CPI Reference Period Review"
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%
+  rename(IMF_country=country) %>%
+  left_join(D5.2.4.COICOP.WGT) #merge CPI weights
+  
+#now calculate whether annual chain linking is used and CPI base year from scratch using this info
+D5.2.4.CPIBY.IMF.RAW <- D5.2.4.CPI.REF %>%
+  filter(!is.na(iso3c)) %>%
+  mutate(CPI_ref_period=str_sub(CPI.reference.period.review,1,4),
+         CPI_ref_period=as.numeric(CPI_ref_period),
+         CPI_weight_change=str_sub(last_change,1,4),
+         CPI_weight_change=as.numeric(CPI_weight_change)) %>%
+  mutate(RAW.D5.2.4.CPIBY.IMF=if_else((CPI_weight_change>=2019 & CPI_ref_period<2020), "annual chained",as.character(CPI_ref_period))) %>%
+  mutate(RAW.D5.2.4.CPIBY.IMF=if_else((iso3c=='AUS' | iso3c=='NZL'),"annual chained",as.character(RAW.D5.2.4.CPIBY.IMF))) #replace Australia and New Zealand as annual chain linking.  They use quarterly cpi releases and do not show up in this dataset
+  
+#score from 2010 to 2019  
+if (exists('D5.2.4.CPIBY.IMF')) {
+    rm(D5.2.4.CPIBY.IMF)
+} 
+
+for (i in c(2015:2019)) {
+  temp <- D5.2.4.CPIBY.IMF.RAW %>%
+    mutate(date=i) %>%
+    mutate(SPI.D5.2.4.CPIBY.IMF=case_when(
+      RAW.D5.2.4.CPIBY.IMF=="annual chained" ~ 1, 
+      (date-as.numeric(RAW.D5.2.4.CPIBY.IMF))<=10 ~ 0.5, #within 10 years of reference period
+      TRUE ~ 0 
+    )) %>%
+    select(iso3c, date, RAW.D5.2.4.CPIBY.IMF, SPI.D5.2.4.CPIBY.IMF  ) %>%
+    arrange(date, iso3c)
+  
+  if (!exists('D5.2.4.CPIBY.IMF')) {
+    D5.2.4.CPIBY.IMF <- temp
+  } else {
+    D5.2.4.CPIBY.IMF <- D5.2.4.CPIBY.IMF %>%
+      bind_rows(temp)
+  }
+  
+}
+
+
+
+#update based on IMF data.  Use manually collected value when other value not available
+D5.2.4.CPIBY <- D5.2.4.CPIBY %>%
+  full_join(D5.2.4.CPIBY.IMF) %>%
+  mutate(SPI.D5.2.4.CPIBY=if_else(!is.na(RAW.D5.2.4.CPIBY.IMF),SPI.D5.2.4.CPIBY.IMF,SPI.D5.2.4.CPIBY)) %>%
+  select(-country,-SPI.D5.2.4.CPIBY.IMF) 
+
+
+
+
+```
+---
+
+.center2[
+```{r maps_5.2.4, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+D5.2.4.CPIBY <- D5.2.4.CPIBY %>%
+  left_join(wbstats::wb_countries()) %>%
+  mutate(weights=1)
+
+spi_mapper('D5.2.4.CPIBY', 'SPI.D5.2.4.CPIBY', 'CPI Base Year')
+
+
+
+```
+
+]
+---
+
+.center3[
+```{r charts_5.2.4, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('D5.2.4.CPIBY', 'SPI.D5.2.4.CPIBY', 'CPI Base Year')
+
+```
+
+]
+
+---
+### 5.2.5 Classification of household consumption
+
+Classification of Individual Consumption According to Purpose (COICOP) 
+is used in household budget surveys, consumer price indices and international 
+comparisons of gross domestic product (GDP) and its component expenditures.  
+Although COICOP is not strictly linked to any particular model of consumer 
+behavior, the classification is designed to broadly reflect differences in 
+income elasticities.  It is an integral part of the SNA1993 and more detailed 
+subdivision of the classes provide comparability between countries and between 
+statistics in these different areas.    
+
+1 Point. Follow Classification of Individual Consumption by Purpose (COICOP)	0 Points.	Otherwise
+
+```{r hous, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+#read in csv file.
+D5.2.5.HOUS <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.csv", sep="/" )) %>%
+  mutate(SPI.D5.2.5.HOUS=case_when(
+    HOUS=="COICOP" ~ 1, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.5.HOUS=HOUS)  %>%
+  select(iso3c, country, date, RAW.D5.2.5.HOUS, SPI.D5.2.5.HOUS  ) %>%
+  arrange(date, country)
+
+#####
+# IMF Data
+#####
+
+#use alternative data source provided by the IMF
+
+#read in data on COICOP from IMF
+D5.2.5.HOUS.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet = "3. Household Consump Class",
+                               skip=0
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.5.HOUS.IMF=case_when(
+    Status=="CIOCOP" ~ 1, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.5.HOUS.IMF=Status) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c, RAW.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS.IMF ) %>%
+  mutate(date=2019)
+  
+  
+D5.2.5.HOUS <-  D5.2.5.HOUS %>%
+  full_join(D5.2.5.HOUS.IMF) %>%
+  mutate(SPI.D5.2.5.HOUS=if_else(is.na(SPI.D5.2.5.HOUS),SPI.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-country,-SPI.D5.2.5.HOUS.IMF) %>%
+  arrange(date, iso3c) 
+```
+
+---
+
+.center2[
+```{r maps_5.2.5, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+D5.2.5.HOUS <- D5.2.5.HOUS %>%
+  left_join(wbstats::wb_countries()) %>%
+  mutate(weights=1)
+
+spi_mapper('D5.2.5.HOUS', 'SPI.D5.2.5.HOUS', 'Classification of Individual Consumption According to Purpose (COICOP)')
+
+
+
+```
+
+]
+---
+
+.center3[
+```{r charts_5.2.5, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('D5.2.5.HOUS', 'SPI.D5.2.5.HOUS', 'Classification of Individual Consumption According to Purpose (COICOP)')
+
+```
+
+]
+---
+
+
+
+### 5.2.7 Central government accounting status
+
+Government finance accounting status refers to the accounting basis for 
+reporting central government financial data.  For many countries' government 
+finance data, have been consolidated into one set of accounts capturing all 
+the central government's fiscal activities and following noncash recording basis.  
+Budgetary central government accounts do not necessarily include all central government 
+units, the picture they provide of central government activities is usually incomplete.  
+
+1 Point. Consolidated central government accounting follows noncash recording basis	 
+0.5 Points. Consolidated central government accounting follows cash recording basis	 
+0 Points. Otherwise 
+
+```{r cgov, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+#read in csv file.
+D5.2.7.CGOV <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.csv", sep="/" )) %>%
+  mutate(SPI.D5.2.7.CGOV=case_when(
+    CGOV=="AC" ~ 1, 
+    CGOV=="CA" ~ 0.5,
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.7.CGOV=CGOV)  %>%
+  select(iso3c, country, date, RAW.D5.2.7.CGOV, SPI.D5.2.7.CGOV  ) %>%
+  arrange(date, country)
+
+#####
+# IMF Data
+#####
+
+#use alternative data source provided by the IMF
+
+#read in data from IMF
+D5.2.7.CGOV.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet = "5. Cntrl Gct Acct Status",
+                               skip=6
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.7.CGOV.IMF=case_when(
+    General.Government..consolidated.=="AC" ~ 1, 
+    General.Government..consolidated.=="CA" ~ 0.5,
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.7.CGOV.IMF=General.Government..consolidated.) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c, RAW.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV.IMF ) %>%
+  mutate(date=2019)
+  
+  
+D5.2.7.CGOV <-  D5.2.7.CGOV %>%
+  full_join(D5.2.7.CGOV.IMF) %>%
+  mutate(SPI.D5.2.7.CGOV=if_else(is.na(SPI.D5.2.7.CGOV),SPI.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-country,-SPI.D5.2.7.CGOV.IMF) %>%
+  arrange(date, iso3c)
+
+```
+
+---
+
+.center2[
+```{r maps_5.2.7, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+D5.2.7.CGOV <- D5.2.7.CGOV %>%
+  left_join(wbstats::wb_countries()) %>%
+  mutate(weights=1)
+
+spi_mapper('D5.2.7.CGOV', 'SPI.D5.2.7.CGOV', 'Central government accounting status')
+
+
+
+```
+
+]
+---
+
+.center3[
+```{r charts_5.2.7, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('D5.2.7.CGOV', 'SPI.D5.2.7.CGOV', 'Central government accounting status')
+
+```
+
+]
+
+
+
+---
+
+### 5.2.9 Compilation of monetary and financial statistics
+
+Compilation of monetary and financial statistics refers to the Monetary and Financial Statistics Manual 
+(MFSM) in use.  It covers concepts, definitions, classifications of financial instruments and sectors, and 
+accounting rules, and provides a comprehensive analytic framework for monetary and financial planning and policy 
+determination.  The Monetary and Finance Statistics: Compilation Guide (2008) provides detailed guidelines for 
+the compilation of monetary and financial statistics in addition to MFSM. 
+
+1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
+0 Points. Otherwise
+
+```{r mony, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+#read in csv file.
+D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep="/" )) %>%
+  mutate(SPI.D5.2.9.MONY=case_when(
+    MONY=="MFSM 2000" | MONY=="MFSMCG 2016"~ 1, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.9.MONY=MONY)  %>%
+  select(iso3c, country, date, RAW.D5.2.9.MONY, SPI.D5.2.9.MONY  ) %>%
+  arrange(date, country)
+
+#####
+# IMF Data
+#####
+
+#use alternative data source provided by the IMF
+
+#read in data from IMF
+D5.2.9.MONY.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet ="7. MFS Compilation status",
+                               skip=0
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.9.MONY.IMF=case_when(
+    grepl('MFSM 2000',Monetary.and.Financial.Statistics..MFS..Reporting.Status) ~ 1, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.9.MONY.IMF=Monetary.and.Financial.Statistics..MFS..Reporting.Status) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) %>%
+  mutate(date=2019)
+  
+  
+D5.2.9.MONY <-  D5.2.9.MONY %>%
+  full_join(D5.2.9.MONY.IMF) %>%
+  mutate(SPI.D5.2.9.MONY=if_else(is.na(SPI.D5.2.9.MONY),SPI.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-country,-SPI.D5.2.9.MONY.IMF) %>%
+  arrange(date, iso3c)
+
+
+```
+
+
+---
+
+.center2[
+```{r maps_5.2.9, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+D5.2.9.MONY <- D5.2.9.MONY %>%
+  left_join(wbstats::wb_countries()) %>%
+  mutate(weights=1)
+
+spi_mapper('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics')
+
+
+
+```
+
+]
+---
+
+.center3[
+```{r charts_5.2.9, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics')
+
+```
+
+]
+---
+
+--- 
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: 100%;
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+```
+
+---
+
+
+
+
+--- 
+
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: 100%;
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+```
+
+---
+
