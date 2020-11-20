@@ -12,6 +12,7 @@ output:
     fig_width: 5
     fig_height: 4
     fig_caption: true
+    dpi: 300
     background-size: contain;
     css: xaringan-themer.css
 ---
@@ -134,6 +135,24 @@ Based on feedback, goal was for SPI framework to:
 
 
 ---
+# Building on SCI
+
+- Statistical Performance Indicators build on the Statistical Capacity Index
+
+The SCI (in use since 2004) has three dimensions:   
+  1. Methodology (Balance of payments manual in use, CPI base year, SDDS, etc.)   
+  2. Source Data (Agriculture Census, Health Surveys, etc)    
+  3. Periodicity (values for indicators: access to water, child malnutrition, poverty, etc)   
+
+--
+
+Based on comments, Statistical Performance Indicators build on this:
+  - Includes same (or similar) indicators   
+  - But also expands into new areas    
+  - Open Data and Open Code   
+  - Still will provide time series (minimum 3 years) for indicators   
+
+---
 # Framework Overview
 
 - SPI framework covers five dimensions:   
@@ -197,7 +216,61 @@ Based on feedback, goal was for SPI framework to:
 
 
 ---
+# Data Use (5 Pillars)
 
+  * <span style="color:grey"> Pillar 1.1: Data use by national legislature:   
+    * *Not included because of lack of established methodology*   
+  * <span style="color:grey"> Pillar 1.2: Data use by national executive branch:    
+    * *Researching method on use of statistics in Voluntary National Review documents*      
+  * <span style="color:grey">Pillar 1.3: Data use by civil society:    
+    * *Not included because of lack of established methodology*    
+  * <span style="color:grey">Pillar 1.4: Data use by academia:      
+    * *Not included because of lack of established methodology*   
+  * **Pillar 1.5: Data use by international organizations:**  
+    * *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics for international agencies using metadata*    
+
+---
+# Data Services (4 Pillars)
+
+  * **Pillar 2.1: Data Releases:** 
+    * *SDDS/e-GDDS subscription*    
+  * **Pillar 2.2: Online access:** 
+    * *ODIN Open Data Openness score*   
+  * <span style="color:grey"> Pillar 2.3: Advisory/ Analytical Services:  
+    * *Not included because of lack of established methodology*    
+  * **Pillar 2.4: Data services:** 
+    * *NADA metadata available*
+    
+---
+  
+# Data Products (4 Pillars) 
+
+For these pillars, we pull values from the UN SDG database, calculate the share of SDG indicators with a country produced value per country
+
+  * **Pillar 3.1: Social Statistics:** 
+    * *Average score for Goal 1-6 indicators*
+  * **Pillar 3.2: Economic Statistics:** 
+    * *Average score for Goal 7-12 indicators*  
+  * **Pillar 3.3: Environmental Statistics:** 
+    * *Average score for Goal 13-15 indicators*      
+  * **Pillar 3.4: Institutional Statistics:**
+    * *Average score for Goal 16-17 indicators*
+    
+---
+
+# Data Sources (4 Pillars) 
+
+
+  * **Pillar 4.1: Censuses and Surveys:** 
+    * *Average score of 8 Census and Survey Indicators*    
+  * **Pillar 4.2: Administrative Data:** 
+    * *Complete CRVS, <span style="color:red"> availability of SPL admin data (ASPIRE), Education admin data (UNESCO), Labor admin data (ILO) *  
+  * **Pillar 4.3: Geospatial Data:**  
+    * *Geospatial data available at 1st Admin Level according to ODIN* 
+  * <span style="color:grey">Pillar 4.4: Private/citizen generated data:  
+    * *Not included because of lack of established methodology*   
+    
+---
 
 # Data Infrastructure (5 Pillars) 
 
@@ -216,7 +289,7 @@ Based on feedback, goal was for SPI framework to:
 ---
 class: inverse, middle, center
 
-Scores Across Countries
+Overall Scores Across Countries
 
 
 ---
@@ -238,7 +311,7 @@ Countries are grouped into five groups:
 
 ---
 
-
+.center2[
 ```{r spi_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 #Now map the result
@@ -644,127 +717,8 @@ p2_alt2
   
  
 }
-```
 
 
-```{r standards_meta}
-
-#pull data for several of the standards from WDI metadata
-
-# df <- WDI_metadata
-# 
-# # Manipulate and clean final data
-# df <- df %>%
-#   filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
-
-#pull IMF country codes for merging
-imf_codes <- read_csv(file=paste(raw_dir, "metadata","IMF_country_codes.csv", sep="/" ))
-
-```
-
----
-
-### 5.2.4 CPI base year
-
-Consumer Price Index serves as indicators of inflation and reflects changes in the 
- cost of acquiring a fixed basket of goods and services by the average consumer.  
- Weights are usually derived from consumer expenditure surveys and the CPI base year 
- refers to the year the weights were derived.  It is recommended that the base year be
- changed periodically to reflect changes in expenditure structure.  
- 
- 1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 points. Otherwise
- 
-```{r cpiby}
-
-#read in csv file.
-D5.2.4.CPIBY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.csv", sep="/" )) %>%
-  mutate(SPI.D5.2.4.CPIBY=case_when(
-    CPIBY=="annual chained" ~ 1, 
-    (date-as.numeric(CPIBY))<=10 ~ 0.5, #within 10 years of reference period
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.4.CPIBY=CPIBY)  %>%
-  select(iso3c, country, date, RAW.D5.2.4.CPIBY, SPI.D5.2.4.CPIBY  ) %>%
-  arrange(date, country)
-
-#####
-# IMF Data
-#####
-
-#use alternative data source provided by the IMF
-
-#read in data on when the weights were last updated to measure if annual chain linking is done
-D5.2.4.COICOP.WGT <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet = "COICOP Month_Last Change",
-                               skip=2
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country_revised
-  ) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
-  left_join(imf_codes)
-  
-  
-#read in last time the CPI reference period is updated to fill in rest of info  
-D5.2.4.CPI.REF <-  read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet = "CPI Reference Period Review"
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%
-  rename(IMF_country=country) %>%
-  left_join(D5.2.4.COICOP.WGT) #merge CPI weights
-  
-#now calculate whether annual chain linking is used and CPI base year from scratch using this info
-D5.2.4.CPIBY.IMF.RAW <- D5.2.4.CPI.REF %>%
-  filter(!is.na(iso3c)) %>%
-  mutate(CPI_ref_period=str_sub(CPI.reference.period.review,1,4),
-         CPI_ref_period=as.numeric(CPI_ref_period),
-         CPI_weight_change=str_sub(last_change,1,4),
-         CPI_weight_change=as.numeric(CPI_weight_change)) %>%
-  mutate(RAW.D5.2.4.CPIBY.IMF=if_else((CPI_weight_change>=2019 & CPI_ref_period<2020), "annual chained",as.character(CPI_ref_period))) %>%
-  mutate(RAW.D5.2.4.CPIBY.IMF=if_else((iso3c=='AUS' | iso3c=='NZL'),"annual chained",as.character(RAW.D5.2.4.CPIBY.IMF))) #replace Australia and New Zealand as annual chain linking.  They use quarterly cpi releases and do not show up in this dataset
-  
-#score from 2010 to 2019  
-if (exists('D5.2.4.CPIBY.IMF')) {
-    rm(D5.2.4.CPIBY.IMF)
-} 
-
-for (i in c(2015:2019)) {
-  temp <- D5.2.4.CPIBY.IMF.RAW %>%
-    mutate(date=i) %>%
-    mutate(SPI.D5.2.4.CPIBY.IMF=case_when(
-      RAW.D5.2.4.CPIBY.IMF=="annual chained" ~ 1, 
-      (date-as.numeric(RAW.D5.2.4.CPIBY.IMF))<=10 ~ 0.5, #within 10 years of reference period
-      TRUE ~ 0 
-    )) %>%
-    select(iso3c, date, RAW.D5.2.4.CPIBY.IMF, SPI.D5.2.4.CPIBY.IMF  ) %>%
-    arrange(date, iso3c)
-  
-  if (!exists('D5.2.4.CPIBY.IMF')) {
-    D5.2.4.CPIBY.IMF <- temp
-  } else {
-    D5.2.4.CPIBY.IMF <- D5.2.4.CPIBY.IMF %>%
-      bind_rows(temp)
-  }
-  
-}
-
-
-
-#update based on IMF data.  Use manually collected value when other value not available
-D5.2.4.CPIBY <- D5.2.4.CPIBY %>%
-  full_join(D5.2.4.CPIBY.IMF) %>%
-  mutate(SPI.D5.2.4.CPIBY=if_else(!is.na(SPI.D5.2.4.CPIBY.IMF),SPI.D5.2.4.CPIBY.IMF,SPI.D5.2.4.CPIBY)) %>%
-  select(-country,-SPI.D5.2.4.CPIBY.IMF) 
-
-
-
-
-```
-
-.center2[
-```{r map5.2.4}
 spi_mapper('SPI', 'SPI.INDEX', 'Statistical Performance Indicators -  Overall Scores')
 
 
@@ -772,295 +726,6 @@ spi_mapper('SPI', 'SPI.INDEX', 'Statistical Performance Indicators -  Overall Sc
 ```
 
 ]
----
- 
-### 5.2.5 Classification of household consumption
-
-Classification of Individual Consumption According to Purpose (COICOP) 
-is used in household budget surveys, consumer price indices and international 
-comparisons of gross domestic product (GDP) and its component expenditures.  
-Although COICOP is not strictly linked to any particular model of consumer 
-behavior, the classification is designed to broadly reflect differences in 
-income elasticities.  It is an integral part of the SNA1993 and more detailed 
-subdivision of the classes provide comparability between countries and between 
-statistics in these different areas.    
-
-1 Point. Follow Classification of Individual Consumption by Purpose (COICOP)	0 Points.	Otherwise
-
-```{r hous}
-
-#read in csv file.
-D5.2.5.HOUS <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.csv", sep="/" )) %>%
-  mutate(SPI.D5.2.5.HOUS=case_when(
-    HOUS=="COICOP" ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.5.HOUS=HOUS)  %>%
-  select(iso3c, country, date, RAW.D5.2.5.HOUS, SPI.D5.2.5.HOUS  ) %>%
-  arrange(date, country)
-
-#####
-# IMF Data
-#####
-
-#use alternative data source provided by the IMF
-
-#read in data on COICOP from IMF
-D5.2.5.HOUS.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet = "3. Household Consump Class",
-                               skip=0
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.5.HOUS.IMF=case_when(
-    Status=="CIOCOP" ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.5.HOUS.IMF=Status) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
-  left_join(imf_codes) %>%
-  select(iso3c, RAW.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS.IMF ) %>%
-  mutate(date=2019)
-  
-  
-D5.2.5.HOUS <-  D5.2.5.HOUS %>%
-  full_join(D5.2.5.HOUS.IMF) %>%
-  mutate(SPI.D5.2.5.HOUS=if_else(is.na(SPI.D5.2.5.HOUS),SPI.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
-  select(-country,-SPI.D5.2.5.HOUS.IMF) %>%
-  arrange(date, iso3c) 
-```
-
-
----
-
-### 5.2.6 Classification of status of employment 
-
-Classification of status of employment refers to employment data that are 
- compiled using the current international standard International Classification 
- of Status in Employment (ISCE-93).  It classifies jobs with respect to the type
- of explicit or implicit contract of employment between the job holder and the 
- economic unit in which he or she is employed.  Therefore, it aims to provide the
- basis for production of internationally comparable statistics on the employment 
- relationship, including the distinction between salaried employment and self-employment.  
- 
-1 Point. Follow International Labour Organization, International Classification of Status in Employment (ICSE-93) or 2012 North American Industry Classification System (NAICS). 0 Points Otherwise. 
- 
-```{r empl}
-
-#read in csv file.
-D5.2.6.EMPL <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.csv", sep="/" )) %>%
-  mutate(SPI.D5.2.6.EMPL=case_when(
-    EMPL=="ICSE-93" | EMPL=="NAICS" ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.6.EMPL=EMPL)  %>%
-  select(iso3c, country, date, RAW.D5.2.6.EMPL, SPI.D5.2.6.EMPL  ) %>%
-  arrange(date, country)
-
-
-
-
-```
-
----
-
-### 5.2.7 Central government accounting status
-
-Government finance accounting status refers to the accounting basis for 
-reporting central government financial data.  For many countries' government 
-finance data, have been consolidated into one set of accounts capturing all 
-the central government's fiscal activities and following noncash recording basis.  
-Budgetary central government accounts do not necessarily include all central government 
-units, the picture they provide of central government activities is usually incomplete.  
-
-1 Point. Consolidated central government accounting follows noncash recording basis	 
-0.5 Points. Consolidated central government accounting follows cash recording basis	 
-0 Points. Otherwise 
-
-```{r cgov}
-
-#read in csv file.
-D5.2.7.CGOV <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.csv", sep="/" )) %>%
-  mutate(SPI.D5.2.7.CGOV=case_when(
-    CGOV=="AC" ~ 1, 
-    CGOV=="CA" ~ 0.5,
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.7.CGOV=CGOV)  %>%
-  select(iso3c, country, date, RAW.D5.2.7.CGOV, SPI.D5.2.7.CGOV  ) %>%
-  arrange(date, country)
-
-#####
-# IMF Data
-#####
-
-#use alternative data source provided by the IMF
-
-#read in data from IMF
-D5.2.7.CGOV.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet = "5. Cntrl Gct Acct Status",
-                               skip=6
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.7.CGOV.IMF=case_when(
-    General.Government..consolidated.=="AC" ~ 1, 
-    General.Government..consolidated.=="CA" ~ 0.5,
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.7.CGOV.IMF=General.Government..consolidated.) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
-  left_join(imf_codes) %>%
-  select(iso3c, RAW.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV.IMF ) %>%
-  mutate(date=2019)
-  
-  
-D5.2.7.CGOV <-  D5.2.7.CGOV %>%
-  full_join(D5.2.7.CGOV.IMF) %>%
-  mutate(SPI.D5.2.7.CGOV=if_else(is.na(SPI.D5.2.7.CGOV),SPI.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
-  select(-country,-SPI.D5.2.7.CGOV.IMF) %>%
-  arrange(date, iso3c)
-
-```
-
-
----
-
-### 5.2.8 Compilation of government finance statistics
-
-(GFSM) in use for compiling the data.  It provides guidelines on the institutional 
-structure of governments and the presentation of fiscal data in a format similar to 
-business accounting with a balance sheet and income statement plus guidelines on the 
-treatment of exchange rate and other valuation adjustments.  The latest manual GFSM2014 
-is harmonized with the SNA2008. 
-
-1 Point. Follow the latest Government Finance Statistical Manual (2014)/ ESA2010	
-0.5 Points. Previous version is used (GFSM 2001)	
-0 Points. Otherwise
-
-
-```{r fina}
-
-#read in csv file.
-D5.2.8.FINA <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.csv", sep="/" )) %>%
-  mutate(SPI.D5.2.8.FINA=case_when(
-    FINA=="2014" | FINA=="ESA 2010"~ 1, 
-    FINA=="2001" ~ 0.5,
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.8.FINA=FINA)  %>%
-  select(iso3c, country, date, RAW.D5.2.8.FINA, SPI.D5.2.8.FINA  ) %>%
-  arrange(date, country)
-
-
-
-
-```
-
-
----
-
-### 5.2.9 Compilation of monetary and financial statistics
-
-Compilation of monetary and financial statistics refers to the Monetary and Financial Statistics Manual 
-(MFSM) in use.  It covers concepts, definitions, classifications of financial instruments and sectors, and 
-accounting rules, and provides a comprehensive analytic framework for monetary and financial planning and policy 
-determination.  The Monetary and Finance Statistics: Compilation Guide (2008) provides detailed guidelines for 
-the compilation of monetary and financial statistics in addition to MFSM. 
-
-1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
-0 Points. Otherwise
-
-```{r mony}
-
-#read in csv file.
-D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep="/" )) %>%
-  mutate(SPI.D5.2.9.MONY=case_when(
-    MONY=="MFSM 2000" | MONY=="MFSMCG 2016"~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.9.MONY=MONY)  %>%
-  select(iso3c, country, date, RAW.D5.2.9.MONY, SPI.D5.2.9.MONY  ) %>%
-  arrange(date, country)
-
-#####
-# IMF Data
-#####
-
-#use alternative data source provided by the IMF
-
-#read in data from IMF
-D5.2.9.MONY.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet ="7. MFS Compilation status",
-                               skip=0
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.9.MONY.IMF=case_when(
-    grepl('MFSM 2000',Monetary.and.Financial.Statistics..MFS..Reporting.Status) ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.9.MONY.IMF=Monetary.and.Financial.Statistics..MFS..Reporting.Status) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
-  left_join(imf_codes) %>%
-  select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) %>%
-  mutate(date=2019)
-  
-  
-D5.2.9.MONY <-  D5.2.9.MONY %>%
-  full_join(D5.2.9.MONY.IMF) %>%
-  mutate(SPI.D5.2.9.MONY=if_else(is.na(SPI.D5.2.9.MONY),SPI.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
-  select(-country,-SPI.D5.2.9.MONY.IMF) %>%
-  arrange(date, iso3c)
-
-
-```
-
-
-
----
-
-### 5.2.10 Business process
-
-The Generic Statistical Business Process Model (GSBPM) aims to describe 
-statistics production in a general and process-oriented way.  It is used 
-both within and between statistical offices as a common basis for work with 
-statistics production in different ways, such as quality, efficiency, standardization, 
-and process-orientation.  It is used for all types of surveys, and "business" is not 
-related to "business statistics" but refers to the statistical office, simply expressed.  
-
-1 Point. GSBPM is in use
-0 Points. Otherwise
-
-```{r gsbp}
-
-#read in csv file.
-D5.2.10.GSBP <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.csv", sep="/" )) %>%
-  mutate(SPI.D5.2.10.GSBP=case_when(
-    str_to_lower(GSBP)=="yes" ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.10.GSBP=GSBP)  %>%
-  select(iso3c, country, date, RAW.D5.2.10.GSBP, SPI.D5.2.10.GSBP  ) %>%
-  arrange(date, country)
-
-
-
-
-```
-
-
-
-
 
 --- 
 

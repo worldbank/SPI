@@ -26,6 +26,12 @@
   method           from
   print.data.table     
 "
+"2","Registered S3 methods overwritten by 'htmltools':
+  method               from         
+  print.html           tools:rstudio
+  print.shiny.tag      tools:rstudio
+  print.shiny.tag.list tools:rstudio
+"
 "2","
 Attaching package: ‘flextable’
 
