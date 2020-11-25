@@ -1,0 +1,12 @@
+"0","knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.cap = ""&nbsp;"")"
+"0","library(tidyverse)"
+"2","package ‘tidyverse’ was built under R version 4.0.3"
+"2","Registered S3 methods overwritten by 'dbplyr':
+  method         from
+  print.tbl_lazy     
+  print.tbl_sql      
+"
+"2","Error: package or namespace load failed for â€˜tidyverseâ€™ in inDL(x, as.logical(local), as.logical(now), ...):
+ unable to load shared object 'C:/Users/wb469649/OneDrive - WBG/Documents/R/win-library/4.0/Rcpp/libs/x64/Rcpp.dll':
+  LoadLibrary failure:  The specified procedure could not be found.
+"

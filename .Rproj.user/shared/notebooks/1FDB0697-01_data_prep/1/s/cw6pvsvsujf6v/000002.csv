@@ -12,7 +12,7 @@
 "0","            External_debt_Reporting=='Estimate' ~ 0.33,"
 "0","            TRUE ~ 0"
 "0","          )) %>% "
-"0","  mutate(SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else((Income.Group==""High income"" & is.na(External_debt_Reporting)),1,SPI.D1.5.DT.TDS.DPPF.XP.ZS)) %>% #fix an issue where high income countries are not judged on their debt reporting"
+"0","  mutate(SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else(((Income.Group==""High income"" | iso3c %in% c(""WBG"", ""PSE"")) & is.na(External_debt_Reporting)),1,SPI.D1.5.DT.TDS.DPPF.XP.ZS)) %>% #fix an issue where high income countries are not judged on their debt reporting.  Also give credit to West Bank and Gaza as they are not an IMF country"
 "0","  ungroup() %>%"
 "0","  select(iso3c, date,  contains('SPI.D1.5.DT.TDS.DPPF.XP.ZS')) "
 "0",""

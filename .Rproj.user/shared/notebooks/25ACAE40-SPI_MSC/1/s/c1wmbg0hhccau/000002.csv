@@ -9,10 +9,4 @@
 "0",""
 "0","#pull IMF country codes for merging"
 "0","imf_codes <- read_csv(file=paste(raw_dir, ""metadata"",""IMF_country_codes.csv"", sep=""/"" ))"
-"2","Parsed with column specification:
-cols(
-  IMF_code = [32mcol_double()[39m,
-  iso3c = [31mcol_character()[39m,
-  country = [31mcol_character()[39m
-)
-"
+"0",""

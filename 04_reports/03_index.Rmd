@@ -73,13 +73,13 @@ We identify five key dimensions of a country’s statistical performance. These 
 
 ![](SPI_cycle.png)
 
-Statistics have no value unless they are used. The first dimension of the Dashboard is therefore data use. A successful statistical system is one that produces data products that are highly used. 
+Statistics have no value unless they are used. The first dimension of the SPI is therefore data use. A successful statistical system is one that produces data products that are highly used. 
 
-In order to meet those needs, the statistical system needs to develop a range of services that connect users and suppliers and facilitate dialogue between them. The second dimension of the SPI is therefore data services that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.
+In order to meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second dimension of the SPI is therefore data services that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.
 
-The dialogue between users and suppliers in turn drives the design of statistical products that are to be created including the quality of product needed for the country requirement. This will incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third dimension of the SPI is therefore data products. A successful statistical system is one that generates high quality statistical indicators that can track progress for the Sustainable Development Goals (SDGs).
+The dialogue between users and suppliers in turn drives the design of statistical products that are to be created including the quality of product needed for the country requirement. This will incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third dimension of the SPI is therefore data products. A successful statistical system is one that generates high quality statistical indicators that can also track progress for the Sustainable Development Goals (SDGs).
 
-In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens.  The fourth dimension of the dashboard is therefore data sources.  A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.
+In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens.  The fourth dimension of the SPI is therefore data sources.  A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.
 
 For the cycle to be complete, capability needs continuously to be reviewed to ensure that it is enough to deliver the products, services and ultimately data use required. The fifth dimension of the SPI is therefore data infrastructure. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
 The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 below.
@@ -622,7 +622,7 @@ The nested structure of our index and the summation methods used to build an ove
 
 ## Handling Missing Data 
 
-For a full description of the methodology behind each specific indicator, please consult the technical documentation.  However, we did follow an approach of handling missing values and lining up data, which I will describe in general terms below.  For indicators where we had a value for a previous year (say a value in 2018 but not 2019), we would fill in from the previous value.  For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator.
+For a full description of the methodology behind each specific indicator, please consult the technical documentation.  However, we did follow an approach of handling missing values and lining up data, which will be describe in general terms below.  For indicators where we had a value for a previous year (say a value in 2018 but not 2019), we would fill in from the previous value.  For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator.
 
 For indicators where we had no data for any years, we chose not to impute a value.  In that case, the value for that indicator is null and the country will not have a value for any pillars or dimensions where that value is used.
 

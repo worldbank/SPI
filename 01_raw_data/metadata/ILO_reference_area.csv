@@ -1,0 +1,323 @@
+﻿ref_area, ref_area.label, ref_area.sort
+X01,World,1
+X02,World: Low income,2
+X03,World: Lower-middle income,3
+X04,World: Upper-middle income,4
+X05,World: High income,5
+X06,Africa,6
+X07,Africa: Low income,7
+X08,Africa: Lower-middle income,8
+X09,Africa: Upper-middle income,9
+X10,Northern Africa,10
+X11,Northern Africa: Lower-middle income,11
+X12,Northern Africa: Upper-middle income,12
+X13,Sub-Saharan Africa,13
+X14,Sub-Saharan Africa: Low income,14
+X15,Sub-Saharan Africa: Lower-middle income,15
+X16,Sub-Saharan Africa: Upper-middle income,16
+X17,Central Africa,17
+X18,Eastern Africa,18
+X19,Southern Africa,19
+X20,Western Africa,20
+X21,Americas,21
+X22,Americas: Low income,22
+X23,Americas: Lower-middle income,23
+X24,Americas: Upper-middle income,24
+X25,Americas: High income,25
+X26,Latin America and the Caribbean,26
+X27,Latin America and the Caribbean: Low income,27
+X28,Latin America and the Caribbean: Lower-middle income,28
+X29,Latin America and the Caribbean: Upper-middle income,29
+X30,Latin America and the Caribbean: High income,30
+X31,Caribbean,31
+X32,Central America,32
+X33,South America,33
+X34,Northern America,34
+X35,Northern America: High income,35
+X36,Arab States,36
+X37,Arab States: Lower-middle income,37
+X38,Arab States: Upper-middle income,38
+X39,Arab States: High income,39
+X40,Asia and the Pacific,40
+X41,Asia and the Pacific: Low income,41
+X42,Asia and the Pacific: Lower-middle income,42
+X43,Asia and the Pacific: Upper-middle income,43
+X44,Asia and the Pacific: High income,44
+X45,Eastern Asia,45
+X46,Eastern Asia: Low income,46
+X86,Eastern Asia: Lower-middle income,47
+X47,Eastern Asia: Upper-middle income,48
+X48,Eastern Asia: High income,49
+X49,South-Eastern Asia and the Pacific,50
+X51,South-Eastern Asia and the Pacific: Lower-middle income,51
+X52,South-Eastern Asia and the Pacific: Upper-middle income,52
+X53,South-Eastern Asia and the Pacific: High income,53
+X54,South-Eastern Asia,54
+X55,Pacific Islands,55
+X56,Southern Asia,56
+X57,Southern Asia: Low income,57
+X58,Southern Asia: Lower-middle income,58
+X59,Southern Asia: Upper-middle income,59
+X60,Europe and Central Asia,60
+X61,Europe and Central Asia: Lower-middle income,61
+X62,Europe and Central Asia: Upper-middle income,62
+X63,Europe and Central Asia: High income,63
+X64,"Northern, Southern and Western Europe",64
+X65,"Northern, Southern and Western Europe: Upper-middle income",65
+X66,"Northern, Southern and Western Europe: High income",66
+X67,Northern Europe,67
+X68,Southern Europe,68
+X69,Western Europe,69
+X70,Eastern Europe,70
+X71,Eastern Europe: Lower-middle income,71
+X72,Eastern Europe: Upper-middle income,72
+X73,Eastern Europe: High income,73
+X78,Central and Western Asia,74
+X75,Central and Western Asia: Lower-middle income,75
+X76,Central and Western Asia: Upper-middle income,76
+X77,Central and Western Asia: High income,77
+X74,Central Asia,78
+X79,Western Asia,79
+X84,ASEAN,80
+X85,BRICS,81
+X82,European Union 28,82
+X83,G20,83
+X87,World excluding BRICS,84
+X88,G7,85
+X89,MENA,86
+X90,Arab League,87
+X91,CARICOM,88
+AFG,Afghanistan,89
+ALB,Albania,90
+DZA,Algeria,91
+ASM,American Samoa,92
+AND,Andorra,93
+AGO,Angola,94
+AIA,Anguilla,95
+ATG,Antigua and Barbuda,96
+ARG,Argentina,97
+ARM,Armenia,98
+ABW,Aruba,99
+AUS,Australia,100
+AUT,Austria,101
+AZE,Azerbaijan,102
+BHS,Bahamas,103
+BHR,Bahrain,104
+BGD,Bangladesh,105
+BRB,Barbados,106
+BLR,Belarus,107
+BEL,Belgium,108
+BLZ,Belize,109
+BEN,Benin,110
+BMU,Bermuda,111
+BTN,Bhutan,112
+BOL,Bolivia,113
+BIH,Bosnia and Herzegovina,114
+BWA,Botswana,115
+BRA,Brazil,116
+VGB,British Virgin Islands,117
+BRN,Brunei Darussalam,118
+BGR,Bulgaria,119
+BFA,Burkina Faso,120
+BDI,Burundi,121
+KHM,Cambodia,122
+CMR,Cameroon,123
+CAN,Canada,124
+CPV,Cape Verde,125
+CYM,Cayman Islands,126
+CAF,Central African Republic,127
+TCD,Chad,128
+CHA,Channel Islands,129
+CHL,Chile,130
+CHN,China,131
+COL,Colombia,132
+COM,Comoros,133
+COG,Congo,134
+COD,"Congo, Democratic Republic of the",135
+COK,Cook Islands,136
+CRI,Costa Rica,137
+HRV,Croatia,138
+CUB,Cuba,139
+CUW,Curaçao,140
+CYP,Cyprus,141
+CZE,Czechia,142
+CIV,Côte d'Ivoire,143
+DNK,Denmark,144
+DJI,Djibouti,145
+DMA,Dominica,146
+DOM,Dominican Republic,147
+ECU,Ecuador,148
+EGY,Egypt,149
+SLV,El Salvador,150
+GNQ,Equatorial Guinea,151
+ERI,Eritrea,152
+EST,Estonia,153
+SWZ,Eswatini,154
+ETH,Ethiopia,155
+FRO,Faeroe Islands,156
+FLK,Falkland Islands (Malvinas),157
+FJI,Fiji,158
+FIN,Finland,159
+FRA,France,160
+GUF,French Guiana,161
+PYF,French Polynesia,162
+GAB,Gabon,163
+GMB,Gambia,164
+GEO,Georgia,165
+DEU,Germany,166
+GHA,Ghana,167
+GIB,Gibraltar,168
+GRC,Greece,169
+GRL,Greenland,170
+GRD,Grenada,171
+GLP,Guadeloupe,172
+GUM,Guam,173
+GTM,Guatemala,174
+GGY,Guernsey,175
+GIN,Guinea,176
+GNB,Guinea-Bissau,177
+GUY,Guyana,178
+HTI,Haiti,179
+HND,Honduras,180
+HKG,"Hong Kong, China",181
+HUN,Hungary,182
+ISL,Iceland,183
+IND,India,184
+IDN,Indonesia,185
+IRN,"Iran, Islamic Republic of",186
+IRQ,Iraq,187
+IRL,Ireland,188
+IMN,Isle of Man,189
+ISR,Israel,190
+ITA,Italy,191
+JAM,Jamaica,192
+JPN,Japan,193
+JEY,Jersey,194
+JOR,Jordan,195
+KAZ,Kazakhstan,196
+KEN,Kenya,197
+KIR,Kiribati,198
+PRK,"Korea, Democratic People's Republic of",199
+KOR,"Korea, Republic of",200
+KOS,Kosovo,201
+KWT,Kuwait,202
+KGZ,Kyrgyzstan,203
+LAO,Lao People's Democratic Republic,204
+LVA,Latvia,205
+LBN,Lebanon,206
+LSO,Lesotho,207
+LBR,Liberia,208
+LBY,Libya,209
+LIE,Liechtenstein,210
+LTU,Lithuania,211
+LUX,Luxembourg,212
+MAC,"Macau, China",213
+MDG,Madagascar,214
+MWI,Malawi,215
+MYS,Malaysia,216
+MDV,Maldives,217
+MLI,Mali,218
+MLT,Malta,219
+MHL,Marshall Islands,220
+MTQ,Martinique,221
+MRT,Mauritania,222
+MUS,Mauritius,223
+MEX,Mexico,224
+FSM,"Micronesia, Federated States of",225
+MDA,"Moldova, Republic of",226
+MCO,Monaco,227
+MNG,Mongolia,228
+MNE,Montenegro,229
+MSR,Montserrat,230
+MAR,Morocco,231
+MOZ,Mozambique,232
+MMR,Myanmar,233
+NAM,Namibia,234
+NRU,Nauru,235
+NPL,Nepal,236
+NLD,Netherlands,237
+ANT,Netherlands Antilles,238
+NCL,New Caledonia,239
+NZL,New Zealand,240
+NIC,Nicaragua,241
+NER,Niger,242
+NGA,Nigeria,243
+NIU,Niue,244
+NFK,Norfolk Island,245
+MKD,North Macedonia,246
+MNP,Northern Mariana Islands,247
+NOR,Norway,248
+PSE,Occupied Palestinian Territory,249
+OMN,Oman,250
+PAK,Pakistan,251
+PLW,Palau,252
+PAN,Panama,253
+PNG,Papua New Guinea,254
+PRY,Paraguay,255
+PER,Peru,256
+PHL,Philippines,257
+POL,Poland,258
+PRT,Portugal,259
+PRI,Puerto Rico,260
+QAT,Qatar,261
+ROU,Romania,262
+RUS,Russian Federation,263
+RWA,Rwanda,264
+REU,Réunion,265
+SHN,Saint Helena,266
+KNA,Saint Kitts and Nevis,267
+LCA,Saint Lucia,268
+SPM,Saint Pierre and Miquelon,269
+VCT,Saint Vincent and the Grenadines,270
+WSM,Samoa,271
+SMR,San Marino,272
+STP,Sao Tome and Principe,273
+SAU,Saudi Arabia,274
+SEN,Senegal,275
+SRB,Serbia,276
+SYC,Seychelles,277
+SLE,Sierra Leone,278
+SGP,Singapore,279
+SVK,Slovakia,280
+SVN,Slovenia,281
+SLB,Solomon Islands,282
+SOM,Somalia,283
+ZAF,South Africa,284
+SSD,South Sudan,285
+ESP,Spain,286
+LKA,Sri Lanka,287
+SDN,Sudan,288
+SUR,Suriname,289
+SWE,Sweden,290
+CHE,Switzerland,291
+SYR,Syrian Arab Republic,292
+TWN,"Taiwan, China",293
+TJK,Tajikistan,294
+TZA,"Tanzania, United Republic of",295
+THA,Thailand,296
+TLS,Timor-Leste,297
+TGO,Togo,298
+TKL,Tokelau,299
+TON,Tonga,300
+TTO,Trinidad and Tobago,301
+TUN,Tunisia,302
+TUR,Turkey,303
+TKM,Turkmenistan,304
+TCA,Turks and Caicos Islands,305
+TUV,Tuvalu,306
+UGA,Uganda,307
+UKR,Ukraine,308
+ARE,United Arab Emirates,309
+GBR,United Kingdom,310
+USA,United States,311
+VIR,United States Virgin Islands,312
+URY,Uruguay,313
+UZB,Uzbekistan,314
+VUT,Vanuatu,315
+VEN,"Venezuela, Bolivarian Republic of",316
+VNM,Viet Nam,317
+WLF,Wallis and Futuna Islands,318
+ESH,Western Sahara,319
+YEM,Yemen,320
+ZMB,Zambia,321
+ZWE,Zimbabwe,322

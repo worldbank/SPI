@@ -1,0 +1,1816 @@
+"0",""
+"0","#function to download data from hyperlink from OECD"
+"0","hyper_read <-  function(hyperlink) {"
+"0","  tryCatch({"
+"0","    url <- hyperlink"
+"0","    temp <- tempfile()"
+"0","    download.file(url, temp, mode=""wb"")"
+"0","    temp_df <- read_excel(path=temp, #read in the file"
+"0","                          skip=4,"
+"0","                          sheet='Data Summary') %>%"
+"0","      filter(!is.na(year)) %>%"
+"0","      select(source, type, year, starts_with('w_')) %>%"
+"0","      mutate(across(starts_with('w_'),as.character)) %>%"
+"0","      pivot_longer( #reshape to compare national urban rural estimates"
+"0","        cols = starts_with('w_'),"
+"0","        names_to = 'label',"
+"0","        values_to = ""value"""
+"0","      ) %>%"
+"0","      mutate(geo = case_when( #split out national, urban, rural estimates"
+"0","        grepl(""_n$"",label) ~ ""National"","
+"0","        grepl(""_u$"",label) ~ ""Urban"","
+"0","        grepl(""_r$"",label) ~ ""Rural"""
+"0","      )) %>%"
+"0","      mutate(data_available=if_else(!is.na(value),1,0)) %>% #get measure of whether value was available"
+"0","      mutate(data_quality=if_else((!grepl('\\[',value) & data_available==1),1,0)) %>% #values in brackets were not used in estimation."
+"0","      group_by(source, type, year, geo) %>%"
+"0","      summarise("
+"0","       data_available=max(data_available, na.rm=T),"
+"0","       data_quality=max(data_quality, na.rm=T),"
+"0","       data_value = mean(as.numeric(value),na.rm=T))"
+"0","  }, error=function(e){cat(""ERROR :"",conditionMessage(e), ""\n"")})"
+"0","}"
+"0",""
+"0","AFG_df <- hyper_read('https://washdata.org/data/country/AFG/household/download')"
+"2","trying URL 'https://washdata.org/data/country/AFG/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3125126 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"0","USA_df <- hyper_read('https://washdata.org/data/country/USA/household/download')"
+"2","trying URL 'https://washdata.org/data/country/USA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3155668 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"0","GBR_df <- hyper_read('https://washdata.org/data/country/GBR/household/download')"
+"2","trying URL 'https://washdata.org/data/country/GBR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3221557 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"0","safely_managed_raw_df <- country_metadata %>%"
+"0","  filter(region!='Aggregates') %>%"
+"0","  mutate(hyperlink=paste0('https://washdata.org/data/country/',iso3c,'/household/download')) %>%"
+"0","  mutate(data=map( #loop across hyperlinks downloading data"
+"0","    hyperlink,"
+"0","    hyper_read"
+"0","      )) %>%"
+"0","  unnest()"
+"2","trying URL 'https://washdata.org/data/country/ABW/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2884097 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/AFG/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3125126 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/AGO/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2980808 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ALB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3111843 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/AND/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3132288 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ARE/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2968273 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ARG/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3006482 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ARM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3462788 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ASM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2992739 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ATG/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2889462 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/AUS/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3027606 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/AUT/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3219548 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/AZE/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3411121 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BDI/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2988034 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BEL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3218355 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BEN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3105250 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BFA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3117792 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BGD/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3173575 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BGR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3443003 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BHR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3474303 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BHS/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2892823 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BIH/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3407494 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BLR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3174987 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BLZ/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2992461 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BMU/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2925167 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BOL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3228747 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BRA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3584998 bytes (3.4 MB)
+"
+"2","downloaded 3.4 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BRB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2920016 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BRN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3010175 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BTN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3057726 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/BWA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3061224 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CAF/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2935690 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CAN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3221103 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CHE/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3147918 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CHI/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2897898 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CHL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3214880 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CHN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3329515 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CIV/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3153731 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CMR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3038208 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/COD/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2975724 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/COG/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2934396 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/COL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3311838 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/COM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2954796 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CPV/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3052601 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CRI/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3453732 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CUB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3165698 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CUW/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2857495 bytes (2.7 MB)
+"
+"2","downloaded 2.7 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CYM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2877142 bytes (2.7 MB)
+"
+"2","downloaded 2.7 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CYP/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3033996 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/CZE/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3454893 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/DEU/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3371144 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/DJI/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2979238 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/DMA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2879787 bytes (2.7 MB)
+"
+"2","downloaded 2.7 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/DNK/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3188483 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/DOM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3323823 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/DZA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3040715 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ECU/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3129219 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/EGY/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3264540 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ERI/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2890970 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ESP/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3338912 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/EST/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3588715 bytes (3.4 MB)
+"
+"2","downloaded 3.4 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ETH/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3156644 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/FIN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3297368 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/FJI/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3026488 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/FRA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3389004 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/FRO/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2852051 bytes (2.7 MB)
+"
+"2","downloaded 2.7 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/FSM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2986319 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GAB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3005032 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GBR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3221557 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GEO/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3326633 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GHA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3172255 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GIB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2960553 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GIN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3104765 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GMB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3001495 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GNB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2968600 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GNQ/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2893987 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GRC/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3331481 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GRD/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2954393 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GRL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3189574 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GTM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3031374 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GUM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2946536 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/GUY/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2960577 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/HKG/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3095123 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/HND/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3427427 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/HRV/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3052865 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/HTI/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2969871 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/HUN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3466699 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/IDN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3250280 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/IMN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2850446 bytes (2.7 MB)
+"
+"2","downloaded 2.7 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/IND/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3261688 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/IRL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3227095 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/IRN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2951664 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/IRQ/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3153195 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ISL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3420066 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ISR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3209094 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ITA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3353231 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/JAM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3138072 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/JOR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3139215 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/JPN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3610913 bytes (3.4 MB)
+"
+"2","downloaded 3.4 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/KAZ/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3492228 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/KEN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3212608 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/KGZ/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3383640 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/KHM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3148362 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/KIR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3000902 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/KNA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2877297 bytes (2.7 MB)
+"
+"2","downloaded 2.7 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/KOR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3326891 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/KWT/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2986818 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LAO/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2999798 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LBN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2955801 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LBR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2983396 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LBY/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2876512 bytes (2.7 MB)
+"
+"2","downloaded 2.7 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LCA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2951156 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LIE/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2886270 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LKA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3025000 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LSO/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3046893 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LTU/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3452328 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LUX/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3261004 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/LVA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3415232 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MAC/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3005905 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MAF/household/download'
+"
+"1","ERROR :"
+"1"," "
+"1","cannot open URL 'https://washdata.org/data/country/MAF/household/download'"
+"1"," "
+"1","
+"
+"2","trying URL 'https://washdata.org/data/country/MAR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3127228 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MCO/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2917379 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MDA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3677230 bytes (3.5 MB)
+"
+"2","downloaded 3.5 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MDG/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3086131 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MDV/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2965754 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MEX/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3400578 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MHL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3036073 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MKD/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3309520 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MLI/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3134438 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MLT/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3349915 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MMR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2995933 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MNE/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3056184 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MNG/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3240893 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MNP/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3019829 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MOZ/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3090348 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MRT/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3026301 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MUS/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3035585 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MWI/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3302533 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/MYS/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3065454 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/NAM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3043238 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/NCL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2930189 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/NER/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3076180 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/NGA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3246514 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/NIC/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3156141 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/NLD/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3294548 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/NOR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3369816 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/NPL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3134753 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/NRU/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2895565 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/NZL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3138666 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/OMN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2983721 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PAK/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3190143 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PAN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2999907 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PER/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3522030 bytes (3.4 MB)
+"
+"2","downloaded 3.4 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PHL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3139249 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PLW/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3065936 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PNG/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2977962 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/POL/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3371957 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PRI/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2967791 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PRK/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2927092 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PRT/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3351717 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PRY/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3201978 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PSE/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3304960 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/PYF/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2909499 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/QAT/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3113141 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ROU/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3518560 bytes (3.4 MB)
+"
+"2","downloaded 3.4 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/RUS/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3562936 bytes (3.4 MB)
+"
+"2","downloaded 3.4 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/RWA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3210750 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SAU/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2920782 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SDN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2982545 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SEN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3285267 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SGP/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2969756 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SLB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2989363 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SLE/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3053774 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SLV/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3229767 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SMR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2870487 bytes (2.7 MB)
+"
+"2","downloaded 2.7 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SOM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2932718 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SRB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3273246 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SSD/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2940363 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/STP/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2982780 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SUR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2977551 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SVK/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3479497 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SVN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3333002 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SWE/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3223002 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SWZ/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3089470 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SXM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2863685 bytes (2.7 MB)
+"
+"2","downloaded 2.7 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SYC/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2913979 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/SYR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2926002 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TCA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2906254 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TCD/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2952810 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TGO/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3094353 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/THA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3129677 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TJK/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3063198 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TKM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3046368 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TLS/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3005425 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TON/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2999948 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TTO/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2986267 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TUN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3364818 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TUR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3117470 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TUV/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3030069 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/TWN/household/download'
+"
+"1","ERROR :"
+"1"," "
+"1","cannot open URL 'https://washdata.org/data/country/TWN/household/download'"
+"1"," "
+"1","
+"
+"2","trying URL 'https://washdata.org/data/country/TZA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3194175 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/UGA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3315634 bytes (3.2 MB)
+"
+"2","downloaded 3.2 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/UKR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3249969 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/URY/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3150309 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/USA/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3155668 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/UZB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3212209 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/VCT/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2895787 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/VEN/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2971683 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/VGB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2893350 bytes (2.8 MB)
+"
+"2","downloaded 2.8 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/VIR/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 2998407 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/VNM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3209494 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/VUT/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3104035 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/WSM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3075377 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/XKX/household/download'
+"
+"1","ERROR :"
+"1"," "
+"1","cannot open URL 'https://washdata.org/data/country/XKX/household/download'"
+"1"," "
+"1","
+"
+"2","trying URL 'https://washdata.org/data/country/YEM/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3003353 bytes (2.9 MB)
+"
+"2","downloaded 2.9 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ZAF/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3499751 bytes (3.3 MB)
+"
+"2","downloaded 3.3 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ZMB/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3266852 bytes (3.1 MB)
+"
+"2","downloaded 3.1 MB
+
+"
+"2","trying URL 'https://washdata.org/data/country/ZWE/household/download'
+"
+"2","Content type 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+"2"," length 3100203 bytes (3.0 MB)
+"
+"2","downloaded 3.0 MB
+
+"
+"0","write_excel_csv(safely_managed_raw_df,"
+"0","                path=paste(raw_dir, '1.5_DUIO/Safely_Managed_Water_data.csv', sep=""/""))"
+"0",""
+"0",""

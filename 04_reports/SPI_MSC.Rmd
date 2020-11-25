@@ -11,6 +11,7 @@ output:
       countIncrementalSlides: false
     fig_width: 5
     fig_height: 4
+    dpi: 250
     fig_caption: true
     background-size: contain;
     css: xaringan-themer.css
@@ -54,6 +55,8 @@ library(ggpmisc)
 library(jsonlite)
 library(httr)
 library(readxl)
+library(kableExtra)
+
 style_mono_accent(base_color = "#009FDA",
                   title_slide_background_color = 'white',
                   title_slide_text_color = '#002244',
@@ -75,9 +78,301 @@ wgt <- 1
 
 ```
 
+```{r load, include=FALSE}
+
+#add in population
+pop_df <- wbstats::wb(country="all",
+             indicator='SP.POP.TOTL',
+             startdate=2004,
+             enddate=2019) %>%
+  mutate(date=as.numeric(date)) %>%
+  mutate(population=value) %>%
+  select(country, date, population) 
+
+#import data
+SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
+    left_join(pop_df) %>%
+  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+
+
+
+
+
+
+#metadata 
+metadata2 <- data.frame(
+  series = c('SPI.INDEX', 'SPI.INDEX.DIM1', 'SPI.INDEX.DIM2', 'SPI.INDEX.DIM3', 'SPI.INDEX.DIM4', 'SPI.INDEX.DIM5'),
+  indicator_name = c('SPI Overall Score', 'Dimension 1: Data Use', 'Dimension 2: Data Services', 'Dimension 3: Data Products', 'Dimension 4: Data Sources', 'Dimension 5: Data Infrastructure')
+)
+
+metadata  <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep="")) %>%
+  rename(series=source_id,
+         indicator_name=source_name) %>%
+  bind_rows(metadata2)
+
+#get list of country info
+country_list <- wbstats::wbcountries()
+
+
+SPI_2019 <- SPI %>%
+  filter(date==2019) %>%
+  filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
+  mutate(ISO_A3_EH=iso3c) %>%
+  mutate(across(contains("SPI"),~1*.))
+
+#read in TopoJSON from World Bank
+#countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
+#                                     what = "sp")
+
+```
+
+# Introduction
+
+- World Bank Development Data Group (DECDG) will be releasing new set of Statistical Performance Indicators along with WDR
+
+- Will be major overhaul of Statistical Capacity Index
+
+- Statistical Performance Indicators are tool for countries/donors to assess statistical system
+
+Based on feedback, goal was for SPI framework to:  
+  - Be forward looking (relevant at least 15 years)   
+  - Measure less advanced systems, as well as more advanced systems
+  - Cover entire national statistical system, not just NSO   
+  - Give countries incentives to build modern statistical system
+
 
 
 ---
+# Building on SCI
+
+- Statistical Performance Indicators build on the Statistical Capacity Index
+
+The SCI (in use since 2004) has three dimensions:   
+  1. Methodology (Balance of payments manual in use, CPI base year, SDDS, etc.)   
+  2. Source Data (Agriculture Census, Health Surveys, etc)    
+  3. Periodicity (values for indicators: access to water, child malnutrition, poverty, etc)   
+
+--
+
+Based on comments, Statistical Performance Indicators build on this:
+  - Includes same (or similar) indicators   
+  - But also expands into new areas    
+  - Open Data and Open Code   
+  - Still will provide time series (minimum 3 years) for indicators   
+
+---
+
+# Framework Overview
+
+- SPI framework covers five dimensions:   
+  1. Data Use
+      * Indicators that capture demand side of statistical system 
+
+---
+# Framework Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system   
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services
+
+---
+# Framework Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system  
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs
+
+---
+# Framework Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system   
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
+  4. Data Sources
+      * Censuses and surveys, admin data, geospatial, private/citizen generated data    
+---
+ # Framework  Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system  
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
+  4. Data Sources
+      * Censuses and surveys, admin data, geospatial, private/citizen generated data      
+  5. Data Infrastructure
+      * Legislation and governance, standards & methods, skill, partnerships, and finance
+
+
+
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_dashboard.png)]
+
+
+---
+
+
+
+```{r overall_sumstats, message=FALSE, warning=FALSE, include=FALSE}
+        #add function to produce weighted summary stats
+        
+indicators<-c(#
+              "SPI.D2.1.GDDS",
+              "SPI.D5.2.1.SNAU",
+              "SPI.D5.2.2.NABY",
+              "SPI.D5.2.3.CNIN",
+              "SPI.D5.2.4.CPIBY",
+              "SPI.D5.2.5.HOUS",
+              "SPI.D5.2.6.EMPL",
+              "SPI.D5.2.7.CGOV",
+              "SPI.D5.2.8.FINA",
+              "SPI.D5.2.9.MONY",
+              "SPI.D5.2.10.GSBP")
+
+        #produce by region
+        sumstats<- SPI_2019 %>%
+            group_by(region) %>%
+            filter(!is.na(region)) %>%
+            select(region,  all_of(indicators), weights) %>%
+            summarise_at( all_of(indicators),~round(wtd.mean(as.numeric(.),as.numeric(weights), na.rm=T),2)) 
+        
+        #produce global number
+        sumstats_gl<- SPI_2019 %>%
+            mutate(region='Global') %>%
+            group_by(region) %>%
+            select(region,  all_of(indicators), weights) %>%
+            summarise_at( all_of(indicators),~round(wtd.mean(as.numeric(.),as.numeric(weights), na.rm=T),2)) 
+        
+        
+        #transpose data
+        sumstats_df_long <-sumstats_gl %>%
+            bind_rows(sumstats) 
+        
+        sumstats_df <- as.data.frame(t(sumstats_df_long %>% select(-region)))
+        colnames(sumstats_df) = sumstats_df_long$region 
+        
+        
+        sumstats_df <- sumstats_df %>%
+            rownames_to_column() %>%
+            rename(series=rowname)
+        
+        
+        #create labels df
+        metadata_tab2_overall <- metadata %>% 
+            janitor::clean_names() %>%
+            filter(series %in%  all_of(indicators)) %>%
+            select(series, indicator_name)
+        
+        
+        #add variable label
+        sumstats_df <- sumstats_df %>%
+            left_join(metadata_tab2_overall) %>%
+            rename(Series=series,
+                   Label=indicator_name) %>%
+          select(Label, everything()) %>%
+          select(-Series)
+        
+
+  
+```
+
+
+
+
+class: inverse, middle, center
+
+Overview of Scores by Indicator
+
+
+---
+
+# Mean by Region
+
+.reduced[
+
+```{r sumstats_table, echo=FALSE, out.height=12, out.width=10}
+
+kable(sumstats_df,
+      digits=2,
+      caption="Statistical Performance Indicator Summary Statistics for 2019",
+      format='html') %>%
+  # column_spec(2,  background = "#e9c46a") %>%
+  # column_spec(6,  color='white', background = "#264653") %>%
+  kable_styling(bootstrap_options = c('hover', 'striped')) %>%
+  pack_rows(start_row=1,end_row=1, group_label='Dimension 2: Data Services') %>%
+  pack_rows(start_row=2,end_row=11, group_label='Dimension 5: Data Infrastructure') 
+  
+  
+```
+]
+
+---
+class: inverse, middle, center
+
+Trends by Region
+
+---
+
+
+
+.center3[
+```{r trends, echo=FALSE, fig.height=10, fig.width=12, message=FALSE, warning=FALSE, dpi=300}
+
+  title <- 'Statistical Performance Indicators'  
+
+ # #add line graph over time
+  p4 <- SPI  %>%
+    pivot_longer(
+      cols=indicators,
+      names_to='series',
+      values_to='data_available'
+    ) %>%
+    left_join(metadata_tab2_overall) %>%
+    group_by( date, indicator_name, region) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
+    mutate(Score=mean(data_available, na.rm=T),
+           Label = paste(round(Score,2))) %>%
+    ungroup() %>%
+    ggplot(aes(y=Score, x=date, color=region)) +
+      facet_wrap(~indicator_name) +
+      geom_point() +
+      geom_line(fill='blue') +
+      # geom_text_repel(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Date', sep=" - "),100),
+      caption = 'Source: IMF/World Bank'
+      ) +
+      expand_limits(y=c(0,1)) +
+      theme_bw() +
+      theme(
+        legend.position = 'top'
+      ) 
+  p4
+
+
+```
+
+
+]
+
+---
+class: inverse, middle, center
+
+Details by Indicator
 
 
 ```{r spi_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
@@ -233,7 +528,7 @@ spi_charts  <- function(data, indicator, title) {
       expand_limits(y=c(0,1)) +
       theme_bw()
       
- (p2 / p3) 
+ (p3 / p4) 
     
 }
 
@@ -656,7 +951,7 @@ e-GDDS websites.
 1 Point. Subscribing to IMF SDDS+, SDDS, or e-GDDS standards with SDMX Data Available	
 0.5 Points. e-GDDS standards, but no SDMX   
 0 Points. Otherwise
----
+
 ```{r gdds, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 #####
 # IMF Data
@@ -1107,7 +1402,79 @@ spi_charts('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financ
 
 ]
 ---
+# Financial Soundness Indicators
 
+Scoring:    
+
+  * 1 point. 2019 value for: Financial Soundness Indicators, Core Set, Deposit Takers, Asset Quality, Non-performing Loans to Total Gross Loans, Percent value    
+  * 0.5 Points. 2018 value for: Financial Soundness Indicators, Core Set, Deposit Takers, Asset Quality, Non-performing Loans to Total Gross Loans, Percent value   
+  * 0 points. Else    
+
+---
+```{r fsi, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+
+#####
+# IMF Data
+#####
+
+#use alternative data source provided by the IMF
+
+#read in data from IMF
+D5.2.9.FSI.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet ="FSI Annual",
+                               skip=1
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.9.FSI.IMF=case_when(
+    Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent==2019 ~ 1, 
+    Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent==2018 ~ 0.5, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.9.FSI.IMF=Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c, RAW.D5.2.9.FSI.IMF,SPI.D5.2.9.FSI.IMF ) %>%
+  mutate(date=2019)
+  
+  
+D5.2.9.FSI <-  D5.2.9.FSI.IMF %>%
+  mutate(SPI.D5.2.9.FSI=SPI.D5.2.9.FSI.IMF) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-SPI.D5.2.9.FSI.IMF) %>%
+  arrange(date, iso3c)
+
+
+```
+
+
+---
+
+.center2[
+```{r maps_5.2.9.fsi, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+D5.2.9.FSI <- D5.2.9.FSI %>%
+  left_join(wbstats::wb_countries()) %>%
+  mutate(weights=1)
+
+spi_mapper('D5.2.9.FSI', 'SPI.D5.2.9.FSI', 'Financial Soundness Indicators, Core Set')
+
+
+
+```
+
+]
+---
+
+.center3[
+```{r charts_5.2.9.fsi, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('D5.2.9.FSI', 'SPI.D5.2.9.FSI', 'Financial Soundness Indicators, Core Set')
+
+```
+]
 --- 
 
 
@@ -1147,5 +1514,105 @@ spi_charts('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financ
     }
 ```
 
+
+---
+class: inverse, middle, center
+
+Overview of Framework
+
+
+---
+ # Framework  Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system  
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
+  4. Data Sources
+      * Censuses and surveys, admin data, geospatial, private/citizen generated data      
+  5. Data Infrastructure
+      * Legislation and governance, standards & methods, skill, partnerships, and finance
+
+
+
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_dashboard.png)]
+
+
+---
+# Data Use (5 Pillars)
+
+  * <span style="color:grey"> Pillar 1.1: Data use by national legislature:   
+    * *Not included because of lack of established methodology*   
+  * <span style="color:grey"> Pillar 1.2: Data use by national executive branch:    
+    * *Researching method on use of statistics in Voluntary National Review documents*      
+  * <span style="color:grey">Pillar 1.3: Data use by civil society:    
+    * *Not included because of lack of established methodology*    
+  * <span style="color:grey">Pillar 1.4: Data use by academia:      
+    * *Not included because of lack of established methodology*   
+  * **Pillar 1.5: Data use by international organizations:**  
+    * *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics for international agencies using metadata*    
+
+---
+# Data Services (4 Pillars)
+
+  * **Pillar 2.1: Data Releases:** 
+    * *SDDS/e-GDDS subscription*    
+  * **Pillar 2.2: Online access:** 
+    * *ODIN Open Data Openness score*   
+  * <span style="color:grey"> Pillar 2.3: Advisory/ Analytical Services:  
+    * *Not included because of lack of established methodology*    
+  * **Pillar 2.4: Data services:** 
+    * *NADA metadata available*
+    
+---
+  
+# Data Products (4 Pillars) 
+
+For these pillars, we pull values from the UN SDG database, calculate the share of SDG indicators with a country produced value per country
+
+  * **Pillar 3.1: Social Statistics:** 
+    * *Average score for Goal 1-6 indicators*
+  * **Pillar 3.2: Economic Statistics:** 
+    * *Average score for Goal 7-12 indicators*  
+  * **Pillar 3.3: Environmental Statistics:** 
+    * *Average score for Goal 13-15 indicators*      
+  * **Pillar 3.4: Institutional Statistics:**
+    * *Average score for Goal 16-17 indicators*
+    
 ---
 
+# Data Sources (4 Pillars) 
+
+
+  * **Pillar 4.1: Censuses and Surveys:** 
+    * *Average score of 8 Census and Survey Indicators*    
+  * **Pillar 4.2: Administrative Data:** 
+    * *Complete CRVS, <span style="color:red"> availability of SPL admin data (ASPIRE), Education admin data (UNESCO), Labor admin data (ILO) *  
+  * **Pillar 4.3: Geospatial Data:**  
+    * *Geospatial data available at 1st Admin Level according to ODIN* 
+  * <span style="color:grey">Pillar 4.4: Private/citizen generated data:  
+    * *Not included because of lack of established methodology*   
+    
+---
+
+# Data Infrastructure (5 Pillars) 
+
+
+  * <span style="color:red"> Pillar 5.1: Legislation and Governance:     
+    * *SDG 17.18.2 - National Statistical Legislation complies with UN Fundamental Principles of Statistics (PARIS21)*  
+  * **Pillar 5.2: Standards and Methods:** 
+    * *Average score for 10 Standards and Methods indicators*  
+  * <span style="color:grey"> Pillar 5.3: Skills:  
+    * *Considering PARIS21 measure of statistical literacy*    
+  * <span style="color:grey"> Pillar 5.4: Partnerships:  
+    * *Not included because of lack of established methodology*    
+  * <span style="color:red"> Pillar 5.5: Finance:  
+    * *SDG 17.18.3 - Statistical Plan fully funded (PARIS21)*   
+    
+---

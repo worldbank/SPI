@@ -1,3 +1,5 @@
 "0",""
+"0","D2.1_DSDR.IMF <- D2.1_DSDR.IMF %>%"
+"0","  mutate(weights=1)"
 "0",""
-"0",""
+"0","spi_mapper('D2.1_DSDR.IMF', 'SPI.D2.1.GDDS', 'Data Dissemination Standards')"

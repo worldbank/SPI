@@ -10,18 +10,19 @@
 "0","library(patchwork)"
 "0","library(ggpmisc)"
 "0","library(jsonlite)"
-"2","package ‘jsonlite’ was built under R version 4.0.2"
-"2","
-Attaching package: ‘jsonlite’
-
-"
-"2","The following object is masked from ‘package:purrr’:
-
-    flatten
-
-"
 "0","library(httr)"
 "0","library(readxl)"
+"0","library(kableExtra)"
+"2","package ‘kableExtra’ was built under R version 4.0.3"
+"2","
+Attaching package: ‘kableExtra’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    group_rows
+
+"
 "0","style_mono_accent(base_color = ""#009FDA"","
 "0","                  title_slide_background_color = 'white',"
 "0","                  title_slide_text_color = '#002244',"

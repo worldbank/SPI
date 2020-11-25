@@ -5,6 +5,8 @@
     <meta charset="utf-8" />
     <meta name="author" content="SPI Team" />
     <script src="libs/header-attrs/header-attrs.js"></script>
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -45,7 +47,285 @@ class: center, middle, inverse, title-slide
 
 
 
+# Introduction
+
+- World Bank Development Data Group (DECDG) will be releasing new set of Statistical Performance Indicators along with WDR
+
+- Will be major overhaul of Statistical Capacity Index
+
+- Statistical Performance Indicators are tool for countries/donors to assess statistical system
+
+Based on feedback, goal was for SPI framework to:  
+  - Be forward looking (relevant at least 15 years)   
+  - Measure less advanced systems, as well as more advanced systems
+  - Cover entire national statistical system, not just NSO   
+  - Give countries incentives to build modern statistical system
+
+
+
 ---
+# Building on SCI
+
+- Statistical Performance Indicators build on the Statistical Capacity Index
+
+The SCI (in use since 2004) has three dimensions:   
+  1. Methodology (Balance of payments manual in use, CPI base year, SDDS, etc.)   
+  2. Source Data (Agriculture Census, Health Surveys, etc)    
+  3. Periodicity (values for indicators: access to water, child malnutrition, poverty, etc)   
+
+--
+
+Based on comments, Statistical Performance Indicators build on this:
+  - Includes same (or similar) indicators   
+  - But also expands into new areas    
+  - Open Data and Open Code   
+  - Still will provide time series (minimum 3 years) for indicators   
+
+---
+
+# Framework Overview
+
+- SPI framework covers five dimensions:   
+  1. Data Use
+      * Indicators that capture demand side of statistical system 
+
+---
+# Framework Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system   
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services
+
+---
+# Framework Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system  
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs
+
+---
+# Framework Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system   
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
+  4. Data Sources
+      * Censuses and surveys, admin data, geospatial, private/citizen generated data    
+---
+ # Framework  Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system  
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
+  4. Data Sources
+      * Censuses and surveys, admin data, geospatial, private/citizen generated data      
+  5. Data Infrastructure
+      * Legislation and governance, standards &amp; methods, skill, partnerships, and finance
+
+
+
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_dashboard.png)]
+
+
+---
+
+
+
+
+
+
+
+
+class: inverse, middle, center
+
+Overview of Scores by Indicator
+
+
+---
+
+# Mean by Region
+
+.reduced[
+
+&lt;table class="table table-hover table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;caption&gt;Statistical Performance Indicator Summary Statistics for 2019&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Label &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Global &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; East Asia &amp;amp; Pacific &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Europe &amp;amp; Central Asia &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Latin America &amp;amp; Caribbean &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Middle East &amp;amp; North Africa &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; North America &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; South Asia &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sub-Saharan Africa &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr grouplength="1"&gt;&lt;td colspan="9" style="border-bottom: 1px solid;"&gt;&lt;strong&gt;Dimension 2: Data Services&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; SDDS/e-GDDS subscription &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.71 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.71 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.91 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.65 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.62 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.52 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr grouplength="10"&gt;&lt;td colspan="9" style="border-bottom: 1px solid;"&gt;&lt;strong&gt;Dimension 5: Data Infrastructure&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; System of national accounts in use &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.77 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.91 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.65 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; National Accounts base year &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.42 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.45 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.24 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; Classification of national industry &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.70 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.62 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.95 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.67 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.62 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.62 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.51 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; CPI base year &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.80 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.44 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.42 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.44 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.46 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; Classification of household consumption &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.74 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.67 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.96 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.67 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.80 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.50 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.57 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; Classification of status of employment &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.31 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.29 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.77 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.07 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.07 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; Central government accounting status &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.41 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.38 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.81 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.37 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.17 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; Compilation of government finance statistics &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.42 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.80 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; Compilation of monetary and financial statistics &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.79 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.94 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.96 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.93 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left; padding-left:  2em;" indentlevel="1"&gt; Business process &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.32 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.85 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+---
+class: inverse, middle, center
+
+Trends by Region
+
+---
+
+
+
+.center3[
+![](SPI_MSC_files/figure-html/trends-1.png)&lt;!-- --&gt;
+
+
+]
+
+---
+class: inverse, middle, center
+
+Details by Indicator
 
 
 
@@ -95,7 +375,7 @@ e-GDDS websites.
 1 Point. Subscribing to IMF SDDS+, SDDS, or e-GDDS standards with SDMX Data Available	
 0.5 Points. e-GDDS standards, but no SDMX   
 0 Points. Otherwise
----
+
 
 ---
 
@@ -225,7 +505,29 @@ the compilation of monetary and financial statistics in addition to MFSM.
 
 ]
 ---
+# Financial Soundness Indicators
 
+Scoring:    
+
+  * 1 point. 2019 value for: Financial Soundness Indicators, Core Set, Deposit Takers, Asset Quality, Non-performing Loans to Total Gross Loans, Percent value    
+  * 0.5 Points. 2018 value for: Financial Soundness Indicators, Core Set, Deposit Takers, Asset Quality, Non-performing Loans to Total Gross Loans, Percent value   
+  * 0 points. Else    
+
+---
+
+
+
+---
+
+.center2[
+![](SPI_MSC_files/figure-html/maps_5.2.9.fsi-1.png)&lt;!-- --&gt;
+
+]
+---
+
+.center3[
+![](SPI_MSC_files/figure-html/charts_5.2.9.fsi-1.png)&lt;!-- --&gt;
+]
 --- 
 
 
@@ -265,8 +567,108 @@ the compilation of monetary and financial statistics in addition to MFSM.
     }
 &lt;/style&gt;
 
+
+---
+class: inverse, middle, center
+
+Overview of Framework
+
+
+---
+ # Framework  Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system  
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
+  4. Data Sources
+      * Censuses and surveys, admin data, geospatial, private/citizen generated data      
+  5. Data Infrastructure
+      * Legislation and governance, standards &amp; methods, skill, partnerships, and finance
+
+
+
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_dashboard.png)]
+
+
+---
+# Data Use (5 Pillars)
+
+  * &lt;span style="color:grey"&gt; Pillar 1.1: Data use by national legislature:   
+    * *Not included because of lack of established methodology*   
+  * &lt;span style="color:grey"&gt; Pillar 1.2: Data use by national executive branch:    
+    * *Researching method on use of statistics in Voluntary National Review documents*      
+  * &lt;span style="color:grey"&gt;Pillar 1.3: Data use by civil society:    
+    * *Not included because of lack of established methodology*    
+  * &lt;span style="color:grey"&gt;Pillar 1.4: Data use by academia:      
+    * *Not included because of lack of established methodology*   
+  * **Pillar 1.5: Data use by international organizations:**  
+    * *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics for international agencies using metadata*    
+
+---
+# Data Services (4 Pillars)
+
+  * **Pillar 2.1: Data Releases:** 
+    * *SDDS/e-GDDS subscription*    
+  * **Pillar 2.2: Online access:** 
+    * *ODIN Open Data Openness score*   
+  * &lt;span style="color:grey"&gt; Pillar 2.3: Advisory/ Analytical Services:  
+    * *Not included because of lack of established methodology*    
+  * **Pillar 2.4: Data services:** 
+    * *NADA metadata available*
+    
+---
+  
+# Data Products (4 Pillars) 
+
+For these pillars, we pull values from the UN SDG database, calculate the share of SDG indicators with a country produced value per country
+
+  * **Pillar 3.1: Social Statistics:** 
+    * *Average score for Goal 1-6 indicators*
+  * **Pillar 3.2: Economic Statistics:** 
+    * *Average score for Goal 7-12 indicators*  
+  * **Pillar 3.3: Environmental Statistics:** 
+    * *Average score for Goal 13-15 indicators*      
+  * **Pillar 3.4: Institutional Statistics:**
+    * *Average score for Goal 16-17 indicators*
+    
 ---
 
+# Data Sources (4 Pillars) 
+
+
+  * **Pillar 4.1: Censuses and Surveys:** 
+    * *Average score of 8 Census and Survey Indicators*    
+  * **Pillar 4.2: Administrative Data:** 
+    * *Complete CRVS, &lt;span style="color:red"&gt; availability of SPL admin data (ASPIRE), Education admin data (UNESCO), Labor admin data (ILO) *  
+  * **Pillar 4.3: Geospatial Data:**  
+    * *Geospatial data available at 1st Admin Level according to ODIN* 
+  * &lt;span style="color:grey"&gt;Pillar 4.4: Private/citizen generated data:  
+    * *Not included because of lack of established methodology*   
+    
+---
+
+# Data Infrastructure (5 Pillars) 
+
+
+  * &lt;span style="color:red"&gt; Pillar 5.1: Legislation and Governance:     
+    * *SDG 17.18.2 - National Statistical Legislation complies with UN Fundamental Principles of Statistics (PARIS21)*  
+  * **Pillar 5.2: Standards and Methods:** 
+    * *Average score for 10 Standards and Methods indicators*  
+  * &lt;span style="color:grey"&gt; Pillar 5.3: Skills:  
+    * *Considering PARIS21 measure of statistical literacy*    
+  * &lt;span style="color:grey"&gt; Pillar 5.4: Partnerships:  
+    * *Not included because of lack of established methodology*    
+  * &lt;span style="color:red"&gt; Pillar 5.5: Finance:  
+    * *SDG 17.18.3 - Statistical Plan fully funded (PARIS21)*   
+    
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

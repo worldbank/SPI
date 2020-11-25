@@ -1237,11 +1237,267 @@ D3.15.AKI <- WDI_metadata %>%
             External_debt_Reporting=='Estimate' ~ 0.33,
             TRUE ~ 0
           )) %>% 
-  mutate(SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else((Income.Group=="High income" & is.na(External_debt_Reporting)),1,SPI.D1.5.DT.TDS.DPPF.XP.ZS)) %>% #fix an issue where high income countries are not judged on their debt reporting
+  mutate(SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else(((Income.Group=="High income" | iso3c %in% c("WBG", "PSE")) & is.na(External_debt_Reporting)),1,SPI.D1.5.DT.TDS.DPPF.XP.ZS)) %>% #fix an issue where high income countries are not judged on their debt reporting.  Also give credit to West Bank and Gaza as they are not an IMF country
   ungroup() %>%
   select(iso3c, date,  contains('SPI.D1.5.DT.TDS.DPPF.XP.ZS')) 
 
 ```
+
+
+### Safely Managed Water
+
+The WHO/UNCIECF JMP has estimated the safely managed water access by a simple linear regression based on the following data sources: Nationally representative household surveys (e.g. DHS, MICS) ; Population and housing censuses; Administrative data (such as regulatory agencies); Service provider data.
+JMP has provided the country files that include the original data sources.  
+
+Find the following note on estimates:
+The indicator for SDG 6.1, safely managed drinking water services are defined as use of an improved drinking water source which is accessible on premises, available when needed and free from contamination. To make an estimate of safely managed services, information on the use of improved drinking water sources is combined with information on the accessibility, availability and quality of drinking water. Estimates are based on the minimum value of these criteria or, where estimates are available for both rural and urban, a population weighted average of the two. The JMP reports estimates for safely managed drinking water provided information is available for at least 50 per cent of the population on quality of drinking water and either accessibility or availability.
+
+From the methodology: https://washdata.org/sites/default/files/JMP%20methodology-Apr-2018-5.pdf
+
+Extension rules (beyond the years covered by data inputs and extrapolation)
+
+1. Estimates are extended forwards four years from the latest estimate, and backwards four years from the earliest estimate
+
+2. Estimates are extended forwards or backwards indefinitely, if the estimate is 99.5% or greater, or 0.5% or less. 
+
+We take therefore useable data if it appears within an 8 year window of the reference date.  Scoring:
+
+  * 1 Point. At least two estimates, with breakdowns for urban/rural areas, within an 8 year window       
+  * 0.5 Points. At least two estimates, but not an urban/rural breakdown, within an 8 year window   
+  * 0 Points. Otherwise
+
+
+```{r safely_managed, eval=FALSE, include=FALSE}
+
+#function to download data from hyperlink from OECD
+hyper_read <-  function(hyperlink) {
+  tryCatch({
+    url <- hyperlink
+    temp <- tempfile()
+    download.file(url, temp, mode="wb")
+    temp_df <- read_excel(path=temp, #read in the file
+                          skip=4,
+                          sheet='Data Summary') %>%
+      filter(!is.na(year)) %>%
+      select(source, type, year, starts_with('w_')) %>%
+      mutate(across(starts_with('w_'),as.character)) %>%
+      pivot_longer( #reshape to compare national urban rural estimates
+        cols = starts_with('w_'),
+        names_to = 'label',
+        values_to = "value"
+      ) %>%
+      mutate(geo = case_when( #split out national, urban, rural estimates
+        grepl("_n$",label) ~ "National",
+        grepl("_u$",label) ~ "Urban",
+        grepl("_r$",label) ~ "Rural"
+      )) %>%
+      mutate(data_available=if_else(!is.na(value),1,0)) %>% #get measure of whether value was available
+      mutate(data_quality=if_else((!grepl('\\[',value) & data_available==1),1,0)) %>% #values in brackets were not used in estimation.
+      group_by(source, type, year, geo) %>%
+      summarise(
+       data_available=max(data_available, na.rm=T),
+       data_quality=max(data_quality, na.rm=T),
+       data_value = mean(as.numeric(value),na.rm=T))
+  }, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
+}
+
+AFG_df <- hyper_read('https://washdata.org/data/country/AFG/household/download')
+
+USA_df <- hyper_read('https://washdata.org/data/country/USA/household/download')
+GBR_df <- hyper_read('https://washdata.org/data/country/GBR/household/download')
+
+safely_managed_raw_df <- country_metadata %>%
+  filter(region!='Aggregates') %>%
+  mutate(hyperlink=paste0('https://washdata.org/data/country/',iso3c,'/household/download')) %>%
+  mutate(data=map( #loop across hyperlinks downloading data
+    hyperlink,
+    hyper_read
+      )) %>%
+  unnest()
+
+write_excel_csv(safely_managed_raw_df,
+                path=paste(raw_dir, '1.5_DUIO/Safely_Managed_Water_data.csv', sep="/"))
+
+
+```
+
+```{r safely_managed_scored, include=FALSE}
+
+#read in saved data
+safely_managed_raw_df <- read_csv(file=paste(raw_dir, '1.5_DUIO/Safely_Managed_Water_data.csv', sep="/"))
+
+#score the data
+
+#function to calculate 10 year window
+window_fun <- function(date_start, date_end) {
+  temp <- safely_managed_raw_df %>%
+  filter(between(year,date_start,date_end) ) %>%
+  group_by(iso3c, geo) %>%
+  mutate(max_value=max(data_value, na.rm=T),
+         max_value=if_else(max_value!=-Inf,max_value,-99)
+         ) %>%
+  mutate(data_quality=if_else((max_value>=99.5),1,as.numeric(data_quality))) %>% #because JMP imputes values indefinitely forward if value for water reaches >99.5%
+  summarise(data_quality=sum(data_quality, na.rm=T)) %>% #average over 10 years
+  pivot_wider(
+    names_from = 'geo',
+    values_from = 'data_quality'
+  ) %>%
+  mutate(
+    SPI.D1.5.SAFE.MAN.WATER=case_when(
+      (Rural>=2 & Urban>=2) ~ 1, #urban rural breakdown gets 1 point
+      (Rural>=2 | Urban>=2 | National>=2) ~ 0.5, #partial data at at least one geography gets 0.5
+      TRUE ~ 0
+    )
+  ) %>%
+  select(iso3c, SPI.D1.5.SAFE.MAN.WATER) %>%
+  mutate(date=date_end)
+  
+  
+
+}
+####
+# 8 Year window
+####
+#create this database for each year from 2004 to 2019 using a 10 year window
+
+
+
+for (i in c(2015:2019)) {
+  
+  start=i-7
+  end=i
+  
+  temp_df <- window_fun(start,end)
+  assign(paste('safe_managed_',end, sep=""), temp_df)
+}
+
+if (exists('safe_managed_df')) {
+  rm('safe_managed_df')
+}
+#now append together and save
+for (i in c(2015:2019)) {
+  
+  temp<-get(paste('safe_managed_',i, sep=""))
+  
+  if (!exists('safe_managed_df')) {
+    safe_managed_df<-temp
+  } else {
+    safe_managed_df<-safe_managed_df %>%
+      bind_rows(temp) %>%
+      arrange(-date, iso3c)
+  }
+}
+
+
+```
+
+
+### Labor Force Statistics
+
+In this indicator, we compare estimated labor force participation data compared to data submitted to the ILO based on national data.  ILOSTAT is the source of both datasets.  Countries are given full points if an indicator is produced by a national government based on a labor force survey and if that estimate is within 5 percentage points of the ILO estimated value.  If either of those two components are missing, but one is available, then the country gets 0.5 points.  O points otherwise.  
+
+The ILO modelled estimates series provides a complete set of internationally comparable labour statistics, including both nationally-reported observations and imputed data for countries with missing data. The imputations are produced through a series of econometric models maintained by the ILO. The purpose of estimating labour market indicators for countries with missing data is to obtain a balanced panel data set so that, every year, regional and global aggregates with consistent country coverage can be computed. These allow the ILO to analyse global and regional estimates of key labour market indicators and related trends. Moreover, the resulting country-level data, combining both reported and imputed observations, constitute a unique, internationally comparable data set on labour market indicators.
+
+From the ILO methodological note (https://www.ilo.org/ilostat-files/Documents/TEM.pdf), ILO has the following preferences for data with Labor force surveys coming first: 
+
+> With regard to the first criterion, in order for labour market data to be included in a particular model, they must be derived from a labour force survey, a household survey or, more rarely, a population census. National labour force surveys are generally similar across countries and present the highest data quality. Hence, the data derived from such surveys are more readily comparable than data obtained from other sources. Strict preference is therefore given to labour force survey-based data in the selection process. However, many developing countries, which lack the resources to carry out a labour force survey, do report labour market information on the basis of other types of household surveys or population censuses. Consequently, because of the need to balance the competing goals of data comparability and data coverage, some (non-labour force survey) household survey data and, more rarely, population census-based data are included in the models.
+
+Scoring:    
+1 Point. Country has a labor force survey based estimate in past 5 years of labor force participation broken down by total, male, and female & estimated value from ILO is within 5 percentage points of value reported by national government.   
+0.5 Point. Country has labor force survey or is within 5 points of ILO, but not both    
+0 Points. Otherwise
+
+```{r lfp, include=FALSE}
+
+#read in ILO reference areas
+ilo_ref_area <- read_csv(file= paste0(raw_dir,"/metadata/ILO_reference_area.csv")) %>%
+  transmute(iso3c=ref_area,
+            country=ref_area.label)
+                         
+#read in the ILO data downloaded on November 24, 2020
+lfp_estimated <- read_excel(path = paste0(raw_dir,"/1.5_DUIO/ILO_lfp_country_estimated.xlsx"),
+                            skip=5) %>%
+  as_tibble(.name_repair = 'universal') %>%
+  mutate(country=case_when(
+    Reference.area=="Gambia" ~ "Gambia, The",
+    TRUE ~ Reference.area
+    ),
+    date=Time,
+    estimated_value=Total) %>%
+    left_join(ilo_ref_area) %>%
+  select(iso3c, date, Sex, estimated_value ) 
+
+#reported data by countries
+lfp_reported <- read_excel(path = paste0(raw_dir,"/1.5_DUIO/ILO_lfp_country_reported.xlsx"),
+                           skip=5)%>%
+  as_tibble(.name_repair = 'universal') %>%
+  mutate(country=case_when(
+    Reference.area=="Gambia" ~ "Gambia, The",
+    TRUE ~ Reference.area
+    ),
+    date=Time,
+    reported_value=..15.) %>%
+    left_join(ilo_ref_area) %>%
+  select(iso3c, date, Source.type, Sex, reported_value )
+
+#merge the two together
+lfp_data <- lfp_reported %>%
+  left_join(lfp_estimated) %>%
+  mutate(estimate_diff=reported_value-estimated_value,
+         lfs_source=(Source.type=="Labour force survey")) %>%
+  filter(iso3c %in% country_metadata$iso3c)
+
+
+#score the data
+
+#function to calculate 10 year window
+ilo_fun <- function(date_start, date_end) {
+  temp <- lfp_data %>%
+    filter(between(date,date_start,date_end) ) %>%
+    group_by(iso3c) %>%
+    summarise(SPI.D1.5.LFP.ACC=as.numeric(mean(estimate_diff, na.rm=T)<=5),
+              SPI.D1.5.LFP.SOURCE=max(lfs_source, na.rm=T),
+              SPI.D1.5.LFP=(SPI.D1.5.LFP.ACC+SPI.D1.5.LFP.SOURCE)/2) %>%
+    select(iso3c, SPI.D1.5.LFP) %>%
+    mutate(date=date_end)
+    
+}
+####
+# 5 Year window
+####
+#create this database for each year from 2004 to 2019 using a 10 year window
+
+
+
+for (i in c(2004:2019)) {
+  
+  start=i-4
+  end=i
+  
+  temp_df <- ilo_fun(start,end)
+  assign(paste('lfp_data_',end, sep=""), temp_df)
+}
+
+if (exists('lfp_data_df')) {
+  rm('lfp_data_df')
+}
+#now append together and save
+for (i in c(2004:2019)) {
+  
+  temp<-get(paste('lfp_data_',i, sep=""))
+  
+  if (!exists('lfp_data_df')) {
+    lfp_data_df<-temp
+  } else {
+    lfp_data_df<-lfp_data_df %>%
+      bind_rows(temp) %>%
+      arrange(-date, iso3c)
+  }
+}
+
+```
+
+
 
 ```{r aki_combine}
 
@@ -1253,8 +1509,14 @@ D3.AKI <- spi_df_empty %>%
   left_join(D3.1.AKI) %>%
   left_join(D3.3.AKI) %>%
   left_join(D3.15.AKI) %>%
+  left_join(safe_managed_df) %>%
+  left_join(lfp_data_df) %>%
   right_join(spi_df_empty) %>%
-  mutate_at(vars(starts_with('SPI.D1.5.')), ~if_else(is.na(.),0,as.numeric(.))) 
+  mutate(SPI.D1.5.POV=if_else(is.na(SPI.D1.5.POV),0,as.numeric(SPI.D1.5.POV)),
+         SPI.D1.5.CHLD.MORT=if_else(is.na(SPI.D1.5.CHLD.MORT),0,as.numeric(SPI.D1.5.CHLD.MORT)),
+         SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else(is.na(SPI.D1.5.DT.TDS.DPPF.XP.ZS),0,as.numeric(SPI.D1.5.DT.TDS.DPPF.XP.ZS)),
+         SPI.D1.5.SAFE.MAN.WATER=if_else(is.na(SPI.D1.5.SAFE.MAN.WATER),0,as.numeric(SPI.D1.5.SAFE.MAN.WATER)),
+         SPI.D1.5.LFP=if_else(is.na(SPI.D1.5.LFP),0,as.numeric(SPI.D1.5.LFP))) 
 
 
 spi_df <- spi_df %>%
@@ -1262,12 +1524,14 @@ spi_df <- spi_df %>%
 
 ```
 
-```{r aki_plots}
+```{r aki_plots, fig.height=10}
 
 aki <- c(
              SPI.D1.5.POV='Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)',
              SPI.D1.5.CHLD.MORT='Mortality rate, under-5 (per 1,000 live births)', 
-             SPI.D1.5.DT.TDS.DPPF.XP.ZS='Debt service (PPG and IMF only, % of exports of goods, services and primary income)'
+             SPI.D1.5.DT.TDS.DPPF.XP.ZS='Debt service (PPG and IMF only, % of exports of goods, services and primary income)',
+             SPI.D1.5.SAFE.MAN.WATER = 'Safely Managed Drinking Water',
+             SPI.D1.5.LFP = 'Labor Force Participation'
 )
 
 
