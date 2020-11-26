@@ -15,19 +15,8 @@
 "0","         SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else(is.na(SPI.D1.5.DT.TDS.DPPF.XP.ZS),0,as.numeric(SPI.D1.5.DT.TDS.DPPF.XP.ZS)),"
 "0","         SPI.D1.5.SAFE.MAN.WATER=if_else(is.na(SPI.D1.5.SAFE.MAN.WATER),0,as.numeric(SPI.D1.5.SAFE.MAN.WATER)),"
 "0","         SPI.D1.5.LFP=if_else(is.na(SPI.D1.5.LFP),0,as.numeric(SPI.D1.5.LFP))) "
-"2","Joining, by = c(""date"", ""iso3c"", ""country"")
-"
-"2","Joining, by = c(""date"", ""country"")
-"
-"2","Joining, by = c(""date"", ""iso3c"")
-"
-"2","Joining, by = c(""date"", ""iso3c"")
-"
-"2","Joining, by = c(""date"", ""iso3c"")
-"
-"2","Joining, by = c(""date"", ""iso3c"", ""iso2c"", ""country"", ""capital"", ""long"", ""lat"", ""regionID"", ""region_iso2c"", ""region"", ""adminID"", ""admin_iso2c"", ""admin"", ""incomeID"", ""income_iso2c"", ""income"", ""lendingID"", ""lending_iso2c"", ""lending"")
-"
+"0",""
+"0",""
 "0","spi_df <- spi_df %>%"
 "0","  left_join(D3.AKI)"
-"2","Joining, by = c(""date"", ""iso3c"", ""iso2c"", ""country"", ""capital"", ""long"", ""lat"", ""regionID"", ""region_iso2c"", ""region"", ""adminID"", ""admin_iso2c"", ""admin"", ""incomeID"", ""income_iso2c"", ""income"", ""lendingID"", ""lending_iso2c"", ""lending"", ""SPI.D1.5.POV"", ""SPI.D1.5.CHLD.MORT"", ""SPI.D1.5.DT.TDS.DPPF.XP.ZS"", ""SPI.D1.5.SAFE.MAN.WATER"", ""SPI.D1.5.LFP"")
-"
+"0",""

@@ -3,15 +3,6 @@
 "0","ilo_ref_area <- read_csv(file= paste0(raw_dir,""/metadata/ILO_reference_area.csv"")) %>%"
 "0","  transmute(iso3c=ref_area,"
 "0","            country=ref_area.label)"
-"2","
-[36m--[39m [1m[1mColumn specification[1m[22m [36m--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------[39m
-cols(
-  ref_area = [31mcol_character()[39m,
-  ref_area.label = [31mcol_character()[39m,
-  ref_area.sort = [32mcol_double()[39m
-)
-
-"
 "0","                         "
 "0","#read in the ILO data downloaded on November 24, 2020"
 "0","lfp_estimated <- read_excel(path = paste0(raw_dir,""/1.5_DUIO/ILO_lfp_country_estimated.xlsx""),"
@@ -25,16 +16,7 @@ cols(
 "0","    estimated_value=Total) %>%"
 "0","    left_join(ilo_ref_area) %>%"
 "0","  select(iso3c, date, Sex, estimated_value ) "
-"2","New names:
-* `Reference area` -> Reference.area
-* `Source type` -> Source.type
-* `15-19` -> ..15.19
-* `20-24` -> ..20.24
-* `25-29` -> ..25.29
-* ...
-"
-"2","Joining, by = ""country""
-"
+"0",""
 "0","#reported data by countries"
 "0","lfp_reported <- read_excel(path = paste0(raw_dir,""/1.5_DUIO/ILO_lfp_country_reported.xlsx""),"
 "0","                           skip=5)%>%"
@@ -47,27 +29,15 @@ cols(
 "0","    reported_value=..15.) %>%"
 "0","    left_join(ilo_ref_area) %>%"
 "0","  select(iso3c, date, Source.type, Sex, reported_value )"
-"2","New names:
-* `` -> ...9
-"
-"2","New names:
-* `Reference area` -> Reference.area
-* `Source type` -> Source.type
-* `15+` -> ..15.
-* `15-64` -> ..15.64
-* `15-24` -> ..15.24
-* ...
-"
-"2","Joining, by = ""country""
-"
+"0",""
 "0","#merge the two together"
 "0","lfp_data <- lfp_reported %>%"
 "0","  left_join(lfp_estimated) %>%"
 "0","  mutate(estimate_diff=reported_value-estimated_value,"
 "0","         lfs_source=(Source.type==""Labour force survey"")) %>%"
 "0","  filter(iso3c %in% country_metadata$iso3c)"
-"2","Joining, by = c(""iso3c"", ""date"", ""Sex"")
-"
+"0",""
+"0",""
 "0","#score the data"
 "0",""
 "0","#function to calculate 10 year window"
@@ -75,7 +45,7 @@ cols(
 "0","  temp <- lfp_data %>%"
 "0","    filter(between(date,date_start,date_end) ) %>%"
 "0","    group_by(iso3c) %>%"
-"0","    summarise(SPI.D1.5.LFP.ACC=as.numeric(mean(estimate_diff, na.rm=T)<=5),"
+"0","    summarise(SPI.D1.5.LFP.ACC=as.numeric(mean(estimate_diff, na.rm=T)<=10),"
 "0","              SPI.D1.5.LFP.SOURCE=max(lfs_source, na.rm=T),"
 "0","              SPI.D1.5.LFP=(SPI.D1.5.LFP.ACC+SPI.D1.5.LFP.SOURCE)/2) %>%"
 "0","    select(iso3c, SPI.D1.5.LFP) %>%"
@@ -89,7 +59,7 @@ cols(
 "0",""
 "0",""
 "0",""
-"0","for (i in c(2004:2019)) {"
+"0","for (i in c(2010:2019)) {"
 "0","  "
 "0","  start=i-4"
 "0","  end=i"
@@ -97,49 +67,12 @@ cols(
 "0","  temp_df <- ilo_fun(start,end)"
 "0","  assign(paste('lfp_data_',end, sep=""""), temp_df)"
 "0","}"
-"2","no non-missing arguments to max; returning -Inf"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","no non-missing arguments to max; returning -Inf"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","no non-missing arguments to max; returning -Inf"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","no non-missing arguments to max; returning -Inf"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","no non-missing arguments to max; returning -Inf"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","no non-missing arguments to max; returning -Inf"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
-"2","`summarise()` ungrouping output (override with `.groups` argument)
-"
+"0",""
 "0","if (exists('lfp_data_df')) {"
 "0","  rm('lfp_data_df')"
 "0","}"
 "0","#now append together and save"
-"0","for (i in c(2004:2019)) {"
+"0","for (i in c(2010:2019)) {"
 "0","  "
 "0","  temp<-get(paste('lfp_data_',i, sep=""""))"
 "0","  "

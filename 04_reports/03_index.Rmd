@@ -987,7 +987,7 @@ spi_country_charts('spi_index_df','SPI.INDEX.DIM1','Dimension 1: Data Use Scores
 
 ```{r maturitytable1}
 
-indicators<-c("SPI.INDEX.DIM1","SPI.D1.5.POV","SPI.D1.5.CHLD.MORT","SPI.D1.5.DT.TDS.DPPF.XP.ZS")
+indicators<-c("SPI.INDEX.DIM1","SPI.D1.5.POV","SPI.D1.5.CHLD.MORT","SPI.D1.5.DT.TDS.DPPF.XP.ZS", "SPI.D1.5.SAFE.MAN.WATER", "SPI.D1.5.LFP")
 
 maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019) 
 

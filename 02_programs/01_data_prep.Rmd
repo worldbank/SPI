@@ -773,7 +773,8 @@ The data will be pulled from the WDI and combined with metadata from the Povcaln
 Scoring is as follows:
 Quality (1 points total):
 1 Point. Comparable data lasting at least two years within past 5 years	
-0 Points. No comparable data within past 5 years
+0.5 Point. Comparable data lasting at least two years within past 10 years	
+0 Points. No comparable data within past 10 years
 
 Note: Because poverty surveys are reported with a lag, we start measuring whether comparable poverty data is available two years prior.  So for 2019, the window starts from 2017 to give countries time to prepare poverty estimates based on surveys.
 
@@ -810,23 +811,45 @@ df <- pcn %>%
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
 for (reference_year in 2004:2019) {
   
-  temp<-df %>%
+  temp_5<-df %>%
         filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
         mutate(frequency=((reference_year-as.numeric(year))<=7) & (reference_year>=as.numeric(year))) %>% 
         filter(frequency==TRUE) %>%
         group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
-        summarise(SPI.D1.5.POV=n())  %>%
+        summarise(SPI.D1.5.POV_5=n())  %>%
         ungroup() %>%
         group_by(countrycode) %>% #now get a total by country with the max number of comparable estimates
-        summarise(SPI.D1.5.POV=max(SPI.D1.5.POV, na.rm=T)) %>%
-        mutate(SPI.D1.5.POV=if_else(SPI.D1.5.POV>=2,1,0)) %>% #only give point if there is at least two observations that are comparable
+        summarise(SPI.D1.5.POV_5=max(SPI.D1.5.POV_5, na.rm=T)) %>%
+        mutate(SPI.D1.5.POV_5=if_else(SPI.D1.5.POV_5>=2,1,0)) %>% #only give point if there is at least two observations that are comparable
         mutate(date=reference_year,
                  iso3c=countrycode) %>%
         left_join(country_metadata) %>%
         select( country,iso3c, date, starts_with('SPI.D1.5.POV')) 
 
+  temp_10<-df %>%
+        filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
+        mutate(frequency=((reference_year-as.numeric(year))<=12) & (reference_year>=as.numeric(year))) %>% 
+        filter(frequency==TRUE) %>%
+        group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
+        summarise(SPI.D1.5.POV_10=n())  %>%
+        ungroup() %>%
+        group_by(countrycode) %>% #now get a total by country with the max number of comparable estimates
+        summarise(SPI.D1.5.POV_10=max(SPI.D1.5.POV_10, na.rm=T)) %>%
+        mutate(SPI.D1.5.POV_10=if_else(SPI.D1.5.POV_10>=2,1,0)) %>% #only give point if there is at least two observations that are comparable
+        mutate(date=reference_year,
+                 iso3c=countrycode) %>%
+        left_join(country_metadata) %>%
+        select( country,iso3c, date, starts_with('SPI.D1.5.POV')) 
 
-
+  temp <- temp_5 %>%
+    left_join(temp_10) %>%
+    mutate(SPI.D1.5.POV=case_when(
+      SPI.D1.5.POV_5==1 ~ 1,
+      SPI.D1.5.POV_10==1 ~ 0.5,
+      TRUE ~ 0
+    )) %>%
+    select(-SPI.D1.5.POV_5,-SPI.D1.5.POV_10)
+  
   assign(paste("D3.1.AKI",reference_year,sep="_"), temp)
 }
 
@@ -1249,10 +1272,10 @@ D3.15.AKI <- WDI_metadata %>%
 The WHO/UNCIECF JMP has estimated the safely managed water access by a simple linear regression based on the following data sources: Nationally representative household surveys (e.g. DHS, MICS) ; Population and housing censuses; Administrative data (such as regulatory agencies); Service provider data.
 JMP has provided the country files that include the original data sources.  
 
-Find the following note on estimates:
-The indicator for SDG 6.1, safely managed drinking water services are defined as use of an improved drinking water source which is accessible on premises, available when needed and free from contamination. To make an estimate of safely managed services, information on the use of improved drinking water sources is combined with information on the accessibility, availability and quality of drinking water. Estimates are based on the minimum value of these criteria or, where estimates are available for both rural and urban, a population weighted average of the two. The JMP reports estimates for safely managed drinking water provided information is available for at least 50 per cent of the population on quality of drinking water and either accessibility or availability.
+From the methodology: https://washdata.org/sites/default/files/JMP%20methodology-Apr-2018-5.pdf:
 
-From the methodology: https://washdata.org/sites/default/files/JMP%20methodology-Apr-2018-5.pdf
+> The indicator for SDG 6.1, safely managed drinking water services are defined as use of an improved drinking water source which is accessible on premises, available when needed and free from contamination. To make an estimate of safely managed services, information on the use of improved drinking water sources is combined with information on the accessibility, availability and quality of drinking water. Estimates are based on the minimum value of these criteria or, where estimates are available for both rural and urban, a population weighted average of the two. The JMP reports estimates for safely managed drinking water provided information is available for at least 50 per cent of the population on quality of drinking water and either accessibility or availability.
+
 
 Extension rules (beyond the years covered by data inputs and extrapolation)
 
@@ -1297,7 +1320,13 @@ hyper_read <-  function(hyperlink) {
       summarise(
        data_available=max(data_available, na.rm=T),
        data_quality=max(data_quality, na.rm=T),
-       data_value = mean(as.numeric(value),na.rm=T))
+       data_value = mean(as.numeric(value),na.rm=T))  %>% 
+       group_by(geo) %>%
+       mutate(max_value=max(data_value, na.rm=T),
+         max_value=if_else(max_value!=-Inf,max_value,-99)
+       ) %>%
+       mutate(data_quality=if_else((max_value>=99.5 | max_value<=0.5),1,as.numeric(data_quality))) %>% #because JMP imputes values indefinitely forward if value for water reaches >99.5%
+      ungroup()
   }, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
 }
 
@@ -1333,10 +1362,6 @@ window_fun <- function(date_start, date_end) {
   temp <- safely_managed_raw_df %>%
   filter(between(year,date_start,date_end) ) %>%
   group_by(iso3c, geo) %>%
-  mutate(max_value=max(data_value, na.rm=T),
-         max_value=if_else(max_value!=-Inf,max_value,-99)
-         ) %>%
-  mutate(data_quality=if_else((max_value>=99.5),1,as.numeric(data_quality))) %>% #because JMP imputes values indefinitely forward if value for water reaches >99.5%
   summarise(data_quality=sum(data_quality, na.rm=T)) %>% #average over 10 years
   pivot_wider(
     names_from = 'geo',
@@ -1394,7 +1419,7 @@ for (i in c(2015:2019)) {
 
 ### Labor Force Statistics
 
-In this indicator, we compare estimated labor force participation data compared to data submitted to the ILO based on national data.  ILOSTAT is the source of both datasets.  Countries are given full points if an indicator is produced by a national government based on a labor force survey and if that estimate is within 5 percentage points of the ILO estimated value.  If either of those two components are missing, but one is available, then the country gets 0.5 points.  O points otherwise.  
+In this indicator, we compare estimated labor force participation data compared to data submitted to the ILO based on national data.  ILOSTAT is the source of both datasets.  Countries are given full points if an indicator is produced by a national government based on a labor force survey and if that estimate is within 10 percentage points of the ILO estimated value.  If either of those two components are missing, but one is available, then the country gets 0.5 points.  O points otherwise.  
 
 The ILO modelled estimates series provides a complete set of internationally comparable labour statistics, including both nationally-reported observations and imputed data for countries with missing data. The imputations are produced through a series of econometric models maintained by the ILO. The purpose of estimating labour market indicators for countries with missing data is to obtain a balanced panel data set so that, every year, regional and global aggregates with consistent country coverage can be computed. These allow the ILO to analyse global and regional estimates of key labour market indicators and related trends. Moreover, the resulting country-level data, combining both reported and imputed observations, constitute a unique, internationally comparable data set on labour market indicators.
 
@@ -1403,8 +1428,8 @@ From the ILO methodological note (https://www.ilo.org/ilostat-files/Documents/TE
 > With regard to the first criterion, in order for labour market data to be included in a particular model, they must be derived from a labour force survey, a household survey or, more rarely, a population census. National labour force surveys are generally similar across countries and present the highest data quality. Hence, the data derived from such surveys are more readily comparable than data obtained from other sources. Strict preference is therefore given to labour force survey-based data in the selection process. However, many developing countries, which lack the resources to carry out a labour force survey, do report labour market information on the basis of other types of household surveys or population censuses. Consequently, because of the need to balance the competing goals of data comparability and data coverage, some (non-labour force survey) household survey data and, more rarely, population census-based data are included in the models.
 
 Scoring:    
-1 Point. Country has a labor force survey based estimate in past 5 years of labor force participation broken down by total, male, and female & estimated value from ILO is within 5 percentage points of value reported by national government.   
-0.5 Point. Country has labor force survey or is within 5 points of ILO, but not both    
+1 Point. Country has a labor force survey based estimate in past 5 years of labor force participation broken down by total, male, and female & estimated value from ILO is within 10 percentage points of value reported by national government.   
+0.5 Point. Country has labor force survey or is within 10 points of ILO, but not both    
 0 Points. Otherwise
 
 ```{r lfp, include=FALSE}
@@ -1455,7 +1480,7 @@ ilo_fun <- function(date_start, date_end) {
   temp <- lfp_data %>%
     filter(between(date,date_start,date_end) ) %>%
     group_by(iso3c) %>%
-    summarise(SPI.D1.5.LFP.ACC=as.numeric(mean(estimate_diff, na.rm=T)<=5),
+    summarise(SPI.D1.5.LFP.ACC=as.numeric(mean(estimate_diff, na.rm=T)<=10),
               SPI.D1.5.LFP.SOURCE=max(lfs_source, na.rm=T),
               SPI.D1.5.LFP=(SPI.D1.5.LFP.ACC+SPI.D1.5.LFP.SOURCE)/2) %>%
     select(iso3c, SPI.D1.5.LFP) %>%
@@ -1469,7 +1494,7 @@ ilo_fun <- function(date_start, date_end) {
 
 
 
-for (i in c(2004:2019)) {
+for (i in c(2010:2019)) {
   
   start=i-4
   end=i
@@ -1482,7 +1507,7 @@ if (exists('lfp_data_df')) {
   rm('lfp_data_df')
 }
 #now append together and save
-for (i in c(2004:2019)) {
+for (i in c(2010:2019)) {
   
   temp<-get(paste('lfp_data_',i, sep=""))
   
