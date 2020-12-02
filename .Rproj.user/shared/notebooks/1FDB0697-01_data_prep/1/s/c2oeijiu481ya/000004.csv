@@ -66,7 +66,7 @@
 "0","      SPI.D1.5.POV_10==1 ~ 0.5,"
 "0","      TRUE ~ 0"
 "0","    )) %>%"
-"0","    select(-SPI.D1.5.POV_5,SPI.D1.5.POV_10)"
+"0","    select(-SPI.D1.5.POV_5,-SPI.D1.5.POV_10)"
 "0","  "
 "0","  assign(paste(""D3.1.AKI"",reference_year,sep=""_""), temp)"
 "0","}"

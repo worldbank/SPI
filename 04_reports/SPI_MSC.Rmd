@@ -26,6 +26,7 @@ output:
   right: 0;  
   width: 800px;
   height: 800px;
+  dpi: 250;
 }
 .center3 {
   margin: 0;
@@ -34,6 +35,7 @@ output:
   right: 20px;  
   width: 800px;
   height: 800px;
+  dpi: 250;
 }
 .reduced{
    font-size: 0.5em;
@@ -41,7 +43,7 @@ output:
 </style>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, dev='svg')
 options(htmltools.dir.version = FALSE)
 library(tidyverse)
 library(xaringanthemer)
@@ -225,6 +227,223 @@ Based on comments, Statistical Performance Indicators build on this:
 
 ---
 
+```{r spi_map_index, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+#Now map the result
+quality = "high"
+maps <- wbgmaps::wbgmaps[[quality]]
+
+
+country_metadata <- wbstats::wbcountries()
+
+data = SPI_2019
+
+
+
+spi_mapper <- function(data, indicator, title) {
+  
+ indicator<-indicator
+
+   map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
+
+
+  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+  
+  SPI_map <- map_df %>%
+    mutate(spi_groups=case_when(
+      between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+  
+  #set color pallete
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
+  p1<-ggplot() +
+    geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+    geom_path(data = maps$boundaries,
+              aes(long, lat, group = group),
+              color = "white",
+              size = 0.5,
+              lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_manual(
+      name='SPI Score',
+      values=col_pal,
+      na.value='grey'
+    ) +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap(title,100),
+      caption = 'Source: World Bank. Statistical Performance Indicators'
+    )
+ print(p1)
+}
+
+spi_charts  <- function(data, indicator, title) {
+  
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  #add histogram by region 
+  p2 <- map_df %>%
+    group_by(region) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=region, fill=region)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Region', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      expand_limits(x=c(0,100)) +
+      theme_bw()
+  
+  #by income
+    income <- c("Low income", "Lower middle income","Upper middle income","High income")
+
+    p3 <- map_df %>%
+    group_by(income) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=wtd.mean(data_available, weights=weights, na.rm=T),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=income, fill=income)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Income', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = income) +
+      expand_limits(x=c(0,100)) +
+      theme_bw()
+    
+  # #add line graph over time
+  p4 <- get(data)  %>%
+    rename(data_available=!! indicator) %>%
+    # right_join(spi_df_empty) %>%
+    group_by( date) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
+    mutate(Percentage=mean(data_available, na.rm=T),
+           Label = paste(round(Percentage,0))) %>%
+    ungroup() %>%
+    ggplot(aes(y=Percentage, x=date)) +
+      geom_point() +
+      geom_line(fill='blue') +
+      # geom_text_repel(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Date', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data'
+      ) +
+    
+      expand_limits(y=c(0,100)) +
+      theme_bw()
+      
+ (p2 / p3) 
+    
+}
+
+spi_country_charts  <- function(data, indicator, title) {
+  
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    filter(region!="Aggregates") %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+   spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+  
+  SPI_map <- map_df %>%
+    mutate(spi_groups=case_when(
+      between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+  
+  #set color pallete
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
+
+  p2_alt <- SPI_map %>%
+    ungroup() %>%
+    ggplot(aes(x=data_available, y=region, color=spi_groups)) +
+      geom_point() +
+      geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+      labs(
+      title=str_wrap(paste(title, 'By Country', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      xlab('Score') +
+      expand_limits(x=c(0,100)) +
+      scale_color_manual(
+        name='SPI Score',
+        values=col_pal,
+        na.value='grey'
+      ) +
+      theme_bw() +
+      theme(legend.position = 'top') 
+   
+p2_alt
+
+}
+
+
+
+
+
+
+
+
+
+```
 
 
 ```{r overall_sumstats, message=FALSE, warning=FALSE, include=FALSE}
@@ -291,11 +510,113 @@ indicators<-c(#
 ```
 
 
+---
+class: inverse, middle, center
 
+Overall Scores Across Countries
+
+
+
+
+
+---
+# Overview Summary of Results
+
+  * Next, we will provide overall index
+  * Will present aggregate scores overall and for each dimension    
+
+  * Given imprecision inherent in calculations, we recommend color coding providing subdivisions of maturity
+Countries are grouped into five groups:   
+
+* **Top 20%**:    Shading in <span style="color:#2ec4b6">dark green</span>.    
+* **4th Quantile**:  Shading in <span style="color:#acece7"> light green</span>.    
+* **3rd Quantile**:   Shading in <span style="color:#f1dc76"> yellow</span>.  
+* **2nd Quantile**:   Shading in <span style="color:#ffbf69"> light orange</span>.  
+* **Bottom 20%**:   Shading in <span style="color:#ff9f1c"> dark orange </span>.   
+---
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: 100%;
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+```
+
+
+.center2[
+```{r overall_map, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX', 'Statistical Performance Indicators - Overall Scores')
+
+```
+]
+---
+.center3[
+```{r overall_charts, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
+
+```
+
+
+]
+---
+.center3[
+```{r country_charts, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_country_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
+
+```
+
+
+]
+---
+
+.center2[
+```{r dimension_5_map, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
+
+```
+]
+
+---
+.center3[
+```{r dimension_5_country_charts, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_country_charts('SPI','SPI.INDEX.DIM5','Statistical Performance Indicators -  SPI Dimension 5: Data Infrastructure')
+
+```
+
+
+]
+
+---
 
 class: inverse, middle, center
 
 Overview of Scores by Indicator
+
+
+---
+# Focus on Indicators
+
+* Next, will focus on indicators compiled using IMF sources   
+* Includes 11 Indicators:
+  1. SDDS/e-GDDS subscription	    
+  2. System of national accounts in use   
+  3. National Accounts base year	    
+  4. Classification of national industry	    
+  5. CPI base year	    
+  6. Classification of household consumption	    
+  7. Classification of status of employment	    
+  8. Central government accounting status	    
+  9. Compilation of government finance statistics	    
+  10. Compilation of monetary and financial statistics	    
+  11. Business process	    
+  
 
 
 ---
@@ -304,7 +625,7 @@ Overview of Scores by Indicator
 
 .reduced[
 
-```{r sumstats_table, echo=FALSE, out.height=12, out.width=10}
+```{r sumstats_table, echo=FALSE, dpi=250, out.height=12, out.width=10}
 
 kable(sumstats_df,
       digits=2,
@@ -320,6 +641,73 @@ kable(sumstats_df,
 ```
 ]
 
+
+---
+.center3[
+```{r dim_corr, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=12}
+
+indicators<-c("SPI.INDEX",
+              "SPI.INDEX.DIM5",
+              "SPI.D2.1.GDDS",
+              "SPI.D5.2.1.SNAU",
+              "SPI.D5.2.2.NABY",
+              "SPI.D5.2.3.CNIN",
+              "SPI.D5.2.4.CPIBY",
+              "SPI.D5.2.5.HOUS",
+              "SPI.D5.2.6.EMPL",
+              "SPI.D5.2.7.CGOV",
+              "SPI.D5.2.8.FINA",
+              "SPI.D5.2.9.MONY",
+              "SPI.D5.2.10.GSBP")
+
+
+
+corr_df <- SPI %>%
+  ungroup() %>%
+  select(indicators)
+
+#calculate correlations between teacher practices
+df_corr_plot <-    round(cor(corr_df, use="complete.obs"), 2) 
+
+
+#attach labels
+labels_df <- metadata %>%
+  filter(series %in% indicators) %>%
+  arrange(factor(series, levels=indicators))
+
+colnames(df_corr_plot) <- labels_df$indicator_name
+rownames(df_corr_plot) <- labels_df$indicator_name
+
+#plot the correlation in a nicely formatted table
+pcorr<- ggcorrplot::ggcorrplot(df_corr_plot[,13:1],
+                   outline.color = "white",
+                   ggtheme = theme_bw(),
+                   colors = c("#F8696B", "#FFEB84", "#63BE7B"),
+                   legend.title = "Correlation",
+                   title = "Correlation Between SPI Indicators",
+                   lab=T,
+                   type = "full",
+                   ) + 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  scale_y_discrete(labels = function(x) str_wrap(x, width = 16)) +
+  theme_bw() 
+
+pcorr +
+  theme(
+    text = element_text(size = 11),
+    axis.text.x = element_text(angle=0,vjust=.5, size=7,
+                               face = ifelse((levels(pcorr$data$Var1) %in% c('Compilation of monetary and financial statistics')) , "bold", "plain")),
+    axis.title = element_blank(),
+    axis.text.y = element_text(face = ifelse((levels(pcorr$data$Var2) %in% c('Compilation of monetary and financial statistics')) , "bold", "plain")
+                               )
+  ) +
+  labs( )
+
+
+```
+]
+
+
 ---
 class: inverse, middle, center
 
@@ -330,10 +718,22 @@ Trends by Region
 
 
 .center3[
-```{r trends, echo=FALSE, fig.height=10, fig.width=12, message=FALSE, warning=FALSE, dpi=300}
+```{r trends, echo=FALSE, dpi=250, fig.height=10, fig.width=12, message=FALSE, warning=FALSE, dpi=300}
 
   title <- 'Statistical Performance Indicators'  
 
+  indicators<-c(
+              "SPI.D2.1.GDDS",
+              "SPI.D5.2.1.SNAU",
+              "SPI.D5.2.2.NABY",
+              "SPI.D5.2.3.CNIN",
+              "SPI.D5.2.4.CPIBY",
+              "SPI.D5.2.5.HOUS",
+              "SPI.D5.2.6.EMPL",
+              "SPI.D5.2.7.CGOV",
+              "SPI.D5.2.8.FINA",
+              "SPI.D5.2.9.MONY",
+              "SPI.D5.2.10.GSBP")
  # #add line graph over time
   p4 <- SPI  %>%
     pivot_longer(
@@ -375,7 +775,7 @@ class: inverse, middle, center
 Details by Indicator
 
 
-```{r spi_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r spi_map, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 #Now map the result
 quality = "high"
@@ -426,7 +826,7 @@ spi_mapper <- function(data, indicator, title) {
     geom_path(data = maps$boundaries,
               aes(long, lat, group = group),
               color = "white",
-              size = 0.1,
+              size = 0.5,
               lineend = maps$boundaries$lineend,
               linetype = maps$boundaries$linetype) +
     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
@@ -793,7 +1193,7 @@ p2_alt2
 
 
 
-```{r standards_meta, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r standards_meta, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 #pull data for several of the standards from WDI metadata
 
@@ -925,7 +1325,7 @@ D2.1_DSDR <- df %>%
 ```
 ---
 .center2[
-```{r maps_2.1, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r maps_2.1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 D2.1_DSDR <- D2.1_DSDR %>%
   left_join(wbstats::wb_countries()) %>%
@@ -952,7 +1352,7 @@ e-GDDS websites.
 0.5 Points. e-GDDS standards, but no SDMX   
 0 Points. Otherwise
 
-```{r gdds, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r gdds, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 #####
 # IMF Data
 #####
@@ -989,7 +1389,7 @@ D2.1_DSDR.IMF <- D2.1_DSDR.IMF %>%
 ---
 
 .center2[
-```{r maps_2.1b, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r maps_2.1b, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 D2.1_DSDR.IMF <- D2.1_DSDR.IMF %>%
   mutate(weights=1)
@@ -1004,7 +1404,7 @@ spi_mapper('D2.1_DSDR.IMF', 'SPI.D2.1.GDDS', 'Data Dissemination Standards')
 ---
 
 .center3[
-```{r charts_2.1, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+```{r charts_2.1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 spi_charts('D2.1_DSDR', 'SPI.D2.1.GDDS', 'Data Dissemination Standards')
 
 ```
@@ -1021,7 +1421,7 @@ Consumer Price Index serves as indicators of inflation and reflects changes in t
  
  1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 points. Otherwise
  
-```{r cpiby, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r cpiby, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 #read in csv file.
 D5.2.4.CPIBY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.csv", sep="/" )) %>%
@@ -1112,7 +1512,7 @@ D5.2.4.CPIBY <- D5.2.4.CPIBY %>%
 ---
 
 .center2[
-```{r maps_5.2.4, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r maps_5.2.4, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 D5.2.4.CPIBY <- D5.2.4.CPIBY %>%
   left_join(wbstats::wb_countries()) %>%
@@ -1128,7 +1528,7 @@ spi_mapper('D5.2.4.CPIBY', 'SPI.D5.2.4.CPIBY', 'CPI Base Year')
 ---
 
 .center3[
-```{r charts_5.2.4, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+```{r charts_5.2.4, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 spi_charts('D5.2.4.CPIBY', 'SPI.D5.2.4.CPIBY', 'CPI Base Year')
 
 ```
@@ -1149,7 +1549,7 @@ statistics in these different areas.
 
 1 Point. Follow Classification of Individual Consumption by Purpose (COICOP)	0 Points.	Otherwise
 
-```{r hous, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r hous, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 #read in csv file.
 D5.2.5.HOUS <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.csv", sep="/" )) %>%
@@ -1190,7 +1590,7 @@ D5.2.5.HOUS.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compi
   
 D5.2.5.HOUS <-  D5.2.5.HOUS %>%
   full_join(D5.2.5.HOUS.IMF) %>%
-  mutate(SPI.D5.2.5.HOUS=if_else(is.na(SPI.D5.2.5.HOUS),SPI.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  mutate(SPI.D5.2.5.HOUS=if_else(is.na(SPI.D5.2.5.HOUS.IMF),SPI.D5.2.5.HOUS,SPI.D5.2.5.HOUS.IMF)) %>% #fill in with manually collected data if missing.  This applies mostly to high income countries
   select(-country,-SPI.D5.2.5.HOUS.IMF) %>%
   arrange(date, iso3c) 
 ```
@@ -1198,7 +1598,7 @@ D5.2.5.HOUS <-  D5.2.5.HOUS %>%
 ---
 
 .center2[
-```{r maps_5.2.5, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r maps_5.2.5, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 D5.2.5.HOUS <- D5.2.5.HOUS %>%
   left_join(wbstats::wb_countries()) %>%
@@ -1214,7 +1614,7 @@ spi_mapper('D5.2.5.HOUS', 'SPI.D5.2.5.HOUS', 'Classification of Individual Consu
 ---
 
 .center3[
-```{r charts_5.2.5, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+```{r charts_5.2.5, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 spi_charts('D5.2.5.HOUS', 'SPI.D5.2.5.HOUS', 'Classification of Individual Consumption According to Purpose (COICOP)')
 
 ```
@@ -1237,7 +1637,7 @@ units, the picture they provide of central government activities is usually inco
 0.5 Points. Consolidated central government accounting follows cash recording basis	 
 0 Points. Otherwise 
 
-```{r cgov, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r cgov, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 #read in csv file.
 D5.2.7.CGOV <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.csv", sep="/" )) %>%
@@ -1289,7 +1689,7 @@ D5.2.7.CGOV <-  D5.2.7.CGOV %>%
 ---
 
 .center2[
-```{r maps_5.2.7, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r maps_5.2.7, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 D5.2.7.CGOV <- D5.2.7.CGOV %>%
   left_join(wbstats::wb_countries()) %>%
@@ -1305,7 +1705,7 @@ spi_mapper('D5.2.7.CGOV', 'SPI.D5.2.7.CGOV', 'Central government accounting stat
 ---
 
 .center3[
-```{r charts_5.2.7, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+```{r charts_5.2.7, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 spi_charts('D5.2.7.CGOV', 'SPI.D5.2.7.CGOV', 'Central government accounting status')
 
 ```
@@ -1327,7 +1727,7 @@ the compilation of monetary and financial statistics in addition to MFSM.
 1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
 0 Points. Otherwise
 
-```{r mony, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r mony, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 #read in csv file.
 D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep="/" )) %>%
@@ -1379,7 +1779,7 @@ D5.2.9.MONY <-  D5.2.9.MONY %>%
 ---
 
 .center2[
-```{r maps_5.2.9, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r maps_5.2.9, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 D5.2.9.MONY <- D5.2.9.MONY %>%
   left_join(wbstats::wb_countries()) %>%
@@ -1395,7 +1795,7 @@ spi_mapper('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financ
 ---
 
 .center3[
-```{r charts_5.2.9, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+```{r charts_5.2.9, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 spi_charts('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics')
 
 ```
@@ -1411,7 +1811,7 @@ Scoring:
   * 0 points. Else    
 
 ---
-```{r fsi, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r fsi, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 
 #####
@@ -1454,7 +1854,7 @@ D5.2.9.FSI <-  D5.2.9.FSI.IMF %>%
 ---
 
 .center2[
-```{r maps_5.2.9.fsi, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+```{r maps_5.2.9.fsi, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
 D5.2.9.FSI <- D5.2.9.FSI %>%
   left_join(wbstats::wb_countries()) %>%
@@ -1470,7 +1870,7 @@ spi_mapper('D5.2.9.FSI', 'SPI.D5.2.9.FSI', 'Financial Soundness Indicators, Core
 ---
 
 .center3[
-```{r charts_5.2.9.fsi, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+```{r charts_5.2.9.fsi, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 spi_charts('D5.2.9.FSI', 'SPI.D5.2.9.FSI', 'Financial Soundness Indicators, Core Set')
 
 ```

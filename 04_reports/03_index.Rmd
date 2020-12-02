@@ -180,7 +180,7 @@ spi_mapper  <- function(data, indicator, title) {
                              levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
   
   #set color pallete
-  col_pal <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
   names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
   
   p1<-ggplot() +
@@ -346,7 +346,7 @@ spi_country_charts  <- function(data, indicator, title) {
                              levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
   
   #set color pallete
-  col_pal <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
   names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
   
 
@@ -373,6 +373,7 @@ spi_country_charts  <- function(data, indicator, title) {
 p2_alt
 
 }
+
 
 spi_maturity_table <- function(data, indicators, reference_year) {
 
@@ -549,7 +550,7 @@ FitFlextableToPage(pillars_tab) %>%
 
 # SPI Data
 
-Thanks to a large scale data collection effort by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering 14 out of our 22 pillars for our dashboard.  These 52 indicators do allow us to provide data for each of our 5 dimensions on data use, data services, data products, data sources, and data infrastructure.  Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public.  Going forward, the international community must work together to fill these gaps.
+Thanks to a large scale data collection effort by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering 14 out of our 22 pillars for our dashboard.  These 54 indicators do allow us to provide data for each of our 5 dimensions on data use, data services, data products, data sources, and data infrastructure.  Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public.  Going forward, the international community must work together to fill these gaps.
 
 An area of particular concern is in the dimension of data use.  Currently, our dashboard only features data for one of the five pillars in data use.  That is on data use by international organizations.  We are currently blind as to whether statistical systems are providing useful data to their national governments (legislature and executive branches), to civil society, and to academia.  By closing this data gap, country national statistical offices (NSOs) can be better guided in whether the information they are providing is meeting their user's needs.  International organizations can help steer funding for capacity building in areas that are lacking.  And the virtuous data cycle can begin: where better investment leads to more effectiveness, then more innovation, higher value-added, and ultimately greater impact.
 
@@ -565,7 +566,7 @@ Below is a brief description of the information (or lack thereof) we have availa
   * **Pillar 1.2: Data use by national executive branch:** *Not included because of lack of established methodology. There are some usable data sources with fairly good coverage (as used by PARIS21) but gaps in data have prevented fuller assessment of suitable methods.*      
   * **Pillar 1.3: Data use by civil society:**  *Not included because of lack of established methodology. There are some usable data sources with good coverage, for example from social media but more data is required to help assess and allow for likely biases between and within countries.*    
   * **Pillar 1.4: Data use by academia:**  *Not included because of lack of established methodology. We have not been able to find usable data sources with global coverage on which a new methodology could be developed.*   
-  * **Pillar 1.5: Data use by international organizations:**  *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics for international agencies using metadata. We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further*    
+  * **Pillar 1.5: Data use by international organizations:**  *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics, safely managed drinking water, and labor force statistics data for international agencies using metadata. We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further*    
 
   
   * **Pillar 2.1: Data Releases:** *SPI.D2.1.GDDS -	SDDS/e-GDDS subscription. This is a good data source but we recognize that it is a proxy for the concept we are seeking to capture rather than a direct measurement.*    
@@ -841,11 +842,11 @@ The map is color coded based on the performance of countries on our index.  Give
 
 Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
 
-* **Top 20%**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#1A9850">green</span>.    
-* **4th Quantile**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#BFCF28"> light green</span>.    
-* **3rd Quantile**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#E7BB25"> yellow</span>.  
-* **2nd Quantile**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#DE7B2B"> orange</span>.  
-* **Bottom 20%**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#D73027"> red </span>.    
+* **Top 20%**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#2ec4b6">dark green</span>.    
+* **4th Quantile**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#acece7">light green</span>.    
+* **3rd Quantile**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#f1dc76">yellow</span>.  
+* **2nd Quantile**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#ffbf69">light orange</span>.  
+* **Bottom 20%**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#ff9f1c">dark orange </span>.    
 
 
 ```{r map}
@@ -1979,6 +1980,111 @@ gdp_overperformers_plot + hci_overperformers_plot +
 ```
 
 
+## Relationship to Government Effectiveness
+
+```{r ge}
+
+#HCI
+ge_df <- wbstats::wb_data(country="countries_only", 
+              indicator=c('GE.EST','NY.GDP.PCAP.KD', 'GE.PER.RNK'),
+              start_date=2016,
+              end_date=2019,
+              return_wide = T) %>%
+  left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
+
+#get the correlation for 2019
+ge_df_2019 <- ge_df %>%
+  filter(date==2019) 
+
+
+corr_ge <- cor(ge_df_2019$GE.EST,ge_df_2019$SPI.INDEX, use='pairwise.complete.obs')
+
+
+
+ge_spi <- lm_robust(GE.EST ~ SPI.INDEX + log(NY.GDP.PCAP.KD) + factor(date) + factor(region) , data = ge_df, se_type = "HC2") 
+
+ge_spi_tidy <- broom::tidy(ge_spi)
+ge_spi_glance <- broom::glance(ge_spi)
+
+#get effect of SPI
+spi_eff <- ge_spi_tidy %>%
+  filter(term=='SPI.INDEX')
+spi_eff <- spi_eff$estimate
+```
+
+
+A common justification for improving statistical systems is that doing so can lead to better governance. Without good statistics, countries may be flying blind on where to target resources to improve the public welfare.  Also, good statistics can help hold public officials accountable for progress toward reaching a country's goals. In this next section, we show the relationship between our SPI overall score and an estimate of government effectiveness produced by the Worldwide Governance Indicators (WGI).  We find a strong relationship between our measure of statistical performance and the WGI measure of governmental effectiveness.
+
+[@kraay2010worldwide] produce a set of Worldwide Governance Indicators, including a measure of government effectiveness.  According to the WGI metadata, the government effectiveness indicator captures perceptions of the quality of public services, the quality of the civil service and the degree of its independence from political pressures, the quality of policy formulation and implementation, and the credibility of the government's commitment to such policies. The estimate gives the country's score on the aggregate indicator, in units of a standard normal distribution, i.e. ranging from approximately -2.5 to 2.5.^[Detailed documentation of the WGI, interactive tools for exploring the data, and full access to the underlying source data available at www.govindicators.org. The WGI are produced by Daniel Kaufmann (Natural Resource Governance Institute and Brookings Institution) and Aart Kraay (World Bank Development Research Group).].  The government effectiveness indicator is available from 1996 to 2019.
+
+There is a strong relationship between the SPI overall score and the government effectivenss indicator.  The correlation between the two in 2019 is `r round(corr_ge,2)`.  The scatterplot below shows the relationship between the SPI overall score and the government effectivenss indicator.
+
+
+
+
+
+```{r geplot}
+ge_spi_plot <- ggplot(data=ge_df_2019, aes(x=GE.EST, y=SPI.INDEX)) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  theme_bw() +
+  ylab('SPI Overall Score') +
+  xlab('Government Effectiveness Score (z score)') +
+  stat_poly_eq(aes(label  = paste(stat(eq.label),
+                                stat(rr.label), sep = "*\", \"*")), 
+                     label.x.npc = "right", label.y.npc = 0.1,
+                     formula = 'y~x', parse = TRUE, size = 4) +
+    theme(legend.position = 'bottom') +
+  labs(
+    title='Plot of SPI overall score on Government Effectiveness',
+    caption='Source: All indicators come from the World Bank.  Government Effectiveness indicator comes from Worldwide Governance Indicators.'
+  )
+
+
+ge_spi_plot
+
+```
+
+
+To tease out to what extent the relationship between the government effectiveness indicator and the SPI is due to other factors such as income or regional characteristics, we present results from an OLS regression below.  While we acknowledge that a more detailed study could be conducted to better understand the processes relating the two, we do find a relationship between government effectiveness and statistical performance after accounting for income and regional characteristics of a country.
+
+The regression model we use takes the following form:
+
+$$ G_{ctr} = \alpha_t + \gamma_r + \beta SPI.INDEX_{ctr} + \theta X_{ctr} + \epsilon_{ctr} $$
+
+where $Y_{ctri}$ is the government effectiveness estimate for country i, in time period t, and region r.  $SPI.INDEX_{ctri}$ is the SPI overall score. $X_{ctri}$ is a set of control variables in the regression. This includes log GDP per capita from the World Bank WDI. $\epsilon_{ctri}$ is the error term.  $\alpha_t$ is an indicator variable for each year and  $\gamma_r$ is a regional indicator variable.
+
+The table below shows the estimate of $\beta$, the effect of the statistical performance measure on government effectiveness.  Full results from this regression are shown in a table in the appendix.  The estimated coefficient is statistically significant at the 0.1% level, and implies that a 10 point increase in the SPI overall score is associated with a `r round(10*spi_eff,2)` standard deviation increase in government effectiveness.  For context, this 10 point jump in the SPI would roughly take a country from roughly the median in terms of government effectiveness to roughly the 58th percentile.
+
+
+
+
+```{r geregsmall, echo=FALSE}
+# 
+
+
+
+
+
+#fix labels
+factor_names <- grep("factor", names(coef(ge_spi)), value = TRUE)
+names(factor_names) <- gsub(".*)(.)", "\\1", factor_names)
+
+
+#create table
+huxtable::huxreg('Goverment Effectiveness'=ge_spi,
+       coefs=c('SPI Overall Score'='SPI.INDEX'),
+       note='{stars}. \nRegression also includes log GDP per capita, year indicator variables, and region indicator variables as controls.  \n Heteroskedasticity robust standard errors in parenthesis.',
+       number_format=3,
+       bold_signif=0.05) %>%
+  #huxtable::set_caption('Linear Regressions of Changes in Government Effectiveness on Changes in SPI from 2016-19') %>%
+  huxtable::as_flextable() %>%
+  add_header_lines('Linear Regressions of Government Effectiveness Score on SPI Overall Score from 2016-19') %>%
+  FitFlextableToPage() %>%
+  width(width = 2.5)
+
+```
+
 ## Country Changes in the Index
 
 
@@ -2233,11 +2339,11 @@ The cells in the table are color coded based on the performance of countries on 
 
 Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
 
-* **Top 20%**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#1A9850">green</span>.    
-* **4th Quantile**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#BFCF28"> light green</span>.    
-* **3rd Quantile**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#E7BB25"> yellow</span>.  
-* **2nd Quantile**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#DE7B2B"> orange</span>.  
-* **Bottom 20%**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#D73027"> red </span>.  
+* **Top 20%**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#2ec4b6">dark green</span>.    
+* **4th Quantile**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#acece7">light green</span>.    
+* **3rd Quantile**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#f1dc76">yellow</span>.  
+* **2nd Quantile**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#ffbf69">light orange</span>.  
+* **Bottom 20%**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#ff9f1c">dark orange </span>.  
 
 
 
@@ -2246,42 +2352,95 @@ Countries shaded in dark red are the lowest performing, countries in dark green 
 
 
 #colors
-col_palette <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
 
-col_palette2 <- c("#1A9850",  "#E7BB25", "#D73027" )
+col_palette <- c("#2ec4b6", "#acece7", "#f1dc76",  "#ffbf69","#ff9f1c"   )
+
+col_palette2 <- c("#2ec4b6",  "#f1dc76", "#ff9f1c" )
 
 #make the table
 index_tab <- index_disp %>%
   filter(date==2019) %>%
   select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) 
 
-#make nice looking
-index_tab <- index_tab %>%
-  flextable() %>%
-  add_header_lines('SPI overall score in 2019 and Dimension Scores.') %>%
-  set_header_labels(values=list(
-                       country="Country", 
-                       SPI.INDEX="SPI overall score",
-                       SPI.INDEX.DIM1="Dim 1: Data Use",
-                       SPI.INDEX.DIM2="Dim 2: Data Services",
-                       SPI.INDEX.DIM3="Dim 3: Data Products ",
-                       SPI.INDEX.DIM4="Dim 4: Data Sources",
-                       SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
-                                   )) %>%
-    bg(j = c('SPI.INDEX'), 
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.DIM1'),
-       bg = scales::col_quantile(col_palette2, domain=NULL, n=3, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.DIM2'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.DIM3'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.DIM4'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.DIM5'),
-       bg = scales::col_quantile(col_palette2, domain=NULL, n=3, reverse=TRUE))
+ #calculate the breaks for the color coding
+        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+        brks <- append(0,brks)
+        brks <- append(brks,100)
 
-  
+        brks1 <- quantile(index_tab$SPI.INDEX.DIM1, probs=c(1,2,3,4)/5,na.rm=T)
+        brks1 <- append(0,brks1)
+        if (max(brks1)<100) brks1 <- append(brks1,100)
+        
+        brks2 <- quantile(index_tab$SPI.INDEX.DIM2, probs=c(1,2,3,4)/5,na.rm=T)
+        brks2 <- append(0,brks2)
+        if (max(brks2)<100) brks2 <- append(brks2,100)
+        
+        brks3 <- quantile(index_tab$SPI.INDEX.DIM3, probs=c(1,2,3,4)/5,na.rm=T)
+        brks3 <- append(0,brks3)
+        if (max(brks3)<100) brks3 <- append(brks3,100)
+        
+        brks4 <- quantile(index_tab$SPI.INDEX.DIM4, probs=c(1,2,3,4)/5,na.rm=T)
+        brks4 <- append(0,brks4)
+        if (max(brks4)<100) brks4 <- append(brks4,100)
+        
+        brks5 <- quantile(index_tab$SPI.INDEX.DIM5, probs=c(1,2,3,4)/5,na.rm=T)
+        brks5 <- append(0,brks5)
+        if (max(brks5)<100) brks5 <- append(brks5,100)
+        
+
+      #make nice looking
+      index_tab <- index_tab %>%
+        flextable() %>%
+        add_header_lines('SPI overall score in 2019 and Dimension Scores.') %>%
+        set_header_labels(values=list(
+                             country="Country",
+                             SPI.INDEX="SPI overall score",
+                             SPI.INDEX.DIM1="Dim 1: Data Use",
+                             SPI.INDEX.DIM2="Dim 2: Data Services",
+                             SPI.INDEX.DIM3="Dim 3: Data Products ",
+                             SPI.INDEX.DIM4="Dim 4: Data Sources",
+                             SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
+                                         )) %>%
+          bg(j = c('SPI.INDEX'),
+             bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks, reverse=TRUE)) %>%
+          bg(j = c('SPI.INDEX.DIM1'),
+             bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks1, reverse=TRUE)) %>%
+          bg(j = c('SPI.INDEX.DIM2'),
+             bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks2, reverse=TRUE)) %>%
+          bg(j = c('SPI.INDEX.DIM3'),
+             bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks3, reverse=TRUE)) %>%
+          bg(j = c('SPI.INDEX.DIM4'),
+             bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks4, reverse=TRUE)) %>%
+          bg(j = c('SPI.INDEX.DIM5'),
+             bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks5, reverse=TRUE))
+# 
+# #make nice looking
+# index_tab <- index_tab %>%
+#   flextable() %>%
+#   add_header_lines('SPI overall score in 2019 and Dimension Scores.') %>%
+#   set_header_labels(values=list(
+#                        country="Country", 
+#                        SPI.INDEX="SPI overall score",
+#                        SPI.INDEX.DIM1="Dim 1: Data Use",
+#                        SPI.INDEX.DIM2="Dim 2: Data Services",
+#                        SPI.INDEX.DIM3="Dim 3: Data Products ",
+#                        SPI.INDEX.DIM4="Dim 4: Data Sources",
+#                        SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
+#                                    )) %>%
+#     bg(j = c('SPI.INDEX'), 
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+#     bg(j = c('SPI.INDEX.DIM1'),
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+#     bg(j = c('SPI.INDEX.DIM2'),
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+#     bg(j = c('SPI.INDEX.DIM3'),
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+#     bg(j = c('SPI.INDEX.DIM4'),
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+#     bg(j = c('SPI.INDEX.DIM5'),
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE))
+# 
+#   
 
 FitFlextableToPage(index_tab)
 
@@ -2293,9 +2452,9 @@ FitFlextableToPage(index_tab)
 
 
 #colors
-col_palette <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+col_palette <- c("#2ec4b6", "#acece7", "#f1dc76",  "#ffbf69","#ff9f1c"   )
 
-col_palette2 <- c("#1A9850",  "#E7BB25", "#D73027" )
+col_palette2 <- c("#2ec4b6",  "#f1dc76", "#ff9f1c" )
 
 #make the table
 index_tab_time <- spi_index_df %>%
@@ -2341,9 +2500,9 @@ FitFlextableToPage(index_tab_time)
 
 
 #colors
-col_palette <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+col_palette <- c("#2ec4b6", "#acece7", "#f1dc76",  "#ffbf69","#ff9f1c"   )
 
-col_palette2 <- c("#1A9850",  "#E7BB25", "#D73027" )
+col_palette2 <- c("#2ec4b6",  "#f1dc76", "#ff9f1c" )
 
 #make the table
 index_tab_recode <- index_compare %>%
@@ -2572,7 +2731,38 @@ spi_spi_plot
 
 ```
 
+## Other Tables and Figures
 
+
+```{r gereg, echo=FALSE}
+# 
+
+
+
+
+
+ge_spi <- lm_robust(GE.EST ~ SPI.INDEX + log(NY.GDP.PCAP.KD) + factor(date) + factor(region) , data = ge_df, se_type = "HC2") 
+
+ge_spi_tidy <- broom::tidy(ge_spi)
+ge_spi_glance <- broom::glance(ge_spi)
+
+#fix labels
+factor_names <- grep("factor", names(coef(ge_spi)), value = TRUE)
+names(factor_names) <- gsub(".*)(.)", "\\1", factor_names)
+
+
+#create table
+huxtable::huxreg('Goverment Effectiveness'=ge_spi,
+       coefs=c('SPI Overall Score'='SPI.INDEX', 'Log GDP per Capita'='log(NY.GDP.PCAP.KD)', factor_names,  'Intercept'='(Intercept)'),
+       note='{stars}. Heteroskedasticity Robust Std Errors in Parenthesis.',
+       number_format=3,
+       bold_signif=0.05) %>%
+  #huxtable::set_caption('Linear Regressions of Changes in Government Effectiveness on Changes in SPI from 2016-19') %>%
+  huxtable::as_flextable() %>%
+  add_header_lines('Linear Regressions of Government Effectiveness Score on SPI Overall Score from 2016-19') %>%
+  FitFlextableToPage() 
+
+```
 
 ## Indicator Metadata
 

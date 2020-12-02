@@ -41,6 +41,7 @@ output:
 </style>
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, dev='svg')
 options(htmltools.dir.version = FALSE)
 library(tidyverse)
 library(kableExtra)
@@ -299,14 +300,13 @@ Overall Scores Across Countries
   * Will present aggregate scores overall and for each dimension    
 
   * Given imprecision inherent in calculations, we recommend color coding providing subdivisions of maturity
-  
 Countries are grouped into five groups:   
 
-* **Top 20%**:    Shading in <span style="color:#1A9850">green</span>.    
-* **4th Quantile**:  Shading in <span style="color:#BFCF28"> light green</span>.    
-* **3rd Quantile**:   Shading in <span style="color:#E7BB25"> yellow</span>.  
-* **2nd Quantile**:   Shading in <span style="color:#DE7B2B"> orange</span>.  
-* **Bottom 20%**:   Shading in <span style="color:#D73027"> red </span>.     
+* **Top 20%**:    Shading in <span style="color:#2ec4b6">dark green</span>.    
+* **4th Quantile**:  Shading in <span style="color:#acece7"> light green</span>.    
+* **3rd Quantile**:   Shading in <span style="color:#f1dc76"> yellow</span>.  
+* **2nd Quantile**:   Shading in <span style="color:#ffbf69"> light orange</span>.  
+* **Bottom 20%**:   Shading in <span style="color:#ff9f1c"> dark orange </span>.     
 
 
 ---
@@ -354,8 +354,9 @@ spi_mapper <- function(data, indicator, title) {
     mutate(spi_groups=factor(spi_groups, 
                              levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
   
+
   #set color pallete
-  col_pal <- c("#1A9850",  "#BFCF28", "#E7BB25", "#DE7B2B",  "#D73027" )
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
   names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
   
   p1<-ggplot() +
@@ -365,7 +366,7 @@ spi_mapper <- function(data, indicator, title) {
     geom_path(data = maps$boundaries,
               aes(long, lat, group = group),
               color = "white",
-              size = 0.1,
+              size = 0.4,
               lineend = maps$boundaries$lineend,
               linetype = maps$boundaries$linetype) +
     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
@@ -474,12 +475,31 @@ spi_country_charts  <- function(data, indicator, title) {
     rename(data_available=!! indicator) %>%
     select(country, date, data_available, weights ) %>%
     right_join(country_metadata) %>%
+    filter(region!="Aggregates") %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
+   spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+  
+  SPI_map <- map_df %>%
+    mutate(spi_groups=case_when(
+      between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+  
+  #set color pallete
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
 
-  p2_alt <- map_df %>%
+  p2_alt <- SPI_map %>%
     ungroup() %>%
-    ggplot(aes(x=data_available, y=region, color=region)) +
+    ggplot(aes(x=data_available, y=region, color=spi_groups)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
@@ -487,7 +507,13 @@ spi_country_charts  <- function(data, indicator, title) {
       caption = 'Source: SPI Indicators Raw Data',
       subtitle= 'Data Point is for last year available (2019)'
       ) +
+      xlab('Score') +
       expand_limits(x=c(0,100)) +
+      scale_color_manual(
+        name='SPI Score',
+        values=col_pal,
+        na.value='grey'
+      ) +
       theme_bw() +
       theme(legend.position = 'top') 
    
@@ -1156,7 +1182,7 @@ corr_2019_nontrans <- cor(gdp_df_2019$value,gdp_df_2019$SPI.INDEX, use='pairwise
 ---
 
 .center3[
-```{r gdp_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+```{r gdp_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=10}
 
 ### Scatterplot log GDP SPI
 (gdp_spi + hci_spi)   +
@@ -1173,7 +1199,7 @@ corr_2019_nontrans <- cor(gdp_df_2019$value,gdp_df_2019$SPI.INDEX, use='pairwise
 ---
 
 .center3[
-```{r gdp_plot2, echo=FALSE, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+```{r gdp_plot2, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=10}
 
 ### Scatterplot log GDP SPI
 (gdp_spi2 + hci_spi2)   +

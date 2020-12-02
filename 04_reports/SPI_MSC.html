@@ -29,6 +29,7 @@ class: center, middle, inverse, title-slide
   right: 0;  
   width: 800px;
   height: 800px;
+  dpi: 250;
 }
 .center3 {
   margin: 0;
@@ -37,6 +38,7 @@ class: center, middle, inverse, title-slide
   right: 20px;  
   width: 800px;
   height: 800px;
+  dpi: 250;
 }
 .reduced{
    font-size: 0.5em;
@@ -152,10 +154,98 @@ Based on comments, Statistical Performance Indicators build on this:
 
 
 
+---
+class: inverse, middle, center
+
+Overall Scores Across Countries
+
+
+
+
+
+---
+# Overview Summary of Results
+
+  * Next, we will provide overall index
+  * Will present aggregate scores overall and for each dimension    
+
+  * Given imprecision inherent in calculations, we recommend color coding providing subdivisions of maturity
+Countries are grouped into five groups:   
+
+* **Top 20%**:    Shading in &lt;span style="color:#2ec4b6"&gt;dark green&lt;/span&gt;.    
+* **4th Quantile**:  Shading in &lt;span style="color:#acece7"&gt; light green&lt;/span&gt;.    
+* **3rd Quantile**:   Shading in &lt;span style="color:#f1dc76"&gt; yellow&lt;/span&gt;.  
+* **2nd Quantile**:   Shading in &lt;span style="color:#ffbf69"&gt; light orange&lt;/span&gt;.  
+* **Bottom 20%**:   Shading in &lt;span style="color:#ff9f1c"&gt; dark orange &lt;/span&gt;.   
+---
+
+&lt;style type="text/css"&gt;
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: 100%;
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+&lt;/style&gt;
+
+
+.center2[
+![](SPI_MSC_files/figure-html/overall_map-1.svg)&lt;!-- --&gt;
+]
+---
+.center3[
+![](SPI_MSC_files/figure-html/overall_charts-1.svg)&lt;!-- --&gt;
+
+
+]
+---
+.center3[
+![](SPI_MSC_files/figure-html/country_charts-1.svg)&lt;!-- --&gt;
+
+
+]
+---
+
+.center2[
+![](SPI_MSC_files/figure-html/dimension_5_map-1.svg)&lt;!-- --&gt;
+]
+
+---
+.center3[
+![](SPI_MSC_files/figure-html/dimension_5_country_charts-1.svg)&lt;!-- --&gt;
+
+
+]
+
+---
 
 class: inverse, middle, center
 
 Overview of Scores by Indicator
+
+
+---
+# Focus on Indicators
+
+* Next, will focus on indicators compiled using IMF sources   
+* Includes 11 Indicators:
+  1. SDDS/e-GDDS subscription	    
+  2. System of national accounts in use   
+  3. National Accounts base year	    
+  4. Classification of national industry	    
+  5. CPI base year	    
+  6. Classification of household consumption	    
+  7. Classification of status of employment	    
+  8. Central government accounting status	    
+  9. Compilation of government finance statistics	    
+  10. Compilation of monetary and financial statistics	    
+  11. Business process	    
+  
 
 
 ---
@@ -307,6 +397,13 @@ Overview of Scores by Indicator
 &lt;/table&gt;
 ]
 
+
+---
+.center3[
+![](SPI_MSC_files/figure-html/dim_corr-1.svg)&lt;!-- --&gt;
+]
+
+
 ---
 class: inverse, middle, center
 
@@ -317,7 +414,7 @@ Trends by Region
 
 
 .center3[
-![](SPI_MSC_files/figure-html/trends-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/trends-1.svg)&lt;!-- --&gt;
 
 
 ]
@@ -359,7 +456,7 @@ e-GDDS websites.
 
 ---
 .center2[
-![](SPI_MSC_files/figure-html/maps_2.1-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/maps_2.1-1.svg)&lt;!-- --&gt;
 ]
 
 ---
@@ -380,13 +477,13 @@ e-GDDS websites.
 ---
 
 .center2[
-![](SPI_MSC_files/figure-html/maps_2.1b-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/maps_2.1b-1.svg)&lt;!-- --&gt;
 
 ]
 ---
 
 .center3[
-![](SPI_MSC_files/figure-html/charts_2.1-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/charts_2.1-1.svg)&lt;!-- --&gt;
 
 ]
 ---
@@ -404,13 +501,13 @@ Consumer Price Index serves as indicators of inflation and reflects changes in t
 ---
 
 .center2[
-![](SPI_MSC_files/figure-html/maps_5.2.4-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/maps_5.2.4-1.svg)&lt;!-- --&gt;
 
 ]
 ---
 
 .center3[
-![](SPI_MSC_files/figure-html/charts_5.2.4-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/charts_5.2.4-1.svg)&lt;!-- --&gt;
 
 ]
 
@@ -433,13 +530,13 @@ statistics in these different areas.
 ---
 
 .center2[
-![](SPI_MSC_files/figure-html/maps_5.2.5-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/maps_5.2.5-1.svg)&lt;!-- --&gt;
 
 ]
 ---
 
 .center3[
-![](SPI_MSC_files/figure-html/charts_5.2.5-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/charts_5.2.5-1.svg)&lt;!-- --&gt;
 
 ]
 ---
@@ -464,13 +561,13 @@ units, the picture they provide of central government activities is usually inco
 ---
 
 .center2[
-![](SPI_MSC_files/figure-html/maps_5.2.7-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/maps_5.2.7-1.svg)&lt;!-- --&gt;
 
 ]
 ---
 
 .center3[
-![](SPI_MSC_files/figure-html/charts_5.2.7-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/charts_5.2.7-1.svg)&lt;!-- --&gt;
 
 ]
 
@@ -495,13 +592,13 @@ the compilation of monetary and financial statistics in addition to MFSM.
 ---
 
 .center2[
-![](SPI_MSC_files/figure-html/maps_5.2.9-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/maps_5.2.9-1.svg)&lt;!-- --&gt;
 
 ]
 ---
 
 .center3[
-![](SPI_MSC_files/figure-html/charts_5.2.9-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/charts_5.2.9-1.svg)&lt;!-- --&gt;
 
 ]
 ---
@@ -520,13 +617,13 @@ Scoring:
 ---
 
 .center2[
-![](SPI_MSC_files/figure-html/maps_5.2.9.fsi-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/maps_5.2.9.fsi-1.svg)&lt;!-- --&gt;
 
 ]
 ---
 
 .center3[
-![](SPI_MSC_files/figure-html/charts_5.2.9.fsi-1.png)&lt;!-- --&gt;
+![](SPI_MSC_files/figure-html/charts_5.2.9.fsi-1.svg)&lt;!-- --&gt;
 ]
 --- 
 
