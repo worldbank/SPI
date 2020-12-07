@@ -1,0 +1,11 @@
+"0",""
+"0","#Now map the result"
+"0","quality = ""high"""
+"0","maps <- wbgmaps::wbgmaps[[quality]]"
+"0",""
+"0",""
+"0","country_metadata <- wbstats::wbcountries()"
+"0",""
+"0","data = SPI_2019"
+"2","Error: object 'SPI_2019' not found
+"

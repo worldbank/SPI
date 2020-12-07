@@ -21,12 +21,6 @@
   method           from
   print.data.table     
 "
-"2","Registered S3 methods overwritten by 'htmltools':
-  method               from         
-  print.html           tools:rstudio
-  print.shiny.tag      tools:rstudio
-  print.shiny.tag.list tools:rstudio
-"
 "2","
 Attaching package: ‘flextable’
 
@@ -58,10 +52,6 @@ Attaching package: ‘flextable’
 "2","Loading required package: survival
 "
 "2","Loading required package: Formula
-"
-"2","Registered S3 method overwritten by 'htmlwidgets':
-  method           from         
-  print.htmlwidget tools:rstudio
 "
 "2","
 Attaching package: ‘Hmisc’

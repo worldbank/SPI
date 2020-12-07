@@ -72,47 +72,59 @@ ui <- navbarPage("Statistical Performance Indicators",
                  tabPanel("Global Picture",
                           div(class="outer",
                               
-                              # If not using custom CSS, set height of leafletOutput to a number instead of percent
-                              withSpinner(leafletOutput("spi_map_overall"
-                                                        , width = "90%", height = "700px")),
-                              
-                              h3('Summary Statistics of Indicators'),
-                              withSpinner(DT::dataTableOutput("summary_stats_overall")),
-                              h3('Indicators Over Time'),
-                              selectizeInput("over_time",
-                                             "Choose Indicator to Plot Over Time",
-                                             choices=as.character(metadata$descript)
-                                             
-                              ),
-                              withSpinner(plotlyOutput('plot_time',
-                                                       width = '80%')),
-                              
-                              # Shiny versions prior to 0.11 should use class = "modal" instead.
                               absolutePanel(id = "controls_overall", class = "panel panel-default", fixed = FALSE,
                                             draggable = FALSE, top = 150, left = "auto", right = 20, bottom = "auto",
                                             width = 330, height = "auto",
-                                            
-                                            h2("Indicator Year"),
-                                            selectizeInput("year_overall",
-                                                           "Reference Year",
-                                                           choices=c(2004:2019),
-                                                           selected=2019
-                                                           
-                                            ),
-                                            selectizeInput("income_groups_overall",
-                                                           "Select Income Groups",
-                                                           choices=c("Low income","Lower middle income","Upper middle income","High income"),
-                                                           selected=c("Low income","Lower middle income","Upper middle income","High income"),
-                                                           multiple=T
-                                            ),
-                                            selectizeInput("color_choices_overall", "Choose Indicator to Color Map", 
-                                                           choices=metadata$descript,
-                                                           selected='SPI.INDEX') 
+                                    selectizeInput("color_choices_overall", "Choose Indicator", 
+                                                      choices=metadata$descript,
+                                                      selected='SPI.INDEX') ,
+                                    
+                                       
+                                       selectizeInput("year_overall",
+                                                      "Reference Year",
+                                                      choices=c(2004:2019),
+                                                      selected=2019
+                                                      
+                                       ),
+                                       selectizeInput("income_groups_overall",
+                                                      "Select Income Groups",
+                                                      choices=c("Low income","Lower middle income","Upper middle income","High income"),
+                                                      selected=c("Low income","Lower middle income","Upper middle income","High income"),
+                                                      multiple=T
+                                       )
+                                    
+                              ),
+                              fluidRow(style='padding:50px',
+
+                                  h2("Map of Statistical Performance Indicators"),
+                                  # If not using custom CSS, set height of leafletOutput to a number instead of percent
+                                  withSpinner(leafletOutput("spi_map_overall", width='800px', height='50vh')
+                                                            ),
+                                  h2("Time Trends of Statistical Performance Indicators"),
+                                  
+                                  
+                                  withSpinner(plotlyOutput('plot_time', width='600px', height='50vh'))
+                                  
+
+                                    
+
                               )
-                              
+                          
                           )
        
                         ),
+                 #####################################################
+                 # Summary Statistics
+                 #####################################################
+                 
+                 tabPanel("Summary Statistics",
+                          div(class="outer",style='padding:50px',
+                              
+                              h2('Summary Statistics of Indicators'),
+                              withSpinner(DT::dataTableOutput("summary_stats_overall")),
+                          )
+                          
+                 ),
                  #####################################################
                  # Country Reports section
                  ####################################################                 
@@ -327,7 +339,7 @@ server <- function(input, output) {
     
     time_var <- reactive({
         
-        names(var.labels[match(input$over_time, var.labels)])
+        names(var.labels[match(input$color_choices_overall, var.labels)])
         
     })
     
@@ -374,9 +386,10 @@ server <- function(input, output) {
                 color=~region, 
                 labels=time_var(),
                 type = 'scatter', mode = 'lines+markers') %>%
-            layout(title = paste('Plot of SPI Indicators Over Time by Region: ',input$over_time, sep=""),
+            layout(title = paste('Plot of SPI Indicators Over Time by Region: ',input$color_choices_overall, sep=""),
                    xaxis = list(autotick = F, dtick = 1),
-                   yaxis = list(range = c(0,100)))
+                   yaxis = list(range = c(0,100)),
+                   legend=list(orientation='h'))
         
         
     })
@@ -418,11 +431,20 @@ server <- function(input, output) {
         palette_df <- df_overall() %>%
           select(map_var())
 
-        brks <- quantile(palette_df[,1], probs=c(0,1,2,3,4,5)/5,na.rm=T)
-        #create pallete
-        pal <- colorBin(c("#ff9f1c","#ffbf69","#f1dc76","#acece7","#2ec4b6"), 
+        brks <- quantile(palette_df[,1], probs=c(1,2,3,4)/5,na.rm=T)
+        brks <- append(0,brks)
+        col_p <- c("#ff9f1c","#ffbf69","#f1dc76","#acece7")
+        
+        if (max(brks)<100) {
+          brks <- append(brks,100)
+          col_p <- c("#ff9f1c","#ffbf69","#f1dc76","#acece7","#2ec4b6")
+          
+        }        #create pallete
+        pal <- colorBin(col_p, 
                           bins=brks,
-                          na.color='grey')
+                          domain=c(0,100),
+                          na.color='grey',
+                          pretty=FALSE)
         
         
         
@@ -442,7 +464,7 @@ server <- function(input, output) {
             lapply(htmltools::HTML)
 
         
-        
+        if (grepl('SPI.INDEX',map_var())) {
         
         leaflet(spi_map_overall) %>%
             addProviderTiles(providers$Esri.WorldStreetMap) %>%
@@ -454,7 +476,22 @@ server <- function(input, output) {
                       labFormat = function(type, cuts, p) {  # Here's the trick
                         paste0( c("Bottom 20%","2nd Quintile","3rd Quintile","4th Quintile","Top 20%" ))
                       },
-                      title='Indicator value', position="bottomleft")        
+                      title='Indicator value', position="bottomleft")      
+        } else {
+          
+          pal <- colorNumeric("Blues", palette_df[,1])
+          
+          
+          leaflet(spi_map_overall) %>%
+            addProviderTiles(providers$Esri.WorldStreetMap) %>%
+            addPolygons(stroke = FALSE, smoothFactor = 0.3, fillOpacity = 0.7,
+                        fillColor = ~pal(select(spi_map_overall@data, map_var())[,1]),
+                        label=labels) %>%
+            addLegend(pal=pal, 
+                      values=~select(spi_map_overall@data, map_var())[,1], opacity=0.7, 
+                                            title='Indicator value', position="bottomleft")      
+        }
+          
     })
     
     ####

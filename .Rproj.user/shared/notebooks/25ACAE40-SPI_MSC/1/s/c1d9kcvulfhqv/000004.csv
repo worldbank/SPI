@@ -1,0 +1,6 @@
+"0",""
+"0","D5.2.5.HOUS <- D5.2.5.HOUS %>%"
+"0","  left_join(wbstats::wb_countries()) %>%"
+"0","  mutate(weights=1)"
+"0",""
+"0","spi_mapper('D5.2.5.HOUS', 'SPI.D5.2.5.HOUS', 'Classification of Individual Consumption According to Purpose (COICOP)')"

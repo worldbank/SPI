@@ -2116,9 +2116,12 @@ In order to assess how stable our index values are over time, next we will compa
 ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2019, color=region)) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm', color='blue') +
+  geom_segment(aes(x=10,xend=100, y=10,yend=100), color='grey') +
+  expand_limits(x=c(10,100),y=c(10,100)) +
   theme_bw() +
   labs(
-    title='Scatterplot of 2019 SPI overall score  & 2016 SPI overall score '
+    title='Scatterplot of 2019 SPI overall score  & 2016 SPI overall score',
+    caption = 'Solid grey line represents the 45 degree line.  Blue line represents line of best fit (regression line) with a 95% confidence interval shown in a shaded line.'
   ) +
   ylab('2019 SPI Overall Score') +
   xlab('2016 SPI Overall Score') +
@@ -2127,7 +2130,10 @@ ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2019, color=region)) +
                                 stat(rr.label), sep = "*\", \"*")), 
                      color='black',
                      label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4)
+                     formula = 'y~x', parse = TRUE, size = 4) +
+  guides(
+    size="none"
+  )
 
 
 ```
@@ -2137,7 +2143,7 @@ ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2019, color=region)) +
 
 top_changes <- spi_changes %>%
   mutate(changes=SPI.INDEX.2019-SPI.INDEX.2016) %>%
-  arrange(-changes) %>%
+  arrange(-abs(changes)) %>%
   select(country,SPI.INDEX.2019,SPI.INDEX.2016, changes) %>%
   mutate(across(c('SPI.INDEX.2019','SPI.INDEX.2016', 'changes'),round,1))
 

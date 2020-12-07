@@ -1,0 +1,5 @@
+"0","#read in the SPI dataset"
+"0","spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep=""/""))"
+"0",""
+"0","metadata <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep=""""))"
+"0",""

@@ -1,5 +1,5 @@
 ---
-title: "Statistical Performance Indicators: Methods, Standards, Classifications from IMF"
+title: "Statistical Performance Indicators: IMF Presentation"
 author: "SPI Team"
 institute: "World Bank, Development Data Group"
 output:
@@ -31,7 +31,7 @@ output:
 .center3 {
   margin: 0;
   position: absolute;
-  top: -20px;
+  top: 20px;
   right: 20px;  
   width: 800px;
   height: 800px;
@@ -147,16 +147,16 @@ Based on feedback, goal was for SPI framework to:
 ---
 # Building on SCI
 
-- Statistical Performance Indicators build on the Statistical Capacity Index
+- Statistical Performance Indicators build on Statistical Capacity Index
 
 The SCI (in use since 2004) has three dimensions:   
-  1. Methodology (Balance of payments manual in use, CPI base year, SDDS, etc.)   
+  1. Methodology (Balance of payments manual in use, CPI base year, External debt reporting status, Government finance accounting, import/export price indexes, industrial producting index, national accounts base year, national immunization coverage, SDDS, UNESCO reporting)   
   2. Source Data (Agriculture Census, Health Surveys, etc)    
-  3. Periodicity (values for indicators: access to water, child malnutrition, poverty, etc)   
+  3. Periodicity (indicators for access to water, malnutrition, poverty, etc)   
 
 --
 
-Based on comments, Statistical Performance Indicators build on this:
+Based on comments, Statistical Performance Indicators build on this:    
   - Includes same (or similar) indicators   
   - But also expands into new areas    
   - Open Data and Open Code   
@@ -224,8 +224,78 @@ Based on comments, Statistical Performance Indicators build on this:
 
 .center[![unchanged image](SPI_dashboard.png)]
 
+---
+# Data Use (5 Pillars)
+
+  * <span style="color:grey"> Pillar 1.1: Data use by national legislature:   
+    * *Not included because of lack of established methodology*   
+  * <span style="color:grey"> Pillar 1.2: Data use by national executive branch:    
+    * *Researching method on use of statistics in Voluntary National Review documents*      
+  * <span style="color:grey">Pillar 1.3: Data use by civil society:    
+    * *Not included because of lack of established methodology*    
+  * <span style="color:grey">Pillar 1.4: Data use by academia:      
+    * *Not included because of lack of established methodology*   
+  * **Pillar 1.5: Data use by international organizations:**  
+    * *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics, safely managed water, labor force data for international agencies using metadata*    
 
 ---
+# Data Services (4 Pillars)
+
+  * <span style="color:green"> **Pillar 2.1: Data Releases:** 
+    * *SDDS/e-GDDS subscription*    
+  * **Pillar 2.2: Online access:** 
+    * *ODIN Open Data Openness score*   
+  * <span style="color:grey"> Pillar 2.3: Advisory/ Analytical Services:  
+    * *Not included because of lack of established methodology*    
+  * **Pillar 2.4: Data services:** 
+    * *NADA metadata available*
+    
+---
+  
+# Data Products (4 Pillars) 
+
+For these pillars, we pull values from the UN SDG database, calculate the share of SDG indicators with a country produced value per country
+
+  * **Pillar 3.1: Social Statistics:** 
+    * *Average score for Goal 1-6 indicators*
+  * **Pillar 3.2: Economic Statistics:** 
+    * *Average score for Goal 7-12 indicators*  
+  * **Pillar 3.3: Environmental Statistics:** 
+    * *Average score for Goal 13-15 indicators*      
+  * **Pillar 3.4: Institutional Statistics:**
+    * *Average score for Goal 16-17 indicators*
+    
+---
+
+# Data Sources (4 Pillars) 
+
+
+  * **Pillar 4.1: Censuses and Surveys:** 
+    * *Average score of 8 Census and Survey Indicators*    
+  * **Pillar 4.2: Administrative Data:** 
+    * *Complete CRVS, <span style="color:red"> availability of SPL admin data (ASPIRE), Education admin data (UNESCO), Labor admin data (ILO) *  
+  * **Pillar 4.3: Geospatial Data:**  
+    * *Geospatial data available at 1st Admin Level according to ODIN* 
+  * <span style="color:grey">Pillar 4.4: Private/citizen generated data:  
+    * *Not included because of lack of established methodology*   
+    
+---
+
+# Data Infrastructure (5 Pillars) 
+
+
+  * <span style="color:grey"> Pillar 5.1: Legislation and Governance:     
+    * *SDG 17.18.2 - National Statistical Legislation complies with UN Fundamental Principles of Statistics (PARIS21)*  
+  * <span style="color:green"> **Pillar 5.2: Standards and Methods:** 
+    * *Average score for 10 Standards and Methods indicators sourced mostly from IMF*  
+  * <span style="color:grey"> Pillar 5.3: Skills:  
+    * *Considering PARIS21 measure of statistical literacy*    
+  * <span style="color:grey"> Pillar 5.4: Partnerships:  
+    * *Not included because of lack of established methodology*    
+  * <span style="color:grey"> Pillar 5.5: Finance:  
+    * *SDG 17.18.3 - Statistical Plan fully funded (PARIS21)*   
+    
+
 
 ```{r spi_map_index, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
@@ -575,7 +645,39 @@ spi_country_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Over
 
 ]
 ---
+class: inverse, middle, center
 
+Dimension 2: Data Services - Scores Across Countries
+
+
+
+
+
+---
+.center2[
+```{r dimension_2_map, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM2', 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
+
+```
+]
+
+---
+.center3[
+```{r dimension_2_country_charts, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_country_charts('SPI','SPI.INDEX.DIM2','Statistical Performance Indicators -  SPI Dimension 2: Data Services')
+
+```
+
+
+]
+
+---
+
+class: inverse, middle, center
+
+Dimension 5: Data Services - Scores Across Countries
+
+---
 .center2[
 ```{r dimension_5_map, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
@@ -605,16 +707,16 @@ Overview of Scores by Indicator
 
 * Next, will focus on indicators compiled using IMF sources   
 * Includes 11 Indicators:
-  1. SDDS/e-GDDS subscription	    
+  1. <span style="color:green"> SDDS/e-GDDS subscription	    
   2. System of national accounts in use   
   3. National Accounts base year	    
-  4. Classification of national industry	    
-  5. CPI base year	    
-  6. Classification of household consumption	    
-  7. Classification of status of employment	    
-  8. Central government accounting status	    
-  9. Compilation of government finance statistics	    
-  10. Compilation of monetary and financial statistics	    
+  4. <span style="color:green"> Classification of national industry	    
+  5. <span style="color:green"> CPI base year	    
+  6. <span style="color:green"> Classification of household consumption (COICOP)	    
+  7. <span style="color:green"> Classification of status of employment	    
+  8. <span style="color:green"> Central government accounting status (AC/CA)	    
+  9. <span style="color:green"> Compilation of government finance statistics (GFSM)	    
+  10. <span style="color:green"> Compilation of monetary and financial statistics (MFS)	    
   11. Business process	    
   
 
@@ -1209,6 +1311,181 @@ imf_codes <- read_csv(file=paste(raw_dir, "metadata","IMF_country_codes.csv", se
 ```
 
 
+---
+
+### 5.2.9 Compilation of monetary and financial statistics
+
+Compilation of monetary and financial statistics refers to the Monetary and Financial Statistics Manual 
+(MFSM) in use.  It covers concepts, definitions, classifications of financial instruments and sectors, and 
+accounting rules, and provides a comprehensive analytic framework for monetary and financial planning and policy 
+determination.  The Monetary and Finance Statistics: Compilation Guide (2008) provides detailed guidelines for 
+the compilation of monetary and financial statistics in addition to MFSM. 
+
+1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
+0 Points. Otherwise
+
+```{r mony, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+#read in csv file.
+D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep="/" )) %>%
+  mutate(SPI.D5.2.9.MONY=case_when(
+    MONY=="MFSM 2000" | MONY=="MFSMCG 2016"~ 1, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.9.MONY=MONY)  %>%
+  select(iso3c, country, date, RAW.D5.2.9.MONY, SPI.D5.2.9.MONY  ) %>%
+  arrange(date, country)
+
+#####
+# IMF Data
+#####
+
+#use alternative data source provided by the IMF
+
+#read in data from IMF
+D5.2.9.MONY.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet ="7. MFS Compilation status",
+                               skip=0
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.9.MONY.IMF=case_when(
+    grepl('MFSM 2000',Monetary.and.Financial.Statistics..MFS..Reporting.Status) ~ 1, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.9.MONY.IMF=Monetary.and.Financial.Statistics..MFS..Reporting.Status) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) %>%
+  mutate(date=2019)
+  
+  
+D5.2.9.MONY <-  D5.2.9.MONY %>%
+  full_join(D5.2.9.MONY.IMF) %>%
+  mutate(SPI.D5.2.9.MONY=if_else(is.na(SPI.D5.2.9.MONY),SPI.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-country,-SPI.D5.2.9.MONY.IMF) %>%
+  arrange(date, iso3c)
+
+
+```
+
+
+---
+
+.center2[
+```{r maps_5.2.9, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+D5.2.9.MONY <- D5.2.9.MONY %>%
+  left_join(wbstats::wb_countries()) %>%
+  mutate(weights=1)
+
+spi_mapper('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics')
+
+
+
+```
+
+]
+---
+
+.center3[
+```{r charts_5.2.9, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics')
+
+```
+
+]
+---
+# Financial Soundness Indicators
+
+Scoring:    
+
+  * 1 point. 2019 value for: Financial Soundness Indicators, Core Set, Deposit Takers, Asset Quality, Non-performing Loans to Total Gross Loans, Percent value    
+  * 0.5 Points. 2018 value for: Financial Soundness Indicators, Core Set, Deposit Takers, Asset Quality, Non-performing Loans to Total Gross Loans, Percent value   
+  * 0 points. Else    
+
+---
+```{r fsi, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+
+#####
+# IMF Data
+#####
+
+#use alternative data source provided by the IMF
+
+#read in data from IMF
+D5.2.9.FSI.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet ="FSI Quarterly",
+                               skip=1
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.9.FSI.IMF=case_when(
+    grepl('2019|2020', Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent) ~ 1, 
+    grepl('2018', Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent) ~ 0.5, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.9.FSI.IMF=Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c, RAW.D5.2.9.FSI.IMF,SPI.D5.2.9.FSI.IMF ) %>%
+  mutate(date=2019)
+  
+D5.2.9.FSI.IMF_annual <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet ="FSI Annual",
+                               skip=1
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.9.FSI.IMF_annual=case_when(
+    grepl('2019|2020', Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent) ~ 1, 
+    grepl('2018', Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent) ~ 0.5, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.9.FSI.IMF=Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c ,SPI.D5.2.9.FSI.IMF_annual ) %>%
+  mutate(date=2019)
+
+  
+D5.2.9.FSI <-  D5.2.9.FSI.IMF %>%
+  left_join(D5.2.9.FSI.IMF_annual) %>%
+  rowwise() %>%
+  mutate(SPI.D5.2.9.FSI=max(c_across(c('SPI.D5.2.9.FSI.IMF','SPI.D5.2.9.FSI.IMF_annual')) )) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-SPI.D5.2.9.FSI.IMF,-SPI.D5.2.9.FSI.IMF_annual) %>%
+  arrange(date, iso3c)
+
+
+```
+
+
+---
+
+.center2[
+```{r maps_5.2.9.fsi, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+
+D5.2.9.FSI <- D5.2.9.FSI %>%
+  left_join(wbstats::wb_countries()) %>%
+  mutate(weights=1)
+
+spi_mapper('D5.2.9.FSI', 'SPI.D5.2.9.FSI', 'Financial Soundness Indicators, Core Set')
+
+
+
+```
+
+]
 
 ---
 ## Indicator 2.1: Data Releases
@@ -1714,159 +1991,7 @@ spi_charts('D5.2.7.CGOV', 'SPI.D5.2.7.CGOV', 'Central government accounting stat
 
 
 
----
 
-### 5.2.9 Compilation of monetary and financial statistics
-
-Compilation of monetary and financial statistics refers to the Monetary and Financial Statistics Manual 
-(MFSM) in use.  It covers concepts, definitions, classifications of financial instruments and sectors, and 
-accounting rules, and provides a comprehensive analytic framework for monetary and financial planning and policy 
-determination.  The Monetary and Finance Statistics: Compilation Guide (2008) provides detailed guidelines for 
-the compilation of monetary and financial statistics in addition to MFSM. 
-
-1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
-0 Points. Otherwise
-
-```{r mony, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-
-#read in csv file.
-D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep="/" )) %>%
-  mutate(SPI.D5.2.9.MONY=case_when(
-    MONY=="MFSM 2000" | MONY=="MFSMCG 2016"~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.9.MONY=MONY)  %>%
-  select(iso3c, country, date, RAW.D5.2.9.MONY, SPI.D5.2.9.MONY  ) %>%
-  arrange(date, country)
-
-#####
-# IMF Data
-#####
-
-#use alternative data source provided by the IMF
-
-#read in data from IMF
-D5.2.9.MONY.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet ="7. MFS Compilation status",
-                               skip=0
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.9.MONY.IMF=case_when(
-    grepl('MFSM 2000',Monetary.and.Financial.Statistics..MFS..Reporting.Status) ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.9.MONY.IMF=Monetary.and.Financial.Statistics..MFS..Reporting.Status) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
-  left_join(imf_codes) %>%
-  select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) %>%
-  mutate(date=2019)
-  
-  
-D5.2.9.MONY <-  D5.2.9.MONY %>%
-  full_join(D5.2.9.MONY.IMF) %>%
-  mutate(SPI.D5.2.9.MONY=if_else(is.na(SPI.D5.2.9.MONY),SPI.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
-  select(-country,-SPI.D5.2.9.MONY.IMF) %>%
-  arrange(date, iso3c)
-
-
-```
-
-
----
-
-.center2[
-```{r maps_5.2.9, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-
-D5.2.9.MONY <- D5.2.9.MONY %>%
-  left_join(wbstats::wb_countries()) %>%
-  mutate(weights=1)
-
-spi_mapper('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics')
-
-
-
-```
-
-]
----
-
-.center3[
-```{r charts_5.2.9, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_charts('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics')
-
-```
-
-]
----
-# Financial Soundness Indicators
-
-Scoring:    
-
-  * 1 point. 2019 value for: Financial Soundness Indicators, Core Set, Deposit Takers, Asset Quality, Non-performing Loans to Total Gross Loans, Percent value    
-  * 0.5 Points. 2018 value for: Financial Soundness Indicators, Core Set, Deposit Takers, Asset Quality, Non-performing Loans to Total Gross Loans, Percent value   
-  * 0 points. Else    
-
----
-```{r fsi, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-
-
-#####
-# IMF Data
-#####
-
-#use alternative data source provided by the IMF
-
-#read in data from IMF
-D5.2.9.FSI.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet ="FSI Annual",
-                               skip=1
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.9.FSI.IMF=case_when(
-    Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent==2019 ~ 1, 
-    Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent==2018 ~ 0.5, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.9.FSI.IMF=Financial.Soundness.Indicators..Core.Set..Deposit.Takers..Asset.Quality..Non.performing.Loans.to.Total.Gross.Loans..Percent) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
-  left_join(imf_codes) %>%
-  select(iso3c, RAW.D5.2.9.FSI.IMF,SPI.D5.2.9.FSI.IMF ) %>%
-  mutate(date=2019)
-  
-  
-D5.2.9.FSI <-  D5.2.9.FSI.IMF %>%
-  mutate(SPI.D5.2.9.FSI=SPI.D5.2.9.FSI.IMF) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
-  select(-SPI.D5.2.9.FSI.IMF) %>%
-  arrange(date, iso3c)
-
-
-```
-
-
----
-
-.center2[
-```{r maps_5.2.9.fsi, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-
-D5.2.9.FSI <- D5.2.9.FSI %>%
-  left_join(wbstats::wb_countries()) %>%
-  mutate(weights=1)
-
-spi_mapper('D5.2.9.FSI', 'SPI.D5.2.9.FSI', 'Financial Soundness Indicators, Core Set')
-
-
-
-```
-
-]
 ---
 
 .center3[
@@ -1918,101 +2043,52 @@ spi_charts('D5.2.9.FSI', 'SPI.D5.2.9.FSI', 'Financial Soundness Indicators, Core
 ---
 class: inverse, middle, center
 
-Overview of Framework
-
-
----
- # Framework  Overview
-
-- SPI framework covers five dimensions:
-  1. Data Use
-      * Indicators that capture demand side of statistical system  
-  2. Data Services
-      * Information on data releases, online access, advisory/analytical services, and other data services    
-  3. Data Products
-      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
-  4. Data Sources
-      * Censuses and surveys, admin data, geospatial, private/citizen generated data      
-  5. Data Infrastructure
-      * Legislation and governance, standards & methods, skill, partnerships, and finance
-
-
+Extra Slides
 
 ---
-# SPI Framework
 
-.center[![unchanged image](SPI_dashboard.png)]
+.center2[
+```{r dimension_1_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM1', 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
 
-
----
-# Data Use (5 Pillars)
-
-  * <span style="color:grey"> Pillar 1.1: Data use by national legislature:   
-    * *Not included because of lack of established methodology*   
-  * <span style="color:grey"> Pillar 1.2: Data use by national executive branch:    
-    * *Researching method on use of statistics in Voluntary National Review documents*      
-  * <span style="color:grey">Pillar 1.3: Data use by civil society:    
-    * *Not included because of lack of established methodology*    
-  * <span style="color:grey">Pillar 1.4: Data use by academia:      
-    * *Not included because of lack of established methodology*   
-  * **Pillar 1.5: Data use by international organizations:**  
-    * *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics for international agencies using metadata*    
+```
+]
 
 ---
-# Data Services (4 Pillars)
 
-  * **Pillar 2.1: Data Releases:** 
-    * *SDDS/e-GDDS subscription*    
-  * **Pillar 2.2: Online access:** 
-    * *ODIN Open Data Openness score*   
-  * <span style="color:grey"> Pillar 2.3: Advisory/ Analytical Services:  
-    * *Not included because of lack of established methodology*    
-  * **Pillar 2.4: Data services:** 
-    * *NADA metadata available*
-    
----
-  
-# Data Products (4 Pillars) 
+.center2[
+```{r dimension_2_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM2', 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
 
-For these pillars, we pull values from the UN SDG database, calculate the share of SDG indicators with a country produced value per country
+```
+]
 
-  * **Pillar 3.1: Social Statistics:** 
-    * *Average score for Goal 1-6 indicators*
-  * **Pillar 3.2: Economic Statistics:** 
-    * *Average score for Goal 7-12 indicators*  
-  * **Pillar 3.3: Environmental Statistics:** 
-    * *Average score for Goal 13-15 indicators*      
-  * **Pillar 3.4: Institutional Statistics:**
-    * *Average score for Goal 16-17 indicators*
-    
 ---
 
-# Data Sources (4 Pillars) 
+.center2[
+```{r dimension_3_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM3', 'Statistical Performance Indicators - SPI Dimension 3: Data Products')
 
+```
+]
 
-  * **Pillar 4.1: Censuses and Surveys:** 
-    * *Average score of 8 Census and Survey Indicators*    
-  * **Pillar 4.2: Administrative Data:** 
-    * *Complete CRVS, <span style="color:red"> availability of SPL admin data (ASPIRE), Education admin data (UNESCO), Labor admin data (ILO) *  
-  * **Pillar 4.3: Geospatial Data:**  
-    * *Geospatial data available at 1st Admin Level according to ODIN* 
-  * <span style="color:grey">Pillar 4.4: Private/citizen generated data:  
-    * *Not included because of lack of established methodology*   
-    
 ---
 
-# Data Infrastructure (5 Pillars) 
+.center2[
+```{r dimension_4_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM4', 'Statistical Performance Indicators - SPI Dimension 4: Data Sources')
 
+```
+]
 
-  * <span style="color:red"> Pillar 5.1: Legislation and Governance:     
-    * *SDG 17.18.2 - National Statistical Legislation complies with UN Fundamental Principles of Statistics (PARIS21)*  
-  * **Pillar 5.2: Standards and Methods:** 
-    * *Average score for 10 Standards and Methods indicators*  
-  * <span style="color:grey"> Pillar 5.3: Skills:  
-    * *Considering PARIS21 measure of statistical literacy*    
-  * <span style="color:grey"> Pillar 5.4: Partnerships:  
-    * *Not included because of lack of established methodology*    
-  * <span style="color:red"> Pillar 5.5: Finance:  
-    * *SDG 17.18.3 - Statistical Plan fully funded (PARIS21)*   
-    
 ---
+
+.center2[
+```{r dimension_5_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
+
+```
+]
+
+---
+

@@ -77,7 +77,7 @@
 !/**/**/*.md
 
 # xlsx files
-!/Data/**/*.xlsx
+!/**/**/*.xlsx
 
 # csv files
 !/**/**/*.csv

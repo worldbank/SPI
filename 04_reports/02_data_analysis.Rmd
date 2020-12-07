@@ -30,6 +30,7 @@ library(lubridate)
 library(haven)
 library(zoo)
 library(skimr)
+library(r2d3)
 
 #set directories
 dir <- here()
@@ -549,13 +550,15 @@ FitFlextableToPage(ft)
 ```{r cen, echo=FALSE}
 
 df_10yr <- spi_df_final %>%
-  mutate('Population Census Last 10 Years'=if_else(SPI.D4.1.1.POPU==1,1,0),
+  mutate(
+          'No Population Census Last 10 Years'=if_else(SPI.D4.1.1.POPU<=0.5,1,0),
+          'Population Census Last 10 Years'=if_else(SPI.D4.1.1.POPU==1,1,0),
          'Population Census Last 20 Years'=if_else(SPI.D4.1.1.POPU>0,1,0),
          'Agriculture Census Last 10 Years'=if_else(SPI.D4.1.2.AGRI==1,1,0),
          'Agriculture Census Last 20 Years'=if_else(SPI.D4.1.2.AGRI>0,1,0))
 
 
-cen_table <- spi_income_table('df_10yr', c('Population Census Last 10 Years','Population Census Last 20 Years','Agriculture Census Last 10 Years','Agriculture Census Last 20 Years'),'2019')
+cen_table <- spi_income_table('df_10yr', c('No Population Census Last 10 Years','Population Census Last 10 Years','Population Census Last 20 Years','Agriculture Census Last 10 Years','Agriculture Census Last 20 Years'),'2019')
 
 #export table to word
 ft <- flextable(cen_table) %>%
@@ -563,8 +566,43 @@ ft <- flextable(cen_table) %>%
 
 FitFlextableToPage(ft)
 ```  
+
+Below is a list of the countries without a population census in past 10 years
+
+```{r cenlist, echo=FALSE}
+
+df_10yr_list <- spi_df_final %>%
+  mutate(
+          no_pop_cen_10yr=if_else(SPI.D4.1.1.POPU<=0.5,1,0),
+          ) %>%
+  filter(no_pop_cen_10yr==1 & date==2019) %>%
+  group_by(income) %>%
+  summarise(cluster = toString(unique(country))) %>%
+  flextable() %>%
+  add_header_lines("List of Countries with No Population Census in Past 10 Years") 
+  
+  FitFlextableToPage(df_10yr_list)
+  
+```
   
 
+## 	Pillar 5.2: system of national accounts in use; share of countries with 2008 SNA (share of countries with at least 2003 SNA) – by income group  
+
+```{r snau, echo=FALSE}
+
+df_5.2 <- spi_df_final %>%
+  mutate('2008 SNA'=if_else(SPI.D5.2.1.SNAU==1,1,0),
+         '1993 SNA'=if_else(SPI.D5.2.1.SNAU==0.5,1,0),
+         'At least 1993 SNA'=if_else(SPI.D5.2.1.SNAU>=0.5,1,0) )
 
 
-  
+sna_table <- spi_income_table('df_5.2', c('2008 SNA','1993 SNA','At least 1993 SNA'),'2019')
+
+#export table to word
+ft <- flextable(sna_table) %>%
+  add_header_lines("Share of countries with SNA",) 
+
+FitFlextableToPage(ft)
+```  
+
+

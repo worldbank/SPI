@@ -811,9 +811,20 @@ df <- pcn %>%
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
 for (reference_year in 2004:2019) {
   
+    #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
+  if (reference_year==2019) {
+    rec_window=7
+  } else if (reference_year==2018) {
+    rec_window=6
+  } else {
+    rec_window=5
+  }
+ 
+  
   temp_5<-df %>%
         filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
-        mutate(frequency=((reference_year-as.numeric(year))<=7) & (reference_year>=as.numeric(year))) %>% 
+
+        mutate(frequency=((reference_year-as.numeric(year))<=rec_window) & (reference_year>=as.numeric(year))) %>% 
         filter(frequency==TRUE) %>%
         group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
         summarise(SPI.D1.5.POV_5=n())  %>%
@@ -955,8 +966,20 @@ D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '1.5_DUIO/UN IGME Child Mortality 
 
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
 for (reference_year in 2004:2019) {
+  
+  
+      #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
+  if (reference_year==2019) {
+    rec_window=7
+  } else if (reference_year==2018) {
+    rec_window=6
+  } else {
+    rec_window=5
+  }
+ 
+  
   temp_5 <-D3.3.AKI.MORT %>%
-          mutate(frequency=((reference_year-as.numeric(date))<=7) & (reference_year>=as.numeric(date))) %>%
+          mutate(frequency=((reference_year-as.numeric(date))<=rec_window) & (reference_year>=as.numeric(date))) %>%
           mutate(SPI.FREQ.D1.5.CHLD.MORT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
           group_by(country) %>%
           summarise(SPI.FREQ.D1.5.CHLD.MORT=sum(SPI.FREQ.D1.5.CHLD.MORT, na.rm=T)) %>%
@@ -970,7 +993,7 @@ for (reference_year in 2004:2019) {
           select(-SPI.FREQ.D1.5.CHLD.MORT)
 
   temp_10 <-D3.3.AKI.MORT %>%
-          mutate(frequency=((reference_year-as.numeric(date))<=12) & (reference_year>=as.numeric(date))) %>%
+          mutate(frequency=((reference_year-as.numeric(date))<=rec_window) & (reference_year>=as.numeric(date))) %>%
           mutate(SPI.FREQ.D1.5.CHLD.MORT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
           group_by(country) %>%
           summarise(SPI.FREQ.D1.5.CHLD.MORT=sum(SPI.FREQ.D1.5.CHLD.MORT, na.rm=T)) %>%
@@ -1403,14 +1426,22 @@ window_fun <- function(date_start, date_end) {
 ####
 # 8 Year window
 ####
-#create this database for each year from 2004 to 2019 using a 10 year window
+#create this database for each year from 2004 to 2019 using a 8 year window
 
 
 
 for (i in c(2015:2019)) {
   
-  start=i-7
   end=i
+  #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
+  if (end==2019) {
+    start=i-9
+  } else if (end==2018) {
+    start=i-8
+  } else {
+    start=i-7
+  }
+ 
   
   temp_df <- window_fun(start,end)
   assign(paste('safe_managed_',end, sep=""), temp_df)
@@ -1516,8 +1547,16 @@ ilo_fun <- function(date_start, date_end) {
 
 for (i in c(2010:2019)) {
   
-  start=i-4
   end=i
+  
+    #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
+  if (end==2019) {
+    start=i-6
+  } else if (end==2018) {
+    start=i-5
+  } else {
+    start=i-4
+  }
   
   temp_df <- ilo_fun(start,end)
   assign(paste('lfp_data_',end, sep=""), temp_df)
@@ -1630,7 +1669,7 @@ D2.1_DSDR_sci <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
     iso3c=countryiso3code,
     country=country.value,
     date=as.numeric(date),
-    SDDS=value
+    SDDS=if_else(is.na(value),0,as.numeric(value))
   ) %>%
   left_join(spi_df_empty) %>% #add on country metadata
   filter(!is.na(income)) %>%
@@ -1663,11 +1702,10 @@ D2.1_DSDR <- df %>%
     TRUE ~ 0 ))  %>%
   bind_rows(D2.1_DSDR_sci) %>%
   rename(RAW.D2.1.IDDS=IDDS) %>%
-  select(iso3c, country, date, RAW.D2.1.IDDS, SPI.D2.1.GDDS  ) %>%
-  arrange(date, country) 
+  select(iso3c,  date, RAW.D2.1.IDDS, SPI.D2.1.GDDS  ) %>%
+  left_join(country_metadata)
 
-D2.1_DSDR_map <- D2.1_DSDR %>%
-  filter(RAW.D2.1.IDDS>0)
+D2.1_DSDR_map <- D2.1_DSDR 
 
 spi_mapper('D2.1_DSDR_map', 'SPI.D2.1.GDDS', 'SDDS Data Standards in Place' )
 
@@ -2178,7 +2216,7 @@ pop_census_df <- df %>%
 ag_census_df <- df %>%
   mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
          country=Table.Name) %>%
-  select(c('iso3c', 'country', 'date',  'Latest.agricultural.census')  ) %>%
+  select(c('iso3c',  'date',  'Latest.agricultural.census')  ) %>%
   mutate(last_val=str_extract(Latest.agricultural.census, "\\d{4}") )%>%
     mutate(last_val=as.numeric(last_val)) %>%
     mutate(indicator=case_when(
@@ -2187,8 +2225,8 @@ ag_census_df <- df %>%
       TRUE ~ 0 )
     )  %>%
     ungroup() %>%
-    select(c('iso3c', 'country', 'date', 'Latest.agricultural.census', 'indicator')  ) %>%
-    arrange(date, country)
+    select(c('iso3c',  'date', 'Latest.agricultural.census', 'indicator')  ) %>%
+    arrange(date, iso3c)
   
     
 
@@ -2278,7 +2316,7 @@ survey_fun  <- function(data, input_var) {
     bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_high.csv", sep="" ))) %>%            
     write_excel_csv(path = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
     distinct() %>%
-    group_by(iso3c, country) %>% 
+    group_by( country) %>% 
     rename(input_var = !! input_var) %>%
     nest() %>% # The next chunk of code will split our string with the years of the census (i.e. "2000, 2010") in to separate rows.  We will then aggregate up.
     mutate(
@@ -2308,7 +2346,12 @@ survey_fun  <- function(data, input_var) {
   for (i in 2004:2019) {
    temp <- cs_df %>%
     mutate(date=i) %>%
-    mutate(recency_indicator=((date-indicator_date<=10) & (date-indicator_date>0)) ) %>% #restrict to surveys inside 10 year period
+    mutate(window=case_when( #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
+      date==2019 ~ 12,
+      date==2018 ~ 11,
+      TRUE ~ 10
+    )) %>%
+    mutate(recency_indicator=((date-indicator_date<=window) & (date-indicator_date>0)) ) %>% #restrict to surveys inside 10 year period 
     group_by( country, date) %>% #group by country and create indicator for how many surveys over 10 year period
     summarise(indicator=case_when(
       sum(recency_indicator)>=3 ~ 1, 
@@ -2339,13 +2382,13 @@ survey_fun  <- function(data, input_var) {
 cs1_df <-pop_census_df %>%
   rename(RAW.D4.1.1.POPU.CENSUS=Latest.population.census,
          SPI.D4.1.1.POPU=indicator) %>%
-  select(country, date, starts_with("SPI"), starts_with("RAW"))
+  select(iso3c, date, starts_with("SPI"), starts_with("RAW"))
 
 #Agriculture census  
 cs2_df <-ag_census_df %>%
   rename(RAW.D4.1.2.AGRI.CENSUS=Latest.agricultural.census,
          SPI.D4.1.2.AGRI=indicator) %>%
-  select(country, date, starts_with("SPI"), starts_with("RAW"))
+  select(iso3c, date, starts_with("SPI"), starts_with("RAW"))
 
 #Business/establishment census 
 cs3_df <-census_fun('D4.1.3.CEN.BIZZ', 'BIZZ.CENSUS') %>%
@@ -3196,7 +3239,7 @@ spi_df <- spi_df %>%
 D5.1_DILG_map <- D5.1_DILG %>%
   filter(!is.na(SPI.D5.1.DILG))
 
-spi_mapper('D5.1_DILG_map', 'SPI.D5.1.DILG', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
+spi_mapper('D5.1_DILG_map', 'RAW.D5.1.DILG', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
 
 ```
 ## Indicator 5.2: standards 
@@ -3243,7 +3286,7 @@ D5.2.1.SNAU <- df %>%
   ),
       RAW.D5.2.1.SNAU=System.of.National.Accounts) %>%
   arrange(date, country) %>%
-  select(iso3c, country, date,RAW.D5.2.1.SNAU, SPI.D5.2.1.SNAU  ) 
+  select(iso3c,  date,RAW.D5.2.1.SNAU, SPI.D5.2.1.SNAU  ) 
 
 
 ```
@@ -3276,8 +3319,8 @@ D5.2.2.NABY <- df %>%
     TRUE ~ 0 
   ),
   RAW.D5.2.2.NABY=NABY)  %>%
-  select(iso3c, country, date, RAW.D5.2.2.NABY, SPI.D5.2.2.NABY  ) %>%
-  arrange(date, country)
+  select(iso3c,  date, RAW.D5.2.2.NABY, SPI.D5.2.2.NABY  ) %>%
+  arrange(date)
 
 
 
@@ -3904,7 +3947,7 @@ spi_df <- spi_df %>%
 D5.5_DIFI_map <- D5.5_DIFI %>%
   filter(!is.na(SPI.D5.5.DIFI))
 
-spi_mapper('D5.5_DIFI_map', 'SPI.D5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
+spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
 
 ```
 

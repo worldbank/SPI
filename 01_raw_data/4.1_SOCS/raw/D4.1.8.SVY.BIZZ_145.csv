@@ -87,7 +87,7 @@ MRT,MR,Mauritania,Nouakchott,-15.9824,18.2367,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,
 MUS,MU,Mauritius,Port Louis,57.4977,-20.1605,SSF,ZG,Sub-Saharan Africa ,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2019,NA
 MWI,MW,Malawi,Lilongwe,33.7703,-13.9899,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,"1998, 2000, 2005, 2007, 2010, 2011, 2012, 2013"
 MYS,MY,Malaysia,Kuala Lumpur,101.684,3.12433,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,2017
-NAM,"NA",Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,NA
+NAM,NA,Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,NA
 NER,NE,Niger,Niamey,2.1073,13.514,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,NA
 NGA,NG,Nigeria,Abuja,7.48906,9.05804,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2019,NA
 NIC,NI,Nicaragua,Managua,-86.2734,12.1475,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2019,NA
@@ -137,7 +137,7 @@ VCT,VC,St. Vincent and the Grenadines,Kingstown,-61.2653,13.2035,LCN,ZJ,Latin Am
 VEN,VE,"Venezuela, RB",Caracas,-69.8371,9.08165,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2019,NA
 VNM,VN,Vietnam,Hanoi,105.825,21.0069,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2019,"2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015"
 VUT,VU,Vanuatu,Port-Vila,168.321,-17.7404,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2019,NA
-West Bank and Gaza,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2019,"2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018"
+West Bank and Gaza,PS,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2019,"2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018"
 WSM,WS,Samoa,Apia,-171.752,-13.8314,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2019,2013
 XKX,XK,Kosovo,Pristina,20.926,42.565,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IDX,XI,IDA,2019,NA
 YEM,YE,"Yemen, Rep.",Sana'a,44.2075,15.352,MEA,ZQ,Middle East & North Africa,MNA,XQ,Middle East & North Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2019,NA

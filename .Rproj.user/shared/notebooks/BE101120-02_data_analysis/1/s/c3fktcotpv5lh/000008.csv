@@ -1,0 +1,5 @@
+"0",""
+"0","finance_df <- spi_index_df %>%"
+"0","  select(country, date,SPI.D5.5.DIFI )"
+"0",""
+"0","spi_mapper('finance_df', 'SPI.D5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')"
