@@ -21,6 +21,7 @@ library(skimr)
 library(ggcorrplot)
 library(Hmisc)
 library(flextable)
+library(skimr)
 
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv')
@@ -72,47 +73,83 @@ ui <- navbarPage("Statistical Performance Indicators",
                  tabPanel("Global Picture",
                           div(class="outer",
                               
-                              absolutePanel(id = "controls_overall", class = "panel panel-default", fixed = FALSE,
-                                            draggable = FALSE, top = 150, left = "auto", right = 20, bottom = "auto",
-                                            width = 330, height = "auto",
-                                    selectizeInput("color_choices_overall", "Choose Indicator", 
-                                                      choices=metadata$descript,
-                                                      selected='SPI.INDEX') ,
-                                    
-                                       
-                                       selectizeInput("year_overall",
-                                                      "Reference Year",
-                                                      choices=c(2004:2019),
-                                                      selected=2019
-                                                      
-                                       ),
-                                       selectizeInput("income_groups_overall",
-                                                      "Select Income Groups",
-                                                      choices=c("Low income","Lower middle income","Upper middle income","High income"),
-                                                      selected=c("Low income","Lower middle income","Upper middle income","High income"),
-                                                      multiple=T
-                                       )
-                                    
+                              selectizeInput("color_choices_overall", "Choose Indicator", 
+                                             choices=metadata$descript,
+                                             selected='SPI.INDEX') ,
+                              
+                              
+                              selectizeInput("year_overall",
+                                             "Reference Year",
+                                             choices=c(2004:2019),
+                                             selected=2019
+                                             
                               ),
+                              downloadButton("downloadDataMap", "Download")
+                              
+                              
+                          ),
+                              
                               fluidRow(style='padding:50px',
 
                                   h2("Map of Statistical Performance Indicators"),
                                   # If not using custom CSS, set height of leafletOutput to a number instead of percent
-                                  withSpinner(leafletOutput("spi_map_overall", width='800px', height='50vh')
-                                                            ),
-                                  h2("Time Trends of Statistical Performance Indicators"),
-                                  
-                                  
-                                  withSpinner(plotlyOutput('plot_time', width='600px', height='50vh'))
+                                  withSpinner(leafletOutput("spi_map_overall", width='auto', height='80vh')
+                                                            )
+
                                   
 
                                     
 
-                              )
+                              
                           
                           )
        
                         ),
+                 
+                 #####################################################
+                 # Time Trends
+                 #####################################################
+                 
+                 tabPanel("Time Trends",
+                          div(class="outer",style='padding:50px',
+                              h2("Time Trends of Statistical Performance Indicators"),
+                              selectizeInput("over_time",
+                                             "Choose Indicator to Plot Over Time",
+                                             choices=as.character(var.labels),
+                                             selected='SPI Overall Score'
+                              ),
+                              downloadButton("downloadDataTrends", "Download"),
+                              
+                              withSpinner(plotlyOutput('plot_time', width='auto', height='40vh')),
+                              h2("Change in Indicator Across Countries from 2016-2019"),
+                              withSpinner(plotlyOutput('country_plot_time', width='auto', height='40vh')),
+                              
+                            )
+                          ),
+                 
+                 #####################################################
+                 # Dimension Scores
+                 #####################################################
+                 
+                 tabPanel("Scores by Dimension",
+                          div(class="outer",style='padding:50px',
+                              
+                              h2('Overall Scores by Dimension'),
+                              selectizeInput("dim_year",
+                                             "Reference Year",
+                                             choices=c(2016:2019),
+                                             selected=2019
+                                             
+                              ),
+                              selectizeInput("country", "Select Countries",
+                                             choices=NULL,
+                                             selected=c("All"),
+                                             multiple=T),  
+                              downloadButton("downloadDataDim", "Download"),
+                              withSpinner(plotlyOutput('plot_dim', width='auto', height='90vh'))
+                          )
+                          
+                 ),
                  #####################################################
                  # Summary Statistics
                  #####################################################
@@ -121,10 +158,45 @@ ui <- navbarPage("Statistical Performance Indicators",
                           div(class="outer",style='padding:50px',
                               
                               h2('Summary Statistics of Indicators'),
-                              withSpinner(DT::dataTableOutput("summary_stats_overall")),
+                              withSpinner(DT::dataTableOutput("summary_stats_overall"))
                           )
                           
                  ),
+                 #####################################################
+                 # Summary Statistics by Percentile
+                 #####################################################
+                 
+                 
+                 tabPanel("Maturity",
+                          div(class="outer",style='padding:50px',
+                              sidebarLayout(
+                                sidebarPanel(
+                                  sliderInput("pctl", "Percentile of SPI Overall Score", 
+                                              min=10, 
+                                              max=100, 
+                                              step=1, 
+                                              value=10, 
+                                              sep="", 
+                                              width='100%',
+                                              animate=
+                                                animationOptions(interval = 800, loop = FALSE) ),
+                                  
+                                  tags$head(tags$style(type='text/css', ".slider-animate-button { font-size: 20pt !important; }"))
+                                ),
+                                mainPanel(
+                                    h2('Compare Summary Statistics by Level of Maturity'),
+                                    p('Below, the user can examine how the summary statistics of our statistical performance indicators change by the percentile of the SPI overall score.  
+                                      Move the slider to change the percentile threshold used to calculate the summary statistics.  Only countries below a given percentile threshold are used
+                                      to calculate the statistics.  This is meant to show how the underlying indicators compare at different levels of maturity of the statistical system.'),
+
+                                    withSpinner(DT::dataTableOutput("tableset"))
+                                    
+                                  )
+                              )
+                          )
+                          
+                 ),
+                           
                  #####################################################
                  # Country Reports section
                  ####################################################                 
@@ -138,7 +210,7 @@ ui <- navbarPage("Statistical Performance Indicators",
                                              selected='Afghanistan'),
                               selectizeInput("year_choice",
                                              "Choose Year",
-                                             choices=c(2016:2019),
+                                             choices=c(2004:2019),
                                              selected=2019),  
                               selectizeInput("comparison_choice",
                                              "Add Countries to Compare",
@@ -299,7 +371,7 @@ ui <- navbarPage("Statistical Performance Indicators",
 )
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
+server <- function(input, output,session) {
 
     
     
@@ -339,7 +411,7 @@ server <- function(input, output) {
     
     time_var <- reactive({
         
-        names(var.labels[match(input$color_choices_overall, var.labels)])
+        names(var.labels[match(input$over_time, var.labels)])
         
     })
     
@@ -348,7 +420,6 @@ server <- function(input, output) {
         #produce by region
         time_df<- SPI %>%
             select(iso3c, country, income, date, population, time_var() ) %>%
-            filter(income %in% input$income_groups_overall) %>% #filter out income groups not selected
             rename(y=time_var()) %>%
             left_join(country_info) %>%
             group_by(date, region) %>%
@@ -385,14 +456,276 @@ server <- function(input, output) {
         plot_ly(data = df_time(), x = ~date, y = ~y, 
                 color=~region, 
                 labels=time_var(),
-                type = 'scatter', mode = 'lines+markers') %>%
-            layout(title = paste('Plot of SPI Indicators Over Time by Region: ',input$color_choices_overall, sep=""),
+                type = 'scatter', mode = 'lines+markers',
+                width=1000) %>%
+            layout(title = paste('Plot of SPI Indicators Over Time by Region: ',input$over_time, sep=""),
                    xaxis = list(autotick = F, dtick = 1),
                    yaxis = list(range = c(0,100)),
                    legend=list(orientation='h'))
         
         
     })
+    
+    # Downloadable csv of selected dataset ----
+    output$downloadDataTrends <- downloadHandler(
+      filename = function() {
+        'SPI_Time_Trends.csv'
+      },
+      content = function(file) {
+        write.csv(df_time(), file, row.names = FALSE)
+      }
+    )
+    
+    ############
+    # Country Plot Over Time
+    ############
+    df_country_time <- reactive({
+      
+      changes_df <-  SPI %>%
+        select(iso3c, country, region,  income, date, time_var(), population) %>%
+        filter(date==2016 | date==2019) 
+      
+      
+      # Rearrange for Plot
+
+
+      #set up data
+      changes_df_temp <- changes_df %>%
+        select(country,iso3c, date, starts_with('SPI')) %>%
+        pivot_longer( #create dataset that is countryXdateXindicator
+          cols = starts_with('SPI'),
+          names_to = 'source_id',
+          values_to = 'values'
+        ) %>% 
+        unique() %>%
+        filter(!is.na(values)) %>%
+        pivot_wider( #reshape to be countryxindicator with columns with data
+          id_cols=c('country','iso3c','source_id'),
+          names_from='date',
+          names_prefix='value_',
+          values_from='values'
+        ) %>%
+        mutate(change=value_2019-value_2016,
+               color=if_else(change>=0,'improved', 'decreased'))  %>%
+        left_join(metadata) %>%
+        filter(!is.na(descript)) %>%
+        ungroup() 
+      
+      changes_df_temp %>%
+        arrange(-value_2019) %>% 
+        mutate(Country=factor(country, levels=unique(changes_df_temp$country))) 
+      
+      
+      
+      
+    })
+    
+    output$country_plot_time <- renderPlotly({
+      
+      
+      p <- ggplot(df_country_time(), aes(x=Country)) +
+        geom_point(aes(y=value_2016), shape=16) +
+        geom_point(aes(y=value_2019), color='blue', shape=17) +
+        geom_segment( aes(x=Country ,xend=Country, y=value_2016, yend=value_2019,
+                          color=color)) +
+        scale_color_manual(values = c('decreased' = "red", 'improved' = "green")) +
+        scale_y_continuous(name='SPI Value') +
+        coord_flip() +
+        theme_bw() +
+        labs(
+          color = 'Change'
+        ) +
+        ylab('SPI Value')
+      
+      l <- list(
+        font = list(
+          x=0.7,
+          y=0.9,
+          family = "sans-serif",
+          size = 12,
+          color = "#000"),
+        bgcolor = "#E2E2E2",
+        bordercolor = "#FFFFFF",
+        borderwidth = 2)
+      
+      ggplotly(p, height=2000, width=1000, tooltip=c('x','y')) %>%
+        layout(legend = l)
+      
+      
+    })
+
+    ############
+    # Plot by Dimension
+    ############
+    
+    #add country choices
+    choice <- unique(as.character(country_info$country))
+    choice<-append('All',choice)
+    
+    updateSelectizeInput(session, 'country', choices = choice, selected=c("All"), server=TRUE)
+    
+    hgt <- reactive({
+      20*(100*length(input$choice)/(length(unique(country_info$country)+1)))
+      print(2000)
+      
+    })
+    
+    df_dim <- reactive({
+      
+      #produce by region
+      time_df<- SPI %>%
+        select(iso3c, country, income, date, population, starts_with('SPI.INDEX') ) %>%
+        filter(date==input$dim_year) 
+      
+      if (!("All" %in% input$country))
+        time_df %>%
+        filter(country %in% input$country) 
+      else (
+        time_df
+      )
+      
+      
+    })
+    
+    output$plot_dim <- renderPlotly({
+      
+      ##################### Zipper ###############################
+      
+
+      
+      # create dataframe by income
+      df_aggregated <- df_dim() %>%
+        ungroup() %>%
+        filter(!is.na(SPI.INDEX)) %>%
+        mutate(rank=max(SPI.INDEX)) %>%
+        arrange(SPI.INDEX)  %>%
+        ungroup() %>%
+        mutate(rank = rank(rank, ties.method = 'first')) %>%
+        arrange(rank) %>%
+        mutate(Country=factor(rank,  levels=rank, labels=country)) %>%
+        mutate(across(starts_with("SPI.INDEX"), round,1))
+      
+      
+      #plot by dimension
+      colors <- c("SPI Overall Score" = "#390099", "SPI Dim 1 - Data Use" = "#9b5de5", "SPI Dim 2 - Data Services" = "#f15bb5", "SPI Dim 3 - Data Products" = "#fee440", "SPI Dim 4 - Data Sources" = "#00bbf9", "SPI Dim 5 - Data Infrastructure" = "#00f5d4" )
+      
+      zipper_plt<-ggplot(df_aggregated, aes(x=Country, y=SPI.INDEX)) +
+        geom_segment( aes(x=Country, xend=Country, y=0, yend=100), color="grey", size=1, alpha=0.1) +
+        geom_point(aes(color="SPI Overall Score"),size=2,) +
+        geom_point( aes(y=SPI.INDEX.DIM1, color="SPI Dim 1 - Data Use"),size=2,) +
+        geom_point( aes(y=SPI.INDEX.DIM2, color="SPI Dim 2 - Data Services"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.DIM3, color="SPI Dim 3 - Data Products"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.DIM4, color="SPI Dim 4 - Data Sources"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.DIM5, color="SPI Dim 5 - Data Infrastructure"), size=2,) +
+        #geom_text(aes(label=food_insecure_mod_severe), nudge_y = 3) +
+        coord_flip()+
+        theme_bw() +
+        theme(
+          panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.border = element_blank(),
+          axis.ticks.x = element_blank()
+        ) +
+        expand_limits(y=c(0,100)) +
+        labs(
+          x="",
+          y="Statistical Performance Indicator",
+          color="Legend"
+        ) +
+        ggtitle(str_wrap("Statistical Performance Indicator", 120)) + 
+        # scale_x_continuous(
+        #   breaks = df_aggregated$rank, # specify tick breaks using rank column
+        #   labels = df_aggregated$country # specify tick labels using x column
+        # ) +
+        scale_color_manual(values = colors,
+                           breaks=c("SPI Overall Score", "SPI Dim 1 - Data Use", "SPI Dim 2 - Data Services", "SPI Dim 3 - Data Products", "SPI Dim 4 - Data Sources", "SPI Dim 5 - Data Infrastructure"),
+                           labels=c("SPI Overall Score", "SPI Dim 1 - Data Use", "SPI Dim 2 - Data Services", "SPI Dim 3 - Data Products", "SPI Dim 4 - Data Sources", "SPI Dim 5 - Data Infrastructure"))
+      zipper_plt
+      
+
+      
+      ggplotly(zipper_plt, height=if_else(('All' %in% input$country),as.numeric(2000), 100*as.numeric(length(input$country))))
+      
+      
+    })
+    
+    output$downloadDataDim <- downloadHandler(
+      filename = function() {
+        'SPI_Dimensions_Data.csv'
+      },
+      content = function(file) {
+        write.csv(df_dim(), file, row.names = FALSE)
+      }
+    )
+    
+    
+    
+    
+    #####################################
+    ########## Maturity
+    #####################################
+    
+    ##########################
+    #Produce dataset based on indicator selected
+    ##########################
+    dat <- reactive({
+      
+      #need to modify this depending on country
+      
+      
+      
+      df<-SPI  %>%
+        filter(date==2019) %>%
+        select(one_of(metadata$source_id))
+      
+      
+      
+      df<- df %>%
+        filter(SPI.INDEX<=quantile(df$SPI.INDEX, probs=c(as.numeric(input$pctl)/100), na.rm=T))
+      
+      df
+      
+      
+      
+    })
+    
+    
+    output$tableset <- DT::renderDataTable({
+      
+      sumstats <- dat()
+      
+      
+      
+      my_skim<-    skim_with( numeric = sfl( mean = ~ wtd.mean(.,  w=ipw, na.rm=TRUE),
+                                             sd = ~ sqrt(wtd.var(.,  weights=ipw, na.rm=TRUE)),
+                                             p25 = ~ (wtd.quantile(., probs=c(0.25),  weights=ipw, na.rm=TRUE)),
+                                             p50 = ~ (wtd.quantile(., probs=c(0.5), weights=ipw, na.rm=TRUE)),
+                                             p75 = ~ (wtd.quantile(., probs=c(0.75), weights=ipw, na.rm=TRUE)),
+                                             complete = ~ sum(!is.na(.))))
+      
+      sumstats$ipw <- 1
+      
+      sumstats_df<-my_skim(sumstats) %>%
+        yank("numeric") %>%
+        mutate(source_id=skim_variable) %>%
+        left_join(metadata) %>%
+        select(descript, mean, p50, complete,  hist) 
+      
+      
+      DT::datatable(sumstats_df, caption=paste("Summary Statistics of Statistical Performance Indicators for Countries Below", input$pctl, "Percentile in SPI Overall Score", sep=" "),
+                    colnames=c("Indicator",  "Mean",  "Median",  "# Complete Cases",  "Histogram"),
+                    extensions = 'Buttons', options=list(
+                      dom = 'Bfrtip',
+                      buttons = c('copy', 'csv', 'excel'),
+                      pageLength = 60)) %>%
+        formatRound(columns = c('mean',  'p50'),
+                    digits=2)
+    })
+    
+    
+    
+    
     
     ###########
     # Now pull data using IDs for WDI and calculate AKI
@@ -403,8 +736,7 @@ server <- function(input, output) {
     df_overall<- reactive({
         SPI %>%
             select(iso3c, country, region,  income, date, starts_with('SPI'), population) %>%
-            filter(date==input$year_overall) %>%
-            filter(income %in% input$income_groups_overall) #filter out income groups not selected
+            filter(date==input$year_overall) 
 
         
         
@@ -491,8 +823,20 @@ server <- function(input, output) {
                       values=~select(spi_map_overall@data, map_var())[,1], opacity=0.7, 
                                             title='Indicator value', position="bottomleft")      
         }
+        
+        
           
     })
+    
+    # Downloadable csv of selected dataset ----
+    output$downloadDataMap <- downloadHandler(
+      filename = function() {
+        'SPI_Global_Map.csv'
+      },
+      content = function(file) {
+        write.csv(df_overall(), file, row.names = FALSE)
+      }
+    )
     
     ####
     # SPI AKI Summary Stats

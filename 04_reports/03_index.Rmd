@@ -760,8 +760,8 @@ spi_index_simple <- spi_index_df_temp %>%
          ) %>% #
   mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
   arrange(-date, -SPI.INDEX) %>%
-  select(country, iso3c, date, starts_with('SPI.INDEX'), everything()) %>%
-    filter(date>=2016) #2016 is first year with complete data
+  select(country, iso3c, date, starts_with('SPI.INDEX'), everything()) 
+  #  filter(date>=2016) #2016 is first year with complete data
 
   
 #display top 25
@@ -814,6 +814,12 @@ l <- as.data.frame(l, stringsAsFactors = F) # Convert list to dataframe
 spi_index_dta_lab <- rbind(l, spi_index_dta) %>%
   write_excel_csv(path=paste(output_dir, 'SPI_index_labelled.csv', sep="/"),
                   na="") # Bind the two
+
+
+#for rest of paper, restrict to just 2016, which is where we have complete data
+spi_index_df <- spi_index_df %>%
+  filter(date>=2016)
+
 ```
 
 

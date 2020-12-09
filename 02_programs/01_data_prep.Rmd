@@ -2206,8 +2206,8 @@ pop_census_df <- df %>%
   mutate(last_val=str_extract(Latest.population.census, "\\d{4}") )%>%
     mutate(last_val=as.numeric(last_val)) %>%
     mutate(indicator=case_when(
-      (date-last_val<=10) & (date-last_val>0) ~ 1,
-      (date-last_val<=20) & (date-last_val>0) ~ 0.5,
+      (date-last_val<=10) & (date-last_val>=0) ~ 1,
+      (date-last_val<=20) & (date-last_val>=0) ~ 0.5,
       TRUE ~ 0 )
     )  %>%
     ungroup() %>%
@@ -2221,8 +2221,8 @@ ag_census_df <- df %>%
   mutate(last_val=str_extract(Latest.agricultural.census, "\\d{4}") )%>%
     mutate(last_val=as.numeric(last_val)) %>%
     mutate(indicator=case_when(
-      (date-last_val<=10) & (date-last_val>0) ~ 1,
-      (date-last_val<=20) & (date-last_val>0) ~ 0.5,
+      (date-last_val<=10) & (date-last_val>=0) ~ 1,
+      (date-last_val<=20) & (date-last_val>=0) ~ 0.5,
       TRUE ~ 0 )
     )  %>%
     ungroup() %>%
@@ -2277,7 +2277,7 @@ census_fun  <- function(data, input_var) {
   for (i in 2004:2019) {
    temp <- cs_df %>%
     mutate(date=i) %>%
-    mutate(recency_indicator=((date>indicator_date)) ) %>% #restrict to censuses that do not occur after reference date
+    mutate(recency_indicator=((date>=indicator_date)) ) %>% #restrict to censuses that do not occur after reference date
     mutate(indicator_date=if_else(recency_indicator==TRUE, indicator_date, as.numeric(NA))) %>%
     group_by(country, date) %>%
     summarise(last_val=max(indicator_date, na.rm=T),
@@ -2352,7 +2352,7 @@ survey_fun  <- function(data, input_var) {
       date==2018 ~ 11,
       TRUE ~ 10
     )) %>%
-    mutate(recency_indicator=((date-indicator_date<=window) & (date-indicator_date>0)) ) %>% #restrict to surveys inside 10 year period 
+    mutate(recency_indicator=((date-indicator_date<=window) & (date-indicator_date>=0)) ) %>% #restrict to surveys inside 10 year period 
     group_by( country, date) %>% #group by country and create indicator for how many surveys over 10 year period
     summarise(indicator=case_when(
       sum(recency_indicator)>=3 ~ 1, 
