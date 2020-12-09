@@ -171,25 +171,25 @@ ui <- navbarPage("Statistical Performance Indicators",
                           div(class="outer",style='padding:50px',
                               sidebarLayout(
                                 sidebarPanel(
-                                  sliderInput("pctl", "Percentile of SPI Overall Score", 
-                                              min=10, 
-                                              max=100, 
+                                  sliderInput("pctl", "Deciles of SPI Overall Score", 
+                                              min=1, 
+                                              max=10, 
                                               step=1, 
-                                              value=10, 
+                                              value=1, 
                                               sep="", 
                                               width='100%',
                                               animate=
-                                                animationOptions(interval = 800, loop = FALSE) ),
+                                                animationOptions(interval = 2000, loop = FALSE) ),
                                   
                                   tags$head(tags$style(type='text/css', ".slider-animate-button { font-size: 20pt !important; }"))
                                 ),
                                 mainPanel(
-                                    h2('Compare Summary Statistics by Level of Maturity'),
-                                    p('Below, the user can examine how the summary statistics of our statistical performance indicators change by the percentile of the SPI overall score.  
-                                      Move the slider to change the percentile threshold used to calculate the summary statistics.  Only countries below a given percentile threshold are used
-                                      to calculate the statistics.  This is meant to show how the underlying indicators compare at different levels of maturity of the statistical system.'),
+                                    h2('Compare Means by Level of Maturity'),
+                                    p('Below, the user can examine how the mean of our statistical performance indicators change by the decile of the SPI overall score.  
+                                      Move the slider to change the decile threshold used to calculate the means.  Only countries in a given decile are used
+                                      to calculate the mean.  This is meant to show how the underlying indicators compare at different levels of maturity of the statistical system.'),
 
-                                    withSpinner(DT::dataTableOutput("tableset"))
+                                    plotOutput('maturityplot', height = '800px')
                                     
                                   )
                               )
@@ -669,7 +669,7 @@ server <- function(input, output,session) {
     ##########################
     #Produce dataset based on indicator selected
     ##########################
-    dat <- reactive({
+    maturity_df <- reactive({
       
       #need to modify this depending on country
       
@@ -682,18 +682,11 @@ server <- function(input, output,session) {
       
       
       df<- df %>%
-        filter(SPI.INDEX<=quantile(df$SPI.INDEX, probs=c(as.numeric(input$pctl)/100), na.rm=T))
+        filter((SPI.INDEX<=quantile(df$SPI.INDEX, probs=c(as.numeric(input$pctl)/10), na.rm=T) & SPI.INDEX>=quantile(df$SPI.INDEX, probs=c((as.numeric(input$pctl)-1)/10), na.rm=T)))
       
       df
       
-      
-      
-    })
-    
-    
-    output$tableset <- DT::renderDataTable({
-      
-      sumstats <- dat()
+      sumstats <- df
       
       
       
@@ -709,20 +702,37 @@ server <- function(input, output,session) {
       sumstats_df<-my_skim(sumstats) %>%
         yank("numeric") %>%
         mutate(source_id=skim_variable) %>%
+        filter(grepl('SPI.INDEX', source_id)) %>%
         left_join(metadata) %>%
-        select(descript, mean, p50, complete,  hist) 
+        select(descript, mean, p50, complete,  hist) %>%
+        filter(!is.na(descript))
       
-      
-      DT::datatable(sumstats_df, caption=paste("Summary Statistics of Statistical Performance Indicators for Countries Below", input$pctl, "Percentile in SPI Overall Score", sep=" "),
-                    colnames=c("Indicator",  "Mean",  "Median",  "# Complete Cases",  "Histogram"),
-                    extensions = 'Buttons', options=list(
-                      dom = 'Bfrtip',
-                      buttons = c('copy', 'csv', 'excel'),
-                      pageLength = 60)) %>%
-        formatRound(columns = c('mean',  'p50'),
-                    digits=2)
     })
     
+    
+    output$maturityplot <- renderPlot({
+      
+      ggplot(maturity_df(), aes(x=mean, y=descript)) +
+        geom_point() +
+        expand_limits(x=c(0,100)) +
+        theme_bw()
+    })
+    # 
+    # output$tableset <- DT::renderDataTable({
+    #   
+    # 
+    #   
+    #   
+    #   DT::datatable(sumstats_df, caption=paste("Summary Statistics of Statistical Performance Indicators for Countries Below", input$pctl, "Percentile in SPI Overall Score", sep=" "),
+    #                 colnames=c("Indicator",  "Mean",  "Median",  "# Complete Cases",  "Histogram"),
+    #                 extensions = 'Buttons', options=list(
+    #                   dom = 'Bfrtip',
+    #                   buttons = c('copy', 'csv', 'excel'),
+    #                   pageLength = 60)) %>%
+    #     formatRound(columns = c('mean',  'p50'),
+    #                 digits=2)
+    # })
+    # 
     
     
     
