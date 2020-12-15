@@ -189,7 +189,7 @@ ui <- navbarPage("Statistical Performance Indicators",
                                       Move the slider to change the decile threshold used to calculate the means.  Only countries in a given decile are used
                                       to calculate the mean.  This is meant to show how the underlying indicators compare at different levels of maturity of the statistical system.'),
 
-                                    plotOutput('maturityplot', height = '800px')
+                                    plotlyOutput('maturityplot')
                                     
                                   )
                               )
@@ -666,6 +666,56 @@ server <- function(input, output,session) {
     ########## Maturity
     #####################################
     
+    mat_df<-SPI  %>%
+      filter(date==2019) %>%
+      select(one_of(metadata$source_id))
+    
+    
+    
+    spi_groups_quantiles <- quantile(mat_df$SPI.INDEX, probs=c(1:10)/10,na.rm=T)
+    
+    mat_df <- mat_df %>%
+      mutate(decile=case_when(
+        between(SPI.INDEX, spi_groups_quantiles[9],100) ~ "Top 10%",
+        between(SPI.INDEX, spi_groups_quantiles[8],spi_groups_quantiles[9]) ~ "9th Decile",
+        between(SPI.INDEX, spi_groups_quantiles[7],spi_groups_quantiles[8]) ~ "8th Decile",
+        between(SPI.INDEX, spi_groups_quantiles[6],spi_groups_quantiles[7]) ~ "7th Decile",
+        between(SPI.INDEX, spi_groups_quantiles[5],spi_groups_quantiles[6]) ~ "6th Decile",
+        between(SPI.INDEX, spi_groups_quantiles[4],spi_groups_quantiles[5]) ~ "5th Decile",
+        between(SPI.INDEX, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Decile",
+        between(SPI.INDEX, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Decile",
+        between(SPI.INDEX, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Decile",
+        between(SPI.INDEX, 0,spi_groups_quantiles[1]) ~ "Bottom 10%"
+        
+      )) %>%
+      mutate(decile=factor(decile, 
+                               levels=c("Bottom 10%","2nd Decile","3rd Decile","4th Decile", "5th Decile","6th Decile","7th Decile","8th Decile","9th Decile","Top 10%" )))  
+    
+    
+    mat_sumstats <- mat_df %>%
+      group_by(decile) %>%
+      filter(!decile=="NA")
+    
+    
+    
+    my_skim<-    skim_with( numeric = sfl( mean = ~ wtd.mean(.,  w=ipw, na.rm=TRUE),
+                                           sd = ~ sqrt(wtd.var(.,  weights=ipw, na.rm=TRUE)),
+                                           p25 = ~ (wtd.quantile(., probs=c(0.25),  weights=ipw, na.rm=TRUE)),
+                                           p50 = ~ (wtd.quantile(., probs=c(0.5), weights=ipw, na.rm=TRUE)),
+                                           p75 = ~ (wtd.quantile(., probs=c(0.75), weights=ipw, na.rm=TRUE)),
+                                           complete = ~ sum(!is.na(.))))
+    
+    mat_sumstats$ipw <- 1
+    
+    mat_sumstats_df<-my_skim(mat_sumstats) %>%
+      yank("numeric") %>%
+      mutate(source_id=skim_variable) %>%
+      filter(grepl('SPI.INDEX', source_id)) %>%
+      left_join(metadata) %>%
+      select(decile, descript, mean, p50, complete,  hist) %>%
+      mutate(descript=str_wrap(descript, 30),
+             mean=round(mean,2))
+    
     ##########################
     #Produce dataset based on indicator selected
     ##########################
@@ -675,47 +725,44 @@ server <- function(input, output,session) {
       
       
       
-      df<-SPI  %>%
-        filter(date==2019) %>%
-        select(one_of(metadata$source_id))
-      
-      
-      
-      df<- df %>%
-        filter((SPI.INDEX<=quantile(df$SPI.INDEX, probs=c(as.numeric(input$pctl)/10), na.rm=T) & SPI.INDEX>=quantile(df$SPI.INDEX, probs=c((as.numeric(input$pctl)-1)/10), na.rm=T)))
-      
-      df
-      
-      sumstats <- df
-      
-      
-      
-      my_skim<-    skim_with( numeric = sfl( mean = ~ wtd.mean(.,  w=ipw, na.rm=TRUE),
-                                             sd = ~ sqrt(wtd.var(.,  weights=ipw, na.rm=TRUE)),
-                                             p25 = ~ (wtd.quantile(., probs=c(0.25),  weights=ipw, na.rm=TRUE)),
-                                             p50 = ~ (wtd.quantile(., probs=c(0.5), weights=ipw, na.rm=TRUE)),
-                                             p75 = ~ (wtd.quantile(., probs=c(0.75), weights=ipw, na.rm=TRUE)),
-                                             complete = ~ sum(!is.na(.))))
-      
-      sumstats$ipw <- 1
-      
-      sumstats_df<-my_skim(sumstats) %>%
-        yank("numeric") %>%
-        mutate(source_id=skim_variable) %>%
-        filter(grepl('SPI.INDEX', source_id)) %>%
-        left_join(metadata) %>%
-        select(descript, mean, p50, complete,  hist) %>%
+      mat_sumstats_df%>%
+        filter(as.numeric(decile)<=as.numeric(input$pctl)) %>%
         filter(!is.na(descript))
       
+
+      
+            
     })
     
     
-    output$maturityplot <- renderPlot({
+    output$maturityplot <- renderPlotly({
       
-      ggplot(maturity_df(), aes(x=mean, y=descript)) +
-        geom_point() +
+     p<-  ggplot(maturity_df(), aes(x=mean, y=descript)) +
+        geom_point(aes(alpha=decile),size=4) +
+        geom_segment(aes(x=0,xend=mean,y=descript,yend=descript), alpha=0.2) +
         expand_limits(x=c(0,100)) +
-        theme_bw()
+        theme_bw() +
+        scale_alpha_discrete(name="Decile",
+                             range=c(0.4,1)) +
+        theme(
+          text=element_text(size=16),
+          legend.position = 'top',
+          legend.title = element_blank()
+        )
+     
+     l <- list(
+         y=0.8,
+         font = list(
+           family = "sans-serif",
+           size = 12,
+           color = "#000"),
+       bgcolor = "#E2E2E2",
+       bordercolor = "#FFFFFF",
+       borderwidth = 2)
+     
+     ggplotly(p, height=800) %>%
+       layout(legend=l)
+     
     })
     # 
     # output$tableset <- DT::renderDataTable({

@@ -1,0 +1,8 @@
+"0",""
+"0","### Scatterplot log GDP SPI"
+"0","(gdp_spi + hci_spi + ge_spi)   +"
+"0","  plot_annotation("
+"0","    title = 'SPI Overall Scores strongly related to GDP per capita, Human Capital Index, and Government Effectiveness Index.',"
+"0","    subtitle='Plot of SPI Index on GDP per capita, Human Capital Index, and Government Effectivess Index ',"
+"0","    caption='Source: All indicators come from the World Bank.'"
+"0","    )"

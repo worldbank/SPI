@@ -381,6 +381,9 @@ spi_mapper <- function(data, indicator, title) {
     labs(
       title=str_wrap(title,100),
       caption = 'Source: World Bank. Statistical Performance Indicators'
+    ) +
+    theme(
+      text=element_text(size=14)
     )
  print(p1)
 }
@@ -415,7 +418,10 @@ spi_charts  <- function(data, indicator, title) {
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       expand_limits(x=c(0,100)) +
-      theme_bw()
+      theme_bw() +
+    theme(
+      text=element_text(size=14)
+    )
   
   #by income
     income <- c("Low income", "Lower middle income","Upper middle income","High income")
@@ -435,7 +441,10 @@ spi_charts  <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
-      theme_bw()
+      theme_bw() +
+    theme(
+      text=element_text(size=14)
+    )
     
   # #add line graph over time
   p4 <- get(data)  %>%
@@ -456,7 +465,10 @@ spi_charts  <- function(data, indicator, title) {
       ) +
     
       expand_limits(y=c(0,100)) +
-      theme_bw()
+      theme_bw() +
+    theme(
+      text=element_text(size=14)
+    )
       
  (p2 / p3) 
     
@@ -515,8 +527,9 @@ spi_country_charts  <- function(data, indicator, title) {
         na.value='grey'
       ) +
       theme_bw() +
-      theme(legend.position = 'top') 
-   
+      theme(legend.position = 'top',
+            text=element_text(size=14)
+            ) 
 p2_alt
 
 }
@@ -555,7 +568,8 @@ lending_charts <- function(data, indicator, title) {
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
       theme_bw() +
-      theme(legend.position = 'top') 
+      theme(legend.position = 'top',
+            text=element_text(size=14) )
    
 p2_alt3 
   
@@ -598,7 +612,8 @@ lending_chart_aggregate <- function(data, indicator, title) {
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
       theme_bw() +
-      theme(legend.position = 'top') 
+      theme(legend.position = 'top',
+            text=element_text(size=14) )
    
 p2_alt3 
   
@@ -667,7 +682,8 @@ fcs_charts <- function(data, indicator, title) {
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
       theme_bw() +
-      theme(legend.position = 'top') 
+      theme(legend.position = 'top',
+            text=element_text(size=14)) 
    
 p2_alt2 
   
@@ -735,7 +751,8 @@ fcs_chart_aggregate <- function(data, indicator, title) {
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
       theme_bw() +
-      theme(legend.position = 'top') 
+      theme(legend.position = 'top',
+            text=element_text(size=14)) 
   
   
   
@@ -753,22 +770,6 @@ spi_mapper('SPI', 'SPI.INDEX', 'Statistical Performance Indicators -  Overall Sc
 
 ]
 
---- 
-
-
-```{css, echo=F}
-    /* Table width = 100% max-width */
-
-    .remark-slide table{
-        width: 100%;
-    }
-
-    /* Change the background color to white for shaded rows (even rows) */
-
-    .remark-slide thead, .remark-slide tr:nth-child(2n) {
-        background-color: white;
-    }
-```
 
 ---
 
