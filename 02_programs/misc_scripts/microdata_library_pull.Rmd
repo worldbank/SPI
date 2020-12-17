@@ -69,7 +69,7 @@ write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studi
 
 #internal use studies from World Bank microdata library
 wb_base_url <- "http://microdatalib.worldbank.org/index.php/api/catalog" #define url
-study_request_wb<-fromJSON(paste(wb_base_url,"/search","?ps=10000", sep="")) # pull from url
+study_request_wb<-fromJSON(paste(wb_base_url,"/search","?ps=15000", sep="")) # pull from url
 study_df_internal <- study_request_wb$result$rows
 write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_internal_studies.csv")) #write to csv
 
@@ -116,7 +116,8 @@ study_df_internal <- study_df_internal %>%
                                            )
                      )
   ) %>%
-  unnest(series_info_dat)
+  unnest(series_info_dat,
+         keep_empty=TRUE)
 
 study_df_internal <- study_df_internal %>%
   mutate(across(is.list, as.character))
