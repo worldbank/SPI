@@ -1,7 +1,0 @@
-"0",""
-"0","complete_df <- spi_index_df %>%"
-"0","  mutate(complete=!is.na(SPI.INDEX)) %>%"
-"0","  select(country, date, complete)"
-"0",""
-"0","spi_mapper('complete_df', 'complete', 'Countries with Complete SPI Observations in 2019')"
-"0",""

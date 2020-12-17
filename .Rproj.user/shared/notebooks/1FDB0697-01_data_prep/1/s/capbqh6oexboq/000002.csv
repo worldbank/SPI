@@ -1,4 +1,0 @@
-"0",""
-"0","un_sdg_df <- read_csv(paste(output_dir,'/un_sdg_df.csv',sep=""""))"
-"2","Error: 'C:/Users/wb469649/OneDrive - WBG/Documents/Github/SPI_v1/03_output_data/un_sdg_df.csv' does not exist.
-"

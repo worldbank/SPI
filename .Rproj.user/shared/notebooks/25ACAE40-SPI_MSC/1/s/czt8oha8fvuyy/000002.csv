@@ -1,6 +1,0 @@
-"0",""
-"0","D5.2.9.MONY <- D5.2.9.MONY %>%"
-"0","  left_join(wbstats::wb_countries()) %>%"
-"0","  mutate(weights=1)"
-"0",""
-"0","spi_mapper('D5.2.9.MONY', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics')"

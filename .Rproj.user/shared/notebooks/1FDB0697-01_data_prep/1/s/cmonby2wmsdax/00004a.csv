@@ -1,8 +1,0 @@
-"0",""
-"0","#display top 25"
-"0","index_disp <- index_1 %>%"
-"0","  filter(date==2019) %>%"
-"0","  arrange(-SPI.INDEX.1) %>%"
-"0","  select(country, iso3c, date, SPI.INDEX.1)"
-"0",""
-"0","head(index_disp, 25) "

@@ -1,7 +1,0 @@
-"0",""
-"0","maturity_tab <- maturity_tab %>%"
-"0","  flextable() %>%"
-"0","  add_header_lines('Select SPI Indicator Scores by SPI Dimension 1 Maturity Level') "
-"0",""
-"0","FitFlextableToPage(maturity_tab) %>%"
-"0","  align( align = ""left"", part = ""body"")"

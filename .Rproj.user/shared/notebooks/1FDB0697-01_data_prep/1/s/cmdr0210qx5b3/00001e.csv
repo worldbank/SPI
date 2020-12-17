@@ -1,3 +1,0 @@
-"0",""
-"0","cs_df_map <- cs_df %>%  filter(!is.na(RAW.D4.1.8.BIZZ.SURVEYS))"
-"0","spi_mapper('cs_df_map', 'RAW.D4.1.8.BIZZ.SURVEYS', 'Business Survey Available in Past 20 Years in 2019' )"

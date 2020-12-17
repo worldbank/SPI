@@ -1,3 +1,0 @@
-"0",""
-"0","msc_df_map <- D5.2.MSC %>%  filter(!is.na(RAW.D5.2.2.NABY))"
-"0","spi_mapper('msc_df_map', 'SPI.D5.2.2.NABY', 'National Accounts base year in 2019' )"

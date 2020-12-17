@@ -1,5 +1,0 @@
-"0","ihsn_citations_base_url <- ""https://catalog.ihsn.org/index.php/api/citations"" #define url
-study_request_ihsn_citations<-fromJSON(paste(ihsn_citations_base_url,""/search"",""?ps=10000"", sep="""")) # pull from url
-"
-"2","Error in open.connection(con, ""rb"") : HTTP error 400.
-"

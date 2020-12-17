@@ -1,6 +1,0 @@
-"0",""
-"0","  kable(sumstats_df,"
-"0","      digits=1,"
-"0","      caption=""Statistical Performance Indicator Unweighted Summary Statistics for 2019"","
-"0","      format='html') %>%"
-"0","  kable_styling(bootstrap_options = c('hover', 'striped'))"
