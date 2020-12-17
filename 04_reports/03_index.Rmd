@@ -2804,5 +2804,50 @@ index_tab <- flextable(metatable) %>%
 
 ```
 
+
+```{r polar_coordinates, eval=FALSE, fig.height=20, fig.width=20, include=FALSE}
+
+  variables<-'SPI.INDEX'
+
+  title <- metadata_full %>%
+    filter(source_id==variables)
+  
+  title <- title$source_name
+    
+  SPI_changes <- spi_index_df %>%
+    rename(outcome=!!variables) %>%
+    select(country,iso3c, date, iso3c,region, outcome) %>%
+    filter(!is.na(outcome)) %>%
+    pivot_wider(
+      names_from='date',
+      names_prefix='outcome_',
+      values_from='outcome'
+      ) %>%
+    mutate(change=outcome_2019-outcome_2016,
+           color=if_else(change>=0,'improved', 'decreased')) %>%
+    arrange(-outcome_2019) %>%
+    mutate(country=factor(country, levels=unique(spi_index_df$country)))
+  
+  p<- ggplot(SPI_changes, aes(x=country)) +
+    geom_point(aes(y=outcome_2016)) +
+    geom_point(aes(y=outcome_2019), color='blue') +
+    geom_segment( aes(x=country ,xend=country, y=outcome_2016, yend=outcome_2019,
+                      color=color)) +
+    scale_color_manual(values = c('decreased' = "red", 'improved' = "green")) +
+    coord_polar() +
+    theme_bw() +
+    labs(
+      title=paste(title, "Change from 2016-2019", sep=" - "),
+      subtitle='Source: Statistical Performance Indicators',
+      color = 'Change 2016-2019') +
+    ylab('SPI Value')
+    
+  p
+
+
+```
+
+
+
 # References
 
