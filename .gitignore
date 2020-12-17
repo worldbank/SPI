@@ -58,6 +58,7 @@
 # R-scrips and Rmarkdown-scripts
 !/**/**/*.R
 !/**/**/*.Rmd
+!renv*
 
 # HTML files
 !/**/**/*.html
