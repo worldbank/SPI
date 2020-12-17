@@ -569,6 +569,116 @@ spi_country_charts('SPI','SPI.INDEX','SPI Overall Scores vary significantly with
 ]
 ---
 
+```{r programs2, echo=FALSE}
+
+
+spi_mapper <- function(data, indicator, title) {
+  
+ indicator<-indicator
+
+   map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
+
+
+  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+  
+  SPI_map <- map_df %>%
+    mutate(spi_groups=case_when(
+      between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+  
+  #set color pallete
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
+  p1<-ggplot() +
+    geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+    geom_path(data = maps$boundaries,
+              aes(long, lat, group = group),
+              color = "white",
+              size = 0.5,
+              lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_manual(
+      name='SPI Score',
+      values=col_pal,
+      na.value='grey'
+    ) +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap(title,100),
+      caption = 'Source: World Bank. Statistical Performance Indicators'
+    )
+ print(p1)
+}
+
+```
+
+.center2[
+```{r dimension_1_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM1', 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
+
+```
+]
+
+---
+
+.center2[
+```{r dimension_2_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM2', 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
+
+```
+]
+
+---
+
+.center2[
+```{r dimension_3_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM3', 'Statistical Performance Indicators - SPI Dimension 3: Data Products')
+
+```
+]
+
+---
+
+.center2[
+```{r dimension_4_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM4', 'Statistical Performance Indicators - SPI Dimension 4: Data Sources')
+
+```
+]
+
+---
+
+.center2[
+```{r dimension_5_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
+
+```
+]
+
+
+---
+
 .center3[
 ```{r elephant, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 
@@ -689,6 +799,7 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
   theme_bw() +
   ylab('SPI Overall Score') +
   xlab('Human Capital Index') +
+  expand_limits(y=c(0,100)) +
   stat_poly_eq(aes(label  = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
@@ -726,13 +837,38 @@ gdp_df_2019_chart <- gdp_df_2019 %>%
   theme_bw() +
   ylab('SPI Overall Score') +
   xlab('Log GDP Per Capita') +
+  expand_limits(y=c(0,100)) +
   theme(legend.position = 'bottom') +
   stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
                      formula = 'y~x', parse = TRUE, size = 4)
-  
-  
+
+#Government Effectiveness
+  ge_df <- wbstats::wb_data(country="countries_only", 
+              indicator=c('GE.EST'),
+              start_date=2016,
+              end_date=2019,
+              return_wide = F) %>%
+  left_join(select(SPI,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
+
+#get the correlation for 2019
+ge_df_2019 <- ge_df %>%
+  filter(date==2019) 
+ 
+  ge_spi <- ggplot(data=ge_df_2019, aes(x=value, y=SPI.INDEX)) +
+  facet_wrap(~indicator) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  theme_bw() +
+  ylab('SPI Overall Score') +
+  xlab('Government Effectiveness (z score)') +
+  expand_limits(y=c(0,100)) +
+  theme(legend.position = 'bottom') +
+  stat_poly_eq(aes(label = paste(stat(eq.label),
+                                stat(rr.label), sep = "*\", \"*")), 
+                     label.x.npc = "right", label.y.npc = 0.1,
+                     formula = 'y~x', parse = TRUE, size = 4) 
 
 ```
 
@@ -741,10 +877,10 @@ gdp_df_2019_chart <- gdp_df_2019 %>%
 ```{r gdpplot, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 
 ### Scatterplot log GDP SPI
-(gdp_spi + hci_spi)   +
+(gdp_spi + hci_spi + ge_spi)   +
   plot_annotation(
-    title = 'SPI Overall Scores strongly related to GDP per capita and Human Capital Index.',
-    subtitle='Plot of SPI Index on Human Capital Index and GDP per capita',
+    title = 'SPI Overall Scores strongly related to GDP per capita, Human Capital Index, and Government Effectiveness Index.',
+    subtitle='Plot of SPI Index on GDP per capita, Human Capital Index, and Government Effectivess Index ',
     caption='Source: All indicators come from the World Bank.'
     )
   
@@ -758,72 +894,7 @@ gdp_df_2019_chart <- gdp_df_2019 %>%
 
 
 
---- 
 
-
-```{r programs2, echo=FALSE}
-
-
-spi_mapper <- function(data, indicator, title) {
-  
- indicator<-indicator
-
-   map_df <- get(data) %>%
-    filter(date==max(date, na.rm=T)) %>%
-    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
-    group_by( country) %>%
-    #summarise(across(!! indicator,last)) %>%
-    rename(data_available=!! indicator) %>%
-    select(iso3c, date, data_available, weights) %>%
-    right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
-
-
-  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
-  
-  SPI_map <- map_df %>%
-    mutate(spi_groups=case_when(
-      between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
-      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
-      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
-      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
-      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
-      
-    )) %>%
-    mutate(spi_groups=factor(spi_groups, 
-                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
-  
-  #set color pallete
-  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
-  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
-  
-  p1<-ggplot() +
-    geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
-    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
-    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
-    geom_path(data = maps$boundaries,
-              aes(long, lat, group = group),
-              color = "white",
-              size = 0.5,
-              lineend = maps$boundaries$lineend,
-              linetype = maps$boundaries$linetype) +
-    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
-    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
-    scale_fill_manual(
-      name='SPI Score',
-      values=col_pal,
-      na.value='grey'
-    ) +
-    coord_equal() +
-    theme_map(base_size=12) +
-    labs(
-      title=str_wrap(title,100),
-      caption = 'Source: World Bank. Statistical Performance Indicators'
-    )
- print(p1)
-}
-
-```
 
 
 ---
@@ -850,7 +921,7 @@ Extra Slides
 ---
 # Data Services (4 Pillars)
 
-  * <span style="color:green"> **Pillar 2.1: Data Releases:** 
+  *  **Pillar 2.1: Data Releases:** 
     * *SDDS/e-GDDS subscription*    
   * **Pillar 2.2: Online access:** 
     * *ODIN Open Data Openness score*   
@@ -895,8 +966,8 @@ For these pillars, we pull values from the UN SDG database, calculate the share 
 
   * <span style="color:grey"> Pillar 5.1: Legislation and Governance:     
     * *SDG 17.18.2 - National Statistical Legislation complies with UN Fundamental Principles of Statistics (PARIS21)*  
-  * <span style="color:green"> **Pillar 5.2: Standards and Methods:** 
-    * *Average score for 10 Standards and Methods indicators sourced mostly from IMF*  
+  *  **Pillar 5.2: Standards and Methods:** 
+    * *Average score for 10 Standards and Methods indicators*  
   * <span style="color:grey"> Pillar 5.3: Skills:  
     * *Considering PARIS21 measure of statistical literacy*    
   * <span style="color:grey"> Pillar 5.4: Partnerships:  
@@ -904,65 +975,6 @@ For these pillars, we pull values from the UN SDG database, calculate the share 
   * <span style="color:grey"> Pillar 5.5: Finance:  
     * *SDG 17.18.3 - Statistical Plan fully funded (PARIS21)*   
     
----
-
-# Indicators collected by IMF
-
-* Next, will focus on indicators compiled using IMF sources   
-* Includes 8 Indicators:
-  1. <span style="color:green"> SDDS/e-GDDS subscription	    
-  2. <span style="color:green"> Classification of national industry	    
-  3. <span style="color:green"> CPI base year	    
-  4. <span style="color:green"> Classification of household consumption (COICOP)	    
-  5. <span style="color:green"> Classification of status of employment	    
-  6. <span style="color:green"> Central government accounting status (AC/CA)	    
-  7. <span style="color:green"> Compilation of government finance statistics (GFSM)	    
-  8. <span style="color:green"> Compilation of monetary and financial statistics (MFS)		    
-  
----
-
-.center2[
-```{r dimension_1_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM1', 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
-
-```
-]
-
----
-
-.center2[
-```{r dimension_2_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM2', 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
-
-```
-]
-
----
-
-.center2[
-```{r dimension_3_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM3', 'Statistical Performance Indicators - SPI Dimension 3: Data Products')
-
-```
-]
-
----
-
-.center2[
-```{r dimension_4_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM4', 'Statistical Performance Indicators - SPI Dimension 4: Data Sources')
-
-```
-]
-
----
-
-.center2[
-```{r dimension_5_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
-
-```
-]
 
 ---
 
