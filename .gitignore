@@ -59,6 +59,7 @@
 !/**/**/*.R
 !/**/**/*.Rmd
 !renv*
+!renv.lock
 
 # HTML files
 !/**/**/*.html
