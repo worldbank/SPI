@@ -952,6 +952,193 @@ spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Di
 ]
 
 
+---
+class: inverse, middle, center
+
+Changes in the SPI Scores over time
+
+
+---
+
+.center3[
+```{r elephant, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+
+growth_plot <- function(variables, name) {
+  
+
+
+  elephant_df <- SPI %>%
+    rename(spi_data=!! variables) %>%
+    select(country, iso3c, date, spi_data) %>%
+    group_by(country, date) %>%
+    mutate(row = row_number()) %>%
+    pivot_wider(names_from=date,
+                names_prefix='spi_data_',
+                values_from=c('spi_data')) %>%
+    ungroup() %>%
+    mutate(growth=(spi_data_2019-spi_data_2016)) %>%
+    filter(!(is.na(spi_data_2019) | is.na(spi_data_2016))) %>%
+    mutate(spi_rank=100*rank(spi_data_2016)/length(spi_data_2016),
+           spi_bins=case_when( #calculate deciles
+             between(spi_rank,0,10) ~ "1st Decile",
+             between(spi_rank,10,20) ~ "2nd Decile",
+             between(spi_rank,20,30) ~ "3rd Decile",
+             between(spi_rank,30,40) ~ "4th Decile",
+             between(spi_rank,40,50) ~ "5th Decile",
+             between(spi_rank,50,60) ~ "6th Decile",
+             between(spi_rank,60,70) ~ "7th Decile",
+             between(spi_rank,70,80) ~ "8th Decile",
+             between(spi_rank,80,90) ~ "9th Decile",
+             between(spi_rank,90,100) ~ "Top Decile"
+           )) %>%
+    arrange(spi_rank)
+  
+  #summarise into decile bins
+  elephant_df <- elephant_df %>%
+    mutate(spi_bins=factor(spi_bins, levels=unique(elephant_df$spi_bins))) %>%
+    group_by(spi_bins) %>%
+    summarise(growth=mean(growth))
+  
+  ggplot(elephant_df, aes(x=spi_bins, y=growth, label=paste0(spi_bins,": ",round(growth,1),""))) +
+    geom_segment(aes(xend=as.numeric(spi_bins)-0.5,x=as.numeric(spi_bins)+0.5, y=growth, yend=growth)) +
+    geom_point() +
+    geom_bar(aes(alpha=growth), stat = "identity", fill='#007f5f') +
+    ggrepel::geom_text_repel(nudge_y=0.1, size=4,segment.alpha =  0 ) +
+    scale_x_discrete() +
+    theme_bw() +
+    xlab(str_wrap('Decile in 2016',40)) +
+    ylab(str_wrap('Change in Score (2016-19)',20)) +
+    labs(
+      title=str_wrap("Countries in 2nd and 3rd deciles have grown most since 2016.",70),
+      subtitle=str_wrap('Change in SPI Overall Score from 2016-19 by 2016 decile group',70),
+      caption=paste0(name,' scale = 0 - 100 points.')
+    ) +
+    expand_limits(y=c(-2,10)) +
+    scale_alpha_continuous(
+      range=c(0.3,1)
+    ) +
+  theme(
+    axis.title.y = element_text(angle=0, vjust = 0.5),
+    text = element_text(size = 14),
+    title= element_text(size = 20),
+    legend.position = 'none'
+  )
+
+}
+
+
+# growth_plot('SPI.INDEX.DIM1', 'SPI Dimension 1 (Data Use) Score')
+# growth_plot('SPI.INDEX.DIM2', 'SPI Dimension 2 (Data Services) Score')
+# growth_plot('SPI.INDEX.DIM3', 'SPI Dimension 3 (Data Products) Score')
+# growth_plot('SPI.INDEX.DIM4', 'SPI Dimension 4 (Data Sources) Score')
+# growth_plot('SPI.INDEX.DIM5', 'SPI Dimension 5 (Data Infrastructure) Score')
+
+
+```
+
+```{r elplot, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+
+growth_plot('SPI.INDEX', 'SPI Overall Score')
+
+```
+
+
+]
+---
+
+.center3[
+```{r elephantstacked, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+
+
+
+  elephant_stacked_df <- SPI %>%
+    select(country, iso3c, date, starts_with('SPI.INDEX')) %>%
+    group_by(country, date) %>%
+    mutate(row = row_number()) %>%
+    pivot_wider(names_from=date,
+                values_from=starts_with('SPI.INDEX')) %>%
+    ungroup() %>%
+    mutate(overall_growth=(SPI.INDEX_2019-SPI.INDEX_2016),
+           dim1_growth=(SPI.INDEX.DIM1_2019-SPI.INDEX.DIM1_2016),
+           dim2_growth=(SPI.INDEX.DIM2_2019-SPI.INDEX.DIM2_2016),
+           dim3_growth=(SPI.INDEX.DIM3_2019-SPI.INDEX.DIM3_2016),
+           dim4_growth=(SPI.INDEX.DIM4_2019-SPI.INDEX.DIM4_2016),
+           dim5_growth=(SPI.INDEX.DIM5_2019-SPI.INDEX.DIM5_2016)
+           ) %>%
+    filter(!(is.na(SPI.INDEX_2019) | is.na(SPI.INDEX_2016))) %>%
+    mutate(spi_rank=100*rank(SPI.INDEX_2016)/length(SPI.INDEX_2016),
+           spi_bins=case_when( #calculate deciles
+             between(spi_rank,0,10) ~ "1st Decile",
+             between(spi_rank,10,20) ~ "2nd Decile",
+             between(spi_rank,20,30) ~ "3rd Decile",
+             between(spi_rank,30,40) ~ "4th Decile",
+             between(spi_rank,40,50) ~ "5th Decile",
+             between(spi_rank,50,60) ~ "6th Decile",
+             between(spi_rank,60,70) ~ "7th Decile",
+             between(spi_rank,70,80) ~ "8th Decile",
+             between(spi_rank,80,90) ~ "9th Decile",
+             between(spi_rank,90,100) ~ "Top Decile"
+           )) %>%
+    arrange(spi_rank)
+  
+  #summarise into decile bins
+  elephant_stacked_df <- elephant_stacked_df %>%
+    mutate(spi_bins=factor(spi_bins, levels=unique(elephant_stacked_df$spi_bins))) %>%
+    group_by(spi_bins) %>%
+    summarise(
+              D1=mean(dim1_growth),
+              D2=mean(dim2_growth),
+              D3=mean(dim3_growth),
+              D4=mean(dim4_growth),
+              D5=mean(dim5_growth)) %>%
+    pivot_longer(
+      cols=c('D1', 'D2', 'D3', 'D4', 'D5'),
+      values_to='growth',
+      names_to='dimension'
+    ) %>%
+    mutate(dimension=case_when(
+      dimension=="D1" ~ "Dimension 1: Data Use",
+      dimension=="D2" ~ "Dimension 2: Data Services",
+      dimension=="D3" ~ "Dimension 3: Data Products",
+      dimension=="D4" ~ "Dimension 4: Data Sources",
+      dimension=="D5" ~ "Dimension 5: Data Infrastructure"
+    )) %>%
+    mutate(growth=growth/5) #divide by 5 so that dimension scores sum to overall score.  This puts equal weight on each dimension in the sum
+  
+
+
+
+
+
+
+```
+
+```{r elplotstacked, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+name <- 'SPI Overall Score'
+
+  ggplot(elephant_stacked_df, aes(x=spi_bins, y=growth, fill=dimension, label=paste0(round(growth,1)))) +
+    geom_bar(stat = "identity", position='stack') +
+    geom_text(size = 4, position = position_stack(vjust = 0.5)) +
+    scale_x_discrete() +
+    theme_bw() +
+    xlab(str_wrap('Decile in 2016',40)) +
+    ylab(str_wrap('Change in Score (2016-19)',20)) +
+    labs(
+      title=str_wrap("Countries in 2nd and 3rd deciles have grown most since 2016.",70),
+      subtitle=str_wrap('Change in SPI Overall Score from 2016-19 by 2016 decile group',70),
+      caption=paste0(name,' scale = 0 - 100 points.')
+    ) +
+    expand_limits(y=c(-2,10)) +
+  theme(
+    axis.title.y = element_text(angle=0, vjust = 0.5),
+    text = element_text(size = 14),
+    title= element_text(size = 20),
+    legend.position = 'bottom'
+  ) +
+    guides(fill=guide_legend(nrow=2,byrow=TRUE))
+
+```
+]
 
 ---
 class: inverse, middle, center
@@ -1039,19 +1226,9 @@ comparison_df <- SPI %>%
 
 ```
 
-# Comparison of SPI Index to SCI
-
-  * Next, compare the SPI Index to the SCI    
-  * Unique values of index:   
-    * 2016 SCI had 44 unique values   
-    * SPI index has 166 unique scores
-
-  * Correlation:    
-    * SPI index and SCI: `r round(cor(comparison_df$SPI.INDEX,comparison_df$SCI, use='pairwise.complete.obs'),2)`.   
-    * SPI index and Open Data Watch index:  `r round(cor(comparison_df$SPI.INDEX,comparison_df$ODIN_score, use='pairwise.complete.obs'),2)`.    
 
 
----
+
 
 
 
@@ -1065,7 +1242,7 @@ hci_df <- wbstats::wb_data(country="countries_only",
               start_date=2016,
               end_date=2019,
               return_wide = F) %>%
-  left_join(select(comparison_df,iso3c,date, region,SPI.INDEX,SCI)) #merge on SPI Index data
+  left_join(select(SPI,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
 
 #get the correlation for 2019
 hci_df_2018 <- hci_df %>%
@@ -1073,7 +1250,7 @@ hci_df_2018 <- hci_df %>%
 
 hci_df_2018_chart <- hci_df_2018 %>%
     pivot_longer(
-    cols = c('SPI.INDEX', 'SCI'),
+    cols = c('SPI.INDEX'),
     names_to='alt_index',
     values_to='index_values'
   ) %>%
@@ -1086,8 +1263,9 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
   theme_bw() +
-  ylab('Index value') +
+  ylab('SPI Overall Score') +
   xlab('Human Capital Index') +
+  expand_limits(y=c(0,100)) +
   stat_poly_eq(aes(label  = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
@@ -1095,21 +1273,7 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
     theme(legend.position = 'bottom')
 
 
-hci_spi2 <- ggplot(data=hci_df_2018_chart, aes(x=value, y=index_values, color=alt_index)) +
-  geom_point() +
-  geom_smooth(method='lm') +
-  theme_bw() +
-  ylab('Index value') +
-  xlab('Human Capital Index') +
-  labs(
-    color='Index'
-  ) +
-  ggtitle("SCI & SPI Index on Human Capital Index") +
-  stat_poly_eq(aes(label  = paste(stat(eq.label),
-                                stat(rr.label), sep = "*\", \"*")), 
-                     label.x = "right", label.y = 'bottom',
-                     formula = 'y~x', parse = TRUE, size = 4) +
-    theme(legend.position = 'bottom')
+
 #GDP
 gdp_df <- wbstats::wb_data(
   indicator='NY.GDP.PCAP.KD',
@@ -1117,7 +1281,7 @@ gdp_df <- wbstats::wb_data(
   end_date=2019,
   return_wide = F
     ) %>%
-  left_join(select(comparison_df,iso3c,date, region,SPI.INDEX,SCI)) #merge on SPI Index data
+  left_join(select(SPI,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
 
 #get the correlation for 2019
 gdp_df_2019 <- gdp_df %>%
@@ -1125,7 +1289,7 @@ gdp_df_2019 <- gdp_df %>%
 
 gdp_df_2019_chart <- gdp_df_2019 %>%
     pivot_longer(
-    cols = c('SPI.INDEX', 'SCI'),
+    cols = c('SPI.INDEX' ),
     names_to='alt_index',
     values_to='index_values'
   ) %>%
@@ -1137,58 +1301,55 @@ gdp_df_2019_chart <- gdp_df_2019 %>%
   geom_smooth(method='lm') +
   scale_x_log10(labels = scales::comma) +
   theme_bw() +
-  ylab('Index value') +
+  ylab('SPI Overall Score') +
   xlab('Log GDP Per Capita') +
+  expand_limits(y=c(0,100)) +
   theme(legend.position = 'bottom') +
   stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
                      formula = 'y~x', parse = TRUE, size = 4)
-  
-  gdp_spi2 <- ggplot(data=gdp_df_2019_chart, aes(x=value, y=index_values, color=alt_index)) +
-  geom_point() +
+
+#Government Effectiveness
+  ge_df <- wbstats::wb_data(country="countries_only", 
+              indicator=c('GE.EST'),
+              start_date=2016,
+              end_date=2019,
+              return_wide = F) %>%
+  left_join(select(SPI,iso3c,date, region,SPI.INDEX)) #merge on SPI Index data
+
+#get the correlation for 2019
+ge_df_2019 <- ge_df %>%
+  filter(date==2019) 
+ 
+  ge_spi <- ggplot(data=ge_df_2019, aes(x=value, y=SPI.INDEX)) +
+  facet_wrap(~indicator) +
+  geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  scale_x_log10(labels = scales::comma) +
   theme_bw() +
-  ylab('Index value') +
-  xlab('Log GDP Per Capita') +
-  ggtitle("SCI & SPI Index on Log GDP per Capita") +
-  labs(
-    color='Index'
-  ) +
+  ylab('SPI Overall Score') +
+  xlab('Government Effectiveness (z score)') +
+  expand_limits(y=c(0,100)) +
   theme(legend.position = 'bottom') +
   stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
-                     label.x = "right", label.y= 'bottom',
-                     formula = 'y~x', parse = TRUE, size = 4)
-
-
-corr_hci_2018 <- cor(hci_df_2018$value,hci_df_2018$SPI.INDEX, use='pairwise.complete.obs')
-
-
-corr_2019 <- cor(log(gdp_df_2019$value),gdp_df_2019$SPI.INDEX, use='pairwise.complete.obs')
-corr_2019_nontrans <- cor(gdp_df_2019$value,gdp_df_2019$SPI.INDEX, use='pairwise.complete.obs')
+                     label.x.npc = "right", label.y.npc = 0.1,
+                     formula = 'y~x', parse = TRUE, size = 4) 
 
 ```
 
- # GDP per capita & Human Capital Index
 
-  * Next, show relationship to Log GDP per capita and Human Capital Index      
-  * Would expect strong relationship between these and SPI Index
 
-  * Correlation:    
-    * Log GDP per capita and SPI index:  `r round(corr_2019,2)`    
-    * HCI & SPI index: `r round(corr_hci_2018,2)`   
-    * Provides better fit than SCI
----
+
 
 .center3[
-```{r gdp_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=10}
+```{r gdpplot, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 
 ### Scatterplot log GDP SPI
-(gdp_spi + hci_spi)   +
+(gdp_spi + hci_spi + ge_spi)   +
   plot_annotation(
-    title='Plot of SPI Index on Human Capital Index and GDP per capita',
+    title = 'SPI Overall Scores strongly related to GDP per capita, Human Capital Index, and Government Effectiveness Index.',
+    subtitle='Plot of SPI Index on GDP per capita, Human Capital Index, and Government Effectivess Index ',
     caption='Source: All indicators come from the World Bank.'
     )
   
@@ -1196,23 +1357,6 @@ corr_2019_nontrans <- cor(gdp_df_2019$value,gdp_df_2019$SPI.INDEX, use='pairwise
 ```
 ]
 
-
----
-
-.center3[
-```{r gdp_plot2, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=10}
-
-### Scatterplot log GDP SPI
-(gdp_spi2 + hci_spi2)   +
-  plot_annotation(
-    title='Plot of SPI Index & SCI on Human Capital Index and GDP per capita',
-    caption='Source: All indicators come from the World Bank.'
-    )
-  
-
-```
-
-  ]
 
 ---
 

@@ -46,7 +46,7 @@ Below we pull data from both the public, non-public (World Bank use only) microd
 public_base_url <- "http://microdata.worldbank.org/index.php/api/catalog" #define url
 study_request_public<-fromJSON(paste(public_base_url,"/search","?ps=10000", sep="")) # pull from url
 study_df_public <- study_request_public$result$rows #convert to dataframe
-write_excel_csv(study_df_public, path = paste(output_dir, "microdata_library_public_studies.csv")) #write to csv
+write_excel_csv(study_df_public, path = paste(output_dir, "microdata_library_public_studies.csv", sep="")) #write to csv
 gt(as_tibble(head(study_df_public[,1:5]))) #display top 5 rows of dataframe
 
 
@@ -54,7 +54,7 @@ gt(as_tibble(head(study_df_public[,1:5]))) #display top 5 rows of dataframe
 ihsn_base_url <- "https://catalog.ihsn.org/index.php/api/catalog" #define url
 study_request_ihsn<-fromJSON(paste(ihsn_base_url,"/search","?ps=10000", sep="")) # pull from url
 study_df_ihsn <- study_request_ihsn$result$rows #convert to dataframe
-write_excel_csv(study_df_ihsn, path = paste(output_dir, "ihsn_library_public_studies.csv")) #write to csv
+write_excel_csv(study_df_ihsn, path = paste(output_dir, "ihsn_library_public_studies.csv", sep="")) #write to csv
 
 
 #pull from ILO
@@ -62,7 +62,7 @@ temp <- tempfile()
 ilo_base_url <- 'https://www.ilo.org/surveyLib/index.php/catalog/export/csv?ps=5000&collection[]=LFS' 
 download.file(ilo_base_url,temp)
 study_df_ilo <- read_csv(temp) #convert to dataframe
-write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv")) #write to csv
+write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv", sep="")) #write to csv
 
 
 
@@ -71,7 +71,7 @@ write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studi
 wb_base_url <- "http://microdatalib.worldbank.org/index.php/api/catalog" #define url
 study_request_wb<-fromJSON(paste(wb_base_url,"/search","?ps=15000", sep="")) # pull from url
 study_df_internal <- study_request_wb$result$rows
-write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_internal_studies.csv")) #write to csv
+write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_internal_studies.csv", sep="")) #write to csv
 
 
 gt(as_tibble(head(study_df_internal[,1:5])))

@@ -1,0 +1,55 @@
+"0",""
+"0",""
+"0","#get list of survey ids"
+"0","internal_series <- study_df_internal$idno"
+"0",""
+"0",""
+"0",""
+"0",""
+"0",""
+"0","#use purr to loop over list of surveys and return some extra info"
+"0","series_info_fn <- function(series) {"
+"0","      "
+"0","    info <- fromJSON(paste('http://microdatalib.worldbank.org/index.php/api/catalog/',series, sep=""""))    "
+"0","    series_info <- as.character(info$dataset$metadata$study_desc$series_statement$series_name)"
+"0","    geog_coverage <- as.character(info$dataset$metadata$study_desc$study_info$geog_coverage)"
+"0","    tibble::tibble(series_info, geog_coverage)"
+"0","}"
+"0",""
+"0",""
+"0","#now produce a dataframe with the more info on survey"
+"0","study_df_internal <- study_df_internal %>%"
+"0","  mutate(series_info_dat=map(internal_series, possibly(series_info_fn, "
+"0","                                           otherwise = 'Something Wrong'"
+"0","                                           )"
+"0","                     )"
+"0","  ) %>%"
+"0","  unnest(series_info_dat,"
+"0","         keep_empty=TRUE)"
+"0",""
+"0","study_df_internal <- study_df_internal %>%"
+"0","  mutate(across(is.list, as.character))"
+"2","Problem with `mutate()` input `..1`.
+[34mi[39m Predicate functions must be wrapped in `where()`.
+
+  # Bad
+  data %>% select(is.list)
+
+  # Good
+  data %>% select(where(is.list))
+
+[34mi[39m Please update your code.
+[90mThis message is displayed once per session.[39m
+[34mi[39m Input `..1` is `across(is.list, as.character)`."
+"2","Predicate functions must be wrapped in `where()`.
+
+  # Bad
+  data %>% select(is.list)
+
+  # Good
+  data %>% select(where(is.list))
+
+[34mi[39m Please update your code.
+[90mThis message is displayed once per session.[39m"
+"0","write_excel_csv(study_df_internal, path = paste(output_dir, ""microdata_library_surveys.csv"",sep="""")) #write to csv"
+"0","gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe"

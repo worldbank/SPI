@@ -14,14 +14,14 @@ AUT,2019,Austria,Europe & Central Asia,High income,1,0.6,0.9,0.455,0.375,1,0.8,0
 AZE,2019,Azerbaijan,Europe & Central Asia,Upper middle income,0.429,0.667,0.81,0.545,0.286,1,0.8,0.5,0.625,0.4,0.333,0.75,0.5,0.889,0.556,0.643,0.5
 BDI,2019,Burundi,Sub-Saharan Africa ,Low income,0.714,0.667,0.8,0.545,0.625,0.833,0.933,0.357,0.375,0.333,0.8,0.75,0,0.889,0.778,0.6,1
 BEL,2019,Belgium,Europe & Central Asia,High income,0.571,0.7,0.85,0.545,0.375,0.833,0.8,0.714,1,0.429,0.333,0.75,0.667,1,0.556,0.538,0
-BEN,2019,Benin,Sub-Saharan Africa ,Lower middle income,0.571,0.667,0.762,0.636,0.375,0.8,0.8,0.462,0.375,0.6,0.2,0.75,0.5,0.778,0.889,0.571,0
+BEN,2019,Benin,Sub-Saharan Africa ,Lower middle income,0.571,0.667,0.762,0.636,0.375,0.8,0.8,0.462,0.375,0.5,0.2,0.75,0.5,0.778,0.889,0.571,0
 BFA,2019,Burkina Faso,Sub-Saharan Africa ,Low income,0.714,0.778,0.762,0.455,0.125,0.8,0.8,0.385,0.333,0.333,0.8,0.75,0,0.889,0.333,0.643,1
 BGD,2019,Bangladesh,South Asia,Lower middle income,0.714,0.889,0.8,0.545,0.375,1,0.933,0.538,0.5,0.6,0.6,0.75,0.667,0.889,0.778,0.6,0.5
 BGR,2019,Bulgaria,Europe & Central Asia,Upper middle income,0.857,0.6,0.81,0.364,0.25,0.667,0.6,0.462,0.625,0.333,0.667,0.75,0.667,0.667,0.556,0.462,1
 BHR,2019,Bahrain,Middle East & North Africa,High income,0.143,0.375,0.8,0.455,0.143,0.667,1,0.214,0.375,0.167,0.167,0.75,0.667,0.556,0.444,0.429,0
 BHS,2019,"Bahamas, The",Latin America & Caribbean ,High income,0.143,0.143,0.8,0.273,0.125,0.333,1,0.308,0.125,0.167,0.167,0.75,0.667,0.556,0.444,0.429,0
 BIH,2019,Bosnia and Herzegovina,Europe & Central Asia,Upper middle income,0.429,0.556,0.9,0.364,0.25,1,0.8,0.615,0.75,0.4,0.4,0.75,0.333,0.889,0.556,0.615,0
-BLR,2019,Belarus,Europe & Central Asia,Upper middle income,0.714,0.667,0.81,0.636,0.5,1,0.8,0.571,0.625,0.5,0.6,0.75,0,0.778,0.667,0.615,0.5
+BLR,2019,Belarus,Europe & Central Asia,Upper middle income,0.714,0.667,0.81,0.636,0.5,1,0.8,0.571,0.625,0.6,0.6,0.75,0,0.778,0.667,0.615,0.5
 BLZ,2019,Belize,Latin America & Caribbean ,Upper middle income,0.286,0.667,0.905,0.545,0.375,0.8,0.933,0.615,0.333,0.333,0.2,0.75,0.667,0.889,0.667,0.6,0
 BMU,2019,Bermuda,North America,High income,0.143,0,0.091,0.273,0,0.333,0.4,0.143,0.222,0,0,0,0.667,0.556,0.222,0.312,0
 BOL,2019,Bolivia,Latin America & Caribbean ,Lower middle income,0.857,0.8,0.95,0.545,0.5,0.833,0.933,0.615,0.444,0.6,0.6,0.75,0,0.889,0.778,0.643,0.5
@@ -36,14 +36,14 @@ CHE,2019,Switzerland,Europe & Central Asia,High income,1,0.7,0.857,0.545,0.5,0.8
 CHL,2019,Chile,Latin America & Caribbean ,High income,1,0.8,0.9,0.545,0.375,1,1,0.846,0.889,0.667,0.8,1,0.667,1,0.556,0.571,1
 CHN,2019,China,East Asia & Pacific,Upper middle income,0.714,0.6,0.75,0.273,0.25,1,0.8,0.308,0.625,0.6,0.667,0.75,0.5,0.889,0.222,0.571,0.5
 CIV,2019,Cote d'Ivoire,Sub-Saharan Africa ,Lower middle income,0.857,0.667,0.762,0.545,0.571,1,0.933,0.615,0.625,0.4,0.6,0.5,0.5,0.889,0.778,0.692,0.5
-CMR,2019,Cameroon,Sub-Saharan Africa ,Lower middle income,0.714,0.667,0.714,0.455,0.125,0.8,0.8,0.385,0.375,0.4,0.8,1,0.667,0.889,0.667,0.571,1
+CMR,2019,Cameroon,Sub-Saharan Africa ,Lower middle income,0.714,0.667,0.714,0.455,0.125,0.8,0.8,0.385,0.375,0.333,0.8,1,0.667,0.889,0.667,0.571,1
 COD,2019,"Congo, Dem. Rep.",Sub-Saharan Africa ,Low income,0.286,0.5,0.6,0.364,0.125,0.8,0.8,0.286,0.625,0.333,0.2,0.5,0.5,0.889,0.222,0.533,0
-COG,2019,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.286,0.444,0.714,0.273,0.25,1,0.933,0.357,0.333,0.333,0.2,0.5,0.667,0.889,0.444,0.6,0
+COG,2019,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.286,0.444,0.714,0.273,0.25,1,0.933,0.357,0.333,0.4,0.2,0.5,0.667,0.889,0.444,0.6,0
 COL,2019,Colombia,Latin America & Caribbean ,Upper middle income,1,0.889,1,0.545,0.571,1,0.933,0.769,0.75,0.6,1,0.75,0.667,0.889,0.889,0.692,1
 COM,2019,Comoros,Sub-Saharan Africa ,Lower middle income,0.571,0.143,0.667,0.455,0.125,0.8,0.8,0.231,0.222,0.333,0.8,0.5,0.667,0.889,0.222,0.643,1
-CPV,2019,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.857,0.556,0.857,0.455,0.25,0.6,0.8,0.538,0.333,0.333,0.5,1,0.667,0.889,0.333,0.643,0.5
-CRI,2019,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.667,1,0.545,0.375,1,0.933,0.769,0.75,0.75,0.8,0.5,0.667,0.889,0.556,0.75,1
-CUB,2019,Cuba,Latin America & Caribbean ,Upper middle income,0.286,0.375,0.9,0.455,0.25,0.833,0.6,0.214,0.5,0.4,0.2,0.75,0.5,0.889,0.444,0.438,0
+CPV,2019,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.857,0.556,0.857,0.455,0.25,0.6,0.8,0.538,0.333,0.4,0.5,1,0.667,0.889,0.333,0.643,0.5
+CRI,2019,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.667,1,0.545,0.375,1,0.933,0.769,0.75,0.6,0.8,0.5,0.667,0.889,0.556,0.75,1
+CUB,2019,Cuba,Latin America & Caribbean ,Upper middle income,0.286,0.375,0.9,0.455,0.25,0.833,0.6,0.214,0.5,0.333,0.2,0.75,0.5,0.889,0.444,0.438,0
 CUW,2019,Curacao,Latin America & Caribbean ,High income,0,0,0.091,0,0.125,0.167,0.8,0.286,0.375,0,0,0.25,0.5,0.556,0,0.333,0
 CYM,2019,Cayman Islands,Latin America & Caribbean ,High income,0,0,0.045,0.273,0,0.167,0.8,0.071,0.111,0,0,0.25,0.667,0.556,0.111,0.375,0
 CYP,2019,Cyprus,Europe & Central Asia,High income,0.571,0.6,0.762,0.364,0.25,0.667,0.8,0.385,0.625,0.429,0.5,0.5,0.667,0.667,0.556,0.385,0.5
@@ -82,7 +82,7 @@ GUM,2019,Guam,East Asia & Pacific,High income,0,0,0.091,0,0.125,0.333,0.6,0,0.11
 GUY,2019,Guyana,Latin America & Caribbean ,Upper middle income,0.286,0.5,0.81,0.273,0.25,0.833,0.8,0.385,0.333,0.4,0.2,0.5,0.667,0.667,0.556,0.562,0
 HKG,2019,"Hong Kong SAR, China",East Asia & Pacific,High income,0.143,0.25,0.091,0.455,0,0.333,0.6,0.231,0.5,0.167,0,0.25,0.5,0.667,0.444,0.5,0
 HND,2019,Honduras,Latin America & Caribbean ,Lower middle income,0.714,0.444,0.85,0.545,0.25,1,0.933,0.538,0.75,0.6,0.6,0.75,0.667,0.889,0.667,0.643,0.5
-HRV,2019,Croatia,Europe & Central Asia,High income,0.857,0.6,0.85,0.364,0.25,0.667,0.8,0.462,0.625,0.429,0.5,0.5,0.667,0.667,0.667,0.385,0.5
+HRV,2019,Croatia,Europe & Central Asia,High income,0.857,0.6,0.85,0.364,0.25,0.667,0.8,0.462,0.625,0.5,0.5,0.5,0.667,0.667,0.667,0.385,0.5
 HTI,2019,Haiti,Latin America & Caribbean ,Low income,0.286,0.556,0.8,0.273,0.5,0.833,0.933,0.231,0.375,0.4,0.2,0.5,0.667,0.889,0.778,0.615,0
 HUN,2019,Hungary,Europe & Central Asia,High income,0.571,0.7,0.9,0.636,0.375,1,0.8,0.769,1,0.5,0.6,0.75,0,0.889,0.556,0.538,0.5
 IDN,2019,Indonesia,East Asia & Pacific,Upper middle income,1,0.778,0.8,0.545,0.429,0.833,0.933,0.615,0.75,0.6,1,0.5,0.667,0.889,0.667,0.615,1
@@ -229,14 +229,14 @@ AUT,2018,Austria,Europe & Central Asia,High income,1,0.7,0.9,0.545,0.375,0.833,0
 AZE,2018,Azerbaijan,Europe & Central Asia,Upper middle income,0.429,0.667,0.857,0.6,0.286,1,0.8,0.462,0.625,0.4,0.333,0.75,0.5,0.889,0.556,0.583,0.5
 BDI,2018,Burundi,Sub-Saharan Africa ,Low income,0.857,0.667,0.8,0.727,0.625,0.833,0.933,0.615,0.333,0.333,0.8,0.75,0,0.889,0.889,0.538,1
 BEL,2018,Belgium,Europe & Central Asia,High income,0.571,0.8,0.85,0.636,0.375,0.833,0.8,0.692,1,0.5,0.333,0.75,0.667,1,0.667,0.5,0
-BEN,2018,Benin,Sub-Saharan Africa ,Lower middle income,0.571,0.667,0.762,0.727,0.5,0.8,0.933,0.417,0.333,0.6,0.2,0.75,0.5,0.778,0.889,0.5,0
+BEN,2018,Benin,Sub-Saharan Africa ,Lower middle income,0.571,0.667,0.762,0.727,0.5,0.8,0.933,0.417,0.333,0.5,0.2,0.75,0.5,0.778,0.889,0.5,0
 BFA,2018,Burkina Faso,Sub-Saharan Africa ,Low income,1,0.778,0.762,0.545,0.125,0.833,0.933,0.417,0.444,0.333,0.8,0.75,0,0.889,0.444,0.545,1
 BGD,2018,Bangladesh,South Asia,Lower middle income,0.714,0.889,0.85,0.545,0.5,1,0.933,0.583,0.5,0.75,0.6,0.75,0.667,0.889,0.556,0.538,0.5
 BGR,2018,Bulgaria,Europe & Central Asia,Upper middle income,0.857,0.8,0.81,0.364,0.25,0.667,0.6,0.583,0.625,0.333,0.667,0.75,0.667,0.667,0.556,0.4,1
 BHR,2018,Bahrain,Middle East & North Africa,High income,0,0.375,0.8,0.455,0.125,0.667,1,0.231,0.625,0.167,0.167,0.75,0.667,0.556,0.444,0.333,0
 BHS,2018,"Bahamas, The",Latin America & Caribbean ,High income,0,0.143,0.8,0.273,0.125,0.333,1,0.25,0.125,0.167,0.167,0.75,0.667,0.556,0.556,0.364,0
 BIH,2018,Bosnia and Herzegovina,Europe & Central Asia,Upper middle income,0.429,0.556,0.9,0.364,0.25,1,0.8,0.583,0.75,0.5,0.333,0.75,0.333,0.889,0.556,0.6,0
-BLR,2018,Belarus,Europe & Central Asia,Upper middle income,0.714,0.667,0.857,0.545,0.375,1,0.8,0.538,0.625,0.6,0.5,0.75,0,0.778,0.556,0.6,0.5
+BLR,2018,Belarus,Europe & Central Asia,Upper middle income,0.714,0.667,0.857,0.545,0.375,1,0.8,0.538,0.625,0.75,0.5,0.75,0,0.778,0.556,0.6,0.5
 BLZ,2018,Belize,Latin America & Caribbean ,Upper middle income,0.286,0.667,0.905,0.545,0.375,0.6,0.933,0.667,0.333,0.333,0.2,0.75,0.667,0.889,0.667,0.538,0
 BMU,2018,Bermuda,North America,High income,0.143,0,0.091,0.273,0,0.333,0.4,0.154,0.222,0,0,0,0.667,0.556,0.222,0.214,0
 BOL,2018,Bolivia,Latin America & Caribbean ,Lower middle income,0.857,0.9,0.95,0.545,0.5,0.833,0.933,0.75,0.444,0.75,0.6,0.75,0,0.889,0.778,0.583,0.5
@@ -251,14 +251,14 @@ CHE,2018,Switzerland,Europe & Central Asia,High income,1,0.7,0.857,0.545,0.5,0.8
 CHL,2018,Chile,Latin America & Caribbean ,High income,1,0.9,0.9,0.545,0.375,1,1,0.833,0.889,0.667,0.8,1,0.667,1,0.556,0.545,1
 CHN,2018,China,East Asia & Pacific,Upper middle income,0.714,0.6,0.75,0.364,0.25,1,0.8,0.25,0.625,0.75,0.667,0.75,0.5,0.889,0.222,0.5,0.5
 CIV,2018,Cote d'Ivoire,Sub-Saharan Africa ,Lower middle income,0.857,0.778,0.762,0.636,0.5,1,0.933,0.667,0.625,0.4,0.6,0.5,0.5,0.889,0.778,0.636,0.5
-CMR,2018,Cameroon,Sub-Saharan Africa ,Lower middle income,1,0.667,0.762,0.636,0.625,0.833,0.933,0.667,0.444,0.5,0.8,1,0.667,0.889,0.889,0.545,1
+CMR,2018,Cameroon,Sub-Saharan Africa ,Lower middle income,1,0.667,0.762,0.636,0.625,0.833,0.933,0.667,0.444,0.4,0.8,1,0.667,0.889,0.889,0.545,1
 COD,2018,"Congo, Dem. Rep.",Sub-Saharan Africa ,Low income,0.286,0.5,0.7,0.455,0.5,0.833,0.933,0.231,0.625,0.333,0.2,0.5,0.5,0.889,0.556,0.462,0
-COG,2018,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.143,0.667,0.714,0.364,0.25,1,0.933,0.308,0.333,0.333,0.2,0.5,0.667,0.889,0.444,0.538,0
+COG,2018,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.143,0.667,0.714,0.364,0.25,1,0.933,0.308,0.333,0.4,0.2,0.5,0.667,0.889,0.444,0.538,0
 COL,2018,Colombia,Latin America & Caribbean ,Upper middle income,1,0.889,1,0.545,0.571,1,0.933,0.75,0.75,0.75,1,0.75,0.667,0.889,0.889,0.7,1
 COM,2018,Comoros,Sub-Saharan Africa ,Lower middle income,0.714,0.143,0.667,0.455,0.25,0.6,0.8,0.417,0.333,0.333,0.8,0.5,0.667,0.889,0.222,0.583,1
-CPV,2018,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.857,0.556,0.857,0.455,0.25,0.6,0.8,0.5,0.333,0.333,0.5,1,0.667,0.889,0.333,0.583,0.5
-CRI,2018,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.667,1,0.545,0.375,1,0.933,0.75,0.667,0.75,0.8,0.5,0.667,0.889,0.556,0.778,1
-CUB,2018,Cuba,Latin America & Caribbean ,Upper middle income,0.143,0.375,0.95,0.545,0.375,0.833,0.6,0.231,0.625,0.4,0.167,0.75,0.5,0.889,0.667,0.357,0
+CPV,2018,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.857,0.556,0.857,0.455,0.25,0.6,0.8,0.5,0.333,0.4,0.5,1,0.667,0.889,0.333,0.583,0.5
+CRI,2018,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.667,1,0.545,0.375,1,0.933,0.75,0.667,0.6,0.8,0.5,0.667,0.889,0.556,0.778,1
+CUB,2018,Cuba,Latin America & Caribbean ,Upper middle income,0.143,0.375,0.95,0.545,0.375,0.833,0.6,0.231,0.625,0.333,0.167,0.75,0.5,0.889,0.667,0.357,0
 CUW,2018,Curacao,Latin America & Caribbean ,High income,0,0,0.091,0,0.125,0.167,0.8,0.308,0.333,0,0,0.25,0.5,0.556,0,0.231,0
 CYM,2018,Cayman Islands,Latin America & Caribbean ,High income,0,0,0.045,0.273,0,0.167,0.8,0.077,0.111,0,0,0.25,0.667,0.556,0.222,0.286,0
 CYP,2018,Cyprus,Europe & Central Asia,High income,0.571,0.6,0.762,0.364,0.25,0.667,0.8,0.5,0.625,0.5,0.5,0.5,0.667,0.667,0.667,0.3,0.5
@@ -297,7 +297,7 @@ GUM,2018,Guam,East Asia & Pacific,High income,0,0,0.091,0,0.125,0.333,0.6,0,0.11
 GUY,2018,Guyana,Latin America & Caribbean ,Upper middle income,0.143,0.75,0.857,0.364,0.375,0.833,0.933,0.5,0.333,0.4,0.2,0.5,0.667,0.667,0.778,0.5,0
 HKG,2018,"Hong Kong SAR, China",East Asia & Pacific,High income,0,0.25,0.091,0.455,0,0.333,0.6,0.25,0.5,0.2,0,0.25,0.5,0.667,0.444,0.417,0
 HND,2018,Honduras,Latin America & Caribbean ,Lower middle income,0.714,0.444,0.9,0.545,0.25,1,0.933,0.75,0.667,0.6,0.6,0.75,0.667,0.889,0.667,0.636,0.5
-HRV,2018,Croatia,Europe & Central Asia,High income,0.857,0.6,0.85,0.364,0.25,0.667,0.8,0.5,0.625,0.5,0.5,0.5,0.667,0.667,0.667,0.3,0.5
+HRV,2018,Croatia,Europe & Central Asia,High income,0.857,0.6,0.85,0.364,0.25,0.667,0.8,0.5,0.625,0.6,0.5,0.5,0.667,0.667,0.667,0.3,0.5
 HTI,2018,Haiti,Latin America & Caribbean ,Low income,0.286,0.556,0.8,0.273,0.5,0.833,0.933,0.25,0.333,0.4,0.2,0.5,0.667,0.889,0.778,0.545,0
 HUN,2018,Hungary,Europe & Central Asia,High income,0.714,0.8,0.9,0.636,0.375,0.833,0.8,0.833,1,0.5,0.5,0.75,0,0.889,0.667,0.5,0.5
 IDN,2018,Indonesia,East Asia & Pacific,Upper middle income,1,0.778,0.8,0.636,0.429,0.833,0.933,0.583,0.667,0.75,1,0.5,0.667,0.889,0.667,0.6,1
@@ -444,14 +444,14 @@ AUT,2017,Austria,Europe & Central Asia,High income,0.857,0.7,0.9,0.6,0.25,0.8,0.
 AZE,2017,Azerbaijan,Europe & Central Asia,Upper middle income,0.429,0.889,0.857,0.6,0.286,1,0.8,0.462,0.625,0.4,0.333,0.75,0,0.889,0.667,0.875,0.5
 BDI,2017,Burundi,Sub-Saharan Africa ,Low income,1,0.778,0.8,0.727,0.625,0.8,0.933,0.615,0.222,0.4,0.8,0.75,0,0.889,0.889,0.7,1
 BEL,2017,Belgium,Europe & Central Asia,High income,0.571,0.8,0.85,0.8,0.375,0.8,0.8,0.75,0.875,0.5,0.333,0.75,0.667,1,0.667,0.625,0
-BEN,2017,Benin,Sub-Saharan Africa ,Lower middle income,0.571,0.667,0.762,0.636,0.25,0.75,0.933,0.417,0.222,0.6,0.2,0.75,0.667,0.778,0.556,0.7,0
+BEN,2017,Benin,Sub-Saharan Africa ,Lower middle income,0.571,0.667,0.762,0.636,0.25,0.75,0.933,0.417,0.222,0.5,0.2,0.75,0.667,0.778,0.556,0.7,0
 BFA,2017,Burkina Faso,Sub-Saharan Africa ,Low income,1,0.778,0.762,0.545,0.125,0.8,0.933,0.417,0.444,0.333,0.8,0.75,0,0.889,0.444,0.75,1
 BGD,2017,Bangladesh,South Asia,Lower middle income,0.714,0.889,0.85,0.545,0.5,1,0.933,0.667,0.444,0.6,0.6,0.75,0.667,0.889,0.667,0.7,0.5
 BGR,2017,Bulgaria,Europe & Central Asia,Upper middle income,0.857,0.8,0.81,0.4,0.25,0.6,0.6,0.583,0.625,0.333,0.667,0.75,0.667,0.667,0.667,0.5,1
 BHR,2017,Bahrain,Middle East & North Africa,High income,0,0.375,0.8,0.455,0.125,0.6,1,0.231,0.625,0.167,0.167,0.75,0.667,0.556,0.333,0.4,0
 BHS,2017,"Bahamas, The",Latin America & Caribbean ,High income,0,0.143,0.81,0.273,0.125,0.2,1,0.25,0.111,0.167,0.167,0.75,0.667,0.556,0.556,0.5,0
 BIH,2017,Bosnia and Herzegovina,Europe & Central Asia,Upper middle income,0.429,0.556,0.857,0.273,0.25,1,0.8,0.583,0.556,0.5,0.167,0.75,0.333,0.889,0.667,0.75,0
-BLR,2017,Belarus,Europe & Central Asia,Upper middle income,0.714,0.667,0.857,0.455,0.375,1,0.8,0.583,0.556,0.4,0.5,0.75,0,0.778,0.667,0.75,0.5
+BLR,2017,Belarus,Europe & Central Asia,Upper middle income,0.714,0.667,0.857,0.455,0.375,1,0.8,0.583,0.556,0.5,0.5,0.75,0,0.778,0.667,0.75,0.5
 BLZ,2017,Belize,Latin America & Caribbean ,Upper middle income,0.286,0.667,0.905,0.636,0.375,0.5,0.933,0.75,0.333,0.333,0.2,0.75,0.667,0.889,0.667,0.875,0
 BMU,2017,Bermuda,North America,High income,0.143,0,0.091,0.273,0,0.4,0.6,0.154,0.111,0,0,0,0.667,0.556,0.222,0.4,0
 BOL,2017,Bolivia,Latin America & Caribbean ,Lower middle income,0.857,0.9,0.95,0.636,0.5,0.8,0.933,0.75,0.444,0.5,0.6,0.75,0,0.889,0.778,0.7,0.5
@@ -466,14 +466,14 @@ CHE,2017,Switzerland,Europe & Central Asia,High income,1,0.778,0.857,0.545,0.5,0
 CHL,2017,Chile,Latin America & Caribbean ,High income,1,0.9,0.9,0.636,0.375,1,1,0.75,0.889,0.667,0.8,1,0.667,1,0.556,0.75,1
 CHN,2017,China,East Asia & Pacific,Upper middle income,0.714,0.8,0.75,0.364,0.125,1,0.8,0.25,0.556,0.6,0.5,0.75,0.5,0.889,0.222,0.75,0.5
 CIV,2017,Cote d'Ivoire,Sub-Saharan Africa ,Lower middle income,0.857,0.778,0.762,0.727,0.5,1,0.933,0.667,0.556,0.4,0.6,0.5,0.5,0.889,0.778,0.875,0.5
-CMR,2017,Cameroon,Sub-Saharan Africa ,Lower middle income,1,0.667,0.762,0.636,0.625,0.8,0.933,0.667,0.444,0.5,0.8,0.75,0.333,0.889,0.889,0.75,1
+CMR,2017,Cameroon,Sub-Saharan Africa ,Lower middle income,1,0.667,0.762,0.636,0.625,0.8,0.933,0.667,0.444,0.4,0.8,0.75,0.333,0.889,0.889,0.75,1
 COD,2017,"Congo, Dem. Rep.",Sub-Saharan Africa ,Low income,0.286,0.75,0.7,0.455,0.5,0.8,0.933,0.308,0.556,0.333,0.2,0.5,0,0.889,0.667,0.6,0
-COG,2017,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.143,0.667,0.762,0.364,0.25,1,0.933,0.308,0.333,0.333,0.2,0.5,0.667,0.889,0.444,0.636,0
+COG,2017,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.143,0.667,0.762,0.364,0.25,1,0.933,0.308,0.333,0.4,0.2,0.5,0.667,0.889,0.444,0.636,0
 COL,2017,Colombia,Latin America & Caribbean ,Upper middle income,1,0.875,1,0.545,0.5,1,0.933,0.75,0.75,0.5,1,0.75,0.667,0.889,0.889,0.875,1
 COM,2017,Comoros,Sub-Saharan Africa ,Lower middle income,0.857,0.143,0.667,0.455,0.25,0.5,0.8,0.417,0.222,0.333,0.8,0.5,0.667,0.889,0.222,0.7,1
-CPV,2017,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.857,0.556,0.857,0.455,0.25,0.6,0.8,0.5,0.333,0.333,0.5,1,0.667,0.889,0.333,0.875,0.5
-CRI,2017,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.667,0.95,0.545,0.375,1,0.933,0.75,0.667,0.5,0.8,0.5,0.667,0.889,0.667,0.875,1
-CUB,2017,Cuba,Latin America & Caribbean ,Upper middle income,0.143,0.375,0.95,0.455,0.375,0.8,0.6,0.231,0.556,0.4,0.167,0.75,0.5,0.889,0.667,0.455,0
+CPV,2017,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.857,0.556,0.857,0.455,0.25,0.6,0.8,0.5,0.333,0.4,0.5,1,0.667,0.889,0.333,0.875,0.5
+CRI,2017,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.667,0.95,0.545,0.375,1,0.933,0.75,0.667,0.4,0.8,0.5,0.667,0.889,0.667,0.875,1
+CUB,2017,Cuba,Latin America & Caribbean ,Upper middle income,0.143,0.375,0.95,0.455,0.375,0.8,0.6,0.231,0.556,0.333,0.167,0.75,0.5,0.889,0.667,0.455,0
 CUW,2017,Curacao,Latin America & Caribbean ,High income,0,0,0.091,0,0,0.2,0.8,0.154,0.111,0,0,0.25,0.5,0.556,0,0.273,0
 CYM,2017,Cayman Islands,Latin America & Caribbean ,High income,0,0,0.045,0.182,0,0.2,0.8,0.077,0,0,0,0.25,0.667,0.556,0.222,0.4,0
 CYP,2017,Cyprus,Europe & Central Asia,High income,0.571,0.6,0.762,0.4,0.25,0.6,0.8,0.5,0.556,0.5,0.5,0.5,0.667,0.667,0.667,0.375,0.5
@@ -512,7 +512,7 @@ GUM,2017,Guam,East Asia & Pacific,High income,0,0,0.091,0,0,0.4,0.6,0,0,0,0,0.25
 GUY,2017,Guyana,Latin America & Caribbean ,Upper middle income,0.429,0.75,0.905,0.364,0.375,0.8,0.933,0.5,0.222,0.4,0.6,0.5,0.333,0.667,0.778,0.7,0.5
 HKG,2017,"Hong Kong SAR, China",East Asia & Pacific,High income,0,0.25,0.091,0.455,0.125,0.4,0.6,0.25,0.5,0.2,0,0.25,0.5,0.667,0.444,0.625,0
 HND,2017,Honduras,Latin America & Caribbean ,Lower middle income,0.714,0.444,0.9,0.636,0.25,1,0.933,0.75,0.667,0.4,0.6,0.75,0.667,0.889,0.667,0.875,0.5
-HRV,2017,Croatia,Europe & Central Asia,High income,0.857,0.6,0.85,0.4,0.25,0.6,0.8,0.5,0.625,0.5,0.5,0.5,0.667,0.667,0.778,0.375,0.5
+HRV,2017,Croatia,Europe & Central Asia,High income,0.857,0.6,0.85,0.4,0.25,0.6,0.8,0.5,0.625,0.6,0.5,0.5,0.667,0.667,0.778,0.375,0.5
 HTI,2017,Haiti,Latin America & Caribbean ,Low income,0.286,0.556,0.8,0.273,0.5,0.8,0.933,0.231,0.222,0.4,0.2,0.5,0.667,0.889,0.778,0.6,0
 HUN,2017,Hungary,Europe & Central Asia,High income,0.714,0.8,0.9,0.7,0.25,0.8,0.8,0.833,0.778,0.5,0.5,0.75,0,0.889,0.778,0.625,0.5
 IDN,2017,Indonesia,East Asia & Pacific,Upper middle income,0.857,0.889,0.8,0.545,0.429,0.8,0.933,0.583,0.667,0.5,0.8,0.5,0.667,0.889,0.556,0.75,0.5
@@ -659,14 +659,14 @@ AUT,2016,Austria,Europe & Central Asia,High income,0.857,0.6,0.85,0.6,0.375,0.6,
 AZE,2016,Azerbaijan,Europe & Central Asia,Upper middle income,0.429,0.889,0.857,0.6,0.286,1,0.8,0.462,0.5,0.4,0.167,0.75,0,0.875,0.667,0.857,0
 BDI,2016,Burundi,Sub-Saharan Africa ,Low income,1,0.778,0.7,0.545,0.25,0.8,0.933,0.667,0.222,0.4,0.8,0.75,0,0.875,0.556,0.667,1
 BEL,2016,Belgium,Europe & Central Asia,High income,0.571,0.7,0.8,0.8,0.5,0.6,0.8,0.667,0.714,0.5,0.333,0.75,0.667,0.875,0.667,0.429,0
-BEN,2016,Benin,Sub-Saharan Africa ,Lower middle income,0.429,0.667,0.762,0.636,0.375,0.75,0.933,0.333,0.25,0.6,0.2,0.75,0.667,0.75,0.556,0.667,0
+BEN,2016,Benin,Sub-Saharan Africa ,Lower middle income,0.429,0.667,0.762,0.636,0.375,0.75,0.933,0.333,0.25,0.5,0.2,0.75,0.667,0.75,0.556,0.667,0
 BFA,2016,Burkina Faso,Sub-Saharan Africa ,Low income,1,0.667,0.762,0.545,0.125,0.8,0.933,0.417,0.333,0.333,0.8,0.75,0,0.875,0.444,0.714,1
 BGD,2016,Bangladesh,South Asia,Lower middle income,0.714,0.889,0.85,0.545,0.5,1,0.933,0.667,0.375,0.6,0.8,0.75,0.667,0.875,0.667,0.857,0.5
 BGR,2016,Bulgaria,Europe & Central Asia,Upper middle income,0.857,0.8,0.81,0.4,0.375,0.6,0.6,0.583,0.571,0.333,0.667,0.75,0.667,0.625,0.778,0.429,1
 BHR,2016,Bahrain,Middle East & North Africa,High income,0,0.375,0.8,0.455,0.125,0.6,1,0.231,0.5,0.167,0.167,0.75,0.667,0.5,0.333,0.333,0
 BHS,2016,"Bahamas, The",Latin America & Caribbean ,High income,0.143,0.143,0.762,0.273,0.125,0.2,1,0.25,0,0.167,0.167,0.75,0.667,0.5,0.556,0.429,0
 BIH,2016,Bosnia and Herzegovina,Europe & Central Asia,Upper middle income,0.429,0.778,0.905,0.455,0.375,0.8,0.8,0.583,0.556,0.5,0.167,0.75,0.333,0.875,0.778,0.714,0
-BLR,2016,Belarus,Europe & Central Asia,Upper middle income,0.714,0.667,0.905,0.545,0.375,1,0.8,0.667,0.444,0.4,0.5,0.75,0,0.75,0.778,0.714,0.5
+BLR,2016,Belarus,Europe & Central Asia,Upper middle income,0.714,0.667,0.905,0.545,0.375,1,0.8,0.667,0.444,0.5,0.5,0.75,0,0.75,0.778,0.714,0.5
 BLZ,2016,Belize,Latin America & Caribbean ,Upper middle income,0.143,0.667,0.905,0.636,0.375,0.5,0.933,0.667,0.25,0.333,0.4,0.75,0.667,0.875,0.667,0.857,0
 BMU,2016,Bermuda,North America,High income,0.143,0,0.091,0.364,0,0.4,0.6,0.154,0.111,0,0.167,0,0.667,0.5,0.222,0.3,0
 BOL,2016,Bolivia,Latin America & Caribbean ,Lower middle income,0.857,0.9,0.95,0.727,0.5,0.8,0.933,0.75,0.333,0.5,0.6,0.75,0,0.875,0.667,0.667,0.5
@@ -681,14 +681,14 @@ CHE,2016,Switzerland,Europe & Central Asia,High income,1,0.778,0.762,0.455,0.375
 CHL,2016,Chile,Latin America & Caribbean ,High income,1,0.9,0.9,0.636,0.375,1,1,0.75,0.75,0.5,0.8,0.5,0.667,0.875,0.556,0.714,1
 CHN,2016,China,East Asia & Pacific,Upper middle income,0.714,0.8,0.75,0.364,0.125,0.8,0.8,0.25,0.5,0.6,0.5,0.75,0.5,0.875,0.333,0.714,0.5
 CIV,2016,Cote d'Ivoire,Sub-Saharan Africa ,Lower middle income,0.857,0.778,0.762,0.727,0.75,1,0.933,0.667,0.5,0.4,0.6,0.5,0.5,0.875,0.778,0.857,0.5
-CMR,2016,Cameroon,Sub-Saharan Africa ,Lower middle income,0.857,0.667,0.762,0.636,0.625,0.8,0.933,0.667,0.375,0.5,0.6,0.75,0.333,0.875,0.889,0.714,0.5
+CMR,2016,Cameroon,Sub-Saharan Africa ,Lower middle income,0.857,0.667,0.762,0.636,0.625,0.8,0.933,0.667,0.375,0.4,0.6,0.75,0.333,0.875,0.889,0.714,0.5
 COD,2016,"Congo, Dem. Rep.",Sub-Saharan Africa ,Low income,0.571,0.75,0.75,0.545,0.5,0.8,0.933,0.462,0.5,0.333,0.2,0.5,0,0.875,0.667,0.625,0
-COG,2016,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.286,0.778,0.762,0.545,0.375,1,0.933,0.385,0.25,0.333,0.2,0.5,0.667,0.875,0.444,0.6,0
+COG,2016,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.286,0.778,0.762,0.545,0.375,1,0.933,0.385,0.25,0.4,0.2,0.5,0.667,0.875,0.444,0.6,0
 COL,2016,Colombia,Latin America & Caribbean ,Upper middle income,1,0.889,1,0.636,0.5,1,0.933,0.667,0.625,0.5,1,0.75,0.667,0.875,0.778,0.857,1
 COM,2016,Comoros,Sub-Saharan Africa ,Lower middle income,0.714,0.429,0.762,0.182,0.625,0.5,0.933,0.5,0.222,0.333,0.6,0.5,0.667,0.875,0.444,0.556,0.5
-CPV,2016,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.857,0.444,0.857,0.455,0.25,0.6,0.8,0.333,0.222,0.333,0.667,1,0.667,0.875,0.333,0.857,0.5
-CRI,2016,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.667,0.95,0.545,0.25,1,0.933,0.75,0.625,0.5,0.8,0.5,0.667,0.875,0.667,0.857,1
-CUB,2016,Cuba,Latin America & Caribbean ,Upper middle income,0.143,0.375,0.95,0.455,0.429,0.8,0.6,0.231,0.5,0.4,0.333,0.75,0.5,0.875,0.667,0.4,0
+CPV,2016,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.857,0.444,0.857,0.455,0.25,0.6,0.8,0.333,0.222,0.4,0.667,1,0.667,0.875,0.333,0.857,0.5
+CRI,2016,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.667,0.95,0.545,0.25,1,0.933,0.75,0.625,0.4,0.8,0.5,0.667,0.875,0.667,0.857,1
+CUB,2016,Cuba,Latin America & Caribbean ,Upper middle income,0.143,0.375,0.95,0.455,0.429,0.8,0.6,0.231,0.5,0.333,0.333,0.75,0.5,0.875,0.667,0.4,0
 CUW,2016,Curacao,Latin America & Caribbean ,High income,0,0,0.045,0,0,0.2,0.8,0.154,0.111,0,0,0.25,0.5,0.5,0,0.2,0
 CYM,2016,Cayman Islands,Latin America & Caribbean ,High income,0,0,0.045,0.182,0,0.2,0.8,0.077,0,0,0,0.25,0.667,0.5,0.222,0.333,0
 CYP,2016,Cyprus,Europe & Central Asia,High income,0.571,0.6,0.762,0.5,0.375,0.6,0.8,0.5,0.5,0.333,0.5,0.5,0.667,0.625,0.667,0.286,0.5
@@ -727,7 +727,7 @@ GUM,2016,Guam,East Asia & Pacific,High income,0,0,0.091,0,0,0.4,0.6,0,0,0,0,0.25
 GUY,2016,Guyana,Latin America & Caribbean ,Upper middle income,0.571,0.75,0.905,0.455,0.25,0.6,0.933,0.25,0.125,0.4,0.6,0.5,0.333,0.625,0.778,0.667,0.5
 HKG,2016,"Hong Kong SAR, China",East Asia & Pacific,High income,0,0.25,0.091,0.455,0.125,0.4,0.6,0.25,0.429,0.2,0,0.25,0.5,0.625,0.444,0.571,0
 HND,2016,Honduras,Latin America & Caribbean ,Lower middle income,0.571,0.667,0.95,0.727,0.625,1,0.933,0.75,0.625,0.4,0.8,0.75,0.667,0.875,0.889,0.857,0.5
-HRV,2016,Croatia,Europe & Central Asia,High income,0.429,0.6,0.81,0.4,0.375,0.6,0.8,0.5,0.571,0.333,0.167,0.5,0.667,0.625,0.667,0.286,0
+HRV,2016,Croatia,Europe & Central Asia,High income,0.429,0.6,0.81,0.4,0.375,0.6,0.8,0.5,0.571,0.4,0.167,0.5,0.667,0.625,0.667,0.286,0
 HTI,2016,Haiti,Latin America & Caribbean ,Low income,0.571,0.556,0.762,0.182,0.25,0.8,0.933,0.538,0.375,0.4,0.2,0.5,0.667,0.875,0.444,0.556,0
 HUN,2016,Hungary,Europe & Central Asia,High income,0.714,0.7,0.85,0.5,0.375,0.6,0.8,0.75,0.556,0.333,0.5,0.75,0,0.625,0.778,0.429,0.5
 IDN,2016,Indonesia,East Asia & Pacific,Upper middle income,0.857,0.889,0.8,0.545,0.286,0.8,0.933,0.583,0.625,0.5,0.8,0.5,0.667,0.875,0.556,0.714,0.5
@@ -874,14 +874,14 @@ AUT,2015,Austria,Europe & Central Asia,High income,0.714,0.6,0.778,0.6,0.375,0.6
 AZE,2015,Azerbaijan,Europe & Central Asia,Upper middle income,0.429,0.889,0.842,0.5,0.429,1,0.933,0.417,0.5,0.4,0,0.75,0,0.875,0.667,0.857,0
 BDI,2015,Burundi,Sub-Saharan Africa ,Low income,0.857,0.556,0.722,0.455,0.25,0.8,0.933,0.583,0.333,0.4,0.75,0.75,0,0.875,0.556,0.667,1
 BEL,2015,Belgium,Europe & Central Asia,High income,0.429,0.7,0.778,0.8,0.5,0.6,0.8,0.667,0.714,0.6,0.2,0.75,0.667,0.875,0.667,0.429,0
-BEN,2015,Benin,Sub-Saharan Africa ,Lower middle income,0.429,0.667,0.737,0.545,0.375,0.75,0.933,0.583,0.375,0.6,0.25,0.75,0.667,0.75,0.444,0.667,0
+BEN,2015,Benin,Sub-Saharan Africa ,Lower middle income,0.429,0.667,0.737,0.545,0.375,0.75,0.933,0.583,0.375,0.5,0.25,0.75,0.667,0.75,0.444,0.667,0
 BFA,2015,Burkina Faso,Sub-Saharan Africa ,Low income,1,0.778,0.737,0.545,0.125,0.8,0.933,0.417,0.333,0.333,0.75,0.75,0,0.875,0.444,0.714,1
 BGD,2015,Bangladesh,South Asia,Lower middle income,0.286,0.889,0.833,0.636,0.5,1,0.933,0.667,0.375,0.4,0.75,0.75,0.667,0.875,0.667,0.857,0.5
 BGR,2015,Bulgaria,Europe & Central Asia,Upper middle income,0.857,0.8,0.789,0.4,0.375,0.6,0.6,0.583,0.571,0.4,0.8,0.75,0.667,0.625,0.778,0.429,1
 BHR,2015,Bahrain,Middle East & North Africa,High income,0.143,0.375,0.778,0.364,0.125,0.6,1,0.231,0.5,0.167,0,0.75,0.667,0.5,0.333,0.333,0
 BHS,2015,"Bahamas, The",Latin America & Caribbean ,High income,0.143,0.143,0.789,0.273,0.25,0.2,1,0.25,0.125,0.167,0,0.75,0.667,0.5,0.556,0.429,0
 BIH,2015,Bosnia and Herzegovina,Europe & Central Asia,Upper middle income,0.571,0.778,0.895,0.455,0.375,0.8,0.8,0.583,0.556,0.5,0,0.75,0.333,0.875,0.778,0.714,0
-BLR,2015,Belarus,Europe & Central Asia,Upper middle income,0.571,0.667,0.895,0.455,0.25,1,0.8,0.583,0.333,0.4,0,0.75,0,0.75,0.778,0.714,0
+BLR,2015,Belarus,Europe & Central Asia,Upper middle income,0.571,0.667,0.895,0.455,0.25,1,0.8,0.583,0.333,0.5,0,0.75,0,0.75,0.778,0.714,0
 BLZ,2015,Belize,Latin America & Caribbean ,Upper middle income,0.571,0.667,0.895,0.636,0.25,0.5,0.933,0.667,0.25,0.333,0.75,0.75,0.667,0.875,0.667,0.857,0.5
 BMU,2015,Bermuda,North America,High income,0,0,0.1,0.273,0,0.4,0.6,0.154,0.111,0,0.2,0,0.667,0.5,0.222,0.3,0
 BOL,2015,Bolivia,Latin America & Caribbean ,Lower middle income,0.857,0.9,0.889,0.727,0.125,0.8,0.933,0.75,0.333,0.5,0.5,0.75,0,0.875,0.556,0.667,0.5
@@ -896,14 +896,14 @@ CHE,2015,Switzerland,Europe & Central Asia,High income,1,0.778,0.632,0.455,0.375
 CHL,2015,Chile,Latin America & Caribbean ,High income,1,0.9,0.889,0.636,0.375,1,1,0.75,0.75,0.5,0.75,0.5,0.667,0.875,0.667,0.714,1
 CHN,2015,China,East Asia & Pacific,Upper middle income,0.714,0.8,0.722,0.273,0.125,0.8,0.8,0.231,0.5,0.4,0.5,0.75,0.5,0.875,0.333,0.714,0.5
 CIV,2015,Cote d'Ivoire,Sub-Saharan Africa ,Lower middle income,0.857,0.778,0.737,0.545,0.375,1,0.933,0.583,0.375,0.4,0.5,0.5,0.5,0.875,0.444,0.75,0.5
-CMR,2015,Cameroon,Sub-Saharan Africa ,Lower middle income,0.857,0.667,0.737,0.636,0.75,0.8,0.933,0.667,0.375,0.5,0.5,0.75,0.333,0.875,0.889,0.556,0.5
+CMR,2015,Cameroon,Sub-Saharan Africa ,Lower middle income,0.857,0.667,0.737,0.636,0.75,0.8,0.933,0.667,0.375,0.4,0.5,0.75,0.333,0.875,0.889,0.556,0.5
 COD,2015,"Congo, Dem. Rep.",Sub-Saharan Africa ,Low income,0.571,0.75,0.722,0.545,0.5,0.8,0.933,0.5,0.5,0.333,0,0.5,0,0.875,0.667,0.5,0
-COG,2015,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.571,0.778,0.737,0.545,0.375,1,0.933,0.385,0.25,0.333,0,0.5,0.667,0.875,0.556,0.6,0
+COG,2015,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.571,0.778,0.737,0.545,0.375,1,0.933,0.385,0.25,0.4,0,0.5,0.667,0.875,0.556,0.6,0
 COL,2015,Colombia,Latin America & Caribbean ,Upper middle income,1,0.667,0.944,0.545,0.5,1,0.933,0.667,0.625,0.5,1,0.75,0.667,0.875,0.778,0.857,1
 COM,2015,Comoros,Sub-Saharan Africa ,Lower middle income,0.714,0.429,0.789,0.273,0.625,0.5,0.933,0.583,0.222,0.333,0.5,0.5,0.667,0.875,0.444,0.556,0.5
-CPV,2015,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.714,0.444,0.842,0.364,0.25,0.6,0.8,0.333,0.444,0.333,0.6,1,0.667,0.875,0.333,0.857,0.5
-CRI,2015,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.667,1,0.545,0.375,1,0.933,0.667,0.625,0.5,0.75,0.5,0.667,0.875,0.778,0.857,1
-CUB,2015,Cuba,Latin America & Caribbean ,Upper middle income,0.143,0.375,0.944,0.455,0.286,0.8,0.6,0.231,0.5,0.4,0.2,0.75,0.5,0.875,0.667,0.4,0
+CPV,2015,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.714,0.444,0.842,0.364,0.25,0.6,0.8,0.333,0.444,0.4,0.6,1,0.667,0.875,0.333,0.857,0.5
+CRI,2015,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.667,1,0.545,0.375,1,0.933,0.667,0.625,0.4,0.75,0.5,0.667,0.875,0.778,0.857,1
+CUB,2015,Cuba,Latin America & Caribbean ,Upper middle income,0.143,0.375,0.944,0.455,0.286,0.8,0.6,0.231,0.5,0.333,0.2,0.75,0.5,0.875,0.667,0.4,0
 CUW,2015,Curacao,Latin America & Caribbean ,High income,0,0,0.1,0,0,0.2,0.8,0.154,0.111,0,0,0.25,0.5,0.5,0,0.2,0
 CYM,2015,Cayman Islands,Latin America & Caribbean ,High income,0,0,0.05,0.182,0,0.2,0.8,0.077,0,0,0,0.25,0.667,0.5,0.222,0.222,0
 CYP,2015,Cyprus,Europe & Central Asia,High income,0.571,0.6,0.737,0.5,0.375,0.6,0.8,0.5,0.5,0.4,0.4,0.5,0.667,0.625,0.667,0.286,0.5
@@ -942,7 +942,7 @@ GUM,2015,Guam,East Asia & Pacific,High income,0,0,0.1,0,0,0.4,0.6,0,0,0,0,0.25,0
 GUY,2015,Guyana,Latin America & Caribbean ,Upper middle income,0.571,0.75,0.944,0.455,0.25,0.6,0.933,0.25,0.125,0.4,0.5,0.5,0.333,0.625,0.778,0.667,0.5
 HKG,2015,"Hong Kong SAR, China",East Asia & Pacific,High income,0,0.25,0.1,0.455,0.125,0.4,0.6,0.25,0.429,0.2,0,0.25,0.5,0.625,0.444,0.571,0
 HND,2015,Honduras,Latin America & Caribbean ,Lower middle income,0.571,0.667,0.944,0.636,0.625,1,0.933,0.75,0.625,0.4,0.75,0.75,0.667,0.875,0.778,0.857,0.5
-HRV,2015,Croatia,Europe & Central Asia,High income,0.429,0.6,0.789,0.3,0.375,0.6,0.8,0.5,0.571,0.4,0,0.5,0.667,0.625,0.667,0.286,0
+HRV,2015,Croatia,Europe & Central Asia,High income,0.429,0.6,0.789,0.3,0.375,0.6,0.8,0.5,0.571,0.5,0,0.5,0.667,0.625,0.667,0.286,0
 HTI,2015,Haiti,Latin America & Caribbean ,Low income,0.571,0.556,0.737,0.182,0.25,0.8,0.933,0.538,0.375,0.4,0,0.5,0.667,0.875,0.444,0.5,0
 HUN,2015,Hungary,Europe & Central Asia,High income,0.714,0.7,0.778,0.5,0.375,0.6,0.8,0.667,0.556,0.333,0.4,0.5,0,0.625,0.778,0.429,0.5
 IDN,2015,Indonesia,East Asia & Pacific,Upper middle income,0.857,0.889,0.722,0.545,0.286,0.8,0.933,0.5,0.5,0.5,0.75,0.5,0.667,0.875,0.556,0.714,0.5
@@ -1089,14 +1089,14 @@ AUT,2014,Austria,Europe & Central Asia,High income,0.667,0.444,0.765,0.6,0.375,0
 AZE,2014,Azerbaijan,Europe & Central Asia,Upper middle income,0.5,0.75,0.833,0.5,0.429,1,0.933,0.417,0.5,0.5,0,0.667,0,0.875,0.625,0.714,0
 BDI,2014,Burundi,Sub-Saharan Africa ,Low income,0.667,0.625,0.722,0.6,0.429,0.8,0.933,0.583,0.333,0.5,0,0.667,0,0.875,0.625,0.556,0
 BEL,2014,Belgium,Europe & Central Asia,High income,0.5,0.556,0.706,0.8,0.5,0.6,0.8,0.667,0.571,0.5,0,0.667,0.667,0.875,0.625,0.429,0
-BEN,2014,Benin,Sub-Saharan Africa ,Lower middle income,0.5,0.625,0.722,0.545,0.375,0.8,0.933,0.583,0.375,0.5,0.333,0.667,0.667,0.75,0.375,0.667,0
+BEN,2014,Benin,Sub-Saharan Africa ,Lower middle income,0.5,0.625,0.722,0.545,0.375,0.8,0.933,0.583,0.375,0.4,0.333,0.667,0.667,0.75,0.375,0.667,0
 BFA,2014,Burkina Faso,Sub-Saharan Africa ,Low income,1,0.625,0.722,0.545,0.625,0.8,0.933,0.5,0.444,0.4,0.5,0.667,0,0.875,0.5,0.714,1
 BGD,2014,Bangladesh,South Asia,Lower middle income,0.667,0.75,0.824,0.727,0.375,1,0.933,0.667,0.375,0.5,0.333,0.667,0.667,0.875,0.5,0.857,0
 BGR,2014,Bulgaria,Europe & Central Asia,Upper middle income,0.833,0.667,0.778,0.4,0.5,0.6,0.6,0.583,0.571,0.5,0.75,0.667,0.667,0.625,0.75,0.429,1
 BHR,2014,Bahrain,Middle East & North Africa,High income,0.167,0.143,0.765,0.364,0.125,0.6,1,0.308,0.5,0.2,0,0.667,0.667,0.5,0.375,0.333,0
 BHS,2014,"Bahamas, The",Latin America & Caribbean ,High income,0.167,0.143,0.778,0.273,0.25,0.2,1,0.25,0.125,0.2,0,0.667,0.667,0.5,0.625,0.429,0
 BIH,2014,Bosnia and Herzegovina,Europe & Central Asia,Upper middle income,0.667,0.625,0.889,0.455,0.375,0.8,0.8,0.583,0.556,0.667,0,0.667,0.333,0.875,0.75,0.714,0
-BLR,2014,Belarus,Europe & Central Asia,Upper middle income,0.667,0.5,0.889,0.455,0.125,1,0.8,0.583,0.333,0.5,0,0.667,0,0.75,0.75,0.571,0
+BLR,2014,Belarus,Europe & Central Asia,Upper middle income,0.667,0.5,0.889,0.455,0.125,1,0.8,0.583,0.333,0.667,0,0.667,0,0.75,0.75,0.571,0
 BLZ,2014,Belize,Latin America & Caribbean ,Upper middle income,0.667,0.5,0.889,0.636,0.25,0.5,0.933,0.667,0.25,0.4,0.75,0.667,0.667,0.875,0.5,0.857,1
 BMU,2014,Bermuda,North America,High income,0,0,0.105,0.273,0,0.4,0.6,0.154,0.111,0,0.25,0,0.667,0.5,0.125,0.3,0
 BOL,2014,Bolivia,Latin America & Caribbean ,Lower middle income,1,0.778,0.833,0.727,0.125,0.8,0.933,0.667,0.444,0.667,0.667,0.667,0,0.875,0.5,0.667,1
@@ -1111,14 +1111,14 @@ CHE,2014,Switzerland,Europe & Central Asia,High income,0.833,0.625,0.611,0.5,0.3
 CHL,2014,Chile,Latin America & Caribbean ,High income,1,0.778,0.833,0.455,0.25,1,1,0.75,0.625,0.4,0.5,0.333,0.667,0.875,0.75,0.571,1
 CHN,2014,China,East Asia & Pacific,Upper middle income,0.667,0.667,0.706,0.182,0.125,0.8,0.933,0.231,0.5,0.5,0,0.667,0.5,0.875,0.375,0.857,0
 CIV,2014,Cote d'Ivoire,Sub-Saharan Africa ,Lower middle income,0.667,0.625,0.722,0.545,0.375,1,0.933,0.583,0.375,0.5,0.667,0.333,0.5,0.875,0.375,0.75,1
-CMR,2014,Cameroon,Sub-Saharan Africa ,Lower middle income,1,0.5,0.765,0.636,0.75,0.8,0.933,0.667,0.375,0.667,0.667,0.667,0.333,0.875,0.875,0.556,1
+CMR,2014,Cameroon,Sub-Saharan Africa ,Lower middle income,1,0.5,0.765,0.636,0.75,0.8,0.933,0.667,0.375,0.5,0.667,0.667,0.333,0.875,0.875,0.556,1
 COD,2014,"Congo, Dem. Rep.",Sub-Saharan Africa ,Low income,0.667,0.571,0.706,0.545,0.5,0.8,0.933,0.5,0.25,0.4,0,0.333,0,0.875,0.75,0.5,0
-COG,2014,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.667,0.625,0.722,0.455,0.25,1,0.933,0.308,0.25,0.4,0,0.333,0.667,0.875,0.375,0.556,0
+COG,2014,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.667,0.625,0.722,0.455,0.25,1,0.933,0.308,0.25,0.5,0,0.333,0.667,0.875,0.375,0.556,0
 COL,2014,Colombia,Latin America & Caribbean ,Upper middle income,1,0.75,1,0.545,0.25,1,0.933,0.667,0.625,0.667,0.667,0.667,0.667,0.875,0.625,0.714,1
 COM,2014,Comoros,Sub-Saharan Africa ,Lower middle income,0.833,0.429,0.778,0.273,0.625,0.5,0.933,0.583,0.222,0.4,0.5,0.333,0.667,0.875,0.5,0.556,1
-CPV,2014,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.5,0.375,0.889,0.364,0.125,0.6,0.933,0.25,0.333,0.4,0.75,0.667,0.667,0.875,0.5,0.857,1
-CRI,2014,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.5,1,0.636,0.375,1,0.933,0.75,0.625,0.667,0.5,0.333,0.667,0.875,0.875,0.857,1
-CUB,2014,Cuba,Latin America & Caribbean ,Upper middle income,0.167,0.375,0.889,0.545,0.429,0.8,0.6,0.308,0.5,0.5,0.25,0.667,0.5,0.875,0.75,0.4,0
+CPV,2014,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.5,0.375,0.889,0.364,0.125,0.6,0.933,0.25,0.333,0.5,0.75,0.667,0.667,0.875,0.5,0.857,1
+CRI,2014,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.5,1,0.636,0.375,1,0.933,0.75,0.625,0.5,0.5,0.333,0.667,0.875,0.875,0.857,1
+CUB,2014,Cuba,Latin America & Caribbean ,Upper middle income,0.167,0.375,0.889,0.545,0.429,0.8,0.6,0.308,0.5,0.4,0.25,0.667,0.5,0.875,0.75,0.4,0
 CUW,2014,Curacao,Latin America & Caribbean ,High income,0,0,0.105,0.091,0,0.2,0.8,0.154,0.111,0,0,0.333,0.5,0.5,0,0.182,0
 CYM,2014,Cayman Islands,Latin America & Caribbean ,High income,0,0,0.053,0.273,0,0.2,0.8,0.077,0,0,0,0.333,0.667,0.5,0.125,0.222,0
 CYP,2014,Cyprus,Europe & Central Asia,High income,0.667,0.444,0.722,0.4,0.375,0.6,0.8,0.5,0.5,0.5,0.5,0.333,0.667,0.625,0.625,0.286,1
@@ -1157,7 +1157,7 @@ GUM,2014,Guam,East Asia & Pacific,High income,0,0,0.105,0,0,0.4,0.6,0,0,0,0,0.33
 GUY,2014,Guyana,Latin America & Caribbean ,Upper middle income,0.667,0.75,0.941,0.455,0.25,0.6,0.933,0.25,0.125,0.5,0.667,0.333,0.333,0.625,0.875,0.667,1
 HKG,2014,"Hong Kong SAR, China",East Asia & Pacific,High income,0,0.125,0.105,0.455,0.125,0.4,0.6,0.25,0.429,0.2,0,0.333,0.5,0.571,0.375,0.429,0
 HND,2014,Honduras,Latin America & Caribbean ,Lower middle income,0.833,0.5,0.941,0.636,0.625,1,0.933,0.75,0.375,0.5,0.75,0.667,0.667,0.875,0.875,0.857,1
-HRV,2014,Croatia,Europe & Central Asia,High income,0.667,0.556,0.833,0.4,0.375,0.8,0.8,0.5,0.714,0.5,0,0.333,0.667,0.875,0.625,0.429,0
+HRV,2014,Croatia,Europe & Central Asia,High income,0.667,0.556,0.833,0.4,0.375,0.8,0.8,0.5,0.714,0.667,0,0.333,0.667,0.875,0.625,0.429,0
 HTI,2014,Haiti,Latin America & Caribbean ,Low income,0.667,0.5,0.722,0.182,0.25,0.8,0.933,0.538,0.375,0.5,0,0.333,0.667,0.875,0.375,0.5,0
 HUN,2014,Hungary,Europe & Central Asia,High income,0.667,0.556,0.765,0.5,0.5,0.6,0.8,0.667,0.444,0.4,0,0.333,0,0.625,0.75,0.429,0
 IDN,2014,Indonesia,East Asia & Pacific,Upper middle income,0.833,0.75,0.765,0.545,0.286,0.8,0.933,0.5,0.5,0.667,1,0.333,0.667,0.875,0.375,0.857,1
@@ -1304,14 +1304,14 @@ AUT,2013,Austria,Europe & Central Asia,High income,0.667,0.375,0.765,0.6,0.5,0.6
 AZE,2013,Azerbaijan,Europe & Central Asia,Upper middle income,0.5,0.857,0.833,0.5,0.429,1,0.933,0.417,0.5,0.5,0,0.667,0,0.875,0.625,0.714,0
 BDI,2013,Burundi,Sub-Saharan Africa ,Low income,0.667,0.714,0.722,0.4,0.286,0.8,0.933,0.333,0.222,0.4,0,0.667,0,0.875,0.5,0.556,0
 BEL,2013,Belgium,Europe & Central Asia,High income,0.5,0.5,0.706,0.8,0.5,0.6,0.8,0.667,0.571,0.5,0,0.667,0.667,0.875,0.5,0.429,0
-BEN,2013,Benin,Sub-Saharan Africa ,Lower middle income,0.667,0.429,0.722,0.5,0.25,0.8,0.933,0.538,0.375,0.5,0.333,0.667,0.667,0.75,0.5,0.857,0
+BEN,2013,Benin,Sub-Saharan Africa ,Lower middle income,0.667,0.429,0.722,0.5,0.25,0.8,0.933,0.538,0.375,0.4,0.333,0.667,0.667,0.75,0.5,0.857,0
 BFA,2013,Burkina Faso,Sub-Saharan Africa ,Low income,0.833,0.714,0.722,0.5,0.625,0.8,0.933,0.385,0.333,0.4,0.75,0.667,0,0.875,0.625,0.714,1
 BGD,2013,Bangladesh,South Asia,Lower middle income,0.667,0.857,0.824,0.8,0.25,1,0.933,0.667,0.375,0.5,0.333,0.667,0.667,0.875,0.5,0.857,0
 BGR,2013,Bulgaria,Europe & Central Asia,Upper middle income,0.833,0.5,0.778,0.4,0.5,0.6,0.6,0.5,0.571,0.5,0.75,0.667,0.667,0.625,0.75,0.429,1
 BHR,2013,Bahrain,Middle East & North Africa,High income,0.167,0.167,0.765,0.4,0.125,0.6,1,0.308,0.25,0.2,0,0.667,0.667,0.5,0.375,0.333,0
 BHS,2013,"Bahamas, The",Latin America & Caribbean ,High income,0.167,0.167,0.778,0.4,0.25,0.2,1,0.25,0.125,0.2,0,0.667,0.667,0.5,0.5,0.429,0
 BIH,2013,Bosnia and Herzegovina,Europe & Central Asia,Upper middle income,0.667,0.714,0.889,0.5,0.375,0.8,0.8,0.583,0.556,0.667,0,0.333,0.333,0.875,0.75,0.714,0
-BLR,2013,Belarus,Europe & Central Asia,Upper middle income,0.667,0.571,0.889,0.5,0.25,0.8,0.8,0.583,0.333,0.4,0,0.333,0,0.75,0.75,0.571,0
+BLR,2013,Belarus,Europe & Central Asia,Upper middle income,0.667,0.571,0.889,0.5,0.25,0.8,0.8,0.583,0.333,0.5,0,0.333,0,0.75,0.75,0.571,0
 BLZ,2013,Belize,Latin America & Caribbean ,Upper middle income,0.667,0.571,0.941,0.7,0.125,0.6,0.933,0.583,0.125,0.4,0.75,0.667,0.667,0.875,0.5,0.857,1
 BMU,2013,Bermuda,North America,High income,0,0,0.105,0.3,0,0.4,0.6,0.154,0.111,0,0.25,0,0.667,0.5,0.125,0.3,0
 BOL,2013,Bolivia,Latin America & Caribbean ,Lower middle income,1,0.875,0.833,0.8,0.125,0.8,0.933,0.667,0.556,0.5,0.667,0.667,0,0.875,0.5,0.667,1
@@ -1326,14 +1326,14 @@ CHE,2013,Switzerland,Europe & Central Asia,High income,0.833,0.714,0.611,0.5,0.3
 CHL,2013,Chile,Latin America & Caribbean ,High income,1,0.875,0.833,0.5,0.25,0.8,1,0.75,0.625,0.4,0.75,0.333,0.667,0.875,0.75,0.571,1
 CHN,2013,China,East Asia & Pacific,Upper middle income,0.667,0.75,0.706,0.2,0.125,0.8,0.933,0.231,0.5,0.5,0,0.667,0.5,0.875,0.375,0.857,0
 CIV,2013,Cote d'Ivoire,Sub-Saharan Africa ,Lower middle income,0.667,0.714,0.722,0.5,0.375,1,0.933,0.462,0.375,0.5,0.667,0.333,0.5,0.875,0.375,0.625,1
-CMR,2013,Cameroon,Sub-Saharan Africa ,Lower middle income,0.5,0.571,0.765,0.5,0.25,0.8,0.933,0.5,0.25,0.5,1,0.667,0.333,0.875,0.625,0.556,1
+CMR,2013,Cameroon,Sub-Saharan Africa ,Lower middle income,0.5,0.571,0.765,0.5,0.25,0.8,0.933,0.5,0.25,0.4,1,0.667,0.333,0.875,0.625,0.556,1
 COD,2013,"Congo, Dem. Rep.",Sub-Saharan Africa ,Low income,0.667,0.667,0.706,0.5,0.125,0.8,0.933,0.5,0.375,0.4,0,0.333,0,0.875,0.375,0.5,0
-COG,2013,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.667,0.714,0.765,0.4,0.25,1,0.933,0.308,0.25,0.4,0,0.333,0.667,0.875,0.5,0.556,0
+COG,2013,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.667,0.714,0.765,0.4,0.25,1,0.933,0.308,0.25,0.5,0,0.333,0.667,0.875,0.5,0.556,0
 COL,2013,Colombia,Latin America & Caribbean ,Upper middle income,1,0.857,0.941,0.6,0.375,1,0.933,0.667,0.625,0.667,0.667,0.667,0.667,0.875,0.625,0.714,1
 COM,2013,Comoros,Sub-Saharan Africa ,Lower middle income,0.667,0.5,0.778,0.3,0.5,0.6,0.933,0.333,0.111,0.4,0.5,0.333,0.667,0.875,0.5,0.556,1
-CPV,2013,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.5,0.429,0.889,0.4,0.125,0.6,0.933,0.25,0.333,0.4,0.75,0.667,0.667,0.875,0.625,0.857,1
-CRI,2013,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.571,1,0.7,0.375,0.8,0.933,0.75,0.625,0.667,0.5,0.333,0.667,0.875,0.875,0.857,1
-CUB,2013,Cuba,Latin America & Caribbean ,Upper middle income,0.167,0.429,0.889,0.5,0.286,0.6,0.6,0.308,0.5,0.5,0.25,0.333,0.5,0.875,0.5,0.4,0
+CPV,2013,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.5,0.429,0.889,0.4,0.125,0.6,0.933,0.25,0.333,0.5,0.75,0.667,0.667,0.875,0.625,0.857,1
+CRI,2013,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.571,1,0.7,0.375,0.8,0.933,0.75,0.625,0.5,0.5,0.333,0.667,0.875,0.875,0.857,1
+CUB,2013,Cuba,Latin America & Caribbean ,Upper middle income,0.167,0.429,0.889,0.5,0.286,0.6,0.6,0.308,0.5,0.4,0.25,0.333,0.5,0.875,0.5,0.4,0
 CUW,2013,Curacao,Latin America & Caribbean ,High income,0,0,0.105,0.1,0,0.2,0.8,0.154,0.111,0,0,0.333,0.5,0.5,0,0.182,0
 CYM,2013,Cayman Islands,Latin America & Caribbean ,High income,0,0,0.053,0.3,0,0.2,0.8,0.077,0,0,0,0.333,0.667,0.5,0.125,0.222,0
 CYP,2013,Cyprus,Europe & Central Asia,High income,0.667,0.5,0.722,0.4,0.375,0.6,0.8,0.5,0.5,0.5,0.5,0.333,0.667,0.625,0.5,0.286,1
@@ -1372,7 +1372,7 @@ GUM,2013,Guam,East Asia & Pacific,High income,0,0,0.105,0,0,0.4,0.6,0,0,0,0,0.33
 GUY,2013,Guyana,Latin America & Caribbean ,Upper middle income,0.667,0.857,0.941,0.4,0.25,0.6,0.933,0.167,0.125,0.5,0.667,0.333,0.333,0.625,0.625,0.667,1
 HKG,2013,"Hong Kong SAR, China",East Asia & Pacific,High income,0.167,0.143,0.105,0.5,0.125,0.4,0.6,0.25,0.429,0.2,0,0.333,0.5,0.571,0.375,0.429,0
 HND,2013,Honduras,Latin America & Caribbean ,Lower middle income,0.833,0.571,0.941,0.7,0.75,1,0.933,0.667,0.375,0.5,0.75,0.333,0.667,0.875,0.875,0.75,1
-HRV,2013,Croatia,Europe & Central Asia,High income,0.667,0.625,0.833,0.4,0.375,0.8,0.8,0.5,0.714,0.5,0,0.333,0.667,0.875,0.625,0.429,0
+HRV,2013,Croatia,Europe & Central Asia,High income,0.667,0.625,0.833,0.4,0.375,0.8,0.8,0.5,0.714,0.667,0,0.333,0.667,0.875,0.625,0.429,0
 HTI,2013,Haiti,Latin America & Caribbean ,Low income,0.667,0.571,0.722,0.2,0.25,0.8,0.933,0.538,0.375,0.5,0,0.333,0.667,0.875,0.375,0.5,0
 HUN,2013,Hungary,Europe & Central Asia,High income,0.5,0.5,0.765,0.5,0.5,0.6,0.8,0.5,0.444,0.4,0,0.333,0,0.625,0.625,0.429,0
 IDN,2013,Indonesia,East Asia & Pacific,Upper middle income,0.833,0.857,0.765,0.6,0.286,0.8,0.933,0.417,0.625,0.667,1,0.333,0.667,0.875,0.5,0.857,1
@@ -1519,14 +1519,14 @@ AUT,2012,Austria,Europe & Central Asia,High income,0.667,0.375,0.765,0.6,0.571,0
 AZE,2012,Azerbaijan,Europe & Central Asia,Upper middle income,0.5,0.857,0.833,0.5,0.571,1,0.933,0.5,0.444,0.5,0,0.667,0,1,0.625,0.714,0
 BDI,2012,Burundi,Sub-Saharan Africa ,Low income,0.333,0.714,0.722,0.4,0.286,0.8,0.933,0.333,0.222,0.4,0,0.667,0,1,0.375,0.556,0
 BEL,2012,Belgium,Europe & Central Asia,High income,0.5,0.5,0.706,0.7,0.429,0.6,0.8,0.667,0.571,0.5,0,0.667,0.667,1,0.5,0.429,0
-BEN,2012,Benin,Sub-Saharan Africa ,Lower middle income,0.667,0.429,0.765,0.5,0.286,0.8,0.933,0.538,0.375,0.5,0.333,0.667,0.667,0.857,0.5,0.714,0
+BEN,2012,Benin,Sub-Saharan Africa ,Lower middle income,0.667,0.429,0.765,0.5,0.286,0.8,0.933,0.538,0.375,0.4,0.333,0.667,0.667,0.857,0.5,0.714,0
 BFA,2012,Burkina Faso,Sub-Saharan Africa ,Low income,0.833,0.714,0.722,0.4,0.714,0.8,0.933,0.385,0.333,0.4,0.75,0.667,0,1,0.625,0.714,1
 BGD,2012,Bangladesh,South Asia,Lower middle income,0.667,0.857,0.824,0.7,0.286,1,0.933,0.583,0.375,0.5,0.333,0.667,0.667,1,0.375,0.857,0
 BGR,2012,Bulgaria,Europe & Central Asia,Upper middle income,0.833,0.5,0.778,0.4,0.571,0.6,0.6,0.5,0.571,0.5,0.75,0.667,0.667,0.714,0.75,0.429,1
 BHR,2012,Bahrain,Middle East & North Africa,High income,0.167,0.167,0.765,0.4,0.143,0.6,1,0.385,0.25,0.2,0,0.667,0.667,0.571,0.375,0.333,0
 BHS,2012,"Bahamas, The",Latin America & Caribbean ,High income,0.167,0.167,0.778,0.4,0.286,0.2,1,0.25,0.125,0.2,0,0.667,0.667,0.571,0.5,0.429,0
 BIH,2012,Bosnia and Herzegovina,Europe & Central Asia,Upper middle income,0.667,0.714,0.889,0.5,0.429,0.8,0.8,0.583,0.556,0.667,0,0.333,0.333,1,0.75,0.571,0
-BLR,2012,Belarus,Europe & Central Asia,Upper middle income,0.667,0.571,0.889,0.5,0.286,0.8,0.8,0.583,0.333,0.4,0,0.333,0,0.857,0.75,0.571,0
+BLR,2012,Belarus,Europe & Central Asia,Upper middle income,0.667,0.571,0.889,0.5,0.286,0.8,0.8,0.583,0.333,0.5,0,0.333,0,0.857,0.75,0.571,0
 BLZ,2012,Belize,Latin America & Caribbean ,Upper middle income,0.667,0.571,0.941,0.6,0.143,0.6,0.933,0.417,0.125,0.4,0.75,0.667,0.667,1,0.5,0.857,1
 BMU,2012,Bermuda,North America,High income,0,0,0.105,0.3,0,0.4,0.6,0.154,0.111,0,0.25,0,0.667,0.5,0.125,0.3,0
 BOL,2012,Bolivia,Latin America & Caribbean ,Lower middle income,1,0.875,0.889,0.7,0.143,0.8,0.933,0.667,0.556,0.5,1,0.667,0,1,0.625,0.667,1
@@ -1541,14 +1541,14 @@ CHE,2012,Switzerland,Europe & Central Asia,High income,0.833,0.714,0.611,0.5,0.4
 CHL,2012,Chile,Latin America & Caribbean ,High income,1,0.875,0.833,0.4,0.429,0.8,1,0.75,0.625,0.4,0.75,0.333,0.5,1,0.75,0.571,1
 CHN,2012,China,East Asia & Pacific,Upper middle income,0.667,0.75,0.706,0.2,0.286,0.8,0.933,0.231,0.5,0.5,0.333,0.333,0.5,1,0.375,0.857,0
 CIV,2012,Cote d'Ivoire,Sub-Saharan Africa ,Lower middle income,1,0.714,0.722,0.5,0.429,1,0.933,0.462,0.375,0.5,0.667,0.333,0.5,1,0.5,0.625,1
-CMR,2012,Cameroon,Sub-Saharan Africa ,Lower middle income,0.5,0.571,0.765,0.4,0.286,0.8,0.933,0.5,0.25,0.5,1,0.667,0.333,1,0.5,0.556,1
+CMR,2012,Cameroon,Sub-Saharan Africa ,Lower middle income,0.5,0.571,0.765,0.4,0.286,0.8,0.933,0.5,0.25,0.4,1,0.667,0.333,1,0.5,0.556,1
 COD,2012,"Congo, Dem. Rep.",Sub-Saharan Africa ,Low income,0.667,0.667,0.706,0.5,0.143,0.8,0.933,0.385,0.375,0.4,0,0.333,0,1,0.375,0.5,0
-COG,2012,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.667,0.714,0.765,0.4,0.286,1,0.933,0.308,0.25,0.4,0,0.333,0.667,1,0.5,0.5,0
+COG,2012,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.667,0.714,0.765,0.4,0.286,1,0.933,0.308,0.25,0.5,0,0.333,0.667,1,0.5,0.5,0
 COL,2012,Colombia,Latin America & Caribbean ,Upper middle income,1,0.857,1,0.6,0.286,1,0.933,0.667,0.5,0.667,0.667,0.667,0.667,1,0.625,0.714,1
 COM,2012,Comoros,Sub-Saharan Africa ,Lower middle income,0.5,0.5,0.778,0.4,0.571,0.6,0.933,0.333,0.111,0.4,0.5,0.333,0.667,1,0.5,0.556,1
-CPV,2012,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.5,0.429,0.889,0.4,0.143,0.6,0.933,0.25,0.333,0.4,0.75,0.667,0.667,1,0.625,0.857,1
-CRI,2012,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.857,1,0.7,0.429,0.8,0.933,0.75,0.625,0.667,0.5,0.333,0.667,1,0.75,0.857,1
-CUB,2012,Cuba,Latin America & Caribbean ,Upper middle income,0.167,0.429,0.889,0.5,0.286,0.6,0.6,0.308,0.5,0.5,0.25,0.333,0.5,1,0.5,0.4,0
+CPV,2012,Cabo Verde,Sub-Saharan Africa ,Lower middle income,0.5,0.429,0.889,0.4,0.143,0.6,0.933,0.25,0.333,0.5,0.75,0.667,0.667,1,0.625,0.857,1
+CRI,2012,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.857,1,0.7,0.429,0.8,0.933,0.75,0.625,0.5,0.5,0.333,0.667,1,0.75,0.857,1
+CUB,2012,Cuba,Latin America & Caribbean ,Upper middle income,0.167,0.429,0.889,0.5,0.286,0.6,0.6,0.308,0.5,0.4,0.25,0.333,0.5,1,0.5,0.4,0
 CUW,2012,Curacao,Latin America & Caribbean ,High income,0,0,0.105,0.1,0,0.2,0.8,0.154,0.111,0,0,0.333,0.5,0.5,0,0.182,0
 CYM,2012,Cayman Islands,Latin America & Caribbean ,High income,0,0,0.053,0.3,0,0.2,0.8,0.077,0,0,0,0.333,0.667,0.5,0.125,0.222,0
 CYP,2012,Cyprus,Europe & Central Asia,High income,0.667,0.5,0.722,0.4,0.429,0.6,0.8,0.5,0.5,0.4,0.5,0.333,0.667,0.714,0.5,0.286,1
@@ -1587,7 +1587,7 @@ GUM,2012,Guam,East Asia & Pacific,High income,0,0,0.105,0,0,0.4,0.6,0,0,0,0,0.33
 GUY,2012,Guyana,Latin America & Caribbean ,Upper middle income,0.667,0.857,0.941,0.4,0.286,0.6,0.933,0.167,0.125,0.5,1,0.333,0.333,0.714,0.625,0.667,1
 HKG,2012,"Hong Kong SAR, China",East Asia & Pacific,High income,0.167,0.143,0.105,0.5,0,0.4,0.6,0.25,0.375,0.2,0,0,0.5,0.571,0.375,0.429,0
 HND,2012,Honduras,Latin America & Caribbean ,Lower middle income,0.833,0.571,0.941,0.5,0.857,1,0.933,0.667,0.375,0.5,0.75,0.333,0.667,1,0.875,0.625,1
-HRV,2012,Croatia,Europe & Central Asia,High income,0.667,0.625,0.833,0.4,0.429,0.8,0.8,0.5,0.625,0.5,0,0.333,0.667,1,0.5,0.429,0
+HRV,2012,Croatia,Europe & Central Asia,High income,0.667,0.625,0.833,0.4,0.429,0.8,0.8,0.5,0.625,0.667,0,0.333,0.667,1,0.5,0.429,0
 HTI,2012,Haiti,Latin America & Caribbean ,Low income,0.667,0.571,0.722,0.2,0.286,0.8,0.933,0.538,0.375,0.5,0,0.333,0.667,1,0.25,0.5,0
 HUN,2012,Hungary,Europe & Central Asia,High income,0.5,0.5,0.765,0.5,0.571,0.6,0.8,0.5,0.5,0.4,0,0.333,0,0.714,0.625,0.429,0
 IDN,2012,Indonesia,East Asia & Pacific,Upper middle income,0.833,0.857,0.765,0.5,0.286,0.8,0.933,0.417,0.625,0.667,1,0.333,0.667,1,0.5,0.857,1
@@ -1734,14 +1734,14 @@ AUT,2011,Austria,Europe & Central Asia,High income,0.667,0.375,0.765,0.5,0.429,0
 AZE,2011,Azerbaijan,Europe & Central Asia,Upper middle income,0.5,0.857,0.882,0.5,0.571,0.8,0.933,0.5,0.444,0.5,0,0.667,0,1,0.625,0.556,0
 BDI,2011,Burundi,Sub-Saharan Africa ,Low income,0.333,0.714,0.722,0.4,0.286,0.8,0.933,0.333,0.222,0.4,0,0.667,0,1,0.375,0.5,0
 BEL,2011,Belgium,Europe & Central Asia,High income,0.5,0.5,0.706,0.6,0.286,0.6,0.8,0.667,0.571,0.5,0,0.667,0.667,1,0.5,0.429,0
-BEN,2011,Benin,Sub-Saharan Africa ,Lower middle income,0.667,0.429,0.647,0.5,0.143,0.8,0.933,0.538,0.429,0.5,0.333,0.667,0.667,0.857,0.375,0.714,0
+BEN,2011,Benin,Sub-Saharan Africa ,Lower middle income,0.667,0.429,0.647,0.5,0.143,0.8,0.933,0.538,0.429,0.4,0.333,0.667,0.667,0.857,0.375,0.714,0
 BFA,2011,Burkina Faso,Sub-Saharan Africa ,Low income,0.833,0.714,0.722,0.4,0.714,0.8,0.933,0.385,0.333,0.4,0.75,0.667,0,1,0.625,0.714,1
 BGD,2011,Bangladesh,South Asia,Lower middle income,0.667,0.857,0.824,0.6,0.286,1,0.933,0.583,0.375,0.5,0,0.667,0.667,1,0.5,0.857,0
 BGR,2011,Bulgaria,Europe & Central Asia,Upper middle income,0.833,0.75,0.778,0.4,0.429,0.6,0.6,0.5,0.571,0.5,0.75,0.667,0.667,0.714,0.625,0.429,1
 BHR,2011,Bahrain,Middle East & North Africa,High income,0.167,0.167,0.765,0.4,0.143,0.6,1,0.385,0.25,0.2,0,0.667,0.667,0.571,0.375,0.429,0
 BHS,2011,"Bahamas, The",Latin America & Caribbean ,High income,0.167,0.167,0.824,0.4,0.286,0.2,1,0.25,0.125,0.2,0,0.667,0.667,0.571,0.5,0.429,0
 BIH,2011,Bosnia and Herzegovina,Europe & Central Asia,Upper middle income,0.667,0.429,0.882,0.3,0.286,0.8,0.8,0.583,0.556,0.667,0,0.333,0.333,1,0.625,0.571,0
-BLR,2011,Belarus,Europe & Central Asia,Upper middle income,0.667,0.571,0.833,0.4,0.286,0.8,0.8,0.5,0.333,0.4,0.25,0.333,0,0.857,0.625,0.571,0
+BLR,2011,Belarus,Europe & Central Asia,Upper middle income,0.667,0.571,0.833,0.4,0.286,0.8,0.8,0.5,0.333,0.5,0.25,0.333,0,0.857,0.625,0.571,0
 BLZ,2011,Belize,Latin America & Caribbean ,Upper middle income,0.667,0.571,0.941,0.6,0.143,0.6,0.933,0.417,0.125,0.4,0.5,0.667,0.667,1,0.5,0.857,1
 BMU,2011,Bermuda,North America,High income,0,0,0.105,0.3,0,0.4,0.6,0.154,0.111,0,0,0,0.667,0.571,0.125,0.3,0
 BOL,2011,Bolivia,Latin America & Caribbean ,Lower middle income,1,0.875,0.833,0.6,0.286,0.6,0.933,0.667,0.556,0.5,1,0.667,0,1,0.625,0.556,1
@@ -1756,14 +1756,14 @@ CHE,2011,Switzerland,Europe & Central Asia,High income,0.833,0.571,0.611,0.5,0.4
 CHL,2011,Chile,Latin America & Caribbean ,High income,1,0.875,0.833,0.4,0.429,0.8,0.933,0.667,0.625,0.4,0.75,0.333,0.5,1,0.75,0.571,1
 CHN,2011,China,East Asia & Pacific,Upper middle income,0.667,0.75,0.706,0.2,0.286,0.8,0.933,0.231,0.5,0.5,0.333,0.333,0.5,1,0.25,0.857,0
 CIV,2011,Cote d'Ivoire,Sub-Saharan Africa ,Lower middle income,1,0.714,0.611,0.4,0.143,1,0.933,0.154,0.25,0.5,0.667,0.333,0.5,1,0.5,0.625,1
-CMR,2011,Cameroon,Sub-Saharan Africa ,Lower middle income,1,0.571,0.765,0.5,0.286,0.8,0.933,0.583,0.375,0.5,1,0.667,0.333,1,0.5,0.556,1
+CMR,2011,Cameroon,Sub-Saharan Africa ,Lower middle income,1,0.571,0.765,0.5,0.286,0.8,0.933,0.583,0.375,0.4,1,0.667,0.333,1,0.5,0.556,1
 COD,2011,"Congo, Dem. Rep.",Sub-Saharan Africa ,Low income,0.333,0.667,0.647,0.4,0.286,0.8,0.933,0.231,0.375,0.4,0,0.333,0,1,0.375,0.5,0
-COG,2011,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.667,0.714,0.647,0.4,0.143,0.8,0.933,0.308,0.25,0.4,0,0.333,0.667,1,0.5,0.5,0
+COG,2011,"Congo, Rep.",Sub-Saharan Africa ,Lower middle income,0.667,0.714,0.647,0.4,0.143,0.8,0.933,0.308,0.25,0.5,0,0.333,0.667,1,0.5,0.5,0
 COL,2011,Colombia,Latin America & Caribbean ,Upper middle income,1,0.857,1,0.5,0.286,0.8,0.933,0.615,0.5,0.667,0.667,0.333,0.667,1,0.625,0.714,1
 COM,2011,Comoros,Sub-Saharan Africa ,Lower middle income,0.333,0.167,0.667,0.4,0.143,0.6,0.8,0.25,0.111,0.4,0.5,0.333,0.667,1,0.25,0.556,1
-CPV,2011,Cabo Verde,Sub-Saharan Africa ,Lower middle income,1,0.429,0.889,0.4,0.143,0.6,0.933,0.25,0.333,0.4,0.5,0.667,0.667,1,0.625,0.857,1
-CRI,2011,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.857,1,0.7,0.429,0.8,0.933,0.667,0.625,0.5,0.5,0.333,0.667,1,0.75,0.857,1
-CUB,2011,Cuba,Latin America & Caribbean ,Upper middle income,0.167,0.429,0.889,0.5,0.286,0.6,0.6,0.308,0.5,0.5,0,0.333,0.5,1,0.375,0.3,0
+CPV,2011,Cabo Verde,Sub-Saharan Africa ,Lower middle income,1,0.429,0.889,0.4,0.143,0.6,0.933,0.25,0.333,0.5,0.5,0.667,0.667,1,0.625,0.857,1
+CRI,2011,Costa Rica,Latin America & Caribbean ,Upper middle income,1,0.857,1,0.7,0.429,0.8,0.933,0.667,0.625,0.4,0.5,0.333,0.667,1,0.75,0.857,1
+CUB,2011,Cuba,Latin America & Caribbean ,Upper middle income,0.167,0.429,0.889,0.5,0.286,0.6,0.6,0.308,0.5,0.4,0,0.333,0.5,1,0.375,0.3,0
 CUW,2011,Curacao,Latin America & Caribbean ,High income,0,0,0.105,0.1,0,0.2,0.8,0.154,0.111,0,0,0.333,0.5,0.571,0.125,0.182,0
 CYM,2011,Cayman Islands,Latin America & Caribbean ,High income,0,0,0.053,0.3,0,0.2,0.8,0.077,0,0,0,0.333,0.667,0.571,0.125,0.2,0
 CYP,2011,Cyprus,Europe & Central Asia,High income,0.667,0.5,0.765,0.3,0.286,0.6,0.8,0.5,0.5,0.4,0.5,0.333,0.667,0.714,0.5,0.286,1
@@ -1802,7 +1802,7 @@ GUM,2011,Guam,East Asia & Pacific,High income,0,0,0.105,0,0,0.4,0.6,0,0,0,0,0.33
 GUY,2011,Guyana,Latin America & Caribbean ,Upper middle income,0.5,0.857,0.941,0.4,0.286,0.6,0.933,0.167,0.125,0.5,1,0.333,0.333,0.714,0.625,0.556,1
 HKG,2011,"Hong Kong SAR, China",East Asia & Pacific,High income,0.167,0.143,0.105,0.3,0,0.4,0.6,0.25,0.375,0.2,0,0,0.5,0.667,0.375,0.429,0
 HND,2011,Honduras,Latin America & Caribbean ,Lower middle income,0.833,0.286,0.824,0.4,0.429,1,0.933,0.667,0.375,0.5,0.5,0.333,0.667,1,0.5,0.625,1
-HRV,2011,Croatia,Europe & Central Asia,High income,0.667,0.625,0.882,0.5,0.286,0.8,0.8,0.5,0.625,0.5,0,0.333,0.667,1,0.625,0.429,0
+HRV,2011,Croatia,Europe & Central Asia,High income,0.667,0.625,0.882,0.5,0.286,0.8,0.8,0.5,0.625,0.667,0,0.333,0.667,1,0.625,0.429,0
 HTI,2011,Haiti,Latin America & Caribbean ,Low income,0.167,0.286,0.611,0.1,0.143,0.6,0.8,0.308,0.25,0.5,0,0.333,0.667,1,0.25,0.5,0
 HUN,2011,Hungary,Europe & Central Asia,High income,0.5,0.5,0.765,0.5,0.429,0.6,0.8,0.5,0.444,0.4,0,0.333,0,0.714,0.625,0.429,0
 IDN,2011,Indonesia,East Asia & Pacific,Upper middle income,0.833,0.857,0.765,0.4,0.286,0.6,0.933,0.417,0.625,0.667,0.667,0.333,0.667,1,0.5,0.857,1

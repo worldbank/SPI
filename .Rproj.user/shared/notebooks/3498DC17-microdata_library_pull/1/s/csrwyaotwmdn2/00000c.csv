@@ -1,0 +1,50 @@
+"0",""
+"0",""
+"0","# pull all surveys from IHSN"
+"0","ihsn_base_url <- ""https://catalog.ihsn.org/index.php/api/catalog"" #define url"
+"0","study_request_ihsn<-fromJSON(paste(ihsn_base_url,""/search"",""?ps=10000"", sep="""")) # pull from url"
+"0","study_df_ihsn <- study_request_ihsn$result$rows #convert to dataframe"
+"0","write_excel_csv(study_df_ihsn, path = paste(output_dir, ""ihsn_library_public_studies.csv"", sep="""")) #write to csv"
+"0",""
+"0",""
+"0","#pull from ILO"
+"0","temp <- tempfile()"
+"0","ilo_base_url <- 'https://www.ilo.org/surveyLib/index.php/catalog/export/csv?ps=5000&collection[]=LFS' "
+"0","download.file(ilo_base_url,temp)"
+"2","trying URL 'https://www.ilo.org/surveyLib/index.php/catalog/export/csv?ps=5000&collection[]=LFS'
+"
+"2","Content type 'text/csv;charset=UTF-8'"
+"2"," length 157332 bytes (153 KB)
+"
+"2","downloaded 153 KB
+
+"
+"0","study_df_ilo <- read_csv(temp) #convert to dataframe"
+"2","
+[36m--[39m [1m[1mColumn specification[1m[22m [36m----------------------------------------------------------[39m
+cols(
+  id = [32mcol_double()[39m,
+  idno = [31mcol_character()[39m,
+  title = [31mcol_character()[39m,
+  nation = [31mcol_character()[39m,
+  authoring_entity = [31mcol_character()[39m,
+  year_start = [32mcol_double()[39m,
+  year_end = [32mcol_double()[39m,
+  created = [31mcol_character()[39m,
+  changed = [31mcol_character()[39m
+)
+
+"
+"0","write_excel_csv(study_df_ilo, path = paste(output_dir, ""ilo_library_public_studies.csv"", sep="""")) #write to csv"
+"0",""
+"0",""
+"0",""
+"0",""
+"0","#internal use studies from World Bank microdata library"
+"0","wb_base_url <- ""http://microdatalib.worldbank.org/index.php/api/catalog"" #define url"
+"0","study_request_wb<-fromJSON(paste(wb_base_url,""/search"",""?ps=15000"", sep="""")) # pull from url"
+"0","study_df_internal <- study_request_wb$result$rows"
+"0","write_excel_csv(study_df_internal, path = paste(output_dir, ""microdata_library_internal_studies.csv"", sep="""")) #write to csv"
+"0",""
+"0",""
+"0","gt(as_tibble(head(study_df_internal[,1:5])))"
