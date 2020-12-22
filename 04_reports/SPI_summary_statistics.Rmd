@@ -474,6 +474,44 @@ spi_charts  <- function(data, indicator, title) {
     
 }
 
+spi_income_aggregates <- function(data, indicator, title) {
+   indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+    income <- c("Low income", "Lower middle income","Upper middle income","High income")
+
+    p3 <- map_df %>%
+    group_by(income) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=mean(data_available, na.rm=T),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=income, fill=income)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Income', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = income) +
+      expand_limits(x=c(0,100)) +
+      theme_bw() +
+    theme(
+      text=element_text(size=14)
+    )
+    
+    p3
+}
+
 spi_country_charts  <- function(data, indicator, title) {
   
 

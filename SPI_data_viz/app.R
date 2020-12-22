@@ -221,7 +221,7 @@ ui <- navbarPage("Statistical Performance Indicators",
                           h3('Dimension 1: Data Use'),
                           withSpinner(plotlyOutput('plot_dim1',
                                                   width = '80%',
-                                                  height='500px')),
+                                                  height='600px')),
                           h3('Dimension 2: Data Services'),
                           withSpinner(plotlyOutput('plot_dim2',
                                                    width = '80%',
@@ -252,7 +252,11 @@ ui <- navbarPage("Statistical Performance Indicators",
                                 selectizeInput("country_year_choice",
                                              "Choose Year",
                                              choices=c(2016:2019),
-                                             selected=2019),    
+                                             selected=2019),
+                                selectizeInput("country_tab", "Select Countries",
+                                               choices=NULL,
+                                               selected=c("All"),
+                                               multiple=T),  
                                 withSpinner(DT::dataTableOutput("country_table",
                                                               width='70%'))
                               ),
@@ -1090,75 +1094,73 @@ server <- function(input, output,session) {
     ###########
     # Country Datatable
     ###########
+    updateSelectizeInput(session, 'country_tab', choices = choice, selected=c("All"), server=TRUE)
     
-    output$country_table <- DT::renderDataTable({
+    
+    df_country_table <- reactive({
       
 
-        #colors
-        col_palette <- c("#ff9f1c","#ffbf69","#f1dc76","#acece7","#2ec4b6")
-        
-        col_palette2 <- c("#FFBE0B",  "#E7BB25",  "#1A9850")
-        
-        #recalculate index based on the weights
-        dim_total <- input$dim_1 + input$dim_2 + input$dim_3 + input$dim_4 + input$dim_5
-        dim2_total <- input$pillar_2_1 + input$pillar_2_2 + input$pillar_2_4
-        dim3_total <- 
-          input$pillar_3_1 + 
-          input$pillar_3_2 +
-          input$pillar_3_3 +
-          input$pillar_3_4 +
-          input$pillar_3_5 +
-          input$pillar_3_6 +
-          input$pillar_3_7 +
-          input$pillar_3_8 +
-          input$pillar_3_9 +
-          input$pillar_3_10 +
-          input$pillar_3_11 +
-          input$pillar_3_12 +
-          input$pillar_3_13 +
-          input$pillar_3_15 +
-          input$pillar_3_16 +
-          input$pillar_3_17
-        dim4_total <- input$pillar_4_1 + input$pillar_4_2 + input$pillar_4_3
-        
-        
-        index_tab <- SPI %>%
-          filter(date==input$country_year_choice) %>%
-          mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
-                 INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
-                 INDEX.SPI.D2.4=SPI.D2.4.NADA,
-                 INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
-                                                  "SPI.D3.2.HNGR",
-                                                  "SPI.D3.3.HLTH",
-                                                  "SPI.D3.4.EDUC",
-                                                  "SPI.D3.5.GEND",
-                                                  "SPI.D3.6.WTRS"))),
-                 INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
-                                                  "SPI.D3.8.WORK",
-                                                  "SPI.D3.9.INDY",
-                                                  "SPI.D3.10.NEQL",
-                                                  "SPI.D3.11.CITY",
-                                                  "SPI.D3.12.CNSP"))),         
-                 INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
-                                                  "SPI.D3.15.LAND" ))),
-                 INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
-                                                  "SPI.D3.17.PTNS" ))),
-                 INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1'))),
-                 INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2'))),
-                 INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3'))),
-                 #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
-                 INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2'))),
-                 #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
-          ) %>%
-          mutate(
-            SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
-            SPI.INDEX.DIM2=(
-              (input$pillar_2_1/dim2_total)*INDEX.SPI.D2.1 +
+      
+      #recalculate index based on the weights
+      dim_total <- input$dim_1 + input$dim_2 + input$dim_3 + input$dim_4 + input$dim_5
+      dim2_total <- input$pillar_2_1 + input$pillar_2_2 + input$pillar_2_4
+      dim3_total <- 
+        input$pillar_3_1 + 
+        input$pillar_3_2 +
+        input$pillar_3_3 +
+        input$pillar_3_4 +
+        input$pillar_3_5 +
+        input$pillar_3_6 +
+        input$pillar_3_7 +
+        input$pillar_3_8 +
+        input$pillar_3_9 +
+        input$pillar_3_10 +
+        input$pillar_3_11 +
+        input$pillar_3_12 +
+        input$pillar_3_13 +
+        input$pillar_3_15 +
+        input$pillar_3_16 +
+        input$pillar_3_17
+      dim4_total <- input$pillar_4_1 + input$pillar_4_2 + input$pillar_4_3
+      
+      
+      index_tab <- SPI %>%
+        filter(date==input$country_year_choice) %>%
+        mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
+               INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
+               INDEX.SPI.D2.4=SPI.D2.4.NADA,
+               INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
+                                                "SPI.D3.2.HNGR",
+                                                "SPI.D3.3.HLTH",
+                                                "SPI.D3.4.EDUC",
+                                                "SPI.D3.5.GEND",
+                                                "SPI.D3.6.WTRS"))),
+               INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
+                                                "SPI.D3.8.WORK",
+                                                "SPI.D3.9.INDY",
+                                                "SPI.D3.10.NEQL",
+                                                "SPI.D3.11.CITY",
+                                                "SPI.D3.12.CNSP"))),         
+               INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
+                                                "SPI.D3.15.LAND" ))),
+               INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
+                                                "SPI.D3.17.PTNS" ))),
+               INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1'))),
+               INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2'))),
+               INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3'))),
+               #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
+               INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2'))),
+               #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
+        ) %>%
+        mutate(
+          SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+          SPI.INDEX.DIM2=(
+            (input$pillar_2_1/dim2_total)*INDEX.SPI.D2.1 +
               (input$pillar_2_2/dim2_total)*INDEX.SPI.D2.2 +
               (input$pillar_2_4/dim2_total)*INDEX.SPI.D2.4 )
-              ,
-            SPI.INDEX.DIM3=(
-              (input$pillar_3_1/dim3_total)*SPI.D3.1.POV +
+          ,
+          SPI.INDEX.DIM3=(
+            (input$pillar_3_1/dim3_total)*SPI.D3.1.POV +
               (input$pillar_3_2/dim3_total)*SPI.D3.2.HNGR +
               (input$pillar_3_3/dim3_total)*SPI.D3.3.HLTH +
               (input$pillar_3_4/dim3_total)*SPI.D3.4.EDUC +
@@ -1174,45 +1176,71 @@ server <- function(input, output,session) {
               (input$pillar_3_15/dim3_total)*SPI.D3.15.LAND +
               (input$pillar_3_16/dim3_total)*SPI.D3.16.INST +
               (input$pillar_3_17/dim3_total)*SPI.D3.17.PTNS)
-            ,
-            SPI.INDEX.DIM4=(
-              (input$pillar_4_1/dim4_total)*INDEX.SPI.D4.1 +
+          ,
+          SPI.INDEX.DIM4=(
+            (input$pillar_4_1/dim4_total)*INDEX.SPI.D4.1 +
               (input$pillar_4_2/dim4_total)*INDEX.SPI.D4.2 +
               (input$pillar_4_3/dim4_total)*INDEX.SPI.D4.3 )
-            ,
-            SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
-            SPI.INDEX=(input$dim_1/dim_total)*SPI.INDEX.DIM1 +
-                      (input$dim_2/dim_total)*SPI.INDEX.DIM2 +
-                      (input$dim_3/dim_total)*SPI.INDEX.DIM3 +
-                      (input$dim_4/dim_total)*SPI.INDEX.DIM4 +
-                      (input$dim_5/dim_total)*SPI.INDEX.DIM5 
-                                         #sum up based on individual dimension weights
-          ) %>% #
-          mutate(across(starts_with('SPI.INDEX'),~100*.)) %>% #create weighted index
-          select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) 
-        
-        
-        #calculate the breaks for the color coding
-        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+          ,
+          SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+          SPI.INDEX=(input$dim_1/dim_total)*SPI.INDEX.DIM1 +
+            (input$dim_2/dim_total)*SPI.INDEX.DIM2 +
+            (input$dim_3/dim_total)*SPI.INDEX.DIM3 +
+            (input$dim_4/dim_total)*SPI.INDEX.DIM4 +
+            (input$dim_5/dim_total)*SPI.INDEX.DIM5 
+          #sum up based on individual dimension weights
+        ) %>% #
+        mutate(across(starts_with('SPI.INDEX'),~100*.)) %>% #create weighted index
+        select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) 
+      
+      
 
-        brks1 <- quantile(index_tab$SPI.INDEX.DIM1, probs=c(1,2,3,4)/5,na.rm=T)
+      
 
-        brks2 <- quantile(index_tab$SPI.INDEX.DIM2, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      
+    })
+    
+    output$country_table <- DT::renderDataTable({
+      
+      #get country file
+      index_tab <- df_country_table()
+      
+      #colors
+      col_palette <- c("#ff9f1c","#ffbf69","#f1dc76","#acece7","#2ec4b6")
+      
+      col_palette2 <- c("#FFBE0B",  "#E7BB25",  "#1A9850")
+      
+      #calculate the breaks for the color coding
+      brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      brks1 <- quantile(index_tab$SPI.INDEX.DIM1, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      brks2 <- quantile(index_tab$SPI.INDEX.DIM2, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      brks3 <- quantile(index_tab$SPI.INDEX.DIM3, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      brks4 <- quantile(index_tab$SPI.INDEX.DIM4, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      brks5 <- quantile(index_tab$SPI.INDEX.DIM5, probs=c(1,2,3,4)/5,na.rm=T)
 
-        brks3 <- quantile(index_tab$SPI.INDEX.DIM3, probs=c(1,2,3,4)/5,na.rm=T)
-
-        brks4 <- quantile(index_tab$SPI.INDEX.DIM4, probs=c(1,2,3,4)/5,na.rm=T)
-
-        brks5 <- quantile(index_tab$SPI.INDEX.DIM5, probs=c(1,2,3,4)/5,na.rm=T)
-
+      # select countries for table
+      
+      if (!("All" %in% input$country_tab))
+        datatab <- index_tab %>%
+        filter(country %in% input$country_tab) 
+      else (
+        datatab <- index_tab
+      )
+      
         #make nice looking table
-        #make nice looking table
-        DT::datatable(index_tab, caption=paste('Overall SPI Index in ',input$country_year_choice,' and Dimension Scores.', sep=""),
+        DT::datatable(datatab, caption=paste('Overall SPI Index in ',input$country_year_choice,' and Dimension Scores.', sep=""),
                       rownames=FALSE,
                       colnames = c("Country", "SPI Index Value", "Dim 1: Data Use", "Dim 2: Data Services","Dim 3: Data Products ","Dim 4: Data Sources","Dim 5: Data Infrastructure" ),
                       class='cell-border stripe',
                       escape = FALSE,
-                      extensions = c ('Buttons', 'FixedHeader'), options=list(
+                      extensions = c ('Buttons', 'FixedHeader'), 
+                      options=list(
                         dom = 'Bfrtip',
                         buttons = c('copy', 'csv', 'excel'),
                         pageLength = 60,

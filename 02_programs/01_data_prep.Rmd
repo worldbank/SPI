@@ -960,7 +960,8 @@ D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '1.5_DUIO/UN IGME Child Mortality 
   as_tibble(.name_repair = 'universal') %>%
   filter(Indicator=='Under-five mortality rate' & Sex=='Total') %>% #keep just observations for under 5 child mortality and for both sexes
   filter(Observation.Status=='Included in IGME') %>% # Also keep only surveys that met IGME criteria for inclusion as a nationally representative statistic
-  mutate(date=as.numeric(str_extract(TIME_PERIOD, "^.{4}")),
+  mutate(date=as.numeric(str_extract(Series.Year, "^.{4}")),
+         ind_date=as.numeric(str_extract(TIME_PERIOD, "^.{4}")),
          country=Geographic.area,
          D3.CHLD.MORT=OBS_VALUE)
 
@@ -979,7 +980,7 @@ for (reference_year in 2004:2019) {
  
   
   temp_5 <-D3.3.AKI.MORT %>%
-          mutate(frequency=((reference_year-as.numeric(date))<=rec_window) & (reference_year>=as.numeric(date))) %>%
+          mutate(frequency=(((reference_year-as.numeric(date))<=rec_window & (reference_year>=as.numeric(date))) | ((reference_year-as.numeric(ind_date))<=rec_window & (reference_year>=as.numeric(ind_date))))) %>% #whether to use the survey year or indicator report year depends on data source.  for vital statistics sources need to use indicator reporting year, but for surveys use survey year
           mutate(SPI.FREQ.D1.5.CHLD.MORT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
           group_by(country) %>%
           summarise(SPI.FREQ.D1.5.CHLD.MORT=sum(SPI.FREQ.D1.5.CHLD.MORT, na.rm=T)) %>%

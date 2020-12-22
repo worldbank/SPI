@@ -20,7 +20,7 @@ bibliography: ./bibliography.bib
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.cap = "&nbsp;")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.cap = "&nbsp;", fig.path = "plots/", dev = c("png"), dpi=500)
 library(tidyverse)
 library(flextable)
 library(here)
@@ -2847,6 +2847,27 @@ index_tab <- flextable(metatable) %>%
 
 ```
 
+```{r clusteranalysis, eval=FALSE, fig.height=20, fig.width=20, include=FALSE}
+library("factoextra")
+
+cluster_df <- spi_index_df %>%
+  filter(date==2019) %>%
+  filter(!is.na(SPI.INDEX)) %>%
+  select(country, starts_with("SPI.INDEX")) %>%
+  column_to_rownames(var='country')
+
+# Enhanced k-means clustering
+res.km <- eclust(cluster_df, "kmeans")
+fviz_gap_stat(res.km$gap_stat)
+km_df<-res.km$clust_plot$data
+
+# Enhanced hierarchical clustering
+res.hc <- eclust(cluster_df, "hclust") # compute hclust
+fviz_gap_stat(res.hc$gap_stat)
+fviz_dend(res.hc, rect = TRUE) # dendrogam
+hc_df<-res.hc$cluster %>%
+  as_tibble()
+```
 
 
 # References
