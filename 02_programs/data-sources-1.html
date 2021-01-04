@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 Data Sources | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
+  <meta name="description" content="5 Data Sources | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5 Data Sources | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5 Data Sources | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  
+  
+  
+
+<meta name="author" content="Brian Stacy" />
+
+
+<meta name="date" content="2021-01-04" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-products-1.html"/>
+<link rel="next" href="data-infrastructure-1.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#motivation"><i class="fa fa-check"></i><b>1.1</b> Motivation</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#overview-of-the-new-spi"><i class="fa fa-check"></i><b>1.2</b> Overview of the New SPI</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#pillars-of-the-new-spi"><i class="fa fa-check"></i><b>1.3</b> Pillars of the new SPI</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#data-use"><i class="fa fa-check"></i><b>1.3.1</b> Data use</a></li>
+<li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#data-services"><i class="fa fa-check"></i><b>1.3.2</b> Data services</a></li>
+<li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#data-products"><i class="fa fa-check"></i><b>1.3.3</b> Data products</a></li>
+<li class="chapter" data-level="1.3.4" data-path="introduction.html"><a href="introduction.html#data-sources"><i class="fa fa-check"></i><b>1.3.4</b> Data sources</a></li>
+<li class="chapter" data-level="1.3.5" data-path="introduction.html"><a href="introduction.html#data-infrastructure"><i class="fa fa-check"></i><b>1.3.5</b> Data infrastructure</a></li>
+<li class="chapter" data-level="1.3.6" data-path="introduction.html"><a href="introduction.html#description-of-pillars"><i class="fa fa-check"></i><b>1.3.6</b> Description of Pillars</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#spi-data"><i class="fa fa-check"></i><b>1.4</b> SPI Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-use-1.html"><a href="data-use-1.html"><i class="fa fa-check"></i><b>2</b> Data Use</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.1-data-use-by-national-legislature"><i class="fa fa-check"></i><b>2.1</b> Indicator 1.1: Data use by national legislature</a></li>
+<li class="chapter" data-level="2.2" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.2-data-use-by-national-executive-branch"><i class="fa fa-check"></i><b>2.2</b> Indicator 1.2: Data use by national executive branch</a></li>
+<li class="chapter" data-level="2.3" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.3-data-use-by-civil-society"><i class="fa fa-check"></i><b>2.3</b> Indicator 1.3: Data use by civil society</a></li>
+<li class="chapter" data-level="2.4" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.4-data-use-by-academia"><i class="fa fa-check"></i><b>2.4</b> Indicator 1.4: Data use by academia</a></li>
+<li class="chapter" data-level="2.5" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.5-data-use-by-international-organizations"><i class="fa fa-check"></i><b>2.5</b> Indicator 1.5: Data use by international organizations</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="data-use-1.html"><a href="data-use-1.html#poverty-comparability"><i class="fa fa-check"></i><b>2.5.1</b> Poverty Comparability</a></li>
+<li class="chapter" data-level="2.5.2" data-path="data-use-1.html"><a href="data-use-1.html#mortality-rate-under-5-per-1000-live-births"><i class="fa fa-check"></i><b>2.5.2</b> Mortality rate, under-5 (per 1,000 live births)</a></li>
+<li class="chapter" data-level="2.5.3" data-path="data-use-1.html"><a href="data-use-1.html#debt-service-ppg-and-imf-only-of-exports-of-goods-services-and-primary-income"><i class="fa fa-check"></i><b>2.5.3</b> Debt service (PPG and IMF only, % of exports of goods, services and primary income)</a></li>
+<li class="chapter" data-level="2.5.4" data-path="data-use-1.html"><a href="data-use-1.html#safely-managed-water"><i class="fa fa-check"></i><b>2.5.4</b> Safely Managed Water</a></li>
+<li class="chapter" data-level="2.5.5" data-path="data-use-1.html"><a href="data-use-1.html#labor-force-statistics"><i class="fa fa-check"></i><b>2.5.5</b> Labor Force Statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-services-1.html"><a href="data-services-1.html"><i class="fa fa-check"></i><b>3</b> Data Services</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.1-data-releases"><i class="fa fa-check"></i><b>3.1</b> Indicator 2.1: Data Releases</a></li>
+<li class="chapter" data-level="3.2" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.2-online-access"><i class="fa fa-check"></i><b>3.2</b> Indicator 2.2: Online access</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="data-services-1.html"><a href="data-services-1.html#source"><i class="fa fa-check"></i><b>3.2.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.3-advisory-analytical-services"><i class="fa fa-check"></i><b>3.3</b> Indicator 2.3: Advisory/ Analytical Services</a></li>
+<li class="chapter" data-level="3.4" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.4-data-services"><i class="fa fa-check"></i><b>3.4</b> Indicator 2.4: Data services</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-products-1.html"><a href="data-products-1.html"><i class="fa fa-check"></i><b>4</b> Data Products</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-products-1.html"><a href="data-products-1.html#methodology"><i class="fa fa-check"></i><b>4.1</b> Methodology</a></li>
+<li class="chapter" data-level="4.2" data-path="data-products-1.html"><a href="data-products-1.html#indicators-3.1---3.17"><i class="fa fa-check"></i><b>4.2</b> Indicators 3.1 - 3.17</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="data-sources-1.html"><a href="data-sources-1.html"><i class="fa fa-check"></i><b>5</b> Data Sources</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.1-censuses-and-surveys"><i class="fa fa-check"></i><b>5.1</b> Indicator 4.1: censuses and surveys</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="data-sources-1.html"><a href="data-sources-1.html#scoring-details"><i class="fa fa-check"></i><b>5.1.1</b> Scoring details</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.2-administrative-data"><i class="fa fa-check"></i><b>5.2</b> Indicator 4.2: administrative data</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="data-sources-1.html"><a href="data-sources-1.html#population-health-admin-data"><i class="fa fa-check"></i><b>5.2.1</b> Population &amp; Health Admin Data</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.3-geospatial-data"><i class="fa fa-check"></i><b>5.3</b> Indicator 4.3: geospatial data</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="data-sources-1.html"><a href="data-sources-1.html#source-1"><i class="fa fa-check"></i><b>5.3.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.4-privatecitizen-generated-data"><i class="fa fa-check"></i><b>5.4</b> Indicator 4.4: private/citizen generated data</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html"><i class="fa fa-check"></i><b>6</b> Data Infrastructure</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.1-legislation-and-governance"><i class="fa fa-check"></i><b>6.1</b> Indicator 5.1: legislation and governance</a></li>
+<li class="chapter" data-level="6.2" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.2-standards"><i class="fa fa-check"></i><b>6.2</b> Indicator 5.2: standards</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#system-of-national-accounts-in-use"><i class="fa fa-check"></i><b>6.2.1</b> 5.2.1 System of National Accounts in use</a></li>
+<li class="chapter" data-level="6.2.2" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#national-accounts-base-year"><i class="fa fa-check"></i><b>6.2.2</b> 5.2.2 National Accounts base year</a></li>
+<li class="chapter" data-level="6.2.3" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-national-industry"><i class="fa fa-check"></i><b>6.2.3</b> 5.2.3 Classification of national industry</a></li>
+<li class="chapter" data-level="6.2.4" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#cpi-base-year"><i class="fa fa-check"></i><b>6.2.4</b> 5.2.4 CPI base year</a></li>
+<li class="chapter" data-level="6.2.5" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-household-consumption"><i class="fa fa-check"></i><b>6.2.5</b> 5.2.5 Classification of household consumption</a></li>
+<li class="chapter" data-level="6.2.6" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-status-of-employment"><i class="fa fa-check"></i><b>6.2.6</b> 5.2.6 Classification of status of employment</a></li>
+<li class="chapter" data-level="6.2.7" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#central-government-accounting-status"><i class="fa fa-check"></i><b>6.2.7</b> 5.2.7 Central government accounting status</a></li>
+<li class="chapter" data-level="6.2.8" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#compilation-of-government-finance-statistics"><i class="fa fa-check"></i><b>6.2.8</b> 5.2.8 Compilation of government finance statistics</a></li>
+<li class="chapter" data-level="6.2.9" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#compilation-of-monetary-and-financial-statistics"><i class="fa fa-check"></i><b>6.2.9</b> 5.2.9 Compilation of monetary and financial statistics</a></li>
+<li class="chapter" data-level="6.2.10" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#business-process"><i class="fa fa-check"></i><b>6.2.10</b> 5.2.10 Business process</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.3-skills"><i class="fa fa-check"></i><b>6.3</b> Indicator 5.3: skills</a></li>
+<li class="chapter" data-level="6.4" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.4-partnerships"><i class="fa fa-check"></i><b>6.4</b> Indicator 5.4: partnerships</a></li>
+<li class="chapter" data-level="6.5" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.5-finance"><i class="fa fa-check"></i><b>6.5</b> Indicator 5.5: finance</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="final-dataset.html"><a href="final-dataset.html"><i class="fa fa-check"></i><b>7</b> Final Dataset</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-sources-1" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Data Sources</h1>
+<p>Cleaning for the Data Sources Indicators. Data Sources (4 Indicators):<br />
+- 4.1_SOCS - Indicator 4.1: censuses and surveys<br />
+- 4.2_SOAD - Indicator 4.2: administrative data<br />
+- 4.3_SOGS - Indicator 4.3: geospatial data<br />
+- 4.4_SOPC - Indicator 4.4: private/citizen generated data</p>
+<div id="indicator-4.1-censuses-and-surveys" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Indicator 4.1: censuses and surveys</h2>
+<p>This indicator draws from data collected by the Statistical Performance Indicators team. The following censuses and surveys are considered:</p>
+<ul>
+<li>Population &amp; Housing census<br />
+</li>
+<li>Agriculture census<br />
+</li>
+<li>Business/establishment census<br />
+</li>
+<li>Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey<br />
+</li>
+<li>Agriculture survey<br />
+</li>
+<li>Labor Force Survey<br />
+</li>
+<li>Health/Demographic survey<br />
+</li>
+<li>Business/establishment survey</li>
+</ul>
+<div id="scoring-details" class="section level3" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> Scoring details</h3>
+<div id="population-housing-census" class="section level4" number="5.1.1.1">
+<h4><span class="header-section-number">5.1.1.1</span> Population &amp; Housing census</h4>
+<p>Population censuses collect data on the size, distribution and composition of population and
+information on a broad range of social and economic characteristics of the population. It also
+provides sampling frames for household and other surveys. Housing censuses provide information
+on the supply of housing units, the structural characteristics and facilities, and health and the
+development of normal family living conditions. Data obtained as part of the population census,
+including data on homeless persons, are often used in the presentation and analysis of the results
+of the housing census. It is recommended that population and housing censuses be conducted at least every 10 years.</p>
+<p>1 Point. Population census done within last 10 years<br />
+0.5 Points. Population census done within last 20 years
+0 Points. Otherwise</p>
+</div>
+<div id="agriculture-census" class="section level4" number="5.1.1.2">
+<h4><span class="header-section-number">5.1.1.2</span> Agriculture census</h4>
+<p>Agriculture censuses collect information on agricultural activities, such as
+size of holding, land tenure, land use, employment and production, and provide
+basic structural data and sampling frames for agricultural surveys. Censuses
+of agriculture normally involves collecting key structural data by complete
+enumeration of all agricultural holdings, in combination with more detailed
+structural data using sampling methods. It is recommended that agricultural
+censuses be conducted at least every 10 years.</p>
+<p>1 Point. census done within last 10 years<br />
+0.5 Points. census done within last 20 years<br />
+0 Points. Otherwise</p>
+</div>
+<div id="businessestablishment-census" class="section level4" number="5.1.1.3">
+<h4><span class="header-section-number">5.1.1.3</span> Business/establishment census</h4>
+<p>Business/establishment censuses provide valuable information on all economic
+activities, number of employed and size of establishments in the economy.
+Business Register information is establishment-based and includes business
+location, organization type (e.g. subsidiary or parent), industry
+classification, and operating data (e.g., receipts and employment).</p>
+<p>1 Point. census done within last 10 years<br />
+0.5 Points. census done within last 20 years<br />
+0 Points. Otherwise</p>
+</div>
+<div id="household-survey-on-incomeconsumptionexpenditurebudgetintegrated-survey" class="section level4" number="5.1.1.4">
+<h4><span class="header-section-number">5.1.1.4</span> Household Survey on income/consumption/expenditure/budget/Integrated Survey</h4>
+<p>These surveys collect data on household income (including income in kind),
+consumption and expenditure. They typically include income, expenditure, and
+consumption surveys, household budget surveys, integrated surveys. It is
+recommended that surveys on income and expenditure be conducted at least every
+3 to 5 years.</p>
+<p>1 Point. 3 or more surveys done within past 10 years<br />
+0.6 Points. 2 surveys done within past 10 years;<br />
+0.3 Points. 1 survey done within past 10 years;<br />
+0 Points. None within past 10 years</p>
+</div>
+<div id="agriculture-survey" class="section level4" number="5.1.1.5">
+<h4><span class="header-section-number">5.1.1.5</span> Agriculture survey</h4>
+<p>Agricultural surveys refer to surveys of agricultural holdings based on the
+sampling frames established by the agricultural census. These are surveys on
+agricultural land, production, crops and livestock, aquaculture, labor and
+cost, and time use. Some issues, such as gender and food security, are of
+interest to most agriculture surveys.</p>
+<p>1 Point. 3 or more surveys done within past 10 years<br />
+0.6 Points. 2 surveys done within past 10 years;<br />
+0.3 Points. 1 survey done within past 10 years;<br />
+0 Points. None within past 10 years</p>
+</div>
+<div id="labor-force-survey" class="section level4" number="5.1.1.6">
+<h4><span class="header-section-number">5.1.1.6</span> Labor Force Survey</h4>
+<p>Labor force survey is a standard household-based survey of work-related
+statistics at the national and sub-national employment or unemployment levels,
+rates or trends. The surveys also provide the characteristics of the employed
+or unemployed, including labor force status by age or gender, breakdowns
+between employees and the self-employed, public versus private sector
+employment, multiple job-holding, hiring, job creation, and duration of
+unemployment.</p>
+<p>1 Point. 3 or more surveys done within past 10 years<br />
+0.6 Points. 2 surveys done within past 10 years;<br />
+0.3 Points. 1 survey done within past 10 years;<br />
+0 Points. None within past 10 years</p>
+</div>
+<div id="healthdemographic-survey" class="section level4" number="5.1.1.7">
+<h4><span class="header-section-number">5.1.1.7</span> Health/Demographic survey</h4>
+<p>Health surveys collect information on various aspects of health of
+populations, such as health expenditure, access, utilization, and outcomes.
+They typically include Demographic and Health Surveys. It is recommended that
+health surveys be conducted at least every 3 to 5 years.</p>
+<p>1 Point. 3 or more surveys done within past 10 years<br />
+0.6 Points. 2 surveys done within past 10 years;<br />
+0.3 Points. 1 survey done within past 10 years;<br />
+0 Points. None within past 10 years</p>
+</div>
+<div id="businessestablishment-survey" class="section level4" number="5.1.1.8">
+<h4><span class="header-section-number">5.1.1.8</span> Business/establishment survey</h4>
+<p>The business/establishment survey provides information on employment, hours,
+and earnings of employees from a sample of business establishments including
+private and public, entities that are classified based on an establishment’s
+principal activity from the business or establishment census. Establishment
+surveys include surveys of businesses, farms, and institutions. They may ask
+for information about the establishment itself and/or employee characteristics
+and demographics.</p>
+<p>1 Point. 3 or more surveys done within past 10 years<br />
+0.6 Points. 2 surveys done within past 10 years;<br />
+0.3 Points. 1 survey done within past 10 years;<br />
+0 Points. None within past 10 years</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="data-sources-1.html#cb33-1" aria-hidden="true"></a><span class="co">#pull data for population and agriculture census from WDI metadata</span></span>
+<span id="cb33-2"><a href="data-sources-1.html#cb33-2" aria-hidden="true"></a></span>
+<span id="cb33-3"><a href="data-sources-1.html#cb33-3" aria-hidden="true"></a>df &lt;-<span class="st"> </span>WDI_metadata</span>
+<span id="cb33-4"><a href="data-sources-1.html#cb33-4" aria-hidden="true"></a></span>
+<span id="cb33-5"><a href="data-sources-1.html#cb33-5" aria-hidden="true"></a><span class="co"># Manipulate and clean final data</span></span>
+<span id="cb33-6"><a href="data-sources-1.html#cb33-6" aria-hidden="true"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb33-7"><a href="data-sources-1.html#cb33-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(Income.Group))  <span class="co">#keep just countries (drop aggregations)</span></span>
+<span id="cb33-8"><a href="data-sources-1.html#cb33-8" aria-hidden="true"></a>  </span>
+<span id="cb33-9"><a href="data-sources-1.html#cb33-9" aria-hidden="true"></a></span>
+<span id="cb33-10"><a href="data-sources-1.html#cb33-10" aria-hidden="true"></a>pop_census_df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb33-11"><a href="data-sources-1.html#cb33-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">iso3c=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(Country.Code), Code, Country.Code),</span>
+<span id="cb33-12"><a href="data-sources-1.html#cb33-12" aria-hidden="true"></a>         <span class="dt">country=</span>Table.Name) <span class="op">%&gt;%</span></span>
+<span id="cb33-13"><a href="data-sources-1.html#cb33-13" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&#39;iso3c&#39;</span>, <span class="st">&#39;country&#39;</span>, <span class="st">&#39;date&#39;</span>,  <span class="st">&#39;Latest.population.census&#39;</span>)  ) <span class="op">%&gt;%</span></span>
+<span id="cb33-14"><a href="data-sources-1.html#cb33-14" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">last_val=</span><span class="kw">str_extract</span>(Latest.population.census, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d{4}&quot;</span>) )<span class="op">%&gt;%</span></span>
+<span id="cb33-15"><a href="data-sources-1.html#cb33-15" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">last_val=</span><span class="kw">as.numeric</span>(last_val)) <span class="op">%&gt;%</span></span>
+<span id="cb33-16"><a href="data-sources-1.html#cb33-16" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">indicator=</span><span class="kw">case_when</span>(</span>
+<span id="cb33-17"><a href="data-sources-1.html#cb33-17" aria-hidden="true"></a>      (date<span class="op">-</span>last_val<span class="op">&lt;=</span><span class="dv">10</span>) <span class="op">&amp;</span><span class="st"> </span>(date<span class="op">-</span>last_val<span class="op">&gt;=</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb33-18"><a href="data-sources-1.html#cb33-18" aria-hidden="true"></a>      (date<span class="op">-</span>last_val<span class="op">&lt;=</span><span class="dv">20</span>) <span class="op">&amp;</span><span class="st"> </span>(date<span class="op">-</span>last_val<span class="op">&gt;=</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>,</span>
+<span id="cb33-19"><a href="data-sources-1.html#cb33-19" aria-hidden="true"></a>      <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> )</span>
+<span id="cb33-20"><a href="data-sources-1.html#cb33-20" aria-hidden="true"></a>    )  <span class="op">%&gt;%</span></span>
+<span id="cb33-21"><a href="data-sources-1.html#cb33-21" aria-hidden="true"></a><span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb33-22"><a href="data-sources-1.html#cb33-22" aria-hidden="true"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&#39;iso3c&#39;</span>, <span class="st">&#39;country&#39;</span>, <span class="st">&#39;date&#39;</span>, <span class="st">&#39;Latest.population.census&#39;</span>, <span class="st">&#39;indicator&#39;</span>)  ) <span class="op">%&gt;%</span></span>
+<span id="cb33-23"><a href="data-sources-1.html#cb33-23" aria-hidden="true"></a><span class="st">    </span><span class="kw">arrange</span>(date, country)</span>
+<span id="cb33-24"><a href="data-sources-1.html#cb33-24" aria-hidden="true"></a>  </span>
+<span id="cb33-25"><a href="data-sources-1.html#cb33-25" aria-hidden="true"></a>ag_census_df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb33-26"><a href="data-sources-1.html#cb33-26" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">iso3c=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(Country.Code), Code, Country.Code),</span>
+<span id="cb33-27"><a href="data-sources-1.html#cb33-27" aria-hidden="true"></a>         <span class="dt">country=</span>Table.Name) <span class="op">%&gt;%</span></span>
+<span id="cb33-28"><a href="data-sources-1.html#cb33-28" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&#39;iso3c&#39;</span>,  <span class="st">&#39;date&#39;</span>,  <span class="st">&#39;Latest.agricultural.census&#39;</span>)  ) <span class="op">%&gt;%</span></span>
+<span id="cb33-29"><a href="data-sources-1.html#cb33-29" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">last_val=</span><span class="kw">str_extract</span>(Latest.agricultural.census, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d{4}&quot;</span>) )<span class="op">%&gt;%</span></span>
+<span id="cb33-30"><a href="data-sources-1.html#cb33-30" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">last_val=</span><span class="kw">as.numeric</span>(last_val)) <span class="op">%&gt;%</span></span>
+<span id="cb33-31"><a href="data-sources-1.html#cb33-31" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">indicator=</span><span class="kw">case_when</span>(</span>
+<span id="cb33-32"><a href="data-sources-1.html#cb33-32" aria-hidden="true"></a>      (date<span class="op">-</span>last_val<span class="op">&lt;=</span><span class="dv">10</span>) <span class="op">&amp;</span><span class="st"> </span>(date<span class="op">-</span>last_val<span class="op">&gt;=</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb33-33"><a href="data-sources-1.html#cb33-33" aria-hidden="true"></a>      (date<span class="op">-</span>last_val<span class="op">&lt;=</span><span class="dv">20</span>) <span class="op">&amp;</span><span class="st"> </span>(date<span class="op">-</span>last_val<span class="op">&gt;=</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>,</span>
+<span id="cb33-34"><a href="data-sources-1.html#cb33-34" aria-hidden="true"></a>      <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> )</span>
+<span id="cb33-35"><a href="data-sources-1.html#cb33-35" aria-hidden="true"></a>    )  <span class="op">%&gt;%</span></span>
+<span id="cb33-36"><a href="data-sources-1.html#cb33-36" aria-hidden="true"></a><span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb33-37"><a href="data-sources-1.html#cb33-37" aria-hidden="true"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&#39;iso3c&#39;</span>,  <span class="st">&#39;date&#39;</span>, <span class="st">&#39;Latest.agricultural.census&#39;</span>, <span class="st">&#39;indicator&#39;</span>)  ) <span class="op">%&gt;%</span></span>
+<span id="cb33-38"><a href="data-sources-1.html#cb33-38" aria-hidden="true"></a><span class="st">    </span><span class="kw">arrange</span>(date, iso3c)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="data-sources-1.html#cb34-1" aria-hidden="true"></a>census_fun  &lt;-<span class="st"> </span><span class="cf">function</span>(data, input_var) {</span>
+<span id="cb34-2"><a href="data-sources-1.html#cb34-2" aria-hidden="true"></a>  </span>
+<span id="cb34-3"><a href="data-sources-1.html#cb34-3" aria-hidden="true"></a>  data &lt;-<span class="st"> </span>data</span>
+<span id="cb34-4"><a href="data-sources-1.html#cb34-4" aria-hidden="true"></a>  input_var &lt;-<span class="st"> </span>input_var</span>
+<span id="cb34-5"><a href="data-sources-1.html#cb34-5" aria-hidden="true"></a></span>
+<span id="cb34-6"><a href="data-sources-1.html#cb34-6" aria-hidden="true"></a>  <span class="co">#read in csv file.</span></span>
+<span id="cb34-7"><a href="data-sources-1.html#cb34-7" aria-hidden="true"></a>  cs_df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/raw/&#39;</span>, data, <span class="st">&quot;_145.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span> )) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#bring in data collected for an original set of 145 countries, then an additional 10, then several more high income counries.</span></span>
+<span id="cb34-8"><a href="data-sources-1.html#cb34-8" aria-hidden="true"></a><span class="st">    </span><span class="kw">bind_rows</span>(<span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/raw/&#39;</span>, data, <span class="st">&quot;_10.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span> ))) <span class="op">%&gt;%</span></span>
+<span id="cb34-9"><a href="data-sources-1.html#cb34-9" aria-hidden="true"></a><span class="st">    </span><span class="kw">bind_rows</span>(<span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/raw/&#39;</span>, data, <span class="st">&quot;_high.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span> ))) <span class="op">%&gt;%</span><span class="st">            </span></span>
+<span id="cb34-10"><a href="data-sources-1.html#cb34-10" aria-hidden="true"></a><span class="st">    </span><span class="kw">write_excel_csv</span>(<span class="dt">path =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/&#39;</span>, data, <span class="st">&quot;_manual.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb34-11"><a href="data-sources-1.html#cb34-11" aria-hidden="true"></a><span class="st">    </span><span class="kw">distinct</span>() <span class="op">%&gt;%</span></span>
+<span id="cb34-12"><a href="data-sources-1.html#cb34-12" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>(iso3c, country) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-13"><a href="data-sources-1.html#cb34-13" aria-hidden="true"></a><span class="st">    </span><span class="kw">rename</span>(<span class="dt">input_var =</span> <span class="op">!!</span><span class="st"> </span>input_var) <span class="op">%&gt;%</span></span>
+<span id="cb34-14"><a href="data-sources-1.html#cb34-14" aria-hidden="true"></a><span class="st">    </span><span class="kw">nest</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># The next chunk of code will split our string with the years of the census (i.e. &quot;2000, 2010&quot;) in to separate rows.  We will then aggregate up.</span></span>
+<span id="cb34-15"><a href="data-sources-1.html#cb34-15" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
+<span id="cb34-16"><a href="data-sources-1.html#cb34-16" aria-hidden="true"></a>      <span class="dt">temp_col =</span> <span class="kw">map</span>(</span>
+<span id="cb34-17"><a href="data-sources-1.html#cb34-17" aria-hidden="true"></a>        data, </span>
+<span id="cb34-18"><a href="data-sources-1.html#cb34-18" aria-hidden="true"></a>        <span class="op">~</span><span class="st"> </span><span class="kw">str_extract_all</span>(.x<span class="op">$</span>input_var, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d{4}&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-19"><a href="data-sources-1.html#cb34-19" aria-hidden="true"></a><span class="st">          </span><span class="kw">flatten</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-20"><a href="data-sources-1.html#cb34-20" aria-hidden="true"></a><span class="st">          </span><span class="kw">map_chr</span>(<span class="op">~</span><span class="kw">return</span>(.x)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-21"><a href="data-sources-1.html#cb34-21" aria-hidden="true"></a><span class="st">          </span><span class="kw">as_tibble</span>()</span>
+<span id="cb34-22"><a href="data-sources-1.html#cb34-22" aria-hidden="true"></a>      )</span>
+<span id="cb34-23"><a href="data-sources-1.html#cb34-23" aria-hidden="true"></a>    ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-24"><a href="data-sources-1.html#cb34-24" aria-hidden="true"></a><span class="st">    </span><span class="kw">unnest</span>(<span class="dt">keep_empty =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Now we have a database with the observations equal to Country*Census observations.  From here we can calculate latest census, etc.</span></span>
+<span id="cb34-25"><a href="data-sources-1.html#cb34-25" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">indicator_date=</span><span class="kw">as.numeric</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb34-26"><a href="data-sources-1.html#cb34-26" aria-hidden="true"></a><span class="st">    </span><span class="kw">select</span>(<span class="st">&#39;country&#39;</span>,<span class="st">&#39;indicator_date&#39;</span>,<span class="st">&#39;input_var&#39;</span>)</span>
+<span id="cb34-27"><a href="data-sources-1.html#cb34-27" aria-hidden="true"></a>  </span>
+<span id="cb34-28"><a href="data-sources-1.html#cb34-28" aria-hidden="true"></a>    <span class="co">#append nada data on surveys</span></span>
+<span id="cb34-29"><a href="data-sources-1.html#cb34-29" aria-hidden="true"></a>  cs_df &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span></span>
+<span id="cb34-30"><a href="data-sources-1.html#cb34-30" aria-hidden="true"></a><span class="st">    </span><span class="kw">bind_rows</span>(<span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/&#39;</span>, data, <span class="st">&quot;_NADA.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span> ))) <span class="op">%&gt;%</span></span>
+<span id="cb34-31"><a href="data-sources-1.html#cb34-31" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>(country, indicator_date) <span class="op">%&gt;%</span></span>
+<span id="cb34-32"><a href="data-sources-1.html#cb34-32" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">input_var=</span><span class="kw">first</span>(<span class="kw">na.omit</span>(input_var)  ),</span>
+<span id="cb34-33"><a href="data-sources-1.html#cb34-33" aria-hidden="true"></a>            <span class="dt">nada_dates=</span><span class="kw">first</span>(<span class="kw">na.omit</span>(nada_dates)  ) </span>
+<span id="cb34-34"><a href="data-sources-1.html#cb34-34" aria-hidden="true"></a>             )</span>
+<span id="cb34-35"><a href="data-sources-1.html#cb34-35" aria-hidden="true"></a>    </span>
+<span id="cb34-36"><a href="data-sources-1.html#cb34-36" aria-hidden="true"></a>  </span>
+<span id="cb34-37"><a href="data-sources-1.html#cb34-37" aria-hidden="true"></a>  <span class="co">#Now calculate our SPI score for this indicator</span></span>
+<span id="cb34-38"><a href="data-sources-1.html#cb34-38" aria-hidden="true"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="op">:</span><span class="dv">2019</span>) {</span>
+<span id="cb34-39"><a href="data-sources-1.html#cb34-39" aria-hidden="true"></a>   temp &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span></span>
+<span id="cb34-40"><a href="data-sources-1.html#cb34-40" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">date=</span>i) <span class="op">%&gt;%</span></span>
+<span id="cb34-41"><a href="data-sources-1.html#cb34-41" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">recency_indicator=</span>((date<span class="op">&gt;=</span>indicator_date)) ) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#restrict to censuses that do not occur after reference date</span></span>
+<span id="cb34-42"><a href="data-sources-1.html#cb34-42" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">indicator_date=</span><span class="kw">if_else</span>(recency_indicator<span class="op">==</span><span class="ot">TRUE</span>, indicator_date, <span class="kw">as.numeric</span>(<span class="ot">NA</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb34-43"><a href="data-sources-1.html#cb34-43" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>(country, date) <span class="op">%&gt;%</span></span>
+<span id="cb34-44"><a href="data-sources-1.html#cb34-44" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">last_val=</span><span class="kw">max</span>(indicator_date, <span class="dt">na.rm=</span>T),</span>
+<span id="cb34-45"><a href="data-sources-1.html#cb34-45" aria-hidden="true"></a>      <span class="dt">input_var=</span><span class="kw">first</span>(input_var),</span>
+<span id="cb34-46"><a href="data-sources-1.html#cb34-46" aria-hidden="true"></a>      <span class="dt">nada_dates=</span><span class="kw">first</span>(nada_dates)) <span class="op">%&gt;%</span></span>
+<span id="cb34-47"><a href="data-sources-1.html#cb34-47" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">indicator=</span><span class="kw">case_when</span>(</span>
+<span id="cb34-48"><a href="data-sources-1.html#cb34-48" aria-hidden="true"></a>      (date<span class="op">-</span>last_val<span class="op">&lt;=</span><span class="dv">10</span>) <span class="op">&amp;</span><span class="st"> </span>(date<span class="op">-</span>last_val<span class="op">&gt;</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,</span>
+<span id="cb34-49"><a href="data-sources-1.html#cb34-49" aria-hidden="true"></a>      (date<span class="op">-</span>last_val<span class="op">&lt;=</span><span class="dv">20</span>) <span class="op">&amp;</span><span class="st"> </span>(date<span class="op">-</span>last_val<span class="op">&gt;</span><span class="dv">0</span>) <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>,</span>
+<span id="cb34-50"><a href="data-sources-1.html#cb34-50" aria-hidden="true"></a>      <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> )</span>
+<span id="cb34-51"><a href="data-sources-1.html#cb34-51" aria-hidden="true"></a>    )  <span class="op">%&gt;%</span></span>
+<span id="cb34-52"><a href="data-sources-1.html#cb34-52" aria-hidden="true"></a><span class="st">     </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb34-53"><a href="data-sources-1.html#cb34-53" aria-hidden="true"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">c</span>( <span class="st">&#39;country&#39;</span>, <span class="st">&#39;date&#39;</span>, <span class="st">&#39;input_var&#39;</span>,<span class="st">&#39;nada_dates&#39;</span>, <span class="st">&#39;indicator&#39;</span>)  ) <span class="op">%&gt;%</span></span>
+<span id="cb34-54"><a href="data-sources-1.html#cb34-54" aria-hidden="true"></a><span class="st">    </span><span class="kw">arrange</span>(date, country)</span>
+<span id="cb34-55"><a href="data-sources-1.html#cb34-55" aria-hidden="true"></a></span>
+<span id="cb34-56"><a href="data-sources-1.html#cb34-56" aria-hidden="true"></a>    <span class="kw">assign</span>(<span class="kw">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="dt">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
+<span id="cb34-57"><a href="data-sources-1.html#cb34-57" aria-hidden="true"></a>  }</span>
+<span id="cb34-58"><a href="data-sources-1.html#cb34-58" aria-hidden="true"></a></span>
+<span id="cb34-59"><a href="data-sources-1.html#cb34-59" aria-hidden="true"></a>  temp &lt;-<span class="st"> </span>temp_<span class="dv">2019</span></span>
+<span id="cb34-60"><a href="data-sources-1.html#cb34-60" aria-hidden="true"></a>  </span>
+<span id="cb34-61"><a href="data-sources-1.html#cb34-61" aria-hidden="true"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="op">:</span><span class="dv">2018</span>) {</span>
+<span id="cb34-62"><a href="data-sources-1.html#cb34-62" aria-hidden="true"></a>    temp &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(temp, <span class="kw">get</span>(<span class="kw">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="dt">sep=</span><span class="st">&quot;_&quot;</span>)))</span>
+<span id="cb34-63"><a href="data-sources-1.html#cb34-63" aria-hidden="true"></a>  }</span>
+<span id="cb34-64"><a href="data-sources-1.html#cb34-64" aria-hidden="true"></a>  temp</span>
+<span id="cb34-65"><a href="data-sources-1.html#cb34-65" aria-hidden="true"></a>}</span>
+<span id="cb34-66"><a href="data-sources-1.html#cb34-66" aria-hidden="true"></a></span>
+<span id="cb34-67"><a href="data-sources-1.html#cb34-67" aria-hidden="true"></a></span>
+<span id="cb34-68"><a href="data-sources-1.html#cb34-68" aria-hidden="true"></a></span>
+<span id="cb34-69"><a href="data-sources-1.html#cb34-69" aria-hidden="true"></a>survey_fun  &lt;-<span class="st"> </span><span class="cf">function</span>(data, input_var) {</span>
+<span id="cb34-70"><a href="data-sources-1.html#cb34-70" aria-hidden="true"></a>  </span>
+<span id="cb34-71"><a href="data-sources-1.html#cb34-71" aria-hidden="true"></a>  data &lt;-<span class="st"> </span>data</span>
+<span id="cb34-72"><a href="data-sources-1.html#cb34-72" aria-hidden="true"></a>  input_var &lt;-<span class="st"> </span>input_var</span>
+<span id="cb34-73"><a href="data-sources-1.html#cb34-73" aria-hidden="true"></a></span>
+<span id="cb34-74"><a href="data-sources-1.html#cb34-74" aria-hidden="true"></a>  <span class="co">#read in csv file that was manually collected.</span></span>
+<span id="cb34-75"><a href="data-sources-1.html#cb34-75" aria-hidden="true"></a>  cs_df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/raw/&#39;</span>, data, <span class="st">&quot;_145.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span> )) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#bring in data collected for an original set of 145 countries, then an additional 10, then several more high income counries.</span></span>
+<span id="cb34-76"><a href="data-sources-1.html#cb34-76" aria-hidden="true"></a><span class="st">    </span><span class="kw">bind_rows</span>(<span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/raw/&#39;</span>, data, <span class="st">&quot;_10.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span> ))) <span class="op">%&gt;%</span></span>
+<span id="cb34-77"><a href="data-sources-1.html#cb34-77" aria-hidden="true"></a><span class="st">    </span><span class="kw">bind_rows</span>(<span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/raw/&#39;</span>, data, <span class="st">&quot;_high.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span> ))) <span class="op">%&gt;%</span><span class="st">            </span></span>
+<span id="cb34-78"><a href="data-sources-1.html#cb34-78" aria-hidden="true"></a><span class="st">    </span><span class="kw">write_excel_csv</span>(<span class="dt">path =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/&#39;</span>, data, <span class="st">&quot;_manual.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb34-79"><a href="data-sources-1.html#cb34-79" aria-hidden="true"></a><span class="st">    </span><span class="kw">distinct</span>() <span class="op">%&gt;%</span></span>
+<span id="cb34-80"><a href="data-sources-1.html#cb34-80" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>( country) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-81"><a href="data-sources-1.html#cb34-81" aria-hidden="true"></a><span class="st">    </span><span class="kw">rename</span>(<span class="dt">input_var =</span> <span class="op">!!</span><span class="st"> </span>input_var) <span class="op">%&gt;%</span></span>
+<span id="cb34-82"><a href="data-sources-1.html#cb34-82" aria-hidden="true"></a><span class="st">    </span><span class="kw">nest</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># The next chunk of code will split our string with the years of the census (i.e. &quot;2000, 2010&quot;) in to separate rows.  We will then aggregate up.</span></span>
+<span id="cb34-83"><a href="data-sources-1.html#cb34-83" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
+<span id="cb34-84"><a href="data-sources-1.html#cb34-84" aria-hidden="true"></a>      <span class="dt">temp_col =</span> <span class="kw">map</span>(</span>
+<span id="cb34-85"><a href="data-sources-1.html#cb34-85" aria-hidden="true"></a>        data, </span>
+<span id="cb34-86"><a href="data-sources-1.html#cb34-86" aria-hidden="true"></a>        <span class="op">~</span><span class="st"> </span><span class="kw">str_extract_all</span>(.x<span class="op">$</span>input_var, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d{4}&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-87"><a href="data-sources-1.html#cb34-87" aria-hidden="true"></a><span class="st">          </span><span class="kw">flatten</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-88"><a href="data-sources-1.html#cb34-88" aria-hidden="true"></a><span class="st">          </span><span class="kw">map_chr</span>(<span class="op">~</span><span class="kw">return</span>(.x)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-89"><a href="data-sources-1.html#cb34-89" aria-hidden="true"></a><span class="st">          </span><span class="kw">as_tibble</span>()</span>
+<span id="cb34-90"><a href="data-sources-1.html#cb34-90" aria-hidden="true"></a>      )</span>
+<span id="cb34-91"><a href="data-sources-1.html#cb34-91" aria-hidden="true"></a>    ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-92"><a href="data-sources-1.html#cb34-92" aria-hidden="true"></a><span class="st">    </span><span class="kw">unnest</span>(<span class="dt">keep_empty =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Now we have a database with the observations equal to Country*Census observations.  From here we can calculate latest census, etc.</span></span>
+<span id="cb34-93"><a href="data-sources-1.html#cb34-93" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">indicator_date=</span><span class="kw">as.numeric</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb34-94"><a href="data-sources-1.html#cb34-94" aria-hidden="true"></a><span class="st">    </span><span class="kw">select</span>(<span class="st">&#39;country&#39;</span>,<span class="st">&#39;indicator_date&#39;</span>,<span class="st">&#39;input_var&#39;</span>)</span>
+<span id="cb34-95"><a href="data-sources-1.html#cb34-95" aria-hidden="true"></a>  </span>
+<span id="cb34-96"><a href="data-sources-1.html#cb34-96" aria-hidden="true"></a>  <span class="co">#append nada data on surveys</span></span>
+<span id="cb34-97"><a href="data-sources-1.html#cb34-97" aria-hidden="true"></a>  cs_df &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span></span>
+<span id="cb34-98"><a href="data-sources-1.html#cb34-98" aria-hidden="true"></a><span class="st">    </span><span class="kw">bind_rows</span>(<span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/&#39;</span>, data, <span class="st">&quot;_NADA.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span> ),</span>
+<span id="cb34-99"><a href="data-sources-1.html#cb34-99" aria-hidden="true"></a>                       <span class="dt">col_types =</span> <span class="kw">list</span>(<span class="kw">col_character</span>(),<span class="kw">col_double</span>(), <span class="kw">col_character</span>()))) <span class="op">%&gt;%</span></span>
+<span id="cb34-100"><a href="data-sources-1.html#cb34-100" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>(country, indicator_date) <span class="op">%&gt;%</span></span>
+<span id="cb34-101"><a href="data-sources-1.html#cb34-101" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">input_var=</span><span class="kw">first</span>(<span class="kw">na.omit</span>(input_var)  ),</span>
+<span id="cb34-102"><a href="data-sources-1.html#cb34-102" aria-hidden="true"></a>            <span class="dt">nada_dates=</span><span class="kw">first</span>(<span class="kw">na.omit</span>(nada_dates)  ) </span>
+<span id="cb34-103"><a href="data-sources-1.html#cb34-103" aria-hidden="true"></a>             )</span>
+<span id="cb34-104"><a href="data-sources-1.html#cb34-104" aria-hidden="true"></a>    </span>
+<span id="cb34-105"><a href="data-sources-1.html#cb34-105" aria-hidden="true"></a>  </span>
+<span id="cb34-106"><a href="data-sources-1.html#cb34-106" aria-hidden="true"></a>  <span class="co">#Now calculate our SPI score for this indicator</span></span>
+<span id="cb34-107"><a href="data-sources-1.html#cb34-107" aria-hidden="true"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="op">:</span><span class="dv">2019</span>) {</span>
+<span id="cb34-108"><a href="data-sources-1.html#cb34-108" aria-hidden="true"></a>   temp &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span></span>
+<span id="cb34-109"><a href="data-sources-1.html#cb34-109" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">date=</span>i) <span class="op">%&gt;%</span></span>
+<span id="cb34-110"><a href="data-sources-1.html#cb34-110" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">window=</span><span class="kw">case_when</span>( <span class="co">#extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period</span></span>
+<span id="cb34-111"><a href="data-sources-1.html#cb34-111" aria-hidden="true"></a>      date<span class="op">==</span><span class="dv">2019</span> <span class="op">~</span><span class="st"> </span><span class="dv">12</span>,</span>
+<span id="cb34-112"><a href="data-sources-1.html#cb34-112" aria-hidden="true"></a>      date<span class="op">==</span><span class="dv">2018</span> <span class="op">~</span><span class="st"> </span><span class="dv">11</span>,</span>
+<span id="cb34-113"><a href="data-sources-1.html#cb34-113" aria-hidden="true"></a>      <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">10</span></span>
+<span id="cb34-114"><a href="data-sources-1.html#cb34-114" aria-hidden="true"></a>    )) <span class="op">%&gt;%</span></span>
+<span id="cb34-115"><a href="data-sources-1.html#cb34-115" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">recency_indicator=</span>((date<span class="op">-</span>indicator_date<span class="op">&lt;=</span>window) <span class="op">&amp;</span><span class="st"> </span>(date<span class="op">-</span>indicator_date<span class="op">&gt;=</span><span class="dv">0</span>)) ) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#restrict to surveys inside 10 year period </span></span>
+<span id="cb34-116"><a href="data-sources-1.html#cb34-116" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>( country, date) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#group by country and create indicator for how many surveys over 10 year period</span></span>
+<span id="cb34-117"><a href="data-sources-1.html#cb34-117" aria-hidden="true"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">indicator=</span><span class="kw">case_when</span>(</span>
+<span id="cb34-118"><a href="data-sources-1.html#cb34-118" aria-hidden="true"></a>      <span class="kw">sum</span>(recency_indicator)<span class="op">&gt;=</span><span class="dv">3</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb34-119"><a href="data-sources-1.html#cb34-119" aria-hidden="true"></a>      <span class="kw">sum</span>(recency_indicator)<span class="op">==</span><span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="fl">0.6</span>, </span>
+<span id="cb34-120"><a href="data-sources-1.html#cb34-120" aria-hidden="true"></a>      <span class="kw">sum</span>(recency_indicator)<span class="op">==</span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="fl">0.3</span>, </span>
+<span id="cb34-121"><a href="data-sources-1.html#cb34-121" aria-hidden="true"></a>      <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> ),</span>
+<span id="cb34-122"><a href="data-sources-1.html#cb34-122" aria-hidden="true"></a>      <span class="dt">input_var=</span><span class="kw">first</span>(input_var),</span>
+<span id="cb34-123"><a href="data-sources-1.html#cb34-123" aria-hidden="true"></a>      <span class="dt">nada_dates=</span><span class="kw">first</span>(nada_dates)) <span class="op">%&gt;%</span></span>
+<span id="cb34-124"><a href="data-sources-1.html#cb34-124" aria-hidden="true"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb34-125"><a href="data-sources-1.html#cb34-125" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">c</span>( <span class="st">&#39;country&#39;</span>, <span class="st">&#39;date&#39;</span>, <span class="st">&#39;input_var&#39;</span>,<span class="st">&#39;nada_dates&#39;</span>, <span class="st">&#39;indicator&#39;</span>)  ) <span class="op">%&gt;%</span></span>
+<span id="cb34-126"><a href="data-sources-1.html#cb34-126" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country)</span>
+<span id="cb34-127"><a href="data-sources-1.html#cb34-127" aria-hidden="true"></a></span>
+<span id="cb34-128"><a href="data-sources-1.html#cb34-128" aria-hidden="true"></a>    <span class="kw">assign</span>(<span class="kw">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="dt">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
+<span id="cb34-129"><a href="data-sources-1.html#cb34-129" aria-hidden="true"></a>  }</span>
+<span id="cb34-130"><a href="data-sources-1.html#cb34-130" aria-hidden="true"></a></span>
+<span id="cb34-131"><a href="data-sources-1.html#cb34-131" aria-hidden="true"></a>  temp &lt;-<span class="st"> </span>temp_<span class="dv">2019</span></span>
+<span id="cb34-132"><a href="data-sources-1.html#cb34-132" aria-hidden="true"></a>  </span>
+<span id="cb34-133"><a href="data-sources-1.html#cb34-133" aria-hidden="true"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="op">:</span><span class="dv">2018</span>) {</span>
+<span id="cb34-134"><a href="data-sources-1.html#cb34-134" aria-hidden="true"></a>    temp &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(temp, <span class="kw">get</span>(<span class="kw">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="dt">sep=</span><span class="st">&quot;_&quot;</span>)))</span>
+<span id="cb34-135"><a href="data-sources-1.html#cb34-135" aria-hidden="true"></a>  }</span>
+<span id="cb34-136"><a href="data-sources-1.html#cb34-136" aria-hidden="true"></a>  temp</span>
+<span id="cb34-137"><a href="data-sources-1.html#cb34-137" aria-hidden="true"></a>}</span>
+<span id="cb34-138"><a href="data-sources-1.html#cb34-138" aria-hidden="true"></a></span>
+<span id="cb34-139"><a href="data-sources-1.html#cb34-139" aria-hidden="true"></a></span>
+<span id="cb34-140"><a href="data-sources-1.html#cb34-140" aria-hidden="true"></a><span class="co">#Population Censuses</span></span>
+<span id="cb34-141"><a href="data-sources-1.html#cb34-141" aria-hidden="true"></a>cs1_df &lt;-pop_census_df <span class="op">%&gt;%</span></span>
+<span id="cb34-142"><a href="data-sources-1.html#cb34-142" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">RAW.D4.1.1.POPU.CENSUS=</span>Latest.population.census,</span>
+<span id="cb34-143"><a href="data-sources-1.html#cb34-143" aria-hidden="true"></a>         <span class="dt">SPI.D4.1.1.POPU=</span>indicator) <span class="op">%&gt;%</span></span>
+<span id="cb34-144"><a href="data-sources-1.html#cb34-144" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="kw">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb34-145"><a href="data-sources-1.html#cb34-145" aria-hidden="true"></a></span>
+<span id="cb34-146"><a href="data-sources-1.html#cb34-146" aria-hidden="true"></a><span class="co">#Agriculture census  </span></span>
+<span id="cb34-147"><a href="data-sources-1.html#cb34-147" aria-hidden="true"></a>cs2_df &lt;-ag_census_df <span class="op">%&gt;%</span></span>
+<span id="cb34-148"><a href="data-sources-1.html#cb34-148" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">RAW.D4.1.2.AGRI.CENSUS=</span>Latest.agricultural.census,</span>
+<span id="cb34-149"><a href="data-sources-1.html#cb34-149" aria-hidden="true"></a>         <span class="dt">SPI.D4.1.2.AGRI=</span>indicator) <span class="op">%&gt;%</span></span>
+<span id="cb34-150"><a href="data-sources-1.html#cb34-150" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="kw">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb34-151"><a href="data-sources-1.html#cb34-151" aria-hidden="true"></a></span>
+<span id="cb34-152"><a href="data-sources-1.html#cb34-152" aria-hidden="true"></a><span class="co">#Business/establishment census </span></span>
+<span id="cb34-153"><a href="data-sources-1.html#cb34-153" aria-hidden="true"></a>cs3_df &lt;-<span class="kw">census_fun</span>(<span class="st">&#39;D4.1.3.CEN.BIZZ&#39;</span>, <span class="st">&#39;BIZZ.CENSUS&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb34-154"><a href="data-sources-1.html#cb34-154" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">RAW.D4.1.3.BIZZ.CENSUS=</span>input_var,</span>
+<span id="cb34-155"><a href="data-sources-1.html#cb34-155" aria-hidden="true"></a>         <span class="dt">RAW.D4.1.3.BIZZ.CENSUS_nada=</span>nada_dates,</span>
+<span id="cb34-156"><a href="data-sources-1.html#cb34-156" aria-hidden="true"></a>         <span class="dt">SPI.D4.1.3.BIZZ=</span>indicator) <span class="op">%&gt;%</span></span>
+<span id="cb34-157"><a href="data-sources-1.html#cb34-157" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="kw">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb34-158"><a href="data-sources-1.html#cb34-158" aria-hidden="true"></a></span>
+<span id="cb34-159"><a href="data-sources-1.html#cb34-159" aria-hidden="true"></a><span class="co">#Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey</span></span>
+<span id="cb34-160"><a href="data-sources-1.html#cb34-160" aria-hidden="true"></a>cs4_df &lt;-<span class="kw">survey_fun</span>(<span class="st">&#39;D4.1.4.SVY.HOUS&#39;</span>, <span class="st">&#39;HOUS.SURVEYS&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb34-161"><a href="data-sources-1.html#cb34-161" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">RAW.D4.1.4.HOUS.SURVEYS=</span>input_var,</span>
+<span id="cb34-162"><a href="data-sources-1.html#cb34-162" aria-hidden="true"></a>         <span class="dt">RAW.D4.1.4.HOUS.SURVEYS_nada=</span>nada_dates,</span>
+<span id="cb34-163"><a href="data-sources-1.html#cb34-163" aria-hidden="true"></a>         <span class="dt">SPI.D4.1.4.HOUS=</span>indicator) <span class="op">%&gt;%</span></span>
+<span id="cb34-164"><a href="data-sources-1.html#cb34-164" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="kw">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb34-165"><a href="data-sources-1.html#cb34-165" aria-hidden="true"></a></span>
+<span id="cb34-166"><a href="data-sources-1.html#cb34-166" aria-hidden="true"></a><span class="co">#Agriculture survey </span></span>
+<span id="cb34-167"><a href="data-sources-1.html#cb34-167" aria-hidden="true"></a>cs5_df &lt;-<span class="kw">survey_fun</span>(<span class="st">&#39;D4.1.5.SVY.AGRI&#39;</span>, <span class="st">&#39;AGRI.SURVEYS&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb34-168"><a href="data-sources-1.html#cb34-168" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">RAW.D4.1.5.AGRI.SURVEYS=</span>input_var,</span>
+<span id="cb34-169"><a href="data-sources-1.html#cb34-169" aria-hidden="true"></a>         <span class="dt">RAW.D4.1.5.AGRI.SURVEYS_nada=</span>nada_dates,</span>
+<span id="cb34-170"><a href="data-sources-1.html#cb34-170" aria-hidden="true"></a>         <span class="dt">SPI.D4.1.5.AGSVY=</span>indicator) <span class="op">%&gt;%</span></span>
+<span id="cb34-171"><a href="data-sources-1.html#cb34-171" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="kw">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb34-172"><a href="data-sources-1.html#cb34-172" aria-hidden="true"></a></span>
+<span id="cb34-173"><a href="data-sources-1.html#cb34-173" aria-hidden="true"></a><span class="co">#Labor Force Survey </span></span>
+<span id="cb34-174"><a href="data-sources-1.html#cb34-174" aria-hidden="true"></a>cs6_df &lt;-<span class="kw">survey_fun</span>(<span class="st">&#39;D4.1.6.SVY.LABR&#39;</span>, <span class="st">&#39;LABR.SURVEYS&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb34-175"><a href="data-sources-1.html#cb34-175" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">RAW.D4.1.6.LABR.SURVEYS=</span>input_var,</span>
+<span id="cb34-176"><a href="data-sources-1.html#cb34-176" aria-hidden="true"></a>         <span class="dt">RAW.D4.1.6.LABR.SURVEYS_nada=</span>nada_dates,</span>
+<span id="cb34-177"><a href="data-sources-1.html#cb34-177" aria-hidden="true"></a>         <span class="dt">SPI.D4.1.6.LABR=</span>indicator) <span class="op">%&gt;%</span></span>
+<span id="cb34-178"><a href="data-sources-1.html#cb34-178" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="kw">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb34-179"><a href="data-sources-1.html#cb34-179" aria-hidden="true"></a></span>
+<span id="cb34-180"><a href="data-sources-1.html#cb34-180" aria-hidden="true"></a><span class="co">#Health/Demographic survey</span></span>
+<span id="cb34-181"><a href="data-sources-1.html#cb34-181" aria-hidden="true"></a>cs7_df &lt;-<span class="kw">survey_fun</span>(<span class="st">&#39;D4.1.7.SVY.HLTH&#39;</span>, <span class="st">&#39;HLTH.SURVEYS&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb34-182"><a href="data-sources-1.html#cb34-182" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">RAW.D4.1.7.HLTH.SURVEYS=</span>input_var,</span>
+<span id="cb34-183"><a href="data-sources-1.html#cb34-183" aria-hidden="true"></a>         <span class="dt">RAW.D4.1.7.HLTH.SURVEYS_nada=</span>nada_dates,</span>
+<span id="cb34-184"><a href="data-sources-1.html#cb34-184" aria-hidden="true"></a>         <span class="dt">SPI.D4.1.7.HLTH=</span>indicator) <span class="op">%&gt;%</span></span>
+<span id="cb34-185"><a href="data-sources-1.html#cb34-185" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="kw">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb34-186"><a href="data-sources-1.html#cb34-186" aria-hidden="true"></a></span>
+<span id="cb34-187"><a href="data-sources-1.html#cb34-187" aria-hidden="true"></a><span class="co">#Business/establishment survey  </span></span>
+<span id="cb34-188"><a href="data-sources-1.html#cb34-188" aria-hidden="true"></a>cs8_df &lt;-<span class="kw">survey_fun</span>(<span class="st">&#39;D4.1.8.SVY.BIZZ&#39;</span>, <span class="st">&#39;BIZZ.SURVEYS&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb34-189"><a href="data-sources-1.html#cb34-189" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">RAW.D4.1.8.BIZZ.SURVEYS=</span>input_var,</span>
+<span id="cb34-190"><a href="data-sources-1.html#cb34-190" aria-hidden="true"></a>         <span class="dt">RAW.D4.1.8.BIZZ.SURVEYS_nada=</span>nada_dates,</span>
+<span id="cb34-191"><a href="data-sources-1.html#cb34-191" aria-hidden="true"></a>         <span class="dt">SPI.D4.1.8.BZSVY=</span>indicator) <span class="op">%&gt;%</span></span>
+<span id="cb34-192"><a href="data-sources-1.html#cb34-192" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="kw">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb34-193"><a href="data-sources-1.html#cb34-193" aria-hidden="true"></a></span>
+<span id="cb34-194"><a href="data-sources-1.html#cb34-194" aria-hidden="true"></a></span>
+<span id="cb34-195"><a href="data-sources-1.html#cb34-195" aria-hidden="true"></a><span class="co">#brind all censuses and surveys together</span></span>
+<span id="cb34-196"><a href="data-sources-1.html#cb34-196" aria-hidden="true"></a>cs_df &lt;-<span class="st"> </span>spi_df_empty <span class="op">%&gt;%</span></span>
+<span id="cb34-197"><a href="data-sources-1.html#cb34-197" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(cs1_df) <span class="op">%&gt;%</span></span>
+<span id="cb34-198"><a href="data-sources-1.html#cb34-198" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(cs2_df) <span class="op">%&gt;%</span></span>
+<span id="cb34-199"><a href="data-sources-1.html#cb34-199" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(cs3_df) <span class="op">%&gt;%</span></span>
+<span id="cb34-200"><a href="data-sources-1.html#cb34-200" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(cs4_df) <span class="op">%&gt;%</span></span>
+<span id="cb34-201"><a href="data-sources-1.html#cb34-201" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(cs5_df) <span class="op">%&gt;%</span></span>
+<span id="cb34-202"><a href="data-sources-1.html#cb34-202" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(cs6_df) <span class="op">%&gt;%</span></span>
+<span id="cb34-203"><a href="data-sources-1.html#cb34-203" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(cs7_df) <span class="op">%&gt;%</span></span>
+<span id="cb34-204"><a href="data-sources-1.html#cb34-204" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(cs8_df) </span>
+<span id="cb34-205"><a href="data-sources-1.html#cb34-205" aria-hidden="true"></a></span>
+<span id="cb34-206"><a href="data-sources-1.html#cb34-206" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
+<span id="cb34-207"><a href="data-sources-1.html#cb34-207" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb34-208"><a href="data-sources-1.html#cb34-208" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(cs_df)</span>
+<span id="cb34-209"><a href="data-sources-1.html#cb34-209" aria-hidden="true"></a></span>
+<span id="cb34-210"><a href="data-sources-1.html#cb34-210" aria-hidden="true"></a><span class="co">#now do the figures </span></span>
+<span id="cb34-211"><a href="data-sources-1.html#cb34-211" aria-hidden="true"></a>cs_df_map &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">1.</span>POPU))</span>
+<span id="cb34-212"><a href="data-sources-1.html#cb34-212" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.1.POPU&#39;</span>, <span class="st">&#39;Population Census Available in Past 20 Years in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/cs-1.png" width="960" /><img src="01_data_prep_files/figure-html/cs-2.png" width="960" /><img src="01_data_prep_files/figure-html/cs-3.png" width="960" /><img src="01_data_prep_files/figure-html/cs-4.png" width="960" /></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="data-sources-1.html#cb35-1" aria-hidden="true"></a>cs_df_map &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">2.</span>AGRI))</span>
+<span id="cb35-2"><a href="data-sources-1.html#cb35-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.2.AGRI&#39;</span>, <span class="st">&#39;Agriculture Census Available in Past 20 Years in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/cs-5.png" width="960" /><img src="01_data_prep_files/figure-html/cs-6.png" width="960" /><img src="01_data_prep_files/figure-html/cs-7.png" width="960" /><img src="01_data_prep_files/figure-html/cs-8.png" width="960" /></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="data-sources-1.html#cb36-1" aria-hidden="true"></a>cs_df_map &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">3.</span>BIZZ))</span>
+<span id="cb36-2"><a href="data-sources-1.html#cb36-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.3.BIZZ&#39;</span>, <span class="st">&#39;Business/Establishment Census Available in Past 20 Years in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/cs-9.png" width="960" /><img src="01_data_prep_files/figure-html/cs-10.png" width="960" /><img src="01_data_prep_files/figure-html/cs-11.png" width="960" /><img src="01_data_prep_files/figure-html/cs-12.png" width="960" /></p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="data-sources-1.html#cb37-1" aria-hidden="true"></a>cs_df_map &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">4.</span>HOUS))</span>
+<span id="cb37-2"><a href="data-sources-1.html#cb37-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.4.HOUS&#39;</span>, <span class="st">&#39;Household Survey Availablility in Past 10 Years in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/cs-13.png" width="960" /><img src="01_data_prep_files/figure-html/cs-14.png" width="960" /><img src="01_data_prep_files/figure-html/cs-15.png" width="960" /><img src="01_data_prep_files/figure-html/cs-16.png" width="960" /></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="data-sources-1.html#cb38-1" aria-hidden="true"></a>cs_df_map &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">5.</span>AGSVY))</span>
+<span id="cb38-2"><a href="data-sources-1.html#cb38-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.5.AGSVY&#39;</span>, <span class="st">&#39;Agriculture Survey Availablility in Past 10 Years in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/cs-17.png" width="960" /><img src="01_data_prep_files/figure-html/cs-18.png" width="960" /><img src="01_data_prep_files/figure-html/cs-19.png" width="960" /><img src="01_data_prep_files/figure-html/cs-20.png" width="960" /></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="data-sources-1.html#cb39-1" aria-hidden="true"></a>cs_df_map &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">6.</span>LABR))</span>
+<span id="cb39-2"><a href="data-sources-1.html#cb39-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.6.LABR&#39;</span>, <span class="st">&#39;Labor Force Survey Availablility in Past 10 Years in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/cs-21.png" width="960" /><img src="01_data_prep_files/figure-html/cs-22.png" width="960" /><img src="01_data_prep_files/figure-html/cs-23.png" width="960" /><img src="01_data_prep_files/figure-html/cs-24.png" width="960" /></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="data-sources-1.html#cb40-1" aria-hidden="true"></a>cs_df_map &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">7.</span>HLTH))</span>
+<span id="cb40-2"><a href="data-sources-1.html#cb40-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.7.HLTH&#39;</span>, <span class="st">&#39;Health Survey Availablility in Past 10 Years in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/cs-25.png" width="960" /><img src="01_data_prep_files/figure-html/cs-26.png" width="960" /><img src="01_data_prep_files/figure-html/cs-27.png" width="960" /><img src="01_data_prep_files/figure-html/cs-28.png" width="960" /></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="data-sources-1.html#cb41-1" aria-hidden="true"></a>cs_df_map &lt;-<span class="st"> </span>cs_df <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">8.</span>BZSVY))</span>
+<span id="cb41-2"><a href="data-sources-1.html#cb41-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.8.BZSVY&#39;</span>, <span class="st">&#39;Business Survey Availablility in Past 10 Years in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/cs-29.png" width="960" /><img src="01_data_prep_files/figure-html/cs-30.png" width="960" /><img src="01_data_prep_files/figure-html/cs-31.png" width="960" /><img src="01_data_prep_files/figure-html/cs-32.png" width="960" /></p>
+</div>
+</div>
+</div>
+<div id="indicator-4.2-administrative-data" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Indicator 4.2: administrative data</h2>
+<p>The following indicator checks whether administrative data is available for the following topic areas: Social Protection, Education, Population &amp; Health, and Labor</p>
+<p>Average score for CRVS indicator. Social Protection, Education, and Labor admin data indicators not included because of lack of established methodology. While our team identified several promising sources for administrative data from the World Bank’s ASPIRE team, UNESCO, and ILO, incomplete coverage across countries made us drop these indicators from our index. A major research and data collection effort is needed from all custodian agencies to fill in this information, so that a more comprehensive picture of administrative data availability can be produced.</p>
+<!-- ### Social Protection Admin Data -->
+<!-- -  Atlas of Social Protection Indicators of Resilience and Equity (ASPIRE) is compilation of Social Protection and Labor (SPL) indicators to analyze scope and performance of SPL programs.    -->
+<!-- - ASPIRE has indicators for 136 countries on:     -->
+<!--   * Social assistance    -->
+<!--   * Social insurance     -->
+<!--   * Labor market programs  -->
+<!-- - Based on both program-level administrative data and national household survey data     -->
+<!-- - Data extends from 2001 to 2018 -->
+<!-- Scoring is 1 if administrative data is available to produce beneficiary counts or expenditures for any social protection and labor program, 0 otherwise.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score. -->
+<!-- ### Education Admin Data -->
+<!-- * UNESCO UIS has database containing data we can use on administrative data systems.  Database is accessible using the UIS bulk download service at https://apiportal.uis.unesco.org/bdds.  Data was last updated on September 29, 2020.   -->
+<!-- * We score countries based on whether there is: -->
+<!--   * Data tracking SDG 4.1.2 Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education     -->
+<!--   <!-- * Data tracking whether countries produce the following from administrative data sources: -->
+<p>–&gt;</p>
+<!--   <!--     * Out-of-school rate by school age and sex -->
+<p>–&gt;
+<!--   <!--     * 4.2.2 Participation rate in organized learning (one year before the official primary entry age), by sex --> –&gt;</p>
+<!-- In order to score this indicator, we calculate the fraction of the indicators that were produced in a country in a year.  In order to smooth out variation from year to year in reporting or conducting national assessments, we take a moving 5 year average. -->
+<div id="population-health-admin-data" class="section level3" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Population &amp; Health Admin Data</h3>
+<ul>
+<li>This indicator is formed using World Bank metadata on whether the Civil Registration and Vital Statistics (CRVS) system is complete in the country.</li>
+</ul>
+<p>Civil registration is the act of recording and documenting of vital events in a person’s life (including birth, marriage, divorce, adoption, and death and cause of death) and is a fundamental function of national governments. Birth registration establishes an individual’s legal identity at birth. A legal identity, name, nationality, and proof of age, are important human rights. They enable individuals to be included in various government, social and private services, and include the right to vote, etc. Vital statistics are compiled using civil registration information on these vital events. The availability of reliable and up-to-date vital statistics depends on the level of development of civil registration programs. An effective civil registration and vital statistics (CRVS) system is critical for planning and monitoring programs across several sectors.</p>
+<p>Data comes from the UNSD Global SDG monitoring database and also the WDI. Scoring is as follows:<br />
+1 Points. Both of at least 90% of births registered and at least 75% of deaths registered
+0.5 Points. One of at least 90% of births registered or at least 75% of deaths registered
+0 Points. Neither</p>
+<p>Source: World Bank WDI Metadata.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="data-sources-1.html#cb42-1" aria-hidden="true"></a><span class="co">#read in data from UNSD database on SDGs</span></span>
+<span id="cb42-2"><a href="data-sources-1.html#cb42-2" aria-hidden="true"></a>df_birth &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file=</span><span class="kw">paste</span>(raw_dir, <span class="st">&#39;4.2_SOAD&#39;</span>, <span class="st">&#39;SG_REG_BRTH90N.csv&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#Countries with birth registration data that are at least 90 percent complete (1 = YES; 0 = NO)</span></span>
+<span id="cb42-3"><a href="data-sources-1.html#cb42-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(date<span class="op">&gt;=</span><span class="dv">2015</span> <span class="op">&amp;</span><span class="st"> </span>date<span class="op">&lt;=</span><span class="dv">2019</span>) <span class="op">%&gt;%</span></span>
+<span id="cb42-4"><a href="data-sources-1.html#cb42-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(spi_df_empty) <span class="op">%&gt;%</span></span>
+<span id="cb42-5"><a href="data-sources-1.html#cb42-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">transmute</span>(</span>
+<span id="cb42-6"><a href="data-sources-1.html#cb42-6" aria-hidden="true"></a>    <span class="dt">iso3c=</span>iso3c,</span>
+<span id="cb42-7"><a href="data-sources-1.html#cb42-7" aria-hidden="true"></a>    <span class="dt">country=</span>country,</span>
+<span id="cb42-8"><a href="data-sources-1.html#cb42-8" aria-hidden="true"></a>    <span class="dt">date=</span>date,</span>
+<span id="cb42-9"><a href="data-sources-1.html#cb42-9" aria-hidden="true"></a>    <span class="dt">RAW.D4.2.3.BRTH90=</span>ind_value,</span>
+<span id="cb42-10"><a href="data-sources-1.html#cb42-10" aria-hidden="true"></a>    <span class="dt">SPI.D4.2.3.BRTH90=</span><span class="kw">if_else</span>(ind_value<span class="op">==</span><span class="dv">1</span>,<span class="fl">0.5</span>,<span class="dv">0</span>)</span>
+<span id="cb42-11"><a href="data-sources-1.html#cb42-11" aria-hidden="true"></a>  )</span>
+<span id="cb42-12"><a href="data-sources-1.html#cb42-12" aria-hidden="true"></a></span>
+<span id="cb42-13"><a href="data-sources-1.html#cb42-13" aria-hidden="true"></a>df_death &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file=</span><span class="kw">paste</span>(raw_dir, <span class="st">&#39;4.2_SOAD&#39;</span>, <span class="st">&#39;SG_REG_DETH75N.csv&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#Countries with death registration data that are at least 75 percent complete (1 = YES; 0 = NO)</span></span>
+<span id="cb42-14"><a href="data-sources-1.html#cb42-14" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(date<span class="op">&gt;=</span><span class="dv">2015</span><span class="op">&amp;</span><span class="st"> </span>date<span class="op">&lt;=</span><span class="dv">2019</span>) <span class="op">%&gt;%</span></span>
+<span id="cb42-15"><a href="data-sources-1.html#cb42-15" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(spi_df_empty) <span class="op">%&gt;%</span></span>
+<span id="cb42-16"><a href="data-sources-1.html#cb42-16" aria-hidden="true"></a><span class="st">    </span><span class="kw">transmute</span>(</span>
+<span id="cb42-17"><a href="data-sources-1.html#cb42-17" aria-hidden="true"></a>    <span class="dt">iso3c=</span>iso3c,</span>
+<span id="cb42-18"><a href="data-sources-1.html#cb42-18" aria-hidden="true"></a>    <span class="dt">country=</span>country,</span>
+<span id="cb42-19"><a href="data-sources-1.html#cb42-19" aria-hidden="true"></a>    <span class="dt">date=</span>date,</span>
+<span id="cb42-20"><a href="data-sources-1.html#cb42-20" aria-hidden="true"></a>    <span class="dt">RAW.D4.2.3.DETH75=</span>ind_value,</span>
+<span id="cb42-21"><a href="data-sources-1.html#cb42-21" aria-hidden="true"></a>    <span class="dt">SPI.D4.2.3.DETH75=</span><span class="kw">if_else</span>(ind_value<span class="op">==</span><span class="dv">1</span>,<span class="fl">0.5</span>,<span class="dv">0</span>)</span>
+<span id="cb42-22"><a href="data-sources-1.html#cb42-22" aria-hidden="true"></a>  )</span>
+<span id="cb42-23"><a href="data-sources-1.html#cb42-23" aria-hidden="true"></a></span>
+<span id="cb42-24"><a href="data-sources-1.html#cb42-24" aria-hidden="true"></a><span class="co">#supplement with wdi data</span></span>
+<span id="cb42-25"><a href="data-sources-1.html#cb42-25" aria-hidden="true"></a>crvs_wdi &lt;-<span class="st"> </span>WDI_metadata <span class="op">%&gt;%</span></span>
+<span id="cb42-26"><a href="data-sources-1.html#cb42-26" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(Country.Code, date, Vital.registration.complete) <span class="op">%&gt;%</span></span>
+<span id="cb42-27"><a href="data-sources-1.html#cb42-27" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">iso3c=</span>Country.Code,</span>
+<span id="cb42-28"><a href="data-sources-1.html#cb42-28" aria-hidden="true"></a>         <span class="dt">SPI.D4.2.3.WDI=</span><span class="kw">if_else</span>(<span class="kw">grepl</span>(<span class="st">&#39;Yes&#39;</span>, Vital.registration.complete),<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb42-29"><a href="data-sources-1.html#cb42-29" aria-hidden="true"></a>         <span class="dt">RAW.D4.2.3.CRVS.WDI=</span>Vital.registration.complete) <span class="op">%&gt;%</span></span>
+<span id="cb42-30"><a href="data-sources-1.html#cb42-30" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>Country.Code, <span class="op">-</span>Vital.registration.complete)</span>
+<span id="cb42-31"><a href="data-sources-1.html#cb42-31" aria-hidden="true"></a></span>
+<span id="cb42-32"><a href="data-sources-1.html#cb42-32" aria-hidden="true"></a>crvs_df &lt;-<span class="st"> </span>df_birth <span class="op">%&gt;%</span></span>
+<span id="cb42-33"><a href="data-sources-1.html#cb42-33" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(df_death) <span class="op">%&gt;%</span></span>
+<span id="cb42-34"><a href="data-sources-1.html#cb42-34" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(crvs_wdi) <span class="op">%&gt;%</span></span>
+<span id="cb42-35"><a href="data-sources-1.html#cb42-35" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb42-36"><a href="data-sources-1.html#cb42-36" aria-hidden="true"></a>         <span class="dt">SPI.D4.2.3.CRVS=</span>SPI.D4.<span class="dv">2</span>.<span class="fl">3.</span>DETH75<span class="op">+</span>SPI.D4.<span class="dv">2</span>.<span class="fl">3.</span>BRTH90,</span>
+<span id="cb42-37"><a href="data-sources-1.html#cb42-37" aria-hidden="true"></a>         <span class="dt">SPI.D4.2.3.CRVS=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(SPI.D4.<span class="dv">2</span>.<span class="fl">3.</span>CRVS),SPI.D4.<span class="dv">2</span>.<span class="fl">3.</span>WDI,SPI.D4.<span class="dv">2</span>.<span class="fl">3.</span>CRVS)) <span class="op">%&gt;%</span></span>
+<span id="cb42-38"><a href="data-sources-1.html#cb42-38" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>SPI.D4.<span class="dv">2</span>.<span class="fl">3.</span>WDI) <span class="op">%&gt;%</span></span>
+<span id="cb42-39"><a href="data-sources-1.html#cb42-39" aria-hidden="true"></a><span class="st">  </span><span class="kw">group_by</span>(country) <span class="op">%&gt;%</span></span>
+<span id="cb42-40"><a href="data-sources-1.html#cb42-40" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), na.locf, <span class="dt">na.rm=</span><span class="ot">FALSE</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#use carry forward to most recent value</span></span>
+<span id="cb42-41"><a href="data-sources-1.html#cb42-41" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="op">~</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(.),<span class="dv">0</span>,.))) <span class="op">%&gt;%</span></span>
+<span id="cb42-42"><a href="data-sources-1.html#cb42-42" aria-hidden="true"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb42-43"><a href="data-sources-1.html#cb42-43" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">c</span>( <span class="st">&#39;country&#39;</span>, <span class="st">&#39;date&#39;</span>,<span class="st">&#39;RAW.D4.2.3.BRTH90&#39;</span>, <span class="st">&#39;RAW.D4.2.3.DETH75&#39;</span>, <span class="st">&#39;RAW.D4.2.3.CRVS.WDI&#39;</span>, <span class="st">&#39;SPI.D4.2.3.CRVS&#39;</span>)  ) </span>
+<span id="cb42-44"><a href="data-sources-1.html#cb42-44" aria-hidden="true"></a></span>
+<span id="cb42-45"><a href="data-sources-1.html#cb42-45" aria-hidden="true"></a></span>
+<span id="cb42-46"><a href="data-sources-1.html#cb42-46" aria-hidden="true"></a></span>
+<span id="cb42-47"><a href="data-sources-1.html#cb42-47" aria-hidden="true"></a></span>
+<span id="cb42-48"><a href="data-sources-1.html#cb42-48" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
+<span id="cb42-49"><a href="data-sources-1.html#cb42-49" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb42-50"><a href="data-sources-1.html#cb42-50" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(crvs_df)</span>
+<span id="cb42-51"><a href="data-sources-1.html#cb42-51" aria-hidden="true"></a></span>
+<span id="cb42-52"><a href="data-sources-1.html#cb42-52" aria-hidden="true"></a></span>
+<span id="cb42-53"><a href="data-sources-1.html#cb42-53" aria-hidden="true"></a>crvs_map &lt;-<span class="st"> </span>crvs_df </span>
+<span id="cb42-54"><a href="data-sources-1.html#cb42-54" aria-hidden="true"></a></span>
+<span id="cb42-55"><a href="data-sources-1.html#cb42-55" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;crvs_map&#39;</span>, <span class="st">&#39;SPI.D4.2.3.CRVS&#39;</span>, <span class="st">&#39;Complete Civil Registration &amp; Vital Statistics Data Available According to WDI&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/crvs-1.png" width="960" /><img src="01_data_prep_files/figure-html/crvs-2.png" width="960" /><img src="01_data_prep_files/figure-html/crvs-3.png" width="960" /><img src="01_data_prep_files/figure-html/crvs-4.png" width="960" /></p>
+<!-- ### Labor Admin Data -->
+<!-- * ILO shared database containing all administrative data sources used to produce ILO statistics (ILOSTAT)    -->
+<!--   * May not be comprehensive of all administrative datasets available in a country     -->
+<!--   * But gives some indication of whether labor statistics produced using Admin data -->
+<!-- * Database contains the following admin sources:     -->
+<!--   * Insurance records    -->
+<!--   * Labour inspectorate records    -->
+<!--   * Records of employers' organizations    -->
+<!--   * Employment office records -->
+<!--   * Records of workers' organizations -->
+<!--   * Other administrative records and related sources -->
+<!-- * Database extends from 2010 to 2019 and covers 177 countries.  -->
+<!-- To produce a score, we calculate the percentage of these six admin sources above that are available for a country in a given year.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score. -->
+</div>
+</div>
+<div id="indicator-4.3-geospatial-data" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Indicator 4.3: geospatial data</h2>
+<p>New indicator based on references to geospatial data in metadata relating to content on NSO website. We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the ability of the national statistical system to produce geospatial data. A major research and data collection effort is needed via GGIM to fill in this information, so that a more comprehensive picture of geospatial data capability at the national level can be produced. Until this is done, it we cannot even assess the scale of the data gaps in a comparable way.</p>
+<div id="source-1" class="section level3" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> Source</h3>
+<p>Our source for this indicator is Open Data Watch. From Open Data watch:</p>
+<blockquote>
+<p>The Open Data Inventory (ODIN) assesses the coverage and openness of official statistics to help identify gaps, promote open data policies, improve access, and encourage dialogue
+between national statistical offices (NSOs) and data users. ODIN 2018/19 includes 178 countries, including most all OECD countries. Two-year comparisons are for all countries with
+two years of data between 2015-2017. Scores can be compared across topics and countries.</p>
+</blockquote>
+<p>We use their indicator on whether indicators are available at the first or second administrative level. To identify the first administrative levels, ODIN largely draws on the ISO 3166-2 standard. In many countries, first administrative levels refer to governorates, regions, or province. No official list exists for the second administrative level classifications. If geographical disaggregation exists that does not qualify as first administrative level, assume that the data are disaggregated to the second administrative level as long as the classification appears to be a further divisions of the first administrative level.</p>
+<p>Scoring for the ODIN indicators for geospatial information is below:</p>
+<ul>
+<li>1 point if all published data in a data category are available at first/second administrative level.<br />
+</li>
+<li>0.5 points if some published data in a data category are available at first/second administrative level.<br />
+</li>
+<li>0 points if no data are available at this level</li>
+</ul>
+<p>There are 21 data categories.</p>
+<p>Social Statistics<br />
+1. Population and Vital Statistics<br />
+2. Education Facilities<br />
+3. Education Outcomes<br />
+4. Health Facilities<br />
+5. Health Outcomes<br />
+6. Reproductive Health<br />
+7. Gender Statistics<br />
+8. Crime and Justice Statistics<br />
+9. Poverty Statistics</p>
+<p>Economic Statistics<br />
+10. National Accounts<br />
+11. Labor Statistics<br />
+12. Price Indexes<br />
+13. Government Finance<br />
+14. Money and Banking<br />
+15. International Trade<br />
+16. Balance of Payments</p>
+<p>Environmental Statistics<br />
+17. Land Use<br />
+18. Resource Use<br />
+19. Energy Use<br />
+20. Pollution<br />
+21. Built Environment</p>
+<p>For the first administrative unit: Money &amp; Banking, International Trade, and Balance of Payments are not scored for this element. For various indicators, lenient interpretations are used for first administrative divisions.</p>
+<p>For the second administrative unit: Money &amp; Banking, International Trade, Balance of Payments, National Accounts, Government Finance ,Pollution, Energy Use, Price Indexes, and Resource Use are not scored for this element. For various indicators within categories, second administrative level data is not required as well.</p>
+<p>In the scores we present below, we show a score between 0 and 1 with a maximum score of 1, which would mean the country has geo data in full for 100% of elements. A score of 0 indicates no data at all for any elements.</p>
+<p>More details on the geographic disaggregation considerations can be found in their technical manual:</p>
+<p><a href="https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit" class="uri">https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit</a></p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="data-sources-1.html#cb43-1" aria-hidden="true"></a>  <span class="co">#read in ODIN data</span></span>
+<span id="cb43-2"><a href="data-sources-1.html#cb43-2" aria-hidden="true"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2015</span><span class="op">:</span><span class="dv">2018</span>) {</span>
+<span id="cb43-3"><a href="data-sources-1.html#cb43-3" aria-hidden="true"></a>   temp &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">paste</span>(raw_dir, <span class="st">&#39;/2.2_DSOA/&#39;</span>,<span class="st">&#39;ODIN_&#39;</span>,i,<span class="st">&#39;.csv&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>))  <span class="op">%&gt;%</span></span>
+<span id="cb43-4"><a href="data-sources-1.html#cb43-4" aria-hidden="true"></a><span class="st">        </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair =</span> <span class="st">&#39;universal&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb43-5"><a href="data-sources-1.html#cb43-5" aria-hidden="true"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">date=</span>i) <span class="op">%&gt;%</span></span>
+<span id="cb43-6"><a href="data-sources-1.html#cb43-6" aria-hidden="true"></a><span class="st">        </span><span class="kw">filter</span>(Data.categories<span class="op">==</span><span class="st">&#39;All Categories&#39;</span>)</span>
+<span id="cb43-7"><a href="data-sources-1.html#cb43-7" aria-hidden="true"></a></span>
+<span id="cb43-8"><a href="data-sources-1.html#cb43-8" aria-hidden="true"></a>    <span class="kw">assign</span>(<span class="kw">paste</span>(<span class="st">&#39;geo_df&#39;</span>,i,<span class="dt">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
+<span id="cb43-9"><a href="data-sources-1.html#cb43-9" aria-hidden="true"></a>  }</span>
+<span id="cb43-10"><a href="data-sources-1.html#cb43-10" aria-hidden="true"></a></span>
+<span id="cb43-11"><a href="data-sources-1.html#cb43-11" aria-hidden="true"></a><span class="co">#bind different years together</span></span>
+<span id="cb43-12"><a href="data-sources-1.html#cb43-12" aria-hidden="true"></a>geo_df &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(geo_df_<span class="dv">2015</span>, geo_df_<span class="dv">2016</span>, geo_df_<span class="dv">2017</span>, geo_df_<span class="dv">2018</span>)</span>
+<span id="cb43-13"><a href="data-sources-1.html#cb43-13" aria-hidden="true"></a></span>
+<span id="cb43-14"><a href="data-sources-1.html#cb43-14" aria-hidden="true"></a></span>
+<span id="cb43-15"><a href="data-sources-1.html#cb43-15" aria-hidden="true"></a><span class="co">#create geo scores</span></span>
+<span id="cb43-16"><a href="data-sources-1.html#cb43-16" aria-hidden="true"></a>geo_df &lt;-<span class="st"> </span>geo_df <span class="op">%&gt;%</span></span>
+<span id="cb43-17"><a href="data-sources-1.html#cb43-17" aria-hidden="true"></a><span class="st">    </span><span class="kw">select</span>(Country.Code, date, First.administrative.level, Second.administrative.level) <span class="op">%&gt;%</span></span>
+<span id="cb43-18"><a href="data-sources-1.html#cb43-18" aria-hidden="true"></a><span class="st">    </span><span class="kw">rename</span>(<span class="dt">iso3c=</span>Country.Code) <span class="op">%&gt;%</span></span>
+<span id="cb43-19"><a href="data-sources-1.html#cb43-19" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>( iso3c) <span class="op">%&gt;%</span></span>
+<span id="cb43-20"><a href="data-sources-1.html#cb43-20" aria-hidden="true"></a><span class="st">    </span><span class="kw">right_join</span>(country_metadata) <span class="op">%&gt;%</span></span>
+<span id="cb43-21"><a href="data-sources-1.html#cb43-21" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">D4.3.GEO.first.admin.level=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(First.administrative.level), <span class="dv">0</span>, First.administrative.level),</span>
+<span id="cb43-22"><a href="data-sources-1.html#cb43-22" aria-hidden="true"></a>           <span class="dt">D4.3.GEO.second.admin.level=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(Second.administrative.level), <span class="dv">0</span>, Second.administrative.level))    </span>
+<span id="cb43-23"><a href="data-sources-1.html#cb43-23" aria-hidden="true"></a>  </span>
+<span id="cb43-24"><a href="data-sources-1.html#cb43-24" aria-hidden="true"></a></span>
+<span id="cb43-25"><a href="data-sources-1.html#cb43-25" aria-hidden="true"></a><span class="co">#do some quick renaming and formatting</span></span>
+<span id="cb43-26"><a href="data-sources-1.html#cb43-26" aria-hidden="true"></a>geo_df_temp1 &lt;-<span class="st"> </span>geo_df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb43-27"><a href="data-sources-1.html#cb43-27" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename_with</span>(<span class="op">~</span><span class="kw">paste</span>(<span class="st">&#39;RAW&#39;</span>,., <span class="dt">sep=</span><span class="st">&quot;.&quot;</span>), <span class="dt">.cols=</span><span class="kw">c</span>(<span class="st">&#39;D4.3.GEO.first.admin.level&#39;</span>, <span class="st">&#39;D4.3.GEO.second.admin.level&#39;</span>) ) </span>
+<span id="cb43-28"><a href="data-sources-1.html#cb43-28" aria-hidden="true"></a></span>
+<span id="cb43-29"><a href="data-sources-1.html#cb43-29" aria-hidden="true"></a></span>
+<span id="cb43-30"><a href="data-sources-1.html#cb43-30" aria-hidden="true"></a>geo_df_temp2 &lt;-<span class="st"> </span>geo_df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb43-31"><a href="data-sources-1.html#cb43-31" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">c</span>(<span class="st">&#39;D4.3.GEO.first.admin.level&#39;</span>, <span class="st">&#39;D4.3.GEO.second.admin.level&#39;</span>), <span class="op">~</span>.<span class="op">/</span><span class="dv">100</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb43-32"><a href="data-sources-1.html#cb43-32" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename_with</span>(<span class="op">~</span><span class="kw">paste</span>(<span class="st">&#39;SPI&#39;</span>,., <span class="dt">sep=</span><span class="st">&quot;.&quot;</span>), <span class="dt">.cols=</span><span class="kw">c</span>(<span class="st">&#39;D4.3.GEO.first.admin.level&#39;</span>, <span class="st">&#39;D4.3.GEO.second.admin.level&#39;</span>) ) </span>
+<span id="cb43-33"><a href="data-sources-1.html#cb43-33" aria-hidden="true"></a></span>
+<span id="cb43-34"><a href="data-sources-1.html#cb43-34" aria-hidden="true"></a>geo_df &lt;-<span class="st"> </span>geo_df_temp1 <span class="op">%&gt;%</span></span>
+<span id="cb43-35"><a href="data-sources-1.html#cb43-35" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(geo_df_temp2)</span>
+<span id="cb43-36"><a href="data-sources-1.html#cb43-36" aria-hidden="true"></a></span>
+<span id="cb43-37"><a href="data-sources-1.html#cb43-37" aria-hidden="true"></a><span class="co">#add to spi df</span></span>
+<span id="cb43-38"><a href="data-sources-1.html#cb43-38" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb43-39"><a href="data-sources-1.html#cb43-39" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(geo_df)</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/geo_plots-1.png" width="960" /><img src="01_data_prep_files/figure-html/geo_plots-2.png" width="960" /><img src="01_data_prep_files/figure-html/geo_plots-3.png" width="960" /><img src="01_data_prep_files/figure-html/geo_plots-4.png" width="960" /><img src="01_data_prep_files/figure-html/geo_plots-5.png" width="960" /><img src="01_data_prep_files/figure-html/geo_plots-6.png" width="960" /></p>
+</div>
+</div>
+<div id="indicator-4.4-privatecitizen-generated-data" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Indicator 4.4: private/citizen generated data</h2>
+<p>New indicator based on references to private/citizen generated data in metadata relating to content on NSO website. Not included because of lack of established methodology. Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.</p>
+<!-- ### Covid Mobility Data Availability  -->
+<!-- We have seen an increased use of private/citizen generated data during the COVID-19 pandemic.  One way in which it has been used is for tracking mobility of citizens to understand the social distancing measures citizens are taking.  As a measure of private/citizen generated data we make use of Apple and Google Mobility tracking data made publicly available during the pandemic. -->
+<!-- Source:  -->
+<!-- Google LLC "Google COVID-19 Community Mobility Reports". -->
+<!-- https://www.google.com/covid19/mobility/ Accessed: 2020-07-23. -->
+<!-- Apple "Mobility Trends Reports". -->
+<!-- https://www.apple.com/covid19/mobility/ Accessed: 2020-07-23. -->
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-products-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-infrastructure-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>

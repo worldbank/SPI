@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>7 Final Dataset | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
+  <meta name="description" content="7 Final Dataset | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="7 Final Dataset | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="7 Final Dataset | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  
+  
+  
+
+<meta name="author" content="Brian Stacy" />
+
+
+<meta name="date" content="2021-01-04" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-infrastructure-1.html"/>
+
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#motivation"><i class="fa fa-check"></i><b>1.1</b> Motivation</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#overview-of-the-new-spi"><i class="fa fa-check"></i><b>1.2</b> Overview of the New SPI</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#pillars-of-the-new-spi"><i class="fa fa-check"></i><b>1.3</b> Pillars of the new SPI</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#data-use"><i class="fa fa-check"></i><b>1.3.1</b> Data use</a></li>
+<li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#data-services"><i class="fa fa-check"></i><b>1.3.2</b> Data services</a></li>
+<li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#data-products"><i class="fa fa-check"></i><b>1.3.3</b> Data products</a></li>
+<li class="chapter" data-level="1.3.4" data-path="introduction.html"><a href="introduction.html#data-sources"><i class="fa fa-check"></i><b>1.3.4</b> Data sources</a></li>
+<li class="chapter" data-level="1.3.5" data-path="introduction.html"><a href="introduction.html#data-infrastructure"><i class="fa fa-check"></i><b>1.3.5</b> Data infrastructure</a></li>
+<li class="chapter" data-level="1.3.6" data-path="introduction.html"><a href="introduction.html#description-of-pillars"><i class="fa fa-check"></i><b>1.3.6</b> Description of Pillars</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#spi-data"><i class="fa fa-check"></i><b>1.4</b> SPI Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-use-1.html"><a href="data-use-1.html"><i class="fa fa-check"></i><b>2</b> Data Use</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.1-data-use-by-national-legislature"><i class="fa fa-check"></i><b>2.1</b> Indicator 1.1: Data use by national legislature</a></li>
+<li class="chapter" data-level="2.2" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.2-data-use-by-national-executive-branch"><i class="fa fa-check"></i><b>2.2</b> Indicator 1.2: Data use by national executive branch</a></li>
+<li class="chapter" data-level="2.3" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.3-data-use-by-civil-society"><i class="fa fa-check"></i><b>2.3</b> Indicator 1.3: Data use by civil society</a></li>
+<li class="chapter" data-level="2.4" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.4-data-use-by-academia"><i class="fa fa-check"></i><b>2.4</b> Indicator 1.4: Data use by academia</a></li>
+<li class="chapter" data-level="2.5" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.5-data-use-by-international-organizations"><i class="fa fa-check"></i><b>2.5</b> Indicator 1.5: Data use by international organizations</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="data-use-1.html"><a href="data-use-1.html#poverty-comparability"><i class="fa fa-check"></i><b>2.5.1</b> Poverty Comparability</a></li>
+<li class="chapter" data-level="2.5.2" data-path="data-use-1.html"><a href="data-use-1.html#mortality-rate-under-5-per-1000-live-births"><i class="fa fa-check"></i><b>2.5.2</b> Mortality rate, under-5 (per 1,000 live births)</a></li>
+<li class="chapter" data-level="2.5.3" data-path="data-use-1.html"><a href="data-use-1.html#debt-service-ppg-and-imf-only-of-exports-of-goods-services-and-primary-income"><i class="fa fa-check"></i><b>2.5.3</b> Debt service (PPG and IMF only, % of exports of goods, services and primary income)</a></li>
+<li class="chapter" data-level="2.5.4" data-path="data-use-1.html"><a href="data-use-1.html#safely-managed-water"><i class="fa fa-check"></i><b>2.5.4</b> Safely Managed Water</a></li>
+<li class="chapter" data-level="2.5.5" data-path="data-use-1.html"><a href="data-use-1.html#labor-force-statistics"><i class="fa fa-check"></i><b>2.5.5</b> Labor Force Statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-services-1.html"><a href="data-services-1.html"><i class="fa fa-check"></i><b>3</b> Data Services</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.1-data-releases"><i class="fa fa-check"></i><b>3.1</b> Indicator 2.1: Data Releases</a></li>
+<li class="chapter" data-level="3.2" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.2-online-access"><i class="fa fa-check"></i><b>3.2</b> Indicator 2.2: Online access</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="data-services-1.html"><a href="data-services-1.html#source"><i class="fa fa-check"></i><b>3.2.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.3-advisory-analytical-services"><i class="fa fa-check"></i><b>3.3</b> Indicator 2.3: Advisory/ Analytical Services</a></li>
+<li class="chapter" data-level="3.4" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.4-data-services"><i class="fa fa-check"></i><b>3.4</b> Indicator 2.4: Data services</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-products-1.html"><a href="data-products-1.html"><i class="fa fa-check"></i><b>4</b> Data Products</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-products-1.html"><a href="data-products-1.html#methodology"><i class="fa fa-check"></i><b>4.1</b> Methodology</a></li>
+<li class="chapter" data-level="4.2" data-path="data-products-1.html"><a href="data-products-1.html#indicators-3.1---3.17"><i class="fa fa-check"></i><b>4.2</b> Indicators 3.1 - 3.17</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="data-sources-1.html"><a href="data-sources-1.html"><i class="fa fa-check"></i><b>5</b> Data Sources</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.1-censuses-and-surveys"><i class="fa fa-check"></i><b>5.1</b> Indicator 4.1: censuses and surveys</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="data-sources-1.html"><a href="data-sources-1.html#scoring-details"><i class="fa fa-check"></i><b>5.1.1</b> Scoring details</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.2-administrative-data"><i class="fa fa-check"></i><b>5.2</b> Indicator 4.2: administrative data</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="data-sources-1.html"><a href="data-sources-1.html#population-health-admin-data"><i class="fa fa-check"></i><b>5.2.1</b> Population &amp; Health Admin Data</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.3-geospatial-data"><i class="fa fa-check"></i><b>5.3</b> Indicator 4.3: geospatial data</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="data-sources-1.html"><a href="data-sources-1.html#source-1"><i class="fa fa-check"></i><b>5.3.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.4-privatecitizen-generated-data"><i class="fa fa-check"></i><b>5.4</b> Indicator 4.4: private/citizen generated data</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html"><i class="fa fa-check"></i><b>6</b> Data Infrastructure</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.1-legislation-and-governance"><i class="fa fa-check"></i><b>6.1</b> Indicator 5.1: legislation and governance</a></li>
+<li class="chapter" data-level="6.2" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.2-standards"><i class="fa fa-check"></i><b>6.2</b> Indicator 5.2: standards</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#system-of-national-accounts-in-use"><i class="fa fa-check"></i><b>6.2.1</b> 5.2.1 System of National Accounts in use</a></li>
+<li class="chapter" data-level="6.2.2" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#national-accounts-base-year"><i class="fa fa-check"></i><b>6.2.2</b> 5.2.2 National Accounts base year</a></li>
+<li class="chapter" data-level="6.2.3" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-national-industry"><i class="fa fa-check"></i><b>6.2.3</b> 5.2.3 Classification of national industry</a></li>
+<li class="chapter" data-level="6.2.4" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#cpi-base-year"><i class="fa fa-check"></i><b>6.2.4</b> 5.2.4 CPI base year</a></li>
+<li class="chapter" data-level="6.2.5" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-household-consumption"><i class="fa fa-check"></i><b>6.2.5</b> 5.2.5 Classification of household consumption</a></li>
+<li class="chapter" data-level="6.2.6" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-status-of-employment"><i class="fa fa-check"></i><b>6.2.6</b> 5.2.6 Classification of status of employment</a></li>
+<li class="chapter" data-level="6.2.7" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#central-government-accounting-status"><i class="fa fa-check"></i><b>6.2.7</b> 5.2.7 Central government accounting status</a></li>
+<li class="chapter" data-level="6.2.8" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#compilation-of-government-finance-statistics"><i class="fa fa-check"></i><b>6.2.8</b> 5.2.8 Compilation of government finance statistics</a></li>
+<li class="chapter" data-level="6.2.9" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#compilation-of-monetary-and-financial-statistics"><i class="fa fa-check"></i><b>6.2.9</b> 5.2.9 Compilation of monetary and financial statistics</a></li>
+<li class="chapter" data-level="6.2.10" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#business-process"><i class="fa fa-check"></i><b>6.2.10</b> 5.2.10 Business process</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.3-skills"><i class="fa fa-check"></i><b>6.3</b> Indicator 5.3: skills</a></li>
+<li class="chapter" data-level="6.4" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.4-partnerships"><i class="fa fa-check"></i><b>6.4</b> Indicator 5.4: partnerships</a></li>
+<li class="chapter" data-level="6.5" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.5-finance"><i class="fa fa-check"></i><b>6.5</b> Indicator 5.5: finance</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="final-dataset.html"><a href="final-dataset.html"><i class="fa fa-check"></i><b>7</b> Final Dataset</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="final-dataset" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Final Dataset</h1>
+<p>Below we will append the data together and save the final files together.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="final-dataset.html#cb58-1" aria-hidden="true"></a><span class="co">#add in population</span></span>
+<span id="cb58-2"><a href="final-dataset.html#cb58-2" aria-hidden="true"></a>pop_df &lt;-<span class="st"> </span>wbstats<span class="op">::</span><span class="kw">wb</span>(<span class="dt">country=</span><span class="st">&quot;all&quot;</span>,</span>
+<span id="cb58-3"><a href="final-dataset.html#cb58-3" aria-hidden="true"></a>             <span class="dt">indicator=</span><span class="st">&#39;SP.POP.TOTL&#39;</span>,</span>
+<span id="cb58-4"><a href="final-dataset.html#cb58-4" aria-hidden="true"></a>             <span class="dt">startdate=</span><span class="dv">2004</span>,</span>
+<span id="cb58-5"><a href="final-dataset.html#cb58-5" aria-hidden="true"></a>             <span class="dt">enddate=</span><span class="dv">2019</span>) <span class="op">%&gt;%</span></span>
+<span id="cb58-6"><a href="final-dataset.html#cb58-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date=</span><span class="kw">as.numeric</span>(date)) <span class="op">%&gt;%</span></span>
+<span id="cb58-7"><a href="final-dataset.html#cb58-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">population=</span>value) <span class="op">%&gt;%</span></span>
+<span id="cb58-8"><a href="final-dataset.html#cb58-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, date, population)</span>
+<span id="cb58-9"><a href="final-dataset.html#cb58-9" aria-hidden="true"></a></span>
+<span id="cb58-10"><a href="final-dataset.html#cb58-10" aria-hidden="true"></a><span class="co"># create final dataset</span></span>
+<span id="cb58-11"><a href="final-dataset.html#cb58-11" aria-hidden="true"></a>spi_df_final &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb58-12"><a href="final-dataset.html#cb58-12" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, iso3c, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="kw">starts_with</span>(<span class="st">&quot;RAW&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb58-13"><a href="final-dataset.html#cb58-13" aria-hidden="true"></a><span class="st">  </span><span class="kw">right_join</span>(spi_df_empty) <span class="op">%&gt;%</span></span>
+<span id="cb58-14"><a href="final-dataset.html#cb58-14" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(pop_df) <span class="op">%&gt;%</span></span>
+<span id="cb58-15"><a href="final-dataset.html#cb58-15" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span>date,country)</span>
+<span id="cb58-16"><a href="final-dataset.html#cb58-16" aria-hidden="true"></a></span>
+<span id="cb58-17"><a href="final-dataset.html#cb58-17" aria-hidden="true"></a></span>
+<span id="cb58-18"><a href="final-dataset.html#cb58-18" aria-hidden="true"></a><span class="co">####</span></span>
+<span id="cb58-19"><a href="final-dataset.html#cb58-19" aria-hidden="true"></a><span class="co">#lining up data to 2019 and filling in some values for OECD countries.  </span></span>
+<span id="cb58-20"><a href="final-dataset.html#cb58-20" aria-hidden="true"></a><span class="co">####</span></span>
+<span id="cb58-21"><a href="final-dataset.html#cb58-21" aria-hidden="true"></a><span class="co">#get a list of oecd countries</span></span>
+<span id="cb58-22"><a href="final-dataset.html#cb58-22" aria-hidden="true"></a>oecd_country_query &lt;-<span class="st">  </span><span class="kw">GET</span>(<span class="dt">url =</span> <span class="st">&quot;https://api.worldbank.org/v2/country?region=OED&amp;format=json&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb58-23"><a href="final-dataset.html#cb58-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">content</span>( <span class="dt">as =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb58-24"><a href="final-dataset.html#cb58-24" aria-hidden="true"></a><span class="st">  </span>jsonlite<span class="op">::</span><span class="kw">fromJSON</span>( <span class="dt">flatten =</span> <span class="ot">TRUE</span>) </span>
+<span id="cb58-25"><a href="final-dataset.html#cb58-25" aria-hidden="true"></a></span>
+<span id="cb58-26"><a href="final-dataset.html#cb58-26" aria-hidden="true"></a><span class="co">#do some conversion to produce a dataframe</span></span>
+<span id="cb58-27"><a href="final-dataset.html#cb58-27" aria-hidden="true"></a>oecd_country_df &lt;-<span class="st"> </span>oecd_country_query[[<span class="dv">2</span>]] <span class="op">%&gt;%</span></span>
+<span id="cb58-28"><a href="final-dataset.html#cb58-28" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>() </span>
+<span id="cb58-29"><a href="final-dataset.html#cb58-29" aria-hidden="true"></a>  </span>
+<span id="cb58-30"><a href="final-dataset.html#cb58-30" aria-hidden="true"></a>country_mod_list &lt;-<span class="st"> </span>oecd_country_df<span class="op">$</span>name  <span class="co">#fill in the missing values for OECDs with 1s because by participating in OECD these countries have this</span></span>
+<span id="cb58-31"><a href="final-dataset.html#cb58-31" aria-hidden="true"></a>country_mod_list &lt;-<span class="st"> </span><span class="kw">c</span>(country_mod_list, <span class="st">&#39;Singapore&#39;</span>)</span>
+<span id="cb58-32"><a href="final-dataset.html#cb58-32" aria-hidden="true"></a>spi_df_final &lt;-<span class="st"> </span>spi_df_final <span class="op">%&gt;%</span></span>
+<span id="cb58-33"><a href="final-dataset.html#cb58-33" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(country, date) <span class="op">%&gt;%</span></span>
+<span id="cb58-34"><a href="final-dataset.html#cb58-34" aria-hidden="true"></a><span class="st">  </span><span class="kw">group_by</span>(country) <span class="op">%&gt;%</span></span>
+<span id="cb58-35"><a href="final-dataset.html#cb58-35" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), na.locf, <span class="dt">na.rm=</span><span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb58-36"><a href="final-dataset.html#cb58-36" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">c</span>(<span class="st">&quot;SPI.D1.5.POV&quot;</span>,</span>
+<span id="cb58-37"><a href="final-dataset.html#cb58-37" aria-hidden="true"></a>                  <span class="st">&quot;SPI.D2.1.GDDS&quot;</span>,</span>
+<span id="cb58-38"><a href="final-dataset.html#cb58-38" aria-hidden="true"></a>                  <span class="st">&quot;SPI.D5.1.DILG&quot;</span>,</span>
+<span id="cb58-39"><a href="final-dataset.html#cb58-39" aria-hidden="true"></a>                  <span class="st">&quot;SPI.D5.2.3.CNIN&quot;</span>, <span class="st">&quot;SPI.D5.2.5.HOUS&quot;</span>, <span class="st">&quot;SPI.D5.2.6.EMPL&quot;</span>, <span class="st">&quot;SPI.D5.2.8.FINA&quot;</span>,</span>
+<span id="cb58-40"><a href="final-dataset.html#cb58-40" aria-hidden="true"></a>                  <span class="st">&quot;SPI.D5.2.10.GSBP&quot;</span>,</span>
+<span id="cb58-41"><a href="final-dataset.html#cb58-41" aria-hidden="true"></a>                  <span class="st">&quot;SPI.D5.5.DIFI&quot;</span>),</span>
+<span id="cb58-42"><a href="final-dataset.html#cb58-42" aria-hidden="true"></a>                <span class="op">~</span><span class="kw">if_else</span>(( (income<span class="op">==</span><span class="st">&#39;High income&#39;</span>)  <span class="op">&amp;</span><span class="st"> </span>(country <span class="op">%in%</span><span class="st"> </span>country_mod_list)),<span class="dv">1</span>,.)                )) </span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="final-dataset.html#cb59-1" aria-hidden="true"></a><span class="co">#write to csv</span></span>
+<span id="cb59-2"><a href="final-dataset.html#cb59-2" aria-hidden="true"></a>spi_df_final <span class="op">%&gt;%</span></span>
+<span id="cb59-3"><a href="final-dataset.html#cb59-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(is.list, as.character)) <span class="op">%&gt;%</span></span>
+<span id="cb59-4"><a href="final-dataset.html#cb59-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">write_excel_csv</span>( <span class="dt">path =</span> <span class="kw">paste</span>(output_dir, <span class="st">&#39;SPI_data.csv&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span>))</span>
+<span id="cb59-5"><a href="final-dataset.html#cb59-5" aria-hidden="true"></a></span>
+<span id="cb59-6"><a href="final-dataset.html#cb59-6" aria-hidden="true"></a><span class="co">#label data</span></span>
+<span id="cb59-7"><a href="final-dataset.html#cb59-7" aria-hidden="true"></a><span class="co">#read in metadata</span></span>
+<span id="cb59-8"><a href="final-dataset.html#cb59-8" aria-hidden="true"></a>names_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&#39;source_id&#39;</span>=<span class="kw">colnames</span>(spi_df_final))</span>
+<span id="cb59-9"><a href="final-dataset.html#cb59-9" aria-hidden="true"></a></span>
+<span id="cb59-10"><a href="final-dataset.html#cb59-10" aria-hidden="true"></a>spi_meta &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">paste</span>(raw_dir, <span class="st">&#39;/metadata/SPI_dimensions_sources.csv&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb59-11"><a href="final-dataset.html#cb59-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">right_join</span>(names_df) <span class="op">%&gt;%</span></span>
+<span id="cb59-12"><a href="final-dataset.html#cb59-12" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">source_name=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(source_name), <span class="kw">paste</span>(source_id), source_name)) <span class="op">%&gt;%</span></span>
+<span id="cb59-13"><a href="final-dataset.html#cb59-13" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">factor</span>(source_id, <span class="dt">levels=</span><span class="kw">colnames</span>(spi_df_final)))</span>
+<span id="cb59-14"><a href="final-dataset.html#cb59-14" aria-hidden="true"></a></span>
+<span id="cb59-15"><a href="final-dataset.html#cb59-15" aria-hidden="true"></a><span class="co">#label data</span></span>
+<span id="cb59-16"><a href="final-dataset.html#cb59-16" aria-hidden="true"></a></span>
+<span id="cb59-17"><a href="final-dataset.html#cb59-17" aria-hidden="true"></a><span class="kw">label</span>(spi_df_final) =<span class="st"> </span><span class="kw">as.list</span>(spi_meta<span class="op">$</span>source_name)</span>
+<span id="cb59-18"><a href="final-dataset.html#cb59-18" aria-hidden="true"></a></span>
+<span id="cb59-19"><a href="final-dataset.html#cb59-19" aria-hidden="true"></a></span>
+<span id="cb59-20"><a href="final-dataset.html#cb59-20" aria-hidden="true"></a><span class="co">#write to stata</span></span>
+<span id="cb59-21"><a href="final-dataset.html#cb59-21" aria-hidden="true"></a>spi_df_final <span class="op">%&gt;%</span></span>
+<span id="cb59-22"><a href="final-dataset.html#cb59-22" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(is.list, as.character)) <span class="op">%&gt;%</span></span>
+<span id="cb59-23"><a href="final-dataset.html#cb59-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename_with</span>(<span class="op">~</span><span class="kw">gsub</span>(<span class="st">&quot;.&quot;</span>,<span class="st">&quot;_&quot;</span>,.x, <span class="dt">fixed=</span><span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb59-24"><a href="final-dataset.html#cb59-24" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>lat,<span class="op">-</span>long) <span class="op">%&gt;%</span></span>
+<span id="cb59-25"><a href="final-dataset.html#cb59-25" aria-hidden="true"></a><span class="st">  </span><span class="kw">write_dta</span>( <span class="dt">path =</span> <span class="kw">paste</span>(output_dir, <span class="st">&#39;SPI_data.dta&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span>))</span></code></pre></div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-infrastructure-1.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Data Services | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
+  <meta name="description" content="3 Data Services | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Data Services | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Data Services | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  
+  
+  
+
+<meta name="author" content="Brian Stacy" />
+
+
+<meta name="date" content="2021-01-04" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-use-1.html"/>
+<link rel="next" href="data-products-1.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#motivation"><i class="fa fa-check"></i><b>1.1</b> Motivation</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#overview-of-the-new-spi"><i class="fa fa-check"></i><b>1.2</b> Overview of the New SPI</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#pillars-of-the-new-spi"><i class="fa fa-check"></i><b>1.3</b> Pillars of the new SPI</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#data-use"><i class="fa fa-check"></i><b>1.3.1</b> Data use</a></li>
+<li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#data-services"><i class="fa fa-check"></i><b>1.3.2</b> Data services</a></li>
+<li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#data-products"><i class="fa fa-check"></i><b>1.3.3</b> Data products</a></li>
+<li class="chapter" data-level="1.3.4" data-path="introduction.html"><a href="introduction.html#data-sources"><i class="fa fa-check"></i><b>1.3.4</b> Data sources</a></li>
+<li class="chapter" data-level="1.3.5" data-path="introduction.html"><a href="introduction.html#data-infrastructure"><i class="fa fa-check"></i><b>1.3.5</b> Data infrastructure</a></li>
+<li class="chapter" data-level="1.3.6" data-path="introduction.html"><a href="introduction.html#description-of-pillars"><i class="fa fa-check"></i><b>1.3.6</b> Description of Pillars</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#spi-data"><i class="fa fa-check"></i><b>1.4</b> SPI Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-use-1.html"><a href="data-use-1.html"><i class="fa fa-check"></i><b>2</b> Data Use</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.1-data-use-by-national-legislature"><i class="fa fa-check"></i><b>2.1</b> Indicator 1.1: Data use by national legislature</a></li>
+<li class="chapter" data-level="2.2" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.2-data-use-by-national-executive-branch"><i class="fa fa-check"></i><b>2.2</b> Indicator 1.2: Data use by national executive branch</a></li>
+<li class="chapter" data-level="2.3" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.3-data-use-by-civil-society"><i class="fa fa-check"></i><b>2.3</b> Indicator 1.3: Data use by civil society</a></li>
+<li class="chapter" data-level="2.4" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.4-data-use-by-academia"><i class="fa fa-check"></i><b>2.4</b> Indicator 1.4: Data use by academia</a></li>
+<li class="chapter" data-level="2.5" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.5-data-use-by-international-organizations"><i class="fa fa-check"></i><b>2.5</b> Indicator 1.5: Data use by international organizations</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="data-use-1.html"><a href="data-use-1.html#poverty-comparability"><i class="fa fa-check"></i><b>2.5.1</b> Poverty Comparability</a></li>
+<li class="chapter" data-level="2.5.2" data-path="data-use-1.html"><a href="data-use-1.html#mortality-rate-under-5-per-1000-live-births"><i class="fa fa-check"></i><b>2.5.2</b> Mortality rate, under-5 (per 1,000 live births)</a></li>
+<li class="chapter" data-level="2.5.3" data-path="data-use-1.html"><a href="data-use-1.html#debt-service-ppg-and-imf-only-of-exports-of-goods-services-and-primary-income"><i class="fa fa-check"></i><b>2.5.3</b> Debt service (PPG and IMF only, % of exports of goods, services and primary income)</a></li>
+<li class="chapter" data-level="2.5.4" data-path="data-use-1.html"><a href="data-use-1.html#safely-managed-water"><i class="fa fa-check"></i><b>2.5.4</b> Safely Managed Water</a></li>
+<li class="chapter" data-level="2.5.5" data-path="data-use-1.html"><a href="data-use-1.html#labor-force-statistics"><i class="fa fa-check"></i><b>2.5.5</b> Labor Force Statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-services-1.html"><a href="data-services-1.html"><i class="fa fa-check"></i><b>3</b> Data Services</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.1-data-releases"><i class="fa fa-check"></i><b>3.1</b> Indicator 2.1: Data Releases</a></li>
+<li class="chapter" data-level="3.2" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.2-online-access"><i class="fa fa-check"></i><b>3.2</b> Indicator 2.2: Online access</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="data-services-1.html"><a href="data-services-1.html#source"><i class="fa fa-check"></i><b>3.2.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.3-advisory-analytical-services"><i class="fa fa-check"></i><b>3.3</b> Indicator 2.3: Advisory/ Analytical Services</a></li>
+<li class="chapter" data-level="3.4" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.4-data-services"><i class="fa fa-check"></i><b>3.4</b> Indicator 2.4: Data services</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-products-1.html"><a href="data-products-1.html"><i class="fa fa-check"></i><b>4</b> Data Products</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-products-1.html"><a href="data-products-1.html#methodology"><i class="fa fa-check"></i><b>4.1</b> Methodology</a></li>
+<li class="chapter" data-level="4.2" data-path="data-products-1.html"><a href="data-products-1.html#indicators-3.1---3.17"><i class="fa fa-check"></i><b>4.2</b> Indicators 3.1 - 3.17</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="data-sources-1.html"><a href="data-sources-1.html"><i class="fa fa-check"></i><b>5</b> Data Sources</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.1-censuses-and-surveys"><i class="fa fa-check"></i><b>5.1</b> Indicator 4.1: censuses and surveys</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="data-sources-1.html"><a href="data-sources-1.html#scoring-details"><i class="fa fa-check"></i><b>5.1.1</b> Scoring details</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.2-administrative-data"><i class="fa fa-check"></i><b>5.2</b> Indicator 4.2: administrative data</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="data-sources-1.html"><a href="data-sources-1.html#population-health-admin-data"><i class="fa fa-check"></i><b>5.2.1</b> Population &amp; Health Admin Data</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.3-geospatial-data"><i class="fa fa-check"></i><b>5.3</b> Indicator 4.3: geospatial data</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="data-sources-1.html"><a href="data-sources-1.html#source-1"><i class="fa fa-check"></i><b>5.3.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.4-privatecitizen-generated-data"><i class="fa fa-check"></i><b>5.4</b> Indicator 4.4: private/citizen generated data</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html"><i class="fa fa-check"></i><b>6</b> Data Infrastructure</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.1-legislation-and-governance"><i class="fa fa-check"></i><b>6.1</b> Indicator 5.1: legislation and governance</a></li>
+<li class="chapter" data-level="6.2" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.2-standards"><i class="fa fa-check"></i><b>6.2</b> Indicator 5.2: standards</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#system-of-national-accounts-in-use"><i class="fa fa-check"></i><b>6.2.1</b> 5.2.1 System of National Accounts in use</a></li>
+<li class="chapter" data-level="6.2.2" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#national-accounts-base-year"><i class="fa fa-check"></i><b>6.2.2</b> 5.2.2 National Accounts base year</a></li>
+<li class="chapter" data-level="6.2.3" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-national-industry"><i class="fa fa-check"></i><b>6.2.3</b> 5.2.3 Classification of national industry</a></li>
+<li class="chapter" data-level="6.2.4" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#cpi-base-year"><i class="fa fa-check"></i><b>6.2.4</b> 5.2.4 CPI base year</a></li>
+<li class="chapter" data-level="6.2.5" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-household-consumption"><i class="fa fa-check"></i><b>6.2.5</b> 5.2.5 Classification of household consumption</a></li>
+<li class="chapter" data-level="6.2.6" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-status-of-employment"><i class="fa fa-check"></i><b>6.2.6</b> 5.2.6 Classification of status of employment</a></li>
+<li class="chapter" data-level="6.2.7" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#central-government-accounting-status"><i class="fa fa-check"></i><b>6.2.7</b> 5.2.7 Central government accounting status</a></li>
+<li class="chapter" data-level="6.2.8" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#compilation-of-government-finance-statistics"><i class="fa fa-check"></i><b>6.2.8</b> 5.2.8 Compilation of government finance statistics</a></li>
+<li class="chapter" data-level="6.2.9" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#compilation-of-monetary-and-financial-statistics"><i class="fa fa-check"></i><b>6.2.9</b> 5.2.9 Compilation of monetary and financial statistics</a></li>
+<li class="chapter" data-level="6.2.10" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#business-process"><i class="fa fa-check"></i><b>6.2.10</b> 5.2.10 Business process</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.3-skills"><i class="fa fa-check"></i><b>6.3</b> Indicator 5.3: skills</a></li>
+<li class="chapter" data-level="6.4" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.4-partnerships"><i class="fa fa-check"></i><b>6.4</b> Indicator 5.4: partnerships</a></li>
+<li class="chapter" data-level="6.5" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.5-finance"><i class="fa fa-check"></i><b>6.5</b> Indicator 5.5: finance</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="final-dataset.html"><a href="final-dataset.html"><i class="fa fa-check"></i><b>7</b> Final Dataset</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-services-1" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Data Services</h1>
+<p>Cleaning for Data Services Indicators. Data Services (4 Indicators):<br />
+- 2.1_DSDR - Indicator 2.1: Data releases<br />
+- 2.2_DSOA - Indicator 2.2: Online access<br />
+- 2.3_DSAS - Indicator 2.3: Advisory/ Analytical Services<br />
+- 2.4_DSDS - Indicator 2.4: Data services</p>
+<div id="indicator-2.1-data-releases" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Indicator 2.1: Data Releases</h2>
+<p>Data Dissemination Standard (SDDS) and electronic General Data Dissemination Standard (e-GDDS) were
+established by the International Monetary Fund (IMF) for member countries that have or that might seek
+access to international capital markets, to guide them in providing their economic and financial data to the public.
+Although subscription is voluntary, the subscribing member needs to be committed to observing the standard and provide
+information about its data and data dissemination practices (metadata). The metadata are posted on the IMF’s SDDS and
+e-GDDS websites.</p>
+<p>1 Point. Subscribing to IMF SDDS+ or SDDS standards
+0.5 Points. Subscribing to IMF e-GDDS standards
+0 Points. Otherwise</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="data-services-1.html#cb12-1" aria-hidden="true"></a>Request_metadata &lt;-<span class="st"> </span><span class="kw">GET</span>(<span class="dt">url =</span> <span class="st">&quot;http://api.worldbank.org/v2/country/all/indicator/5.21.01.01.sdds?format=json&amp;date=2004:2015&amp;per_page=5000&quot;</span>)</span>
+<span id="cb12-2"><a href="data-services-1.html#cb12-2" aria-hidden="true"></a>Response_metadata &lt;-<span class="st"> </span><span class="kw">content</span>(Request_metadata, <span class="dt">as =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>)</span>
+<span id="cb12-3"><a href="data-services-1.html#cb12-3" aria-hidden="true"></a></span>
+<span id="cb12-4"><a href="data-services-1.html#cb12-4" aria-hidden="true"></a><span class="co"># Parse the JSON content and convert it to a data frame.</span></span>
+<span id="cb12-5"><a href="data-services-1.html#cb12-5" aria-hidden="true"></a>D2<span class="fl">.1</span>_DSDR_sci &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw">fromJSON</span>(Response_metadata, <span class="dt">flatten =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb12-6"><a href="data-services-1.html#cb12-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span></span>
+<span id="cb12-7"><a href="data-services-1.html#cb12-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">transmute</span>(</span>
+<span id="cb12-8"><a href="data-services-1.html#cb12-8" aria-hidden="true"></a>    <span class="dt">iso3c=</span>countryiso3code,</span>
+<span id="cb12-9"><a href="data-services-1.html#cb12-9" aria-hidden="true"></a>    <span class="dt">country=</span>country.value,</span>
+<span id="cb12-10"><a href="data-services-1.html#cb12-10" aria-hidden="true"></a>    <span class="dt">date=</span><span class="kw">as.numeric</span>(date),</span>
+<span id="cb12-11"><a href="data-services-1.html#cb12-11" aria-hidden="true"></a>    <span class="dt">SDDS=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(value),<span class="dv">0</span>,<span class="kw">as.numeric</span>(value))</span>
+<span id="cb12-12"><a href="data-services-1.html#cb12-12" aria-hidden="true"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb12-13"><a href="data-services-1.html#cb12-13" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(spi_df_empty) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#add on country metadata</span></span>
+<span id="cb12-14"><a href="data-services-1.html#cb12-14" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(income)) <span class="op">%&gt;%</span></span>
+<span id="cb12-15"><a href="data-services-1.html#cb12-15" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, SDDS  ) </span>
+<span id="cb12-16"><a href="data-services-1.html#cb12-16" aria-hidden="true"></a></span>
+<span id="cb12-17"><a href="data-services-1.html#cb12-17" aria-hidden="true"></a></span>
+<span id="cb12-18"><a href="data-services-1.html#cb12-18" aria-hidden="true"></a></span>
+<span id="cb12-19"><a href="data-services-1.html#cb12-19" aria-hidden="true"></a><span class="co">#read in metadata file.</span></span>
+<span id="cb12-20"><a href="data-services-1.html#cb12-20" aria-hidden="true"></a></span>
+<span id="cb12-21"><a href="data-services-1.html#cb12-21" aria-hidden="true"></a><span class="co">#pull data for several of the standards from WDI metadata</span></span>
+<span id="cb12-22"><a href="data-services-1.html#cb12-22" aria-hidden="true"></a></span>
+<span id="cb12-23"><a href="data-services-1.html#cb12-23" aria-hidden="true"></a>df &lt;-<span class="st"> </span>WDI_metadata</span>
+<span id="cb12-24"><a href="data-services-1.html#cb12-24" aria-hidden="true"></a></span>
+<span id="cb12-25"><a href="data-services-1.html#cb12-25" aria-hidden="true"></a><span class="co"># Manipulate and clean final data</span></span>
+<span id="cb12-26"><a href="data-services-1.html#cb12-26" aria-hidden="true"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb12-27"><a href="data-services-1.html#cb12-27" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(Income.Group))  <span class="co">#keep just countries (drop aggregations)</span></span>
+<span id="cb12-28"><a href="data-services-1.html#cb12-28" aria-hidden="true"></a></span>
+<span id="cb12-29"><a href="data-services-1.html#cb12-29" aria-hidden="true"></a></span>
+<span id="cb12-30"><a href="data-services-1.html#cb12-30" aria-hidden="true"></a>D2<span class="fl">.1</span>_DSDR &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb12-31"><a href="data-services-1.html#cb12-31" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">iso3c=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(Country.Code), Code, Country.Code),</span>
+<span id="cb12-32"><a href="data-services-1.html#cb12-32" aria-hidden="true"></a>         <span class="dt">country=</span>Table.Name) <span class="op">%&gt;%</span></span>
+<span id="cb12-33"><a href="data-services-1.html#cb12-33" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&#39;iso3c&#39;</span>, <span class="st">&#39;country&#39;</span>, <span class="st">&#39;date&#39;</span>,  <span class="st">&#39;IMF.data.dissemination.standard&#39;</span>)  ) <span class="op">%&gt;%</span></span>
+<span id="cb12-34"><a href="data-services-1.html#cb12-34" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">IDDS=</span>IMF.data.dissemination.standard) <span class="op">%&gt;%</span></span>
+<span id="cb12-35"><a href="data-services-1.html#cb12-35" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D2.1.GDDS=</span><span class="kw">case_when</span>(</span>
+<span id="cb12-36"><a href="data-services-1.html#cb12-36" aria-hidden="true"></a>    IDDS<span class="op">==</span><span class="st">&quot;Special Data Dissemination Standard Plus (SDDS+)&quot;</span> <span class="op">|</span><span class="st"> </span>IDDS<span class="op">==</span><span class="st">&quot;Special Data Dissemination Standard (SDDS)&quot;</span><span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb12-37"><a href="data-services-1.html#cb12-37" aria-hidden="true"></a>    IDDS<span class="op">==</span><span class="st">&quot;Enhanced General Data Dissemination System (e-GDDS)&quot;</span><span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>,</span>
+<span id="cb12-38"><a href="data-services-1.html#cb12-38" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> ),</span>
+<span id="cb12-39"><a href="data-services-1.html#cb12-39" aria-hidden="true"></a>    <span class="dt">SDDS=</span><span class="kw">case_when</span>(</span>
+<span id="cb12-40"><a href="data-services-1.html#cb12-40" aria-hidden="true"></a>     IDDS<span class="op">==</span><span class="st">&quot;Special Data Dissemination Standard (SDDS)&quot;</span><span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb12-41"><a href="data-services-1.html#cb12-41" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> ))  <span class="op">%&gt;%</span></span>
+<span id="cb12-42"><a href="data-services-1.html#cb12-42" aria-hidden="true"></a><span class="st">  </span><span class="kw">bind_rows</span>(D2<span class="fl">.1</span>_DSDR_sci) <span class="op">%&gt;%</span></span>
+<span id="cb12-43"><a href="data-services-1.html#cb12-43" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">RAW.D2.1.IDDS=</span>IDDS) <span class="op">%&gt;%</span></span>
+<span id="cb12-44"><a href="data-services-1.html#cb12-44" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c,  date, RAW.D2.<span class="fl">1.</span>IDDS, SPI.D2.<span class="fl">1.</span>GDDS  ) <span class="op">%&gt;%</span></span>
+<span id="cb12-45"><a href="data-services-1.html#cb12-45" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(country_metadata)</span>
+<span id="cb12-46"><a href="data-services-1.html#cb12-46" aria-hidden="true"></a></span>
+<span id="cb12-47"><a href="data-services-1.html#cb12-47" aria-hidden="true"></a>D2<span class="fl">.1</span>_DSDR_map &lt;-<span class="st"> </span>D2<span class="fl">.1</span>_DSDR </span>
+<span id="cb12-48"><a href="data-services-1.html#cb12-48" aria-hidden="true"></a></span>
+<span id="cb12-49"><a href="data-services-1.html#cb12-49" aria-hidden="true"></a></span>
+<span id="cb12-50"><a href="data-services-1.html#cb12-50" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;D2.1_DSDR_map&#39;</span>, <span class="st">&#39;SPI.D2.1.GDDS&#39;</span>, <span class="st">&#39;SDDS Data Standards in Place&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/idds-1.png" width="960" /><img src="01_data_prep_files/figure-html/idds-2.png" width="960" /><img src="01_data_prep_files/figure-html/idds-3.png" width="960" /><img src="01_data_prep_files/figure-html/idds-4.png" width="960" /></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="data-services-1.html#cb13-1" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
+<span id="cb13-2"><a href="data-services-1.html#cb13-2" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb13-3"><a href="data-services-1.html#cb13-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D2<span class="fl">.1</span>_DSDR)</span></code></pre></div>
+</div>
+<div id="indicator-2.2-online-access" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Indicator 2.2: Online access</h2>
+<p>This indicator measures the richness and openness of online access.</p>
+<div id="source" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Source</h3>
+<p>Our source for this indicator is Open Data Watch. From Open Data watch:</p>
+<blockquote>
+<p>The Open Data Inventory (ODIN) assesses the coverage and openness of official statistics to help identify gaps, promote open data policies, improve access, and encourage dialogue
+between national statistical offices (NSOs) and data users. ODIN 2018/19 includes 178 countries, including most all OECD countries. Two-year comparisons are for all countries with
+two years of data between 2015-2017. Scores can be compared across topics and countries.</p>
+</blockquote>
+<p>We use the Openness score from ODIN for this measure. The score ranges from 0-100. It contains scores along five dimensions:<br />
+- Machine Readability<br />
+- Non-Proprietary format<br />
+- Download Options<br />
+- Metadata Available<br />
+- Terms of Use</p>
+<p>A description for each of these five dimensions is below:</p>
+<div id="machine-readability" class="section level4" number="3.2.1.1">
+<h4><span class="header-section-number">3.2.1.1</span> Machine Readability</h4>
+<blockquote>
+<p>Openness element 1 measures whether data are available in a machine readable format such as XLS, XLSX, CSV, and JSON. Machine-readable file formats allow users to easily process data using a computer. When data are made available in formats that are not machine readable, users cannot easily access and modify the data, which severely restricts the scope of the data’s use. In many cases PDF versions of datasets within reports can be useful to users, as the text in conjunction with the tables gives context and explanation to the figures which helps less technical users understand the data. Because of this, ODIN assessments do not penalize countries for making datasets available in PDF or other non-machine readable formats, unless these formats are the only option for exporting data. Scores are not penalized for having identical datasets in both machine readable and non-readable formats. Compression formats do not affect machine readability scores, only non-proprietary scores (see next page). Scores are given by data category, not indicator.</p>
+</blockquote>
+</div>
+<div id="non-proprietary-format" class="section level4" number="3.2.1.2">
+<h4><span class="header-section-number">3.2.1.2</span> Non-Proprietary format</h4>
+<blockquote>
+<p>For the elements of data openness, scoring is calculated independent of the data coverage.
+If data files are compressed in RAR format (which is proprietary), data for that indicator should be considered proprietary even if the enclosing files are in a non-proprietary format. Files compressed in ZIP format are not affected.</p>
+</blockquote>
+</div>
+<div id="download-options" class="section level4" number="3.2.1.3">
+<h4><span class="header-section-number">3.2.1.3</span> Download Options</h4>
+<blockquote>
+<p>Openness element 3 measures whether data are available with three different download options: bulk download, API, and user-select options.
+A bulk download is defined at the indicator level as: The ability to download all data recorded in ODIN for a particular indicator (all years, disaggregations, and subnational data) in one file, or multiple files that can be downloaded simultaneously. Bulk downloads are a key component of the Open Definition, which requires data to be “provided as a whole . . . and downloadable via the internet.”
+User-selectable download options are defined as: Users must be able to select an indicator and at least one other dimension to create a download or table. These dimensions could include time periods, geographic disaggregations, or other recommended disaggregations. An option to choose the file export format is not enough.
+API stands for Application Programming Interface. Ideally, APIs should be clearly displayed on the website. ODIN assumes APIs are available for the NSOs entire data collection used in ODIN, unless clearly stated. ODIN assessors do not register for use or test API functionality. For more information on APIs, see this guide. Scores are given by data category, not indicator.</p>
+</blockquote>
+</div>
+<div id="metadata-available" class="section level4" number="3.2.1.4">
+<h4><span class="header-section-number">3.2.1.4</span> Metadata Available</h4>
+<blockquote>
+<p>Openness element 4 measures whether metadata are made available. Scores are given by data category, not indicator. Metadata are defined at the indicator level as information about how the data are defined/calculated and collected. ODIN classifies metadata into three categories: (1) Not Available, (2) Incomplete, and (3) Complete. The following must be available to classify metadata as complete:
+• Definition of the indicator, or definition of key terms used in the indicator description (as applicable), or how the indicator was calculated.
+• Publication (date of upload), compilation date (date on front of report is not sufficient), or date dataset was last updated.
+• Name of data source (what agency collected the data).
+If the metadata only have one or two of the above elements, they are scored as incomplete</p>
+</blockquote>
+</div>
+<div id="terms-of-use" class="section level4" number="3.2.1.5">
+<h4><span class="header-section-number">3.2.1.5</span> Terms of Use</h4>
+<blockquote>
+<p>Openness element 5 measures whether data are available with an open terms of use. Generally, terms of use (TOU) will apply to an entire website or data portal (unless otherwise specified). In these cases, all data found on the same website and/or portal will receive the same score. If a portal is located on the same domain as the NSO website, the terms of use on the NSO site will apply. If the data are located on a portal or website on a different domain, another terms of use will need to be present. For a policy/ license to be accepted as a terms of use, it must clearly refer to the data found on the website. Terms of use that refer to nondata content (such as pictures, logos, etc.) of the website are not considered. A copyright symbol at the bottom of the page is not sufficient. A sentence indicating a recommended citation format is not sufficient.
+Terms of use are classified the following ways: (1) Not Available, (2) Restrictive, (3) Semi-Restrictive, and (4) Open.
+If the TOU contains one or more restrictive clauses, it receives 0 points and is classified as “restrictive.” Restrictive clauses include:</p>
+</blockquote>
+<p>For more details, consult the ODIN technical documentation:
+<a href="https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit#" class="uri">https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit#</a></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="data-services-1.html#cb14-1" aria-hidden="true"></a>  <span class="co">#read in ODIN data</span></span>
+<span id="cb14-2"><a href="data-services-1.html#cb14-2" aria-hidden="true"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2015</span><span class="op">:</span><span class="dv">2018</span>) {</span>
+<span id="cb14-3"><a href="data-services-1.html#cb14-3" aria-hidden="true"></a>   temp &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">paste</span>(raw_dir, <span class="st">&#39;/2.2_DSOA/&#39;</span>,<span class="st">&#39;ODIN_&#39;</span>,i,<span class="st">&#39;.csv&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>))  <span class="op">%&gt;%</span></span>
+<span id="cb14-4"><a href="data-services-1.html#cb14-4" aria-hidden="true"></a><span class="st">        </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair =</span> <span class="st">&#39;universal&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb14-5"><a href="data-services-1.html#cb14-5" aria-hidden="true"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">date=</span>i) <span class="op">%&gt;%</span></span>
+<span id="cb14-6"><a href="data-services-1.html#cb14-6" aria-hidden="true"></a><span class="st">        </span><span class="kw">filter</span>(Data.categories<span class="op">==</span><span class="st">&#39;All Categories&#39;</span>)</span>
+<span id="cb14-7"><a href="data-services-1.html#cb14-7" aria-hidden="true"></a></span>
+<span id="cb14-8"><a href="data-services-1.html#cb14-8" aria-hidden="true"></a>    <span class="kw">assign</span>(<span class="kw">paste</span>(<span class="st">&#39;openness_df&#39;</span>,i,<span class="dt">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
+<span id="cb14-9"><a href="data-services-1.html#cb14-9" aria-hidden="true"></a>  }</span>
+<span id="cb14-10"><a href="data-services-1.html#cb14-10" aria-hidden="true"></a></span>
+<span id="cb14-11"><a href="data-services-1.html#cb14-11" aria-hidden="true"></a><span class="co">#bind different years together</span></span>
+<span id="cb14-12"><a href="data-services-1.html#cb14-12" aria-hidden="true"></a>openness_df &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(openness_df_<span class="dv">2015</span>, openness_df_<span class="dv">2016</span>, openness_df_<span class="dv">2017</span>, openness_df_<span class="dv">2018</span>)</span>
+<span id="cb14-13"><a href="data-services-1.html#cb14-13" aria-hidden="true"></a></span>
+<span id="cb14-14"><a href="data-services-1.html#cb14-14" aria-hidden="true"></a></span>
+<span id="cb14-15"><a href="data-services-1.html#cb14-15" aria-hidden="true"></a>openness_df &lt;-<span class="st"> </span>openness_df <span class="op">%&gt;%</span></span>
+<span id="cb14-16"><a href="data-services-1.html#cb14-16" aria-hidden="true"></a><span class="st">    </span><span class="kw">select</span>(Country.Code, date, Machine.readable, Non.proprietary, Download.options, Metadata.available, Terms.of.use, Openness.subscore) <span class="op">%&gt;%</span></span>
+<span id="cb14-17"><a href="data-services-1.html#cb14-17" aria-hidden="true"></a><span class="st">    </span><span class="kw">rename</span>(<span class="dt">iso3c=</span>Country.Code) <span class="op">%&gt;%</span></span>
+<span id="cb14-18"><a href="data-services-1.html#cb14-18" aria-hidden="true"></a><span class="st">    </span><span class="kw">group_by</span>( iso3c) <span class="op">%&gt;%</span></span>
+<span id="cb14-19"><a href="data-services-1.html#cb14-19" aria-hidden="true"></a><span class="st">    </span><span class="kw">right_join</span>(country_metadata) <span class="op">%&gt;%</span></span>
+<span id="cb14-20"><a href="data-services-1.html#cb14-20" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
+<span id="cb14-21"><a href="data-services-1.html#cb14-21" aria-hidden="true"></a>      <span class="kw">across</span>(<span class="kw">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>),<span class="op">~</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(.), <span class="dv">0</span>, .)           )</span>
+<span id="cb14-22"><a href="data-services-1.html#cb14-22" aria-hidden="true"></a>      </span>
+<span id="cb14-23"><a href="data-services-1.html#cb14-23" aria-hidden="true"></a>           )  </span>
+<span id="cb14-24"><a href="data-services-1.html#cb14-24" aria-hidden="true"></a></span>
+<span id="cb14-25"><a href="data-services-1.html#cb14-25" aria-hidden="true"></a><span class="co">#do some quick renaming and formatting</span></span>
+<span id="cb14-26"><a href="data-services-1.html#cb14-26" aria-hidden="true"></a>openness_df_temp1 &lt;-<span class="st"> </span>openness_df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-27"><a href="data-services-1.html#cb14-27" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename_with</span>(<span class="op">~</span><span class="kw">paste</span>(<span class="st">&#39;RAW.D2.2&#39;</span>,., <span class="dt">sep=</span><span class="st">&quot;.&quot;</span>), <span class="dt">.cols=</span><span class="kw">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>) ) </span>
+<span id="cb14-28"><a href="data-services-1.html#cb14-28" aria-hidden="true"></a></span>
+<span id="cb14-29"><a href="data-services-1.html#cb14-29" aria-hidden="true"></a></span>
+<span id="cb14-30"><a href="data-services-1.html#cb14-30" aria-hidden="true"></a>openness_df_temp2 &lt;-<span class="st"> </span>openness_df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-31"><a href="data-services-1.html#cb14-31" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>), <span class="op">~</span>.<span class="op">/</span><span class="dv">100</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb14-32"><a href="data-services-1.html#cb14-32" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename_with</span>(<span class="op">~</span><span class="kw">paste</span>(<span class="st">&#39;SPI.D2.2&#39;</span>,., <span class="dt">sep=</span><span class="st">&quot;.&quot;</span>), <span class="dt">.cols=</span><span class="kw">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>) ) </span>
+<span id="cb14-33"><a href="data-services-1.html#cb14-33" aria-hidden="true"></a></span>
+<span id="cb14-34"><a href="data-services-1.html#cb14-34" aria-hidden="true"></a>openness_df &lt;-<span class="st"> </span>openness_df_temp1 <span class="op">%&gt;%</span></span>
+<span id="cb14-35"><a href="data-services-1.html#cb14-35" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(openness_df_temp2)</span>
+<span id="cb14-36"><a href="data-services-1.html#cb14-36" aria-hidden="true"></a></span>
+<span id="cb14-37"><a href="data-services-1.html#cb14-37" aria-hidden="true"></a><span class="co">#add to spi dataframe</span></span>
+<span id="cb14-38"><a href="data-services-1.html#cb14-38" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb14-39"><a href="data-services-1.html#cb14-39" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(openness_df)</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/open_plots-1.png" width="960" /><img src="01_data_prep_files/figure-html/open_plots-2.png" width="960" /><img src="01_data_prep_files/figure-html/open_plots-3.png" width="960" /></p>
+</div>
+</div>
+</div>
+<div id="indicator-2.3-advisory-analytical-services" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Indicator 2.3: Advisory/ Analytical Services</h2>
+<p>No established source exists for this indicator. This is experimental.</p>
+</div>
+<div id="indicator-2.4-data-services" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Indicator 2.4: Data services</h2>
+<p>NSO has a listing of surveys and microdata sets that can provide the necessary
+data and reference for follow-up. Upon well-defined request and procedure per
+the national law and practice, users and practitioners can obtain the data
+collected from the households and businesses when needed.</p>
+<p>NADA is an open source microdata cataloging system, compliant with the Data Documentation Initiative (DDI) and Dublin Core’s RDF metadata standards. It serves as a portal for researchers to browse, search, compare, apply for access, and download relevant census or survey datasets, questionnaires, reports and other information.</p>
+<p>1 Point. Yes
+0 Points. No</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="data-services-1.html#cb15-1" aria-hidden="true"></a><span class="co">#read in csv file.</span></span>
+<span id="cb15-2"><a href="data-services-1.html#cb15-2" aria-hidden="true"></a>D2<span class="fl">.4</span>_NADA &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&#39;/2.4_DSDS/&#39;</span>, <span class="st">&quot;D2.4.NADA.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb15-3"><a href="data-services-1.html#cb15-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D2.4.NADA=</span><span class="kw">case_when</span>(</span>
+<span id="cb15-4"><a href="data-services-1.html#cb15-4" aria-hidden="true"></a>    NADA<span class="op">==</span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb15-5"><a href="data-services-1.html#cb15-5" aria-hidden="true"></a>    NADA<span class="op">==</span><span class="dv">0</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span>, </span>
+<span id="cb15-6"><a href="data-services-1.html#cb15-6" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb15-7"><a href="data-services-1.html#cb15-7" aria-hidden="true"></a>  ))  <span class="op">%&gt;%</span></span>
+<span id="cb15-8"><a href="data-services-1.html#cb15-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">RAW.D2.4.NADA=</span>NADA,</span>
+<span id="cb15-9"><a href="data-services-1.html#cb15-9" aria-hidden="true"></a>         <span class="dt">RAW.D2.4.NADA_text=</span>NADA_text) <span class="op">%&gt;%</span></span>
+<span id="cb15-10"><a href="data-services-1.html#cb15-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, RAW.D2.<span class="fl">4.</span>NADA,RAW.D2.<span class="fl">4.</span>NADA_text, SPI.D2.<span class="fl">4.</span>NADA  ) <span class="op">%&gt;%</span></span>
+<span id="cb15-11"><a href="data-services-1.html#cb15-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country)</span>
+<span id="cb15-12"><a href="data-services-1.html#cb15-12" aria-hidden="true"></a></span>
+<span id="cb15-13"><a href="data-services-1.html#cb15-13" aria-hidden="true"></a>D2<span class="fl">.4</span>_NADA_map &lt;-<span class="st"> </span>D2<span class="fl">.4</span>_NADA <span class="op">%&gt;%</span></span>
+<span id="cb15-14"><a href="data-services-1.html#cb15-14" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(SPI.D2.<span class="fl">4.</span>NADA<span class="op">&gt;</span><span class="dv">0</span>)</span>
+<span id="cb15-15"><a href="data-services-1.html#cb15-15" aria-hidden="true"></a></span>
+<span id="cb15-16"><a href="data-services-1.html#cb15-16" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;D2.4_NADA_map&#39;</span>, <span class="st">&#39;RAW.D2.4.NADA&#39;</span>, <span class="st">&#39;NADA in Place&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/nada-1.png" width="960" /><img src="01_data_prep_files/figure-html/nada-2.png" width="960" /><img src="01_data_prep_files/figure-html/nada-3.png" width="960" /><img src="01_data_prep_files/figure-html/nada-4.png" width="960" /></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="data-services-1.html#cb16-1" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
+<span id="cb16-2"><a href="data-services-1.html#cb16-2" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb16-3"><a href="data-services-1.html#cb16-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D2<span class="fl">.4</span>_NADA)</span></code></pre></div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-use-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-products-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>

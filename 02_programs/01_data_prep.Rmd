@@ -3,11 +3,8 @@ title: Technical Documentation on Data Sources and Methods for Statistical Perfo
   Indicators
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
-output:
-  pdf_document:
-    toc: yes
-  html_document:
-    toc: yes
+output: bookdown::gitbook
+
 ---
 
 ```{r setup, include=FALSE}
@@ -31,7 +28,7 @@ library(haven)
 library(cld2)
 library(zoo)
 library(readxl)
-
+library(flextable)
 #set directories
 dir <- here()
 
@@ -200,44 +197,174 @@ un_pull <- function(series,start, end) {
 
 # Introduction
 
-In this program, I will clean and reshape the raw data files in the 01_rawdata folder in order to produce the Statistical Performance Indicators.
+This document contains a detailed technical description of the Statistical Performance Indicators (SPI).  The document contains a detailed description of each indicator, as well as the R code used to construct each indicator.
 
-Below is an overview of the SPI framework.
+## Motivation
 
-![unchanged image](SPI_dashboard.png)
-# Handling missing data
+The primary purpose of the statistical system is to help users of statistics make better decisions or to hold those decision makers accountable. In the words of Principle 1 of the Fundamental Principles of Official Statistics, the statistics must “meet the test of practical utility”, serving “the Government, the economy and the public with data about the economic, demographic, social and environmental situation.” 
 
-It is likely that for the initial launch of the Dashboard there will be several types of missing data.
+The national statistical system, or NSS, plays a crucial role in modern economies. It provides stakeholders, ranging from policy makers to stock market analysts and the general public, with the latest data on the country’s socio-economic developments. At the international level, monitoring progress on global undertakings such as the recently established Sustainable Development Goals (SDGs) requires high-quality data that must be produced consistently across different national statistical systems. Assessing and improving the capacity of a country’s NSS has long been a part of the global agenda. Since the early 2000s, a few capacity assessment tools have been developed to identify the weaknesses and strengths of national statistical systems by other organizations including PARIS21, the Food and Agriculture Organization of the United Nations (FAO), the United Nations Economic Commission for Europe (UNECE), the United Nations Economic Commission for Africa (UNECA), and the U.S. Census Bureau.   
 
-In the absence of any new data, the existing material collected for the Statistical Performance Index could be used to populate an initial dashboard as follows:
+The World Bank’s Statistical Capacity Index (SCI) is one such tool that has been widely employed. Several international and national agencies have adopted the SCI for measuring progress in statistical capacity building and related investments.   The World Bank mainstreamed the SCI in its monitoring and assessment framework and has adopted it as a baseline indicator in various projects at the country level. The SCI is based on publicly available data, and this has various advantages over other indexes of statistical capacity. A key advantage of the SCI is that it can provide assessment of a country’s statistical capacity in an internationally comparable and cost-effective manner.
 
-•	Data use dimension: leave blank
+Yet, there are several areas in which the existing SCI can be improved. First, it comprises of a limited number of indicators and includes no indicators of some important data sources, such as labor force surveys, establishment surveys, or administrative data. Second, it ignores the data dissemination practices of an NSS, which is one of the key features of data usage. Third, the SCI has been criticized for placing too much weight on statistical output and activities, while neglecting the infrastructure and resource components of statistical systems.  Finally, it is silent on whether the data products produced by the NSS are in high demand. 
 
-•	Data services dimension: use scores for SPI “dissemination practices and openness” dimension
+Since its launch in 2004, the SCI’s methodology and coverage have basically remained the same, while the global data landscape has changed significantly. NSSs have made significant advancements with data collection and dissemination practices. At the same time, the adoption of the Sustainable Development Goals (SDGs) set an ambitious development agenda for the next 15 years on ending poverty, protecting the planet, and ensuring prosperity for all by 2030. This, in turn, increased the demand for data and raised the bar for national statistical systems regarding their capacity to produce high-quality data. We thus propose to improve the current SCI to better suit the changing global data landscape.
 
-•	Data products dimension: use scores for SPI “availability of key indicators” dimension
+## Overview of the New SPI
 
-•	Data sources dimension: use scores for SPI “censuses and surveys” dimension
+The new Statistical Performance Indicators (SPI) builds on the SCI, which the World Bank has regularly published since 2004.  Our new SPI will cover many of the same elements as the SCI, such as statistical methodology, source data, and periodicity, but will also expand into new areas. The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system.  We also are committing to making our project open data and open code to build confidence in our work.
 
-•	Data infrastructure dimension: use scores for SPI “methodology, standard and classifications” dimension
+The new Statistical Performance Indicators (SPI) are designed to monitor how well countries statistical systems are meeting this purpose.  By helping countries and development partners identify the strengths and weaknesses of national statistical systems the SPI can support policy advice for countries about their national statistical systems, investment decisions for donors including the World Bank, benchmarking of national statistical systems, and advocacy for national statistics.  
 
-Indeed, a first iteration Dashboard and toolkit can be demonstrated using this existing data. As new methods are developed and data are collected, the Dashboard can progressively be populated.
-Where it has not been possible to develop and implement a methodology for the dashboard tile concerned, this should be left blank to signify that this is an important issue that has not yet been quantified in a way that meets the criteria for the Dashboard. This will provide an incentive for a research agenda and possibly surveys and other mechanisms to fill the gap for a particular purpose eg a country assessment.
+We identify five key dimensions of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These dimensions can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining.
 
-Where it has been possible to develop and implement a methodology but it has not been possible to find data for a specific country, even though it is known to exist, the Dashboard tile for that country should also be left blank and weighting between tiles conducted on the basis of the tiles that are present.
+![](SPI_cycle.png)
 
-In some situations, missing data represents a zero score, for example if there is no evidence that geospatial data is used by the country’s statistical system. In such cases a score of zero should be recorded and used in the generation of indicators, weightings and rankings.
+Statistics have no value unless they are used. The first dimension of the SPI is therefore data use. A successful statistical system is one that produces data products that are highly used. 
+
+In order to meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second dimension of the SPI is therefore data services that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.
+
+The dialogue between users and suppliers in turn drives the design of statistical products that are to be created including the quality of product needed for the country requirement. This will incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third dimension of the SPI is therefore data products. A successful statistical system is one that generates high quality statistical indicators that can also track progress for the Sustainable Development Goals (SDGs).
+
+In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens.  The fourth dimension of the SPI is therefore data sources.  A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.
+
+For the cycle to be complete, capability needs continuously to be reviewed to ensure that it is enough to deliver the products, services and ultimately data use required. The fifth dimension of the SPI is therefore data infrastructure. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
+The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 below.
+
+*Figure 1: The Dimensions and Pillars that Construct the New SPI*
+![](SPI_dashboard.png)
+
+A score against each element would facilitate:    
+
+  1. Understanding of the maturity of the national statistical system in relation to others eg quintile groups of countries could be shown against each dimension    
+  
+  2. This in turn would highlight relative strengths and weaknesses of the system and give an indication of the extent to which the official statistics could be relied upon  
+  
+  3. It would also point to which other countries the country in question could learn from as it seeks to improve and create incentives to develop in a forward looking rather than backward looking way   
+  
+  4. Time series would allow assessments to be made of progress of the system and a start point for assessments of return on investment for funding given for capacity building 
+  
+  5. A dynamic view encouraging continuous improvement. As countries improve the bar for what good looks like would get higher     
 
 
-<!-- # Key Discussion Points -->
+Key characteristics of the SPI are: (i) uses only publicly accessible data; (ii) transparent methodology; (iii) easily replicable; (iv) provides a long-time series to track progress in performance; (v) captures outcomes and supporting elements; (vi) reflects the SDGs; (vii) facilitates at-a-glance comparisons on a global scale.
+We are collecting data on indicators for the 22 pillars above. For dissemination, the SPI will be presented both in the dashboard format above and as an index for each country. Further details on the construction of the new SPI are provided in the remainder of the document.
 
-<!-- Here are a few concerns that I have at the moment, but this is by no means an exhaustive list.  Overall, there are some indicators with issues in terms of coverage across countries.  There are also differences in the length of the time series for each indicator.  Here is a detailed breakdown by indicator. -->
 
-<!-- 1. Dimension 1 needs more work adding source documents, NSO social media accounts.  It also needs work refining scoring methodology.  This should be discussed as a team.    -->
-<!-- 2. Dimension 2 has no information for the Advisory/Analytical Services dimension. -->
-<!-- 3. Dimension 3 is based on the 15 AKI indicators we defined for the original SPI. This needs to be discussed, as John had proposed going to NSO sites and collecting SDG indicator information. I abandoned this approach, because there is no straightforward way of scraping this info.  To discuss as a team.    -->
-<!-- 4. Dimension 4 needs more work and refinement particularly on the Private/Citizen generated data section.    -->
-<!-- 5. Dimension 5 also needs work with having a complete set of data for all countries.  There are major coverage gaps for all indicators, except for the Standards dimension which comes from the SPI team. -->
+
+## Pillars of the new SPI
+
+
+A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as dimensions. We refer to the 22 cells in the framwork in Figure 1 as pillars. Finally, each pillar may be composed of multiple indicators. For instance, the pillar on censuses and surveys is made up indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.
+
+### Data use
+
+The data use dimension is segmented by user type. The tiles on the Dashboard provide an indicator of use of statistics respectively by the legislature, executive, civil society (including sub-national actors), academia and international bodies. A mature system would score well across the tiles. Areas for development would be highlighted by weaker scores in that domain enabling questions to be asked about prioritization amongst user groups and why existing services are not resulting in higher use of national statistics in that segment.
+
+### Data services
+
+The data services dimension is segmented by service type. The tiles on the Dashboard provide an indicator of the quality of data releases, the richness and openness of online access, the effectiveness of advisory and analytical services related to statistics and the availability and use of data services such as secure microdata access. Advisory and analytical services might incorporate elements related to data stewardship services including ethical consideration of proposals and calling out misuse of data in accordance with the Fundamental Principles of Official Statistics.
+
+### Data products
+
+The data products dimension is segmented by topic and organized into social, economic, environmental and institutional domains using the typology of the Sustainable Development Goals. This approach enables comparisons across countries and anchors the system in the 2030 agenda so that a global view can be generated whilst enabling different emphasis to be applied in different countries to reflect the user needs of that country.
+
+### Data sources
+
+The data sources dimension is segmented between sources generated by the statistical office (censuses and surveys) and sources accessed from elsewhere (administrative data, geospatial data, private sector data and citizen generated data). The appropriate balance between these types of source will vary depending on the institutional setting and maturity of the statistical system in each country. High scores should reflect the extent to which the sources being utilized enable the necessary statistical indicators to be generated. For example, a low score on environment statistics may reflect a lack of use of (and low score for) geospatial data. This linkage, which is inherent in the data cycle approach, should help highlight areas for investment if country needs are to be met.
+
+### Data infrastructure
+
+The data infrastructure dimension is segmented into hard and soft infrastructure segments itemizing essential cross cutting requirements for an effective statistical system. The segments are:   
+
+  1. Legislation and governance covering the existence of laws and a functioning institutional framework for the statistical system    
+  
+  2. Standards and methods addressing compliance with recognized frameworks and concepts   
+  
+  3. Skills including level of skills within the statistical system and amongst users (statistical literacy)   
+  
+  4. Partnerships reflecting the need for the statistical system to be inclusive and coherent    
+  
+  5. Finance, both domestically and from donors    
+  
+
+### Description of Pillars
+
+Below is a brief description of the 22 pillars in our framework.  
+
+
+
+```{r metadatatab1, echo=FALSE}
+####
+# create table
+####
+pillars <- read_csv(paste(raw_dir, '/metadata/SPI_pillars.csv', sep=""))
+
+pillars <- pillars %>%
+  mutate(pillar=paste(pillar_number, pillar_name, sep=": ")) %>%
+  select(pillar, spi_indicator_description)
+
+
+pillars_tab <- flextable(pillars) %>%
+  add_header_lines('SPI Pillars Metadata.') %>%
+  set_header_labels(values=list(
+                       pillar="Pillar",
+                       spi_indicator_description="Brief Description"
+                                   )) 
+
+pillars_tab %>%
+  width(width=4.2) %>%
+  align( align = "left", part = "body")
+
+
+
+```
+
+## SPI Data
+
+Thanks to a large scale data collection effort by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering 14 out of our 22 pillars for our dashboard.  These 54 indicators do allow us to provide data for each of our 5 dimensions on data use, data services, data products, data sources, and data infrastructure.  Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public.  Going forward, the international community must work together to fill these gaps.
+
+An area of particular concern is in the dimension of data use.  Currently, our dashboard only features data for one of the five pillars in data use.  That is on data use by international organizations.  We are currently blind as to whether statistical systems are providing useful data to their national governments (legislature and executive branches), to civil society, and to academia.  By closing this data gap, country national statistical offices (NSOs) can be better guided in whether the information they are providing is meeting their user's needs.  International organizations can help steer funding for capacity building in areas that are lacking.  And the virtuous data cycle can begin: where better investment leads to more effectiveness, then more innovation, higher value-added, and ultimately greater impact.
+
+Another area that needs improvement is in the measurement of advisory and analytical services provided by NSOs, such as data stewardship services and the ethical consideration of proposals.  By measuring this type of work done by NSOs that goes beyond producing data, the international community and the NSOs themselves can better assess whether this type of support is in place.
+
+In the area of data sources, more information is needed particularly in the areas of administrative data, geospatial data, and private and citizen generated data.  While we have measures of administrative data use, particularly on the development of civil registrations and vital statistics systems, we have an incomplete picture of whether the administrative data systems are in place to measure health, education, labor, and social protection program statistics.  For our geospatial indicator, we have a proxy measure of whether the country is able to produce indicators at the sub-national level, but we lack an understanding of how countries are using geospatial information in other ways, for instance using satellite data.  And while the world is increasingly awash with private and citizen generated data, such as on mobility, job searching, or social networking, we were unable to find a reliable source to measure how national statistical systems are incorporating this information.
+
+Finally, many of the soft components of data infrastructure lacked adequate data.  This includes the areas of skill (including data literacy) and partnerships between entities in the national statistical system.  We are making use of the PARIS21 led SDG indicator on whether statistical legislation met the standards of the UN fundamental Principles of Statistics in our dashboard, but were unable to use this in our index, because countries have not sufficiently reported to PARIS21 on this measure.  This is also true of the PARIS21 led SDG indicator on whether the national statistical system is fully funded.  Countries should be encouraged to report on this information.
+
+Below is a brief description of the information (or lack thereof) we have available for the pillars in our framework.  For pillars excluded, we either lacked a source with a developed methodology or else the data collection for that measure was incomplete. This is described below:
+
+  * **Pillar 1.1: Data use by national legislature:**  *Not included because of lack of established methodology.  In principle it may be possible to utilize websites of national legislatures but this will require further work and assessment. *   
+  * **Pillar 1.2: Data use by national executive branch:** *Not included because of lack of established methodology. There are some usable data sources with fairly good coverage (as used by PARIS21) but gaps in data have prevented fuller assessment of suitable methods.*      
+  * **Pillar 1.3: Data use by civil society:**  *Not included because of lack of established methodology. There are some usable data sources with good coverage, for example from social media but more data is required to help assess and allow for likely biases between and within countries.*    
+  * **Pillar 1.4: Data use by academia:**  *Not included because of lack of established methodology. We have not been able to find usable data sources with global coverage on which a new methodology could be developed.*   
+  * **Pillar 1.5: Data use by international organizations:**  *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics, safely managed drinking water, and labor force statistics data for international agencies using metadata. We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further*    
+
+  
+  * **Pillar 2.1: Data Releases:** *SPI.D2.1.GDDS -	SDDS/e-GDDS subscription. This is a good data source but we recognize that it is a proxy for the concept we are seeking to capture rather than a direct measurement.*    
+  * **Pillar 2.2: Online access:** *SPI.D2.2.Openness.subscore	ODIN Open Data Openness score.  This is a well-established data source with good country coverage. In using this indicator, it is important to describe carefully what is captured since the purpose of ODIN is different to the purpose of the SPI.*   
+  * **Pillar 2.3: Advisory/ Analytical Services:**  *Not included because of lack of established methodology. We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further.*    
+  * **Pillar 2.4: Data services:** *SPI.D2.4.NADA	NADA metadata.  We have not been able to find usable data sources with global coverage on which a new methodology could be developed.*
+  
+  * **Pillar 3.1: Social Statistics:** *Average score for Goal 1-6 indicators. The primary data source is the UN SDG database. Whilst this is a database with comprehensive coverage that all countries have signed up to, it is clear that many (particularly developed countries) are not yet submitting their available national data. Scores for these countries are likely to represent an indicator of their willingness to submit national data rather than their performance in calculating the indicators.  For OECD countries, we supplement the UN SDG database with comparable data submitted to the OECD following the methodology in Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm). *
+  * **Pillar 3.2: Economic Statistics:** *Average score for Goal 7-12 indicators. See 3.1.*  
+  * **Pillar 3.3: Environmental Statistics:**  *Average score for Goal 13-15 indicators. See 3.1.*      
+  * **Pillar 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators. See 3.1.*    
+
+  * **Pillar 4.1: Censuses and Surveys:** *Average score Census and Survey Indicators indicators.  In this release of the SPI the data and methods used for this indicator are the same as for the previous SPI. Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt outdated practices for censuses and surveys.*
+  * **Pillar 4.2: Administrative Data:** *Average score for CRVS indicator.  Social Protection, Education, and Labor admin data indicators not included because of lack of established methodolgy. While our team identified several promising sources for administrative data from the World Bank's ASPIRE team, UNESCO, and ILO, incomplete coverage across countries made us drop these indicators from our index.  A major research and data collection effort is needed from all custodian agencies  to fill in this information, so that a more comprehensive picture of administrative data availability can be produced.  *  
+  * **Pillar 4.3: Geospatial Data:**  *SPI.D4.3.GEO.first.admin.level -	Geospatial data available at 1st Admin Level.  We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the ability of the national statistical system to produce geospatial data. A major research and data collection effort is needed via GGIM to fill in this information, so that a more comprehensive picture of geospatial data capability at the national level can be produced. Until this is done, it we cannot even assess the scale of the data gaps in a comparable way. * 
+  * **Pillar 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology.  Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.*   
+  
+  * **Pillar 5.1: Legislation and governance:**  *Included in dashboard, but not index because of insufficient country coverage.  A global database of statistical and data legislation and governance practice would be a valuable resource for capacity building in general not just for the SPI.*  
+  * **Pillar 5.2: Standards and Methods:** *Average score for Standards and Methods indicators.  In this release of the SPI the data and methods used for this indicator are the same as for the previous SPI. Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt only traditional standards and methods and neglect innovative solutions that may be more valid in the current context.  *  
+  * **Pillar 5.3: Skills:**  *Not included because of lack of established methodology or suitable data sources*    
+  * **Pillar 5.4: Partnerships:**  *Not included because of lack of established methodology or suitable data sources*    
+  * **Pillar 5.5: Finance:**  *Included in dashboard, but not index because of insufficient country coverage and concerns that the indicator has biases that would lead to misleading incentives. * 
+  
+
+This process of eliminating some pillars due to lack of established methodology or country coverage results in 12 pillars. This includes 1 on data use, 3 on data services, 4 on data products, 3 on data sources, and 1 on data infrastructure.
 
 # Data Use 
 
@@ -250,23 +377,13 @@ Cleaning for Data Use Indicators.  Data Use (5 Indicators):
 
 ## Indicator 1.1: Data use by national legislature    
 
-Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using national legislature website as source.
+Not included because of lack of established methodology.  In principle it may be possible to utilize websites of national legislatures but this will require further work and assessment.
 
 ## Indicator 1.2: Data use by national executive branch
 
-Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using voluntary national review plans as a source.
+Not included because of lack of established methodology. There are some usable data sources with fairly good coverage (as used by PARIS21) but gaps in data have prevented fuller assessment of suitable methods.  
 
-Our main source for this is the UN Voluntary National Reviews (VNR) Database (https://sustainabledevelopment.un.org/vnrs/).
-
-
-The indicator for each data use by the national executive branch is formed by:   
-  1.	Searches the documents for references to a set of keywords related to each SDG goal     
-  2.	Searches the documents for the subset of references that also include statistics, by searching for numeric values (excluding references to years)    
-  3.	Calculates the ratio between the two
-
-The ratio captures density of discussion of each topic in each document assessed.  The keywords are based on indicators found in the World Bank's World Development Indicators (WDI).  
-
-```{r vnr}
+```{r vnr, eval=FALSE, include=FALSE}
 #load data
 vnr_use_df <- read_csv(paste(raw_dir, "/1.2_DUNE/UN_VNR_use_of_numbers.csv", sep="")) %>%
   group_by(country) %>%
@@ -398,9 +515,7 @@ spi_mapper('vnr_use_merge', 'SPI.D1.2.VNR', 'Overall Score for Use of Numbers in
 
 ## Indicator 1.3: Data use by civil society     
 
-Based on PARIS21 data use indicator (Chapter 4 of Statistical Capacity Development Outlook) using main social media platform in use in country as source.
-
-We are pulling data from Twitter at this point. We have only accessed a handful of accounts from NSOs, but this could be quickly scaled up.
+Not included because of lack of established methodology. There are some usable data sources with good coverage, for example from social media but more data is required to help assess and allow for likely biases between and within countries.
 
 
 
@@ -486,23 +601,24 @@ country_metadata <- wbstats::wbcountries()
 ```
 
 ## Indicator 1.4: Data use by academia  
+Not included because of lack of established methodology. We have not been able to find usable data sources with global coverage on which a new methodology could be developed.
 
-The idea for this indicator is that countries should be producing statistical products that are utilized, in this case by academia.  As a measure of this, we use the IHSN database on censuses and surveys conducted by counties and calculate a ranking of countries based on the total number of downloads of the censuses and surveys produced by that country on a per capita basis.  In other words, we calculate the total number of downloads of censuses and surveys for a country, divided by the population of that country, to produce a ranking.  Countries with low scores on this metric, may either be producing censuses and surveys that are not in high demand or are not producing or adding a sufficient number of censuses and surveys to IHSN to register highly on this measure.
+<!-- The idea for this indicator is that countries should be producing statistical products that are utilized, in this case by academia.  As a measure of this, we use the IHSN database on censuses and surveys conducted by counties and calculate a ranking of countries based on the total number of downloads of the censuses and surveys produced by that country on a per capita basis.  In other words, we calculate the total number of downloads of censuses and surveys for a country, divided by the population of that country, to produce a ranking.  Countries with low scores on this metric, may either be producing censuses and surveys that are not in high demand or are not producing or adding a sufficient number of censuses and surveys to IHSN to register highly on this measure. -->
 
 
-The source for this indicator is the IHSN.
+<!-- The source for this indicator is the IHSN. -->
 
-> The mission of the IHSN is to improve the availability, accessibility, and quality of survey data within developing countries, and to encourage the analysis and use of this data by national and international development decision makers, the research community, and other stakeholders.
+<!-- > The mission of the IHSN is to improve the availability, accessibility, and quality of survey data within developing countries, and to encourage the analysis and use of this data by national and international development decision makers, the research community, and other stakeholders. -->
 
->To support this mission, the key objectives of the IHSN are:
+<!-- >To support this mission, the key objectives of the IHSN are: -->
 
->Improved coordination of internationally sponsored survey programs, with emphasis on timing, sequencing, frequency, and cost-effectiveness 
-Availability of coordinated and practical technical and methodological guidelines for all stages of the survey life cycle 
-Availability of a central survey data catalog which would inform data users of the availability of survey and census data from multiple sources 
-Availability of standards, tools, and guidelines that would allow data producers to document, disseminate, and preserve microdata according to international standards and best practices 
-Improved collaboration between data producers and users 
+<!-- >Improved coordination of internationally sponsored survey programs, with emphasis on timing, sequencing, frequency, and cost-effectiveness  -->
+<!-- Availability of coordinated and practical technical and methodological guidelines for all stages of the survey life cycle  -->
+<!-- Availability of a central survey data catalog which would inform data users of the availability of survey and census data from multiple sources  -->
+<!-- Availability of standards, tools, and guidelines that would allow data producers to document, disseminate, and preserve microdata according to international standards and best practices  -->
+<!-- Improved collaboration between data producers and users  -->
 
-IHSN has a database of more than 7,483 surveys as of August 5, 2020.
+<!-- IHSN has a database of more than 7,483 surveys as of August 5, 2020. -->
 
 ```{r ihsn, eval=FALSE, include=FALSE}
 
@@ -755,16 +871,15 @@ print(g2)
 
 ## Indicator 1.5: Data use by international organizations   
 
-The following indicator will measure how useful data sources produced in national statistics systems are for international organizations.  We gather three measures of how useful or reliable country produced measures are for international organizations.  The first on comparability of poverty estimates for the World Bank reporting on international poverty.  A second on statistics on child mortality for the UN Inter-agency Group for Child Mortality Estimation.  A third on accuracy of debt reporting as classified by the World Bank.  Each of these will be described in greater detail below.  
+The following indicator will measure how useful data sources produced in national statistics systems are for international organizations.  We gather five measures of how useful or reliable country produced measures are for international organizations.  The first on comparability of poverty estimates for the World Bank reporting on international poverty.  A second on statistics on child mortality for the UN Inter-agency Group for Child Mortality Estimation.  A third on accuracy of debt reporting as classified by the World Bank.  A fourth on whether data sources are available to the JMP for estimating safely managed drinking water.  A fifth on whether a suitable data source is available to the ILO for producing estimates of labor force participation. Each of these will be described in greater detail below.  
 
-While these three indicators are not comprehensive of all statistics produced by countries, they do provide some indication of whether countries are producing estimates that are useful to international organizations for their reporting and monitoring efforts.
+We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further.
 
 ### Poverty Comparability
 
 The first measure examines whether comparable poverty estimates are produced by countries over time.  The World Bank's Povcalnet has introduced a comparability indicator for whether the country produces comparable poverty estimates over time.  https://blogs.worldbank.org/opendata/apples-apples-povcalnet-introduces-new-comparability-indicator.  This metadata has been compiled by the Country Poverty Economists in the World Bank’s Poverty and Equity Global Practice.  From the Povcalnet team:
 
-    As countries frequently improve household surveys and measurement methodologies, strict comparability of poverty estimates over time is often limited. Strictly comparable poverty estimates within a country require a consistent production process, including the sampling frame, questionnaires, the methodological construction of the welfare aggregates and poverty lines, a consistent deflation of prices in time and space, among many  other considerations. Thus, the assessment of comparability is country-dependent and relies on the knowledge of the Country Poverty Economist and Regional Poverty Teams of the Poverty Global Practice, as well as close  dialogue with national data producers with intimate knowledge of the survey design and methodology. Within a country, we assume comparability of poverty estimates over time unless there is a known change to survey     methodology, measurement or data structure. More details on the comparability metadata database can be found in Atamanov et al. (2019) (section 4). The database can be downloaded in csv.
-
+>> As countries frequently improve household surveys and measurement methodologies, strict comparability of poverty estimates over time is often limited. Strictly comparable poverty estimates within a country require a consistent production process, including the sampling frame, questionnaires, the methodological construction of the welfare aggregates and poverty lines, a consistent deflation of prices in time and space, among many  other considerations. Thus, the assessment of comparability is country-dependent and relies on the knowledge of the Country Poverty Economist and Regional Poverty Teams of the Poverty Global Practice, as well as close  dialogue with national data producers with intimate knowledge of the survey design and methodology. Within a country, we assume comparability of poverty estimates over time unless there is a known change to survey     methodology, measurement or data structure. More details on the comparability metadata database can be found in Atamanov et al. (2019) (section 4). The database can be downloaded in csv.
 
 
 
@@ -882,51 +997,6 @@ for (i in c(2004:2019)) {
 
 ```
 
-<!-- ### AKI 1.5.2: Hunger -->
-
-<!-- We examine the Food Insecurity Experience Scale from the FAO (http://www.fao.org/faostat/en/#data/FS).  Data for food insecurity was pulled on May 1, 2020. -->
-
-<!-- Scoring -->
-<!-- 1 Point. 3 or more values available within past 5 years	 -->
-<!-- 0.6 Points. 2 values available within past 5 years; 	 -->
-<!-- 0.3 Points. 1 values available within past 5 years; 	 -->
-<!-- 0 Points. None within past 5 years -->
-
-
-<!-- ```{r AKI_3.2} -->
-
-
-<!-- #Read in data from UN Inter-agency Group for Child Mortality Estimation -->
-
-<!-- D3.2.AKI.FIES <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.2.FIES.csv', sep="/")) %>% -->
-<!--   rename(year_code="Year Code", -->
-<!--          iso3c="ISO3 Code") %>% -->
-<!--   mutate(date=as.numeric(str_extract(year_code, "^.{4}")), -->
-<!--          SPI.D1.5.FIES=Value) -->
-
-<!-- #Now loop from 2016 and 2019, keeping just data inside last 5 years. -->
-<!-- for (reference_year in 2016:2019) { -->
-<!--   temp <-D3.2.AKI.FIES %>% -->
-<!--           filter(((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>% #filter out years outside reference window of 5 years      -->
-<!--           mutate(SPI.D1.5.FIES=if_else(is.na(SPI.D1.5.FIES),0,1)) %>% #create 0,1 variable for whether data point exists for country -->
-<!--           group_by(iso3c) %>% -->
-<!--           summarise_all((~(if(is.numeric(.)) sum(., na.rm = TRUE) else first(.)))) %>% #group by country to create one observation per country                 containing whether or not data point existed -->
-<!--           mutate(SPI.D1.5.FIES=case_when( -->
-<!--             SPI.D1.5.FIES>=3 ~ 1, -->
-<!--             SPI.D1.5.FIES==2 ~ 0.6, -->
-<!--             SPI.D1.5.FIES==1 ~ 0.3, -->
-<!--             SPI.D1.5.FIES==0 ~ 0,  -->
-<!--             TRUE ~ 0 -->
-<!--           )) %>% # 1 point for at least 3 values, 0.6 for 2 values, 0.3 for 1 values, 0 otherwise -->
-<!--           mutate(date=reference_year) %>% -->
-<!--           select( iso3c, date, starts_with('SPI.'))  -->
-
-
-<!--   assign(paste("D3.2.AKI",reference_year,sep="_"), temp) -->
-<!-- } -->
-
-<!-- D3.2.AKI <- bind_rows(D3.2.AKI_2016, D3.2.AKI_2017, D3.2.AKI_2018, D3.2.AKI_2019) -->
-<!-- ``` -->
 
 
 
@@ -1079,180 +1149,6 @@ D3.3.AKI <- D3.3.AKI %>%
 
 
 
-<!-- ```{r AKI_3.3, eval=FALSE, include=FALSE} -->
-<!-- EdStatsRequest_metadata <- GET(url = "https://api.worldbank.org/v2/country/all/indicator/SE.LPV.PRIM.BMP?footnote=y&per_page=30000&format=json") -->
-<!-- EdStatsResponse_metadata <- content(EdStatsRequest_metadata, as = "text", encoding = "UTF-8") -->
-
-<!-- # Parse the JSON content and convert it to a data frame. -->
-<!-- EdStatsJSON_metadata <- jsonlite::fromJSON(EdStatsResponse_metadata, flatten = TRUE) %>% -->
-<!--   data.frame() %>% -->
-<!--   filter(str_length(footnote)>0) -->
-<!-- ``` -->
-
-
-<!-- ### AKI 1.5.5 Maternal Mortality Ratio -->
-
-<!-- The data is sourced from the the Inter-Agency Group (200 countries) to improve time and country coverages. Tne national estimates with the source information are available at https://www.who.int/reproductivehealth/publications/maternal-mortality-2000-2017/en/.  The data was accessed on April 3, 2020.  This data was used for modelling maternal mortality, which are then fed into the modelled estimates on Maternal Mortality (SH.STA.MMRT) in the WDI. -->
-
-<!-- For our purposes, we will use the raw data from the country surveys as our data for the availability of key indicators, since the modelled estimates are produced out of sample, and thus not reflective of a country's national statistical system. -->
-
-<!-- Countries are ranked by source quality (admin data > survey > no data) and frequency. -->
-<!-- Score on this indicator has a max of 1 point with 0.5 points for source quality and 0.5 points for frequency.  Detailed scoring for source quality and frequency components are below. -->
-
-<!-- Quality (0.5 points total): -->
-<!-- 0.5 Point. Vital Registration data available within past 5 years	 -->
-<!-- 0.25 Points. Survey Data or Census Data availabe, but no Vital Registration data within past 5 years; 	 -->
-<!-- 0 Points. None within past 5 years -->
-
-<!-- Frequency (0.5 points total): -->
-<!-- 0.5 Point. 3 or more values available within past 5 years	 -->
-<!-- 0.3 Points. 2 values available within past 5 years; 	 -->
-<!-- 0.15 Points. 1 values available within past 5 years; 	 -->
-<!-- 0 Points. None within past 5 years -->
-
-<!-- ```{r AKI_3.5} -->
-
-
-<!-- #Read in data from UN Inter-agency Group  -->
-
-<!-- D3.5.AKI.MMR <- read_csv(file=paste(raw_dir, '3.1_DPSS/D3.5.BMat2019_datainputs.csv', sep="/")) %>% -->
-<!--   filter(modelinclude=='TRUE') %>% #keep just observations that the UN inter-agency group deemed credible for use in modelling  -->
-<!--   mutate(date=end, -->
-<!--          iso3c=iso, -->
-<!--          D3.MMRT=pm_obs) -->
-
-<!-- #Now loop from 2016 and 2019, keeping just data inside last 5 years. -->
-<!-- for (reference_year in 2016:2019) { -->
-<!--   temp <-D3.5.AKI.MMR %>% -->
-<!--           mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>%  -->
-<!--           mutate(SPI.FREQ.D1.5.MMRT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country -->
-<!--           mutate(SPI.QUAL.D1.5.MMRT=case_when( -->
-<!--                    reference_year-as.numeric(date)>=5 ~ 0, #outside 5 year window -->
-<!--                    type=='vr' ~ 0.5, -->
-<!--                    type!='vr' ~ 0.25, -->
-<!--                    TRUE ~ as.numeric(NA) -->
-<!--                  )) %>% -->
-<!--           group_by(iso3c) %>% -->
-<!--           summarise(SPI.FREQ.D1.5.MMRT=sum(SPI.FREQ.D1.5.MMRT, na.rm=T), -->
-<!--                     SPI.QUAL.D1.5.MMRT=max(SPI.QUAL.D1.5.MMRT, na.rm=T)) %>%  -->
-<!--           mutate(SPI.FREQ.D1.5.MMRT=case_when( -->
-<!--             SPI.FREQ.D1.5.MMRT>=3 ~ 0.5, -->
-<!--             SPI.FREQ.D1.5.MMRT==2 ~ 0.3, -->
-<!--             SPI.FREQ.D1.5.MMRT==1 ~ 0.15, -->
-<!--             SPI.FREQ.D1.5.MMRT==0 ~ 0,  -->
-<!--             TRUE ~ 0 -->
-<!--           )) %>% -->
-<!--           mutate(SPI.D1.5.MMRT=SPI.FREQ.D1.5.MMRT+SPI.QUAL.D1.5.MMRT) %>%  -->
-<!--           mutate(date=reference_year) %>% -->
-<!--           select( iso3c, date, starts_with('SPI.'))  -->
-
-
-<!--   assign(paste("D3.5.AKI",reference_year,sep="_"), temp) -->
-<!-- } -->
-
-<!-- D3.5.AKI <- bind_rows(D3.5.AKI_2016, D3.5.AKI_2017, D3.5.AKI_2018, D3.5.AKI_2019) -->
-
-<!-- ``` -->
-
-
-
-
-
-
-<!-- ### AKI 1.5.7: Access to electricity (% of population)  -->
-
-<!-- Access to Electricity (% of population) has 99% coverage in the WDI database making it less useful for distinguishing between countries.  In order to improve the usefulness of this indicator, we are making use of data compiled by World Bank colleagues on surveys containing electricity items.  According to the access to electricity metadata, around 42 countries have no data and an imputed value is assigned based on the regional average.  By going to survey source data, we address this issue of imputation, which gives a misleading picture of availability for our purposes.  Below is the metadata from the WDI for methods for the access to electricity indicator. -->
-
-<!-- >Data for access to electricity are collected among different sources: mostly data from nationally representative household surveys (including national censuses) were used. Survey sources include Demographic and Health Surveys (DHS) and Living Standards Measurement Surveys (LSMS), Multi-Indicator Cluster Surveys (MICS), the World Health Survey (WHS), other nationally developed and implemented surveys, and various government agencies (for example, ministries of energy and utilities). Given the low frequency and the regional distribution of some surveys, a number of countries have gaps in available data. To develop the historical evolution and starting point of electrification rates, a simple modeling approach was adopted to fill in the missing data points - around 1990, around 2000, and around 2010. Therefore, a country can have a continuum of zero to three data points. There are 42 countries with zero data point and the weighted regional average was used as an estimate for electrification in each of the data periods. 170 countries have between one and three data points and missing data are estimated by using a model with region, country, and time variables. The model keeps the original observation if data is available for any of the time periods. This modeling approach allowed the estimation of electrification rates for 212 countries over these three time periods (Indicated as "Estimate"). Notation "Assumption" refers to the assumption of universal access in countries classified as developed by the United Nations. Data begins from the year in which the first survey data is available for each country. -->
-
-<!-- Scoring -->
-<!-- 1 Point. 3 or more values available within past 5 years	 -->
-<!-- 0.6 Points. 2 values available within past 5 years; 	 -->
-<!-- 0.3 Points. 1 values available within past 5 years; 	 -->
-<!-- 0 Points. None within past 5 years -->
-
-<!-- ```{r D3.7_AKI} -->
-<!-- #read in file from rawdata folder -->
-<!-- D3.7.ELEC <- read_csv(file = paste(raw_dir, "3.2_DPES/D3.7.ELEC.csv", sep="/" )) %>% -->
-<!--   rename(country=Country, -->
-<!--          iso3c="Country code", -->
-<!--          date=Time) -->
-
-<!-- #Now loop from 2016 and 2019, keeping just data inside last 5 years. -->
-<!-- for (reference_year in 2016:2019) { -->
-<!--   temp <-D3.7.ELEC %>% -->
-<!--           mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>%  -->
-<!--           mutate(SPI.D1.5.ELEC=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country -->
-<!--           group_by(country) %>% -->
-<!--           summarise(SPI.D1.5.ELEC=sum(SPI.D1.5.ELEC, na.rm=T)) %>% -->
-<!--           mutate(SPI.D1.5.ELEC=case_when( -->
-<!--             SPI.D1.5.ELEC>=3 ~ 1, -->
-<!--             SPI.D1.5.ELEC==2 ~ 0.6, -->
-<!--             SPI.D1.5.ELEC==1 ~ 0.3, -->
-<!--             SPI.D1.5.ELEC==0 ~ 0,  -->
-<!--             TRUE ~ 0 -->
-<!--           )) %>% -->
-<!--           mutate(date=reference_year) %>% -->
-<!--           select( country, date, starts_with('SPI.'))  -->
-
-
-<!--   assign(paste("D3.7.AKI",reference_year,sep="_"), temp) -->
-<!-- } -->
-
-<!-- D3.7.AKI <- bind_rows(D3.7.AKI_2016, D3.7.AKI_2017, D3.7.AKI_2018, D3.7.AKI_2019) -->
-<!-- ``` -->
-
-
-
-<!-- ### AKI 1.5.14 Quarterly GDP -->
-
-<!-- Quarterly GDP numbers were pulled from the IMF website. -->
-
-<!-- After GDP by expenditure, quarterly GDP is probably the most important development to be made in a system of National Accounts, before the development of full sectoral accounts. IMF IFS has quarterly GDP from various sources, including governments and international agencies at https://data.imf.org/?sk=4C514D48-B6BA-49ED-8AB9-52B0C1A0179B -->
-
-<!-- Scoring -->
-<!-- 1 Point. 3 or more values available within past 5 years	 -->
-<!-- 0.6 Points. 2 values available within past 5 years; 	 -->
-<!-- 0.3 Points. 1 values available within past 5 years; 	 -->
-<!-- 0 Points. None within past 5 years -->
-
-
-
-<!-- ```{r AKI_3.14} -->
-
-<!-- #read in file from rawdata folder -->
-<!-- D3.14.QUART.GDP <- read_csv(file = paste(raw_dir, "3.2_DPES/D3.14.QUART.GDP.csv", sep="/" )) -->
-
-<!-- #clean data and produce indicator for each year -->
-<!-- #Now loop from 2016 and 2019, keeping just data inside last 5 years. -->
-<!-- for (reference_year in 2016:2019) { -->
-<!-- temp <-D3.14.QUART.GDP %>% -->
-<!--   mutate(date=as.numeric(str_sub(TIME_PERIOD,1,4))) %>% -->
-<!--   mutate(iso2c=REF_AREA) %>% -->
-<!--   mutate(frequency=((reference_year-as.numeric(date))<=5) & (reference_year>=as.numeric(date))) %>%  -->
-<!--   mutate(SPI.D1.5.QUART.GDP=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country -->
-<!--   group_by(iso2c, date) %>% -->
-<!--   summarise(SPI.D1.5.QUART.GDP=max(SPI.D1.5.QUART.GDP, na.rm=T)) %>%  -->
-<!--   group_by(iso2c) %>% -->
-<!--   summarise(SPI.D1.5.QUART.GDP=sum(SPI.D1.5.QUART.GDP, na.rm=T)) %>%  -->
-<!--   mutate(SPI.D1.5.QUART.GDP=case_when( -->
-<!--     SPI.D1.5.QUART.GDP>=3 ~ 1, -->
-<!--     SPI.D1.5.QUART.GDP==2 ~ 0.6, -->
-<!--     SPI.D1.5.QUART.GDP==1 ~ 0.3, -->
-<!--     SPI.D1.5.QUART.GDP==0 ~ 0,  -->
-<!--     TRUE ~ 0 -->
-<!--   )) %>% -->
-<!--   mutate(date=reference_year) %>% -->
-<!--   select( iso2c, date, starts_with('SPI.D1.5.QUART.GDP'))  -->
-
-
-<!--   assign(paste("D3.14.AKI",reference_year,sep="_"), temp) -->
-<!-- } -->
-
-<!-- D3.17.AKI <- bind_rows(D3.14.AKI_2016, D3.14.AKI_2017, D3.14.AKI_2018, D3.14.AKI_2019)   -->
-
-<!-- ``` -->
-
 ###  Debt service (PPG and IMF only, % of exports of goods, services and primary income)
 
 For this indicator, Debt service (PPG and IMF only, % of exports of goods, services and primary income), we will pull data from the WDI but modify the scoring using the WDI metadata on whether the external debt data is actual, estimated, or preliminary.  The status “as reported (actual)” indicates that the country was fully current in its reporting under the DRS and that World Bank staff are satisfied that the reported data give an adequate and fair representation of the country’s total public debt. “Preliminary” data are based on reported or collected information, but because of incompleteness or other reasons, an element of staff estimation is included. “Estimated” data indicate that countries are not current in their reporting and that a significant element of staff estimation has been necessary for producing the data tables. 
@@ -1269,7 +1165,7 @@ Quality:
 0 Points. No value
 
 
-```{r metadata_pull}
+```{r metadata_pull, echo=FALSE}
 
 # pull in some WDI metadata which will be used for constructing AKI indicators.
 # WDI metadata was gathered using previous vintages of WDI from 2016-19
@@ -1321,11 +1217,6 @@ From the methodology: https://washdata.org/sites/default/files/JMP%20methodology
 > The indicator for SDG 6.1, safely managed drinking water services are defined as use of an improved drinking water source which is accessible on premises, available when needed and free from contamination. To make an estimate of safely managed services, information on the use of improved drinking water sources is combined with information on the accessibility, availability and quality of drinking water. Estimates are based on the minimum value of these criteria or, where estimates are available for both rural and urban, a population weighted average of the two. The JMP reports estimates for safely managed drinking water provided information is available for at least 50 per cent of the population on quality of drinking water and either accessibility or availability.
 
 
-Extension rules (beyond the years covered by data inputs and extrapolation)
-
-1. Estimates are extended forwards four years from the latest estimate, and backwards four years from the earliest estimate
-
-2. Estimates are extended forwards or backwards indefinitely, if the estimate is 99.5% or greater, or 0.5% or less. 
 
 We take therefore useable data if it appears within an 8 year window of the reference date.  Scoring:
 
@@ -1394,7 +1285,7 @@ write_excel_csv(safely_managed_raw_df,
 
 ```
 
-```{r safely_managed_scored, include=FALSE}
+```{r safely_managed_scored}
 
 #read in saved data
 safely_managed_raw_df <- read_csv(file=paste(raw_dir, '1.5_DUIO/Safely_Managed_Water_data.csv', sep="/"))
@@ -1484,7 +1375,7 @@ Scoring:
 0.5 Point. Country has labor force survey or is within 10 points of ILO, but not both    
 0 Points. Otherwise
 
-```{r lfp, include=FALSE}
+```{r lfp}
 
 #read in ILO reference areas
 ilo_ref_area <- read_csv(file= paste0(raw_dir,"/metadata/ILO_reference_area.csv")) %>%
@@ -1584,7 +1475,7 @@ for (i in c(2010:2019)) {
 
 
 
-```{r aki_combine}
+```{r aki_combine, echo=FALSE}
 
 
 
@@ -1609,7 +1500,7 @@ spi_df <- spi_df %>%
 
 ```
 
-```{r aki_plots, fig.height=10}
+```{r aki_plots, echo=FALSE, fig.height=10}
 
 aki <- c(
              SPI.D1.5.POV='Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)',
@@ -1962,7 +1853,7 @@ Cleaning for Data Products Indicators.  Data Products (16 Indicators):
 
 
 
-## Indicators 3.1-3.4
+## Methodology
 
   1. Download the latest SDG indicator data from UN Stats (https://unstats.un.org/sdgs/indicators/en/#) using their API   
   
@@ -1989,7 +1880,6 @@ For each value of the indicator, the responsible international agency has been r
   
   * Global monitoring data (G): Produced on a regular basis by the designated agency for global monitoring, based on country data. There is no corresponding figure at the country level.
 
-# Scoring
 
 For each indicator, we will produce a value for each country with the following coding scheme:    
 
@@ -2001,6 +1891,8 @@ We give countries no credit for modeled data, because the country did not produc
 When we average over all indicators in a goal to get a score, we compute a 5 year moving average to avoid year to year variability in reporting for SDGs.  The overall score for an SDG is then the 5 year average of the percentage of indicator values based on **country**, **country data adjusted**, or **estimated or Global Monitoring** data that were available for the SDG.
   
 Because of the large data files and runtime of the program to calculate these indicators, the code to produce these indicators is in a separate file.  https://github.com/stacybri/UN_Stats_SDG_Indicators_SPI/blob/master/02_programs/un_stats_cleaning.Rmd
+
+## Indicators 3.1 - 3.17
 
 ```{r unstats}
 
@@ -2483,20 +2375,22 @@ spi_mapper('cs_df_map', 'SPI.D4.1.8.BZSVY', 'Business Survey Availablility in Pa
 
 The following indicator checks whether administrative data is available for the following topic areas: Social Protection, Education, Population & Health, and Labor
 
-### Social Protection Admin Data
+Average score for CRVS indicator.  Social Protection, Education, and Labor admin data indicators not included because of lack of established methodology. While our team identified several promising sources for administrative data from the World Bank's ASPIRE team, UNESCO, and ILO, incomplete coverage across countries made us drop these indicators from our index.  A major research and data collection effort is needed from all custodian agencies  to fill in this information, so that a more comprehensive picture of administrative data availability can be produced.
 
--  Atlas of Social Protection Indicators of Resilience and Equity (ASPIRE) is compilation of Social Protection and Labor (SPL) indicators to analyze scope and performance of SPL programs.   
-- ASPIRE has indicators for 136 countries on:    
-  * Social assistance   
-  * Social insurance    
-  * Labor market programs 
-  
-- Based on both program-level administrative data and national household survey data    
-- Data extends from 2001 to 2018
+<!-- ### Social Protection Admin Data -->
 
-Scoring is 1 if administrative data is available to produce beneficiary counts or expenditures for any social protection and labor program, 0 otherwise.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score.
+<!-- -  Atlas of Social Protection Indicators of Resilience and Equity (ASPIRE) is compilation of Social Protection and Labor (SPL) indicators to analyze scope and performance of SPL programs.    -->
+<!-- - ASPIRE has indicators for 136 countries on:     -->
+<!--   * Social assistance    -->
+<!--   * Social insurance     -->
+<!--   * Labor market programs  -->
 
-```{r aspire, message=FALSE, warning=FALSE}
+<!-- - Based on both program-level administrative data and national household survey data     -->
+<!-- - Data extends from 2001 to 2018 -->
+
+<!-- Scoring is 1 if administrative data is available to produce beneficiary counts or expenditures for any social protection and labor program, 0 otherwise.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score. -->
+
+```{r aspire, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 #read data
 aspire_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ASPIRE_sources.csv', sep="/"))
@@ -2577,22 +2471,22 @@ spi_mapper('aspire_map', 'SPI.D4.2.1.SPL', 'Administrative Data Available on Ben
 ```
 
 
-### Education Admin Data
+<!-- ### Education Admin Data -->
 
-* UNESCO UIS has database containing data we can use on administrative data systems.  Database is accessible using the UIS bulk download service at https://apiportal.uis.unesco.org/bdds.  Data was last updated on September 29, 2020.  
+<!-- * UNESCO UIS has database containing data we can use on administrative data systems.  Database is accessible using the UIS bulk download service at https://apiportal.uis.unesco.org/bdds.  Data was last updated on September 29, 2020.   -->
 
-* We score countries based on whether there is:
+<!-- * We score countries based on whether there is: -->
 
-  * Data tracking SDG 4.1.2 Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education    
-  
-  <!-- * Data tracking whether countries produce the following from administrative data sources: -->
+<!--   * Data tracking SDG 4.1.2 Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education     -->
 
-  <!--     * Out-of-school rate by school age and sex -->
-  <!--     * 4.2.2 Participation rate in organized learning (one year before the official primary entry age), by sex -->
+<!--   <!-- * Data tracking whether countries produce the following from administrative data sources: --> -->
 
-In order to score this indicator, we calculate the fraction of the indicators that were produced in a country in a year.  In order to smooth out variation from year to year in reporting or conducting national assessments, we take a moving 5 year average.
+<!--   <!--     * Out-of-school rate by school age and sex --> -->
+<!--   <!--     * 4.2.2 Participation rate in organized learning (one year before the official primary entry age), by sex --> -->
 
-```{r uis, message=FALSE, warning=FALSE}
+<!-- In order to score this indicator, we calculate the fraction of the indicators that were produced in a country in a year.  In order to smooth out variation from year to year in reporting or conducting national assessments, we take a moving 5 year average. -->
+
+```{r uis, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 # #read data from UNESCO API
 # #get list of indicators to download
@@ -2729,26 +2623,26 @@ spi_mapper('crvs_map', 'SPI.D4.2.3.CRVS', 'Complete Civil Registration & Vital S
 ```
 
 
-### Labor Admin Data
+<!-- ### Labor Admin Data -->
 
-* ILO shared database containing all administrative data sources used to produce ILO statistics (ILOSTAT)   
-  * May not be comprehensive of all administrative datasets available in a country    
-  * But gives some indication of whether labor statistics produced using Admin data
-  
-* Database contains the following admin sources:    
+<!-- * ILO shared database containing all administrative data sources used to produce ILO statistics (ILOSTAT)    -->
+<!--   * May not be comprehensive of all administrative datasets available in a country     -->
+<!--   * But gives some indication of whether labor statistics produced using Admin data -->
 
-  * Insurance records   
-  * Labour inspectorate records   
-  * Records of employers' organizations   
-  * Employment office records
-  * Records of workers' organizations
-  * Other administrative records and related sources
-  
-* Database extends from 2010 to 2019 and covers 177 countries. 
+<!-- * Database contains the following admin sources:     -->
 
-To produce a score, we calculate the percentage of these six admin sources above that are available for a country in a given year.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score.
+<!--   * Insurance records    -->
+<!--   * Labour inspectorate records    -->
+<!--   * Records of employers' organizations    -->
+<!--   * Employment office records -->
+<!--   * Records of workers' organizations -->
+<!--   * Other administrative records and related sources -->
 
-```{r ilo, message=FALSE, warning=FALSE}
+<!-- * Database extends from 2010 to 2019 and covers 177 countries.  -->
+
+<!-- To produce a score, we calculate the percentage of these six admin sources above that are available for a country in a given year.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score. -->
+
+```{r ilo, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
 #read data
 ilo_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ILOSTAT_sources.csv', sep="/"))
@@ -2811,7 +2705,7 @@ spi_mapper('ilo_map', 'SPI.D4.2.4.LBR', 'Labor Administrative Data Available Acc
 
 ## Indicator 4.3: geospatial data  
 
-New indicator based on references to geospatial data in metadata relating to content on NSO website
+New indicator based on references to geospatial data in metadata relating to content on NSO website.  We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the ability of the national statistical system to produce geospatial data. A major research and data collection effort is needed via GGIM to fill in this information, so that a more comprehensive picture of geospatial data capability at the national level can be produced. Until this is done, it we cannot even assess the scale of the data gaps in a comparable way.
 
 ### Source
 
@@ -2914,6 +2808,8 @@ spi_df <- spi_df %>%
  
    
 ```
+
+
 ```{r geo_plots, echo=FALSE}
 
 #do the plots  
@@ -3038,19 +2934,19 @@ spi_df <- spi_df %>%
 
 ## Indicator 4.4: private/citizen generated data  
 
-New indicator based on references to private/citizen generated data in metadata relating to content on NSO website.
+New indicator based on references to private/citizen generated data in metadata relating to content on NSO website.  Not included because of lack of established methodology.  Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.
 
-### Covid Mobility Data Availability 
+<!-- ### Covid Mobility Data Availability  -->
 
-We have seen an increased use of private/citizen generated data during the COVID-19 pandemic.  One way in which it has been used is for tracking mobility of citizens to understand the social distancing measures citizens are taking.  As a measure of private/citizen generated data we make use of Apple and Google Mobility tracking data made publicly available during the pandemic.
+<!-- We have seen an increased use of private/citizen generated data during the COVID-19 pandemic.  One way in which it has been used is for tracking mobility of citizens to understand the social distancing measures citizens are taking.  As a measure of private/citizen generated data we make use of Apple and Google Mobility tracking data made publicly available during the pandemic. -->
 
-Source: 
+<!-- Source:  -->
 
-Google LLC "Google COVID-19 Community Mobility Reports".
-https://www.google.com/covid19/mobility/ Accessed: 2020-07-23.
+<!-- Google LLC "Google COVID-19 Community Mobility Reports". -->
+<!-- https://www.google.com/covid19/mobility/ Accessed: 2020-07-23. -->
 
-Apple "Mobility Trends Reports".
-https://www.apple.com/covid19/mobility/ Accessed: 2020-07-23.
+<!-- Apple "Mobility Trends Reports". -->
+<!-- https://www.apple.com/covid19/mobility/ Accessed: 2020-07-23. -->
 
 
 ```{r 4_SOPC, eval=FALSE, fig.height=7, fig.width=9, message=FALSE, warning=FALSE, include=FALSE}
@@ -3196,7 +3092,11 @@ D5.1_DILG_map <- D5.1_DILG %>%
 spi_mapper('D5.1_DILG_map', 'RAW.D5.1.DILG', 'National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21')
 
 ```
+
+
 ## Indicator 5.2: standards 
+
+Average score for Standards and Methods indicators.  In this release of the SPI the data and methods used for this indicator are the same as for the previous SPI. Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt only traditional standards and methods and neglect innovative solutions that may be more valid in the current context.
 
 ```{r standards_meta}
 
@@ -3698,9 +3598,8 @@ D5.2.10.GSBP <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.csv", se
 ```
 
 
-### Create Overall Indicator
 
-```{r msc}
+```{r msc, echo=FALSE}
 # join datasets together based on country and date
 D5.2.MSC <- spi_df_empty %>%
   left_join(D5.2.1.SNAU) %>%
@@ -3764,6 +3663,7 @@ Score ranges from 0 to 100. The score is the weighted sum of each of the four co
 
 The source is Paris 21.  Data accessed on August 6, 2020 from https://statisticalcapacitymonitor.org/indicator/127
 
+Not included because of lack of established methodology or suitable data sources.
 
 ```{r skill}
 
@@ -3824,8 +3724,8 @@ spi_mapper('D5.3_DISK_map', 'SPI.D5.3.DISK', 'Systematic use of statistical know
 
 ## Indicator 5.4: partnerships
 
-No data is available for this indicator at this point.
-  
+Not included because of lack of established methodology or suitable data sources.
+
 ## Indicator 5.5: finance
 
 
@@ -3905,9 +3805,10 @@ spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Sou
 
 ```
 
-## Final Dataset
+# Final Dataset
 
-Below we will append the data together and save the final files to gether.
+Below we will append the data together and save the final files together.
+
 ```{r append}
 
 #add in population

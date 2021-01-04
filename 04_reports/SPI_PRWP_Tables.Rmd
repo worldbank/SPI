@@ -977,8 +977,8 @@ growth_plot <- function(variables, name) {
     ) +
   theme(
     axis.title.y = element_text(angle=0, vjust = 0.5),
-    text = element_text(size = 14),
-    title= element_text(size = 20),
+    text = element_text(size = 12),
+    title= element_text(size = 14),
     legend.position = 'none'
   )
 
@@ -994,7 +994,7 @@ growth_plot <- function(variables, name) {
 
 ```
 
-```{r elplot, echo=FALSE, }
+```{r elplot, echo=FALSE, fig.height=8, fig.width=12 }
 
 growth_plot('SPI.INDEX', 'SPI Overall Score')
 
@@ -1066,7 +1066,7 @@ growth_plot('SPI.INDEX', 'SPI Overall Score')
 
 ```
 
-```{r elplotstackedplt, echo=FALSE}
+```{r elplotstackedplt, echo=FALSE, fig.height=8, fig.width=12}
 name <- 'SPI Overall Score'
 
   ggplot(elephant_stacked_df, aes(x=spi_bins, y=growth, fill=dimension, label=paste0(round(growth,1)))) +
@@ -1084,8 +1084,8 @@ name <- 'SPI Overall Score'
     expand_limits(y=c(-2,10)) +
   theme(
     axis.title.y = element_text(angle=0, vjust = 0.5),
-    text = element_text(size = 14),
-    title= element_text(size = 20),
+    text = element_text(size = 12),
+    title= element_text(size = 14),
     legend.position = 'bottom'
   ) +
     guides(fill=guide_legend(nrow=2,byrow=TRUE))

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2 Motivation | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
+  <meta name="description" content="2 Motivation | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2 Motivation | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2 Motivation | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  
+  
+  
+
+<meta name="author" content="Brian Stacy" />
+
+
+<meta name="date" content="2021-01-04" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introduction.html"/>
+<link rel="next" href="overview-of-the-new-spi.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="motivation.html"><a href="motivation.html"><i class="fa fa-check"></i><b>2</b> Motivation</a></li>
+<li class="chapter" data-level="3" data-path="overview-of-the-new-spi.html"><a href="overview-of-the-new-spi.html"><i class="fa fa-check"></i><b>3</b> Overview of the New SPI</a></li>
+<li class="chapter" data-level="4" data-path="pillars-of-the-new-spi.html"><a href="pillars-of-the-new-spi.html"><i class="fa fa-check"></i><b>4</b> Pillars of the new SPI</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="pillars-of-the-new-spi.html"><a href="pillars-of-the-new-spi.html#data-use"><i class="fa fa-check"></i><b>4.1</b> Data use</a></li>
+<li class="chapter" data-level="4.2" data-path="pillars-of-the-new-spi.html"><a href="pillars-of-the-new-spi.html#data-services"><i class="fa fa-check"></i><b>4.2</b> Data services</a></li>
+<li class="chapter" data-level="4.3" data-path="pillars-of-the-new-spi.html"><a href="pillars-of-the-new-spi.html#data-products"><i class="fa fa-check"></i><b>4.3</b> Data products</a></li>
+<li class="chapter" data-level="4.4" data-path="pillars-of-the-new-spi.html"><a href="pillars-of-the-new-spi.html#data-sources"><i class="fa fa-check"></i><b>4.4</b> Data sources</a></li>
+<li class="chapter" data-level="4.5" data-path="pillars-of-the-new-spi.html"><a href="pillars-of-the-new-spi.html#data-infrastructure"><i class="fa fa-check"></i><b>4.5</b> Data infrastructure</a></li>
+<li class="chapter" data-level="4.6" data-path="pillars-of-the-new-spi.html"><a href="pillars-of-the-new-spi.html#description-of-pillars"><i class="fa fa-check"></i><b>4.6</b> Description of Pillars</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="spi-data.html"><a href="spi-data.html"><i class="fa fa-check"></i><b>5</b> SPI Data</a></li>
+<li class="chapter" data-level="6" data-path="data-use-1.html"><a href="data-use-1.html"><i class="fa fa-check"></i><b>6</b> Data Use</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.1-data-use-by-national-legislature"><i class="fa fa-check"></i><b>6.1</b> Indicator 1.1: Data use by national legislature</a></li>
+<li class="chapter" data-level="6.2" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.2-data-use-by-national-executive-branch"><i class="fa fa-check"></i><b>6.2</b> Indicator 1.2: Data use by national executive branch</a></li>
+<li class="chapter" data-level="6.3" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.3-data-use-by-civil-society"><i class="fa fa-check"></i><b>6.3</b> Indicator 1.3: Data use by civil society</a></li>
+<li class="chapter" data-level="6.4" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.4-data-use-by-academia"><i class="fa fa-check"></i><b>6.4</b> Indicator 1.4: Data use by academia</a></li>
+<li class="chapter" data-level="6.5" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.5-data-use-by-international-organizations"><i class="fa fa-check"></i><b>6.5</b> Indicator 1.5: Data use by international organizations</a>
+<ul>
+<li class="chapter" data-level="6.5.1" data-path="data-use-1.html"><a href="data-use-1.html#poverty-comparability"><i class="fa fa-check"></i><b>6.5.1</b> Poverty Comparability</a></li>
+<li class="chapter" data-level="6.5.2" data-path="data-use-1.html"><a href="data-use-1.html#mortality-rate-under-5-per-1000-live-births"><i class="fa fa-check"></i><b>6.5.2</b> Mortality rate, under-5 (per 1,000 live births)</a></li>
+<li class="chapter" data-level="6.5.3" data-path="data-use-1.html"><a href="data-use-1.html#debt-service-ppg-and-imf-only-of-exports-of-goods-services-and-primary-income"><i class="fa fa-check"></i><b>6.5.3</b> Debt service (PPG and IMF only, % of exports of goods, services and primary income)</a></li>
+<li class="chapter" data-level="6.5.4" data-path="data-use-1.html"><a href="data-use-1.html#safely-managed-water"><i class="fa fa-check"></i><b>6.5.4</b> Safely Managed Water</a></li>
+<li class="chapter" data-level="6.5.5" data-path="data-use-1.html"><a href="data-use-1.html#labor-force-statistics"><i class="fa fa-check"></i><b>6.5.5</b> Labor Force Statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="data-services-1.html"><a href="data-services-1.html"><i class="fa fa-check"></i><b>7</b> Data Services</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.1-data-releases"><i class="fa fa-check"></i><b>7.1</b> Indicator 2.1: Data Releases</a></li>
+<li class="chapter" data-level="7.2" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.2-online-access"><i class="fa fa-check"></i><b>7.2</b> Indicator 2.2: Online access</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="data-services-1.html"><a href="data-services-1.html#source"><i class="fa fa-check"></i><b>7.2.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.3-advisory-analytical-services"><i class="fa fa-check"></i><b>7.3</b> Indicator 2.3: Advisory/ Analytical Services</a></li>
+<li class="chapter" data-level="7.4" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.4-data-services"><i class="fa fa-check"></i><b>7.4</b> Indicator 2.4: Data services</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="data-products-1.html"><a href="data-products-1.html"><i class="fa fa-check"></i><b>8</b> Data Products</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="data-products-1.html"><a href="data-products-1.html#methodology"><i class="fa fa-check"></i><b>8.1</b> Methodology</a></li>
+<li class="chapter" data-level="8.2" data-path="data-products-1.html"><a href="data-products-1.html#indicators-3.1---3.17"><i class="fa fa-check"></i><b>8.2</b> Indicators 3.1 - 3.17</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="data-sources-1.html"><a href="data-sources-1.html"><i class="fa fa-check"></i><b>9</b> Data Sources</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.1-censuses-and-surveys"><i class="fa fa-check"></i><b>9.1</b> Indicator 4.1: censuses and surveys</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="data-sources-1.html"><a href="data-sources-1.html#scoring-details"><i class="fa fa-check"></i><b>9.1.1</b> Scoring details</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.2-administrative-data"><i class="fa fa-check"></i><b>9.2</b> Indicator 4.2: administrative data</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="data-sources-1.html"><a href="data-sources-1.html#population-health-admin-data"><i class="fa fa-check"></i><b>9.2.1</b> Population &amp; Health Admin Data</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.3-geospatial-data"><i class="fa fa-check"></i><b>9.3</b> Indicator 4.3: geospatial data</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="data-sources-1.html"><a href="data-sources-1.html#source-1"><i class="fa fa-check"></i><b>9.3.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.4-privatecitizen-generated-data"><i class="fa fa-check"></i><b>9.4</b> Indicator 4.4: private/citizen generated data</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html"><i class="fa fa-check"></i><b>10</b> Data Infrastructure</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.1-legislation-and-governance"><i class="fa fa-check"></i><b>10.1</b> Indicator 5.1: legislation and governance</a></li>
+<li class="chapter" data-level="10.2" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.2-standards"><i class="fa fa-check"></i><b>10.2</b> Indicator 5.2: standards</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#system-of-national-accounts-in-use"><i class="fa fa-check"></i><b>10.2.1</b> 5.2.1 System of National Accounts in use</a></li>
+<li class="chapter" data-level="10.2.2" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#national-accounts-base-year"><i class="fa fa-check"></i><b>10.2.2</b> 5.2.2 National Accounts base year</a></li>
+<li class="chapter" data-level="10.2.3" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-national-industry"><i class="fa fa-check"></i><b>10.2.3</b> 5.2.3 Classification of national industry</a></li>
+<li class="chapter" data-level="10.2.4" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#cpi-base-year"><i class="fa fa-check"></i><b>10.2.4</b> 5.2.4 CPI base year</a></li>
+<li class="chapter" data-level="10.2.5" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-household-consumption"><i class="fa fa-check"></i><b>10.2.5</b> 5.2.5 Classification of household consumption</a></li>
+<li class="chapter" data-level="10.2.6" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-status-of-employment"><i class="fa fa-check"></i><b>10.2.6</b> 5.2.6 Classification of status of employment</a></li>
+<li class="chapter" data-level="10.2.7" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#central-government-accounting-status"><i class="fa fa-check"></i><b>10.2.7</b> 5.2.7 Central government accounting status</a></li>
+<li class="chapter" data-level="10.2.8" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#compilation-of-government-finance-statistics"><i class="fa fa-check"></i><b>10.2.8</b> 5.2.8 Compilation of government finance statistics</a></li>
+<li class="chapter" data-level="10.2.9" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#compilation-of-monetary-and-financial-statistics"><i class="fa fa-check"></i><b>10.2.9</b> 5.2.9 Compilation of monetary and financial statistics</a></li>
+<li class="chapter" data-level="10.2.10" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#business-process"><i class="fa fa-check"></i><b>10.2.10</b> 5.2.10 Business process</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.3-skills"><i class="fa fa-check"></i><b>10.3</b> Indicator 5.3: skills</a></li>
+<li class="chapter" data-level="10.4" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.4-partnerships"><i class="fa fa-check"></i><b>10.4</b> Indicator 5.4: partnerships</a></li>
+<li class="chapter" data-level="10.5" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.5-finance"><i class="fa fa-check"></i><b>10.5</b> Indicator 5.5: finance</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="final-dataset.html"><a href="final-dataset.html"><i class="fa fa-check"></i><b>11</b> Final Dataset</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="motivation" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Motivation</h1>
+<p>The primary purpose of the statistical system is to help users of statistics make better decisions or to hold those decision makers accountable. In the words of Principle 1 of the Fundamental Principles of Official Statistics, the statistics must “meet the test of practical utility”, serving “the Government, the economy and the public with data about the economic, demographic, social and environmental situation.”</p>
+<p>The national statistical system, or NSS, plays a crucial role in modern economies. It provides stakeholders, ranging from policy makers to stock market analysts and the general public, with the latest data on the country’s socio-economic developments. At the international level, monitoring progress on global undertakings such as the recently established Sustainable Development Goals (SDGs) requires high-quality data that must be produced consistently across different national statistical systems. Assessing and improving the capacity of a country’s NSS has long been a part of the global agenda. Since the early 2000s, a few capacity assessment tools have been developed to identify the weaknesses and strengths of national statistical systems by other organizations including PARIS21, the Food and Agriculture Organization of the United Nations (FAO), the United Nations Economic Commission for Europe (UNECE), the United Nations Economic Commission for Africa (UNECA), and the U.S. Census Bureau.</p>
+<p>The World Bank’s Statistical Capacity Index (SCI) is one such tool that has been widely employed. Several international and national agencies have adopted the SCI for measuring progress in statistical capacity building and related investments. The World Bank mainstreamed the SCI in its monitoring and assessment framework and has adopted it as a baseline indicator in various projects at the country level. The SCI is based on publicly available data, and this has various advantages over other indexes of statistical capacity. A key advantage of the SCI is that it can provide assessment of a country’s statistical capacity in an internationally comparable and cost-effective manner.</p>
+<p>Yet, there are several areas in which the existing SCI can be improved. First, it comprises of a limited number of indicators and includes no indicators of some important data sources, such as labor force surveys, establishment surveys, or administrative data. Second, it ignores the data dissemination practices of an NSS, which is one of the key features of data usage. Third, the SCI has been criticized for placing too much weight on statistical output and activities, while neglecting the infrastructure and resource components of statistical systems. Finally, it is silent on whether the data products produced by the NSS are in high demand.</p>
+<p>Since its launch in 2004, the SCI’s methodology and coverage have basically remained the same, while the global data landscape has changed significantly. NSSs have made significant advancements with data collection and dissemination practices. At the same time, the adoption of the Sustainable Development Goals (SDGs) set an ambitious development agenda for the next 15 years on ending poverty, protecting the planet, and ensuring prosperity for all by 2030. This, in turn, increased the demand for data and raised the bar for national statistical systems regarding their capacity to produce high-quality data. We thus propose to improve the current SCI to better suit the changing global data landscape.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="overview-of-the-new-spi.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>
