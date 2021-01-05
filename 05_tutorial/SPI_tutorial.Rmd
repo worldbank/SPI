@@ -957,49 +957,6 @@ spi_mapper('lfp_data_df', 'SPI.D1.5.LFP', 'Data Use: Labor Force Participation' 
 
 
 
-```{r akiplots, echo=FALSE, fig.height=10, exercise=TRUE}
-
-
-#now combine AKI databases and write to csv
-D3.AKI <- spi_df_empty %>%
-  left_join(D3.1.AKI) %>%
-  left_join(D3.3.AKI) %>%
-  left_join(D3.15.AKI) %>%
-  left_join(safe_managed_df) %>%
-  left_join(lfp_data_df) %>%
-  right_join(spi_df_empty) %>%
-  mutate(SPI.D1.5.POV=if_else(is.na(SPI.D1.5.POV),0,as.numeric(SPI.D1.5.POV)),
-         SPI.D1.5.CHLD.MORT=if_else(is.na(SPI.D1.5.CHLD.MORT),0,as.numeric(SPI.D1.5.CHLD.MORT)),
-         SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else(is.na(SPI.D1.5.DT.TDS.DPPF.XP.ZS),0,as.numeric(SPI.D1.5.DT.TDS.DPPF.XP.ZS)),
-         SPI.D1.5.SAFE.MAN.WATER=if_else(is.na(SPI.D1.5.SAFE.MAN.WATER),0,as.numeric(SPI.D1.5.SAFE.MAN.WATER)),
-         SPI.D1.5.LFP=if_else(is.na(SPI.D1.5.LFP),0,as.numeric(SPI.D1.5.LFP))) 
-
-
-spi_df <- spi_df %>%
-  left_join(D3.AKI)
-
-aki <- c(
-             SPI.D1.5.POV='Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)',
-             SPI.D1.5.CHLD.MORT='Mortality rate, under-5 (per 1,000 live births)', 
-             SPI.D1.5.DT.TDS.DPPF.XP.ZS='Debt service (PPG and IMF only, % of exports of goods, services and primary income)',
-             SPI.D1.5.SAFE.MAN.WATER = 'Safely Managed Drinking Water',
-             SPI.D1.5.LFP = 'Labor Force Participation'
-)
-
-
-for (ind in names(aki)) {
-  ind <- ind
-  names(aki)
-  print(ind)
-  temp_map <- D3.AKI %>%
-    filter(.data[[ind]] >= 0)
-  
-  spi_mapper('temp_map', ind, aki[[ind]])
-}
-
-```
-
-
 
 ## Indicator 2.1: Data Releases
 
@@ -1016,7 +973,7 @@ e-GDDS websites.
 
 
 
-```{r idds}
+```{r idds, exercise=TRUE}
 
 
 Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/5.21.01.01.sdds?format=json&date=2004:2015&per_page=5000")
@@ -1138,7 +1095,7 @@ If the TOU contains one or more restrictive clauses, it receives 0 points and is
 For more details, consult the ODIN technical documentation:
 https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit#
 
-```{r online_access}
+```{r onlineaccess, exercise=TRUE}
 
   #read in ODIN data
   for (i in 2015:2018) {
@@ -1262,7 +1219,7 @@ NADA is an open source microdata cataloging system, compliant with the Data Docu
 1 Point. Yes
 0 Points. No
 
-```{r nada}
+```{r nada, exercise=TRUE}
 
 #read in csv file.
 D2.4_NADA <- read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.csv", sep="/" )) %>%
@@ -1331,7 +1288,7 @@ Because of the large data files and runtime of the program to calculate these in
 
 ## Indicators 3.1 - 3.17
 
-```{r unstats}
+```{r unstats, exercise=TRUE}
 
 un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data_',window,'yr.csv',sep="")) %>%
   rename(SPI.D3.1.POV   = SPI.D3.1,
@@ -1511,7 +1468,7 @@ and demographics.
 0.3 Points. 1 survey done within past 10 years; 	
 0 Points. None within past 10 years
 
-```{r pop_ag_censuses}
+```{r popagcensuses, exercise=TRUE}
 
 #pull data for population and agriculture census from WDI metadata
 
@@ -1817,7 +1774,7 @@ Data comes from the UNSD Global SDG monitoring database and also the WDI.  Scori
 
 Source: World Bank WDI Metadata.  
 
-```{r crvs}
+```{r crvs, exercise=TRUE}
 
 
 #read in data from UNSD database on SDGs
@@ -1941,7 +1898,7 @@ More details on the geographic disaggregation considerations can be found in the
 
 https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit
 
-```{r geo}
+```{r geo, exercise=TRUE}
 
   #read in ODIN data
   for (i in 2015:2018) {
@@ -2125,7 +2082,7 @@ Scores is 1 if the country has a national statistical legislation compliant with
 The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Date()`
 
 
-```{r legislation_governance}
+```{r legislationgovernance, exercise=TRUE}
 
 
 D5.1_DILG <- un_pull('SG_STT_FPOS', '2004', '2019') %>%
@@ -2207,7 +2164,7 @@ Average score for Standards and Methods indicators.  In this release of the SPI 
  
  Scoring: 1 point for using SNA2008 or ESA 2010, 0.5 points for using SNA 1993 or ESA 1995, 0 points otherwise
  
-```{r snau}
+```{r snau, exercise=TRUE}
 #pull data for several of the standards from WDI metadata
 
 df <- WDI_metadata
@@ -2232,6 +2189,8 @@ D5.2.1.SNAU <- df %>%
   arrange(date, country) %>%
   select(iso3c,  date,RAW.D5.2.1.SNAU, SPI.D5.2.1.SNAU  ) 
 
+msc_df_map <- D5.2.1.SNAU %>%  filter(!is.na(SPI.D5.2.1.SNAU)) %>% left_join(country_metadata)
+spi_mapper('msc_df_map', 'SPI.D5.2.1.SNAU', 'System of National Accounts in use in 2019' )
 
 ```
  
@@ -2244,7 +2203,7 @@ constant price estimates be changed periodically to reflect changes in economic 
 
 1 point for chained price, 0.5 for reference period within past 10 years, 0 points otherwise.
 
-```{r naby}
+```{r naby, exercise=TRUE}
 
 #pull data for several of the standards from WDI metadata
 
@@ -2273,7 +2232,8 @@ D5.2.2.NABY <- df %>%
   arrange(date)
 
 
-
+msc_df_map <- D5.2.2.NABY %>%  filter(!is.na(SPI.D5.2.2.NABY)) %>% left_join(country_metadata)
+spi_mapper('msc_df_map', 'SPI.D5.2.2.NABY', 'National Accounts base year in 2019' )
 
 ```
 
@@ -2294,7 +2254,7 @@ D5.2.2.NABY <- df %>%
 
 0 Points. Otherwise
 
-```{r cnin}
+```{r cnin, exercise=TRUE}
 
 #read in csv file.
 D5.2.3.CNIN <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.3.CNIN.csv", sep="/" )) %>%
@@ -2307,7 +2267,8 @@ D5.2.3.CNIN <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.3.CNIN.csv", sep=
   select(iso3c, country, date, RAW.D5.2.3.CNIN, SPI.D5.2.3.CNIN  ) %>%
   arrange(date, country)
 
-
+msc_df_map <- D5.2.3.CNIN %>%  filter(!is.na(SPI.D5.2.3.CNIN)) %>% left_join(country_metadata)
+spi_mapper('msc_df_map', 'SPI.D5.2.3.CNIN', 'Classification of national industry in 2019' )
 
 ```
 
@@ -2321,7 +2282,7 @@ Consumer Price Index serves as indicators of inflation and reflects changes in t
  
  1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 points. Otherwise
  
-```{r cpiby}
+```{r cpiby, exercise=TRUE}
 
 #read in csv file.
 D5.2.4.CPIBY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.csv", sep="/" )) %>%
@@ -2406,7 +2367,8 @@ D5.2.4.CPIBY <- D5.2.4.CPIBY %>%
   select(-country,-SPI.D5.2.4.CPIBY.IMF) 
 
 
-
+msc_df_map <- D5.2.4.CPIBY %>%  filter(!is.na(SPI.D5.2.4.CPIBY)) %>% left_join(country_metadata)
+spi_mapper('msc_df_map', 'SPI.D5.2.4.CPIBY', 'CPI base year in 2019' )
 
 ```
 
@@ -2426,7 +2388,7 @@ statistics in these different areas.
 
 1 Point. Follow Classification of Individual Consumption by Purpose (COICOP)	0 Points.	Otherwise
 
-```{r hous}
+```{r hous, exercise=TRUE}
 
 #read in csv file.
 D5.2.5.HOUS <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.csv", sep="/" )) %>%
@@ -2470,6 +2432,10 @@ D5.2.5.HOUS <-  D5.2.5.HOUS %>%
   mutate(SPI.D5.2.5.HOUS=if_else(is.na(SPI.D5.2.5.HOUS),SPI.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
   select(-country,-SPI.D5.2.5.HOUS.IMF) %>%
   arrange(date, iso3c) 
+
+msc_df_map <- D5.2.5.HOUS %>%  filter(!is.na(SPI.D5.2.5.HOUS)) %>% left_join(country_metadata)
+spi_mapper('msc_df_map', 'SPI.D5.2.5.HOUS', 'Classification of household consumption in 2019' )
+
 ```
 
 
@@ -2487,7 +2453,7 @@ Classification of status of employment refers to employment data that are
  
 1 Point. Follow International Labour Organization, International Classification of Status in Employment (ICSE-93) or 2012 North American Industry Classification System (NAICS). 0 Points Otherwise. 
  
-```{r empl}
+```{r empl, exercise=TRUE}
 
 #read in csv file.
 D5.2.6.EMPL <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.csv", sep="/" )) %>%
@@ -2500,7 +2466,8 @@ D5.2.6.EMPL <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.csv", sep=
   arrange(date, country)
 
 
-
+msc_df_map <- D5.2.6.EMPL %>%  filter(!is.na(SPI.D5.2.6.EMPL)) %>% left_join(country_metadata)
+spi_mapper('msc_df_map', 'SPI.D5.2.6.EMPL', 'Classification of status of employment in 2019' )
 
 ```
 
@@ -2519,7 +2486,7 @@ units, the picture they provide of central government activities is usually inco
 0.5 Points. Consolidated central government accounting follows cash recording basis	 
 0 Points. Otherwise 
 
-```{r cgov}
+```{r cgov, exercise=TRUE}
 
 #read in csv file.
 D5.2.7.CGOV <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.csv", sep="/" )) %>%
@@ -2566,6 +2533,9 @@ D5.2.7.CGOV <-  D5.2.7.CGOV %>%
   select(-country,-SPI.D5.2.7.CGOV.IMF) %>%
   arrange(date, iso3c)
 
+msc_df_map <- D5.2.7.CGOV %>%  filter(!is.na(SPI.D5.2.7.CGOV)) %>% left_join(country_metadata)
+spi_mapper('msc_df_map', 'SPI.D5.2.7.CGOV', 'Central government accounting status in 2019' )
+
 ```
 
 ### 5.2.8 Compilation of government finance statistics
@@ -2581,7 +2551,7 @@ is harmonized with the SNA2008.
 0 Points. Otherwise
 
 
-```{r fina}
+```{r fina, exercise=TRUE}
 
 #read in csv file.
 D5.2.8.FINA <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.csv", sep="/" )) %>%
@@ -2595,6 +2565,8 @@ D5.2.8.FINA <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.csv", sep=
   arrange(date, country)
 
 
+msc_df_map <- D5.2.8.FINA %>%  filter(!is.na(SPI.D5.2.8.FINA)) %>% left_join(country_metadata)
+spi_mapper('msc_df_map', 'SPI.D5.2.8.FINA', 'Compilation of government finance statistics in 2019' )
 
 
 ```
@@ -2612,7 +2584,7 @@ the compilation of monetary and financial statistics in addition to MFSM.
 1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
 0 Points. Otherwise
 
-```{r mony}
+```{r mony, exercise=TRUE}
 
 #read in csv file.
 D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep="/" )) %>%
@@ -2657,6 +2629,9 @@ D5.2.9.MONY <-  D5.2.9.MONY %>%
   select(-country,-SPI.D5.2.9.MONY.IMF) %>%
   arrange(date, iso3c)
 
+msc_df_map <- D5.2.9.MONY %>%  filter(!is.na(SPI.D5.2.9.MONY)) %>% left_join(country_metadata)
+spi_mapper('msc_df_map', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics in 2019' )
+
 
 ```
 
@@ -2676,7 +2651,7 @@ related to "business statistics" but refers to the statistical office, simply ex
 1 Point. GSBPM is in use
 0 Points. Otherwise
 
-```{r gsbp}
+```{r gsbp, exercise=TRUE}
 
 #read in csv file.
 D5.2.10.GSBP <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.csv", sep="/" )) %>%
@@ -2689,65 +2664,13 @@ D5.2.10.GSBP <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.csv", se
   arrange(date, country)
 
 
-
-
-```
-
-
-
-```{r msc, echo=FALSE}
-# join datasets together based on country and date
-D5.2.MSC <- spi_df_empty %>%
-  left_join(D5.2.1.SNAU) %>%
-  left_join(D5.2.2.NABY) %>%
-  left_join(D5.2.3.CNIN) %>%
-  left_join(D5.2.4.CPIBY) %>%
-  left_join(D5.2.5.HOUS) %>%
-  left_join(D5.2.6.EMPL) %>%
-  left_join(D5.2.7.CGOV) %>%
-  left_join(D5.2.8.FINA) %>%
-  left_join(D5.2.9.MONY) %>%
-  left_join(D5.2.10.GSBP) %>%
-  select(iso3c, country, date, everything()) %>%
-  arrange(date, iso3c) 
-
-
-#add to spi databases
-spi_df <- spi_df %>%
-  left_join(D5.2.MSC)
-
-#now do the figures 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.1.SNAU))
-spi_mapper('msc_df_map', 'SPI.D5.2.1.SNAU', 'System of National Accounts in use in 2019' )
-
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.2.NABY))
-spi_mapper('msc_df_map', 'SPI.D5.2.2.NABY', 'National Accounts base year in 2019' )
-
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.3.CNIN))
-spi_mapper('msc_df_map', 'SPI.D5.2.3.CNIN', 'Classification of national industry in 2019' )
-
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.4.CPIBY))
-spi_mapper('msc_df_map', 'SPI.D5.2.4.CPIBY', 'CPI base year in 2019' )
-
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.5.HOUS))
-spi_mapper('msc_df_map', 'SPI.D5.2.5.HOUS', 'Classification of household consumption in 2019' )
-
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.6.EMPL))
-spi_mapper('msc_df_map', 'SPI.D5.2.6.EMPL', 'Classification of status of employment in 2019' )
-
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.7.CGOV))
-spi_mapper('msc_df_map', 'SPI.D5.2.7.CGOV', 'Central government accounting status in 2019' )
-
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.8.FINA))
-spi_mapper('msc_df_map', 'SPI.D5.2.8.FINA', 'Compilation of government finance statistics in 2019' )
-
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.9.MONY))
-spi_mapper('msc_df_map', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics in 2019' )
-
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.10.GSBP))
+msc_df_map <- D5.2.10.GSBP %>%  filter(!is.na(SPI.D5.2.10.GSBP)) %>% left_join(country_metadata)
 spi_mapper('msc_df_map', 'SPI.D5.2.10.GSBP', 'Business process in 2019' )
 
+
 ```
+
+
 
 
 
@@ -2761,7 +2684,7 @@ The source is Paris 21.  Data accessed on August 6, 2020 from https://statistica
 
 Not included because of lack of established methodology or suitable data sources.
 
-```{r skill}
+```{r skill, exercise=TRUE}
 
 #read in csv file.
 D5.3_DISK <- read_csv(file = paste(raw_dir, "5.3_DISK","5.3_DISK.csv", sep="/" )) %>%
@@ -2833,7 +2756,7 @@ The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Dat
 
 Source of this data is UNSD and Paris21.  
 
-```{r finance}
+```{r finance, exercise=TRUE}
 
 #pull from unsd api
 D5.5_DIFI <- un_pull('SG_STT_NSDSFND', '2004', '2019') %>%

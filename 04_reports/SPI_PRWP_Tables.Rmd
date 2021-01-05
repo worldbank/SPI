@@ -1293,3 +1293,194 @@ FitFlextableToPage(index_tab_time)
   ![](plots/dimensionsplot5-1.png)
 ### Panel B: By Country 
    ![](plots/countrydimensionsplot5-1.png)
+
+## Unique values in SCI
+
+```{r unique_sci}
+#pull SCI values
+
+Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/IQ.SCI.OVRL?format=json&date=2004:2020&per_page=5000")
+Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
+
+# Parse the JSON content and convert it to a data frame.
+sci_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
+  data.frame() %>%
+  transmute(
+    iso3c=countryiso3code,
+    country=country.value,
+    date=as.numeric(date),
+    SCI=value
+  ) %>%
+  left_join(country_metadata) %>% #add on country metadata
+  filter(region!='Aggregates') %>%
+  select(iso3c, country, date, SCI  ) %>%
+  group_by(date) %>%
+  arrange(-SCI) %>%
+  mutate(SCI_rank=rank(-SCI),
+         SCI_rank=if_else(is.na(SCI),as.numeric(NA),SCI_rank))
+
+
+#check unique values by dimension.
+unique_scores_df <- sci_df %>% filter(date==2019) %>% filter(!is.na(SCI)) %>% mutate(SCI=round(SCI,3))
+unique_scores_sci <-length(unique(unique_scores_df$SCI))
+```
+
+The SCI contains `r unique_scores_sci` unique scores for `r length(unique_scores_df$SCI)` countries in 2019.
+
+## Volatility in SPI versus SCI
+
+```{r volatility}
+
+volatility_df <- SPI %>%
+  left_join(sci_df) %>%
+  select(country, iso3c, date,income, region, SPI.INDEX, SCI) %>%
+  distinct()
+
+
+           
+
+  
+
+```
+
+```{r volatilityplt1}
+
+volatility_scatter_df <- volatility_df %>%
+  filter(date==2016 | date==2019) %>%
+  as_tibble() %>%
+  pivot_longer(
+    cols=c('SPI.INDEX', 'SCI'),
+    names_to='indicator',
+    values_to='value'
+  ) %>%
+  pivot_wider(
+    values_from='value',
+    names_from='date',
+    names_prefix='value_'
+  ) %>%
+  mutate(indicator=case_when(
+    indicator=='SCI' ~ "SCI",
+    indicator=="SPI.INDEX" ~ "SPI Overall Score"
+  ))
+
+ggplot(volatility_scatter_df, aes(x=value_2016, y=value_2019, label=iso3c)) +
+  facet_wrap(~indicator) +
+  geom_text(color='#457b9d') +
+  labs(
+    title='Volatility Between 2016 and 2019 for SCI and SPI Overall Scores'
+  ) +
+  xlab('2016 value') +
+  ylab('2019 value') +
+  expand_limits(x=c(0,100), y=c(0,100)) +
+  theme_bw()
+    
+
+```
+
+```{r volatilityplt2, fig.height=8}
+
+country_samp <- sample(unique(volatility_df$country),25)
+
+volatility_trace_df <- volatility_df %>%
+  as_tibble() %>%
+  filter(date>=2016) %>%
+  filter(!is.na(SPI.INDEX) & !is.na(SCI)) %>%
+  pivot_longer(
+    cols=c('SPI.INDEX', 'SCI'),
+    names_to='indicator',
+    values_to='value'
+  )  %>%
+  mutate(indicator=case_when(
+    indicator=='SCI' ~ "SCI",
+    indicator=="SPI.INDEX" ~ "SPI Overall Score"
+  ))
+  
+#randomly seleect a few countries  
+set.seed(9872454)
+country_samp <- sample(unique(volatility_trace_df$country),15)
+volatility_trace_sample_df <- volatility_trace_df  %>%
+  filter(country %in% country_samp)
+
+
+ggplot(volatility_trace_sample_df, aes(x=date, y=value, color=indicator)) +
+  facet_wrap(~country) +
+  geom_line( ) +
+  geom_point(shape=21, fill="#69b3a2") +
+  labs(
+    title='Volatility for SCI and SPI Overall Scores for 25 Randomly Selected Countries'
+  ) +
+  xlab('') +
+  ylab('') +
+  expand_limits(y=c(0,100)) +
+  theme_bw() +
+  theme(legend.position = 'top')
+    
+
+```
+
+
+```{r variance}
+
+#create a table with the variance for a set of countries
+#randomly seleect a few countries  
+set.seed(9872454)
+country_samp <- sample(unique(volatility_trace_df$country),15)
+
+variance_df <- volatility_trace_df  %>%
+  filter(country %in% country_samp) %>%
+  group_by(country, indicator) %>%
+  summarise(variance=sd(value)) %>%
+  pivot_wider(
+    names_from='indicator',
+    values_from='variance'
+  )
+
+variance_samp_avg_df <- volatility_trace_df %>% 
+  filter(country %in% country_samp) %>%
+  group_by(country, indicator) %>%
+  summarise(variance=sd(value)) %>%
+  pivot_wider(
+    names_from='indicator',
+    values_from='variance'
+  ) %>%
+  ungroup() %>%
+  summarise(across(c('SCI', 'SPI Overall Score'), mean)) %>%
+  mutate(country="Selected Country Avg")
+
+variance_avg_df <- volatility_trace_df %>%   
+  group_by(country, indicator) %>%
+  summarise(variance=sd(value)) %>%
+  pivot_wider(
+    names_from='indicator',
+    values_from='variance'
+  ) %>%
+  ungroup() %>%
+  summarise(across(c('SCI', 'SPI Overall Score'), mean)) %>%
+  mutate(country="Global Avg")
+
+global_sd_sci <- variance_avg_df$SCI[1]
+global_sd_spi <- variance_avg_df$`SPI Overall Score`[1]
+
+```
+
+Below we show a measure of volatility over time in a countries SCI or SPI Overall Score.  The volatility measure is the standard deviation of the measure from 2016-19.  The SCI has slightly greater volatility across time with a global average standard deviation of `r round(global_sd_sci,1)`.  The SPI Overall Score has a global average standard deviation across time of `r round(global_sd_spi,1)`
+
+```{r varianceplot}
+
+
+
+std_border = officer::fp_border(color="black", width = 1)
+
+
+variance_df %>%
+  bind_rows(variance_samp_avg_df) %>%
+  bind_rows(variance_avg_df) %>%
+  flextable() %>%
+  add_header_lines('Standard Deviation Across Time for 15 Randomly Selected Countries for SPI Overall Score and SCI') %>%
+  add_footer_lines('Global Avg represents the average standard deviation across time for all countries in dataset.  Selected Country Avg is the average standard deviation for the 15 randomly selected countries.' ) %>%
+  hline(i = 15, part = "body",
+        border = std_border) %>%
+  FitFlextableToPage()
+
+```
+

@@ -683,7 +683,7 @@ spi_index_df_temp <- spi_df_final %>%
 
 #Drop certain indicators that don't make cut because of imcomplete coverage usually
 spi_index_df_temp <- spi_index_df_temp %>%
-  select( -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level,, -SPI.D4.2.1.SPL, -SPI.D4.2.4.LBR,-SPI.D4.2.2.EDU) 
+  select( -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level) 
 
 
 
@@ -2189,7 +2189,7 @@ As another check, we present the distribution of scores across countries for eac
 
 #pull SCI values
 
-Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/IQ.SCI.OVRL?format=json&date=2004:2019&per_page=5000")
+Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/IQ.SCI.OVRL?format=json&date=2004:2020&per_page=5000")
 Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
 
 # Parse the JSON content and convert it to a data frame.
@@ -2208,6 +2208,13 @@ sci_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
   arrange(-SCI) %>%
   mutate(SCI_rank=rank(-SCI),
          SCI_rank=if_else(is.na(SCI),as.numeric(NA),SCI_rank))
+
+
+#check unique values by dimension.
+unique_scores_df <- sci_df %>% filter(date==2019) %>% mutate(SCI=round(SCI,3))
+unique_scores_sci <-length(unique(unique_scores_df$SCI))
+
+
 
 #read in ODIN data
   for (i in 2015:2018) {
