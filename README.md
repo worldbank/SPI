@@ -1,107 +1,63 @@
 Statistical Performance Indicators
 ================
 
+The new Statistical Performance Indicators (SPI) builds on the SCI, which the World Bank has regularly published since 2004.  Our new SPI will cover many of the same elements as the SCI, such as statistical methodology, source data, and periodicity, but will also expand into new areas. The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system.  We also are committing to making our project open data and open code to build confidence in our work.
 
-The SPI framework is designed to capture different aspects of national
-statistical capacity by employing most relevant and representative
-variables that are publicly available. The SPI can be used to gauge
-statistical performance of individual countries over time or
-cross-country comparisons of performance at a point in time.
+The new Statistical Performance Indicators (SPI) are designed to monitor how well countries statistical systems are meeting this purpose.  By helping countries and development partners identify the strengths and weaknesses of national statistical systems the SPI can support policy advice for countries about their national statistical systems, investment decisions for donors including the World Bank, benchmarking of national statistical systems, and advocacy for national statistics.  
 
-The SPI aims to provide an objective, justifiable/verifiable assessment
-of the statistical performance of countries over time by using publicly
-available information from international agencies and country websites
-that were produced by national statistical systems. The SPI framework
-helps countries and development partners identify the strengths and
-weaknesses of national statistical systems and areas of potential
-improvements. It could also provide actionable guidance for national
-statistical systems in areas that may require further and deeper
-assessment. Key characteristics of the SPI are:
+We identify five key dimensions of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These dimensions can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining.
 
-  - Uses only publicly accessible data  
-  - Transparent methodology  
-  - Easily replicable  
-  - Provides a long-time series to track progress in performance  
-  - Captures outcomes and supporting elements  
-  - Reflects the SDGs.  
-  - Facilitates at-a-glance comparisons on a global scale
+![](04_reports/SPI_cycle.png)
 
-# Overview
-  In November 2014, the “World that Counts” report was published, setting an agenda for mobilizing the data revolution for sustainable development (https://www.undatarevolution.org/wp-content/uploads/2014/11/A-World-That-Counts.pdf). The report opens with the words: “data are the lifeblood of decision-making and the raw material for accountability. Without high-quality data providing the right information on the right things at the right time; designing, monitoring and evaluating effective policies becomes almost impossible.”
+Statistics have no value unless they are used. The first dimension of the SPI is therefore data use. A successful statistical system is one that produces data products that are highly used.
 
-  In July 2015, the centrality of data to the development process was recognized in the Addis Ababa Action Agenda on Financing for Development (https://www.un.org/esa/ffd/wp-content/uploads/2015/08/AAAA_Outcome.pdf) which emphasized that high-quality disaggregated data is an essential input for smart and transparent decision-making, including in support of the post-2015 agenda and its means of implementation, and can improve policy-making at all levels.
+In order to meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second dimension of the SPI is therefore data services that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.
 
-  The scale of the task was defined by the adoption of the Sustainable Development Goals in September 2015 (https://sustainabledevelopment.un.org/?menu=1300) which heralded a step change in the requirements placed on national and global statistical and data systems.
+The dialogue between users and suppliers in turn drives the design of statistical products that are to be created including the quality of product needed for the country requirement. This will incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third dimension of the SPI is therefore data products. A successful statistical system is one that generates high quality statistical indicators that can also track progress for the Sustainable Development Goals (SDGs).
 
-  To meet the imperative of the SDGs, the Cape Town Global Action Plan for Sustainable Development Data (https://unstats.un.org/sdgs/hlg/Cape-Town-Global-Action-Plan/) was developed through an open consultation in 2016, informally launched at the first UN World Data Forum in January 2017 and adopted by the United Nations Statistical Commission in March 2017.
+In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens.  The fourth dimension of the SPI is therefore data sources.  A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.
 
-  “The Action Plan recognises that quality and timely data are vital for enabling governments, international organisations, civil society, private sector and the general public to make informed decisions and to ensure the accountability of representative bodies. Effective planning, follow-up and review of the implementation of the 2030 Agenda for Sustainable Development requires the collection, processing, analysis and dissemination of an unprecedented amount of data and statistics at local, national, regional and global levels and by multiple stakeholders. The 2030 Agenda explicitly calls for enhancing capacity building to support national plans to implement the sustainable development goals.
+For the cycle to be complete, capability needs continuously to be reviewed to ensure that it is enough to deliver the products, services and ultimately data use required. The fifth dimension of the SPI is therefore data infrastructure. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
+The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 below.
 
-  National statistical systems (NSS) face the urgent need to adapt and develop in order to meet the widening, increasing and evolving needs of data users, including for the full implementation of the 2030 Agenda for Sustainable Development. There is a wide range of statistical capacity among countries, with individual countries setting their own national priorities. Some countries are facing steeper challenges than others. Capacity building is important for all countries, even more so for developing countries, particularly African countries, least developed countries, landlocked developing countries, small island developing States and middle-income countries and other countries in vulnerable situations. This modernization and strengthening effort will require the full, active, and focused commitment of government policy leaders and the international community to implement the sustainable development agenda.”
-  This document sets out a proposal for a Statistical Performance Dashboard designed to facilitate a granular approach that will support the following purposes:
+*Figure 1: The Dimensions and Pillars that Construct the New SPI*
+![](04_reports/SPI_dashboard.png)
 
-    1.	Policy advice for countries about their national statistical systems
-    2.	Investment decisions for donors  
-    3.	Benchmarking of national statistical systems
-    4.	Advocacy for national statistics
+A score against each element would facilitate:    
 
-  The new Dashboard should help get answers to the following questions:
+  1. Understanding of the maturity of the national statistical system in relation to others eg quintile groups of countries could be shown against each dimension    
 
-    1.	What is the current level of performance of the national statistical system? How well does the statistical system meet user needs for relevant and good quality statistics in a timely manner?
-    2.	Are some aspects of the national statistical system better than others? Where are the strengths and weaknesses?  
-    3.	How does the national statistical system compare with other countries? Which are the most suitable comparators?  
-    4.	Where should investment in national statistical systems be directed? What is the likely return on investment for alternative proposals?  
-    5.	How effective have previous investments in national statistical systems been? Which interventions work best? Is the national statistical system getting better?
+  2. This in turn would highlight relative strengths and weaknesses of the system and give an indication of the extent to which the official statistics could be relied upon  
 
-  The requirements of different users of the index are similar even though their perspective may be different. User groups would include:
+  3. It would also point to which other countries the country in question could learn from as it seeks to improve and create incentives to develop in a forward looking rather than backward looking way   
 
-    1.	National governments
-    2.	National statistics offices  
-    3.	World Bank staff in Washington and in countries  
-    4.	Other international organizations  
-    5.	Donors and other development partners  
+  4. Time series would allow assessments to be made of progress of the system and a start point for assessments of return on investment for funding given for capacity building
 
-  The Dashboard builds on and incorporates the previous work done by the World Bank on the Statistical Capacity Index and proposals for a Statistical Performance Index. Since the publication of proposals for the Statistical Performance Index (http://documents1.worldbank.org/curated/en/304431546956224461/pdf/WPS8693.pdf ) many comments have been received from experts inside the World Bank and other interested parties. Some of these comments have also been informed by a discussion paper (attached at Annex A). The comments received have been invaluable in shaping the proposal.
+  5. A dynamic view encouraging continuous improvement. As countries improve the bar for what good looks like would get higher     
 
-  The COVID-19 pandemic has illustrated the urgency and critical importance of a toolkit for all users to provide answers to these questions. It is hoped that this proposal will provide a timely catalyst for taking the necessary actions at country, regional and global levels.
-   
-## Further Background
 
-  The upcoming World Development Report (WDR) will focus on data for better lives (https://www.worldbank.org/en/publication/wdr2021/overview). It will examine the tremendous potential of the changing data landscape to improve the lives of poor people and also consider the backdoors that can harm people.
+Key characteristics of the SPI are: (i) uses only publicly accessible data; (ii) transparent methodology; (iii) easily replicable; (iv) provides a long-time series to track progress in performance; (v) captures outcomes and supporting elements; (vi) reflects the SDGs; (vii) facilitates at-a-glance comparisons on a global scale.
+We are collecting data on indicators for the 22 pillars above. For dissemination, the SPI will be presented both in the dashboard format above and as an index for each country. Further details on the construction of the new SPI are provided in the remainder of the document.
 
-  There is an opportunity to launch a Statistical Performance Dashboard through the WDR and potential for strong alignment and synergy. The WDR will:
+# How to use this repository
 
-    •	Ask questions about the statistics readiness of countries
-    •	Bring out the importance of the demand side in use (and reuse of data)  
-    •	Explore the bottlenecks in using data to help poor people in poor countries
-    •	Focus on data for improving lives
-    •	Recognize that value is not realized because reuse of data is hard  
-    •	Consider safeguards: each use/reuse is an opportunity for misuse  
-    •	Identify the attributes of a system for data access and reuse
-    •	Set out the groundwork that needs to be done and the critical steps
+There are several subfolders in this repository.  Below is a list of the most important files.
 
-  The World Bank has regularly published a Statistical Capacity Index (SCI) for many years and wishes to refresh it to meet the requirements now being placed on national statistical systems and to support the World Development Report agenda.
+  1. 01_raw_data contains the raw data for the project for each indicator.  This folder contains several subfolders linked to the 22 pillars in our framework.
 
-  The SCI has been in widespread use since 2004. Recognizing the new challenges for national statistical systems created by the Sustainable Development Goals, the World Bank has reviewed measurement methodologies, proposed desired attributes, and presented theoretical and empirical frameworks for a new, improved Statistical Performance Index (SPI) to monitor progress in the statistical capacity of nations (http://documents.worldbank.org/curated/en/304431546956224461/pdf/WPS8693.pdf ).
+  2. 02_programs contains the cleaning code to clean each indicator.  This code is consolidated into a single R Markdown file, 01_data_prep.Rmd, which also automatically writes a technical document for the indicators titled, "01_data_prep.pdf".  Inside this technical document, one can find the detailed description and methodology behind each indicator.
 
-  The SPI framework aims to capture different aspects of national statistical capacity by using relevant and representative variables that are publicly available. The SPI is designed to be used to gauge statistical performance of individual countries over time or make cross-country comparisons of performance at a point in time.
+  3. 03_output_data.  This folder contains a number of final output files in either csv or stata .dta format.  The most important of these files are the SPI_data.csv, which contains the data for each country containing the final indicator values for each of our Statistical Performance Indicators.  The SPI_index.csv file contains this data as well, but also includes a set of indices, including an overall score for countries, based on the values of their indicators.  The methodology for the index can be found in the 04_reports folder.
 
-  The SPI framework should help countries and development partners identify the strengths and weaknesses of national statistical systems and areas of potential improvements. It could also provide actionable guidance for national statistical systems in areas that may require further and deeper assessment. Key characteristics of the SPI are:
+  4. 04_reports contains several R Markdown files that produce various analyses and reports.  The most imporant of these include the 03_index.Rmd.  This file contains the code to produce our SPI Overall Score and dimension indices.  It also writes our SPI technical report.
 
-    •	Uses only publicly accessible data  
-    •	Transparent methodology
-    •	Easily replicable
-    •	Provides a long-time series to track progress in performance  
-    •	Captures outcomes and supporting elements
-    •	Reflects the SDGs
-    •	Facilitates at-a-glance comparisons on a global scale
+# R code
 
-  The methodology covers four dimensions:
+The vast majority of code in this repository is written in the R language.  The R version used was 4.0.3 (2020-10-10).  
 
-    •	Methodology, standards and classifications  
-    •	Censuses and surveys  
-    •	Availability of key indicators  
-    •	Dissemination practices and openness  
+This repository contains several files from the R package "renv".  The renv package helps manage specific package versions used to produce the results in this repository.  Because package version conflicts can make code that runs on one system not run on another system, it is important to have a list of the specific package versions used and a workflow for accessing these specific packages.  The renv package provides this.  In order to use renv, see the renv documentation here (https://rstudio.github.io/renv/articles/renv.html).  In general, the renv::restore() command should install all packages found in the renv.lock file in this repository, so that version conflicts do not cause errors.  
 
-  Whilst this work is seen as a highly positive move in the right direction, the World Bank wishes to expand the scope of the SPI further still to ensure it is consistent with the data agenda of the World Bank and will help countries focus and prioritize on important areas of statistical capacity and data gaps. The proposed Statistical Performance Dashboard aims to deliver on this wish whilst maintaining the characteristics of the SPI.
+There may be some issue with a few packages in particular.  These are World Bank specific packages to produce maps that conform with World Bank geospatial boundaries.  These can be downloaded here (https://github.com/worldbank/wbgviz).
+
+
    
