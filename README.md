@@ -8,7 +8,10 @@ The new Statistical Performance Indicators (SPI) are designed to monitor how wel
 
 We identify five key dimensions of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These dimensions can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining.
 
-![](04_reports/SPI_cycle.png)
+<p align = "center">
+<img src = "04_reports/SPI_cycle.png" width = "700">
+</p>
+
 
 Statistics have no value unless they are used. The first dimension of the SPI is therefore data use. A successful statistical system is one that produces data products that are highly used.
 
@@ -22,7 +25,10 @@ For the cycle to be complete, capability needs continuously to be reviewed to en
 The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 below.
 
 *Figure 1: The Dimensions and Pillars that Construct the New SPI*
-![](04_reports/SPI_dashboard.png)
+<p align = "center">
+<img src = "04_reports/SPI_dashboard.png" width = "700">
+</p>
+
 
 A score against each element would facilitate:    
 
