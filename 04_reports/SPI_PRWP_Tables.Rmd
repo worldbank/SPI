@@ -73,6 +73,12 @@ spi_index_df <- SPI
 
 
 
+#read in the SPI dataset
+spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
+  left_join(pop_df) %>%
+  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+
+
 
 #metadata 
 metadata <- data.frame(
@@ -1484,3 +1490,134 @@ variance_df %>%
 
 ```
 
+
+
+## how missing values can affect the SPI, and whether there is a minimal set of indicators that would allow meaningful inference in the case of missing values
+
+```{r minset, include=FALSE}
+
+# number of iterations
+iterate <- 10000
+
+#read in indicators
+metadata_ind <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep="")) %>%
+  filter(grepl("SPI.", source_id))
+
+
+# create index dataset
+spi_index_df_temp <- spi_df_final %>%
+  select(country, iso3c, date, starts_with("SPI"), income, region, weights, population) %>%
+  arrange(-date,country)
+
+#Drop certain indicators that don't make cut because of imcomplete coverage usually
+spi_index_df_temp <- spi_index_df_temp %>%
+  select( -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level) 
+
+leave_out_fun <-  function(variables) {
+  
+spi_index_df_alt <- spi_index_df_temp %>%
+  arrange(country, date) %>%
+  group_by(country) %>%
+  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
+  mutate(across(matches(variables),~as.numeric(NA))) %>% #convert selected variable to missing values then begin calculation without them
+  select(country, iso3c, date, everything())
+
+
+
+#Create overall subscores corresponding to John's framework
+spi_index_df_alt <- spi_index_df_alt %>%
+  mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
+         INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
+         INDEX.SPI.D2.4=SPI.D2.4.NADA,
+         INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
+                                          "SPI.D3.2.HNGR",
+                                          "SPI.D3.3.HLTH",
+                                          "SPI.D3.4.EDUC",
+                                          "SPI.D3.5.GEND",
+                                          "SPI.D3.6.WTRS")), na.rm=TRUE),
+         INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
+                                          "SPI.D3.8.WORK",
+                                          "SPI.D3.9.INDY",
+                                          "SPI.D3.10.NEQL",
+                                          "SPI.D3.11.CITY",
+                                          "SPI.D3.12.CNSP")), na.rm=TRUE),         
+         INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
+                                          "SPI.D3.15.LAND" )), na.rm=TRUE),
+         INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
+                                          "SPI.D3.17.PTNS" )), na.rm=TRUE),
+         INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1')), na.rm=TRUE),
+         INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2')), na.rm=TRUE),
+         INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3')), na.rm=TRUE),
+         #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
+         INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2')), na.rm=TRUE),
+         #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
+  ) %>%
+  mutate(
+    SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=TRUE),
+    SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=TRUE),
+    SPI.INDEX.DIM3=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
+    SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=TRUE),
+    SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=TRUE),
+    SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.DIM1',
+                                    'SPI.INDEX.DIM2',
+                                    'SPI.INDEX.DIM3',
+                                    'SPI.INDEX.DIM4',
+                                    'SPI.INDEX.DIM5')), na.rm=TRUE)
+  ) %>% #
+  mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
+  arrange(-date, -SPI.INDEX.ALT) %>%
+  select(country, iso3c, date, SPI.INDEX.ALT) %>%
+  filter(date>=2016) #2016 is first year with complete data
+
+  #form database with both measures
+  temp <- spi_index_df %>%
+    select(country, iso3c, date, SPI.INDEX) %>%
+    left_join(spi_index_df_alt) 
+
+  cor(temp$SPI.INDEX, temp$SPI.INDEX.ALT, use='pairwise.complete')
+  
+}
+
+minset_df <- tibble(iteration=1:iterate) %>%
+  mutate(ind_list=list(metadata_ind$source_id),
+         rand_number=rbinom(n(),54,row_number()/iterate),
+         rand_number=case_when( #generate random number for calculation
+           as.numeric(rand_number)<=1 ~ 1,
+           as.numeric(rand_number)>=54 ~ 53,
+           TRUE ~ as.numeric(rand_number)
+         )) %>%
+  rowwise() %>%
+  mutate(ind_list=list(sample(ind_list,rand_number)),
+         source_id=paste(ind_list, collapse="|")) %>%
+  as_tibble() %>%
+  nest(source_id) %>%
+  mutate(
+    CORR=map(
+      data,
+      ~leave_out_fun(.x$source_id)
+    )
+  ) %>%
+  #unnest(ABS.DIFF) %>%
+  unnest(data) 
+
+minset_df <- minset_df %>%
+  mutate(CORR=as.numeric(CORR)) %>%
+  arrange(-rand_number, -CORR)
+
+full_ind_list <- as.character(metadata_ind$source_id)
+
+minset_df <- minset_df %>%
+  rename(drop_list=ind_list) %>%
+  rowwise() %>%
+  mutate(set=list(full_ind_list[which(!full_ind_list %in% drop_list)]))
+
+
+minset_df %>%
+ select(set,drop_list, rand_number, iteration, CORR) %>%
+ save(file=paste0(output_dir, 'minimum_set_analysis.Rdata'))
+
+# 
+# 
+# set=full_ind_list[which(!full_ind_list %in% minset_df$drop_list[1])]
+
+```
