@@ -29,7 +29,7 @@
 # These files include GitHub settings
 !.gitignore
 !.gitattributes
-
+!*.nojekyll
 # Keep markdown files used for documentation on GitHub
 !README.md
 !CONTRIBUTING.md
