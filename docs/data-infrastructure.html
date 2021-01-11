@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>7 Data Infrastructure | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
+  <meta name="description" content="7 Data Infrastructure | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="7 Data Infrastructure | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="7 Data Infrastructure | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  
+  
+  
+
+<meta name="author" content="Brian Stacy" />
+
+
+<meta name="date" content="2021-01-04" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-sources.html"/>
+
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="data-use.html"><a href="data-use.html"><i class="fa fa-check"></i><b>2</b> Data Use</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-use.html"><a href="data-use.html#indicator-1.1-data-use-by-national-legislature"><i class="fa fa-check"></i><b>2.1</b> Indicator 1.1: Data use by national legislature</a></li>
+<li class="chapter" data-level="2.2" data-path="data-use.html"><a href="data-use.html#indicator-1.2-data-use-by-national-executive-branch"><i class="fa fa-check"></i><b>2.2</b> Indicator 1.2: Data use by national executive branch</a></li>
+<li class="chapter" data-level="2.3" data-path="data-use.html"><a href="data-use.html#indicator-1.3-data-use-by-civil-society"><i class="fa fa-check"></i><b>2.3</b> Indicator 1.3: Data use by civil society</a></li>
+<li class="chapter" data-level="2.4" data-path="data-use.html"><a href="data-use.html#indicator-1.4-data-use-by-academia"><i class="fa fa-check"></i><b>2.4</b> Indicator 1.4: Data use by academia</a></li>
+<li class="chapter" data-level="2.5" data-path="data-use.html"><a href="data-use.html#indicator-1.5-data-use-by-international-organizations"><i class="fa fa-check"></i><b>2.5</b> Indicator 1.5: Data use by international organizations</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="data-use.html"><a href="data-use.html#poverty-comparability"><i class="fa fa-check"></i><b>2.5.1</b> Poverty Comparability</a></li>
+<li class="chapter" data-level="2.5.2" data-path="data-use.html"><a href="data-use.html#mortality-rate-under-5-per-1000-live-births"><i class="fa fa-check"></i><b>2.5.2</b> Mortality rate, under-5 (per 1,000 live births)</a></li>
+<li class="chapter" data-level="2.5.3" data-path="data-use.html"><a href="data-use.html#debt-service-ppg-and-imf-only-of-exports-of-goods-services-and-primary-income"><i class="fa fa-check"></i><b>2.5.3</b> Debt service (PPG and IMF only, % of exports of goods, services and primary income)</a></li>
+<li class="chapter" data-level="2.5.4" data-path="data-use.html"><a href="data-use.html#safely-managed-water"><i class="fa fa-check"></i><b>2.5.4</b> Safely Managed Water</a></li>
+<li class="chapter" data-level="2.5.5" data-path="data-use.html"><a href="data-use.html#labor-force-statistics"><i class="fa fa-check"></i><b>2.5.5</b> Labor Force Statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-services.html"><a href="data-services.html"><i class="fa fa-check"></i><b>3</b> Data Services</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-services.html"><a href="data-services.html#indicator-2.1-data-releases"><i class="fa fa-check"></i><b>3.1</b> Indicator 2.1: Data Releases</a></li>
+<li class="chapter" data-level="3.2" data-path="data-services.html"><a href="data-services.html#indicator-2.2-online-access"><i class="fa fa-check"></i><b>3.2</b> Indicator 2.2: Online access</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="data-services.html"><a href="data-services.html#source"><i class="fa fa-check"></i><b>3.2.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="data-services.html"><a href="data-services.html#indicator-2.3-advisory-analytical-services"><i class="fa fa-check"></i><b>3.3</b> Indicator 2.3: Advisory/ Analytical Services</a></li>
+<li class="chapter" data-level="3.4" data-path="data-services.html"><a href="data-services.html#indicator-2.4-data-services"><i class="fa fa-check"></i><b>3.4</b> Indicator 2.4: Data services</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-products.html"><a href="data-products.html"><i class="fa fa-check"></i><b>4</b> Data Products</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-products.html"><a href="data-products.html#indicators-3.1-3.4"><i class="fa fa-check"></i><b>4.1</b> Indicators 3.1-3.4</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="scoring.html"><a href="scoring.html"><i class="fa fa-check"></i><b>5</b> Scoring</a></li>
+<li class="chapter" data-level="6" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>6</b> Data Sources</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="data-sources.html"><a href="data-sources.html#indicator-4.1-censuses-and-surveys"><i class="fa fa-check"></i><b>6.1</b> Indicator 4.1: censuses and surveys</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="data-sources.html"><a href="data-sources.html#scoring-details"><i class="fa fa-check"></i><b>6.1.1</b> Scoring details</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="data-sources.html"><a href="data-sources.html#indicator-4.2-administrative-data"><i class="fa fa-check"></i><b>6.2</b> Indicator 4.2: administrative data</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="data-sources.html"><a href="data-sources.html#social-protection-admin-data"><i class="fa fa-check"></i><b>6.2.1</b> Social Protection Admin Data</a></li>
+<li class="chapter" data-level="6.2.2" data-path="data-sources.html"><a href="data-sources.html#education-admin-data"><i class="fa fa-check"></i><b>6.2.2</b> Education Admin Data</a></li>
+<li class="chapter" data-level="6.2.3" data-path="data-sources.html"><a href="data-sources.html#population-health-admin-data"><i class="fa fa-check"></i><b>6.2.3</b> Population &amp; Health Admin Data</a></li>
+<li class="chapter" data-level="6.2.4" data-path="data-sources.html"><a href="data-sources.html#labor-admin-data"><i class="fa fa-check"></i><b>6.2.4</b> Labor Admin Data</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="data-sources.html"><a href="data-sources.html#indicator-4.3-geospatial-data"><i class="fa fa-check"></i><b>6.3</b> Indicator 4.3: geospatial data</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="data-sources.html"><a href="data-sources.html#source-1"><i class="fa fa-check"></i><b>6.3.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="data-sources.html"><a href="data-sources.html#indicator-4.4-privatecitizen-generated-data"><i class="fa fa-check"></i><b>6.4</b> Indicator 4.4: private/citizen generated data</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="data-sources.html"><a href="data-sources.html#covid-mobility-data-availability"><i class="fa fa-check"></i><b>6.4.1</b> Covid Mobility Data Availability</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="data-infrastructure.html"><a href="data-infrastructure.html"><i class="fa fa-check"></i><b>7</b> Data Infrastructure</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="data-infrastructure.html"><a href="data-infrastructure.html#indicator-5.1-legislation-and-governance"><i class="fa fa-check"></i><b>7.1</b> Indicator 5.1: legislation and governance</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="data-infrastructure.html"><a href="data-infrastructure.html#system-of-national-accounts-in-use"><i class="fa fa-check"></i><b>7.1.1</b> 5.2.1 System of National Accounts in use</a></li>
+<li class="chapter" data-level="7.1.2" data-path="data-infrastructure.html"><a href="data-infrastructure.html#national-accounts-base-year"><i class="fa fa-check"></i><b>7.1.2</b> 5.2.2 National Accounts base year</a></li>
+<li class="chapter" data-level="7.1.3" data-path="data-infrastructure.html"><a href="data-infrastructure.html#classification-of-national-industry"><i class="fa fa-check"></i><b>7.1.3</b> 5.2.3 Classification of national industry</a></li>
+<li class="chapter" data-level="7.1.4" data-path="data-infrastructure.html"><a href="data-infrastructure.html#cpi-base-year"><i class="fa fa-check"></i><b>7.1.4</b> 5.2.4 CPI base year</a></li>
+<li class="chapter" data-level="7.1.5" data-path="data-infrastructure.html"><a href="data-infrastructure.html#classification-of-household-consumption"><i class="fa fa-check"></i><b>7.1.5</b> 5.2.5 Classification of household consumption</a></li>
+<li class="chapter" data-level="7.1.6" data-path="data-infrastructure.html"><a href="data-infrastructure.html#classification-of-status-of-employment"><i class="fa fa-check"></i><b>7.1.6</b> 5.2.6 Classification of status of employment</a></li>
+<li class="chapter" data-level="7.1.7" data-path="data-infrastructure.html"><a href="data-infrastructure.html#central-government-accounting-status"><i class="fa fa-check"></i><b>7.1.7</b> 5.2.7 Central government accounting status</a></li>
+<li class="chapter" data-level="7.1.8" data-path="data-infrastructure.html"><a href="data-infrastructure.html#compilation-of-government-finance-statistics"><i class="fa fa-check"></i><b>7.1.8</b> 5.2.8 Compilation of government finance statistics</a></li>
+<li class="chapter" data-level="7.1.9" data-path="data-infrastructure.html"><a href="data-infrastructure.html#compilation-of-monetary-and-financial-statistics"><i class="fa fa-check"></i><b>7.1.9</b> 5.2.9 Compilation of monetary and financial statistics</a></li>
+<li class="chapter" data-level="7.1.10" data-path="data-infrastructure.html"><a href="data-infrastructure.html#business-process"><i class="fa fa-check"></i><b>7.1.10</b> 5.2.10 Business process</a></li>
+<li class="chapter" data-level="7.1.11" data-path="data-infrastructure.html"><a href="data-infrastructure.html#create-overall-indicator"><i class="fa fa-check"></i><b>7.1.11</b> Create Overall Indicator</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="data-infrastructure.html"><a href="data-infrastructure.html#indicator-5.3-skills"><i class="fa fa-check"></i><b>7.2</b> Indicator 5.3: skills</a></li>
+<li class="chapter" data-level="7.3" data-path="data-infrastructure.html"><a href="data-infrastructure.html#indicator-5.4-partnerships"><i class="fa fa-check"></i><b>7.3</b> Indicator 5.4: partnerships</a></li>
+<li class="chapter" data-level="7.4" data-path="data-infrastructure.html"><a href="data-infrastructure.html#indicator-5.5-finance"><i class="fa fa-check"></i><b>7.4</b> Indicator 5.5: finance</a></li>
+<li class="chapter" data-level="7.5" data-path="data-infrastructure.html"><a href="data-infrastructure.html#final-dataset"><i class="fa fa-check"></i><b>7.5</b> Final Dataset</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-infrastructure" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Data Infrastructure</h1>
+<p>Data Infrastructure (5 Indicators):<br />
+- 5.1_DILG - Indicator 5.1: legislation and governance<br />
+- 5.2_DISM - Indicator 5.2: standards<br />
+- 5.3_DISK - Indicator 5.3: skills<br />
+- 5.4_DIPN - Indicator 5.4: partnerships<br />
+- 5.5_DIFI - Indicator 5.5: finance</p>
+<div id="indicator-5.1-legislation-and-governance" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Indicator 5.1: legislation and governance</h2>
+<p>The legislation and governance indicator will be drawn from SDG indicator 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Also include some other legislative aspects that foster good use of statistics eg freedom of information, privacy/transparency, good governance (eg free and fair elections).</p>
+<p>This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)</p>
+<p>Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics. Scores of 0 or scores with missing values are treated the same (both given a score of zero).</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2021-01-04</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="data-infrastructure.html#cb51-1" aria-hidden="true"></a>D5<span class="fl">.1</span>_DILG &lt;-<span class="st"> </span><span class="kw">un_pull</span>(<span class="st">&#39;SG_STT_FPOS&#39;</span>, <span class="st">&#39;2004&#39;</span>, <span class="st">&#39;2019&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb51-2"><a href="data-infrastructure.html#cb51-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, date,value) <span class="op">%&gt;%</span></span>
+<span id="cb51-3"><a href="data-infrastructure.html#cb51-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">right_join</span>(spi_df_empty) <span class="op">%&gt;%</span></span>
+<span id="cb51-4"><a href="data-infrastructure.html#cb51-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">RAW.D5.1.DILG=</span><span class="kw">if_else</span>((<span class="kw">is.na</span>(value) <span class="op">|</span><span class="st"> </span>value<span class="op">==</span><span class="st">&quot;NaN&quot;</span>),<span class="kw">as.numeric</span>(<span class="ot">NA</span>), <span class="kw">as.numeric</span>(value)),</span>
+<span id="cb51-5"><a href="data-infrastructure.html#cb51-5" aria-hidden="true"></a>         <span class="dt">SPI.D5.1.DILG=</span><span class="kw">if_else</span>((<span class="kw">is.na</span>(value) <span class="op">|</span><span class="st"> </span>value<span class="op">==</span><span class="st">&quot;NaN&quot;</span>),<span class="dv">0</span>, <span class="kw">as.numeric</span>(value))) <span class="op">%&gt;%</span></span>
+<span id="cb51-6"><a href="data-infrastructure.html#cb51-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>value)</span>
+<span id="cb51-7"><a href="data-infrastructure.html#cb51-7" aria-hidden="true"></a><span class="co"># </span></span>
+<span id="cb51-8"><a href="data-infrastructure.html#cb51-8" aria-hidden="true"></a><span class="co"># #read in csv file.</span></span>
+<span id="cb51-9"><a href="data-infrastructure.html#cb51-9" aria-hidden="true"></a><span class="co"># D5.1_DILG2 &lt;- read_csv(file = paste(raw_dir, &quot;5.1_DILG&quot;,&quot;5.1_DILG.csv&quot;, sep=&quot;/&quot; )) %&gt;%</span></span>
+<span id="cb51-10"><a href="data-infrastructure.html#cb51-10" aria-hidden="true"></a><span class="co">#   as_tibble(.name_repair = &#39;universal&#39;) %&gt;%</span></span>
+<span id="cb51-11"><a href="data-infrastructure.html#cb51-11" aria-hidden="true"></a><span class="co">#   transmute(</span></span>
+<span id="cb51-12"><a href="data-infrastructure.html#cb51-12" aria-hidden="true"></a><span class="co">#     country=Country,</span></span>
+<span id="cb51-13"><a href="data-infrastructure.html#cb51-13" aria-hidden="true"></a><span class="co">#     date=Year,</span></span>
+<span id="cb51-14"><a href="data-infrastructure.html#cb51-14" aria-hidden="true"></a><span class="co">#     SPI.5.1.DILG=Data.Value</span></span>
+<span id="cb51-15"><a href="data-infrastructure.html#cb51-15" aria-hidden="true"></a><span class="co">#   ) %&gt;%</span></span>
+<span id="cb51-16"><a href="data-infrastructure.html#cb51-16" aria-hidden="true"></a><span class="co">#     mutate(country=case_when(</span></span>
+<span id="cb51-17"><a href="data-infrastructure.html#cb51-17" aria-hidden="true"></a><span class="co">#     country==&quot;Bahamas&quot; ~ &quot;Bahamas, The&quot;,                  </span></span>
+<span id="cb51-18"><a href="data-infrastructure.html#cb51-18" aria-hidden="true"></a><span class="co">#     country==&quot;Bolivia (Plurinational State of)&quot;   ~  &quot;Bolivia&quot;   ,                  </span></span>
+<span id="cb51-19"><a href="data-infrastructure.html#cb51-19" aria-hidden="true"></a><span class="co">#     country==&quot;Côte d&#39;Ivoire&quot;  ~  &quot;Cote d&#39;Ivoire&quot;                ,</span></span>
+<span id="cb51-20"><a href="data-infrastructure.html#cb51-20" aria-hidden="true"></a><span class="co">#     country==&quot;Democratic Republic of the Congo&quot;  ~ &quot;Congo, Dem. Rep.&quot;  ,           </span></span>
+<span id="cb51-21"><a href="data-infrastructure.html#cb51-21" aria-hidden="true"></a><span class="co">#     country==&quot;Congo&quot;  ~ &quot;Congo, Rep.&quot;        ,           </span></span>
+<span id="cb51-22"><a href="data-infrastructure.html#cb51-22" aria-hidden="true"></a><span class="co">#     country==&quot;Curacao&quot;  ~  &quot;Curacao&quot;       ,                </span></span>
+<span id="cb51-23"><a href="data-infrastructure.html#cb51-23" aria-hidden="true"></a><span class="co">#     country==&quot;Czechia&quot;   ~  &quot;Czech Republic&quot;     ,        </span></span>
+<span id="cb51-24"><a href="data-infrastructure.html#cb51-24" aria-hidden="true"></a><span class="co">#     country==&quot;Egypt&quot;  ~ &quot;Egypt, Arab Rep.&quot;        ,      </span></span>
+<span id="cb51-25"><a href="data-infrastructure.html#cb51-25" aria-hidden="true"></a><span class="co">#     country==&quot;Micronesia (Federated States of)&quot;  ~ &quot;Micronesia, Fed. Sts.&quot;  ,       </span></span>
+<span id="cb51-26"><a href="data-infrastructure.html#cb51-26" aria-hidden="true"></a><span class="co">#     country==&quot;United Kingdom&quot;   ~  &quot;United Kingdom&quot;    ,         </span></span>
+<span id="cb51-27"><a href="data-infrastructure.html#cb51-27" aria-hidden="true"></a><span class="co">#     country==&quot;Gambia&quot;    ~  &quot;Gambia, The&quot;     ,           </span></span>
+<span id="cb51-28"><a href="data-infrastructure.html#cb51-28" aria-hidden="true"></a><span class="co">#     country==&quot;Iran (Islamic Republic of)&quot;  ~ &quot;Iran, Islamic Rep.&quot; ,           </span></span>
+<span id="cb51-29"><a href="data-infrastructure.html#cb51-29" aria-hidden="true"></a><span class="co">#     country==&quot;Kyrgyzstan&quot;   ~  &quot;Kyrgyz Republic&quot;   ,          </span></span>
+<span id="cb51-30"><a href="data-infrastructure.html#cb51-30" aria-hidden="true"></a><span class="co">#     country==&quot;Republic of Korea&quot;   ~ &quot;Korea, Rep.&quot;   ,               </span></span>
+<span id="cb51-31"><a href="data-infrastructure.html#cb51-31" aria-hidden="true"></a><span class="co">#     country==&quot;Lao People&#39;s Democratic Republic&quot;    ~  &quot;Lao PDR&quot; ,                    </span></span>
+<span id="cb51-32"><a href="data-infrastructure.html#cb51-32" aria-hidden="true"></a><span class="co">#     country==&quot;Saint Kitts and Nevis   &quot;   ~ &quot;St. Kitts and Nevis&quot;,</span></span>
+<span id="cb51-33"><a href="data-infrastructure.html#cb51-33" aria-hidden="true"></a><span class="co">#     country==&quot;Saint Lucia&quot;   ~ &quot;St. Lucia&quot;,</span></span>
+<span id="cb51-34"><a href="data-infrastructure.html#cb51-34" aria-hidden="true"></a><span class="co">#     country==&quot;Republic of Moldova&quot;   ~  &quot;Moldova&quot;   ,                  </span></span>
+<span id="cb51-35"><a href="data-infrastructure.html#cb51-35" aria-hidden="true"></a><span class="co">#     country==&quot;Democratic People&#39;s Republic of Korea&quot;  ~  &quot;Korea, Dem. People’s Rep.&quot; ,  </span></span>
+<span id="cb51-36"><a href="data-infrastructure.html#cb51-36" aria-hidden="true"></a><span class="co">#     country==&quot;Slovakia&quot;   ~  &quot;Slovak Republic&quot;             ,</span></span>
+<span id="cb51-37"><a href="data-infrastructure.html#cb51-37" aria-hidden="true"></a><span class="co">#     country==&quot;United Republic of Tanzania&quot;   ~  &quot;Tanzania&quot; ,                    </span></span>
+<span id="cb51-38"><a href="data-infrastructure.html#cb51-38" aria-hidden="true"></a><span class="co">#     country==&quot;United States of America&quot;  ~ &quot;United States&quot;  ,                </span></span>
+<span id="cb51-39"><a href="data-infrastructure.html#cb51-39" aria-hidden="true"></a><span class="co">#     country==&quot;Saint Vincent and the Grenadines&quot; ~ &quot;St. Vincent and the Grenadines&quot; ,</span></span>
+<span id="cb51-40"><a href="data-infrastructure.html#cb51-40" aria-hidden="true"></a><span class="co">#     country==&quot;Venezuela (Bolivarian Republic of)&quot;  ~  &quot;Venezuela, RB&quot;   ,              </span></span>
+<span id="cb51-41"><a href="data-infrastructure.html#cb51-41" aria-hidden="true"></a><span class="co">#     country==&quot;British Virgin Islands&quot;  ~  &quot;British Virgin Islands&quot; ,       </span></span>
+<span id="cb51-42"><a href="data-infrastructure.html#cb51-42" aria-hidden="true"></a><span class="co">#     country==&quot;Viet Nam&quot;  ~ &quot;Vietnam&quot;        ,              </span></span>
+<span id="cb51-43"><a href="data-infrastructure.html#cb51-43" aria-hidden="true"></a><span class="co">#     country==&quot;Yemen&quot;  ~ &quot;Yemen, Rep.&quot;,</span></span>
+<span id="cb51-44"><a href="data-infrastructure.html#cb51-44" aria-hidden="true"></a><span class="co">#     country==&quot;United Kingdom of Great Britain and Northern Ireland&quot; ~ &quot;United Kingdom&quot;,</span></span>
+<span id="cb51-45"><a href="data-infrastructure.html#cb51-45" aria-hidden="true"></a><span class="co">#     TRUE ~ country</span></span>
+<span id="cb51-46"><a href="data-infrastructure.html#cb51-46" aria-hidden="true"></a><span class="co">#   )) %&gt;%</span></span>
+<span id="cb51-47"><a href="data-infrastructure.html#cb51-47" aria-hidden="true"></a><span class="co">#   mutate(RAW.5.1.DILG=if_else(SPI.5.1.DILG==&#39;no data&#39;,as.character(NA), SPI.5.1.DILG),</span></span>
+<span id="cb51-48"><a href="data-infrastructure.html#cb51-48" aria-hidden="true"></a><span class="co">#          SPI.5.1.DILG=if_else(SPI.5.1.DILG==&#39;no data&#39;,as.numeric(NA), as.numeric(SPI.5.1.DILG))) %&gt;%</span></span>
+<span id="cb51-49"><a href="data-infrastructure.html#cb51-49" aria-hidden="true"></a><span class="co">#   right_join(spi_df_empty)</span></span>
+<span id="cb51-50"><a href="data-infrastructure.html#cb51-50" aria-hidden="true"></a></span>
+<span id="cb51-51"><a href="data-infrastructure.html#cb51-51" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
+<span id="cb51-52"><a href="data-infrastructure.html#cb51-52" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb51-53"><a href="data-infrastructure.html#cb51-53" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5<span class="fl">.1</span>_DILG)</span>
+<span id="cb51-54"><a href="data-infrastructure.html#cb51-54" aria-hidden="true"></a></span>
+<span id="cb51-55"><a href="data-infrastructure.html#cb51-55" aria-hidden="true"></a></span>
+<span id="cb51-56"><a href="data-infrastructure.html#cb51-56" aria-hidden="true"></a>D5<span class="fl">.1</span>_DILG_map &lt;-<span class="st"> </span>D5<span class="fl">.1</span>_DILG <span class="op">%&gt;%</span></span>
+<span id="cb51-57"><a href="data-infrastructure.html#cb51-57" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="fl">1.</span>DILG))</span>
+<span id="cb51-58"><a href="data-infrastructure.html#cb51-58" aria-hidden="true"></a></span>
+<span id="cb51-59"><a href="data-infrastructure.html#cb51-59" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;D5.1_DILG_map&#39;</span>, <span class="st">&#39;RAW.D5.1.DILG&#39;</span>, <span class="st">&#39;National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21&#39;</span>)</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/legislation_governance-1.png" width="960" /><img src="01_data_prep_files/figure-html/legislation_governance-2.png" width="960" /><img src="01_data_prep_files/figure-html/legislation_governance-3.png" width="960" /><img src="01_data_prep_files/figure-html/legislation_governance-4.png" width="960" />
+## Indicator 5.2: standards</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="data-infrastructure.html#cb52-1" aria-hidden="true"></a><span class="co">#pull data for several of the standards from WDI metadata</span></span>
+<span id="cb52-2"><a href="data-infrastructure.html#cb52-2" aria-hidden="true"></a></span>
+<span id="cb52-3"><a href="data-infrastructure.html#cb52-3" aria-hidden="true"></a>df &lt;-<span class="st"> </span>WDI_metadata</span>
+<span id="cb52-4"><a href="data-infrastructure.html#cb52-4" aria-hidden="true"></a></span>
+<span id="cb52-5"><a href="data-infrastructure.html#cb52-5" aria-hidden="true"></a><span class="co"># Manipulate and clean final data</span></span>
+<span id="cb52-6"><a href="data-infrastructure.html#cb52-6" aria-hidden="true"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb52-7"><a href="data-infrastructure.html#cb52-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(Income.Group))  <span class="co">#keep just countries (drop aggregations)</span></span>
+<span id="cb52-8"><a href="data-infrastructure.html#cb52-8" aria-hidden="true"></a></span>
+<span id="cb52-9"><a href="data-infrastructure.html#cb52-9" aria-hidden="true"></a><span class="co">#pull IMF country codes for merging</span></span>
+<span id="cb52-10"><a href="data-infrastructure.html#cb52-10" aria-hidden="true"></a>imf_codes &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file=</span><span class="kw">paste</span>(raw_dir, <span class="st">&quot;metadata&quot;</span>,<span class="st">&quot;IMF_country_codes.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> ))</span></code></pre></div>
+<div id="system-of-national-accounts-in-use" class="section level3" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> 5.2.1 System of National Accounts in use</h3>
+<p>The national accounts data are compiled using the concepts, definitions,
+framework, and methodology of the System of National Account 2008 (SNA2008)
+or European System of National and Regional Accounts (ESA 2010). The manual
+has evolved to meet the changing economic structure, to follow systematic accounting
+and ensure international compatibility.</p>
+<p>Scoring: 1 point for using SNA2008 or ESA 2010, 0.5 points for using SNA 1993 or ESA 1995, 0 points otherwise</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="data-infrastructure.html#cb53-1" aria-hidden="true"></a><span class="co">#read in metadata file.</span></span>
+<span id="cb53-2"><a href="data-infrastructure.html#cb53-2" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">1.</span>SNAU &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb53-3"><a href="data-infrastructure.html#cb53-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">iso3c=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(Country.Code), Code, Country.Code),</span>
+<span id="cb53-4"><a href="data-infrastructure.html#cb53-4" aria-hidden="true"></a>         <span class="dt">country=</span>Table.Name) <span class="op">%&gt;%</span></span>
+<span id="cb53-5"><a href="data-infrastructure.html#cb53-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&#39;iso3c&#39;</span>, <span class="st">&#39;country&#39;</span>, <span class="st">&#39;date&#39;</span>,  <span class="st">&#39;System.of.National.Accounts&#39;</span>)  ) <span class="op">%&gt;%</span></span>
+<span id="cb53-6"><a href="data-infrastructure.html#cb53-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SNAU=</span>System.of.National.Accounts) <span class="op">%&gt;%</span></span>
+<span id="cb53-7"><a href="data-infrastructure.html#cb53-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SNAU=</span><span class="kw">str_extract</span>(SNAU, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d{4}&quot;</span>) ) <span class="op">%&gt;%</span></span>
+<span id="cb53-8"><a href="data-infrastructure.html#cb53-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.1.SNAU=</span><span class="kw">case_when</span>(</span>
+<span id="cb53-9"><a href="data-infrastructure.html#cb53-9" aria-hidden="true"></a>    SNAU<span class="op">==</span><span class="st">&quot;2008&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb53-10"><a href="data-infrastructure.html#cb53-10" aria-hidden="true"></a>    SNAU<span class="op">==</span><span class="st">&quot;1993&quot;</span> <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>,</span>
+<span id="cb53-11"><a href="data-infrastructure.html#cb53-11" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb53-12"><a href="data-infrastructure.html#cb53-12" aria-hidden="true"></a>  ),</span>
+<span id="cb53-13"><a href="data-infrastructure.html#cb53-13" aria-hidden="true"></a>      <span class="dt">RAW.D5.2.1.SNAU=</span>System.of.National.Accounts) <span class="op">%&gt;%</span></span>
+<span id="cb53-14"><a href="data-infrastructure.html#cb53-14" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country) <span class="op">%&gt;%</span></span>
+<span id="cb53-15"><a href="data-infrastructure.html#cb53-15" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c,  date,RAW.D5.<span class="dv">2</span>.<span class="fl">1.</span>SNAU, SPI.D5.<span class="dv">2</span>.<span class="fl">1.</span>SNAU  ) </span></code></pre></div>
+</div>
+<div id="national-accounts-base-year" class="section level3" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> 5.2.2 National Accounts base year</h3>
+<p>National accounts base year is the year used as the base period for constant price
+calculations in the country’s national accounts. It is recommended that the base year of
+constant price estimates be changed periodically to reflect changes in economic structure and relative prices.</p>
+<p>1 point for chained price, 0.5 for reference period within past 10 years, 0 points otherwise.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="data-infrastructure.html#cb54-1" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">2.</span>NABY &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb54-2"><a href="data-infrastructure.html#cb54-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">iso3c=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(Country.Code), Code, Country.Code),</span>
+<span id="cb54-3"><a href="data-infrastructure.html#cb54-3" aria-hidden="true"></a>         <span class="dt">country=</span>Table.Name) <span class="op">%&gt;%</span></span>
+<span id="cb54-4"><a href="data-infrastructure.html#cb54-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&#39;iso3c&#39;</span>, <span class="st">&#39;country&#39;</span>, <span class="st">&#39;date&#39;</span>,  <span class="st">&#39;National.accounts.base.year&#39;</span>)  ) <span class="op">%&gt;%</span></span>
+<span id="cb54-5"><a href="data-infrastructure.html#cb54-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">NABY=</span>National.accounts.base.year) <span class="op">%&gt;%</span></span>
+<span id="cb54-6"><a href="data-infrastructure.html#cb54-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">NABY_dates=</span><span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">d{2}/&quot;</span>,<span class="st">&quot;&quot;</span>,NABY) ) <span class="op">%&gt;%</span></span>
+<span id="cb54-7"><a href="data-infrastructure.html#cb54-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">NABY_dates=</span><span class="kw">str_extract</span>(NABY_dates, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">d{4}&quot;</span>) ) <span class="op">%&gt;%</span></span>
+<span id="cb54-8"><a href="data-infrastructure.html#cb54-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">NABY_dates=</span><span class="kw">if_else</span>(NABY<span class="op">==</span><span class="st">&quot;20015/2016&quot;</span>,<span class="st">&quot;2016&quot;</span>,NABY_dates)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#fix an issue in WDI metadata</span></span>
+<span id="cb54-9"><a href="data-infrastructure.html#cb54-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.2.NABY=</span><span class="kw">case_when</span>(</span>
+<span id="cb54-10"><a href="data-infrastructure.html#cb54-10" aria-hidden="true"></a>    NABY<span class="op">==</span><span class="st">&quot;Original chained constant price data are rescaled.&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb54-11"><a href="data-infrastructure.html#cb54-11" aria-hidden="true"></a>    (date<span class="op">-</span><span class="kw">as.numeric</span>(NABY_dates))<span class="op">&lt;=</span><span class="dv">10</span> <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>, <span class="co">#within 10 years of reference period</span></span>
+<span id="cb54-12"><a href="data-infrastructure.html#cb54-12" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb54-13"><a href="data-infrastructure.html#cb54-13" aria-hidden="true"></a>  ),</span>
+<span id="cb54-14"><a href="data-infrastructure.html#cb54-14" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.2.NABY=</span>NABY)  <span class="op">%&gt;%</span></span>
+<span id="cb54-15"><a href="data-infrastructure.html#cb54-15" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c,  date, RAW.D5.<span class="dv">2</span>.<span class="fl">2.</span>NABY, SPI.D5.<span class="dv">2</span>.<span class="fl">2.</span>NABY  ) <span class="op">%&gt;%</span></span>
+<span id="cb54-16"><a href="data-infrastructure.html#cb54-16" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date)</span></code></pre></div>
+</div>
+<div id="classification-of-national-industry" class="section level3" number="7.1.3">
+<h3><span class="header-section-number">7.1.3</span> 5.2.3 Classification of national industry</h3>
+<p>The industrial production data are compiled using the International Standard Industrial
+Classification of All Economic Activities (ISIC) Rev.4 and Statistical Classification of
+Economic Activities in the European Community (NACE) Rev.2. ISIC Rev.4 is a standard classification
+of economic activities arranged so that entities can be classified per the activity they carry out
+using criteria such as input, output and use of the products produced, more emphasis has been given
+to the character of the production process in defining and delineating ISIC classes for international
+comparability. The manual and classification have changed to cover the complete scope of industrial
+production, employment, and GDP and other statistical areas.</p>
+<p>1 Point. Latest version is adopted (ISIC Rev 4, NACE Rev 2 or a compatible classification)</p>
+<p>0.5 Points. Previous version is used (ISIC Rev 3, NACE Rev 1 or a compatible classification)</p>
+<p>0 Points. Otherwise</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="data-infrastructure.html#cb55-1" aria-hidden="true"></a><span class="co">#read in csv file.</span></span>
+<span id="cb55-2"><a href="data-infrastructure.html#cb55-2" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">3.</span>CNIN &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;D5.2.3.CNIN.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb55-3"><a href="data-infrastructure.html#cb55-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.3.CNIN=</span><span class="kw">case_when</span>(</span>
+<span id="cb55-4"><a href="data-infrastructure.html#cb55-4" aria-hidden="true"></a>    <span class="kw">str_to_lower</span>(CNIN)<span class="op">==</span><span class="st">&quot;nace rev2&quot;</span> <span class="op">|</span><span class="st"> </span><span class="kw">str_to_lower</span>(CNIN)<span class="op">==</span><span class="st">&quot;rev4&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb55-5"><a href="data-infrastructure.html#cb55-5" aria-hidden="true"></a>    <span class="kw">str_to_lower</span>(CNIN)<span class="op">==</span><span class="st">&quot;nace rev1&quot;</span> <span class="op">|</span><span class="st"> </span><span class="kw">str_to_lower</span>(CNIN)<span class="op">==</span><span class="st">&quot;rev3&quot;</span> <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>, </span>
+<span id="cb55-6"><a href="data-infrastructure.html#cb55-6" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb55-7"><a href="data-infrastructure.html#cb55-7" aria-hidden="true"></a>  ),</span>
+<span id="cb55-8"><a href="data-infrastructure.html#cb55-8" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.3.CNIN=</span>CNIN)  <span class="op">%&gt;%</span></span>
+<span id="cb55-9"><a href="data-infrastructure.html#cb55-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, RAW.D5.<span class="dv">2</span>.<span class="fl">3.</span>CNIN, SPI.D5.<span class="dv">2</span>.<span class="fl">3.</span>CNIN  ) <span class="op">%&gt;%</span></span>
+<span id="cb55-10"><a href="data-infrastructure.html#cb55-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country)</span></code></pre></div>
+</div>
+<div id="cpi-base-year" class="section level3" number="7.1.4">
+<h3><span class="header-section-number">7.1.4</span> 5.2.4 CPI base year</h3>
+<p>Consumer Price Index serves as indicators of inflation and reflects changes in the
+cost of acquiring a fixed basket of goods and services by the average consumer.<br />
+Weights are usually derived from consumer expenditure surveys and the CPI base year
+refers to the year the weights were derived. It is recommended that the base year be
+changed periodically to reflect changes in expenditure structure.</p>
+<p>1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 points. Otherwise</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="data-infrastructure.html#cb56-1" aria-hidden="true"></a><span class="co">#read in csv file.</span></span>
+<span id="cb56-2"><a href="data-infrastructure.html#cb56-2" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;D5.2.4.CPIBY.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb56-3"><a href="data-infrastructure.html#cb56-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.4.CPIBY=</span><span class="kw">case_when</span>(</span>
+<span id="cb56-4"><a href="data-infrastructure.html#cb56-4" aria-hidden="true"></a>    CPIBY<span class="op">==</span><span class="st">&quot;annual chained&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb56-5"><a href="data-infrastructure.html#cb56-5" aria-hidden="true"></a>    (date<span class="op">-</span><span class="kw">as.numeric</span>(CPIBY))<span class="op">&lt;=</span><span class="dv">10</span> <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>, <span class="co">#within 10 years of reference period</span></span>
+<span id="cb56-6"><a href="data-infrastructure.html#cb56-6" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb56-7"><a href="data-infrastructure.html#cb56-7" aria-hidden="true"></a>  ),</span>
+<span id="cb56-8"><a href="data-infrastructure.html#cb56-8" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.4.CPIBY=</span>CPIBY)  <span class="op">%&gt;%</span></span>
+<span id="cb56-9"><a href="data-infrastructure.html#cb56-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, RAW.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY, SPI.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY  ) <span class="op">%&gt;%</span></span>
+<span id="cb56-10"><a href="data-infrastructure.html#cb56-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country)</span>
+<span id="cb56-11"><a href="data-infrastructure.html#cb56-11" aria-hidden="true"></a></span>
+<span id="cb56-12"><a href="data-infrastructure.html#cb56-12" aria-hidden="true"></a><span class="co">#####</span></span>
+<span id="cb56-13"><a href="data-infrastructure.html#cb56-13" aria-hidden="true"></a><span class="co"># IMF Data</span></span>
+<span id="cb56-14"><a href="data-infrastructure.html#cb56-14" aria-hidden="true"></a><span class="co">#####</span></span>
+<span id="cb56-15"><a href="data-infrastructure.html#cb56-15" aria-hidden="true"></a></span>
+<span id="cb56-16"><a href="data-infrastructure.html#cb56-16" aria-hidden="true"></a><span class="co">#use alternative data source provided by the IMF</span></span>
+<span id="cb56-17"><a href="data-infrastructure.html#cb56-17" aria-hidden="true"></a></span>
+<span id="cb56-18"><a href="data-infrastructure.html#cb56-18" aria-hidden="true"></a><span class="co">#read in data on when the weights were last updated to measure if annual chain linking is done</span></span>
+<span id="cb56-19"><a href="data-infrastructure.html#cb56-19" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">4.</span>COICOP.WGT &lt;-<span class="st">   </span><span class="kw">read_excel</span>(<span class="dt">path=</span><span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;2020.11.04_Compiled Data for World Bank.xlsx&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> ),</span>
+<span id="cb56-20"><a href="data-infrastructure.html#cb56-20" aria-hidden="true"></a>                               <span class="dt">sheet =</span> <span class="st">&quot;COICOP Month_Last Change&quot;</span>,</span>
+<span id="cb56-21"><a href="data-infrastructure.html#cb56-21" aria-hidden="true"></a>                               <span class="dt">skip=</span><span class="dv">2</span></span>
+<span id="cb56-22"><a href="data-infrastructure.html#cb56-22" aria-hidden="true"></a>                               ) <span class="op">%&gt;%</span></span>
+<span id="cb56-23"><a href="data-infrastructure.html#cb56-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair=</span><span class="st">&#39;universal&#39;</span>) <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb56-24"><a href="data-infrastructure.html#cb56-24" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(</span>
+<span id="cb56-25"><a href="data-infrastructure.html#cb56-25" aria-hidden="true"></a>    <span class="dt">IMF_code=</span>Code,</span>
+<span id="cb56-26"><a href="data-infrastructure.html#cb56-26" aria-hidden="true"></a>    <span class="dt">IMF_country=</span>Country_revised</span>
+<span id="cb56-27"><a href="data-infrastructure.html#cb56-27" aria-hidden="true"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb56-28"><a href="data-infrastructure.html#cb56-28" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">IMF_code=</span><span class="kw">as.numeric</span>(IMF_code)) <span class="op">%&gt;%</span></span>
+<span id="cb56-29"><a href="data-infrastructure.html#cb56-29" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(imf_codes)</span>
+<span id="cb56-30"><a href="data-infrastructure.html#cb56-30" aria-hidden="true"></a>  </span>
+<span id="cb56-31"><a href="data-infrastructure.html#cb56-31" aria-hidden="true"></a>  </span>
+<span id="cb56-32"><a href="data-infrastructure.html#cb56-32" aria-hidden="true"></a><span class="co">#read in last time the CPI reference period is updated to fill in rest of info  </span></span>
+<span id="cb56-33"><a href="data-infrastructure.html#cb56-33" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">4.</span>CPI.REF &lt;-<span class="st">  </span><span class="kw">read_excel</span>(<span class="dt">path=</span><span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;2020.11.04_Compiled Data for World Bank.xlsx&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> ),</span>
+<span id="cb56-34"><a href="data-infrastructure.html#cb56-34" aria-hidden="true"></a>                               <span class="dt">sheet =</span> <span class="st">&quot;CPI Reference Period Review&quot;</span></span>
+<span id="cb56-35"><a href="data-infrastructure.html#cb56-35" aria-hidden="true"></a>                               ) <span class="op">%&gt;%</span></span>
+<span id="cb56-36"><a href="data-infrastructure.html#cb56-36" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair=</span><span class="st">&#39;universal&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb56-37"><a href="data-infrastructure.html#cb56-37" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">IMF_country=</span>country) <span class="op">%&gt;%</span></span>
+<span id="cb56-38"><a href="data-infrastructure.html#cb56-38" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">4.</span>COICOP.WGT) <span class="co">#merge CPI weights</span></span>
+<span id="cb56-39"><a href="data-infrastructure.html#cb56-39" aria-hidden="true"></a>  </span>
+<span id="cb56-40"><a href="data-infrastructure.html#cb56-40" aria-hidden="true"></a><span class="co">#now calculate whether annual chain linking is used and CPI base year from scratch using this info</span></span>
+<span id="cb56-41"><a href="data-infrastructure.html#cb56-41" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF.RAW &lt;-<span class="st"> </span>D5.<span class="dv">2</span>.<span class="fl">4.</span>CPI.REF <span class="op">%&gt;%</span></span>
+<span id="cb56-42"><a href="data-infrastructure.html#cb56-42" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(iso3c)) <span class="op">%&gt;%</span></span>
+<span id="cb56-43"><a href="data-infrastructure.html#cb56-43" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">CPI_ref_period=</span><span class="kw">str_sub</span>(CPI.reference.period.review,<span class="dv">1</span>,<span class="dv">4</span>),</span>
+<span id="cb56-44"><a href="data-infrastructure.html#cb56-44" aria-hidden="true"></a>         <span class="dt">CPI_ref_period=</span><span class="kw">as.numeric</span>(CPI_ref_period),</span>
+<span id="cb56-45"><a href="data-infrastructure.html#cb56-45" aria-hidden="true"></a>         <span class="dt">CPI_weight_change=</span><span class="kw">str_sub</span>(last_change,<span class="dv">1</span>,<span class="dv">4</span>),</span>
+<span id="cb56-46"><a href="data-infrastructure.html#cb56-46" aria-hidden="true"></a>         <span class="dt">CPI_weight_change=</span><span class="kw">as.numeric</span>(CPI_weight_change)) <span class="op">%&gt;%</span></span>
+<span id="cb56-47"><a href="data-infrastructure.html#cb56-47" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">RAW.D5.2.4.CPIBY.IMF=</span><span class="kw">if_else</span>((CPI_weight_change<span class="op">&gt;=</span><span class="dv">2019</span> <span class="op">&amp;</span><span class="st"> </span>CPI_ref_period<span class="op">&lt;</span><span class="dv">2020</span>), <span class="st">&quot;annual chained&quot;</span>,<span class="kw">as.character</span>(CPI_ref_period))) <span class="op">%&gt;%</span></span>
+<span id="cb56-48"><a href="data-infrastructure.html#cb56-48" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">RAW.D5.2.4.CPIBY.IMF=</span><span class="kw">if_else</span>((iso3c<span class="op">==</span><span class="st">&#39;AUS&#39;</span> <span class="op">|</span><span class="st"> </span>iso3c<span class="op">==</span><span class="st">&#39;NZL&#39;</span>),<span class="st">&quot;annual chained&quot;</span>,<span class="kw">as.character</span>(RAW.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF))) <span class="co">#replace Australia and New Zealand as annual chain linking.  They use quarterly cpi releases and do not show up in this dataset</span></span>
+<span id="cb56-49"><a href="data-infrastructure.html#cb56-49" aria-hidden="true"></a>  </span>
+<span id="cb56-50"><a href="data-infrastructure.html#cb56-50" aria-hidden="true"></a><span class="co">#score from 2010 to 2019  </span></span>
+<span id="cb56-51"><a href="data-infrastructure.html#cb56-51" aria-hidden="true"></a><span class="cf">if</span> (<span class="kw">exists</span>(<span class="st">&#39;D5.2.4.CPIBY.IMF&#39;</span>)) {</span>
+<span id="cb56-52"><a href="data-infrastructure.html#cb56-52" aria-hidden="true"></a>    <span class="kw">rm</span>(D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF)</span>
+<span id="cb56-53"><a href="data-infrastructure.html#cb56-53" aria-hidden="true"></a>} </span>
+<span id="cb56-54"><a href="data-infrastructure.html#cb56-54" aria-hidden="true"></a></span>
+<span id="cb56-55"><a href="data-infrastructure.html#cb56-55" aria-hidden="true"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">c</span>(<span class="dv">2015</span><span class="op">:</span><span class="dv">2019</span>)) {</span>
+<span id="cb56-56"><a href="data-infrastructure.html#cb56-56" aria-hidden="true"></a>  temp &lt;-<span class="st"> </span>D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF.RAW <span class="op">%&gt;%</span></span>
+<span id="cb56-57"><a href="data-infrastructure.html#cb56-57" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">date=</span>i) <span class="op">%&gt;%</span></span>
+<span id="cb56-58"><a href="data-infrastructure.html#cb56-58" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.4.CPIBY.IMF=</span><span class="kw">case_when</span>(</span>
+<span id="cb56-59"><a href="data-infrastructure.html#cb56-59" aria-hidden="true"></a>      RAW.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF<span class="op">==</span><span class="st">&quot;annual chained&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb56-60"><a href="data-infrastructure.html#cb56-60" aria-hidden="true"></a>      (date<span class="op">-</span><span class="kw">as.numeric</span>(RAW.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF))<span class="op">&lt;=</span><span class="dv">10</span> <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>, <span class="co">#within 10 years of reference period</span></span>
+<span id="cb56-61"><a href="data-infrastructure.html#cb56-61" aria-hidden="true"></a>      <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb56-62"><a href="data-infrastructure.html#cb56-62" aria-hidden="true"></a>    )) <span class="op">%&gt;%</span></span>
+<span id="cb56-63"><a href="data-infrastructure.html#cb56-63" aria-hidden="true"></a><span class="st">    </span><span class="kw">select</span>(iso3c, date, RAW.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF, SPI.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF  ) <span class="op">%&gt;%</span></span>
+<span id="cb56-64"><a href="data-infrastructure.html#cb56-64" aria-hidden="true"></a><span class="st">    </span><span class="kw">arrange</span>(date, iso3c)</span>
+<span id="cb56-65"><a href="data-infrastructure.html#cb56-65" aria-hidden="true"></a>  </span>
+<span id="cb56-66"><a href="data-infrastructure.html#cb56-66" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="op">!</span><span class="kw">exists</span>(<span class="st">&#39;D5.2.4.CPIBY.IMF&#39;</span>)) {</span>
+<span id="cb56-67"><a href="data-infrastructure.html#cb56-67" aria-hidden="true"></a>    D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF &lt;-<span class="st"> </span>temp</span>
+<span id="cb56-68"><a href="data-infrastructure.html#cb56-68" aria-hidden="true"></a>  } <span class="cf">else</span> {</span>
+<span id="cb56-69"><a href="data-infrastructure.html#cb56-69" aria-hidden="true"></a>    D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF &lt;-<span class="st"> </span>D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF <span class="op">%&gt;%</span></span>
+<span id="cb56-70"><a href="data-infrastructure.html#cb56-70" aria-hidden="true"></a><span class="st">      </span><span class="kw">bind_rows</span>(temp)</span>
+<span id="cb56-71"><a href="data-infrastructure.html#cb56-71" aria-hidden="true"></a>  }</span>
+<span id="cb56-72"><a href="data-infrastructure.html#cb56-72" aria-hidden="true"></a>  </span>
+<span id="cb56-73"><a href="data-infrastructure.html#cb56-73" aria-hidden="true"></a>}</span>
+<span id="cb56-74"><a href="data-infrastructure.html#cb56-74" aria-hidden="true"></a></span>
+<span id="cb56-75"><a href="data-infrastructure.html#cb56-75" aria-hidden="true"></a></span>
+<span id="cb56-76"><a href="data-infrastructure.html#cb56-76" aria-hidden="true"></a></span>
+<span id="cb56-77"><a href="data-infrastructure.html#cb56-77" aria-hidden="true"></a><span class="co">#update based on IMF data.  Use manually collected value when other value not available</span></span>
+<span id="cb56-78"><a href="data-infrastructure.html#cb56-78" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY &lt;-<span class="st"> </span>D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY <span class="op">%&gt;%</span></span>
+<span id="cb56-79"><a href="data-infrastructure.html#cb56-79" aria-hidden="true"></a><span class="st">  </span><span class="kw">full_join</span>(D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF) <span class="op">%&gt;%</span></span>
+<span id="cb56-80"><a href="data-infrastructure.html#cb56-80" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.4.CPIBY=</span><span class="kw">if_else</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF),SPI.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY)) <span class="op">%&gt;%</span></span>
+<span id="cb56-81"><a href="data-infrastructure.html#cb56-81" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>country,<span class="op">-</span>SPI.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY.IMF) </span></code></pre></div>
+</div>
+<div id="classification-of-household-consumption" class="section level3" number="7.1.5">
+<h3><span class="header-section-number">7.1.5</span> 5.2.5 Classification of household consumption</h3>
+<p>Classification of Individual Consumption According to Purpose (COICOP)
+is used in household budget surveys, consumer price indices and international
+comparisons of gross domestic product (GDP) and its component expenditures.<br />
+Although COICOP is not strictly linked to any particular model of consumer
+behavior, the classification is designed to broadly reflect differences in
+income elasticities. It is an integral part of the SNA1993 and more detailed
+subdivision of the classes provide comparability between countries and between
+statistics in these different areas.</p>
+<p>1 Point. Follow Classification of Individual Consumption by Purpose (COICOP) 0 Points. Otherwise</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="data-infrastructure.html#cb57-1" aria-hidden="true"></a><span class="co">#read in csv file.</span></span>
+<span id="cb57-2"><a href="data-infrastructure.html#cb57-2" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;D5.2.5.HOUS.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb57-3"><a href="data-infrastructure.html#cb57-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.5.HOUS=</span><span class="kw">case_when</span>(</span>
+<span id="cb57-4"><a href="data-infrastructure.html#cb57-4" aria-hidden="true"></a>    HOUS<span class="op">==</span><span class="st">&quot;COICOP&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb57-5"><a href="data-infrastructure.html#cb57-5" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb57-6"><a href="data-infrastructure.html#cb57-6" aria-hidden="true"></a>  ),</span>
+<span id="cb57-7"><a href="data-infrastructure.html#cb57-7" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.5.HOUS=</span>HOUS)  <span class="op">%&gt;%</span></span>
+<span id="cb57-8"><a href="data-infrastructure.html#cb57-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, RAW.D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS, SPI.D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS  ) <span class="op">%&gt;%</span></span>
+<span id="cb57-9"><a href="data-infrastructure.html#cb57-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country)</span>
+<span id="cb57-10"><a href="data-infrastructure.html#cb57-10" aria-hidden="true"></a></span>
+<span id="cb57-11"><a href="data-infrastructure.html#cb57-11" aria-hidden="true"></a><span class="co">#####</span></span>
+<span id="cb57-12"><a href="data-infrastructure.html#cb57-12" aria-hidden="true"></a><span class="co"># IMF Data</span></span>
+<span id="cb57-13"><a href="data-infrastructure.html#cb57-13" aria-hidden="true"></a><span class="co">#####</span></span>
+<span id="cb57-14"><a href="data-infrastructure.html#cb57-14" aria-hidden="true"></a></span>
+<span id="cb57-15"><a href="data-infrastructure.html#cb57-15" aria-hidden="true"></a><span class="co">#use alternative data source provided by the IMF</span></span>
+<span id="cb57-16"><a href="data-infrastructure.html#cb57-16" aria-hidden="true"></a></span>
+<span id="cb57-17"><a href="data-infrastructure.html#cb57-17" aria-hidden="true"></a><span class="co">#read in data on COICOP from IMF</span></span>
+<span id="cb57-18"><a href="data-infrastructure.html#cb57-18" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS.IMF &lt;-<span class="st">   </span><span class="kw">read_excel</span>(<span class="dt">path=</span><span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;2020.11.04_Compiled Data for World Bank.xlsx&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> ),</span>
+<span id="cb57-19"><a href="data-infrastructure.html#cb57-19" aria-hidden="true"></a>                               <span class="dt">sheet =</span> <span class="st">&quot;3. Household Consump Class&quot;</span>,</span>
+<span id="cb57-20"><a href="data-infrastructure.html#cb57-20" aria-hidden="true"></a>                               <span class="dt">skip=</span><span class="dv">0</span></span>
+<span id="cb57-21"><a href="data-infrastructure.html#cb57-21" aria-hidden="true"></a>                               ) <span class="op">%&gt;%</span></span>
+<span id="cb57-22"><a href="data-infrastructure.html#cb57-22" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair=</span><span class="st">&#39;universal&#39;</span>) <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb57-23"><a href="data-infrastructure.html#cb57-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(</span>
+<span id="cb57-24"><a href="data-infrastructure.html#cb57-24" aria-hidden="true"></a>    <span class="dt">IMF_code=</span>Code,</span>
+<span id="cb57-25"><a href="data-infrastructure.html#cb57-25" aria-hidden="true"></a>    <span class="dt">IMF_country=</span>Country,</span>
+<span id="cb57-26"><a href="data-infrastructure.html#cb57-26" aria-hidden="true"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb57-27"><a href="data-infrastructure.html#cb57-27" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.5.HOUS.IMF=</span><span class="kw">case_when</span>(</span>
+<span id="cb57-28"><a href="data-infrastructure.html#cb57-28" aria-hidden="true"></a>    Status<span class="op">==</span><span class="st">&quot;CIOCOP&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb57-29"><a href="data-infrastructure.html#cb57-29" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb57-30"><a href="data-infrastructure.html#cb57-30" aria-hidden="true"></a>  ),</span>
+<span id="cb57-31"><a href="data-infrastructure.html#cb57-31" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.5.HOUS.IMF=</span>Status) <span class="op">%&gt;%</span></span>
+<span id="cb57-32"><a href="data-infrastructure.html#cb57-32" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">IMF_code=</span><span class="kw">as.numeric</span>(IMF_code)) <span class="op">%&gt;%</span></span>
+<span id="cb57-33"><a href="data-infrastructure.html#cb57-33" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(imf_codes) <span class="op">%&gt;%</span></span>
+<span id="cb57-34"><a href="data-infrastructure.html#cb57-34" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, RAW.D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS.IMF ) <span class="op">%&gt;%</span></span>
+<span id="cb57-35"><a href="data-infrastructure.html#cb57-35" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date=</span><span class="dv">2019</span>)</span>
+<span id="cb57-36"><a href="data-infrastructure.html#cb57-36" aria-hidden="true"></a>  </span>
+<span id="cb57-37"><a href="data-infrastructure.html#cb57-37" aria-hidden="true"></a>  </span>
+<span id="cb57-38"><a href="data-infrastructure.html#cb57-38" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS &lt;-<span class="st">  </span>D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS <span class="op">%&gt;%</span></span>
+<span id="cb57-39"><a href="data-infrastructure.html#cb57-39" aria-hidden="true"></a><span class="st">  </span><span class="kw">full_join</span>(D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS.IMF) <span class="op">%&gt;%</span></span>
+<span id="cb57-40"><a href="data-infrastructure.html#cb57-40" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.5.HOUS=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS),SPI.D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#fill in with IMF data if missing.  This applies mostly to high income countries</span></span>
+<span id="cb57-41"><a href="data-infrastructure.html#cb57-41" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>country,<span class="op">-</span>SPI.D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS.IMF) <span class="op">%&gt;%</span></span>
+<span id="cb57-42"><a href="data-infrastructure.html#cb57-42" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, iso3c) </span></code></pre></div>
+</div>
+<div id="classification-of-status-of-employment" class="section level3" number="7.1.6">
+<h3><span class="header-section-number">7.1.6</span> 5.2.6 Classification of status of employment</h3>
+<p>Classification of status of employment refers to employment data that are
+compiled using the current international standard International Classification
+of Status in Employment (ISCE-93). It classifies jobs with respect to the type
+of explicit or implicit contract of employment between the job holder and the
+economic unit in which he or she is employed. Therefore, it aims to provide the
+basis for production of internationally comparable statistics on the employment
+relationship, including the distinction between salaried employment and self-employment.</p>
+<p>1 Point. Follow International Labour Organization, International Classification of Status in Employment (ICSE-93) or 2012 North American Industry Classification System (NAICS). 0 Points Otherwise.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="data-infrastructure.html#cb58-1" aria-hidden="true"></a><span class="co">#read in csv file.</span></span>
+<span id="cb58-2"><a href="data-infrastructure.html#cb58-2" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">6.</span>EMPL &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;D5.2.6.EMPL.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb58-3"><a href="data-infrastructure.html#cb58-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.6.EMPL=</span><span class="kw">case_when</span>(</span>
+<span id="cb58-4"><a href="data-infrastructure.html#cb58-4" aria-hidden="true"></a>    EMPL<span class="op">==</span><span class="st">&quot;ICSE-93&quot;</span> <span class="op">|</span><span class="st"> </span>EMPL<span class="op">==</span><span class="st">&quot;NAICS&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb58-5"><a href="data-infrastructure.html#cb58-5" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb58-6"><a href="data-infrastructure.html#cb58-6" aria-hidden="true"></a>  ),</span>
+<span id="cb58-7"><a href="data-infrastructure.html#cb58-7" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.6.EMPL=</span>EMPL)  <span class="op">%&gt;%</span></span>
+<span id="cb58-8"><a href="data-infrastructure.html#cb58-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, RAW.D5.<span class="dv">2</span>.<span class="fl">6.</span>EMPL, SPI.D5.<span class="dv">2</span>.<span class="fl">6.</span>EMPL  ) <span class="op">%&gt;%</span></span>
+<span id="cb58-9"><a href="data-infrastructure.html#cb58-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country)</span></code></pre></div>
+</div>
+<div id="central-government-accounting-status" class="section level3" number="7.1.7">
+<h3><span class="header-section-number">7.1.7</span> 5.2.7 Central government accounting status</h3>
+<p>Government finance accounting status refers to the accounting basis for
+reporting central government financial data. For many countries’ government
+finance data, have been consolidated into one set of accounts capturing all
+the central government’s fiscal activities and following noncash recording basis.<br />
+Budgetary central government accounts do not necessarily include all central government
+units, the picture they provide of central government activities is usually incomplete.</p>
+<p>1 Point. Consolidated central government accounting follows noncash recording basis<br />
+0.5 Points. Consolidated central government accounting follows cash recording basis<br />
+0 Points. Otherwise</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="data-infrastructure.html#cb59-1" aria-hidden="true"></a><span class="co">#read in csv file.</span></span>
+<span id="cb59-2"><a href="data-infrastructure.html#cb59-2" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;D5.2.7.CGOV.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb59-3"><a href="data-infrastructure.html#cb59-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.7.CGOV=</span><span class="kw">case_when</span>(</span>
+<span id="cb59-4"><a href="data-infrastructure.html#cb59-4" aria-hidden="true"></a>    CGOV<span class="op">==</span><span class="st">&quot;AC&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb59-5"><a href="data-infrastructure.html#cb59-5" aria-hidden="true"></a>    CGOV<span class="op">==</span><span class="st">&quot;CA&quot;</span> <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>,</span>
+<span id="cb59-6"><a href="data-infrastructure.html#cb59-6" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb59-7"><a href="data-infrastructure.html#cb59-7" aria-hidden="true"></a>  ),</span>
+<span id="cb59-8"><a href="data-infrastructure.html#cb59-8" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.7.CGOV=</span>CGOV)  <span class="op">%&gt;%</span></span>
+<span id="cb59-9"><a href="data-infrastructure.html#cb59-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, RAW.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV, SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV  ) <span class="op">%&gt;%</span></span>
+<span id="cb59-10"><a href="data-infrastructure.html#cb59-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country)</span>
+<span id="cb59-11"><a href="data-infrastructure.html#cb59-11" aria-hidden="true"></a></span>
+<span id="cb59-12"><a href="data-infrastructure.html#cb59-12" aria-hidden="true"></a><span class="co">#####</span></span>
+<span id="cb59-13"><a href="data-infrastructure.html#cb59-13" aria-hidden="true"></a><span class="co"># IMF Data</span></span>
+<span id="cb59-14"><a href="data-infrastructure.html#cb59-14" aria-hidden="true"></a><span class="co">#####</span></span>
+<span id="cb59-15"><a href="data-infrastructure.html#cb59-15" aria-hidden="true"></a></span>
+<span id="cb59-16"><a href="data-infrastructure.html#cb59-16" aria-hidden="true"></a><span class="co">#use alternative data source provided by the IMF</span></span>
+<span id="cb59-17"><a href="data-infrastructure.html#cb59-17" aria-hidden="true"></a></span>
+<span id="cb59-18"><a href="data-infrastructure.html#cb59-18" aria-hidden="true"></a><span class="co">#read in data from IMF</span></span>
+<span id="cb59-19"><a href="data-infrastructure.html#cb59-19" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF &lt;-<span class="st">   </span><span class="kw">read_excel</span>(<span class="dt">path=</span><span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;2020.11.04_Compiled Data for World Bank.xlsx&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> ),</span>
+<span id="cb59-20"><a href="data-infrastructure.html#cb59-20" aria-hidden="true"></a>                               <span class="dt">sheet =</span> <span class="st">&quot;5. Cntrl Gct Acct Status&quot;</span>,</span>
+<span id="cb59-21"><a href="data-infrastructure.html#cb59-21" aria-hidden="true"></a>                               <span class="dt">skip=</span><span class="dv">6</span></span>
+<span id="cb59-22"><a href="data-infrastructure.html#cb59-22" aria-hidden="true"></a>                               ) <span class="op">%&gt;%</span></span>
+<span id="cb59-23"><a href="data-infrastructure.html#cb59-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair=</span><span class="st">&#39;universal&#39;</span>) <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb59-24"><a href="data-infrastructure.html#cb59-24" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(</span>
+<span id="cb59-25"><a href="data-infrastructure.html#cb59-25" aria-hidden="true"></a>    <span class="dt">IMF_code=</span>Code,</span>
+<span id="cb59-26"><a href="data-infrastructure.html#cb59-26" aria-hidden="true"></a>    <span class="dt">IMF_country=</span>Country,</span>
+<span id="cb59-27"><a href="data-infrastructure.html#cb59-27" aria-hidden="true"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb59-28"><a href="data-infrastructure.html#cb59-28" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.7.CGOV.IMF=</span><span class="kw">case_when</span>(</span>
+<span id="cb59-29"><a href="data-infrastructure.html#cb59-29" aria-hidden="true"></a>    General.Government..consolidated.<span class="op">==</span><span class="st">&quot;AC&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb59-30"><a href="data-infrastructure.html#cb59-30" aria-hidden="true"></a>    General.Government..consolidated.<span class="op">==</span><span class="st">&quot;CA&quot;</span> <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>,</span>
+<span id="cb59-31"><a href="data-infrastructure.html#cb59-31" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb59-32"><a href="data-infrastructure.html#cb59-32" aria-hidden="true"></a>  ),</span>
+<span id="cb59-33"><a href="data-infrastructure.html#cb59-33" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.7.CGOV.IMF=</span>General.Government..consolidated.) <span class="op">%&gt;%</span></span>
+<span id="cb59-34"><a href="data-infrastructure.html#cb59-34" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">IMF_code=</span><span class="kw">as.numeric</span>(IMF_code)) <span class="op">%&gt;%</span></span>
+<span id="cb59-35"><a href="data-infrastructure.html#cb59-35" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(imf_codes) <span class="op">%&gt;%</span></span>
+<span id="cb59-36"><a href="data-infrastructure.html#cb59-36" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, RAW.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF ) <span class="op">%&gt;%</span></span>
+<span id="cb59-37"><a href="data-infrastructure.html#cb59-37" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date=</span><span class="dv">2019</span>)</span>
+<span id="cb59-38"><a href="data-infrastructure.html#cb59-38" aria-hidden="true"></a>  </span>
+<span id="cb59-39"><a href="data-infrastructure.html#cb59-39" aria-hidden="true"></a>  </span>
+<span id="cb59-40"><a href="data-infrastructure.html#cb59-40" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV &lt;-<span class="st">  </span>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV <span class="op">%&gt;%</span></span>
+<span id="cb59-41"><a href="data-infrastructure.html#cb59-41" aria-hidden="true"></a><span class="st">  </span><span class="kw">full_join</span>(D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF) <span class="op">%&gt;%</span></span>
+<span id="cb59-42"><a href="data-infrastructure.html#cb59-42" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.7.CGOV=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV),SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#fill in with IMF data if missing.  This applies mostly to high income countries</span></span>
+<span id="cb59-43"><a href="data-infrastructure.html#cb59-43" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>country,<span class="op">-</span>SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF) <span class="op">%&gt;%</span></span>
+<span id="cb59-44"><a href="data-infrastructure.html#cb59-44" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, iso3c)</span></code></pre></div>
+</div>
+<div id="compilation-of-government-finance-statistics" class="section level3" number="7.1.8">
+<h3><span class="header-section-number">7.1.8</span> 5.2.8 Compilation of government finance statistics</h3>
+<p>(GFSM) in use for compiling the data. It provides guidelines on the institutional
+structure of governments and the presentation of fiscal data in a format similar to
+business accounting with a balance sheet and income statement plus guidelines on the
+treatment of exchange rate and other valuation adjustments. The latest manual GFSM2014
+is harmonized with the SNA2008.</p>
+<p>1 Point. Follow the latest Government Finance Statistical Manual (2014)/ ESA2010<br />
+0.5 Points. Previous version is used (GFSM 2001)<br />
+0 Points. Otherwise</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="data-infrastructure.html#cb60-1" aria-hidden="true"></a><span class="co">#read in csv file.</span></span>
+<span id="cb60-2"><a href="data-infrastructure.html#cb60-2" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">8.</span>FINA &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;D5.2.8.FINA.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb60-3"><a href="data-infrastructure.html#cb60-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.8.FINA=</span><span class="kw">case_when</span>(</span>
+<span id="cb60-4"><a href="data-infrastructure.html#cb60-4" aria-hidden="true"></a>    FINA<span class="op">==</span><span class="st">&quot;2014&quot;</span> <span class="op">|</span><span class="st"> </span>FINA<span class="op">==</span><span class="st">&quot;ESA 2010&quot;</span><span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb60-5"><a href="data-infrastructure.html#cb60-5" aria-hidden="true"></a>    FINA<span class="op">==</span><span class="st">&quot;2001&quot;</span> <span class="op">~</span><span class="st"> </span><span class="fl">0.5</span>,</span>
+<span id="cb60-6"><a href="data-infrastructure.html#cb60-6" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb60-7"><a href="data-infrastructure.html#cb60-7" aria-hidden="true"></a>  ),</span>
+<span id="cb60-8"><a href="data-infrastructure.html#cb60-8" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.8.FINA=</span>FINA)  <span class="op">%&gt;%</span></span>
+<span id="cb60-9"><a href="data-infrastructure.html#cb60-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, RAW.D5.<span class="dv">2</span>.<span class="fl">8.</span>FINA, SPI.D5.<span class="dv">2</span>.<span class="fl">8.</span>FINA  ) <span class="op">%&gt;%</span></span>
+<span id="cb60-10"><a href="data-infrastructure.html#cb60-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country)</span></code></pre></div>
+</div>
+<div id="compilation-of-monetary-and-financial-statistics" class="section level3" number="7.1.9">
+<h3><span class="header-section-number">7.1.9</span> 5.2.9 Compilation of monetary and financial statistics</h3>
+<p>Compilation of monetary and financial statistics refers to the Monetary and Financial Statistics Manual
+(MFSM) in use. It covers concepts, definitions, classifications of financial instruments and sectors, and
+accounting rules, and provides a comprehensive analytic framework for monetary and financial planning and policy
+determination. The Monetary and Finance Statistics: Compilation Guide (2008) provides detailed guidelines for
+the compilation of monetary and financial statistics in addition to MFSM.</p>
+<p>1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
+0 Points. Otherwise</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="data-infrastructure.html#cb61-1" aria-hidden="true"></a><span class="co">#read in csv file.</span></span>
+<span id="cb61-2"><a href="data-infrastructure.html#cb61-2" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;D5.2.9.MONY.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb61-3"><a href="data-infrastructure.html#cb61-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.9.MONY=</span><span class="kw">case_when</span>(</span>
+<span id="cb61-4"><a href="data-infrastructure.html#cb61-4" aria-hidden="true"></a>    MONY<span class="op">==</span><span class="st">&quot;MFSM 2000&quot;</span> <span class="op">|</span><span class="st"> </span>MONY<span class="op">==</span><span class="st">&quot;MFSMCG 2016&quot;</span><span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb61-5"><a href="data-infrastructure.html#cb61-5" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb61-6"><a href="data-infrastructure.html#cb61-6" aria-hidden="true"></a>  ),</span>
+<span id="cb61-7"><a href="data-infrastructure.html#cb61-7" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.9.MONY=</span>MONY)  <span class="op">%&gt;%</span></span>
+<span id="cb61-8"><a href="data-infrastructure.html#cb61-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, RAW.D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY, SPI.D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY  ) <span class="op">%&gt;%</span></span>
+<span id="cb61-9"><a href="data-infrastructure.html#cb61-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country)</span>
+<span id="cb61-10"><a href="data-infrastructure.html#cb61-10" aria-hidden="true"></a></span>
+<span id="cb61-11"><a href="data-infrastructure.html#cb61-11" aria-hidden="true"></a><span class="co">#####</span></span>
+<span id="cb61-12"><a href="data-infrastructure.html#cb61-12" aria-hidden="true"></a><span class="co"># IMF Data</span></span>
+<span id="cb61-13"><a href="data-infrastructure.html#cb61-13" aria-hidden="true"></a><span class="co">#####</span></span>
+<span id="cb61-14"><a href="data-infrastructure.html#cb61-14" aria-hidden="true"></a></span>
+<span id="cb61-15"><a href="data-infrastructure.html#cb61-15" aria-hidden="true"></a><span class="co">#use alternative data source provided by the IMF</span></span>
+<span id="cb61-16"><a href="data-infrastructure.html#cb61-16" aria-hidden="true"></a></span>
+<span id="cb61-17"><a href="data-infrastructure.html#cb61-17" aria-hidden="true"></a><span class="co">#read in data from IMF</span></span>
+<span id="cb61-18"><a href="data-infrastructure.html#cb61-18" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY.IMF &lt;-<span class="st">   </span><span class="kw">read_excel</span>(<span class="dt">path=</span><span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;2020.11.04_Compiled Data for World Bank.xlsx&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> ),</span>
+<span id="cb61-19"><a href="data-infrastructure.html#cb61-19" aria-hidden="true"></a>                               <span class="dt">sheet =</span><span class="st">&quot;7. MFS Compilation status&quot;</span>,</span>
+<span id="cb61-20"><a href="data-infrastructure.html#cb61-20" aria-hidden="true"></a>                               <span class="dt">skip=</span><span class="dv">0</span></span>
+<span id="cb61-21"><a href="data-infrastructure.html#cb61-21" aria-hidden="true"></a>                               ) <span class="op">%&gt;%</span></span>
+<span id="cb61-22"><a href="data-infrastructure.html#cb61-22" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair=</span><span class="st">&#39;universal&#39;</span>) <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb61-23"><a href="data-infrastructure.html#cb61-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(</span>
+<span id="cb61-24"><a href="data-infrastructure.html#cb61-24" aria-hidden="true"></a>    <span class="dt">IMF_code=</span>Code,</span>
+<span id="cb61-25"><a href="data-infrastructure.html#cb61-25" aria-hidden="true"></a>    <span class="dt">IMF_country=</span>Country,</span>
+<span id="cb61-26"><a href="data-infrastructure.html#cb61-26" aria-hidden="true"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb61-27"><a href="data-infrastructure.html#cb61-27" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.9.MONY.IMF=</span><span class="kw">case_when</span>(</span>
+<span id="cb61-28"><a href="data-infrastructure.html#cb61-28" aria-hidden="true"></a>    <span class="kw">grepl</span>(<span class="st">&#39;MFSM 2000&#39;</span>,Monetary.and.Financial.Statistics..MFS..Reporting.Status) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb61-29"><a href="data-infrastructure.html#cb61-29" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb61-30"><a href="data-infrastructure.html#cb61-30" aria-hidden="true"></a>  ),</span>
+<span id="cb61-31"><a href="data-infrastructure.html#cb61-31" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.9.MONY.IMF=</span>Monetary.and.Financial.Statistics..MFS..Reporting.Status) <span class="op">%&gt;%</span></span>
+<span id="cb61-32"><a href="data-infrastructure.html#cb61-32" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">IMF_code=</span><span class="kw">as.numeric</span>(IMF_code)) <span class="op">%&gt;%</span></span>
+<span id="cb61-33"><a href="data-infrastructure.html#cb61-33" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(imf_codes) <span class="op">%&gt;%</span></span>
+<span id="cb61-34"><a href="data-infrastructure.html#cb61-34" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, RAW.D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY.IMF ) <span class="op">%&gt;%</span></span>
+<span id="cb61-35"><a href="data-infrastructure.html#cb61-35" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date=</span><span class="dv">2019</span>)</span>
+<span id="cb61-36"><a href="data-infrastructure.html#cb61-36" aria-hidden="true"></a>  </span>
+<span id="cb61-37"><a href="data-infrastructure.html#cb61-37" aria-hidden="true"></a>  </span>
+<span id="cb61-38"><a href="data-infrastructure.html#cb61-38" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY &lt;-<span class="st">  </span>D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY <span class="op">%&gt;%</span></span>
+<span id="cb61-39"><a href="data-infrastructure.html#cb61-39" aria-hidden="true"></a><span class="st">  </span><span class="kw">full_join</span>(D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY.IMF) <span class="op">%&gt;%</span></span>
+<span id="cb61-40"><a href="data-infrastructure.html#cb61-40" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.9.MONY=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY),SPI.D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#fill in with IMF data if missing.  This applies mostly to high income countries</span></span>
+<span id="cb61-41"><a href="data-infrastructure.html#cb61-41" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>country,<span class="op">-</span>SPI.D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY.IMF) <span class="op">%&gt;%</span></span>
+<span id="cb61-42"><a href="data-infrastructure.html#cb61-42" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, iso3c)</span></code></pre></div>
+</div>
+<div id="business-process" class="section level3" number="7.1.10">
+<h3><span class="header-section-number">7.1.10</span> 5.2.10 Business process</h3>
+<p>The Generic Statistical Business Process Model (GSBPM) aims to describe
+statistics production in a general and process-oriented way. It is used
+both within and between statistical offices as a common basis for work with
+statistics production in different ways, such as quality, efficiency, standardization,
+and process-orientation. It is used for all types of surveys, and “business” is not
+related to “business statistics” but refers to the statistical office, simply expressed.</p>
+<p>1 Point. GSBPM is in use
+0 Points. Otherwise</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="data-infrastructure.html#cb62-1" aria-hidden="true"></a><span class="co">#read in csv file.</span></span>
+<span id="cb62-2"><a href="data-infrastructure.html#cb62-2" aria-hidden="true"></a>D5.<span class="dv">2</span>.<span class="fl">10.</span>GSBP &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;D5.2.10.GSBP.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb62-3"><a href="data-infrastructure.html#cb62-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SPI.D5.2.10.GSBP=</span><span class="kw">case_when</span>(</span>
+<span id="cb62-4"><a href="data-infrastructure.html#cb62-4" aria-hidden="true"></a>    <span class="kw">str_to_lower</span>(GSBP)<span class="op">==</span><span class="st">&quot;yes&quot;</span> <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, </span>
+<span id="cb62-5"><a href="data-infrastructure.html#cb62-5" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="dv">0</span> </span>
+<span id="cb62-6"><a href="data-infrastructure.html#cb62-6" aria-hidden="true"></a>  ),</span>
+<span id="cb62-7"><a href="data-infrastructure.html#cb62-7" aria-hidden="true"></a>  <span class="dt">RAW.D5.2.10.GSBP=</span>GSBP)  <span class="op">%&gt;%</span></span>
+<span id="cb62-8"><a href="data-infrastructure.html#cb62-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, RAW.D5.<span class="dv">2</span>.<span class="fl">10.</span>GSBP, SPI.D5.<span class="dv">2</span>.<span class="fl">10.</span>GSBP  ) <span class="op">%&gt;%</span></span>
+<span id="cb62-9"><a href="data-infrastructure.html#cb62-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, country)</span></code></pre></div>
+</div>
+<div id="create-overall-indicator" class="section level3" number="7.1.11">
+<h3><span class="header-section-number">7.1.11</span> Create Overall Indicator</h3>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="data-infrastructure.html#cb63-1" aria-hidden="true"></a><span class="co"># join datasets together based on country and date</span></span>
+<span id="cb63-2"><a href="data-infrastructure.html#cb63-2" aria-hidden="true"></a>D5.<span class="fl">2.</span>MSC &lt;-<span class="st"> </span>spi_df_empty <span class="op">%&gt;%</span></span>
+<span id="cb63-3"><a href="data-infrastructure.html#cb63-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">1.</span>SNAU) <span class="op">%&gt;%</span></span>
+<span id="cb63-4"><a href="data-infrastructure.html#cb63-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">2.</span>NABY) <span class="op">%&gt;%</span></span>
+<span id="cb63-5"><a href="data-infrastructure.html#cb63-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">3.</span>CNIN) <span class="op">%&gt;%</span></span>
+<span id="cb63-6"><a href="data-infrastructure.html#cb63-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY) <span class="op">%&gt;%</span></span>
+<span id="cb63-7"><a href="data-infrastructure.html#cb63-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS) <span class="op">%&gt;%</span></span>
+<span id="cb63-8"><a href="data-infrastructure.html#cb63-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">6.</span>EMPL) <span class="op">%&gt;%</span></span>
+<span id="cb63-9"><a href="data-infrastructure.html#cb63-9" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV) <span class="op">%&gt;%</span></span>
+<span id="cb63-10"><a href="data-infrastructure.html#cb63-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">8.</span>FINA) <span class="op">%&gt;%</span></span>
+<span id="cb63-11"><a href="data-infrastructure.html#cb63-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY) <span class="op">%&gt;%</span></span>
+<span id="cb63-12"><a href="data-infrastructure.html#cb63-12" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="dv">2</span>.<span class="fl">10.</span>GSBP) <span class="op">%&gt;%</span></span>
+<span id="cb63-13"><a href="data-infrastructure.html#cb63-13" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, country, date, <span class="kw">everything</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb63-14"><a href="data-infrastructure.html#cb63-14" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(date, iso3c) </span>
+<span id="cb63-15"><a href="data-infrastructure.html#cb63-15" aria-hidden="true"></a></span>
+<span id="cb63-16"><a href="data-infrastructure.html#cb63-16" aria-hidden="true"></a></span>
+<span id="cb63-17"><a href="data-infrastructure.html#cb63-17" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
+<span id="cb63-18"><a href="data-infrastructure.html#cb63-18" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb63-19"><a href="data-infrastructure.html#cb63-19" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5.<span class="fl">2.</span>MSC)</span>
+<span id="cb63-20"><a href="data-infrastructure.html#cb63-20" aria-hidden="true"></a></span>
+<span id="cb63-21"><a href="data-infrastructure.html#cb63-21" aria-hidden="true"></a><span class="co">#now do the figures </span></span>
+<span id="cb63-22"><a href="data-infrastructure.html#cb63-22" aria-hidden="true"></a>msc_df_map &lt;-<span class="st"> </span>D5.<span class="fl">2.</span>MSC <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">1.</span>SNAU))</span>
+<span id="cb63-23"><a href="data-infrastructure.html#cb63-23" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;msc_df_map&#39;</span>, <span class="st">&#39;SPI.D5.2.1.SNAU&#39;</span>, <span class="st">&#39;System of National Accounts in use in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/msc-1.png" width="960" /><img src="01_data_prep_files/figure-html/msc-2.png" width="960" /><img src="01_data_prep_files/figure-html/msc-3.png" width="960" /><img src="01_data_prep_files/figure-html/msc-4.png" width="960" /></p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="data-infrastructure.html#cb64-1" aria-hidden="true"></a>msc_df_map &lt;-<span class="st"> </span>D5.<span class="fl">2.</span>MSC <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">2.</span>NABY))</span>
+<span id="cb64-2"><a href="data-infrastructure.html#cb64-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;msc_df_map&#39;</span>, <span class="st">&#39;SPI.D5.2.2.NABY&#39;</span>, <span class="st">&#39;National Accounts base year in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/msc-5.png" width="960" /><img src="01_data_prep_files/figure-html/msc-6.png" width="960" /><img src="01_data_prep_files/figure-html/msc-7.png" width="960" /><img src="01_data_prep_files/figure-html/msc-8.png" width="960" /></p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="data-infrastructure.html#cb65-1" aria-hidden="true"></a>msc_df_map &lt;-<span class="st"> </span>D5.<span class="fl">2.</span>MSC <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">3.</span>CNIN))</span>
+<span id="cb65-2"><a href="data-infrastructure.html#cb65-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;msc_df_map&#39;</span>, <span class="st">&#39;SPI.D5.2.3.CNIN&#39;</span>, <span class="st">&#39;Classification of national industry in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/msc-9.png" width="960" /><img src="01_data_prep_files/figure-html/msc-10.png" width="960" /><img src="01_data_prep_files/figure-html/msc-11.png" width="960" /><img src="01_data_prep_files/figure-html/msc-12.png" width="960" /></p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="data-infrastructure.html#cb66-1" aria-hidden="true"></a>msc_df_map &lt;-<span class="st"> </span>D5.<span class="fl">2.</span>MSC <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">4.</span>CPIBY))</span>
+<span id="cb66-2"><a href="data-infrastructure.html#cb66-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;msc_df_map&#39;</span>, <span class="st">&#39;SPI.D5.2.4.CPIBY&#39;</span>, <span class="st">&#39;CPI base year in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/msc-13.png" width="960" /><img src="01_data_prep_files/figure-html/msc-14.png" width="960" /><img src="01_data_prep_files/figure-html/msc-15.png" width="960" /><img src="01_data_prep_files/figure-html/msc-16.png" width="960" /></p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="data-infrastructure.html#cb67-1" aria-hidden="true"></a>msc_df_map &lt;-<span class="st"> </span>D5.<span class="fl">2.</span>MSC <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">5.</span>HOUS))</span>
+<span id="cb67-2"><a href="data-infrastructure.html#cb67-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;msc_df_map&#39;</span>, <span class="st">&#39;SPI.D5.2.5.HOUS&#39;</span>, <span class="st">&#39;Classification of household consumption in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/msc-17.png" width="960" /><img src="01_data_prep_files/figure-html/msc-18.png" width="960" /><img src="01_data_prep_files/figure-html/msc-19.png" width="960" /><img src="01_data_prep_files/figure-html/msc-20.png" width="960" /></p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="data-infrastructure.html#cb68-1" aria-hidden="true"></a>msc_df_map &lt;-<span class="st"> </span>D5.<span class="fl">2.</span>MSC <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">6.</span>EMPL))</span>
+<span id="cb68-2"><a href="data-infrastructure.html#cb68-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;msc_df_map&#39;</span>, <span class="st">&#39;SPI.D5.2.6.EMPL&#39;</span>, <span class="st">&#39;Classification of status of employment in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/msc-21.png" width="960" /><img src="01_data_prep_files/figure-html/msc-22.png" width="960" /><img src="01_data_prep_files/figure-html/msc-23.png" width="960" /><img src="01_data_prep_files/figure-html/msc-24.png" width="960" /></p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="data-infrastructure.html#cb69-1" aria-hidden="true"></a>msc_df_map &lt;-<span class="st"> </span>D5.<span class="fl">2.</span>MSC <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV))</span>
+<span id="cb69-2"><a href="data-infrastructure.html#cb69-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;msc_df_map&#39;</span>, <span class="st">&#39;SPI.D5.2.7.CGOV&#39;</span>, <span class="st">&#39;Central government accounting status in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/msc-25.png" width="960" /><img src="01_data_prep_files/figure-html/msc-26.png" width="960" /><img src="01_data_prep_files/figure-html/msc-27.png" width="960" /><img src="01_data_prep_files/figure-html/msc-28.png" width="960" /></p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="data-infrastructure.html#cb70-1" aria-hidden="true"></a>msc_df_map &lt;-<span class="st"> </span>D5.<span class="fl">2.</span>MSC <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">8.</span>FINA))</span>
+<span id="cb70-2"><a href="data-infrastructure.html#cb70-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;msc_df_map&#39;</span>, <span class="st">&#39;SPI.D5.2.8.FINA&#39;</span>, <span class="st">&#39;Compilation of government finance statistics in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/msc-29.png" width="960" /><img src="01_data_prep_files/figure-html/msc-30.png" width="960" /><img src="01_data_prep_files/figure-html/msc-31.png" width="960" /><img src="01_data_prep_files/figure-html/msc-32.png" width="960" /></p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="data-infrastructure.html#cb71-1" aria-hidden="true"></a>msc_df_map &lt;-<span class="st"> </span>D5.<span class="fl">2.</span>MSC <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">9.</span>MONY))</span>
+<span id="cb71-2"><a href="data-infrastructure.html#cb71-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;msc_df_map&#39;</span>, <span class="st">&#39;SPI.D5.2.9.MONY&#39;</span>, <span class="st">&#39;Compilation of monetary and financial statistics in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/msc-33.png" width="960" /><img src="01_data_prep_files/figure-html/msc-34.png" width="960" /><img src="01_data_prep_files/figure-html/msc-35.png" width="960" /><img src="01_data_prep_files/figure-html/msc-36.png" width="960" /></p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="data-infrastructure.html#cb72-1" aria-hidden="true"></a>msc_df_map &lt;-<span class="st"> </span>D5.<span class="fl">2.</span>MSC <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">10.</span>GSBP))</span>
+<span id="cb72-2"><a href="data-infrastructure.html#cb72-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;msc_df_map&#39;</span>, <span class="st">&#39;SPI.D5.2.10.GSBP&#39;</span>, <span class="st">&#39;Business process in 2019&#39;</span> )</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/msc-37.png" width="960" /><img src="01_data_prep_files/figure-html/msc-38.png" width="960" /><img src="01_data_prep_files/figure-html/msc-39.png" width="960" /><img src="01_data_prep_files/figure-html/msc-40.png" width="960" /></p>
+</div>
+</div>
+<div id="indicator-5.3-skills" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Indicator 5.3: skills</h2>
+<p>This indicator assesses the systematic use of statistical knowledge with statistical terms and indicators in national policy documents. It is a composite indicator consisting of 4 sub-indices that aim to reflect the relevance of statistical evidence. It comprises four main dimensions: i) Basic consideration; ii) Diagnosis and quantification; iii) Statistical Analysis; iv) Disaggregation.</p>
+<p>Score ranges from 0 to 100. The score is the weighted sum of each of the four components’ scores, whose relative weight is reported in brackets: i) Basic Consideration (25%); ii) Diagnosis and quantification (24%); iii) Statistical Analysis (22%); iv) Disaggregation (29%).</p>
+<p>The source is Paris 21. Data accessed on August 6, 2020 from <a href="https://statisticalcapacitymonitor.org/indicator/127" class="uri">https://statisticalcapacitymonitor.org/indicator/127</a></p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="data-infrastructure.html#cb73-1" aria-hidden="true"></a><span class="co">#read in csv file.</span></span>
+<span id="cb73-2"><a href="data-infrastructure.html#cb73-2" aria-hidden="true"></a>D5<span class="fl">.3</span>_DISK &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="kw">paste</span>(raw_dir, <span class="st">&quot;5.3_DISK&quot;</span>,<span class="st">&quot;5.3_DISK.csv&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="op">%&gt;%</span></span>
+<span id="cb73-3"><a href="data-infrastructure.html#cb73-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair =</span> <span class="st">&#39;universal&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb73-4"><a href="data-infrastructure.html#cb73-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">transmute</span>(</span>
+<span id="cb73-5"><a href="data-infrastructure.html#cb73-5" aria-hidden="true"></a>    <span class="dt">country=</span>Country,</span>
+<span id="cb73-6"><a href="data-infrastructure.html#cb73-6" aria-hidden="true"></a>    <span class="dt">date=</span>Year,</span>
+<span id="cb73-7"><a href="data-infrastructure.html#cb73-7" aria-hidden="true"></a>    <span class="dt">SPI.D5.3.DISK=</span>Data.Value</span>
+<span id="cb73-8"><a href="data-infrastructure.html#cb73-8" aria-hidden="true"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb73-9"><a href="data-infrastructure.html#cb73-9" aria-hidden="true"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">country=</span><span class="kw">case_when</span>(</span>
+<span id="cb73-10"><a href="data-infrastructure.html#cb73-10" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Bahamas&quot;</span> <span class="op">~</span><span class="st"> &quot;Bahamas, The&quot;</span>,                  </span>
+<span id="cb73-11"><a href="data-infrastructure.html#cb73-11" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Bolivia (Plurinational State of)&quot;</span>   <span class="op">~</span><span class="st">  &quot;Bolivia&quot;</span>   ,                  </span>
+<span id="cb73-12"><a href="data-infrastructure.html#cb73-12" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Côte d&#39;Ivoire&quot;</span>  <span class="op">~</span><span class="st">  &quot;Cote d&#39;Ivoire&quot;</span>                ,</span>
+<span id="cb73-13"><a href="data-infrastructure.html#cb73-13" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Democratic Republic of the Congo&quot;</span>  <span class="op">~</span><span class="st"> &quot;Congo, Dem. Rep.&quot;</span>  ,           </span>
+<span id="cb73-14"><a href="data-infrastructure.html#cb73-14" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Congo&quot;</span>  <span class="op">~</span><span class="st"> &quot;Congo, Rep.&quot;</span>        ,           </span>
+<span id="cb73-15"><a href="data-infrastructure.html#cb73-15" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Curacao&quot;</span>  <span class="op">~</span><span class="st">  &quot;Curacao&quot;</span>       ,                </span>
+<span id="cb73-16"><a href="data-infrastructure.html#cb73-16" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Czechia&quot;</span>   <span class="op">~</span><span class="st">  &quot;Czech Republic&quot;</span>     ,        </span>
+<span id="cb73-17"><a href="data-infrastructure.html#cb73-17" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Egypt&quot;</span>  <span class="op">~</span><span class="st"> &quot;Egypt, Arab Rep.&quot;</span>        ,      </span>
+<span id="cb73-18"><a href="data-infrastructure.html#cb73-18" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Micronesia (Federated States of)&quot;</span>  <span class="op">~</span><span class="st"> &quot;Micronesia, Fed. Sts.&quot;</span>  ,       </span>
+<span id="cb73-19"><a href="data-infrastructure.html#cb73-19" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;United Kingdom&quot;</span>   <span class="op">~</span><span class="st">  &quot;United Kingdom&quot;</span>    ,         </span>
+<span id="cb73-20"><a href="data-infrastructure.html#cb73-20" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Gambia&quot;</span>    <span class="op">~</span><span class="st">  &quot;Gambia, The&quot;</span>     ,           </span>
+<span id="cb73-21"><a href="data-infrastructure.html#cb73-21" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Iran (Islamic Republic of)&quot;</span>  <span class="op">~</span><span class="st"> &quot;Iran, Islamic Rep.&quot;</span> ,           </span>
+<span id="cb73-22"><a href="data-infrastructure.html#cb73-22" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Kyrgyzstan&quot;</span>   <span class="op">~</span><span class="st">  &quot;Kyrgyz Republic&quot;</span>   ,          </span>
+<span id="cb73-23"><a href="data-infrastructure.html#cb73-23" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Republic of Korea&quot;</span>   <span class="op">~</span><span class="st"> &quot;Korea, Rep.&quot;</span>   ,               </span>
+<span id="cb73-24"><a href="data-infrastructure.html#cb73-24" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Lao People&#39;s Democratic Republic&quot;</span>    <span class="op">~</span><span class="st">  &quot;Lao PDR&quot;</span> ,                    </span>
+<span id="cb73-25"><a href="data-infrastructure.html#cb73-25" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Saint Kitts and Nevis &quot;</span>   <span class="op">~</span><span class="st"> &quot;St. Kitts and Nevis&quot;</span>,</span>
+<span id="cb73-26"><a href="data-infrastructure.html#cb73-26" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Saint Lucia&quot;</span>   <span class="op">~</span><span class="st"> &quot;St. Lucia&quot;</span>,</span>
+<span id="cb73-27"><a href="data-infrastructure.html#cb73-27" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Republic of Moldova&quot;</span>   <span class="op">~</span><span class="st">  &quot;Moldova&quot;</span>   ,                  </span>
+<span id="cb73-28"><a href="data-infrastructure.html#cb73-28" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Democratic People&#39;s Republic of Korea&quot;</span>  <span class="op">~</span><span class="st">  &quot;Korea, Dem. People’s Rep.&quot;</span> ,  </span>
+<span id="cb73-29"><a href="data-infrastructure.html#cb73-29" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Slovakia&quot;</span>   <span class="op">~</span><span class="st">  &quot;Slovak Republic&quot;</span>             ,</span>
+<span id="cb73-30"><a href="data-infrastructure.html#cb73-30" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;United Republic of Tanzania&quot;</span>   <span class="op">~</span><span class="st">  &quot;Tanzania&quot;</span> ,                    </span>
+<span id="cb73-31"><a href="data-infrastructure.html#cb73-31" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;United States of America&quot;</span>  <span class="op">~</span><span class="st"> &quot;United States&quot;</span>  ,                </span>
+<span id="cb73-32"><a href="data-infrastructure.html#cb73-32" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Saint Vincent and the Grenadines&quot;</span> <span class="op">~</span><span class="st"> &quot;St. Vincent and the Grenadines&quot;</span> ,</span>
+<span id="cb73-33"><a href="data-infrastructure.html#cb73-33" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Venezuela (Bolivarian Republic of)&quot;</span>  <span class="op">~</span><span class="st">  &quot;Venezuela, RB&quot;</span>   ,              </span>
+<span id="cb73-34"><a href="data-infrastructure.html#cb73-34" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;British Virgin Islands&quot;</span>  <span class="op">~</span><span class="st">  &quot;British Virgin Islands&quot;</span> ,       </span>
+<span id="cb73-35"><a href="data-infrastructure.html#cb73-35" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Viet Nam&quot;</span>  <span class="op">~</span><span class="st"> &quot;Vietnam&quot;</span>        ,              </span>
+<span id="cb73-36"><a href="data-infrastructure.html#cb73-36" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;Yemen&quot;</span>  <span class="op">~</span><span class="st"> &quot;Yemen, Rep.&quot;</span>,</span>
+<span id="cb73-37"><a href="data-infrastructure.html#cb73-37" aria-hidden="true"></a>    country<span class="op">==</span><span class="st">&quot;United Kingdom of Great Britain and Northern Ireland&quot;</span> <span class="op">~</span><span class="st"> &quot;United Kingdom&quot;</span>,</span>
+<span id="cb73-38"><a href="data-infrastructure.html#cb73-38" aria-hidden="true"></a>    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span>country</span>
+<span id="cb73-39"><a href="data-infrastructure.html#cb73-39" aria-hidden="true"></a>  )) <span class="op">%&gt;%</span></span>
+<span id="cb73-40"><a href="data-infrastructure.html#cb73-40" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">RAW.D5.3.DISK=</span><span class="kw">if_else</span>(SPI.D5.<span class="fl">3.</span>DISK<span class="op">==</span><span class="st">&#39;no data&#39;</span>,<span class="kw">as.character</span>(<span class="ot">NA</span>), SPI.D5.<span class="fl">3.</span>DISK),</span>
+<span id="cb73-41"><a href="data-infrastructure.html#cb73-41" aria-hidden="true"></a>         <span class="dt">SPI.D5.3.DISK=</span><span class="kw">if_else</span>(SPI.D5.<span class="fl">3.</span>DISK<span class="op">==</span><span class="st">&#39;no data&#39;</span>,<span class="kw">as.numeric</span>(<span class="ot">NA</span>), <span class="kw">as.numeric</span>(SPI.D5.<span class="fl">3.</span>DISK))<span class="op">/</span><span class="dv">100</span>) <span class="op">%&gt;%</span></span>
+<span id="cb73-42"><a href="data-infrastructure.html#cb73-42" aria-hidden="true"></a><span class="st">  </span><span class="kw">right_join</span>(spi_df_empty)</span>
+<span id="cb73-43"><a href="data-infrastructure.html#cb73-43" aria-hidden="true"></a></span>
+<span id="cb73-44"><a href="data-infrastructure.html#cb73-44" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
+<span id="cb73-45"><a href="data-infrastructure.html#cb73-45" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb73-46"><a href="data-infrastructure.html#cb73-46" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5<span class="fl">.3</span>_DISK)</span>
+<span id="cb73-47"><a href="data-infrastructure.html#cb73-47" aria-hidden="true"></a></span>
+<span id="cb73-48"><a href="data-infrastructure.html#cb73-48" aria-hidden="true"></a></span>
+<span id="cb73-49"><a href="data-infrastructure.html#cb73-49" aria-hidden="true"></a>D5<span class="fl">.3</span>_DISK_map &lt;-<span class="st"> </span>D5<span class="fl">.3</span>_DISK <span class="op">%&gt;%</span></span>
+<span id="cb73-50"><a href="data-infrastructure.html#cb73-50" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="fl">3.</span>DISK))</span>
+<span id="cb73-51"><a href="data-infrastructure.html#cb73-51" aria-hidden="true"></a></span>
+<span id="cb73-52"><a href="data-infrastructure.html#cb73-52" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;D5.3_DISK_map&#39;</span>, <span class="st">&#39;SPI.D5.3.DISK&#39;</span>, <span class="st">&#39;Systematic use of statistical knowledge with statistical terms and indicators in national policy documents. Source: Paris21&#39;</span>)</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/skill-1.png" width="960" /><img src="01_data_prep_files/figure-html/skill-2.png" width="960" /><img src="01_data_prep_files/figure-html/skill-3.png" width="960" /><img src="01_data_prep_files/figure-html/skill-4.png" width="960" /></p>
+</div>
+<div id="indicator-5.4-partnerships" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> Indicator 5.4: partnerships</h2>
+<p>No data is available for this indicator at this point.</p>
+</div>
+<div id="indicator-5.5-finance" class="section level2" number="7.4">
+<h2><span class="header-section-number">7.4</span> Indicator 5.5: finance</h2>
+<p>Indicator based on SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). This indicator measures whether the national statistical plan under implementation is fully funded. It relates to SDG 17.18.3 and is based on the annual Status Report on National Strategies for the Development of Statistics (NSDS).</p>
+<p>Scores is 1 if the country has a national statistical plan that is fully funded and under implementation. Scores of 0 or scores with missing values are treated the same (both given a score of zero).</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2021-01-04</p>
+<p>Source of this data is UNSD and Paris21.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="data-infrastructure.html#cb74-1" aria-hidden="true"></a><span class="co">#pull from unsd api</span></span>
+<span id="cb74-2"><a href="data-infrastructure.html#cb74-2" aria-hidden="true"></a>D5<span class="fl">.5</span>_DIFI &lt;-<span class="st"> </span><span class="kw">un_pull</span>(<span class="st">&#39;SG_STT_NSDSFND&#39;</span>, <span class="st">&#39;2004&#39;</span>, <span class="st">&#39;2019&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb74-3"><a href="data-infrastructure.html#cb74-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, date,value) <span class="op">%&gt;%</span></span>
+<span id="cb74-4"><a href="data-infrastructure.html#cb74-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">right_join</span>(spi_df_empty) <span class="op">%&gt;%</span></span>
+<span id="cb74-5"><a href="data-infrastructure.html#cb74-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">RAW.D5.5.DIFI=</span><span class="kw">if_else</span>((<span class="kw">is.na</span>(value) <span class="op">|</span><span class="st"> </span>value<span class="op">==</span><span class="st">&quot;NaN&quot;</span>),<span class="kw">as.numeric</span>(<span class="ot">NA</span>), <span class="kw">as.numeric</span>(value)),</span>
+<span id="cb74-6"><a href="data-infrastructure.html#cb74-6" aria-hidden="true"></a>         <span class="dt">SPI.D5.5.DIFI=</span><span class="kw">if_else</span>((<span class="kw">is.na</span>(value) <span class="op">|</span><span class="st"> </span>value<span class="op">==</span><span class="st">&quot;NaN&quot;</span>),<span class="dv">0</span>, <span class="kw">as.numeric</span>(value))) <span class="op">%&gt;%</span></span>
+<span id="cb74-7"><a href="data-infrastructure.html#cb74-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>value)</span>
+<span id="cb74-8"><a href="data-infrastructure.html#cb74-8" aria-hidden="true"></a></span>
+<span id="cb74-9"><a href="data-infrastructure.html#cb74-9" aria-hidden="true"></a><span class="co"># #read in csv file.</span></span>
+<span id="cb74-10"><a href="data-infrastructure.html#cb74-10" aria-hidden="true"></a><span class="co"># D5.5_DIFI &lt;- read_csv(file = paste(raw_dir, &quot;5.5_DIFI&quot;,&quot;D5.5_DIFI.csv&quot;, sep=&quot;/&quot; )) %&gt;%</span></span>
+<span id="cb74-11"><a href="data-infrastructure.html#cb74-11" aria-hidden="true"></a><span class="co">#   as_tibble(.name_repair = &#39;universal&#39;) %&gt;%</span></span>
+<span id="cb74-12"><a href="data-infrastructure.html#cb74-12" aria-hidden="true"></a><span class="co">#   transmute(</span></span>
+<span id="cb74-13"><a href="data-infrastructure.html#cb74-13" aria-hidden="true"></a><span class="co">#     country=Country,</span></span>
+<span id="cb74-14"><a href="data-infrastructure.html#cb74-14" aria-hidden="true"></a><span class="co">#     date=Year,</span></span>
+<span id="cb74-15"><a href="data-infrastructure.html#cb74-15" aria-hidden="true"></a><span class="co">#     SPI.5.5.DIFI=Data.Value</span></span>
+<span id="cb74-16"><a href="data-infrastructure.html#cb74-16" aria-hidden="true"></a><span class="co">#   ) %&gt;%</span></span>
+<span id="cb74-17"><a href="data-infrastructure.html#cb74-17" aria-hidden="true"></a><span class="co">#     mutate(country=case_when(</span></span>
+<span id="cb74-18"><a href="data-infrastructure.html#cb74-18" aria-hidden="true"></a><span class="co">#     country==&quot;Bahamas&quot; ~ &quot;Bahamas, The&quot;,                  </span></span>
+<span id="cb74-19"><a href="data-infrastructure.html#cb74-19" aria-hidden="true"></a><span class="co">#     country==&quot;Bolivia (Plurinational State of)&quot;   ~  &quot;Bolivia&quot;   ,                  </span></span>
+<span id="cb74-20"><a href="data-infrastructure.html#cb74-20" aria-hidden="true"></a><span class="co">#     country==&quot;Côte d&#39;Ivoire&quot;  ~  &quot;Cote d&#39;Ivoire&quot;                ,</span></span>
+<span id="cb74-21"><a href="data-infrastructure.html#cb74-21" aria-hidden="true"></a><span class="co">#     country==&quot;Democratic Republic of the Congo&quot;  ~ &quot;Congo, Dem. Rep.&quot;  ,           </span></span>
+<span id="cb74-22"><a href="data-infrastructure.html#cb74-22" aria-hidden="true"></a><span class="co">#     country==&quot;Congo&quot;  ~ &quot;Congo, Rep.&quot;        ,           </span></span>
+<span id="cb74-23"><a href="data-infrastructure.html#cb74-23" aria-hidden="true"></a><span class="co">#     country==&quot;Curacao&quot;  ~  &quot;Curacao&quot;       ,                </span></span>
+<span id="cb74-24"><a href="data-infrastructure.html#cb74-24" aria-hidden="true"></a><span class="co">#     country==&quot;Czechia&quot;   ~  &quot;Czech Republic&quot;     ,        </span></span>
+<span id="cb74-25"><a href="data-infrastructure.html#cb74-25" aria-hidden="true"></a><span class="co">#     country==&quot;Egypt&quot;  ~ &quot;Egypt, Arab Rep.&quot;        ,      </span></span>
+<span id="cb74-26"><a href="data-infrastructure.html#cb74-26" aria-hidden="true"></a><span class="co">#     country==&quot;Micronesia (Federated States of)&quot;  ~ &quot;Micronesia, Fed. Sts.&quot;  ,       </span></span>
+<span id="cb74-27"><a href="data-infrastructure.html#cb74-27" aria-hidden="true"></a><span class="co">#     country==&quot;United Kingdom&quot;   ~  &quot;United Kingdom&quot;    ,         </span></span>
+<span id="cb74-28"><a href="data-infrastructure.html#cb74-28" aria-hidden="true"></a><span class="co">#     country==&quot;Gambia&quot;    ~  &quot;Gambia, The&quot;     ,           </span></span>
+<span id="cb74-29"><a href="data-infrastructure.html#cb74-29" aria-hidden="true"></a><span class="co">#     country==&quot;Iran (Islamic Republic of)&quot;  ~ &quot;Iran, Islamic Rep.&quot; ,           </span></span>
+<span id="cb74-30"><a href="data-infrastructure.html#cb74-30" aria-hidden="true"></a><span class="co">#     country==&quot;Kyrgyzstan&quot;   ~  &quot;Kyrgyz Republic&quot;   ,          </span></span>
+<span id="cb74-31"><a href="data-infrastructure.html#cb74-31" aria-hidden="true"></a><span class="co">#     country==&quot;Republic of Korea&quot;   ~ &quot;Korea, Rep.&quot;   ,               </span></span>
+<span id="cb74-32"><a href="data-infrastructure.html#cb74-32" aria-hidden="true"></a><span class="co">#     country==&quot;Lao People&#39;s Democratic Republic&quot;    ~  &quot;Lao PDR&quot; ,                    </span></span>
+<span id="cb74-33"><a href="data-infrastructure.html#cb74-33" aria-hidden="true"></a><span class="co">#     country==&quot;Saint Kitts and Nevis   &quot;   ~ &quot;St. Kitts and Nevis&quot;,</span></span>
+<span id="cb74-34"><a href="data-infrastructure.html#cb74-34" aria-hidden="true"></a><span class="co">#     country==&quot;Saint Lucia&quot;   ~ &quot;St. Lucia&quot;,</span></span>
+<span id="cb74-35"><a href="data-infrastructure.html#cb74-35" aria-hidden="true"></a><span class="co">#     country==&quot;Republic of Moldova&quot;   ~  &quot;Moldova&quot;   ,                  </span></span>
+<span id="cb74-36"><a href="data-infrastructure.html#cb74-36" aria-hidden="true"></a><span class="co">#     country==&quot;Democratic People&#39;s Republic of Korea&quot;  ~  &quot;Korea, Dem. People’s Rep.&quot; ,  </span></span>
+<span id="cb74-37"><a href="data-infrastructure.html#cb74-37" aria-hidden="true"></a><span class="co">#     country==&quot;Slovakia&quot;   ~  &quot;Slovak Republic&quot;             ,</span></span>
+<span id="cb74-38"><a href="data-infrastructure.html#cb74-38" aria-hidden="true"></a><span class="co">#     country==&quot;United Republic of Tanzania&quot;   ~  &quot;Tanzania&quot; ,                    </span></span>
+<span id="cb74-39"><a href="data-infrastructure.html#cb74-39" aria-hidden="true"></a><span class="co">#     country==&quot;United States of America&quot;  ~ &quot;United States&quot;  ,                </span></span>
+<span id="cb74-40"><a href="data-infrastructure.html#cb74-40" aria-hidden="true"></a><span class="co">#     country==&quot;Saint Vincent and the Grenadines&quot; ~ &quot;St. Vincent and the Grenadines&quot; ,</span></span>
+<span id="cb74-41"><a href="data-infrastructure.html#cb74-41" aria-hidden="true"></a><span class="co">#     country==&quot;Venezuela (Bolivarian Republic of)&quot;  ~  &quot;Venezuela, RB&quot;   ,              </span></span>
+<span id="cb74-42"><a href="data-infrastructure.html#cb74-42" aria-hidden="true"></a><span class="co">#     country==&quot;British Virgin Islands&quot;  ~  &quot;British Virgin Islands&quot; ,       </span></span>
+<span id="cb74-43"><a href="data-infrastructure.html#cb74-43" aria-hidden="true"></a><span class="co">#     country==&quot;Viet Nam&quot;  ~ &quot;Vietnam&quot;        ,              </span></span>
+<span id="cb74-44"><a href="data-infrastructure.html#cb74-44" aria-hidden="true"></a><span class="co">#     country==&quot;Yemen&quot;  ~ &quot;Yemen, Rep.&quot;,</span></span>
+<span id="cb74-45"><a href="data-infrastructure.html#cb74-45" aria-hidden="true"></a><span class="co">#     country==&quot;United Kingdom of Great Britain and Northern Ireland&quot; ~ &quot;United Kingdom&quot;,</span></span>
+<span id="cb74-46"><a href="data-infrastructure.html#cb74-46" aria-hidden="true"></a><span class="co">#     TRUE ~ country</span></span>
+<span id="cb74-47"><a href="data-infrastructure.html#cb74-47" aria-hidden="true"></a><span class="co">#   )) %&gt;%</span></span>
+<span id="cb74-48"><a href="data-infrastructure.html#cb74-48" aria-hidden="true"></a><span class="co">#   mutate(RAW.5.5.DIFI=if_else(SPI.5.5.DIFI==&#39;no data&#39;,as.character(NA), SPI.5.5.DIFI),</span></span>
+<span id="cb74-49"><a href="data-infrastructure.html#cb74-49" aria-hidden="true"></a><span class="co">#          SPI.5.5.DIFI=if_else(SPI.5.5.DIFI==&#39;no data&#39;,as.numeric(NA), as.numeric(SPI.5.5.DIFI))) %&gt;%</span></span>
+<span id="cb74-50"><a href="data-infrastructure.html#cb74-50" aria-hidden="true"></a><span class="co">#   right_join(spi_df_empty)</span></span>
+<span id="cb74-51"><a href="data-infrastructure.html#cb74-51" aria-hidden="true"></a></span>
+<span id="cb74-52"><a href="data-infrastructure.html#cb74-52" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
+<span id="cb74-53"><a href="data-infrastructure.html#cb74-53" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb74-54"><a href="data-infrastructure.html#cb74-54" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D5<span class="fl">.5</span>_DIFI)</span>
+<span id="cb74-55"><a href="data-infrastructure.html#cb74-55" aria-hidden="true"></a></span>
+<span id="cb74-56"><a href="data-infrastructure.html#cb74-56" aria-hidden="true"></a></span>
+<span id="cb74-57"><a href="data-infrastructure.html#cb74-57" aria-hidden="true"></a></span>
+<span id="cb74-58"><a href="data-infrastructure.html#cb74-58" aria-hidden="true"></a></span>
+<span id="cb74-59"><a href="data-infrastructure.html#cb74-59" aria-hidden="true"></a></span>
+<span id="cb74-60"><a href="data-infrastructure.html#cb74-60" aria-hidden="true"></a>D5<span class="fl">.5</span>_DIFI_map &lt;-<span class="st"> </span>D5<span class="fl">.5</span>_DIFI <span class="op">%&gt;%</span></span>
+<span id="cb74-61"><a href="data-infrastructure.html#cb74-61" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(SPI.D5.<span class="fl">5.</span>DIFI))</span>
+<span id="cb74-62"><a href="data-infrastructure.html#cb74-62" aria-hidden="true"></a></span>
+<span id="cb74-63"><a href="data-infrastructure.html#cb74-63" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;D5.5_DIFI_map&#39;</span>, <span class="st">&#39;RAW.D5.5.DIFI&#39;</span>, <span class="st">&#39;Statistical plan fully funded. Source: Paris21&#39;</span>)</span></code></pre></div>
+<p><img src="01_data_prep_files/figure-html/finance-1.png" width="960" /><img src="01_data_prep_files/figure-html/finance-2.png" width="960" /><img src="01_data_prep_files/figure-html/finance-3.png" width="960" /><img src="01_data_prep_files/figure-html/finance-4.png" width="960" /></p>
+</div>
+<div id="final-dataset" class="section level2" number="7.5">
+<h2><span class="header-section-number">7.5</span> Final Dataset</h2>
+<p>Below we will append the data together and save the final files to gether.</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="data-infrastructure.html#cb75-1" aria-hidden="true"></a><span class="co">#add in population</span></span>
+<span id="cb75-2"><a href="data-infrastructure.html#cb75-2" aria-hidden="true"></a>pop_df &lt;-<span class="st"> </span>wbstats<span class="op">::</span><span class="kw">wb</span>(<span class="dt">country=</span><span class="st">&quot;all&quot;</span>,</span>
+<span id="cb75-3"><a href="data-infrastructure.html#cb75-3" aria-hidden="true"></a>             <span class="dt">indicator=</span><span class="st">&#39;SP.POP.TOTL&#39;</span>,</span>
+<span id="cb75-4"><a href="data-infrastructure.html#cb75-4" aria-hidden="true"></a>             <span class="dt">startdate=</span><span class="dv">2004</span>,</span>
+<span id="cb75-5"><a href="data-infrastructure.html#cb75-5" aria-hidden="true"></a>             <span class="dt">enddate=</span><span class="dv">2019</span>) <span class="op">%&gt;%</span></span>
+<span id="cb75-6"><a href="data-infrastructure.html#cb75-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date=</span><span class="kw">as.numeric</span>(date)) <span class="op">%&gt;%</span></span>
+<span id="cb75-7"><a href="data-infrastructure.html#cb75-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">population=</span>value) <span class="op">%&gt;%</span></span>
+<span id="cb75-8"><a href="data-infrastructure.html#cb75-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, date, population)</span>
+<span id="cb75-9"><a href="data-infrastructure.html#cb75-9" aria-hidden="true"></a></span>
+<span id="cb75-10"><a href="data-infrastructure.html#cb75-10" aria-hidden="true"></a><span class="co"># create final dataset</span></span>
+<span id="cb75-11"><a href="data-infrastructure.html#cb75-11" aria-hidden="true"></a>spi_df_final &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb75-12"><a href="data-infrastructure.html#cb75-12" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, iso3c, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="kw">starts_with</span>(<span class="st">&quot;RAW&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb75-13"><a href="data-infrastructure.html#cb75-13" aria-hidden="true"></a><span class="st">  </span><span class="kw">right_join</span>(spi_df_empty) <span class="op">%&gt;%</span></span>
+<span id="cb75-14"><a href="data-infrastructure.html#cb75-14" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(pop_df) <span class="op">%&gt;%</span></span>
+<span id="cb75-15"><a href="data-infrastructure.html#cb75-15" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span>date,country)</span>
+<span id="cb75-16"><a href="data-infrastructure.html#cb75-16" aria-hidden="true"></a></span>
+<span id="cb75-17"><a href="data-infrastructure.html#cb75-17" aria-hidden="true"></a></span>
+<span id="cb75-18"><a href="data-infrastructure.html#cb75-18" aria-hidden="true"></a><span class="co">####</span></span>
+<span id="cb75-19"><a href="data-infrastructure.html#cb75-19" aria-hidden="true"></a><span class="co">#lining up data to 2019 and filling in some values for OECD countries.  </span></span>
+<span id="cb75-20"><a href="data-infrastructure.html#cb75-20" aria-hidden="true"></a><span class="co">####</span></span>
+<span id="cb75-21"><a href="data-infrastructure.html#cb75-21" aria-hidden="true"></a><span class="co">#get a list of oecd countries</span></span>
+<span id="cb75-22"><a href="data-infrastructure.html#cb75-22" aria-hidden="true"></a>oecd_country_query &lt;-<span class="st">  </span><span class="kw">GET</span>(<span class="dt">url =</span> <span class="st">&quot;https://api.worldbank.org/v2/country?region=OED&amp;format=json&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb75-23"><a href="data-infrastructure.html#cb75-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">content</span>( <span class="dt">as =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb75-24"><a href="data-infrastructure.html#cb75-24" aria-hidden="true"></a><span class="st">  </span>jsonlite<span class="op">::</span><span class="kw">fromJSON</span>( <span class="dt">flatten =</span> <span class="ot">TRUE</span>) </span>
+<span id="cb75-25"><a href="data-infrastructure.html#cb75-25" aria-hidden="true"></a></span>
+<span id="cb75-26"><a href="data-infrastructure.html#cb75-26" aria-hidden="true"></a><span class="co">#do some conversion to produce a dataframe</span></span>
+<span id="cb75-27"><a href="data-infrastructure.html#cb75-27" aria-hidden="true"></a>oecd_country_df &lt;-<span class="st"> </span>oecd_country_query[[<span class="dv">2</span>]] <span class="op">%&gt;%</span></span>
+<span id="cb75-28"><a href="data-infrastructure.html#cb75-28" aria-hidden="true"></a><span class="st">  </span><span class="kw">as_tibble</span>() </span>
+<span id="cb75-29"><a href="data-infrastructure.html#cb75-29" aria-hidden="true"></a>  </span>
+<span id="cb75-30"><a href="data-infrastructure.html#cb75-30" aria-hidden="true"></a>country_mod_list &lt;-<span class="st"> </span>oecd_country_df<span class="op">$</span>name  <span class="co">#fill in the missing values for OECDs with 1s because by participating in OECD these countries have this</span></span>
+<span id="cb75-31"><a href="data-infrastructure.html#cb75-31" aria-hidden="true"></a>country_mod_list &lt;-<span class="st"> </span><span class="kw">c</span>(country_mod_list, <span class="st">&#39;Singapore&#39;</span>)</span>
+<span id="cb75-32"><a href="data-infrastructure.html#cb75-32" aria-hidden="true"></a>spi_df_final &lt;-<span class="st"> </span>spi_df_final <span class="op">%&gt;%</span></span>
+<span id="cb75-33"><a href="data-infrastructure.html#cb75-33" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(country, date) <span class="op">%&gt;%</span></span>
+<span id="cb75-34"><a href="data-infrastructure.html#cb75-34" aria-hidden="true"></a><span class="st">  </span><span class="kw">group_by</span>(country) <span class="op">%&gt;%</span></span>
+<span id="cb75-35"><a href="data-infrastructure.html#cb75-35" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), na.locf, <span class="dt">na.rm=</span><span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb75-36"><a href="data-infrastructure.html#cb75-36" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">c</span>(<span class="st">&quot;SPI.D1.5.POV&quot;</span>,</span>
+<span id="cb75-37"><a href="data-infrastructure.html#cb75-37" aria-hidden="true"></a>                  <span class="st">&quot;SPI.D2.1.GDDS&quot;</span>,</span>
+<span id="cb75-38"><a href="data-infrastructure.html#cb75-38" aria-hidden="true"></a>                  <span class="st">&quot;SPI.D5.1.DILG&quot;</span>,</span>
+<span id="cb75-39"><a href="data-infrastructure.html#cb75-39" aria-hidden="true"></a>                  <span class="st">&quot;SPI.D5.2.3.CNIN&quot;</span>, <span class="st">&quot;SPI.D5.2.5.HOUS&quot;</span>, <span class="st">&quot;SPI.D5.2.6.EMPL&quot;</span>, <span class="st">&quot;SPI.D5.2.8.FINA&quot;</span>,</span>
+<span id="cb75-40"><a href="data-infrastructure.html#cb75-40" aria-hidden="true"></a>                  <span class="st">&quot;SPI.D5.2.10.GSBP&quot;</span>,</span>
+<span id="cb75-41"><a href="data-infrastructure.html#cb75-41" aria-hidden="true"></a>                  <span class="st">&quot;SPI.D5.5.DIFI&quot;</span>),</span>
+<span id="cb75-42"><a href="data-infrastructure.html#cb75-42" aria-hidden="true"></a>                <span class="op">~</span><span class="kw">if_else</span>(( (income<span class="op">==</span><span class="st">&#39;High income&#39;</span>)  <span class="op">&amp;</span><span class="st"> </span>(country <span class="op">%in%</span><span class="st"> </span>country_mod_list)),<span class="dv">1</span>,.)                )) </span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="data-infrastructure.html#cb76-1" aria-hidden="true"></a><span class="co">#write to csv</span></span>
+<span id="cb76-2"><a href="data-infrastructure.html#cb76-2" aria-hidden="true"></a>spi_df_final <span class="op">%&gt;%</span></span>
+<span id="cb76-3"><a href="data-infrastructure.html#cb76-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(is.list, as.character)) <span class="op">%&gt;%</span></span>
+<span id="cb76-4"><a href="data-infrastructure.html#cb76-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">write_excel_csv</span>( <span class="dt">path =</span> <span class="kw">paste</span>(output_dir, <span class="st">&#39;SPI_data.csv&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span>))</span>
+<span id="cb76-5"><a href="data-infrastructure.html#cb76-5" aria-hidden="true"></a></span>
+<span id="cb76-6"><a href="data-infrastructure.html#cb76-6" aria-hidden="true"></a><span class="co">#label data</span></span>
+<span id="cb76-7"><a href="data-infrastructure.html#cb76-7" aria-hidden="true"></a><span class="co">#read in metadata</span></span>
+<span id="cb76-8"><a href="data-infrastructure.html#cb76-8" aria-hidden="true"></a>names_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&#39;source_id&#39;</span>=<span class="kw">colnames</span>(spi_df_final))</span>
+<span id="cb76-9"><a href="data-infrastructure.html#cb76-9" aria-hidden="true"></a></span>
+<span id="cb76-10"><a href="data-infrastructure.html#cb76-10" aria-hidden="true"></a>spi_meta &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">paste</span>(raw_dir, <span class="st">&#39;/metadata/SPI_dimensions_sources.csv&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb76-11"><a href="data-infrastructure.html#cb76-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">right_join</span>(names_df) <span class="op">%&gt;%</span></span>
+<span id="cb76-12"><a href="data-infrastructure.html#cb76-12" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">source_name=</span><span class="kw">if_else</span>(<span class="kw">is.na</span>(source_name), <span class="kw">paste</span>(source_id), source_name)) <span class="op">%&gt;%</span></span>
+<span id="cb76-13"><a href="data-infrastructure.html#cb76-13" aria-hidden="true"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">factor</span>(source_id, <span class="dt">levels=</span><span class="kw">colnames</span>(spi_df_final)))</span>
+<span id="cb76-14"><a href="data-infrastructure.html#cb76-14" aria-hidden="true"></a></span>
+<span id="cb76-15"><a href="data-infrastructure.html#cb76-15" aria-hidden="true"></a><span class="co">#label data</span></span>
+<span id="cb76-16"><a href="data-infrastructure.html#cb76-16" aria-hidden="true"></a></span>
+<span id="cb76-17"><a href="data-infrastructure.html#cb76-17" aria-hidden="true"></a><span class="kw">label</span>(spi_df_final) =<span class="st"> </span><span class="kw">as.list</span>(spi_meta<span class="op">$</span>source_name)</span>
+<span id="cb76-18"><a href="data-infrastructure.html#cb76-18" aria-hidden="true"></a></span>
+<span id="cb76-19"><a href="data-infrastructure.html#cb76-19" aria-hidden="true"></a></span>
+<span id="cb76-20"><a href="data-infrastructure.html#cb76-20" aria-hidden="true"></a><span class="co">#write to stata</span></span>
+<span id="cb76-21"><a href="data-infrastructure.html#cb76-21" aria-hidden="true"></a>spi_df_final <span class="op">%&gt;%</span></span>
+<span id="cb76-22"><a href="data-infrastructure.html#cb76-22" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(is.list, as.character)) <span class="op">%&gt;%</span></span>
+<span id="cb76-23"><a href="data-infrastructure.html#cb76-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename_with</span>(<span class="op">~</span><span class="kw">gsub</span>(<span class="st">&quot;.&quot;</span>,<span class="st">&quot;_&quot;</span>,.x, <span class="dt">fixed=</span><span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb76-24"><a href="data-infrastructure.html#cb76-24" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>lat,<span class="op">-</span>long) <span class="op">%&gt;%</span></span>
+<span id="cb76-25"><a href="data-infrastructure.html#cb76-25" aria-hidden="true"></a><span class="st">  </span><span class="kw">write_dta</span>( <span class="dt">path =</span> <span class="kw">paste</span>(output_dir, <span class="st">&#39;SPI_data.dta&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span>))</span></code></pre></div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-sources.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>
