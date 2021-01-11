@@ -1,7 +1,0 @@
-source_id,descript,spi_indicator_description
-SPI.INDEX,SPI Overall Score,Overall Statistical Performance Indicators Index Score
-SPI.INDEX.DIM1,Dimension 1  - Data Use - Score,Indicators that capture demand side of statistical system
-SPI.INDEX.DIM2,Dimension 2 - Data Services - Score,"Information on data releases, online access, and other data services"
-SPI.INDEX.DIM3,Dimension 3 - Data Products - Score,"Whether the country is able to produce relevant indicators, primarily related to SDGs"
-SPI.INDEX.DIM4,Dimension 4 - Data Sources - Score,"Censuses and surveys, admin data, geospatial"
-SPI.INDEX.DIM5,Dimension 5 - Data Infrastructure - Score,Standards and methodology used in classification
