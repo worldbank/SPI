@@ -93,8 +93,7 @@ country_list <- wbstats::wb_countries()
 SPI_2019 <- SPI %>%
   filter(date==2019) %>%
   filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
-  mutate(ISO_A3_EH=iso3c) %>%
-  mutate(across(contains("SPI"),~1.))
+  mutate(ISO_A3_EH=iso3c) 
 
 #read in TopoJSON from World Bank
 #countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
@@ -745,6 +744,12 @@ pov_spi <- ggplot(data=pov_df_2019, aes(x=value, y=SPI.INDEX)) +
                                 stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "left", label.y.npc = 0.1,
                      formula = 'y~x', parse = TRUE, size = 4) +
+    stat_fit_tidy(method = "lm",
+                label.x = "right",
+                method.args = list(formula = y ~ x),
+                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
+                                              stat(x_estimate),
+                                              stat(x_p.value)))) +
     theme(legend.position = 'bottom')
 
 
@@ -774,7 +779,13 @@ gini_df_2019 <- gini_df %>%
   stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4)
+                     formula = 'y~x', parse = TRUE, size = 4) +
+      stat_fit_tidy(method = "lm",
+                label.x = "right",
+                method.args = list(formula = y ~ x),
+                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
+                                              stat(x_estimate),
+                                              stat(x_p.value))))
   
 
 
@@ -790,7 +801,7 @@ gini_df_2019 <- gini_df %>%
 ### Scatterplot log GDP SPI
 pov_spi + gini_spi   +
   plot_annotation(
-    title='Plot of SPI overall score on Poverty Ratio and Gini Index',
+    #title='Plot of SPI overall score on Poverty Ratio and Gini Index',
     caption='Source: All indicators come from the World Bank. SI.POV.DDAY & SI.POV.GINI.'
     )
   
@@ -844,7 +855,7 @@ pov_spi + gini_spi   +
           y="Statistical Performance Indicator",
           color="Legend"
         ) +
-        ggtitle(str_wrap("Decomposition of Statistical Performance Indicator Scores by Dimension", 120)) + 
+        #ggtitle(str_wrap("Decomposition of Statistical Performance Indicator Scores by Dimension", 120)) + 
         # scale_x_continuous(
         #   breaks = df_aggregated$rank, # specify tick breaks using rank column
         #   labels = df_aggregated$country # specify tick labels using x column
@@ -897,7 +908,7 @@ pov_spi + gini_spi   +
 ```{r decompstackedplt, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
     name <- 'SPI Overall Score'
     income <- c("Low income", "Lower middle income","Upper middle income","High income")
-
+#absolute graph
   ggplot(decomp_stacked_df, aes(x=income, y=level, fill=dimension, label=paste0(round(level,1)))) +
     geom_bar(stat = "identity", position='stack') +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
@@ -906,7 +917,7 @@ pov_spi + gini_spi   +
     theme_bw() +
     
     labs(
-      title='Contribution of each dimension to SPI overall score',
+      #title='Contribution of each dimension to SPI overall score',
       subtitle='Each dimension receives equal 1/5th weight in overall score',
       caption=paste0(name,' scale = 0 - 100 points.')
     ) +
@@ -920,6 +931,30 @@ pov_spi + gini_spi   +
     legend.position = 'bottom'
   ) +
     guides(fill=guide_legend(nrow=2,byrow=TRUE))
+  
+#relative graph  
+  ggplot(decomp_stacked_df, aes(x=income, y=100*level/total, fill=dimension, label=paste0(round(100*level/total,1),"%"))) +
+    geom_bar(stat = "identity", position='stack') +
+    geom_text(size = 4, position = position_stack(vjust = 0.5)) +
+    #geom_text(aes(y=total,label=paste0('Total = ' ,round(total,1))), size=4, nudge_y=7 ) +
+    scale_x_discrete() +
+    theme_bw() +
+    ylab('percentage') +
+    labs(
+      #title='Relative Contribution of each dimension to SPI overall score',
+      subtitle='Each dimension receives equal 1/5th weight in overall score',
+      caption=paste0(name,' scale = 0 - 100 points.')
+    ) +
+  scale_x_discrete(limits = income) +
+    coord_flip() +
+  expand_limits(y=c(0,100)) +
+  theme(
+    axis.title.y = element_text(angle=0, vjust = 0.5),
+    text = element_text(size = 12),
+    title= element_text(size = 14),
+    legend.position = 'bottom'
+  ) +
+    guides(fill=guide_legend(nrow=2,byrow=TRUE))  
 
 ```
 
@@ -963,7 +998,7 @@ growth_plot <- function(variables, name) {
     group_by(spi_bins) %>%
     summarise(growth=mean(growth))
   
-  ggplot(elephant_df, aes(x=spi_bins, y=growth, label=paste0(spi_bins,": ",round(growth,1),""))) +
+  ggplot(elephant_df, aes(x=spi_bins, y=growth, label=paste0(round(growth,1),""))) +
     geom_segment(aes(xend=as.numeric(spi_bins)-0.5,x=as.numeric(spi_bins)+0.5, y=growth, yend=growth)) +
     geom_point() +
     geom_bar(aes(alpha=growth), stat = "identity", fill='#007f5f') +
@@ -1005,6 +1040,48 @@ growth_plot <- function(variables, name) {
 growth_plot('SPI.INDEX', 'SPI Overall Score')
 
 ```
+
+```{r bottom40}
+
+overall_bottom_40 <- SPI %>%
+    rename(spi_data=SPI.INDEX) %>%
+    select(country, iso3c, date, spi_data) %>%
+    group_by(country, date) %>%
+    mutate(row = row_number()) %>%
+    pivot_wider(names_from=date,
+                names_prefix='spi_data_',
+                values_from=c('spi_data')) %>%
+    ungroup() %>%
+    mutate(growth=(spi_data_2019-spi_data_2016)) %>%
+    filter(!(is.na(spi_data_2019) | is.na(spi_data_2016))) %>%
+    mutate(spi_rank=100*rank(spi_data_2016)/length(spi_data_2016),
+           spi_bins=case_when( #calculate deciles
+             between(spi_rank,0,10) ~ "1st Decile",
+             between(spi_rank,10,20) ~ "2nd Decile",
+             between(spi_rank,20,30) ~ "3rd Decile",
+             between(spi_rank,30,40) ~ "4th Decile",
+             between(spi_rank,40,50) ~ "5th Decile",
+             between(spi_rank,50,60) ~ "6th Decile",
+             between(spi_rank,60,70) ~ "7th Decile",
+             between(spi_rank,70,80) ~ "8th Decile",
+             between(spi_rank,80,90) ~ "9th Decile",
+             between(spi_rank,90,100) ~ "Top Decile"
+           )) %>%
+    arrange(spi_rank)
+
+  #summarise into decile bins
+  bottom_40 <- overall_bottom_40 %>%
+    filter(spi_rank<=40) %>%
+    ungroup() %>%
+    summarise(growth=mean(growth))
+
+    #summarise overall
+  overall_growth <- overall_bottom_40 %>%
+    ungroup() %>%
+    summarise(growth=mean(growth))
+
+```
+
 
 ```{r elephantstacked, echo=FALSE}
 
@@ -1083,7 +1160,7 @@ name <- 'SPI Overall Score'
     xlab(str_wrap('Decile in 2016',40)) +
     ylab(str_wrap('Change in Score (2016-19)',20)) +
     labs(
-      title=str_wrap("Decomposition of Changes Over Time",70),
+      #title=str_wrap("Decomposition of Changes Over Time",70),
       subtitle=str_wrap('Change in SPI Overall Score from 2016-19 by 2016 decile group',70),
       caption=paste0(name,' scale = 0 - 100 points.')
     ) +
@@ -1372,9 +1449,9 @@ volatility_scatter_df <- volatility_df %>%
 ggplot(volatility_scatter_df, aes(x=value_2016, y=value_2019, label=iso3c)) +
   facet_wrap(~indicator) +
   geom_text(color='#457b9d') +
-  labs(
-    title='Volatility Between 2016 and 2019 for SCI and SPI Overall Scores'
-  ) +
+  # labs(
+  #   title='Volatility Between 2016 and 2019 for SCI and SPI Overall Scores'
+  # ) +
   xlab('2016 value') +
   ylab('2019 value') +
   expand_limits(x=c(0,100), y=c(0,100)) +
@@ -1412,9 +1489,9 @@ ggplot(volatility_trace_sample_df, aes(x=date, y=value, color=indicator)) +
   facet_wrap(~country) +
   geom_line( ) +
   geom_point(shape=21, fill="#69b3a2") +
-  labs(
-    title='Volatility for SCI and SPI Overall Scores for 25 Randomly Selected Countries'
-  ) +
+  # labs(
+  #   title='Volatility for SCI and SPI Overall Scores for 25 Randomly Selected Countries'
+  # ) +
   xlab('') +
   ylab('') +
   expand_limits(y=c(0,100)) +
@@ -1494,7 +1571,7 @@ variance_df %>%
 
 ## how missing values can affect the SPI, and whether there is a minimal set of indicators that would allow meaningful inference in the case of missing values
 
-```{r minset, include=FALSE}
+```{r minset, eval=FALSE, include=FALSE}
 
 # number of iterations
 iterate <- 10000

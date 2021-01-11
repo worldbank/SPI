@@ -1113,7 +1113,7 @@ spi_mapper('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
 When looking at the country chart, again there is significant variability across countries.  
 
 
-```{r aggdimensionsplot3}
+```{r aggdimensionsplot3, eval=FALSE, include=FALSE}
 
 spi_charts('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
 
@@ -1825,7 +1825,13 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
                                 stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
                      formula = 'y~x', parse = TRUE, size = 4) +
-    theme(legend.position = 'bottom')
+    theme(legend.position = 'bottom') +
+  stat_fit_tidy(method = "lm",
+                label.x = "left",
+                method.args = list(formula = y ~ x),
+                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
+                                              stat(x_estimate),
+                                              stat(x_p.value))))
 
 
 #GDP
@@ -1853,7 +1859,13 @@ gdp_df_2019 <- gdp_df %>%
   stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4)
+                     formula = 'y~x', parse = TRUE, size = 4) +
+  stat_fit_tidy(method = "lm",
+                label.x = "left",
+                method.args = list(formula = y ~ x),
+                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
+                                              stat(x_estimate),
+                                              stat(x_p.value))))
   
 
 
@@ -2040,6 +2052,12 @@ ge_spi_plot <- ggplot(data=ge_df_2019, aes(x=GE.EST, y=SPI.INDEX)) +
                                 stat(rr.label), sep = "*\", \"*")), 
                      label.x.npc = "right", label.y.npc = 0.1,
                      formula = 'y~x', parse = TRUE, size = 4) +
+    stat_fit_tidy(method = "lm",
+                label.x = "left",
+                method.args = list(formula = y ~ x),
+                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
+                                              stat(x_estimate),
+                                              stat(x_p.value)))) +
     theme(legend.position = 'bottom') +
   labs(
     title='Plot of SPI overall score on Government Effectiveness',
@@ -2852,68 +2870,6 @@ index_tab <- flextable(metatable) %>%
   p
 
 
-```
-
-# kmeans clustering
-
-```{r clusteranalysis, echo=FALSE, fig.height=10, fig.width=10}
-library("factoextra")
-
-cluster_df <- spi_index_df %>%
-  filter(date==2019) %>%
-  filter(!is.na(SPI.INDEX)) %>%
-  select(country, starts_with("SPI.")) %>%
-  select(-starts_with('SPI.INDEX')) %>%
-  column_to_rownames(var='country')
-
-# Enhanced k-means clustering
-res.km <- eclust(cluster_df, "kmeans")
-fviz_gap_stat(res.km$gap_stat)
-
-#now form 5 clusters 
-res.km.5 <- eclust(cluster_df, "kmeans", k=5)
-
-#form 4 clusters and plot
-res.km.4<- eclust(cluster_df, "kmeans", k=4)
-
-#form 3 clusters and plot
-res.km.3<- eclust(cluster_df, "kmeans", k=3)
-
-
-cluster_analysis_df<-res.km.3$clust_plot$data %>%
-  rownames_to_column(var='country') %>%
-  mutate(date=2019) 
-
-#link SPI index
-  spi_groups_quantiles <- quantile(SPI_2019$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
-  
-  SPI_2019_group_df <- SPI_2019 %>%
-    select(country, iso3c, date, region, income, starts_with('SPI')) %>%
-    mutate(spi_groups=case_when(
-      between(SPI.INDEX, spi_groups_quantiles[4],100) ~ "Top 20%",
-      between(SPI.INDEX, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
-      between(SPI.INDEX, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
-      between(SPI.INDEX, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
-      between(SPI.INDEX, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
-      
-    )) %>%
-    mutate(spi_groups=factor(spi_groups, 
-                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
-  
-  #add to cluster database
-  cluster_analysis_df <- cluster_analysis_df %>%
-  left_join(SPI_2019_group_df)
-  
-  ggplot(cluster_analysis_df, aes(x=as.numeric(cluster), y=spi_groups, label=iso3c, color=income)) +
-    geom_point() +
-    geom_text_repel()
-
-# # Enhanced hierarchical clustering
-# res.hc <- eclust(cluster_df, "hclust") # compute hclust
-# fviz_gap_stat(res.hc$gap_stat)
-# fviz_dend(res.hc, rect = TRUE) # dendrogam
-# hc_df<-res.hc$cluster %>%
-#   as_tibble()
 ```
 
 
