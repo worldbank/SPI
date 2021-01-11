@@ -299,6 +299,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb59-23"><a href="final-dataset.html#cb59-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename_with</span>(<span class="op">~</span><span class="kw">gsub</span>(<span class="st">&quot;.&quot;</span>,<span class="st">&quot;_&quot;</span>,.x, <span class="dt">fixed=</span><span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb59-24"><a href="final-dataset.html#cb59-24" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>lat,<span class="op">-</span>long) <span class="op">%&gt;%</span></span>
 <span id="cb59-25"><a href="final-dataset.html#cb59-25" aria-hidden="true"></a><span class="st">  </span><span class="kw">write_dta</span>( <span class="dt">path =</span> <span class="kw">paste</span>(output_dir, <span class="st">&#39;SPI_data.dta&#39;</span>, <span class="dt">sep=</span><span class="st">&quot;/&quot;</span>))</span></code></pre></div>
+
 </div>
             </section>
 
@@ -351,8 +352,7 @@ gitbook.start({
 "download": null,
 "toc": {
 "collapse": "subsection"
-},
-"search": false
+}
 });
 });
 </script>
