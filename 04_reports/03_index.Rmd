@@ -24,7 +24,6 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width 
 library(tidyverse)
 library(flextable)
 library(here)
-# devtools::install_github("worldbank/wbgviz", subdir = "wbgdata")
 # devtools::install_github("worldbank/wbgviz", subdir = "wbgcharts")
 # devtools::install_github("worldbank/wbgviz", subdir = "wbggeo")
 # devtools::install_github("worldbank/wbgviz", subdir = "wbgmaps")
@@ -54,10 +53,11 @@ wgt <- 2
 
 ```{r themes}
 
+#ggplot theme
 theme_spi <- function () { 
     theme_bw() %+replace%
     theme(
-      #plot.title=element_blank() remove all titles from plots
+      #plot.title=element_blank() remove all titles from plots (sometimes we may need to bring title outside plot)
     )
 }
 
