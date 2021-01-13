@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-01-11" />
+<meta name="date" content="2021-01-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -297,7 +297,7 @@ e-GDDS websites.</p>
 <span id="cb12-48"><a href="data-services-1.html#cb12-48" aria-hidden="true"></a></span>
 <span id="cb12-49"><a href="data-services-1.html#cb12-49" aria-hidden="true"></a></span>
 <span id="cb12-50"><a href="data-services-1.html#cb12-50" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;D2.1_DSDR_map&#39;</span>, <span class="st">&#39;SPI.D2.1.GDDS&#39;</span>, <span class="st">&#39;SDDS Data Standards in Place&#39;</span> )</span></code></pre></div>
-<p><img src="_main_files/figure-html/idds-1.png" width="960" /><img src="_main_files/figure-html/idds-2.png" width="960" /><img src="_main_files/figure-html/idds-3.png" width="960" /><img src="_main_files/figure-html/idds-4.png" width="960" /></p>
+<p><img src="01_data_prep_files/figure-html/idds-1.png" width="960" /><img src="01_data_prep_files/figure-html/idds-2.png" width="960" /><img src="01_data_prep_files/figure-html/idds-3.png" width="960" /><img src="01_data_prep_files/figure-html/idds-4.png" width="960" /></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="data-services-1.html#cb13-1" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
 <span id="cb13-2"><a href="data-services-1.html#cb13-2" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
 <span id="cb13-3"><a href="data-services-1.html#cb13-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D2<span class="fl">.1</span>_DSDR)</span></code></pre></div>
@@ -400,7 +400,7 @@ If the TOU contains one or more restrictive clauses, it receives 0 points and is
 <span id="cb14-37"><a href="data-services-1.html#cb14-37" aria-hidden="true"></a><span class="co">#add to spi dataframe</span></span>
 <span id="cb14-38"><a href="data-services-1.html#cb14-38" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
 <span id="cb14-39"><a href="data-services-1.html#cb14-39" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(openness_df)</span></code></pre></div>
-<p><img src="_main_files/figure-html/open_plots-1.png" width="960" /><img src="_main_files/figure-html/open_plots-2.png" width="960" /><img src="_main_files/figure-html/open_plots-3.png" width="960" /></p>
+<p><img src="01_data_prep_files/figure-html/open_plots-1.png" width="960" /><img src="01_data_prep_files/figure-html/open_plots-2.png" width="960" /><img src="01_data_prep_files/figure-html/open_plots-3.png" width="960" /></p>
 </div>
 </div>
 </div>
@@ -433,7 +433,7 @@ collected from the households and businesses when needed.</p>
 <span id="cb15-14"><a href="data-services-1.html#cb15-14" aria-hidden="true"></a><span class="st">  </span><span class="kw">filter</span>(SPI.D2.<span class="fl">4.</span>NADA<span class="op">&gt;</span><span class="dv">0</span>)</span>
 <span id="cb15-15"><a href="data-services-1.html#cb15-15" aria-hidden="true"></a></span>
 <span id="cb15-16"><a href="data-services-1.html#cb15-16" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;D2.4_NADA_map&#39;</span>, <span class="st">&#39;RAW.D2.4.NADA&#39;</span>, <span class="st">&#39;NADA in Place&#39;</span> )</span></code></pre></div>
-<p><img src="_main_files/figure-html/nada-1.png" width="960" /><img src="_main_files/figure-html/nada-2.png" width="960" /><img src="_main_files/figure-html/nada-3.png" width="960" /><img src="_main_files/figure-html/nada-4.png" width="960" /></p>
+<p><img src="01_data_prep_files/figure-html/nada-1.png" width="960" /><img src="01_data_prep_files/figure-html/nada-2.png" width="960" /><img src="01_data_prep_files/figure-html/nada-3.png" width="960" /><img src="01_data_prep_files/figure-html/nada-4.png" width="960" /></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="data-services-1.html#cb16-1" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
 <span id="cb16-2"><a href="data-services-1.html#cb16-2" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
 <span id="cb16-3"><a href="data-services-1.html#cb16-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(D2<span class="fl">.4</span>_NADA)</span></code></pre></div>
@@ -490,7 +490,8 @@ gitbook.start({
 "download": null,
 "toc": {
 "collapse": "subsection"
-}
+},
+"search": false
 });
 });
 </script>
