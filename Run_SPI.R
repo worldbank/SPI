@@ -30,7 +30,7 @@ render(input = paste0(dir,"/02_programs/01-SPI_data_prep.Rmd"),
        output_dir=paste0(dir,"/04_reports"))
 
 # Run 02-SPI_index.Rmd.  This is an Rmarkdown file, which simultaneously runs the
-# code to produce the indices, but also creates a word document with technical details
+# code to produce the index, but also creates a word document with technical details
 # and various statistics.
 render(input = paste0(dir,"/02_programs/02-SPI_index.Rmd"),
        output_dir=paste0(dir,"/04_reports"))
