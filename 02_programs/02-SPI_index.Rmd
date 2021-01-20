@@ -7,7 +7,6 @@ output:
     toc: yes
     fig_width: 9
     fig_height: 6
-out_dir: "`r paste0(here::here(),'/04_reports')`"
 abstract: Recognizing the new challenges for national statistical systems in monitoring  the
   Sustainable Development Goals (SDGs), the World Bank is developing a new, improved  Statistical  Performance
   Indicators (SPI) to monitor progress of the statistical  performance  of countries.
@@ -1984,8 +1983,10 @@ hci_underperformers_df <- hci_df_2018 %>%
 
 hci_overperformers_plot <-  hci_overperformers_df %>%
   bind_rows(hci_underperformers_df) %>%
-  arrange(resid) %>%
-  mutate(country=factor(country, levels=country),
+  arrange(resid) 
+
+hci_overperformers_plot <-  hci_overperformers_df %>%
+  mutate(country=factor(country, levels=unique(hci_overperformers_plot$country)),
          group=if_else(resid>=0, 'above','below')) %>%
   ggplot(aes(x=country, y=resid, color=group)) +
   geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +

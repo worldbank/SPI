@@ -4,7 +4,6 @@ title: Technical Documentation on Data Sources and Methods for Statistical Perfo
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
 output: bookdown::gitbook
-out_dir: "`r paste0(here::here(),'/04_reports')`"
 ---
 
 ```{r setup, include=FALSE}
