@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-01-12" />
+<meta name="date" content="2021-01-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -241,13 +241,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">6.1</span> Indicator 5.1: legislation and governance</h2>
 <p>The legislation and governance indicator will be drawn from SDG indicator 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Also include some other legislative aspects that foster good use of statistics eg freedom of information, privacy/transparency, good governance (eg free and fair elections).</p>
 <p>This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)</p>
-<p>Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics. Scores of 0 or scores with missing values are treated the same (both given a score of zero).</p>
-<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2021-01-12</p>
+<p>Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics. Scores of 0 given a score of zero.</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2021-01-15</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="data-infrastructure-1.html#cb44-1" aria-hidden="true"></a>D5<span class="fl">.1</span>_DILG &lt;-<span class="st"> </span><span class="kw">un_pull</span>(<span class="st">&#39;SG_STT_FPOS&#39;</span>, <span class="st">&#39;2004&#39;</span>, <span class="st">&#39;2019&#39;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb44-2"><a href="data-infrastructure-1.html#cb44-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, date,value) <span class="op">%&gt;%</span></span>
 <span id="cb44-3"><a href="data-infrastructure-1.html#cb44-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">right_join</span>(spi_df_empty) <span class="op">%&gt;%</span></span>
 <span id="cb44-4"><a href="data-infrastructure-1.html#cb44-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">RAW.D5.1.DILG=</span><span class="kw">if_else</span>((<span class="kw">is.na</span>(value) <span class="op">|</span><span class="st"> </span>value<span class="op">==</span><span class="st">&quot;NaN&quot;</span>),<span class="kw">as.numeric</span>(<span class="ot">NA</span>), <span class="kw">as.numeric</span>(value)),</span>
-<span id="cb44-5"><a href="data-infrastructure-1.html#cb44-5" aria-hidden="true"></a>         <span class="dt">SPI.D5.1.DILG=</span><span class="kw">if_else</span>((<span class="kw">is.na</span>(value) <span class="op">|</span><span class="st"> </span>value<span class="op">==</span><span class="st">&quot;NaN&quot;</span>),<span class="dv">0</span>, <span class="kw">as.numeric</span>(value))) <span class="op">%&gt;%</span></span>
+<span id="cb44-5"><a href="data-infrastructure-1.html#cb44-5" aria-hidden="true"></a>         <span class="dt">SPI.D5.1.DILG=</span><span class="kw">if_else</span>((<span class="kw">is.na</span>(value) <span class="op">|</span><span class="st"> </span>value<span class="op">==</span><span class="st">&quot;NaN&quot;</span>),<span class="kw">as.numeric</span>(<span class="ot">NA</span>), <span class="kw">as.numeric</span>(value))) <span class="op">%&gt;%</span></span>
 <span id="cb44-6"><a href="data-infrastructure-1.html#cb44-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>value)</span>
 <span id="cb44-7"><a href="data-infrastructure-1.html#cb44-7" aria-hidden="true"></a><span class="co"># </span></span>
 <span id="cb44-8"><a href="data-infrastructure-1.html#cb44-8" aria-hidden="true"></a><span class="co"># #read in csv file.</span></span>
@@ -770,15 +770,15 @@ related to “business statistics” but refers to the statistical office, simpl
 <div id="indicator-5.5-finance" class="section level2" number="6.5">
 <h2><span class="header-section-number">6.5</span> Indicator 5.5: finance</h2>
 <p>Indicator based on SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). This indicator measures whether the national statistical plan under implementation is fully funded. It relates to SDG 17.18.3 and is based on the annual Status Report on National Strategies for the Development of Statistics (NSDS).</p>
-<p>Scores is 1 if the country has a national statistical plan that is fully funded and under implementation. Scores of 0 or scores with missing values are treated the same (both given a score of zero).</p>
-<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2021-01-12</p>
+<p>Scores is 1 if the country has a national statistical plan that is fully funded and under implementation. Scores of 0 given a score of zero.</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2021-01-15</p>
 <p>Source of this data is UNSD and Paris21.</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="data-infrastructure-1.html#cb57-1" aria-hidden="true"></a><span class="co">#pull from unsd api</span></span>
 <span id="cb57-2"><a href="data-infrastructure-1.html#cb57-2" aria-hidden="true"></a>D5<span class="fl">.5</span>_DIFI &lt;-<span class="st"> </span><span class="kw">un_pull</span>(<span class="st">&#39;SG_STT_NSDSFND&#39;</span>, <span class="st">&#39;2004&#39;</span>, <span class="st">&#39;2019&#39;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb57-3"><a href="data-infrastructure-1.html#cb57-3" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(iso3c, date,value) <span class="op">%&gt;%</span></span>
 <span id="cb57-4"><a href="data-infrastructure-1.html#cb57-4" aria-hidden="true"></a><span class="st">  </span><span class="kw">right_join</span>(spi_df_empty) <span class="op">%&gt;%</span></span>
 <span id="cb57-5"><a href="data-infrastructure-1.html#cb57-5" aria-hidden="true"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">RAW.D5.5.DIFI=</span><span class="kw">if_else</span>((<span class="kw">is.na</span>(value) <span class="op">|</span><span class="st"> </span>value<span class="op">==</span><span class="st">&quot;NaN&quot;</span>),<span class="kw">as.numeric</span>(<span class="ot">NA</span>), <span class="kw">as.numeric</span>(value)),</span>
-<span id="cb57-6"><a href="data-infrastructure-1.html#cb57-6" aria-hidden="true"></a>         <span class="dt">SPI.D5.5.DIFI=</span><span class="kw">if_else</span>((<span class="kw">is.na</span>(value) <span class="op">|</span><span class="st"> </span>value<span class="op">==</span><span class="st">&quot;NaN&quot;</span>),<span class="dv">0</span>, <span class="kw">as.numeric</span>(value))) <span class="op">%&gt;%</span></span>
+<span id="cb57-6"><a href="data-infrastructure-1.html#cb57-6" aria-hidden="true"></a>         <span class="dt">SPI.D5.5.DIFI=</span><span class="kw">if_else</span>((<span class="kw">is.na</span>(value) <span class="op">|</span><span class="st"> </span>value<span class="op">==</span><span class="st">&quot;NaN&quot;</span>),<span class="kw">as.numeric</span>(<span class="ot">NA</span>), <span class="kw">as.numeric</span>(value))) <span class="op">%&gt;%</span></span>
 <span id="cb57-7"><a href="data-infrastructure-1.html#cb57-7" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>value)</span>
 <span id="cb57-8"><a href="data-infrastructure-1.html#cb57-8" aria-hidden="true"></a></span>
 <span id="cb57-9"><a href="data-infrastructure-1.html#cb57-9" aria-hidden="true"></a><span class="co"># #read in csv file.</span></span>

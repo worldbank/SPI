@@ -3024,7 +3024,7 @@ The legislation and governance indicator will be drawn from SDG indicator 17.18.
 
 This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)
 
-Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics.  Scores of 0 or scores with missing values are treated the same (both given a score of zero).
+Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics.  Scores of 0 given a score of zero.
 
 The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Date()`
 
@@ -3036,7 +3036,7 @@ D5.1_DILG <- un_pull('SG_STT_FPOS', '2004', '2019') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.1.DILG=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
-         SPI.D5.1.DILG=if_else((is.na(value) | value=="NaN"),0, as.numeric(value))) %>%
+         SPI.D5.1.DILG=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value))) %>%
   select(-value)
 # 
 # #read in csv file.
@@ -3732,7 +3732,7 @@ Not included because of lack of established methodology or suitable data sources
 
 Indicator based on  SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). This indicator measures whether the national statistical plan under implementation is fully funded. It relates to SDG 17.18.3 and is based on the annual Status Report on National Strategies for the Development of Statistics (NSDS).
 
-Scores is 1 if the country has a national statistical plan that is fully funded and under implementation.  Scores of 0 or scores with missing values are treated the same (both given a score of zero).
+Scores is 1 if the country has a national statistical plan that is fully funded and under implementation.  Scores of 0 given a score of zero.
 
 The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Date()`
 
@@ -3745,7 +3745,7 @@ D5.5_DIFI <- un_pull('SG_STT_NSDSFND', '2004', '2019') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
-         SPI.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),0, as.numeric(value))) %>%
+         SPI.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value))) %>%
   select(-value)
 
 # #read in csv file.
@@ -3806,6 +3806,30 @@ spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Sou
 
 ```
 
+```{r financetest, eval=FALSE, include=FALSE}
+
+#examine other finance indicators
+#pull from unsd api
+D5.5_DIFI_test <- un_pull('SG_STT_NSDSFDGVT', '2004', '2019') %>%
+  select(iso3c, date,value) %>%
+  right_join(spi_df_empty) %>%
+  mutate(RAW.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
+         SPI.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value))) %>%
+  select(-value)
+
+
+
+
+
+
+
+
+D5.5_DIFI_map <- D5.5_DIFI_test %>%
+  filter(!is.na(SPI.D5.5.DIFI))
+
+spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
+
+```
 # Final Dataset
 
 Below we will append the data together and save the final files together.
