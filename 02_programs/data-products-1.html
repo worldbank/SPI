@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Data Products | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
+  <meta name="description" content="4 Data Products | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Data Products | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Data Products | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  
+  
+  
+
+<meta name="author" content="Brian Stacy" />
+
+
+<meta name="date" content="2021-01-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-services-1.html"/>
+<link rel="next" href="data-sources-1.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#motivation"><i class="fa fa-check"></i><b>1.1</b> Motivation</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#overview-of-the-new-spi"><i class="fa fa-check"></i><b>1.2</b> Overview of the New SPI</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#pillars-of-the-new-spi"><i class="fa fa-check"></i><b>1.3</b> Pillars of the new SPI</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#data-use"><i class="fa fa-check"></i><b>1.3.1</b> Data use</a></li>
+<li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#data-services"><i class="fa fa-check"></i><b>1.3.2</b> Data services</a></li>
+<li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#data-products"><i class="fa fa-check"></i><b>1.3.3</b> Data products</a></li>
+<li class="chapter" data-level="1.3.4" data-path="introduction.html"><a href="introduction.html#data-sources"><i class="fa fa-check"></i><b>1.3.4</b> Data sources</a></li>
+<li class="chapter" data-level="1.3.5" data-path="introduction.html"><a href="introduction.html#data-infrastructure"><i class="fa fa-check"></i><b>1.3.5</b> Data infrastructure</a></li>
+<li class="chapter" data-level="1.3.6" data-path="introduction.html"><a href="introduction.html#description-of-pillars"><i class="fa fa-check"></i><b>1.3.6</b> Description of Pillars</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#spi-data"><i class="fa fa-check"></i><b>1.4</b> SPI Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-use-1.html"><a href="data-use-1.html"><i class="fa fa-check"></i><b>2</b> Data Use</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.1-data-use-by-national-legislature"><i class="fa fa-check"></i><b>2.1</b> Indicator 1.1: Data use by national legislature</a></li>
+<li class="chapter" data-level="2.2" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.2-data-use-by-national-executive-branch"><i class="fa fa-check"></i><b>2.2</b> Indicator 1.2: Data use by national executive branch</a></li>
+<li class="chapter" data-level="2.3" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.3-data-use-by-civil-society"><i class="fa fa-check"></i><b>2.3</b> Indicator 1.3: Data use by civil society</a></li>
+<li class="chapter" data-level="2.4" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.4-data-use-by-academia"><i class="fa fa-check"></i><b>2.4</b> Indicator 1.4: Data use by academia</a></li>
+<li class="chapter" data-level="2.5" data-path="data-use-1.html"><a href="data-use-1.html#indicator-1.5-data-use-by-international-organizations"><i class="fa fa-check"></i><b>2.5</b> Indicator 1.5: Data use by international organizations</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="data-use-1.html"><a href="data-use-1.html#poverty-comparability"><i class="fa fa-check"></i><b>2.5.1</b> Poverty Comparability</a></li>
+<li class="chapter" data-level="2.5.2" data-path="data-use-1.html"><a href="data-use-1.html#mortality-rate-under-5-per-1000-live-births"><i class="fa fa-check"></i><b>2.5.2</b> Mortality rate, under-5 (per 1,000 live births)</a></li>
+<li class="chapter" data-level="2.5.3" data-path="data-use-1.html"><a href="data-use-1.html#debt-service-ppg-and-imf-only-of-exports-of-goods-services-and-primary-income"><i class="fa fa-check"></i><b>2.5.3</b> Debt service (PPG and IMF only, % of exports of goods, services and primary income)</a></li>
+<li class="chapter" data-level="2.5.4" data-path="data-use-1.html"><a href="data-use-1.html#safely-managed-water"><i class="fa fa-check"></i><b>2.5.4</b> Safely Managed Water</a></li>
+<li class="chapter" data-level="2.5.5" data-path="data-use-1.html"><a href="data-use-1.html#labor-force-statistics"><i class="fa fa-check"></i><b>2.5.5</b> Labor Force Statistics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-services-1.html"><a href="data-services-1.html"><i class="fa fa-check"></i><b>3</b> Data Services</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.1-data-releases"><i class="fa fa-check"></i><b>3.1</b> Indicator 2.1: Data Releases</a></li>
+<li class="chapter" data-level="3.2" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.2-online-access"><i class="fa fa-check"></i><b>3.2</b> Indicator 2.2: Online access</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="data-services-1.html"><a href="data-services-1.html#source"><i class="fa fa-check"></i><b>3.2.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.3-advisory-analytical-services"><i class="fa fa-check"></i><b>3.3</b> Indicator 2.3: Advisory/ Analytical Services</a></li>
+<li class="chapter" data-level="3.4" data-path="data-services-1.html"><a href="data-services-1.html#indicator-2.4-data-services"><i class="fa fa-check"></i><b>3.4</b> Indicator 2.4: Data services</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-products-1.html"><a href="data-products-1.html"><i class="fa fa-check"></i><b>4</b> Data Products</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-products-1.html"><a href="data-products-1.html#methodology"><i class="fa fa-check"></i><b>4.1</b> Methodology</a></li>
+<li class="chapter" data-level="4.2" data-path="data-products-1.html"><a href="data-products-1.html#indicators-3.1---3.17"><i class="fa fa-check"></i><b>4.2</b> Indicators 3.1 - 3.17</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="data-sources-1.html"><a href="data-sources-1.html"><i class="fa fa-check"></i><b>5</b> Data Sources</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.1-censuses-and-surveys"><i class="fa fa-check"></i><b>5.1</b> Indicator 4.1: censuses and surveys</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="data-sources-1.html"><a href="data-sources-1.html#scoring-details"><i class="fa fa-check"></i><b>5.1.1</b> Scoring details</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.2-administrative-data"><i class="fa fa-check"></i><b>5.2</b> Indicator 4.2: administrative data</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="data-sources-1.html"><a href="data-sources-1.html#population-health-admin-data"><i class="fa fa-check"></i><b>5.2.1</b> Population &amp; Health Admin Data</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.3-geospatial-data"><i class="fa fa-check"></i><b>5.3</b> Indicator 4.3: geospatial data</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="data-sources-1.html"><a href="data-sources-1.html#source-1"><i class="fa fa-check"></i><b>5.3.1</b> Source</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="data-sources-1.html"><a href="data-sources-1.html#indicator-4.4-privatecitizen-generated-data"><i class="fa fa-check"></i><b>5.4</b> Indicator 4.4: private/citizen generated data</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html"><i class="fa fa-check"></i><b>6</b> Data Infrastructure</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.1-legislation-and-governance"><i class="fa fa-check"></i><b>6.1</b> Indicator 5.1: legislation and governance</a></li>
+<li class="chapter" data-level="6.2" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.2-standards"><i class="fa fa-check"></i><b>6.2</b> Indicator 5.2: standards</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#system-of-national-accounts-in-use"><i class="fa fa-check"></i><b>6.2.1</b> 5.2.1 System of National Accounts in use</a></li>
+<li class="chapter" data-level="6.2.2" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#national-accounts-base-year"><i class="fa fa-check"></i><b>6.2.2</b> 5.2.2 National Accounts base year</a></li>
+<li class="chapter" data-level="6.2.3" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-national-industry"><i class="fa fa-check"></i><b>6.2.3</b> 5.2.3 Classification of national industry</a></li>
+<li class="chapter" data-level="6.2.4" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#cpi-base-year"><i class="fa fa-check"></i><b>6.2.4</b> 5.2.4 CPI base year</a></li>
+<li class="chapter" data-level="6.2.5" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-household-consumption"><i class="fa fa-check"></i><b>6.2.5</b> 5.2.5 Classification of household consumption</a></li>
+<li class="chapter" data-level="6.2.6" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#classification-of-status-of-employment"><i class="fa fa-check"></i><b>6.2.6</b> 5.2.6 Classification of status of employment</a></li>
+<li class="chapter" data-level="6.2.7" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#central-government-accounting-status"><i class="fa fa-check"></i><b>6.2.7</b> 5.2.7 Central government accounting status</a></li>
+<li class="chapter" data-level="6.2.8" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#compilation-of-government-finance-statistics"><i class="fa fa-check"></i><b>6.2.8</b> 5.2.8 Compilation of government finance statistics</a></li>
+<li class="chapter" data-level="6.2.9" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#compilation-of-monetary-and-financial-statistics"><i class="fa fa-check"></i><b>6.2.9</b> 5.2.9 Compilation of monetary and financial statistics</a></li>
+<li class="chapter" data-level="6.2.10" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#business-process"><i class="fa fa-check"></i><b>6.2.10</b> 5.2.10 Business process</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.3-skills"><i class="fa fa-check"></i><b>6.3</b> Indicator 5.3: skills</a></li>
+<li class="chapter" data-level="6.4" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.4-partnerships"><i class="fa fa-check"></i><b>6.4</b> Indicator 5.4: partnerships</a></li>
+<li class="chapter" data-level="6.5" data-path="data-infrastructure-1.html"><a href="data-infrastructure-1.html#indicator-5.5-finance"><i class="fa fa-check"></i><b>6.5</b> Indicator 5.5: finance</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="final-dataset.html"><a href="final-dataset.html"><i class="fa fa-check"></i><b>7</b> Final Dataset</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-products-1" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Data Products</h1>
+<p>Cleaning for Data Products Indicators. Data Products (16 Indicators):</p>
+<ul>
+<li>GOAL 1: No Poverty<br />
+</li>
+<li>GOAL 2: Zero Hunger<br />
+</li>
+<li>GOAL 3: Good Health and Well-beingq<br />
+</li>
+<li>GOAL 4: Quality Education<br />
+</li>
+<li>GOAL 5: Gender Equality<br />
+</li>
+<li>GOAL 6: Clean Water and Sanitation<br />
+</li>
+<li>GOAL 7: Affordable and Clean Energy<br />
+</li>
+<li>GOAL 8: Decent Work and Economic Growth<br />
+</li>
+<li>GOAL 9: Industry, Innovation and Infrastructure<br />
+</li>
+<li>GOAL 10: Reduced Inequality<br />
+</li>
+<li>GOAL 11: Sustainable Cities and Communities<br />
+</li>
+<li>GOAL 12: Responsible Consumption and Production<br />
+</li>
+<li>GOAL 13: Climate Action<br />
+</li>
+<li><strong>GOAL 14: Life Below Water is excluded because this indicator is not relevant for landlocked countries</strong><br />
+</li>
+<li>GOAL 15: Life on Land<br />
+</li>
+<li>GOAL 16: Peace and Justice Strong Institutions<br />
+</li>
+<li>GOAL 17: Partnerships to achieve the Goal</li>
+</ul>
+<div id="methodology" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Methodology</h2>
+<ol style="list-style-type: decimal">
+<li><p>Download the latest SDG indicator data from UN Stats (<a href="https://unstats.un.org/sdgs/indicators/en/#" class="uri">https://unstats.un.org/sdgs/indicators/en/#</a>) using their API</p></li>
+<li><p>Transform the data so that for each indicator we can create a score documenting whether a value exists for the country in a year, whether the value is based on country data, country data adjusted, estimated, or modelled data according the UN Stats metadata. <strong>This will only include tier 1 indicators</strong>.</p></li>
+<li><p>Combine the resulting data into a single set of indicators for use in the Statistical Performance Indicators dashboard and index by calculating the average across SDGs. This results in 17 total indicators. One for each SDG, which is the share of indicators with a value meeting quality criteria defined below.</p></li>
+</ol>
+<p>Below is a paraphrased description from the UN stats webpage (<a href="https://unstats.un.org/sdgs/indicators/indicators-list/" class="uri">https://unstats.un.org/sdgs/indicators/indicators-list/</a>):</p>
+<p>The global indicator framework for Sustainable Development Goals was developed by the Inter-Agency and Expert Group on SDG Indicators (IAEG-SDGs) and agreed upon at the 48th session of the United Nations Statistical Commission held in March 2017.</p>
+<p>The global indicator framework includes 231 unique indicators. Please note that the total number of indicators listed in the global indicator framework of SDG indicators is 247. However, twelve indicators repeat under two or three different targets.</p>
+<p>For each value of the indicator, the responsible international agency has been requested to indicate whether the national data were adjusted, estimated, modelled or are the result of global monitoring. The “nature” of the data in the SDG database is determined as follows:</p>
+<ul>
+<li><p>Country data (C): Produced and disseminated by the country (including data adjusted by the country to meet international standards);</p></li>
+<li><p>Country data adjusted (CA): Produced and provided by the country, but adjusted by the international agency for international comparability to comply with internationally agreed standards, definitions and classifications;</p></li>
+<li><p>Estimated (E): Estimated based on national data, such as surveys or administrative records, or other sources but on the same variable being estimated, produced by the international agency when country data for some year(s) is not available, when multiple sources exist, or when there are data quality issues;</p></li>
+<li><p>Modelled (M): Modelled by the agency on the basis of other covariates when there is a complete lack of data on the variable being estimated;</p></li>
+<li><p>Global monitoring data (G): Produced on a regular basis by the designated agency for global monitoring, based on country data. There is no corresponding figure at the country level.</p></li>
+</ul>
+<p>For each indicator, we will produce a value for each country with the following coding scheme:</p>
+<ul>
+<li><strong>1 Point</strong>: Indicator exists and the value is based on the <strong>country</strong>, <strong>country data adjusted</strong>, or <strong>estimated or Global Monitoring</strong> data<br />
+</li>
+<li><strong>0 Points</strong>: Indicator <strong>based on modeled data or does not exists</strong></li>
+</ul>
+<p>We give countries no credit for modeled data, because the country did not produce indicators in a form that was directly usable for reporting on an SDG indicator.</p>
+<p>When we average over all indicators in a goal to get a score, we compute a 5 year moving average to avoid year to year variability in reporting for SDGs. The overall score for an SDG is then the 5 year average of the percentage of indicator values based on <strong>country</strong>, <strong>country data adjusted</strong>, or <strong>estimated or Global Monitoring</strong> data that were available for the SDG.</p>
+<p>Because of the large data files and runtime of the program to calculate these indicators, the code to produce these indicators is in a separate file. <a href="https://github.com/stacybri/UN_Stats_SDG_Indicators_SPI/blob/master/02_programs/un_stats_cleaning.Rmd" class="uri">https://github.com/stacybri/UN_Stats_SDG_Indicators_SPI/blob/master/02_programs/un_stats_cleaning.Rmd</a></p>
+</div>
+<div id="indicators-3.1---3.17" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Indicators 3.1 - 3.17</h2>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="data-products-1.html#cb17-1" aria-hidden="true"></a>un_sdg_df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">paste</span>(raw_dir,<span class="st">&#39;/3_DP/SPI_D3_UNSD_data_&#39;</span>,window,<span class="st">&#39;yr.csv&#39;</span>,<span class="dt">sep=</span><span class="st">&quot;&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb17-2"><a href="data-products-1.html#cb17-2" aria-hidden="true"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">SPI.D3.1.POV   =</span> SPI.D3<span class="fl">.1</span>,</span>
+<span id="cb17-3"><a href="data-products-1.html#cb17-3" aria-hidden="true"></a>         <span class="dt">SPI.D3.2.HNGR  =</span> SPI.D3<span class="fl">.2</span>,</span>
+<span id="cb17-4"><a href="data-products-1.html#cb17-4" aria-hidden="true"></a>         <span class="dt">SPI.D3.3.HLTH  =</span> SPI.D3<span class="fl">.3</span>,</span>
+<span id="cb17-5"><a href="data-products-1.html#cb17-5" aria-hidden="true"></a>         <span class="dt">SPI.D3.4.EDUC  =</span> SPI.D3<span class="fl">.4</span>,</span>
+<span id="cb17-6"><a href="data-products-1.html#cb17-6" aria-hidden="true"></a>         <span class="dt">SPI.D3.5.GEND  =</span> SPI.D3<span class="fl">.5</span>,</span>
+<span id="cb17-7"><a href="data-products-1.html#cb17-7" aria-hidden="true"></a>         <span class="dt">SPI.D3.6.WTRS  =</span> SPI.D3<span class="fl">.6</span>,</span>
+<span id="cb17-8"><a href="data-products-1.html#cb17-8" aria-hidden="true"></a>         <span class="dt">SPI.D3.7.ENRG  =</span> SPI.D3<span class="fl">.7</span>,</span>
+<span id="cb17-9"><a href="data-products-1.html#cb17-9" aria-hidden="true"></a>         <span class="dt">SPI.D3.8.WORK  =</span> SPI.D3<span class="fl">.8</span>,</span>
+<span id="cb17-10"><a href="data-products-1.html#cb17-10" aria-hidden="true"></a>         <span class="dt">SPI.D3.9.INDY  =</span> SPI.D3<span class="fl">.9</span>,</span>
+<span id="cb17-11"><a href="data-products-1.html#cb17-11" aria-hidden="true"></a>         <span class="dt">SPI.D3.10.NEQL =</span> SPI.D3<span class="fl">.10</span>,</span>
+<span id="cb17-12"><a href="data-products-1.html#cb17-12" aria-hidden="true"></a>         <span class="dt">SPI.D3.11.CITY =</span> SPI.D3<span class="fl">.11</span>,</span>
+<span id="cb17-13"><a href="data-products-1.html#cb17-13" aria-hidden="true"></a>         <span class="dt">SPI.D3.12.CNSP =</span> SPI.D3<span class="fl">.12</span>,</span>
+<span id="cb17-14"><a href="data-products-1.html#cb17-14" aria-hidden="true"></a>         <span class="dt">SPI.D3.13.CLMT =</span> SPI.D3<span class="fl">.13</span>,</span>
+<span id="cb17-15"><a href="data-products-1.html#cb17-15" aria-hidden="true"></a>         <span class="dt">SPI.D3.14.LFWT =</span> SPI.D3<span class="fl">.14</span>,</span>
+<span id="cb17-16"><a href="data-products-1.html#cb17-16" aria-hidden="true"></a>         <span class="dt">SPI.D3.15.LAND =</span> SPI.D3<span class="fl">.15</span>,</span>
+<span id="cb17-17"><a href="data-products-1.html#cb17-17" aria-hidden="true"></a>         <span class="dt">SPI.D3.16.INST =</span> SPI.D3<span class="fl">.16</span>,</span>
+<span id="cb17-18"><a href="data-products-1.html#cb17-18" aria-hidden="true"></a>         <span class="dt">SPI.D3.17.PTNS =</span> SPI.D3<span class="fl">.17</span></span>
+<span id="cb17-19"><a href="data-products-1.html#cb17-19" aria-hidden="true"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb17-20"><a href="data-products-1.html#cb17-20" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb17-21"><a href="data-products-1.html#cb17-21" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>SPI.D3.<span class="fl">14.</span>LFWT)</span>
+<span id="cb17-22"><a href="data-products-1.html#cb17-22" aria-hidden="true"></a></span>
+<span id="cb17-23"><a href="data-products-1.html#cb17-23" aria-hidden="true"></a><span class="co">#add to spi databases</span></span>
+<span id="cb17-24"><a href="data-products-1.html#cb17-24" aria-hidden="true"></a>spi_df &lt;-<span class="st"> </span>spi_df <span class="op">%&gt;%</span></span>
+<span id="cb17-25"><a href="data-products-1.html#cb17-25" aria-hidden="true"></a><span class="st">  </span><span class="kw">left_join</span>(un_sdg_df)</span>
+<span id="cb17-26"><a href="data-products-1.html#cb17-26" aria-hidden="true"></a></span>
+<span id="cb17-27"><a href="data-products-1.html#cb17-27" aria-hidden="true"></a><span class="co">#map the values</span></span>
+<span id="cb17-28"><a href="data-products-1.html#cb17-28" aria-hidden="true"></a>un_sdg_map &lt;-<span class="st"> </span>un_sdg_df <span class="op">%&gt;%</span></span>
+<span id="cb17-29"><a href="data-products-1.html#cb17-29" aria-hidden="true"></a><span class="st">  </span><span class="kw">select</span>(country, date, <span class="kw">starts_with</span>(<span class="st">&quot;SPI&quot;</span>)) </span>
+<span id="cb17-30"><a href="data-products-1.html#cb17-30" aria-hidden="true"></a></span>
+<span id="cb17-31"><a href="data-products-1.html#cb17-31" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.1.POV&#39;</span>,<span class="st">&#39;Goal 1: No Poverty&#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-1.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-2.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-3.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-4.png" width="960" /></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="data-products-1.html#cb18-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.2.HNGR&#39;</span>,<span class="st">&#39;Goal 2: No Hunger&#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-5.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-6.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-7.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-8.png" width="960" /></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="data-products-1.html#cb19-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.3.HLTH&#39;</span>,<span class="st">&#39;Goal 3: Good Health and Well-being&#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-9.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-10.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-11.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-12.png" width="960" /></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="data-products-1.html#cb20-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.4.EDUC&#39;</span>,<span class="st">&#39;Goal 4: Quality Education  &#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-13.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-14.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-15.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-16.png" width="960" /></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="data-products-1.html#cb21-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.5.GEND&#39;</span>,<span class="st">&#39;Goal 5: Gender Equality &#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-17.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-18.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-19.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-20.png" width="960" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="data-products-1.html#cb22-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.6.WTRS&#39;</span>,<span class="st">&#39;Goal 6: Clean Water and Sanitation &#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-21.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-22.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-23.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-24.png" width="960" /></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="data-products-1.html#cb23-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.7.ENRG&#39;</span>,<span class="st">&#39;Goal 7: Affordable and Clean Energy&#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-25.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-26.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-27.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-28.png" width="960" /></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="data-products-1.html#cb24-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.8.WORK&#39;</span>,<span class="st">&#39;Goal 8: Decent Work and Economic Growth  &#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-29.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-30.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-31.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-32.png" width="960" /></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="data-products-1.html#cb25-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.9.INDY&#39;</span>,<span class="st">&#39;Goal 9: Industry, Innovation and Infrastructure &#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-33.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-34.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-35.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-36.png" width="960" /></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="data-products-1.html#cb26-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.10.NEQL&#39;</span>,<span class="st">&#39;Goal 10: Reduced Inequality   &#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-37.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-38.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-39.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-40.png" width="960" /></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="data-products-1.html#cb27-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.11.CITY&#39;</span>,<span class="st">&#39;Goal 11: Sustainable Cities and Communities&#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-41.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-42.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-43.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-44.png" width="960" /></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="data-products-1.html#cb28-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.12.CNSP&#39;</span>,<span class="st">&#39;Goal 12: Responsible Consumption and Production   &#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-45.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-46.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-47.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-48.png" width="960" /></p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="data-products-1.html#cb29-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.13.CLMT&#39;</span>,<span class="st">&#39;Goal 13: Climate Action&#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-49.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-50.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-51.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-52.png" width="960" /></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="data-products-1.html#cb30-1" aria-hidden="true"></a><span class="co">#spi_mapper(&#39;un_sdg_map&#39;,&#39;SPI.D3.14.LFWT&#39;,&#39;Goal 14: Life Below Water&#39;)</span></span>
+<span id="cb30-2"><a href="data-products-1.html#cb30-2" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.15.LAND&#39;</span>,<span class="st">&#39;Goal 15: Life on Land&#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-53.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-54.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-55.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-56.png" width="960" /></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="data-products-1.html#cb31-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.16.INST&#39;</span>,<span class="st">&#39;Goal 16: Peace and Justice Strong Institutions&#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-57.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-58.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-59.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-60.png" width="960" /></p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="data-products-1.html#cb32-1" aria-hidden="true"></a><span class="kw">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.17.PTNS&#39;</span>,<span class="st">&#39;Goal 17: Partnerships to achieve the Goal  &#39;</span>)</span></code></pre></div>
+<p><img src="01-SPI_data_prep_files/figure-html/unstats-61.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-62.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-63.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-64.png" width="960" /></p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-services-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-sources-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>

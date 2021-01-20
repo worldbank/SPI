@@ -7,6 +7,7 @@ output:
     toc: yes
     fig_width: 9
     fig_height: 6
+out_dir: "`r paste0(here::here(),'/04_reports')`"
 abstract: Recognizing the new challenges for national statistical systems in monitoring  the
   Sustainable Development Goals (SDGs), the World Bank is developing a new, improved  Statistical  Performance
   Indicators (SPI) to monitor progress of the statistical  performance  of countries.
@@ -43,7 +44,7 @@ library(ggthemes)
 dir <- here()
 
 raw_dir <- paste(dir, '01_raw_data', sep="/")
-output_dir <- paste(dir, '03_output_data', sep="/")
+out_dir <- paste(dir, '03_output_data', sep="/")
 
 #weights (either unity (1) or population (2))
 wgt <- 2
@@ -132,7 +133,7 @@ pop_df <- wbstats::wb(country="all",
 
 
 #read in the SPI dataset
-spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
+spi_df_final <- read_csv( file = paste(out_dir, 'SPI_data.csv', sep="/")) %>%
   left_join(pop_df) %>%
   mutate(wgt=wgt,
          weights=if_else(wgt==2,population,1))  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
@@ -796,7 +797,7 @@ index_disp <- spi_index_df %>%
 
 
 spi_index_df %>%
-  write_excel_csv(path=paste(output_dir, 'SPI_index.csv', sep="/"))
+  write_excel_csv(path=paste(out_dir, 'SPI_index.csv', sep="/"))
 
 #add stata labels and save a stata version
 #read in the data labels
@@ -820,13 +821,13 @@ label(spi_index_dta) <- as.list(labels)
 #save stata compatible version with labels
 spi_index_dta %>%
   janitor::clean_names() %>%
-  haven::write_dta(path=paste(output_dir, 'SPI_index.dta', sep="/"))
+  haven::write_dta(path=paste(out_dir, 'SPI_index.dta', sep="/"))
 
 #save a copy with column labels as well to csv
 l <- lapply(spi_index_dta, attr, "label") # Gives you list of the labeled variables
 l <- as.data.frame(l, stringsAsFactors = F) # Convert list to dataframe
 spi_index_dta_lab <- rbind(l, spi_index_dta) %>%
-  write_excel_csv(path=paste(output_dir, 'SPI_index_labelled.csv', sep="/"),
+  write_excel_csv(path=paste(out_dir, 'SPI_index_labelled.csv', sep="/"),
                   na="") # Bind the two
 
 
