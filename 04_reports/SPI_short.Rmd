@@ -296,7 +296,8 @@ spi_mapper <- function(data, indicator, title) {
     title= element_text(size = 20),
     text = element_text(size = 14)
     )
- print(p1)
+ p1 %>%
+   plotly::ggplotly()
 }
 
 spi_charts  <- function(data, indicator, title) {

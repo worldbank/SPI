@@ -2022,8 +2022,8 @@ recommended that surveys on income and expenditure be conducted at least every
 3 to 5 years.
 
 1 Point. 3 or more surveys done within past 10 years	
-0.6 Points. 2 surveys done within past 10 years; 	
-0.3 Points. 1 survey done within past 10 years; 	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
 0 Points. None within past 10 years
 
 
@@ -2036,8 +2036,8 @@ cost, and time use.  Some issues, such as gender and food security, are of
 interest to most agriculture surveys.
 
 1 Point. 3 or more surveys done within past 10 years	
-0.6 Points. 2 surveys done within past 10 years; 	
-0.3 Points. 1 survey done within past 10 years; 	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
 0 Points. None within past 10 years
 
 ####  Labor Force Survey 
@@ -2051,8 +2051,8 @@ employment, multiple job-holding, hiring, job creation, and duration of
 unemployment.
 
 1 Point. 3 or more surveys done within past 10 years	
-0.6 Points. 2 surveys done within past 10 years; 	
-0.3 Points. 1 survey done within past 10 years; 	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
 0 Points. None within past 10 years
 
 ####  Health/Demographic survey
@@ -2063,8 +2063,8 @@ They typically include Demographic and Health Surveys.  It is recommended that
 health surveys be conducted at least every 3 to 5 years.
 
 1 Point. 3 or more surveys done within past 10 years	
-0.6 Points. 2 surveys done within past 10 years; 	
-0.3 Points. 1 survey done within past 10 years; 	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
 0 Points. None within past 10 years
 
 ####  Business/establishment survey
@@ -2078,8 +2078,8 @@ for information about the establishment itself and/or employee characteristics
 and demographics.
 
 1 Point. 3 or more surveys done within past 10 years	
-0.6 Points. 2 surveys done within past 10 years; 	
-0.3 Points. 1 survey done within past 10 years; 	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
 0 Points. None within past 10 years
 
 ```{r pop_ag_censuses}
@@ -2250,8 +2250,8 @@ survey_fun  <- function(data, input_var) {
     group_by( country, date) %>% #group by country and create indicator for how many surveys over 10 year period
     summarise(indicator=case_when(
       sum(recency_indicator)>=3 ~ 1, 
-      sum(recency_indicator)==2 ~ 0.6, 
-      sum(recency_indicator)==1 ~ 0.3, 
+      sum(recency_indicator)==2 ~ 0.67, 
+      sum(recency_indicator)==1 ~ 0.33, 
       TRUE ~ 0 ),
       input_var=first(input_var),
       nada_dates=first(nada_dates)) %>%

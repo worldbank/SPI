@@ -1,0 +1,170 @@
+---
+title: "Highchart"
+author: "Brian Stacy"
+date: "1/21/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, dev='svg')
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+library(xaringanthemer)
+library(wbggeo)
+library(wbgmaps)
+library(ggthemes)
+library(Hmisc)
+library(here)
+library(patchwork)
+library(ggpmisc)
+library(jsonlite)
+library(httr)
+library(readxl)
+library(kableExtra)
+
+style_mono_accent(base_color = "#009FDA",
+                  title_slide_background_color = 'white',
+                  title_slide_text_color = '#002244',
+                  title_slide_background_image = 'WB_logo.png',
+                  title_slide_background_size = '7',
+                  title_slide_background_position = 'bottom 25px right 25px;',
+                  text_font_google = google_font('Roboto'),
+                  text_font_size = '24px',
+                  )
+
+#set directories
+dir <- here()
+
+raw_dir <- paste(dir, '01_raw_data', sep="/")
+output_dir <- paste(dir, '03_output_data', sep="/")
+
+#weights (either unity (1) or population)
+wgt <- 1
+
+```
+
+```{r load, include=FALSE}
+
+#add in population
+# pop_df <- wbstats::wb(country="all",
+#              indicator='SP.POP.TOTL',
+#              startdate=2004,
+#              enddate=2019) %>%
+#   mutate(date=as.numeric(date)) %>%
+#   mutate(population=value) %>%
+#   select(country, date, population) 
+
+#import data
+SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
+#     left_join(pop_df) %>%
+   mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+
+
+
+
+
+
+#metadata 
+metadata2 <- data.frame(
+  series = c('SPI.INDEX', 'SPI.INDEX.DIM1', 'SPI.INDEX.DIM2', 'SPI.INDEX.DIM3', 'SPI.INDEX.DIM4', 'SPI.INDEX.DIM5'),
+  indicator_name = c('SPI Overall Score', 'Dimension 1: Data Use', 'Dimension 2: Data Services', 'Dimension 3: Data Products', 'Dimension 4: Data Sources', 'Dimension 5: Data Infrastructure')
+)
+
+metadata  <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep="")) %>%
+  rename(series=source_id,
+         indicator_name=source_name) %>%
+  bind_rows(metadata2)
+
+#get list of country info
+country_list <- wbstats::wbcountries()
+
+
+SPI_2019 <- SPI %>%
+  filter(date==2019) %>%
+  filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
+  mutate(ISO_A3_EH=iso3c) %>%
+  mutate(across(contains("SPI"),~1*.))
+
+#read in TopoJSON from World Bank
+#countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
+#                                     what = "sp")
+
+```
+
+
+```{r highchart}
+
+library(highcharter)
+library(httr)
+library(jsonlite)
+library(geojsonio)
+#hcmap("custom/world-robinson-lowres")
+country_metadata <- wbstats::wbcountries() 
+
+
+
+
+
+map_df <- SPI %>%
+  filter(date==2019) %>%
+  filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+  group_by( country) %>%
+  #summarise(across(!! indicator,last)) %>%
+  rename(data_available=SPI.INDEX) %>%
+  select(iso3c, date, data_available, weights) %>%
+  right_join(country_metadata) %>%
+  mutate(data_available=if_else(is.na(data_available), as.numeric(NA), round(as.numeric(data_available),1)))     %>%
+  filter(region!='Aggregates')
+
+
+spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+
+SPI_map <- map_df %>%
+  mutate(spi_groups=case_when(
+    between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
+    between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+    between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+    between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+    between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+    
+  )) %>%
+  mutate(spi_groups=factor(spi_groups, 
+                           levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )),
+         value = as.numeric(spi_groups))  
+
+
+#read in TopoJSON from World Bank
+countries <- geojsonio::geojson_read(paste0(dir,"/SPI_data_viz/WB_countries_Admin0_lowres.geojson"),
+                                     what = "sp") 
+countries@data  <- countries@data %>%
+          mutate(iso3c=ISO_A3_EH,
+                 iso3c=if_else(ISO_A3_EH==-99,WB_A3,ISO_A3_EH)) %>%
+            left_join(SPI_map) 
+
+countries <- countries %>%
+  geojson_json(geometry='polygon',
+               group="iso3c")
+
+
+SPI_highchart_map <- hcmap(countries,
+      data=SPI_map,
+      joinBy=c('iso3c','iso3c'),
+      name='SPI Overall Score',
+      value='value',
+      tooltip = list(pointFormat = "{point.country} {point.data_available}")) %>%
+  hc_colorAxis(dataClassColor="category", 
+     dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
+                        list(from=2, to=2, color="#acece7", name="4th Quintile"),
+                        list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
+                        list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
+                        list(from=5, to=5, color="#ff9f1c", name="Bottom 20%"))) %>%
+  hc_title(
+    text = "SPI Overall Scores in 2019"
+  )
+
+
+
+
+SPI_highchart_map
+```
+
