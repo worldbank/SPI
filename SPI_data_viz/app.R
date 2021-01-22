@@ -346,14 +346,17 @@ ui <- navbarPage("Statistical Performance Indicators",
                                                         min = 0, max = 1, value = (1/5)
                                             ),
                                             h4("Pillar Weights"),
-                                            sliderInput("pillar_4_1", "Pillar 4.1: censuses and surveys",
-                                                        min = 0, max = 1, value = (1/3)
+                                            sliderInput("pillar_4_1.CEN", "Pillar 4.1: Censuses",
+                                                        min = 0, max = 1, value = (1/4)
                                             ),
+                                           sliderInput("pillar_4_1.SVY", "Pillar 4.1: Surveys",
+                                                       min = 0, max = 1, value = (1/4)
+                                           ),                                           
                                             sliderInput("pillar_4_2", "Pillar 4.2: administrative data",
-                                                        min = 0, max = 1, value = (1/3)
+                                                        min = 0, max = 1, value = (1/4)
                                             ),
                                             sliderInput("pillar_4_3", "Pillar 4.3: geospatial data",
-                                                        min = 0, max = 1, value = (1/3)
+                                                        min = 0, max = 1, value = (1/4)
                                             ),
                                             h3("Dimension 5: Data Infrastructure"), 
                                             sliderInput("dim_5", "Dimension 5 - Overall Weight",
@@ -1121,7 +1124,7 @@ server <- function(input, output,session) {
         input$pillar_3_15 +
         input$pillar_3_16 +
         input$pillar_3_17
-      dim4_total <- input$pillar_4_1 + input$pillar_4_2 + input$pillar_4_3
+      dim4_total <- input$pillar_4_1.CEN + input$pillar_4_1.SVY + + input$pillar_4_2 + input$pillar_4_3
       
       
       index_tab <- SPI %>%
@@ -1178,7 +1181,8 @@ server <- function(input, output,session) {
               (input$pillar_3_17/dim3_total)*SPI.D3.17.PTNS)
           ,
           SPI.INDEX.DIM4=(
-            (input$pillar_4_1/dim4_total)*INDEX.SPI.D4.1 +
+            (input$pillar_4_1.CEN/dim4_total)*INDEX.SPI.D4.1.CEN +
+              (input$pillar_4_1.SVY/dim4_total)*INDEX.SPI.D4.1.SVY +
               (input$pillar_4_2/dim4_total)*INDEX.SPI.D4.2 +
               (input$pillar_4_3/dim4_total)*INDEX.SPI.D4.3 )
           ,

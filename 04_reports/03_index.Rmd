@@ -617,7 +617,7 @@ $$ SPI.PILLAR_{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
 
 where $SPI.PILLAR_{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
 
-After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental statistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.
+After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental statistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.  Additionally, for Dimension 4 on data sources, we give censuses and surveys separate weights, so that censuses get 1/4th weight, surveys get 1/4th weight, admin data gets 1/4th weight, and geospatial gets 1/4th weight.  While censuses and surveys are in the same pillar in our framework, and therefore would typically only recieve 1/3 weight in this dimension, because of their importance in producing many indicators, they are given extra weight with a sum of 1/2.
 
 $$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{\omega_{ds} \times SPI.PILLAR_{ctds}}{N_S} $$
 
@@ -676,6 +676,76 @@ iso3c <- read_csv(paste(raw_dir,'metadata/iso_codes.csv', sep="/"),
                   col_types=list(col_character(), col_character(), col_character()))
 
 ```
+
+
+```{r index_weights}
+
+#Dimension 1 - Overall Weight
+dim_1 <- 1/5
+#Pillar 1.5: Data Use by International Organizations
+pillar_1_5 <- 1
+
+#Dimension 2 - Overall Weight
+dim_2 <- 1/5
+#Pillar 2.1: Data releases
+pillar_2_1 <- 1/3
+#Pillar 2.2: Online access
+pillar_2_2 <- 1/3
+# Pillar 2.4: Data services
+pillar_2_4 <- 1/3
+
+# Dimension 3 - Overall Weight
+dim_3 <- 1/5
+# Pillar 3: SDG 1
+pillar_3_1 <- 1/16
+# Pillar 3: SDG 2
+pillar_3_2 <- 1/16
+# Pillar 3: SDG 3
+pillar_3_3 <- 1/16
+# Pillar 3: SDG 4
+pillar_3_4 <- 1/16
+# Pillar 3: SDG 5
+pillar_3_5 <- 1/16
+# Pillar 3: SDG 6
+pillar_3_6 <- 1/16
+# Pillar 3: SDG 7
+pillar_3_7 <- 1/16
+# Pillar 3: SDG 8
+pillar_3_8 <- 1/16
+# Pillar 3: SDG 9
+pillar_3_9 <- 1/16
+# Pillar 3: SDG 10
+pillar_3_10 <- 1/16
+# Pillar 3: SDG 11
+pillar_3_11 <- 1/16
+# Pillar 3: SDG 12
+pillar_3_12 <- 1/16
+# Pillar 3: SDG 13
+pillar_3_13 <- 1/16
+# Pillar 3: SDG 15
+pillar_3_15 <- 1/16
+# Pillar 3: SDG 16
+pillar_3_16 <- 1/16
+# Pillar 3: SDG 17
+pillar_3_17 <- 1/16
+
+#Dimension 4 - Overall Weight
+dim_4 <- 1/5
+# Pillar 4.1: censuses and surveys
+pillar_4_1.CEN <- 1/4
+pillar_4_1.SVY <- 1/4
+#Pillar 4.2: administrative data
+pillar_4_2 <- 1/4
+# Pillar 4.3: geospatial data
+pillar_4_3 <- 1/4
+
+# Dimension 5 - Overall Weight
+dim_5 <- 1/5
+# Pillar 5.2: Standards and Methods
+pillar_5_2 <- 1
+
+
+```
   
 
 ```{r index}
@@ -724,7 +794,7 @@ spi_index_simple <- spi_index_df_temp %>%
 #################
 # Nested Index
 ################
-  spi_index_df <- spi_index_df_temp %>%
+spi_index_df <- spi_index_df_temp %>%
   arrange(country, date) %>%
   group_by(country) %>%
   mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
@@ -732,27 +802,49 @@ spi_index_simple <- spi_index_df_temp %>%
 
 
 
-#Create overall subscores corresponding to John's framework
-  spi_index_df <- spi_index_df %>%
-    mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
+#recalculate index based on the weights
+dim_total <- dim_1 + dim_2 + dim_3 + dim_4 + dim_5
+dim2_total <- pillar_2_1 + pillar_2_2 + pillar_2_4
+dim3_total <- 
+  pillar_3_1 + 
+  pillar_3_2 +
+  pillar_3_3 +
+  pillar_3_4 +
+  pillar_3_5 +
+  pillar_3_6 +
+  pillar_3_7 +
+  pillar_3_8 +
+  pillar_3_9 +
+  pillar_3_10 +
+  pillar_3_11 +
+  pillar_3_12 +
+  pillar_3_13 +
+  pillar_3_15 +
+  pillar_3_16 +
+  pillar_3_17
+dim4_total <- pillar_4_1.CEN + pillar_4_1.SVY + + pillar_4_2 + pillar_4_3
+
+#create index dataset
+spi_index_df <- spi_index_df %>%
+  mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
          INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
          INDEX.SPI.D2.4=SPI.D2.4.NADA,
          INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
-                                            "SPI.D3.2.HNGR",
-                                            "SPI.D3.3.HLTH",
-                                            "SPI.D3.4.EDUC",
-                                            "SPI.D3.5.GEND",
-                                            "SPI.D3.6.WTRS"))),
+                                          "SPI.D3.2.HNGR",
+                                          "SPI.D3.3.HLTH",
+                                          "SPI.D3.4.EDUC",
+                                          "SPI.D3.5.GEND",
+                                          "SPI.D3.6.WTRS"))),
          INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
-                                            "SPI.D3.8.WORK",
-                                            "SPI.D3.9.INDY",
-                                            "SPI.D3.10.NEQL",
-                                            "SPI.D3.11.CITY",
-                                            "SPI.D3.12.CNSP"))),         
+                                          "SPI.D3.8.WORK",
+                                          "SPI.D3.9.INDY",
+                                          "SPI.D3.10.NEQL",
+                                          "SPI.D3.11.CITY",
+                                          "SPI.D3.12.CNSP"))),         
          INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
-                                            "SPI.D3.15.LAND" ))),
+                                          "SPI.D3.15.LAND" ))),
          INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
-                                            "SPI.D3.17.PTNS" ))),
+                                          "SPI.D3.17.PTNS" ))),
          INDEX.SPI.D4.1.CEN=rowMeans(across(c('SPI.D4.1.1.POPU','SPI.D4.1.2.AGRI','SPI.D4.1.3.BIZZ'))), #separate census and surveys 
          INDEX.SPI.D4.1.SVY=rowMeans(across(c('SPI.D4.1.4.HOUS','SPI.D4.1.5.AGSVY','SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH','SPI.D4.1.8.BZSVY'))), #separate census and surveys 
          INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2'))),
@@ -760,19 +852,46 @@ spi_index_simple <- spi_index_df_temp %>%
          #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
          INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2'))),
          #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
-                 ) %>%
+  ) %>%
   mutate(
-         SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
-         SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
-         SPI.INDEX.DIM3=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
-         SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
-         SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
-         SPI.INDEX=rowMeans(across(c('SPI.INDEX.DIM1',
-                                     'SPI.INDEX.DIM2',
-                                     'SPI.INDEX.DIM3',
-                                     'SPI.INDEX.DIM4',
-                                     'SPI.INDEX.DIM5')), na.rm=FALSE)
-         ) %>% #
+    SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+    SPI.INDEX.DIM2=(
+      (pillar_2_1/dim2_total)*INDEX.SPI.D2.1 +
+        (pillar_2_2/dim2_total)*INDEX.SPI.D2.2 +
+        (pillar_2_4/dim2_total)*INDEX.SPI.D2.4 )
+    ,
+    SPI.INDEX.DIM3=(
+      (pillar_3_1/dim3_total)*SPI.D3.1.POV +
+        (pillar_3_2/dim3_total)*SPI.D3.2.HNGR +
+        (pillar_3_3/dim3_total)*SPI.D3.3.HLTH +
+        (pillar_3_4/dim3_total)*SPI.D3.4.EDUC +
+        (pillar_3_5/dim3_total)*SPI.D3.5.GEND +
+        (pillar_3_6/dim3_total)*SPI.D3.6.WTRS +
+        (pillar_3_7/dim3_total)*SPI.D3.7.ENRG +
+        (pillar_3_8/dim3_total)*SPI.D3.8.WORK +
+        (pillar_3_9/dim3_total)*SPI.D3.9.INDY +
+        (pillar_3_10/dim3_total)*SPI.D3.10.NEQL +
+        (pillar_3_11/dim3_total)*SPI.D3.11.CITY +
+        (pillar_3_12/dim3_total)*SPI.D3.12.CNSP +
+        (pillar_3_13/dim3_total)*SPI.D3.13.CLMT +
+        (pillar_3_15/dim3_total)*SPI.D3.15.LAND +
+        (pillar_3_16/dim3_total)*SPI.D3.16.INST +
+        (pillar_3_17/dim3_total)*SPI.D3.17.PTNS)
+    ,
+    SPI.INDEX.DIM4=(
+      (pillar_4_1.CEN/dim4_total)*INDEX.SPI.D4.1.CEN +
+      (pillar_4_1.SVY/dim4_total)*INDEX.SPI.D4.1.SVY +
+        (pillar_4_2/dim4_total)*INDEX.SPI.D4.2 +
+        (pillar_4_3/dim4_total)*INDEX.SPI.D4.3 )
+    ,
+    SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+    SPI.INDEX=(dim_1/dim_total)*SPI.INDEX.DIM1 +
+      (dim_2/dim_total)*SPI.INDEX.DIM2 +
+      (dim_3/dim_total)*SPI.INDEX.DIM3 +
+      (dim_4/dim_total)*SPI.INDEX.DIM4 +
+      (dim_5/dim_total)*SPI.INDEX.DIM5 
+    #sum up based on individual dimension weights
+  ) %>% #
   mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
   arrange(-date, -SPI.INDEX) %>%
   select(country, iso3c, date, starts_with('SPI.INDEX'), everything()) 
