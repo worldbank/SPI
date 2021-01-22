@@ -3305,7 +3305,7 @@ for (i in c(2015:2019)) {
 #update based on IMF data.  Use manually collected value when other value not available
 D5.2.4.CPIBY <- D5.2.4.CPIBY %>%
   full_join(D5.2.4.CPIBY.IMF) %>%
-  mutate(SPI.D5.2.4.CPIBY=if_else(!is.na(SPI.D5.2.4.CPIBY.IMF),SPI.D5.2.4.CPIBY.IMF,SPI.D5.2.4.CPIBY)) %>%
+  mutate(SPI.D5.2.4.CPIBY=if_else(is.na(SPI.D5.2.4.CPIBY),SPI.D5.2.4.CPIBY.IMF,SPI.D5.2.4.CPIBY)) %>%
   select(-country,-SPI.D5.2.4.CPIBY.IMF) 
 
 
