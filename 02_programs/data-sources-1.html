@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-01-20" />
+<meta name="date" content="2021-01-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -303,8 +303,8 @@ consumption surveys, household budget surveys, integrated surveys. It is
 recommended that surveys on income and expenditure be conducted at least every
 3 to 5 years.</p>
 <p>1 Point. 3 or more surveys done within past 10 years<br />
-0.6 Points. 2 surveys done within past 10 years;<br />
-0.3 Points. 1 survey done within past 10 years;<br />
+0.67 Points. 2 surveys done within past 10 years;<br />
+0.33 Points. 1 survey done within past 10 years;<br />
 0 Points. None within past 10 years</p>
 </div>
 <div id="agriculture-survey" class="section level4" number="5.1.1.5">
@@ -315,8 +315,8 @@ agricultural land, production, crops and livestock, aquaculture, labor and
 cost, and time use. Some issues, such as gender and food security, are of
 interest to most agriculture surveys.</p>
 <p>1 Point. 3 or more surveys done within past 10 years<br />
-0.6 Points. 2 surveys done within past 10 years;<br />
-0.3 Points. 1 survey done within past 10 years;<br />
+0.67 Points. 2 surveys done within past 10 years;<br />
+0.33 Points. 1 survey done within past 10 years;
 0 Points. None within past 10 years</p>
 </div>
 <div id="labor-force-survey" class="section level4" number="5.1.1.6">
@@ -329,8 +329,8 @@ between employees and the self-employed, public versus private sector
 employment, multiple job-holding, hiring, job creation, and duration of
 unemployment.</p>
 <p>1 Point. 3 or more surveys done within past 10 years<br />
-0.6 Points. 2 surveys done within past 10 years;<br />
-0.3 Points. 1 survey done within past 10 years;<br />
+0.67 Points. 2 surveys done within past 10 years;<br />
+0.33 Points. 1 survey done within past 10 years;<br />
 0 Points. None within past 10 years</p>
 </div>
 <div id="healthdemographic-survey" class="section level4" number="5.1.1.7">
@@ -340,8 +340,8 @@ populations, such as health expenditure, access, utilization, and outcomes.
 They typically include Demographic and Health Surveys. It is recommended that
 health surveys be conducted at least every 3 to 5 years.</p>
 <p>1 Point. 3 or more surveys done within past 10 years<br />
-0.6 Points. 2 surveys done within past 10 years;<br />
-0.3 Points. 1 survey done within past 10 years;<br />
+0.67 Points. 2 surveys done within past 10 years;<br />
+0.33 Points. 1 survey done within past 10 years;<br />
 0 Points. None within past 10 years</p>
 </div>
 <div id="businessestablishment-survey" class="section level4" number="5.1.1.8">
@@ -354,8 +354,8 @@ surveys include surveys of businesses, farms, and institutions. They may ask
 for information about the establishment itself and/or employee characteristics
 and demographics.</p>
 <p>1 Point. 3 or more surveys done within past 10 years<br />
-0.6 Points. 2 surveys done within past 10 years;<br />
-0.3 Points. 1 survey done within past 10 years;<br />
+0.67 Points. 2 surveys done within past 10 years;<br />
+0.33 Points. 1 survey done within past 10 years;
 0 Points. None within past 10 years</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="data-sources-1.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#pull data for population and agriculture census from WDI metadata</span></span>
 <span id="cb33-2"><a href="data-sources-1.html#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -513,8 +513,8 @@ and demographics.</p>
 <span id="cb34-116"><a href="data-sources-1.html#cb34-116" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>( country, date) <span class="sc">%&gt;%</span> <span class="co">#group by country and create indicator for how many surveys over 10 year period</span></span>
 <span id="cb34-117"><a href="data-sources-1.html#cb34-117" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">indicator=</span><span class="fu">case_when</span>(</span>
 <span id="cb34-118"><a href="data-sources-1.html#cb34-118" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">&gt;=</span><span class="dv">3</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
-<span id="cb34-119"><a href="data-sources-1.html#cb34-119" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">==</span><span class="dv">2</span> <span class="sc">~</span> <span class="fl">0.6</span>, </span>
-<span id="cb34-120"><a href="data-sources-1.html#cb34-120" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="fl">0.3</span>, </span>
+<span id="cb34-119"><a href="data-sources-1.html#cb34-119" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">==</span><span class="dv">2</span> <span class="sc">~</span> <span class="fl">0.67</span>, </span>
+<span id="cb34-120"><a href="data-sources-1.html#cb34-120" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="fl">0.33</span>, </span>
 <span id="cb34-121"><a href="data-sources-1.html#cb34-121" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> ),</span>
 <span id="cb34-122"><a href="data-sources-1.html#cb34-122" aria-hidden="true" tabindex="-1"></a>      <span class="at">input_var=</span><span class="fu">first</span>(input_var),</span>
 <span id="cb34-123"><a href="data-sources-1.html#cb34-123" aria-hidden="true" tabindex="-1"></a>      <span class="at">nada_dates=</span><span class="fu">first</span>(nada_dates)) <span class="sc">%&gt;%</span></span>
