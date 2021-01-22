@@ -138,8 +138,7 @@ countries <- geojsonio::geojson_read(paste0(dir,"/SPI_data_viz/WB_countries_Admi
                                      what = "sp") 
 countries@data  <- countries@data %>%
           mutate(iso3c=ISO_A3_EH,
-                 iso3c=if_else(ISO_A3_EH==-99,WB_A3,ISO_A3_EH)) %>%
-            left_join(SPI_map) 
+                 iso3c=if_else(ISO_A3_EH==-99,WB_A3,ISO_A3_EH))  
 
 countries <- countries %>%
   geojson_json(geometry='polygon',
