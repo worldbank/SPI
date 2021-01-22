@@ -145,9 +145,9 @@ countries <- countries %>%
                group="iso3c")
 
 
-SPI_highchart_map <- hcmap(countries,
+SPI_highchart_map <- hcmap("custom/world-robinson-lowres",
       data=SPI_map,
-      joinBy=c('iso3c','iso3c'),
+      joinBy=c('iso-a3','iso3c'),
       name='SPI Overall Score',
       value='value',
       tooltip = list(pointFormat = "{point.country} {point.data_available}")) %>%

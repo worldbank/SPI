@@ -758,8 +758,7 @@ oecd_country_query <-  GET(url = "https://api.worldbank.org/v2/country?region=OE
 oecd_country_df <- oecd_country_query[[2]] %>%
   as_tibble() 
   
-country_mod_list <- oecd_country_df$name  #fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
-country_mod_list <- c(country_mod_list, 'Singapore')
+
 # create index dataset
 spi_index_df_temp <- spi_df_final %>%
   select(country, iso3c, date, starts_with("SPI"), income, region, weights, population) %>%
