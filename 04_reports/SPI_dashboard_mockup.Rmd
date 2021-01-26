@@ -434,7 +434,12 @@ Explore each of our statistical performance indicators and veiw our other result
 [Maybe we can insert a full dashboard for the user to explore here?]
 
 A prototype that needs some work is here:
- https://datanalytics.worldbank.org/content/603.
+https://datanalytics.worldbank.org/content/686
+
+```{r eval=FALSE, include=FALSE}
+knitr::include_app("https://datanalytics.worldbank.org/content/686", 
+  height = "900px")
+```
 
 # Acknowledgements and Moving Forward
 
