@@ -1,7 +1,7 @@
 ---
-title: "SPI Dashboard"
+title: "Statistical Performance Indicators"
 author: ""
-date: "1/25/2021"
+date: ""
 output: html_document
 ---
 
@@ -28,7 +28,8 @@ library(jsonlite)
 library(geojsonio)
 library(waffle)
 library(hrbrthemes)
-
+library(ggbeeswarm)
+library(plotly)
 style_mono_accent(base_color = "#009FDA",
                   title_slide_background_color = 'white',
                   title_slide_text_color = '#002244',
@@ -100,56 +101,102 @@ countries_df <- sf::st_read(paste0(dir,"/misc/WB_countries_Admin0.geojson")) %>%
 #                                     ) 
 countries <- countries_df %>%
   geojson_json(geometry='polygon')
+
+#function to plot dimension scores
+plot_fun <- function(variables, title) {
+
+  plot_df <- SPI_2019 %>%
+    rename(value= !! variables) %>%
+    mutate(income=factor(income, levels=c('High income', 'Upper middle income', 
+                                          'Lower middle income', 'Low income')))
+  
+  p <- ggplot(plot_df,aes(income, value, color=income, label=country)) + 
+    geom_quasirandom() + 
+    theme_ipsum() +
+    ylab('Score') +
+    theme(legend.position='none') 
+  
+  ggplotly(p,
+           tooltip=c('label','y')) %>%
+    layout(title=title)
+    
+}
+
 ```
+
 
 # Introduction
 
-Statistical Performance Indicators are tool for countries/donors to assess statistical system.  [Add connection to forthcoming WDR]
+The World Bank's Statistical Performance Indicators (SPI) project is a tool for countries/donors to assess the statistical system of a country.  [Add connection to forthcoming WDR]
 
-The new Statistical Performance Indicators (SPI) builds on the SCI, which the World Bank has regularly published since 2004. Our new SPI will cover many of the same elements as the SCI, such as statistical methodology, source data, and periodicity, but will also expand into new areas. The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system. We also are committing to making our project open data and open code to build confidence in our work.
+The SPI builds on the SCI, which the World Bank has regularly published since 2004. Our new SPI will cover many of the same elements as the SCI, such as statistical methodology, source data, and periodicity, but will also expand into new areas. The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system. We also are committing to making our project open data and open code to build confidence in our work. All code and data can be found at our github repository. https://github.com/stacybri/SPI
 
 By helping countries and development partners identify the strengths and weaknesses of national statistical systems the SPI can support policy advice for countries about their national statistical systems, investment decisions for donors including the World Bank, benchmarking of national statistical systems, and advocacy for national statistics.
 
+Thanks to a large scale data collection effort by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering five dimensions for our dashboard.  These 54 indicators do allow us to provide data for each of our 5 dimensions on data use, data services, data products, data sources, and data infrastructure.  Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public.  Going forward, the international community must work together to fill these gaps.
+
 # What is covered in SPI?
 
-Statistics have no value unless they are used. The first dimension of the SPI is therefore **data use**. A successful statistical system is one that produces data products that are highly used. The SPI contains five measures of data use.  One of them, the Availability of Comparable Poverty headcount ratio at $1.90 a day, measures whether a country produces comparable poverty measures to track progress towards poverty reduction based on data from the World Bank Povcalnet.  
+Statistics have no value unless they are used. The first dimension of the SPI is therefore **data use**. A successful statistical system is one that produces data products that are highly used. The SPI contains five indicators of data use.  Below are the dimension 1 aggregate scores by income group, which is formed by averaging across the five indicators.  These indicators are formed by checking whether the country produces useful data for international organizations to monitor global progress.  Scores range between 0 and 100, with a score of 100 being the highest possible score.  For more information, feel free to consult our technical report [insert link to technical report here]. https://stacybri.github.io/SPI/.
 
-```{r povertywaffle}
+```{r dim1, out.height=400, out.width=700}
 
-poverty_waffle <- SPI_2019 %>%
-  select(country, income, region, SPI.D1.5.POV) %>%
-  mutate(poverty=factor(SPI.D1.5.POV, levels=c(1,0.5,0), labels=c('Two in past 5 years.',
-                                                    'Two in past 10 years.',
-                                                    'Less than Two in past 10 years.'))) %>%
-  group_by(income) %>%
-  count(poverty)
-
-ggplot(poverty_waffle, aes(fill = poverty, values = n)) +
-  geom_waffle(n_rows = 6, size = 0.33, colour = "white", flip = TRUE) +
-  facet_wrap(~income, ncol=4, strip.position = "bottom") +
-  coord_equal() +
-  theme_ipsum_rc(grid="") +
-  theme_enhance_waffle() +
-  theme(legend.position = 'top') +
-  labs(
-    title='Availability of Comparable Poverty Headcount data',
-    fill='Estimate'
-  )
+plot_fun('SPI.INDEX.DIM1', 'Dimension 1: Data Use')
 
 ```
 
 
-In order to meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second dimension of the SPI is therefore **data services** that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.
 
-The dialogue between users and suppliers in turn drives the design of statistical products that are to be created including the quality of product needed for the country requirement. This will incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third dimension of the SPI is therefore **data products**. A successful statistical system is one that generates high quality statistical indicators that can also track progress for the Sustainable Development Goals (SDGs).
+
+In order to meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second dimension of the SPI is therefore **data services** that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.  Our data services dimension contains indicators on data releases, online accessibility, and availability of detailed survey metadata.  The dimension 2 overall score averages over these indicators.
+
+
+```{r dim2, out.height=400, out.width=700}
+
+plot_fun('SPI.INDEX.DIM2', 'Dimension 2: Data Services')
+
+
+```
+
+
+The dialogue between users and suppliers in turn drives the design of statistical products that are to be created including the quality of product needed for the country requirement. This will incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third dimension of the SPI is therefore **data products**. A successful statistical system is one that generates high quality statistical indicators that can also track progress for the Sustainable Development Goals (SDGs).  Our data products indicators include the fraction of SDG indicators in each goal that have at least one value in a five year span.
+
+
+```{r dim3, out.height=400, out.width=700}
+
+plot_fun('SPI.INDEX.DIM3', 'Dimension 3: Data Products')
+
+
+```
 
 In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens. The fourth dimension of the SPI is therefore **data sources**. A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.
 
+```{r dim4, out.height=400, out.width=700}
+
+plot_fun('SPI.INDEX.DIM4', 'Dimension 4: Data Sources')
+
+
+```
+
+
 For the cycle to be complete, capability needs continuously to be reviewed to ensure that it is enough to deliver the products, services and ultimately data use required. The fifth dimension of the SPI is therefore **data infrastructure**. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
+
+
+```{r dim5, out.height=400, out.width=700}
+
+plot_fun('SPI.INDEX.DIM5', 'Dimension 5: Data Infrastructure')
+
+
+```
+
+The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 below.
+
+*Figure 1: The Dimensions and Pillars that Construct the New SPI*
+![](SPI_dashboard.png)
 
 # SPI Scores
 
-Combining our five dimensions, we form an overall index of statistical performance.  For more details on the methodology, see our technical note [LINK HERE].
+Combining our five dimensions, we form an overall index of statistical performance.  For more details on the methodology, see our technical note [LINK HERE].  https://stacybri.github.io/SPI/measuring-the-statistical-performance-of-countries-an-overview-of-the-statistical-performance-indicators-and-index.html
 
 There are large differences in the SPI overall score across World Bank regions and income groups. Overall, North America has the highest average SPI overall score, while the Sub-Saharan Africa region has the lowest average score.  There is also a clear gradient with respect to income groups. Countries classified as low income have lower scores on average than countries classified as middle income. High income countries have the highest average SPI overall score score.
 
@@ -169,6 +216,8 @@ region_SPI_df <- SPI_2019 %>%
               SPI.INDEX.DIM5=round(wtd.mean(SPI.INDEX.DIM5, weights = weights, na.rm=T),0))
 
 income_SPI_df <- SPI_2019 %>%
+    mutate(income=factor(income, levels=c('High income', 'Upper middle income', 
+                                          'Lower middle income', 'Low income'))) %>%
     group_by(income) %>%
     filter(region!='Aggregates') %>%
     summarise(SPI.INDEX=round(wtd.mean(SPI.INDEX, weights = weights, na.rm=T),0),
@@ -230,7 +279,7 @@ region_graph <- region_graph %>%
   hc_xAxis( title = "" ) %>%
   hc_title(text = "SPI Overall Scores by Region in 2019" ) %>%
   hc_subtitle(
-    text = "Click bar to see by county. Source: World Bank Statistical Performance Index",
+    text = "Click bar to see by county.",
     style = list(useHTML = TRUE)
   )
 
@@ -241,6 +290,8 @@ region_graph
 
 country_income_drilldown <- SPI_2019 %>%
   mutate(across(starts_with("SPI.INDEX"),round,0)) %>%
+  mutate(income=factor(income, levels=c('High income', 'Upper middle income', 
+                                          'Lower middle income', 'Low income'))) %>%
   group_nest(income) %>%
   mutate(id=income,
          type='column',
@@ -271,7 +322,7 @@ income_graph <- income_graph %>%
   hc_xAxis( title = "" ) %>%
   hc_title(text = "SPI Overall Scores by Income Group in 2019" ) %>%
   hc_subtitle(
-    text = "Click bar to see by county. Source: World Bank Statistical Performance Index",
+    text = "Click bar to see by county.",
     style = list(useHTML = TRUE)
   )
 
@@ -308,7 +359,7 @@ Countries shaded in dark red are the lowest performing, countries in dark green 
 * **2nd Quantile**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#ffbf69">light orange</span>.  
 * **Bottom 20%**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#ff9f1c">dark orange </span>.    
 
-```{r leaflet, out.height=900, out.width=900}
+```{r leaflet, out.height=700, out.width=900}
 library(leaflet)
 variable <- "SPI.INDEX"
 
@@ -378,9 +429,12 @@ leaflet(spi_map_overall,
 
 # Dashboard
 
-[Insert some kind of dashboard to allow user to explore data in greater detail]
+Explore each of our statistical performance indicators and veiw our other results here:
 
-See more at https://datanalytics.worldbank.org/content/603.
+[Maybe we can insert a full dashboard for the user to explore here?]
+
+A prototype that needs some work is here:
+ https://datanalytics.worldbank.org/content/603.
 
 # Acknowledgements and Moving Forward
 

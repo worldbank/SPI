@@ -1,0 +1,138 @@
+---
+title: "Statistical Performance Indicators Storyboard"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+runtime: shiny  
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, dpi=500, dev='svg')
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+library(xaringanthemer)
+library(wbggeo)
+library(wbgmaps)
+library(ggthemes)
+library(Hmisc)
+library(here)
+library(patchwork)
+library(ggpmisc)
+library(ggbeeswarm)
+library(hrbrthemes)
+library(plotly)
+style_mono_accent(base_color = "#009FDA",
+                  title_slide_background_color = 'white',
+                  title_slide_text_color = '#002244',
+                  title_slide_background_image = 'WB_logo.png',
+                  title_slide_background_size = '7',
+                  title_slide_background_position = 'bottom 25px right 25px;',
+                  text_font_google = google_font('Roboto'),
+                  text_font_size = '24px',
+                  )
+
+
+
+```
+
+```{r global, include=FALSE}
+
+#read in data and metatdata
+SPI <- read_csv('SPI_index.csv')
+
+metadata_raw <- read_csv('SPI_dimensions_sources.csv')
+
+metadata <- metadata_raw %>%
+    mutate(descript=paste(SPI_indicator_id,": ", spi_indicator_name," - ",source_name , sep="")) %>%
+    select(source_id,  descript, spi_indicator_description,spi_indicator_scoring)
+
+metadata <- read_csv('SPI_index_sources.csv') %>%
+  bind_rows(metadata)
+
+
+#create named list, which can be useful later
+var.labels <- metadata$descript
+names(var.labels) <- metadata$source_id
+
+
+
+
+SPI_2019 <- SPI %>%
+  filter(date==2019) %>%
+  filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
+  mutate(across(contains("SPI"),~1*.))
+
+# #read in TopoJSON from World Bank
+# countries_df <- sf::st_read("WB_countries_Admin0_lowres.geojson") %>%
+#             mutate(iso3c=ISO_A3_EH,
+#                  iso3c=if_else(WB_A3=="NOR",WB_A3,ISO_A3_EH)) #fix norway which has no iso3c
+# 
+# #countries <- geojsonio::topojson_read(paste0(dir,"/misc/WB_countries_Admin0_topojson.json")
+# #                                     ) 
+# countries <- countries_df %>%
+#   geojson_json(geometry='polygon')
+
+plot_fun <- function(variables) {
+
+  plot_df <- SPI_2019 %>%
+    rename(value= !! variables) %>%
+    mutate(income=factor(income, levels=c('High income', 'Upper middle income', 
+                                          'Lower middle income', 'Low income')))
+  
+  p <- ggplot(plot_df,aes(income, value, color=income, label=country)) + 
+    geom_quasirandom() + 
+    theme_ipsum() +
+    ylab('Score') +
+    theme(legend.position='none') 
+  
+  ggplotly(p,
+           tooltip=c('label','y'))
+    
+}
+
+```
+
+
+SPI Dimension Scores {.tabset }
+-------------------------------------
+
+### Dimension 1: Data Use
+```{r dim1}
+
+plot_fun('SPI.INDEX.DIM1')
+
+```
+
+### Dimension 2: Data Services
+```{r dim2}
+
+plot_fun('SPI.INDEX.DIM2')
+
+
+```
+
+### Dimension 3: Data Products
+```{r dim3}
+
+plot_fun('SPI.INDEX.DIM3')
+
+
+```
+
+### Dimension 4: Data Sources
+```{r dim4}
+
+plot_fun('SPI.INDEX.DIM4')
+
+
+```
+
+### Dimension 5: Data Infrastructure
+```{r dim5}
+
+plot_fun('SPI.INDEX.DIM5')
+
+
+```
+
