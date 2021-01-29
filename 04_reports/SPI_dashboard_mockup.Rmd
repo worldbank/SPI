@@ -204,6 +204,31 @@ Click on the region and income group bars for more breakdowns by country.
 
 ```{r drilldown, echo=FALSE}
 
+#set groups and colors
+spi_groups_quantiles <- quantile(SPI_2019$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+
+
+SPI_map <- SPI_2019 %>%
+    mutate(spi_groups=case_when(
+      between(SPI.INDEX, spi_groups_quantiles[4],100) ~ "Top 20%",
+      between(SPI.INDEX, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(SPI.INDEX, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(SPI.INDEX, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(SPI.INDEX, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )),
+           value = as.numeric(spi_groups))  
+  
+
+  #set color pallete
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
+  col_pal_df <- as.data.frame(col_pal) %>%
+    rownames_to_column(var='spi_groups')
+
 #prep data
 region_SPI_df <- SPI_2019 %>%
     group_by(region) %>%
@@ -213,7 +238,13 @@ region_SPI_df <- SPI_2019 %>%
               SPI.INDEX.DIM2=round(wtd.mean(SPI.INDEX.DIM2, weights = weights, na.rm=T),0),
               SPI.INDEX.DIM3=round(wtd.mean(SPI.INDEX.DIM3, weights = weights, na.rm=T),0),
               SPI.INDEX.DIM4=round(wtd.mean(SPI.INDEX.DIM4, weights = weights, na.rm=T),0),
-              SPI.INDEX.DIM5=round(wtd.mean(SPI.INDEX.DIM5, weights = weights, na.rm=T),0))
+              SPI.INDEX.DIM5=round(wtd.mean(SPI.INDEX.DIM5, weights = weights, na.rm=T),0)) %>%
+  arrange(-SPI.INDEX) 
+
+region_order <- region_SPI_df$region
+
+region_SPI_df <- region_SPI_df %>%
+  mutate(region=factor(region, levels=region_order))
 
 income_SPI_df <- SPI_2019 %>%
     mutate(income=factor(income, levels=c('High income', 'Upper middle income', 
@@ -228,12 +259,13 @@ income_SPI_df <- SPI_2019 %>%
               SPI.INDEX.DIM5=round(wtd.mean(SPI.INDEX.DIM5, weights = weights, na.rm=T),0))
 
 #create the drilldown data first
-country_drilldown <- SPI_2019 %>%
+country_drilldown <- SPI_map %>%
   mutate(across(starts_with("SPI.INDEX"),round,0)) %>%
+  left_join(col_pal_df) %>% #add colors
   group_nest(region) %>%
   mutate(id=region,
          type='column',
-         data=map(data, mutate, name=country, y=SPI.INDEX),
+         data=map(data, mutate, name=country, y=SPI.INDEX, group=spi_groups, color=col_pal),
          data=map(data,list_parse)
   )
 
@@ -261,25 +293,31 @@ region_graph <- hchart(
   "column",
   hcaes(x = region, y = SPI.INDEX, name = region, drilldown = region),
   name = "SPI Overall Score",
-  colorByPoint = TRUE
+  colorByPoint = FALSE
 )
 
 region_graph <- region_graph %>% 
   hc_drilldown(
     allowPointDrilldown = TRUE,
     series = list_parse(country_drilldown)
-  ) 
+  )  %>%
+  hc_colorAxis(dataClassColor="category", 
+               dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
+                                  list(from=2, to=2, color="#acece7", name="4th Quintile"),
+                                  list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
+                                  list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
+                                  list(from=5, to=5, color="#ff9f1c", name="Bottom 20%")))
 
 region_graph <- region_graph %>%
   hc_tooltip(
     useHTML = TRUE,
     pointFormat = my_tooltips
     ) %>% 
-  hc_yAxis( title = "SPI Score") %>% 
-  hc_xAxis( title = "" ) %>%
-  hc_title(text = "SPI Overall Scores by Region in 2019" ) %>%
+  hc_yAxis( title = "SPI Score")  %>% 
+  hc_xAxis( title = "") %>% 
+  hc_title(text = "SPI Overall Scores by Region in 2019" )  %>%
   hc_subtitle(
-    text = "Click bar to see by county.",
+    text = "Click bar to see by country.",
     style = list(useHTML = TRUE)
   )
 
@@ -288,14 +326,15 @@ region_graph
 
 #create overall graph by income
 
-country_income_drilldown <- SPI_2019 %>%
+country_income_drilldown <- SPI_map %>%
   mutate(across(starts_with("SPI.INDEX"),round,0)) %>%
   mutate(income=factor(income, levels=c('High income', 'Upper middle income', 
                                           'Lower middle income', 'Low income'))) %>%
+  left_join(col_pal_df) %>% #add colors
   group_nest(income) %>%
   mutate(id=income,
          type='column',
-         data=map(data, mutate, name=country, y=SPI.INDEX),
+         data=map(data, mutate, name=country, y=SPI.INDEX, group=spi_groups, color=col_pal),
          data=map(data,list_parse)
   )
 
@@ -304,14 +343,20 @@ income_graph <- hchart(
   "column",
   hcaes(x = income, y = SPI.INDEX, name = income, drilldown = income),
   name = "SPI Overall Score",
-  colorByPoint = TRUE
+  colorByPoint = FALSE
 )
 
 income_graph <- income_graph %>% 
   hc_drilldown(
     allowPointDrilldown = TRUE,
     series = list_parse(country_income_drilldown)
-  ) 
+  ) %>%
+  hc_colorAxis(dataClassColor="category", 
+               dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
+                                  list(from=2, to=2, color="#acece7", name="4th Quintile"),
+                                  list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
+                                  list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
+                                  list(from=5, to=5, color="#ff9f1c", name="Bottom 20%")))
 
 income_graph <- income_graph %>%
   hc_tooltip(
@@ -322,7 +367,7 @@ income_graph <- income_graph %>%
   hc_xAxis( title = "" ) %>%
   hc_title(text = "SPI Overall Scores by Income Group in 2019" ) %>%
   hc_subtitle(
-    text = "Click bar to see by county.",
+    text = "Click bar to see by country.",
     style = list(useHTML = TRUE)
   )
 
@@ -426,6 +471,69 @@ leaflet(spi_map_overall,
             },
             title='Indicator value', position="bottomleft")   
 ```
+
+Here is an experimental hexagon map alternative.  This is attractive, because all countries are represented as the same physical size.  Just an alternative.
+
+```{r hexmap, out.height=400, out.width=700}
+
+
+########
+# Get data
+########
+# http://www.maartenlambrechts.com/2017/10/22/tutorial-a-worldtilegrid-with-ggplot2.html
+
+url <- "https://gist.githubusercontent.com/maartenzam/787498bbc07ae06b637447dbd430ea0a/raw/9a9dafafb44d8990f85243a9c7ca349acd3a0d07/worldtilegrid.csv"
+
+hexmap <- read_csv(url)
+
+spi_hex <- SPI_map %>%
+  select(iso3c, SPI.INDEX, spi_groups, value) %>%
+  mutate(SPI_Index=round(SPI.INDEX,0))
+
+hexmap <- hexmap %>% 
+  rename_all(str_replace_all, "\\.", "_") %>% 
+  select(x, y, name, alpha_2, alpha_3) %>%
+  mutate(iso2c=alpha_2) %>%
+  left_join(country_list) %>%
+  select(x,y,country,iso3c, region) %>%
+  left_join(spi_hex) %>%
+  filter(!is.na(region))
+
+########
+# Make Chart
+########
+
+hchart(hexmap, "tilemap", hcaes(x = x, y = -y, value=value),  name='SPI Overall Score') %>% 
+  hc_chart(type = "tilemap") %>% 
+  hc_plotOptions(
+    series = list(
+      dataLabels = list(
+        enabled = TRUE,
+        format = "{point.iso3c}",
+        color = "black",
+        style = list(textOutline = FALSE)
+      )
+    )
+  ) %>% 
+  hc_tooltip(
+    
+    pointFormat =  "Score: {point.SPI_Index} <br> Maturity level: {point.spi_groups} <br> Country: {point.country}"
+    ) %>% 
+  hc_colorAxis(dataClassColor="category", 
+     dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
+                        list(from=2, to=2, color="#acece7", name="4th Quintile"),
+                        list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
+                        list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
+                        list(from=5, to=5, color="#ff9f1c", name="Bottom 20%"))) %>%
+  hc_title(
+    text = "SPI Overall Scores in 2019"
+  ) %>%
+  hc_xAxis(visible = FALSE) %>% 
+  hc_yAxis(visible = FALSE) %>% 
+  hc_size(height = 1000)
+
+```
+
 
 # Dashboard
 

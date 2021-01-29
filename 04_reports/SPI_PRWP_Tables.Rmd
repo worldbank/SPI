@@ -40,6 +40,7 @@ library(zoo)
 library(estimatr)
 library(ggpmisc)
 library(ggthemes)
+library(ggtext)
 #set directories
 dir <- here()
 
@@ -641,6 +642,15 @@ FitFlextableToPage <- function(ft, pgwidth = 6){
   return(ft_out)
 }
 
+#add equations to plots
+eq_plot_txt <- function(data) {
+  eq <- lm_robust(SPI.INDEX ~ value, data=data, se_type='HC2')
+  coef <- coef(eq)
+  std_err <- sqrt(diag(vcov(eq)))
+  r_2<- summary(eq)$r.squared
+  glue::glue("y = {round(coef[1],3)} + {round(coef[2],3)} x, R<sup>2</sup> = {round(r_2[1],3)} <br> &nbsp;   &nbsp;  	&nbsp; 	&nbsp;   ({round(std_err[1],3)}) &nbsp;   &nbsp;  ({round(std_err[2],3)})" )
+}
+
 ```
 
 # Figures
@@ -715,6 +725,8 @@ fcs_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scor
 
 ```{r pov_gini}
 
+
+
 #poverty
 pov_df <- wbstats::wb_data(country="countries_only", 
               indicator='SI.POV.DDAY',
@@ -730,6 +742,33 @@ pov_df_2019 <- pov_df %>%
   filter(date==2019) 
 
 
+eq <- lm_robust(SPI.INDEX ~ value, data=pov_df_2019, se_type='HC2')
+coef <- coef(eq)
+std_err <- sqrt(diag(vcov(eq)))
+r_2<- summary(eq)$r.squared
+eq_txt <- sprintf("y = %.3f + %.3f x, R^2 = %.3f \n     (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
+
+ # ggplot(data=pov_df_2019, aes(x=value, y=SPI.INDEX)) +
+ #  facet_wrap(~indicator) +
+ #  geom_text(aes(label=iso3c)) +
+ #  geom_smooth(method='lm') +
+ #  theme_bw() +
+ #  #scale_x_continuous(trans = scales::log2_trans()) +
+ #  ylab('SPI Overall Score') +
+ #  xlab('Poverty Headcount Ratio at $1.90 a day') +
+ #  stat_poly_eq(aes(label  = paste(stat(eq.label),
+ #                                stat(rr.label), sep = "*\", \"*")), 
+ #                     color='blue',
+ #                     label.x.npc = "left", label.y.npc = 0.1,
+ #                     formula = 'y~x', parse = TRUE, size = 4) +
+ #    stat_fit_tidy(method = "lm",
+ #                color='blue',
+ #                label.x = "right",
+ #                method.args = list(formula = y ~ x),
+ #                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
+ #                                              stat(x_estimate),
+ #                                              stat(x_p.value)))) +
+ #    theme(legend.position = 'bottom')
 
 
 pov_spi <- ggplot(data=pov_df_2019, aes(x=value, y=SPI.INDEX)) +
@@ -740,18 +779,12 @@ pov_spi <- ggplot(data=pov_df_2019, aes(x=value, y=SPI.INDEX)) +
   #scale_x_continuous(trans = scales::log2_trans()) +
   ylab('SPI Overall Score') +
   xlab('Poverty Headcount Ratio at $1.90 a day') +
-  stat_poly_eq(aes(label  = paste(stat(eq.label),
-                                stat(rr.label), sep = "*\", \"*")), 
-                     label.x.npc = "left", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4) +
-    stat_fit_tidy(method = "lm",
-                label.x = "right",
-                method.args = list(formula = y ~ x),
-                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
-                                              stat(x_estimate),
-                                              stat(x_p.value)))) +
-    theme(legend.position = 'bottom')
-
+  geom_richtext(
+    aes(x = 20, y = 5,label = eq_plot_txt(pov_df_2019), hjust=0.2)
+  ) +
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2019), hjust = 0) +
+  theme(legend.position = 'bottom'
+        )
 
 #gini
 gini_df <- wbstats::wb_data(
@@ -768,27 +801,42 @@ gini_df <- wbstats::wb_data(
 gini_df_2019 <- gini_df %>%
   filter(date==2019) 
 
-  gini_spi <- ggplot(data=gini_df_2019, aes(x=value, y=SPI.INDEX)) +
+
+
+  # gini_spi <- ggplot(data=gini_df_2019, aes(x=value, y=SPI.INDEX)) +
+  # facet_wrap(~indicator) +
+  # geom_text(aes(label=iso3c)) +
+  # geom_smooth(method='lm') +
+  # theme_bw() +
+  # ylab('SPI Overall Score') +
+  # xlab('Gini Index') +
+  # theme(legend.position = 'bottom') +
+  # stat_poly_eq(aes(label = paste(stat(eq.label),
+  #                               stat(rr.label), sep = "*\", \"*")), 
+  #                    color='blue',
+  #                    label.x.npc = "right", label.y.npc = 0.1,
+  #                    formula = 'y~x', parse = TRUE, size = 4) +
+  #     stat_fit_tidy(method = "lm",
+  #               label.x = "right",
+  #               color='blue',
+  #               method.args = list(formula = y ~ x),
+  #               mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
+  #                                             stat(x_estimate),
+  #                                             stat(x_p.value))))
+  
+
+gini_spi <- ggplot(data=gini_df_2019, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
   theme_bw() +
+  #scale_x_continuous(trans = scales::log2_trans()) +
   ylab('SPI Overall Score') +
-  xlab('Gini Index') +
-  theme(legend.position = 'bottom') +
-  stat_poly_eq(aes(label = paste(stat(eq.label),
-                                stat(rr.label), sep = "*\", \"*")), 
-                     label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4) +
-      stat_fit_tidy(method = "lm",
-                label.x = "right",
-                method.args = list(formula = y ~ x),
-                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
-                                              stat(x_estimate),
-                                              stat(x_p.value))))
-  
-
-
+  xlab('Gini Index')  +
+  geom_richtext(
+    aes(x = 40, y = 5,label = eq_plot_txt(gini_df_2019), hjust=0.2)
+  ) +
+    theme(legend.position = 'bottom')
 
 
 

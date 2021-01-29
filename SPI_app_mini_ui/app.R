@@ -21,6 +21,9 @@ library(skimr)
 library(Hmisc)
 library(flextable)
 library(skimr)
+# library(wbggeo)
+# library(wbgmaps)
+library(ggthemes)
 
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv')
@@ -50,7 +53,20 @@ country_info <- wb_countries() %>%
     filter(region!="Aggregates") %>%
     select(iso3c, country, region, income, lending)
 
-
+#For mapping the result
+# quality = "high"
+# maps <- wbgmaps::wbgmaps[[quality]]
+#load world bank map data
+load('maps.Rdata')
+standard_crop_wintri <- function() {
+  l <- list(
+    left=-12000000, right=16396891,
+    top=9400000, bottom=-6500000
+  )
+  l$xlim <- c(l$left, l$right)
+  l$ylim <- c(l$bottom, l$top)
+  l
+}
 # Define UI for application that draws a histogram
 ui <- miniPage(
   gadgetTitleBar("Statistical Performance Indicators"),
@@ -120,6 +136,7 @@ ui <- miniPage(
                                     choices=NULL,
                                     selected=c("All"),
                                     multiple=T),  
+                     plotOutput('weights_map', height='800px'),
                      withSpinner(DT::dataTableOutput("country_table", height='800px'))
                    ),
                    sidebarPanel(id = "weights",
@@ -676,6 +693,67 @@ server <- function(input, output,session) {
 
       
 
+      
+      
+    })
+    
+    output$weights_map <- renderPlot({
+      
+      indicator<-'SPI.INDEX'
+      title <- paste0('Overall SPI Index in ',input$country_year_choice)
+      
+      map_df <- df_country_table() %>%
+        filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+        group_by( country) %>%
+        #summarise(across(!! indicator,last)) %>%
+        rename(data_available=!! indicator) %>%
+        select(country, data_available) %>%
+        right_join(country_info) %>%
+        mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
+      
+      
+      spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      SPI_map <- map_df %>%
+        mutate(spi_groups=case_when(
+          between(data_available, spi_groups_quantiles[4],100) ~ "Top 20%",
+          between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+          between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+          between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+          between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+          
+        )) %>%
+        mutate(spi_groups=factor(spi_groups, 
+                                 levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+      
+      #set color pallete
+      col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+      names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+      
+      p1<-ggplot() +
+        geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
+        geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+        geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+        geom_path(data = maps$boundaries,
+                  aes(long, lat, group = group),
+                  color = "white",
+                  size = 0.3,
+                  lineend = maps$boundaries$lineend,
+                  linetype = maps$boundaries$linetype) +
+        scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+        scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+        scale_fill_manual(
+          name='SPI Score',
+          values=col_pal,
+          na.value='grey'
+        ) +
+        coord_equal() +
+        theme_map(base_size=16) +
+        labs(
+          title=str_wrap(title,100),
+          caption = 'Source: World Bank. Statistical Performance Indicators'
+        )
+      p1
       
       
     })

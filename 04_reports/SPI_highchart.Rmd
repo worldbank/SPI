@@ -202,7 +202,35 @@ SPI_map <- map_df %>%
                            levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )),
          value = as.numeric(spi_groups))  
 
+  #set color pallete
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
 
+p1<-ggplot() +
+    geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups, label=country), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+    geom_path(data = maps$boundaries,
+              aes(long, lat, group = group),
+              color = "white",
+              size = 0.1,
+              lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_manual(
+      name='SPI Score',
+      values=col_pal,
+      na.value='grey'
+    ) +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap('SPI Overall Score',100),
+      caption = 'Source: World Bank. Statistical Performance Indicators'
+    )
+ p1 %>%
+   ggplotly(tooltip=c('label','fill'))
 #read in TopoJSON from World Bank
 countries_df <- sf::st_read(paste0(dir,"/misc/WB_countries_Admin0.geojson")) %>%
             mutate(iso3c=ISO_A3_EH,
@@ -327,5 +355,57 @@ SPI_highchart_map <- hcmap('custom/world-robinson-lowres',
 
 
 SPI_highchart_map
+```
+
+```{r hexmap, out.height=10, out.width=12}
+
+
+########
+# Get data
+########
+# http://www.maartenlambrechts.com/2017/10/22/tutorial-a-worldtilegrid-with-ggplot2.html
+
+url <- "https://gist.githubusercontent.com/maartenzam/787498bbc07ae06b637447dbd430ea0a/raw/9a9dafafb44d8990f85243a9c7ca349acd3a0d07/worldtilegrid.csv"
+
+hexmap <- read_csv(url)
+
+hexmap <- hexmap %>% 
+  rename_all(str_replace_all, "\\.", "_") %>% 
+  select(x, y, name, alpha_2, alpha_3) %>%
+  mutate(iso3c=alpha_3) %>%
+  left_join(SPI_map) %>%
+  filter(!is.na(region))
+
+########
+# Make Chart
+########
+
+hchart(hexmap, "tilemap", hcaes(x = x, y = -y, name = country, group = region)) %>% 
+  hc_chart(type = "tilemap") %>% 
+  hc_plotOptions(
+    series = list(
+      dataLabels = list(
+        enabled = TRUE,
+        format = "{point.alpha_3}",
+        color = "white",
+        style = list(textOutline = FALSE)
+      )
+    )
+  ) %>% 
+  hc_tooltip(
+    headerFormat = "",
+    pointFormat =  "{point.country} {point.data_available}"
+    ) %>% 
+  hc_colorAxis(dataClassColor="category", 
+     dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
+                        list(from=2, to=2, color="#acece7", name="4th Quintile"),
+                        list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
+                        list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
+                        list(from=5, to=5, color="#ff9f1c", name="Bottom 20%"))) %>%
+  hc_title(
+    text = "SPI Overall Scores in 2019"
+  )
+  hc_xAxis(visible = FALSE) %>% 
+  hc_yAxis(visible = FALSE) 
 ```
 

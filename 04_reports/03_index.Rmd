@@ -39,6 +39,7 @@ library(zoo)
 library(estimatr)
 library(ggpmisc)
 library(ggthemes)
+library(ggtext)
 #set directories
 dir <- here()
 
@@ -204,7 +205,7 @@ spi_mapper  <- function(data, indicator, title) {
     geom_path(data = maps$boundaries,
               aes(long, lat, group = group),
               color = "white",
-              size = 0.1,
+              size = 0.3,
               lineend = maps$boundaries$lineend,
               linetype = maps$boundaries$linetype) +
     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
@@ -473,6 +474,16 @@ FitFlextableToPage <- function(ft, pgwidth = 6){
 
   ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
   return(ft_out)
+}
+
+#add equations to plots
+eq_plot_txt <- function(data) {
+  eq <- lm_robust(SPI.INDEX ~ value, data=data, se_type='HC2')
+  coef <- coef(eq)
+  std_err <- sqrt(diag(vcov(eq)))
+  r_2<- summary(eq)$r.squared
+  sprintf("y = %.3f + %.3f x, R<sup>2</sup> = %.3f <br>    (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
+
 }
 
 ```
@@ -1958,17 +1969,9 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
   theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Human Capital Index') +
-  stat_poly_eq(aes(label  = paste(stat(eq.label),
-                                stat(rr.label), sep = "*\", \"*")), 
-                     label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4) +
-    theme(legend.position = 'bottom') +
-  stat_fit_tidy(method = "lm",
-                label.x = "left",
-                method.args = list(formula = y ~ x),
-                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
-                                              stat(x_estimate),
-                                              stat(x_p.value))))
+  geom_richtext(
+    aes(x = 0.5, y = 20,label = eq_plot_txt(hci_df_2018)), hjust=0.2
+  ) 
 
 
 #GDP
@@ -1984,6 +1987,13 @@ gdp_df <- wbstats::wb_data(
 gdp_df_2019 <- gdp_df %>%
   filter(date==2019) 
 
+#text for plot
+eq <- lm_robust(SPI.INDEX ~ log(value), data=gdp_df_2019 , se_type='HC2')
+coef <- coef(eq)
+std_err <- sqrt(diag(vcov(eq)))
+r_2<- summary(eq)$r.squared
+plot_txt <- sprintf("y = %.3f + %.3f ln(x), R^2 = %.3f \n     (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
+
   gdp_spi <- ggplot(data=gdp_df_2019, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
@@ -1993,16 +2003,10 @@ gdp_df_2019 <- gdp_df %>%
   ylab('SPI Overall Score') +
   xlab('Log GDP Per Capita') +
   theme(legend.position = 'bottom') +
-  stat_poly_eq(aes(label = paste(stat(eq.label),
-                                stat(rr.label), sep = "*\", \"*")), 
-                     label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4) +
-  stat_fit_tidy(method = "lm",
-                label.x = "left",
-                method.args = list(formula = y ~ x),
-                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
-                                              stat(x_estimate),
-                                              stat(x_p.value))))
+  geom_richtext(
+    aes(x = 1000, y = 20,label = plot_txt), hjust=0.2
+  )   
+
   
 
 
@@ -2179,22 +2183,19 @@ There is a strong relationship between the SPI overall score and the government 
 
 
 ```{r geplot}
-ge_spi_plot <- ggplot(data=ge_df_2019, aes(x=GE.EST, y=SPI.INDEX)) +
+
+ge_df_2019 <- ge_df_2019 %>%
+  rename(value=GE.EST)
+
+ge_spi_plot <- ggplot(data=ge_df_2019, aes(x=value, y=SPI.INDEX)) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
   theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Government Effectiveness Score (z score)') +
-  stat_poly_eq(aes(label  = paste(stat(eq.label),
-                                stat(rr.label), sep = "*\", \"*")), 
-                     label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4) +
-    stat_fit_tidy(method = "lm",
-                label.x = "left",
-                method.args = list(formula = y ~ x),
-                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
-                                              stat(x_estimate),
-                                              stat(x_p.value)))) +
+  geom_richtext(
+    aes(x = 0.5, y = 5,label = eq_plot_txt(ge_df_2019), hjust=0.2)
+  ) +  
     theme(legend.position = 'bottom') +
   labs(
     title='Plot of SPI overall score on Government Effectiveness',
@@ -2289,7 +2290,7 @@ ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2019, color=region)) +
   theme(legend.position = 'bottom') +
     stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
-                     color='black',
+                     color='blue',
                      label.x.npc = "right", label.y.npc = 0.1,
                      formula = 'y~x', parse = TRUE, size = 4) +
   guides(
