@@ -28,8 +28,8 @@ library(here)
 # devtools::install_github("worldbank/wbgviz", subdir = "wbgcharts")
 # devtools::install_github("worldbank/wbgviz", subdir = "wbggeo")
 # devtools::install_github("worldbank/wbgviz", subdir = "wbgmaps")
-library(wbggeo)
-library(wbgmaps)
+# library(wbggeo)
+# library(wbgmaps)
 library(ggthemes)
 library(Hmisc)
 library(httr)
@@ -104,9 +104,20 @@ SPI_2019 <- SPI %>%
 
 ```{r spi_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
-#Now map the result
-quality = "high"
-maps <- wbgmaps::wbgmaps[[quality]]
+#For mapping the result
+# quality = "high"
+# maps <- wbgmaps::wbgmaps[[quality]]
+#load world bank map data
+load(paste0(raw_dir, '/misc/maps.Rdata'))
+standard_crop_wintri <- function() {
+  l <- list(
+    left=-12000000, right=16396891,
+    top=9400000, bottom=-6500000
+  )
+  l$xlim <- c(l$left, l$right)
+  l$ylim <- c(l$bottom, l$top)
+  l
+}
 
 
 country_metadata <- wbstats::wbcountries()

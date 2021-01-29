@@ -17,8 +17,8 @@ library(here)
 # devtools::install_github("worldbank/wbgviz", subdir = "wbgcharts")
 # devtools::install_github("worldbank/wbgviz", subdir = "wbggeo")
 # devtools::install_github("worldbank/wbgviz", subdir = "wbgmaps")
-library(wbggeo)
-library(wbgmaps)
+# library(wbggeo)
+# library(wbgmaps)
 library(ggthemes)
 library(Hmisc)
 library(httr)
@@ -66,9 +66,20 @@ iso3c <- read_csv(paste(raw_dir,'metadata/iso_codes.csv', sep="/"),
 ```{r programs, include=FALSE}
 
 
-#Now map the result
-quality = "high"
-maps <- wbgmaps::wbgmaps[[quality]]
+#For mapping the result
+# quality = "high"
+# maps <- wbgmaps::wbgmaps[[quality]]
+#load world bank map data
+load(paste0(raw_dir, '/misc/maps.Rdata'))
+standard_crop_wintri <- function() {
+  l <- list(
+    left=-12000000, right=16396891,
+    top=9400000, bottom=-6500000
+  )
+  l$xlim <- c(l$left, l$right)
+  l$ylim <- c(l$bottom, l$top)
+  l
+}
 
 country_metadata <- wbstats::wbcountries()
 
@@ -95,7 +106,7 @@ spi_mapper  <- function(data, indicator, title) {
      geom_path(data = maps$boundaries,
                aes(long, lat, group = group),
                color = "white",
-               size = 0.1,
+               size = 0.3,
                lineend = maps$boundaries$lineend,
               linetype = maps$boundaries$linetype) +
     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
@@ -1623,7 +1634,7 @@ This indicator measures the richness and openness of online access.
 
 ### Source
 
-Our source for this indicator is Open Data Watch.  From Open Data watch:
+Our source for this indicator is Open Data Watch.  Data was last accessed on December 17, 2020.  From Open Data watch:
 
 > The Open Data Inventory (ODIN) assesses the coverage and openness of official statistics to help identify gaps, promote open data policies, improve access, and encourage dialogue 
 > between national statistical offices (NSOs) and data users. ODIN 2018/19 includes 178 countries, including most all OECD countries. Two-year comparisons are for all countries with

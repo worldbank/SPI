@@ -27,8 +27,8 @@ library(here)
 # devtools::install_github("worldbank/wbgviz", subdir = "wbgcharts")
 # devtools::install_github("worldbank/wbgviz", subdir = "wbggeo")
 # devtools::install_github("worldbank/wbgviz", subdir = "wbgmaps")
-library(wbggeo)
-library(wbgmaps)
+# library(wbggeo)
+# library(wbgmaps)
 library(ggthemes)
 library(Hmisc)
 library(httr)
@@ -156,9 +156,21 @@ pillars <- read_csv(paste(raw_dir, '/metadata/SPI_pillars.csv', sep=""))
 ```{r programs, include=FALSE}
 
 
-#Now map the result
-quality = "high"
-maps <- wbgmaps::wbgmaps[[quality]]
+#For mapping the result
+# quality = "high"
+# maps <- wbgmaps::wbgmaps[[quality]]
+#load world bank map data
+load(paste0(raw_dir, '/misc/maps.Rdata'))
+standard_crop_wintri <- function() {
+  l <- list(
+    left=-12000000, right=16396891,
+    top=9400000, bottom=-6500000
+  )
+  l$xlim <- c(l$left, l$right)
+  l$ylim <- c(l$bottom, l$top)
+  l
+}
+
 
 country_metadata <- wbstats::wbcountries()
 
@@ -491,7 +503,7 @@ eq_plot_txt <- function(data) {
 # Pillars of the new SPI
 
 
-A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as dimensions. We refer to the 22 cells in the framwork in Figure 1 as pillars. Finally, each pillar may be composed of multiple indicators. For instance, the pillar on censuses and surveys is made up indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.
+A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as dimensions. We refer to the 22 cells in the framework in Figure 1 as pillars. Finally, each pillar may be composed of multiple indicators. For instance, the pillar on censuses and surveys is made up indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.
 
 ## Data use
 
@@ -618,6 +630,38 @@ Below is a brief description of the information (or lack thereof) we have availa
 
 This process of eliminating some pillars due to lack of established methodology or country coverage results in 12 pillars. This includes 1 on data use, 3 on data services, 4 on data products, 3 on data sources, and 1 on data infrastructure.
 
+## Process for Collecting Data
+
+The SPI team pulls from a variety of sources to populate our indicators.  While greater detail for each specific indicator can be found in our technical documentation (XX https://stacybri.github.io/SPI/ XX) describing each indicator, we will provide a general overview of how we collect data for our indicators.
+
+Starting with dimension 1, we collect data four distinct sources.  The World Bank supplies the data for two indicators.  The indicator on availability of comparable poverty data comes from the World Bank's Povcalnet system, and the indicator on quality of debt service data comes from the World Bank's WDI metadata.  Data on the availability of under 5 child mortality data comes from the UN IGME. The indicator on availability of safely managed drinking water data is sources from the JMP, which is a combined effort by the WHO and UNICEF.  The indicator on the availability of source data for measuring labor force participation comes from the ILO.  Each of these sources will be updated annually prior to each annual data release.  The date the data is updated for each of these sources is available in our technical documentation.  
+
+For dimension 2, we collect data on data dissemination subscriptions based on the IMF's dissemination standards bulletin board website (https://dsbb.imf.org/). We follow the same update schedule for this information as the World Bank's WDI metadata, so that as of the release these two sources are identical.  The online access indicator is sources from the Open Data Watch ODIN openness score.  The date on which we downloaded the data is available in the technical description for this indicator.  The indicator for data services is based on whether a portal is available, compliant with the Data Documentation Initiative (DDI) and Dublin Core’s RDF metadata standards, which has a listing of surveys and microdata sets that can provide the necessary data and reference for follow-up.  This information is collected manually by visiting each NSO website and checking whether or not such a system exists.  In the raw data, a hyperlink is available to the portal, but any changes to the website of the NSO may cause this link to no longer function.
+
+For the data products dimension, we examine whether countries are reporting data to monitor the SDG goals.  For this dimension, indicators are produced using the UN Global SDG monitoring database. For each SDG indicator, we check whether a value is available within a five year window of the date.  For instance, for the date of 2019, we examine whether any value is available between the years 2015-2019. For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  We chose to use the UN Global SDG monitoring database as a primary source, rather than individual NSO websites, because data submitted to the UN Global SDG monitoring database goes through a standardized process including quality control and documentation.
+
+For dimension 4, on censuses and surveys, we take two complementary approaches to collecting data. The first is to make use of data submitted to the World Bank, IHSN, ILO, and FAO microdata libraries.  We keep only surveys that are marked as nationally representative, and classify surveys (as either health surveys, agriculture surveys, labor force surveys, etc) using the classifications submitted to the microdata libraries.  The contents of our searches in these databases are available in our github repository.  The second approach is a manual data collection effort, where we directly visit NSO websites to be sure no surveys were missed.  For this second approach, where our team visits NSO websites, the survey or census must be publicly available and accessible to be included in this search.  If surveys or censuses are missed in this search, the easiest way for a country to get it included would be to create an entry for the survey at one of the microdata libraries.  Information on the completeness of the CRVS is sourced from the UN SDG global monitoring database.  Information on whether data is available at the 1st administrative level, for our geospatial indicator, is sourced from Open Data Watch, similar to the process for the data openness score.
+
+For dimension 5, data on the legislation indicator and finance indicators are pulled from the UN SDG global monitoring database.  Indicators in the standards and methods pillar are sourced primarily through the IMF.  Information on the system of national accounts in use and national accounts base year are sourced through the World Bank's WDI metadata.  Data for the business process indicator is sourced through the United Nations Industrial Development Organization (UNIDO) and United Nations Economic Commission for Europe (UNECE).
+
+## Handling Missing Data 
+
+For a full description of the methodology behind each specific indicator, please consult the technical documentation.  However, we did follow an approach of handling missing values and lining up data, which will be describe in general terms below.  For indicators where we had a value for a previous year (say a value in 2018 but not 2019), we would fill in from the previous value.  For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator.
+
+For indicators where we had no data for any years, we chose not to impute a value.  In that case, the value for that indicator is null and the country will not have a value for any pillars or dimensions where that value is used.
+
+
+## Process for Disputing the Data
+
+Countries will be given an opportunity to dispute the values that make up our indicators.  Our team takes every effort to make sure the data presented in our Statistical Performance Indicators are accurate, but it is possible that the sources we used to assign values for our indicators are not accurate despite these efforts.  Because of this, countries will have a window to provide documentation for any disputed values, and our team will be happy to adjust our scores based on this new information.  Precise details for this process will be made available in the future.
+
+## Process for Updating Indicators
+
+While we feel our framework is comprehensive and is designed to capture the contours most statistical systems over at least the next 15 years, we fully recognize that our indicators themselves have room for improvement.  At launch, we will tag our version of our statistical performance indicators as version 1.0.  From there, we will likely have a 2-3 year cycle, where we continuously update the values of our indicators, but do not change the methodology for constructing them. At the end of the 2-3 year period, we may introduce a indicator or we may re-evaluate how our current indicators are constructed based on feedback from countries and other groups.  At that point, we will launch a major update as version 2.0, or version 3.0 as the sequence goes.  Smaller updates, where for instance we adjust a countries value based on the data dispute process we describe above, will be labeled with a decimal point as version 1.1 for instance.
+
+In order to be completely transparent, we will track all changes to our methodology through a publicly available github repository and we will publish all code and underlying data to produce our indicators.
+
+
 # SPI Index Methodology 
 
 We next produce an overall score by combining the indicators we have collected.  Our statistical performance indicators have a three level structure, and our SPI overall score will be formed by sequentially aggregating each level.
@@ -628,7 +672,7 @@ $$ SPI.PILLAR_{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
 
 where $SPI.PILLAR_{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
 
-After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental statistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.  Additionally, for Dimension 4 on data sources, we give censuses and surveys separate weights, so that censuses get 1/4th weight, surveys get 1/4th weight, admin data gets 1/4th weight, and geospatial gets 1/4th weight.  While censuses and surveys are in the same pillar in our framework, and therefore would typically only recieve 1/3 weight in this dimension, because of their importance in producing many indicators, they are given extra weight with a sum of 1/2.
+After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental statistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.  Additionally, for Dimension 4 on data sources, we give censuses and surveys separate weights, so that censuses get 1/4th weight, surveys get 1/4th weight, admin data gets 1/4th weight, and geospatial gets 1/4th weight.  While censuses and surveys are in the same pillar in our framework, and therefore would typically only receive 1/3 weight in this dimension, because of their importance in producing many indicators, they are given extra weight with a sum of 1/2.
 
 $$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{\omega_{ds} \times SPI.PILLAR_{ctds}}{N_S} $$
 
@@ -646,22 +690,6 @@ Where SPI.INDEX is the SPI overall score. SPI.DIM are the 5 SPI dimensions liste
 
 The nested structure of our index and the summation methods used to build an overall score ensure the axiomatic properties outlined in [@cameron2019measuring].  These include symmetry, monotonicity, and subgroup decomposability.
 
-## Handling Missing Data 
-
-For a full description of the methodology behind each specific indicator, please consult the technical documentation.  However, we did follow an approach of handling missing values and lining up data, which will be describe in general terms below.  For indicators where we had a value for a previous year (say a value in 2018 but not 2019), we would fill in from the previous value.  For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator.
-
-For indicators where we had no data for any years, we chose not to impute a value.  In that case, the value for that indicator is null and the country will not have a value for any pillars or dimensions where that value is used.
-
-
-## Process for Disputing the Data
-
-Countries will be given an opportunity to dispute the values that make up our indicators.  Our team takes every effort to make sure the data presented in ouf Statistical Performance Indicators are accurate, but it is possible that the sources we used to assign values for our indicators are not accurate despite these efforts.  Because of this, countries will have a window to provide documentation for any disputed values, and our team will be happy to adjust our scores based on this new information.  Precise details for this process will be made available in the future.
-
-## Process for Updating Indicators
-
-While we feel our framework is comprehensive and is designed to capture the contours most statistical systems over at least the next 15 years, we fully recognize that our indicators themselves have room for improvement.  At launch, we will tag our version of our statistical performance indicators as version 1.0.  From there, we will likely have a 2-3 year cycle, where we continuously update the values of our indicators, but do not change the methodology for constructing them. At the end of the 2-3 year period, we may introduce a indicator or we may re-evaluate how our current indicators are constructed based on feedback from countries and other groups.  At that point, we will launch a major update as version 2.0, or version 3.0 as the sequence goes.  Smaller updates, where for instance we adjust a countries value based on the data dispute process we describe above, will be labeled with a decimal point as version 1.1 for instance.
-
-In order to be completely transparent, we will track all changes to our methodology through a publicly available github repository and we will publish all code and underlying data to produce our indicators.
 
 # SPI Overall Scores
 
@@ -784,7 +812,7 @@ spi_index_df_temp <- spi_index_df_temp %>%
 
 
 #first index 
-# just take a simple numeric average acorss all indicators
+# just take a simple numeric average across all indicators
 # I will forward fill all indicators if they are missing
 spi_index_simple <- spi_index_df_temp %>%
   arrange(country, date) %>%
@@ -1239,7 +1267,7 @@ For the data products dimension, we examine whether countries are reporting data
 
 For this indicator, there is a weaker relationship between a country's income level and their performance in this dimension.  No countries receive a maximum score of 100, which would indicate that they report on every SDG indicator at least once inside a 5 year window.  Additionally, no country scores 0, which would indicate that they have reported no information for any of the SDG indicators.
 
-While it is conceivable that some countries may have data values for these indicators on their NSO websites, for instance, rather than posted on the UN Global SDG monitoring database, we took the perspective that to produce a data product that is full usable a country's national statistical system should provide that information in an internationally comparable way.  And we have judged countries accordingly.  Additionally, for countries that have not reported values for SDG monitoring, but do possess a value, a simple way to improve their score on this dimension would be to submit all of their indicators to the UN database.  For OECD countries, we didi supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  Even with this supplemental data from the OECD included, there is considerable room for improvement in reporting on the SDGs.
+While it is conceivable that some countries may have data values for these indicators on their NSO websites, for instance, rather than posted on the UN Global SDG monitoring database, we took the perspective that to produce a data product that is full usable a country's national statistical system should provide that information in an internationally comparable way.  And we have judged countries accordingly.  Additionally, for countries that have not reported values for SDG monitoring, but do possess a value, a simple way to improve their score on this dimension would be to submit all of their indicators to the UN database.  For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  Even with this supplemental data from the OECD included, there is considerable room for improvement in reporting on the SDGs.
 
 We exclude values that were produced by an international organization through modeling  We do include values that are either country reported, country adjusted, estimated, or is included as global monitoring data.  This is based on the UN SDG metadata.  For each value of the indicator, the responsible international agency has been requested to indicate whether the national data were adjusted, estimated, modeled or are the result of global monitoring. The “nature” of the data in the SDG database is determined as follows:
 
@@ -1336,7 +1364,7 @@ FitFlextableToPage(maturity_tab) %>%
 
 
 #################
-# Nested Index with high income, OECD coutries top coded
+# Nested Index with high income, OECD countries top coded
 ################
   spi_index_df_dim3_alt <- spi_index_df_temp %>%
   arrange(country, date) %>%
@@ -2176,7 +2204,7 @@ A common justification for improving statistical systems is that doing so can le
 
 [@kraay2010worldwide] produce a set of Worldwide Governance Indicators, including a measure of government effectiveness.  According to the WGI metadata, the government effectiveness indicator captures perceptions of the quality of public services, the quality of the civil service and the degree of its independence from political pressures, the quality of policy formulation and implementation, and the credibility of the government's commitment to such policies. The estimate gives the country's score on the aggregate indicator, in units of a standard normal distribution, i.e. ranging from approximately -2.5 to 2.5.^[Detailed documentation of the WGI, interactive tools for exploring the data, and full access to the underlying source data available at www.govindicators.org. The WGI are produced by Daniel Kaufmann (Natural Resource Governance Institute and Brookings Institution) and Aart Kraay (World Bank Development Research Group).].  The government effectiveness indicator is available from 1996 to 2019.
 
-There is a strong relationship between the SPI overall score and the government effectivenss indicator.  The correlation between the two in 2019 is `r round(corr_ge,2)`.  The scatterplot below shows the relationship between the SPI overall score and the government effectivenss indicator.
+There is a strong relationship between the SPI overall score and the government effectiveness indicator.  The correlation between the two in 2019 is `r round(corr_ge,2)`.  The scatterplot below shows the relationship between the SPI overall score and the government effectiveness indicator.
 
 
 
