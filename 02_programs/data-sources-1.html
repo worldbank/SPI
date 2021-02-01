@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-01-22" />
+<meta name="date" content="2021-02-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -316,7 +316,7 @@ cost, and time use. Some issues, such as gender and food security, are of
 interest to most agriculture surveys.</p>
 <p>1 Point. 3 or more surveys done within past 10 years<br />
 0.67 Points. 2 surveys done within past 10 years;<br />
-0.33 Points. 1 survey done within past 10 years;
+0.33 Points. 1 survey done within past 10 years;<br />
 0 Points. None within past 10 years</p>
 </div>
 <div id="labor-force-survey" class="section level4" number="5.1.1.6">
@@ -355,7 +355,7 @@ for information about the establishment itself and/or employee characteristics
 and demographics.</p>
 <p>1 Point. 3 or more surveys done within past 10 years<br />
 0.67 Points. 2 surveys done within past 10 years;<br />
-0.33 Points. 1 survey done within past 10 years;
+0.33 Points. 1 survey done within past 10 years;<br />
 0 Points. None within past 10 years</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="data-sources-1.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#pull data for population and agriculture census from WDI metadata</span></span>
 <span id="cb33-2"><a href="data-sources-1.html#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -536,54 +536,54 @@ and demographics.</p>
 <span id="cb34-139"><a href="data-sources-1.html#cb34-139" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-140"><a href="data-sources-1.html#cb34-140" aria-hidden="true" tabindex="-1"></a><span class="co">#Population Censuses</span></span>
 <span id="cb34-141"><a href="data-sources-1.html#cb34-141" aria-hidden="true" tabindex="-1"></a>cs1_df <span class="ot">&lt;-</span>pop_census_df <span class="sc">%&gt;%</span></span>
-<span id="cb34-142"><a href="data-sources-1.html#cb34-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.1.POPU.CENSUS=</span>Latest.population.census,</span>
+<span id="cb34-142"><a href="data-sources-1.html#cb34-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.1.POPU=</span>Latest.population.census,</span>
 <span id="cb34-143"><a href="data-sources-1.html#cb34-143" aria-hidden="true" tabindex="-1"></a>         <span class="at">SPI.D4.1.1.POPU=</span>indicator) <span class="sc">%&gt;%</span></span>
 <span id="cb34-144"><a href="data-sources-1.html#cb34-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
 <span id="cb34-145"><a href="data-sources-1.html#cb34-145" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-146"><a href="data-sources-1.html#cb34-146" aria-hidden="true" tabindex="-1"></a><span class="co">#Agriculture census  </span></span>
 <span id="cb34-147"><a href="data-sources-1.html#cb34-147" aria-hidden="true" tabindex="-1"></a>cs2_df <span class="ot">&lt;-</span>ag_census_df <span class="sc">%&gt;%</span></span>
-<span id="cb34-148"><a href="data-sources-1.html#cb34-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.2.AGRI.CENSUS=</span>Latest.agricultural.census,</span>
+<span id="cb34-148"><a href="data-sources-1.html#cb34-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.2.AGRI=</span>Latest.agricultural.census,</span>
 <span id="cb34-149"><a href="data-sources-1.html#cb34-149" aria-hidden="true" tabindex="-1"></a>         <span class="at">SPI.D4.1.2.AGRI=</span>indicator) <span class="sc">%&gt;%</span></span>
 <span id="cb34-150"><a href="data-sources-1.html#cb34-150" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
 <span id="cb34-151"><a href="data-sources-1.html#cb34-151" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-152"><a href="data-sources-1.html#cb34-152" aria-hidden="true" tabindex="-1"></a><span class="co">#Business/establishment census </span></span>
 <span id="cb34-153"><a href="data-sources-1.html#cb34-153" aria-hidden="true" tabindex="-1"></a>cs3_df <span class="ot">&lt;-</span><span class="fu">census_fun</span>(<span class="st">&#39;D4.1.3.CEN.BIZZ&#39;</span>, <span class="st">&#39;BIZZ.CENSUS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-154"><a href="data-sources-1.html#cb34-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.3.BIZZ.CENSUS=</span>input_var,</span>
+<span id="cb34-154"><a href="data-sources-1.html#cb34-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.3.BIZZ=</span>input_var,</span>
 <span id="cb34-155"><a href="data-sources-1.html#cb34-155" aria-hidden="true" tabindex="-1"></a>         <span class="at">RAW.D4.1.3.BIZZ.CENSUS_nada=</span>nada_dates,</span>
 <span id="cb34-156"><a href="data-sources-1.html#cb34-156" aria-hidden="true" tabindex="-1"></a>         <span class="at">SPI.D4.1.3.BIZZ=</span>indicator) <span class="sc">%&gt;%</span></span>
 <span id="cb34-157"><a href="data-sources-1.html#cb34-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
 <span id="cb34-158"><a href="data-sources-1.html#cb34-158" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-159"><a href="data-sources-1.html#cb34-159" aria-hidden="true" tabindex="-1"></a><span class="co">#Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey</span></span>
 <span id="cb34-160"><a href="data-sources-1.html#cb34-160" aria-hidden="true" tabindex="-1"></a>cs4_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.4.SVY.HOUS&#39;</span>, <span class="st">&#39;HOUS.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-161"><a href="data-sources-1.html#cb34-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.4.HOUS.SURVEYS=</span>input_var,</span>
+<span id="cb34-161"><a href="data-sources-1.html#cb34-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.4.HOUS=</span>input_var,</span>
 <span id="cb34-162"><a href="data-sources-1.html#cb34-162" aria-hidden="true" tabindex="-1"></a>         <span class="at">RAW.D4.1.4.HOUS.SURVEYS_nada=</span>nada_dates,</span>
 <span id="cb34-163"><a href="data-sources-1.html#cb34-163" aria-hidden="true" tabindex="-1"></a>         <span class="at">SPI.D4.1.4.HOUS=</span>indicator) <span class="sc">%&gt;%</span></span>
 <span id="cb34-164"><a href="data-sources-1.html#cb34-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
 <span id="cb34-165"><a href="data-sources-1.html#cb34-165" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-166"><a href="data-sources-1.html#cb34-166" aria-hidden="true" tabindex="-1"></a><span class="co">#Agriculture survey </span></span>
 <span id="cb34-167"><a href="data-sources-1.html#cb34-167" aria-hidden="true" tabindex="-1"></a>cs5_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.5.SVY.AGRI&#39;</span>, <span class="st">&#39;AGRI.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-168"><a href="data-sources-1.html#cb34-168" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.5.AGRI.SURVEYS=</span>input_var,</span>
+<span id="cb34-168"><a href="data-sources-1.html#cb34-168" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.5.AGSVY=</span>input_var,</span>
 <span id="cb34-169"><a href="data-sources-1.html#cb34-169" aria-hidden="true" tabindex="-1"></a>         <span class="at">RAW.D4.1.5.AGRI.SURVEYS_nada=</span>nada_dates,</span>
 <span id="cb34-170"><a href="data-sources-1.html#cb34-170" aria-hidden="true" tabindex="-1"></a>         <span class="at">SPI.D4.1.5.AGSVY=</span>indicator) <span class="sc">%&gt;%</span></span>
 <span id="cb34-171"><a href="data-sources-1.html#cb34-171" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
 <span id="cb34-172"><a href="data-sources-1.html#cb34-172" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-173"><a href="data-sources-1.html#cb34-173" aria-hidden="true" tabindex="-1"></a><span class="co">#Labor Force Survey </span></span>
 <span id="cb34-174"><a href="data-sources-1.html#cb34-174" aria-hidden="true" tabindex="-1"></a>cs6_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.6.SVY.LABR&#39;</span>, <span class="st">&#39;LABR.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-175"><a href="data-sources-1.html#cb34-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.6.LABR.SURVEYS=</span>input_var,</span>
+<span id="cb34-175"><a href="data-sources-1.html#cb34-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.6.LABR=</span>input_var,</span>
 <span id="cb34-176"><a href="data-sources-1.html#cb34-176" aria-hidden="true" tabindex="-1"></a>         <span class="at">RAW.D4.1.6.LABR.SURVEYS_nada=</span>nada_dates,</span>
 <span id="cb34-177"><a href="data-sources-1.html#cb34-177" aria-hidden="true" tabindex="-1"></a>         <span class="at">SPI.D4.1.6.LABR=</span>indicator) <span class="sc">%&gt;%</span></span>
 <span id="cb34-178"><a href="data-sources-1.html#cb34-178" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
 <span id="cb34-179"><a href="data-sources-1.html#cb34-179" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-180"><a href="data-sources-1.html#cb34-180" aria-hidden="true" tabindex="-1"></a><span class="co">#Health/Demographic survey</span></span>
 <span id="cb34-181"><a href="data-sources-1.html#cb34-181" aria-hidden="true" tabindex="-1"></a>cs7_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.7.SVY.HLTH&#39;</span>, <span class="st">&#39;HLTH.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-182"><a href="data-sources-1.html#cb34-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.7.HLTH.SURVEYS=</span>input_var,</span>
+<span id="cb34-182"><a href="data-sources-1.html#cb34-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.7.HLTH=</span>input_var,</span>
 <span id="cb34-183"><a href="data-sources-1.html#cb34-183" aria-hidden="true" tabindex="-1"></a>         <span class="at">RAW.D4.1.7.HLTH.SURVEYS_nada=</span>nada_dates,</span>
 <span id="cb34-184"><a href="data-sources-1.html#cb34-184" aria-hidden="true" tabindex="-1"></a>         <span class="at">SPI.D4.1.7.HLTH=</span>indicator) <span class="sc">%&gt;%</span></span>
 <span id="cb34-185"><a href="data-sources-1.html#cb34-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
 <span id="cb34-186"><a href="data-sources-1.html#cb34-186" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-187"><a href="data-sources-1.html#cb34-187" aria-hidden="true" tabindex="-1"></a><span class="co">#Business/establishment survey  </span></span>
 <span id="cb34-188"><a href="data-sources-1.html#cb34-188" aria-hidden="true" tabindex="-1"></a>cs8_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.8.SVY.BIZZ&#39;</span>, <span class="st">&#39;BIZZ.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-189"><a href="data-sources-1.html#cb34-189" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.8.BIZZ.SURVEYS=</span>input_var,</span>
+<span id="cb34-189"><a href="data-sources-1.html#cb34-189" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.8.BZSVY=</span>input_var,</span>
 <span id="cb34-190"><a href="data-sources-1.html#cb34-190" aria-hidden="true" tabindex="-1"></a>         <span class="at">RAW.D4.1.8.BIZZ.SURVEYS_nada=</span>nada_dates,</span>
 <span id="cb34-191"><a href="data-sources-1.html#cb34-191" aria-hidden="true" tabindex="-1"></a>         <span class="at">SPI.D4.1.8.BZSVY=</span>indicator) <span class="sc">%&gt;%</span></span>
 <span id="cb34-192"><a href="data-sources-1.html#cb34-192" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
