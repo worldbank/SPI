@@ -126,10 +126,7 @@ study_df_internal <- study_df_internal %>%
 write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_surveys.csv",sep="")) #write to csv
 gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
 
-series_types_wb <- study_df_internal %>%
-  group_by(series_info) %>%
-  summarise(n=n()
-            )
+
 
 
 ```
@@ -139,6 +136,11 @@ series_types_wb <- study_df_internal %>%
 ```{r save, echo=TRUE}
 
 study_df_internal <- read_csv(paste(output_dir, "microdata_library_surveys.csv", sep="/"))
+
+series_types_wb <- study_df_internal %>%
+  group_by(series_info) %>%
+  summarise(n=n()
+            )
 
 saver <- function(indicator,filename) {
   
@@ -168,7 +170,7 @@ survey_df <- study_df_internal %>%
   write_excel_csv(survey_df, path = paste(output_dir, filename, sep="")) #write to csv
 }
 
-saver('hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
+saver('lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
 
 saver('ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
 
