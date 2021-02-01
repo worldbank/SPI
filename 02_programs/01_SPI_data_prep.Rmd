@@ -1605,8 +1605,8 @@ D2.1_DSDR <- df %>%
      IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
     TRUE ~ 0 ))  %>%
   bind_rows(D2.1_DSDR_sci) %>%
-  rename(RAW.D2.1.IDDS=IDDS) %>%
-  select(iso3c,  date, RAW.D2.1.IDDS, SPI.D2.1.GDDS  ) %>%
+  rename(RAW.D2.1.GDDS=IDDS) %>%
+  select(iso3c,  date, RAW.D2.1.GDDS, SPI.D2.1.GDDS  ) %>%
   left_join(country_metadata)
 
 D2.1_DSDR_map <- D2.1_DSDR 
@@ -2286,54 +2286,54 @@ survey_fun  <- function(data, input_var) {
 
 #Population Censuses
 cs1_df <-pop_census_df %>%
-  rename(RAW.D4.1.1.POPU.CENSUS=Latest.population.census,
+  rename(RAW.D4.1.1.POPU=Latest.population.census,
          SPI.D4.1.1.POPU=indicator) %>%
   select(iso3c, date, starts_with("SPI"), starts_with("RAW"))
 
 #Agriculture census  
 cs2_df <-ag_census_df %>%
-  rename(RAW.D4.1.2.AGRI.CENSUS=Latest.agricultural.census,
+  rename(RAW.D4.1.2.AGRI=Latest.agricultural.census,
          SPI.D4.1.2.AGRI=indicator) %>%
   select(iso3c, date, starts_with("SPI"), starts_with("RAW"))
 
 #Business/establishment census 
 cs3_df <-census_fun('D4.1.3.CEN.BIZZ', 'BIZZ.CENSUS') %>%
-  rename(RAW.D4.1.3.BIZZ.CENSUS=input_var,
+  rename(RAW.D4.1.3.BIZZ=input_var,
          RAW.D4.1.3.BIZZ.CENSUS_nada=nada_dates,
          SPI.D4.1.3.BIZZ=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey
 cs4_df <-survey_fun('D4.1.4.SVY.HOUS', 'HOUS.SURVEYS') %>%
-  rename(RAW.D4.1.4.HOUS.SURVEYS=input_var,
+  rename(RAW.D4.1.4.HOUS=input_var,
          RAW.D4.1.4.HOUS.SURVEYS_nada=nada_dates,
          SPI.D4.1.4.HOUS=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Agriculture survey 
 cs5_df <-survey_fun('D4.1.5.SVY.AGRI', 'AGRI.SURVEYS') %>%
-  rename(RAW.D4.1.5.AGRI.SURVEYS=input_var,
+  rename(RAW.D4.1.5.AGSVY=input_var,
          RAW.D4.1.5.AGRI.SURVEYS_nada=nada_dates,
          SPI.D4.1.5.AGSVY=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Labor Force Survey 
 cs6_df <-survey_fun('D4.1.6.SVY.LABR', 'LABR.SURVEYS') %>%
-  rename(RAW.D4.1.6.LABR.SURVEYS=input_var,
+  rename(RAW.D4.1.6.LABR=input_var,
          RAW.D4.1.6.LABR.SURVEYS_nada=nada_dates,
          SPI.D4.1.6.LABR=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Health/Demographic survey
 cs7_df <-survey_fun('D4.1.7.SVY.HLTH', 'HLTH.SURVEYS') %>%
-  rename(RAW.D4.1.7.HLTH.SURVEYS=input_var,
+  rename(RAW.D4.1.7.HLTH=input_var,
          RAW.D4.1.7.HLTH.SURVEYS_nada=nada_dates,
          SPI.D4.1.7.HLTH=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Business/establishment survey  
 cs8_df <-survey_fun('D4.1.8.SVY.BIZZ', 'BIZZ.SURVEYS') %>%
-  rename(RAW.D4.1.8.BIZZ.SURVEYS=input_var,
+  rename(RAW.D4.1.8.BZSVY=input_var,
          RAW.D4.1.8.BIZZ.SURVEYS_nada=nada_dates,
          SPI.D4.1.8.BZSVY=indicator) %>%
   select(country, date, starts_with("SPI"), starts_with("RAW"))
