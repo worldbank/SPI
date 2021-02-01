@@ -9,7 +9,7 @@ The new Statistical Performance Indicators (SPI) are designed to monitor how wel
 We identify five key dimensions of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These dimensions can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining.
 
 <p align = "center">
-<img src = "04_reports/SPI_cycle.PNG" width = "700">
+<img src = "misc/SPI_cycle.PNG" width = "700">
 </p>
 
 
@@ -26,7 +26,7 @@ The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 b
 
 *Figure 1: The Dimensions and Pillars that Construct the New SPI*
 <p align = "center">
-<img src = "04_reports/SPI_dashboard.PNG" width = "700">
+<img src = "misc/SPI_dashboard.PNG" width = "700">
 </p>
 
 
@@ -50,13 +50,15 @@ We are collecting data on indicators for the 22 pillars above. For dissemination
 
 There are several subfolders in this repository.  Below is a list of the most important files.
 
+Run_SPI.R contains a master file to run the two most important scripts: 01-data_prep.Rmd and 02-SPI_index.Rmd.  If you just want to reproduce the results, then simply execute this file.
+
   1. 01_raw_data contains the raw data for the project for each indicator.  This folder contains several subfolders linked to the 22 pillars in our framework.
 
-  2. 02_programs contains the cleaning code to clean each indicator.  This code is consolidated into a single R Markdown file, 01_data_prep.Rmd, which also automatically writes a technical document for the indicators titled, "01_data_prep.pdf".  Inside this technical document, one can find the detailed description and methodology behind each indicator.
+  2. 02_programs contains the cleaning code to clean each indicator.  This code is consolidated into a single R Markdown file, 01-data_prep.Rmd, which also automatically writes a technical document for the indicators.  Inside this technical document, one can find the detailed description and methodology behind each indicator.  The folder also contains code to create an overall index to compare country performance.  The code to create the index is 02-SPI_index.Rmd.
 
-  3. 03_output_data.  This folder contains a number of final output files in either csv or stata .dta format.  The most important of these files are the SPI_data.csv, which contains the data for each country containing the final indicator values for each of our Statistical Performance Indicators.  The SPI_index.csv file contains this data as well, but also includes a set of indices, including an overall score for countries, based on the values of their indicators.  The methodology for the index can be found in the 04_reports folder.
+  3. 03_output_data.  This folder contains a number of final output files in either csv or stata .dta format.  The most important of these files are the SPI_data.csv, which contains the data for each country containing the final indicator values for each of our Statistical Performance Indicators.  The SPI_index.csv file contains this data as well, but also includes a set of indices, including an overall score for countries, based on the values of their indicators.  
 
-  4. 04_reports contains several R Markdown files that produce various analyses and reports.  The most imporant of these include the 03_index.Rmd.  This file contains the code to produce our SPI Overall Score and dimension indices.  It also writes our SPI technical report.
+
 
 # R code
 
@@ -67,4 +69,3 @@ This repository contains several files from the R package "renv".  The renv pack
 There may be some issue with a few packages in particular.  These are World Bank specific packages to produce maps that conform with World Bank geospatial boundaries.  These can be downloaded here (https://github.com/worldbank/wbgviz).
 
 
-   
