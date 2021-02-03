@@ -1005,8 +1005,11 @@ for (i in c(2004:2019)) {
   }
 }
 
-
-
+#fix countries not included
+D3.1.AKI<-D3.1.AKI %>%
+  right_join(spi_df_empty) %>%
+  mutate(SPI.D1.5.POV=if_else(lendingID=="LNX",1,SPI.D1.5.POV)) %>%#we give non-IDA/IBRD/blend countries credit for this, because they are not measured in database
+  select(country, iso3c, date, SPI.D1.5.POV)
 ```
 
 

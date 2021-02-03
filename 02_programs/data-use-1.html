@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-02-01" />
+<meta name="date" content="2021-02-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -378,7 +378,13 @@ Quality (1 points total):
 <span id="cb2-94"><a href="data-use-1.html#cb2-94" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bind_rows</span>(temp) <span class="sc">%&gt;%</span></span>
 <span id="cb2-95"><a href="data-use-1.html#cb2-95" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="sc">-</span>date, iso3c)</span>
 <span id="cb2-96"><a href="data-use-1.html#cb2-96" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-97"><a href="data-use-1.html#cb2-97" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb2-97"><a href="data-use-1.html#cb2-97" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-98"><a href="data-use-1.html#cb2-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-99"><a href="data-use-1.html#cb2-99" aria-hidden="true" tabindex="-1"></a><span class="co">#fix countries not included</span></span>
+<span id="cb2-100"><a href="data-use-1.html#cb2-100" aria-hidden="true" tabindex="-1"></a>D3.<span class="fl">1.</span>AKI<span class="ot">&lt;-</span>D3.<span class="fl">1.</span>AKI <span class="sc">%&gt;%</span></span>
+<span id="cb2-101"><a href="data-use-1.html#cb2-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(spi_df_empty) <span class="sc">%&gt;%</span></span>
+<span id="cb2-102"><a href="data-use-1.html#cb2-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D1.5.POV=</span><span class="fu">if_else</span>(lendingID<span class="sc">==</span><span class="st">&quot;LNX&quot;</span>,<span class="dv">1</span>,SPI.D1.<span class="fl">5.</span>POV)) <span class="sc">%&gt;%</span><span class="co">#we give non-IDA/IBRD/blend countries credit for this, because they are not measured in database</span></span>
+<span id="cb2-103"><a href="data-use-1.html#cb2-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, iso3c, date, SPI.D1.<span class="fl">5.</span>POV)</span></code></pre></div>
 </div>
 <div id="mortality-rate-under-5-per-1000-live-births" class="section level3" number="2.5.2">
 <h3><span class="header-section-number">2.5.2</span> Mortality rate, under-5 (per 1,000 live births)</h3>

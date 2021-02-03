@@ -1234,6 +1234,141 @@ name <- 'SPI Overall Score'
 
 ```
 
+# Changes over time
+
+```{r changesfun}
+
+changes_fun <- function(var, title, start_date, end_date) {
+  
+
+    changes_df <-  SPI %>%
+        left_join(country_metadata) %>%
+        select(iso3c, country, region, lending, income, date, var , population) %>%
+        filter(date==start_date | date==end_date) %>%
+        mutate(period=case_when(
+          date==start_date ~ 'start',
+          date==end_date ~ 'end'
+        ))
+      
+      
+      # Rearrange for Plot
+
+
+      #set up data
+      changes_df_temp <- changes_df %>%
+        select(country,iso3c, period, var) %>%
+        pivot_longer( #create dataset that is countryXdateXindicator
+          cols = var,
+          names_to = 'series',
+          values_to = 'values'
+        ) %>% 
+        unique() %>%
+        filter(!is.na(values)) %>%
+        pivot_wider( #reshape to be countryxindicator with columns with data
+          id_cols=c('country','iso3c','series'),
+          names_from='period',
+          values_from='values'
+        ) %>%
+        mutate(change=end-start,
+               color=if_else(change>=0,'improved', 'decreased'))  %>%
+        left_join(metadata) %>%
+        ungroup() 
+      
+      #read in 2016 metadata for lending classficiations
+      WDI_metadata_2016 <- read_csv(paste0(raw_dir,"/metadata/WDI_metadata_2019.csv")) %>%
+        as_tibble(.name_repair='universal') %>%
+        transmute(country=Table.Name,
+                  lending=Lending.category,
+                  region=Region,
+                  income=Income.Group)
+      
+      df_country_time <- changes_df_temp %>%
+        left_join(WDI_metadata_2016) %>% #get lending classifications for 2019
+        filter(!is.na(region)) %>%
+        #filter(lending %in% c('IBRD','IDA','Blend')) %>%
+        group_by(lending) %>%
+        arrange(-end) %>% 
+        mutate(Country=factor(country, levels=unique(changes_df_temp$country))) 
+      
+      
+p <- ggplot(df_country_time, aes(x=Country)) +
+        facet_wrap(~lending,scales = 'free_y', nrow=2) +
+        geom_point(aes(y=start), shape=16) +
+        geom_point(aes(y=end), color='blue', shape=17) +
+        geom_segment( aes(x=Country ,xend=Country, y=start, yend=end,
+                          color=color)) +
+        scale_color_manual(values = c('decreased' = "red", 'improved' = "green")) +
+        scale_y_continuous(name='SPI Value') +
+        coord_flip() +
+        theme_bw() +
+        labs(
+          color = 'Change'
+        ) +
+        ylab('SPI Value') +
+        labs(
+          title=str_wrap(paste0('Change in ', title, ' from ',start_date,' to ', end_date,' by Lending Type'),70),
+          subtitle='Lending group based on 2019 classification'
+        )
+      
+
+print(p)            
+
+}     
+      
+```
+
+```{r changesplot, fig.height=12}
+
+changes_fun('SPI.INDEX', 'SPI Overall Score', 2016, 2019)
+
+```
+
+```{r changesplotpov, fig.height=12}
+
+changes_fun('SPI.D1.5.POV', 'SPI Comparable Poverty Data Indicator', 2004, 2019)
+
+```
+
+```{r changesplot1, fig.height=12}
+
+changes_fun('SPI.INDEX.DIM1', 'SPI Dimension 1 (Data Use) Score', 2016, 2019)
+
+```
+
+```{r changesplot2, fig.height=12}
+
+changes_fun('SPI.INDEX.DIM2', 'SPI Dimension 2 (Data Services) Score', 2016, 2019)
+
+```
+
+```{r changesplot3, fig.height=12}
+
+changes_fun('SPI.INDEX.DIM3', 'SPI Dimension 3 (Data Products) Score', 2016, 2019)
+
+```
+
+```{r changesplotpovind, fig.height=12}
+
+changes_fun('SPI.D3.1.POV', 'SPI Dimension 3 (Data Products) - SDG 1 Score', 2004, 2019)
+
+```
+```{r changesplot4, fig.height=12}
+
+changes_fun('SPI.INDEX.DIM4', 'SPI Dimension 4 (Data Sources) Score', 2016, 2019)
+
+```
+
+```{r changesplot4house, fig.height=12}
+
+changes_fun('SPI.D4.1.4.HOUS', 'SPI Dimension 4 - Household Survey Availability - Score', 2010, 2019)
+
+```
+
+```{r changesplot5, fig.height=12}
+
+changes_fun('SPI.INDEX.DIM5', 'SPI Dimension 5 (Data Infrastructure) Score', 2016, 2019)
+
+```
 # Tables
 
 ## Country SPI overall scores
