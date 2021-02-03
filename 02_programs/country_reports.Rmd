@@ -636,6 +636,139 @@ eq_plot_txt <- function(data) {
 
 ```
 
+# Country Figures
+
+```{r lollifun}
+
+
+      df_lolli <- spi_df_final %>%
+        select(iso3c, country, region,  income, date, starts_with('SPI'), population) %>%
+        filter(date==yr) %>%
+        mutate(ISO_A3_EH=iso3c) 
+      
+      #need to get the aggregates for the income group and region
+      country_select_info <- country_metadata %>%
+        filter(country==cntry)
+      
+      region_name<-country_select_info$region
+      income_name<-country_select_info$income
+      
+      #produce aggregation
+      region_agg <- df_lolli %>%
+        filter(region==region_name) %>%
+        summarise(across(starts_with('SPI'),~round(mean(as.numeric(.), na.rm=T),2))) %>%
+        mutate(country=region_name)
+      
+      income_agg <- df_lolli %>%
+        filter(income==income_name) %>%
+        summarise(across(starts_with('SPI'),~round(mean(as.numeric(.), na.rm=T),2))) %>%
+        mutate(country=income_name)
+      
+      #lollipop chart data
+        
+    lolli_df <- df_lolli %>%
+          filter(country==cntry) %>%
+          bind_rows(region_agg) %>%
+          bind_rows(income_agg) 
+        
+
+      
+      
+      
+    
+  
+    #################
+    # Functions
+    #################
+    
+    country_report_lolli_fn <- function(variables) {
+      
+      #set up data
+      lollip_df_temp <- lolli_df %>%
+        select(country, starts_with(variables)) %>%
+        pivot_longer(
+          cols = starts_with(variables),
+          names_to = 'source_id',
+          values_to = 'values'
+        ) %>% 
+        left_join(metadata) %>%
+        filter(!is.na(source_name)) %>%
+        mutate(source_name=str_wrap(source_name, 30)) %>%
+        mutate(source_name=factor(source_name, levels=unique(source_name)),
+               country=factor(country, levels=unique(country))) 
+        
+      #now use ggplot
+        lollip <- ggplot(lollip_df_temp,
+               aes(x=source_name, y=values, color=country)) +
+        geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=values), color="grey") +
+        geom_point(size=4) +
+        coord_flip() +
+        theme_bw() +
+        scale_x_discrete(limits = rev(levels(lollip_df_temp$source_name))) +
+        theme(
+          panel.grid.minor.y = element_blank(),
+          panel.grid.major.y = element_blank(),
+          axis.text.y=element_text(size=14),
+          legend.text = element_text(size=14),
+          plot.title = element_text(size=18),
+          legend.title = element_blank(),
+          legend.position = 'top'
+        ) +
+        xlab("") +
+        ylab("Indicator")
+      
+      lollip
+    }
+    
+    
+   
+    
+```
+
+```{r lolliplot1, fig.height=7, fig.width=10}
+
+  
+country_report_lolli_fn('SPI.D1') +
+  ggtitle(str_wrap(paste0(' Dimension 1 - Data Use - Indicator Data for ',cntry,' in ',yr,"."),50))
+      
+
+```
+
+```{r lolliplot2, fig.height=5, fig.width=10}
+
+  
+country_report_lolli_fn('SPI.D2') +
+  ggtitle(str_wrap(paste0(' Dimension 2 - Data Services - Indicator Data for ',cntry,' in ',yr,"."),50)) 
+      
+
+```
+
+```{r lolliplot3, fig.height=9, fig.width=10 }
+
+  
+country_report_lolli_fn('SPI.D3') +
+  ggtitle(str_wrap(paste0(' Dimension 3 - Data Products - Indicator Data for ',cntry,' in ',yr,"."),50)) 
+
+```
+
+```{r lolliplot4, fig.height=8, fig.width=10}
+
+  
+country_report_lolli_fn('SPI.D4') +
+  ggtitle(str_wrap(paste0(' Dimension 4 - Data Sources - Indicator Data for ',cntry,' in ',yr,"."),50))
+      
+
+```
+
+```{r lolliplot5, fig.height=8, fig.width=10}
+
+  
+country_report_lolli_fn('SPI.D5') +
+  ggtitle(str_wrap(paste0(' Dimension 5 - Data Infrastructure - Indicator Data for ',cntry,' in ',yr,"."),50))
+      
+
+```
+
 # Table of Raw Indicators and Scores
 
 ```{r}
@@ -672,7 +805,7 @@ country_df <- country_df_raw %>%
 metadata_merge <- metadata %>%
   filter(grepl('SPI.', source_id)) %>%
   mutate(indicator=str_replace(source_id, "SPI.","")) %>%
-  select(indicator, spi_indicator_description)
+  select(indicator, source_name, spi_indicator_description)
 
 country_disp <- country_df %>%
   select(indicator, Scored, Raw) %>%
@@ -682,12 +815,51 @@ country_disp <- country_df %>%
 
 ```
 
-```{r reports_table}
 
-flextable(country_disp) %>%
+
+```{r cs_reports_table}
+
+country_disp %>%
+  filter(grepl('D4.1',indicator)) %>%
+  select(source_name, Scored, Raw) %>%
+  flextable() %>%
     add_header_lines(paste0(cntry, ' SPI Indicator Data in ',yr,".")) %>%
     set_header_labels(values=list(
-                       indicator="ID", 
+                       source_name="Indicator", 
+                       Scored="Scored Value", 
+                       Raw="Census/Survey Dates"
+                                   )) %>%
+  FitFlextableToPage() %>%
+  width(width=1.6) %>%
+  align( align = "left", part = "body")
+
+```
+
+```{r msc_reports_table}
+
+country_disp %>%
+  filter(grepl('D5.2',indicator)) %>%
+  select(source_name, Scored, Raw) %>%
+  flextable() %>%
+    add_header_lines(paste0(cntry, ' SPI Indicator Data in ',yr,".")) %>%
+    set_header_labels(values=list(
+                       source_name="Indicator", 
+                       Scored="Scored Value", 
+                       Raw="Method, Standard, or Classification"
+                                   )) %>%
+  FitFlextableToPage() %>%
+  width(width=1.6) %>%
+  align( align = "left", part = "body")
+
+```
+
+```{r reports_table, eval=FALSE, include=FALSE}
+country_disp %>%
+select(source_name, Scored, Raw, spi_indicator_description) %>%
+flextable() %>%
+    add_header_lines(paste0(cntry, ' SPI Indicator Data in ',yr,".")) %>%
+    set_header_labels(values=list(
+                       source_name="ID", 
                        Scored="Scored Value", 
                        Raw="Raw Information",
                        spi_indicator_description="Brief Description"

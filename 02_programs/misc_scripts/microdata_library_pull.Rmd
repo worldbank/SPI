@@ -1,0 +1,322 @@
+---
+title: "Microdata Library Catalog"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Load Packages
+library(tidyverse)
+library(skimr)
+library(kableExtra)
+library(readxl)
+library(Hmisc)
+library(haven)
+library(gt)
+library(httr)
+library(jsonlite)
+library(tidytext)
+library(rsdmx)
+library(here)
+library(purrr)
+library(wbggeo)
+library(wbgmaps)
+library(ggthemes)
+
+
+# Directory for SPI csv files  to be created
+dir <- here()
+
+input_dir <- paste(dir, '01_raw_data', sep="/")
+output_dir <- paste(dir, '01_raw_data','4.1_SOCS/', sep="/")
+
+country_metadata <- wbstats::wbcountries()
+```
+
+## Introduction
+
+This file will pull metadata from the microdata library programmatically using the Microdata library API.
+
+Below we pull data from both the public, non-public (World Bank use only) microdata, and IHSN libraries using a restful API.  We will produce a dataframe for each of these sources containing the basic metadata for each survey included.
+
+```{r data_pulls}
+
+#public studies from World Bank microdata library
+public_base_url <- "http://microdata.worldbank.org/index.php/api/catalog" #define url
+study_request_public<-fromJSON(paste(public_base_url,"/search","?ps=10000", sep="")) # pull from url
+study_df_public <- study_request_public$result$rows #convert to dataframe
+write_excel_csv(study_df_public, path = paste(output_dir, "microdata_library_public_studies.csv", sep="")) #write to csv
+gt(as_tibble(head(study_df_public[,1:5]))) #display top 5 rows of dataframe
+
+
+# pull all surveys from IHSN
+ihsn_base_url <- "https://catalog.ihsn.org/index.php/api/catalog" #define url
+study_request_ihsn<-fromJSON(paste(ihsn_base_url,"/search","?ps=10000", sep="")) # pull from url
+study_df_ihsn <- study_request_ihsn$result$rows #convert to dataframe
+write_excel_csv(study_df_ihsn, path = paste(output_dir, "ihsn_library_public_studies.csv", sep="")) #write to csv
+
+
+#pull from ILO
+temp <- tempfile()
+ilo_base_url <- 'https://www.ilo.org/surveyLib/index.php/catalog/export/csv?ps=5000&collection[]=LFS' 
+download.file(ilo_base_url,temp)
+study_df_ilo <- read_csv(temp) #convert to dataframe
+write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv", sep="")) #write to csv
+
+
+
+
+#internal use studies from World Bank microdata library
+wb_base_url <- "http://microdatalib.worldbank.org/index.php/api/catalog" #define url
+study_request_wb<-fromJSON(paste(wb_base_url,"/search","?ps=15000", sep="")) # pull from url
+study_df_internal <- study_request_wb$result$rows
+write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_internal_studies.csv", sep="")) #write to csv
+
+
+gt(as_tibble(head(study_df_internal[,1:5])))
+
+
+
+#check for matches
+matches_wb_public <- study_df_internal %>%
+  inner_join(study_df_public, by=c('title', 'nation','year_start','year_end'))
+
+matches_wb_ihsn <- study_df_internal %>%
+  inner_join(study_df_ihsn, by=c('title', 'nation','year_start','year_end'))
+
+```
+
+# Microdatalib
+
+```{r micro_series_info}
+
+
+#get list of survey ids
+internal_series <- study_df_internal$idno
+
+
+
+
+
+#use purr to loop over list of surveys and return some extra info
+series_info_fn <- function(series) {
+      
+    info <- fromJSON(paste('http://microdatalib.worldbank.org/index.php/api/catalog/',series, sep=""))    
+    series_info <- as.character(info$dataset$metadata$study_desc$series_statement$series_name)
+    geog_coverage <- as.character(info$dataset$metadata$study_desc$study_info$geog_coverage)
+    tibble::tibble(series_info, geog_coverage)
+}
+
+
+#now produce a dataframe with the more info on survey
+study_df_internal <- study_df_internal %>%
+  mutate(series_info_dat=map(internal_series, possibly(series_info_fn, 
+                                           otherwise = 'Something Wrong'
+                                           )
+                     )
+  ) %>%
+  unnest(series_info_dat,
+         keep_empty=TRUE)
+
+study_df_internal <- study_df_internal %>%
+  mutate(across(is.list, as.character))
+
+
+write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_surveys.csv",sep="")) #write to csv
+gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
+
+
+
+
+```
+
+
+
+```{r save, echo=TRUE}
+
+study_df_internal <- read_csv(paste(output_dir, "microdata_library_surveys.csv", sep="/"))
+
+series_types_wb <- study_df_internal %>%
+  group_by(series_info) %>%
+  summarise(n=n()
+            )
+
+saver <- function(indicator,filename) {
+  
+  indicator<-indicator
+
+  
+survey_df <- study_df_internal %>%
+  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
+  rename(country=nation,
+         indicator_date=year_end) %>% 
+  mutate(country=case_when(
+    country=="Gambia" ~ "Gambia, The",
+    TRUE ~ country
+  )) %>%
+  filter(grepl(indicator, series_info)) %>%
+  group_by(country, indicator_date) %>%
+  summarise(freq=n(),
+            title=first(title)) %>%
+  group_by(country) %>%
+  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
+         nada_title = paste0(title, collapse = "; ")) %>%
+  select(country,indicator_date, nada_dates, nada_title)
+  
+    
+    
+  
+  write_excel_csv(survey_df, path = paste(output_dir, filename, sep="")) #write to csv
+}
+
+saver('lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
+
+saver('ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
+
+
+
+ 
+ # use ILO for source of labor force surveys
+survey_df_ilo <- study_df_ilo %>%
+  rename(indicator_date=year_end) %>% 
+  mutate(iso3c=str_sub(idno,1,3)) %>%
+  mutate(iso3c=if_else(iso3c=='KOS','XKX',iso3c)) %>% #fix kosovo
+  select(iso3c, indicator_date) %>%
+  left_join(country_metadata) %>%
+  select(country, indicator_date)
+
+
+#add Microdatalib
+indicator<-'lfs'
+survey_df <- study_df_internal %>%
+  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
+  rename(country=nation,
+         indicator_date=year_end) %>% 
+  mutate(country=case_when(
+    country=="Gambia" ~ "Gambia, The",
+    TRUE ~ country
+  )) %>%
+  filter(grepl(indicator, series_info)) %>%
+  bind_rows(survey_df_ilo) %>%
+  group_by(country, indicator_date) %>%
+  summarise(freq=n(),
+            title=first(title)) %>%
+  group_by(country) %>%
+  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
+         nada_title = paste0(title, collapse = "; ")) %>%
+  select(country,indicator_date, nada_dates, nada_title)
+
+  write_excel_csv(survey_df, path = paste(output_dir, 'D4.1.6.SVY.LABR_NADA.csv', sep="")) #write to csv
+
+ # saver('lfs' , 'D4.1.6.SVY.LABR_NADA.csv')
+
+saver('dhs|mics|whs|hea' , 'D4.1.7.SVY.HLTH_NADA.csv')
+
+saver('Business Survey' , 'D4.1.8.SVY.BIZZ_NADA.csv')
+
+
+#slightly modified code for estabilishment census
+survey_df <- study_df_internal %>%
+  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
+  rename(country=nation,
+         indicator_date=year_end) %>% 
+  mutate(country=case_when(
+    country=="Gambia" ~ "Gambia, The",
+    TRUE ~ country
+  )) %>%
+  filter(grepl('en/census|Enterprise Census', series_info)) %>%
+  filter(!grepl('Survey|Encuesta', title)) %>% #drop some cases where establishment surveys were categorized as censuses
+  group_by(country, indicator_date) %>%
+  summarise(freq=n(),
+            title=first(title)) %>%
+  group_by(country) %>%
+  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
+         nada_title = paste0(title, collapse = "; ")) %>%
+  select(country,indicator_date, nada_dates, nada_title)
+  
+    
+    
+  
+  write_excel_csv(survey_df, path = paste(output_dir, 'D4.1.3.CEN.BIZZ_NADA.csv', sep="")) #write to csv
+
+```
+
+
+```{r ihsn_map, echo=FALSE, fig.height=14, fig.width=14}
+
+
+#Now map the result
+quality = "high"
+maps <- wbgmaps::wbgmaps[[quality]]
+
+country_list <- wbstats::wbcountries()
+
+
+
+
+ihsn_mapper <- function(indicator,title_text) {
+  
+  indicator<-indicator
+
+  
+  ihsn_map <- study_df_internal %>%
+    rename(country=nation) %>% 
+    filter(year_end>=2000) %>% #surveys after 2010
+    filter(grepl(indicator, series_info)) %>%
+    group_by(country) %>%
+    summarise(freq=n()) %>%
+    mutate(ihsn_groups=case_when( #create groupings
+      freq == 0 ~ "0",
+      freq == 1 ~ "1",
+      freq == 2 ~ "2",      
+      freq == 3 ~ "3", 
+      freq == 4 ~ "4", 
+      freq >= 5 ~ "5+"
+           )) %>%
+    mutate(ihsn_groups=factor(ihsn_groups, levels=c("0", "1","2","3","4","5+" ))) %>%
+    right_join(country_list)
+  
+  
+  
+   ggplot() +
+    geom_map(data = ihsn_map, aes(map_id = iso3c, fill = ihsn_groups), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+     geom_path(data = maps$boundaries,
+               aes(long, lat, group = group),
+               color = "white",
+               size = 0.1,
+               lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_brewer(
+      name='Number of Surveys or Censuses',
+      palette='Greens',
+      na.value='grey'
+    ) +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap(title_text,100),
+      caption = 'Source: IHSN Microdata Library'
+    )
+
+
+}
+
+
+
+ihsn_mapper('[hh/ies]|Income/Expenditure/Household Survey' , 'Income/Expenditure/Household Survey')
+
+ihsn_mapper('[ag/oth]|Agricultural Survey' , 'Agricultural Survey')
+
+ihsn_mapper('lfs' , 'Labor Force Survey')
+
+ihsn_mapper('dhs|mics|whs|hea' , 'Health Survey')
+
+ihsn_mapper('[en/oth]|Enterprise Survey' , 'Business Survey')
+
+
+```

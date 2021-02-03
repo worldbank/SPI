@@ -1005,8 +1005,11 @@ for (i in c(2004:2019)) {
   }
 }
 
-
-
+#fix countries not included
+D3.1.AKI<-D3.1.AKI %>%
+  right_join(spi_df_empty) %>%
+  mutate(SPI.D1.5.POV=if_else(lendingID=="LNX",1,SPI.D1.5.POV)) %>%#we give non-IDA/IBRD/blend countries credit for this, because they are not measured in database
+  select(country, iso3c, date, SPI.D1.5.POV)
 ```
 
 
@@ -2186,7 +2189,7 @@ census_fun  <- function(data, input_var) {
     mutate(indicator_date=if_else(recency_indicator==TRUE, indicator_date, as.numeric(NA))) %>%
     group_by(country, date) %>%
     summarise(last_val=max(indicator_date, na.rm=T),
-      input_var=first(input_var),
+      input_var=paste(unique(indicator_date), collapse=","),
       nada_dates=first(nada_dates)) %>%
     mutate(indicator=case_when(
       (date-last_val<=10) & (date-last_val>0) ~ 1,
@@ -2264,7 +2267,7 @@ survey_fun  <- function(data, input_var) {
       sum(recency_indicator)==2 ~ 0.67, 
       sum(recency_indicator)==1 ~ 0.33, 
       TRUE ~ 0 ),
-      input_var=first(input_var),
+      input_var=paste(unique(indicator_date), collapse=", "),
       nada_dates=first(nada_dates)) %>%
   ungroup() %>%
   select(c( 'country', 'date', 'input_var','nada_dates', 'indicator')  ) %>%
