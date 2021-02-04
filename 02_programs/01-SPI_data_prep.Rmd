@@ -2178,7 +2178,8 @@ census_fun  <- function(data, input_var) {
     group_by(country, indicator_date) %>%
     summarise(input_var=first(na.omit(input_var)  ),
             nada_dates=first(na.omit(nada_dates)  ) 
-             )
+             ) %>%
+  filter(!is.na(indicator_date))
     
   
   #Now calculate our SPI score for this indicator
@@ -2248,7 +2249,8 @@ survey_fun  <- function(data, input_var) {
     group_by(country, indicator_date) %>%
     summarise(input_var=first(na.omit(input_var)  ),
             nada_dates=first(na.omit(nada_dates)  ) 
-             )
+             ) %>%
+  filter(!is.na(indicator_date))
     
   
   #Now calculate our SPI score for this indicator
@@ -3900,6 +3902,7 @@ spi_df_final <- spi_df_final %>%
 
 #write to csv
 spi_df_final %>%
+  distinct() %>%
   mutate(across(is.list, as.character)) %>%
   write_excel_csv( path = paste(output_dir, 'SPI_data.csv', sep="/"))
 

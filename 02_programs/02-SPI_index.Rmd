@@ -2099,7 +2099,7 @@ gdp_underperformers_df <- gdp_df_2019 %>%
 gdp_overperformers_plot <-  gdp_overperformers_df %>%
   bind_rows(gdp_underperformers_df) %>%
   arrange(resid) %>%
-  mutate(country=factor(country, levels=country),
+  mutate(country=factor(country, levels=unique(gdp_overperformers_df$country)),
          group=if_else(resid>=0, 'above','below')) %>%
   ggplot(aes(x=country, y=resid, color=group)) +
   geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +
@@ -2139,7 +2139,7 @@ hci_underperformers_df <- hci_df_2018 %>%
 hci_overperformers_plot <-  hci_overperformers_df %>%
   bind_rows(hci_underperformers_df) %>%
   arrange(resid) %>%
-  mutate(country=factor(country, levels=country),
+  mutate(country=factor(country, levels=unique(gdp_overperformers_df$country)),
          group=if_else(resid>=0, 'above','below')) %>%
   ggplot(aes(x=country, y=resid, color=group)) +
   geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +

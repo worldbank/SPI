@@ -84,7 +84,7 @@ metadata  <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep
   bind_rows(metadata2)
 
 #get list of country info
-country_list <- wbstats::wbcountries()
+country_list <- wbstats::wb_countries()
 
 
 SPI_2019 <- SPI %>%
@@ -93,7 +93,7 @@ SPI_2019 <- SPI %>%
   mutate(across(contains("SPI"),~1*.))
 
 #read in TopoJSON from World Bank
-countries_df <- sf::st_read(paste0(dir,"/misc/WB_countries_Admin0.geojson")) %>%
+countries_df <- sf::st_read(paste0(dir,"/01_raw_data/misc/WB_countries_Admin0_lowres.geojson")) %>%
             mutate(iso3c=ISO_A3_EH,
                  iso3c=if_else(WB_A3=="NOR",WB_A3,ISO_A3_EH)) #fix norway which has no iso3c
 
