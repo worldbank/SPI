@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-02-03" />
+<meta name="date" content="2021-02-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -276,29 +276,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb58-42"><a href="final-dataset.html#cb58-42" aria-hidden="true" tabindex="-1"></a>                <span class="sc">~</span><span class="fu">if_else</span>(( (income<span class="sc">==</span><span class="st">&#39;High income&#39;</span>)  <span class="sc">&amp;</span> (country <span class="sc">%in%</span> country_mod_list)),<span class="dv">1</span>,.)                )) </span></code></pre></div>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="final-dataset.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#write to csv</span></span>
 <span id="cb59-2"><a href="final-dataset.html#cb59-2" aria-hidden="true" tabindex="-1"></a>spi_df_final <span class="sc">%&gt;%</span></span>
-<span id="cb59-3"><a href="final-dataset.html#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(is.list, as.character)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-4"><a href="final-dataset.html#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_excel_csv</span>( <span class="at">path =</span> <span class="fu">paste</span>(output_dir, <span class="st">&#39;SPI_data.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>))</span>
-<span id="cb59-5"><a href="final-dataset.html#cb59-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-6"><a href="final-dataset.html#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="co">#label data</span></span>
-<span id="cb59-7"><a href="final-dataset.html#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="co">#read in metadata</span></span>
-<span id="cb59-8"><a href="final-dataset.html#cb59-8" aria-hidden="true" tabindex="-1"></a>names_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&#39;source_id&#39;</span><span class="ot">=</span><span class="fu">colnames</span>(spi_df_final))</span>
-<span id="cb59-9"><a href="final-dataset.html#cb59-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-10"><a href="final-dataset.html#cb59-10" aria-hidden="true" tabindex="-1"></a>spi_meta <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste</span>(raw_dir, <span class="st">&#39;/metadata/SPI_dimensions_sources.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-11"><a href="final-dataset.html#cb59-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(names_df) <span class="sc">%&gt;%</span></span>
-<span id="cb59-12"><a href="final-dataset.html#cb59-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source_name=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(source_name), <span class="fu">paste</span>(source_id), source_name)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-13"><a href="final-dataset.html#cb59-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">factor</span>(source_id, <span class="at">levels=</span><span class="fu">colnames</span>(spi_df_final)))</span>
-<span id="cb59-14"><a href="final-dataset.html#cb59-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-15"><a href="final-dataset.html#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="co">#label data</span></span>
-<span id="cb59-16"><a href="final-dataset.html#cb59-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-17"><a href="final-dataset.html#cb59-17" aria-hidden="true" tabindex="-1"></a><span class="fu">label</span>(spi_df_final) <span class="ot">=</span> <span class="fu">as.list</span>(spi_meta<span class="sc">$</span>source_name)</span>
-<span id="cb59-18"><a href="final-dataset.html#cb59-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="final-dataset.html#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb59-4"><a href="final-dataset.html#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(is.list, as.character)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-5"><a href="final-dataset.html#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_excel_csv</span>( <span class="at">path =</span> <span class="fu">paste</span>(output_dir, <span class="st">&#39;SPI_data.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>))</span>
+<span id="cb59-6"><a href="final-dataset.html#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-7"><a href="final-dataset.html#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="co">#label data</span></span>
+<span id="cb59-8"><a href="final-dataset.html#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="co">#read in metadata</span></span>
+<span id="cb59-9"><a href="final-dataset.html#cb59-9" aria-hidden="true" tabindex="-1"></a>names_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&#39;source_id&#39;</span><span class="ot">=</span><span class="fu">colnames</span>(spi_df_final))</span>
+<span id="cb59-10"><a href="final-dataset.html#cb59-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-11"><a href="final-dataset.html#cb59-11" aria-hidden="true" tabindex="-1"></a>spi_meta <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste</span>(raw_dir, <span class="st">&#39;/metadata/SPI_dimensions_sources.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-12"><a href="final-dataset.html#cb59-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(names_df) <span class="sc">%&gt;%</span></span>
+<span id="cb59-13"><a href="final-dataset.html#cb59-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source_name=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(source_name), <span class="fu">paste</span>(source_id), source_name)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-14"><a href="final-dataset.html#cb59-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">factor</span>(source_id, <span class="at">levels=</span><span class="fu">colnames</span>(spi_df_final)))</span>
+<span id="cb59-15"><a href="final-dataset.html#cb59-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-16"><a href="final-dataset.html#cb59-16" aria-hidden="true" tabindex="-1"></a><span class="co">#label data</span></span>
+<span id="cb59-17"><a href="final-dataset.html#cb59-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-18"><a href="final-dataset.html#cb59-18" aria-hidden="true" tabindex="-1"></a><span class="fu">label</span>(spi_df_final) <span class="ot">=</span> <span class="fu">as.list</span>(spi_meta<span class="sc">$</span>source_name)</span>
 <span id="cb59-19"><a href="final-dataset.html#cb59-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-20"><a href="final-dataset.html#cb59-20" aria-hidden="true" tabindex="-1"></a><span class="co">#write to stata</span></span>
-<span id="cb59-21"><a href="final-dataset.html#cb59-21" aria-hidden="true" tabindex="-1"></a>spi_df_final <span class="sc">%&gt;%</span></span>
-<span id="cb59-22"><a href="final-dataset.html#cb59-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(is.list, as.character)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-23"><a href="final-dataset.html#cb59-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">gsub</span>(<span class="st">&quot;.&quot;</span>,<span class="st">&quot;_&quot;</span>,.x, <span class="at">fixed=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-24"><a href="final-dataset.html#cb59-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>lat,<span class="sc">-</span>long) <span class="sc">%&gt;%</span></span>
-<span id="cb59-25"><a href="final-dataset.html#cb59-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_dta</span>( <span class="at">path =</span> <span class="fu">paste</span>(output_dir, <span class="st">&#39;SPI_data.dta&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>))</span></code></pre></div>
+<span id="cb59-20"><a href="final-dataset.html#cb59-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-21"><a href="final-dataset.html#cb59-21" aria-hidden="true" tabindex="-1"></a><span class="co">#write to stata</span></span>
+<span id="cb59-22"><a href="final-dataset.html#cb59-22" aria-hidden="true" tabindex="-1"></a>spi_df_final <span class="sc">%&gt;%</span></span>
+<span id="cb59-23"><a href="final-dataset.html#cb59-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(is.list, as.character)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-24"><a href="final-dataset.html#cb59-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">gsub</span>(<span class="st">&quot;.&quot;</span>,<span class="st">&quot;_&quot;</span>,.x, <span class="at">fixed=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb59-25"><a href="final-dataset.html#cb59-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>lat,<span class="sc">-</span>long) <span class="sc">%&gt;%</span></span>
+<span id="cb59-26"><a href="final-dataset.html#cb59-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_dta</span>( <span class="at">path =</span> <span class="fu">paste</span>(output_dir, <span class="st">&#39;SPI_data.dta&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>))</span></code></pre></div>
 </div>
             </section>
 
