@@ -3,7 +3,6 @@
   <head>
     <title>Statistical Performance Indicators</title>
     <meta charset="utf-8" />
-    <meta name="date" content="2021-02-05" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -13,7 +12,7 @@ class: center, middle, inverse, title-slide
 
 # Statistical Performance Indicators
 ### World Bank, Development Data Group
-### 2021-02-05
+### February 9th, 2021
 
 ---
 
@@ -64,7 +63,7 @@ class: center, middle, inverse, title-slide
 - SPI are tool for countries/donors to assess statistical system
 
 Based on feedback, goal was for SPI framework to:  
-  - Be forward looking (relevant at least 15 years)   
+  - Be forward looking (relevant ~ 10-15 years)   
   - Measure less advanced systems, as well as more advanced systems
   - Cover entire national statistical system, not just NSO   
   - Give countries incentives to build modern statistical system    
@@ -124,7 +123,7 @@ Based on feedback, goal was for SPI framework to:
   3. Data Products
       * Whether the country is able to produce relevant indicators, primarily related to SDGs    
   4. Data Sources
-      * Censuses and surveys, admin data, geospatial, private/citizen generated data    
+      * Censuses, surveys, admin data, geospatial, private/citizen generated data    
 ---
  # Framework  Overview
 
@@ -136,7 +135,7 @@ Based on feedback, goal was for SPI framework to:
   3. Data Products
       * Whether the country is able to produce relevant indicators, primarily related to SDGs    
   4. Data Sources
-      * Censuses and surveys, admin data, geospatial, private/citizen generated data      
+      * Censuses, surveys, admin data, geospatial, private/citizen generated data      
   5. Data Infrastructure
       * Legislation and governance, standards &amp; methods, skill, partnerships, and finance
 
@@ -145,9 +144,12 @@ Based on feedback, goal was for SPI framework to:
 ---
 # SPI Framework
 
-.center[![unchanged image](SPI_dashboard.png)]
+.center[![unchanged image](SPI_Framework.png)]
 
+---
+# SPI Framework
 
+.center[![unchanged image](SPI_Framework_filled.png)]
 
 
 
@@ -163,22 +165,19 @@ Overall Scores Across Countries
 
 
 
-
 ---
-# Overview Summary of Results
+# Index Methodology
 
-  * Next, we will provide overall index
-  * Will present aggregate scores overall and for each dimension    
-
-  * Given imprecision inherent in calculations, we recommend color coding providing subdivisions of maturity.   
+  * Produce overall score combining indicators
   
-Countries are grouped into five groups:   
-
-* **Top 20%**:    Shading in &lt;span style="color:#2ec4b6"&gt;dark green&lt;/span&gt;.    
-* **4th Quintile**:  Shading in &lt;span style="color:#acece7"&gt; light green&lt;/span&gt;.    
-* **3rd Quintile**:   Shading in &lt;span style="color:#f1dc76"&gt; yellow&lt;/span&gt;.  
-* **2nd Quintile**:   Shading in &lt;span style="color:#ffbf69"&gt; light orange&lt;/span&gt;.  
-* **Bottom 20%**:   Shading in &lt;span style="color:#ff9f1c"&gt; dark orange &lt;/span&gt;.   
+  * Three level structure:    
+    * Indicators nested under pillars (sub-dimensions): `\(SPI.PILLAR_{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I}\)`  
+    * Pillars (sub-dimensions) nested under dimensions: `\(SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{\omega_{ds} SPI.PILLAR_{ctds}}{N_S}\)`   
+    * Dimensions nested under overall score: `\(SPI.INDEX_{ct} = \sum_{d=1}^{N_D} \frac{\alpha_{d} SPI.DIM_{ctd}}{N_D}\)`  
+  
+  * Nested structure allows for symmetry, monotonicity, and subgroup decomposability      
+    
+ 
 ---
 
 &lt;style type="text/css"&gt;
@@ -195,92 +194,125 @@ Countries are grouped into five groups:
     }
 &lt;/style&gt;
 .center3[
-![](SPI_generic_presentation_files/figure-html/region_charts-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/region_charts-1.svg)&lt;!-- --&gt;
 ]
 ---
 
 .center3[
-![](SPI_generic_presentation_files/figure-html/country_charts-1.svg)&lt;!-- --&gt;
-]
----
-.center3[
-![](SPI_generic_presentation_files/figure-html/lending_charts-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/country_charts-1.svg)&lt;!-- --&gt;
 ]
 
 
 
 ---
 .center3[
-![](SPI_generic_presentation_files/figure-html/fcs_charts-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/lending_charts-1.svg)&lt;!-- --&gt;
+]
 
+
+
+---
+.center3[
+![](SPI_poverty_presentation_files/figure-html/fcs_charts-1.svg)&lt;!-- --&gt;
+
+]
+---
+# Overview Summary of Results
+
+
+  * Will present aggregate scores overall and for each dimension    
+
+  * Given imprecision inherent in calculations, we recommend color coding providing subdivisions of maturity.   
+  
+Countries are grouped into five groups:   
+
+* **Top 20%**:    Shading in &lt;span style="color:#2ec4b6"&gt;dark green&lt;/span&gt;.    
+* **4th Quintile**:  Shading in &lt;span style="color:#acece7"&gt; light green&lt;/span&gt;.    
+* **3rd Quintile**:   Shading in &lt;span style="color:#f1dc76"&gt; yellow&lt;/span&gt;.  
+* **2nd Quintile**:   Shading in &lt;span style="color:#ffbf69"&gt; light orange&lt;/span&gt;.  
+* **Bottom 20%**:   Shading in &lt;span style="color:#ff9f1c"&gt; dark orange &lt;/span&gt;.  
+---
+
+
+.center2[
+![](SPI_poverty_presentation_files/figure-html/overall_map-1.svg)&lt;!-- --&gt;
 ]
 ---
 
 
 .center2[
-![](SPI_generic_presentation_files/figure-html/overall_map-1.svg)&lt;!-- --&gt;
-]
----
-
-
-.center2[
-![](SPI_generic_presentation_files/figure-html/overall_map1-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/overall_map1-1.svg)&lt;!-- --&gt;
 ]
 
 ---
 
 .center2[
-![](SPI_generic_presentation_files/figure-html/overall_map2-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/overall_map2-1.svg)&lt;!-- --&gt;
 ]
 
 ---
 
 .center2[
-![](SPI_generic_presentation_files/figure-html/overall_map3-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/overall_map3-1.svg)&lt;!-- --&gt;
 ]
 
 ---
 
 .center2[
-![](SPI_generic_presentation_files/figure-html/overall_map4-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/overall_map4-1.svg)&lt;!-- --&gt;
 ]
 
 ---
 
 .center2[
-![](SPI_generic_presentation_files/figure-html/overall_map5-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/overall_map5-1.svg)&lt;!-- --&gt;
 
+]
+
+
+---
+class: inverse, middle, center
+
+Scores by Dimension Across Countries
+
+
+
+---
+.center2[
+![](SPI_poverty_presentation_files/figure-html/dimension_1_m-1.svg)&lt;!-- --&gt;
 ]
 
 ---
 
 .center2[
-![](SPI_generic_presentation_files/figure-html/dimension_1_m-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/dimension_2_m-1.svg)&lt;!-- --&gt;
 ]
 
 ---
 
 .center2[
-![](SPI_generic_presentation_files/figure-html/dimension_2_m-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/dimension_3_m-1.svg)&lt;!-- --&gt;
 ]
 
 ---
 
 .center2[
-![](SPI_generic_presentation_files/figure-html/dimension_3_m-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/dimension_4_m-1.svg)&lt;!-- --&gt;
 ]
 
 ---
 
 .center2[
-![](SPI_generic_presentation_files/figure-html/dimension_4_m-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/dimension_5_m-1.svg)&lt;!-- --&gt;
 ]
+
 
 ---
+class: inverse, middle, center
 
-.center2[
-![](SPI_generic_presentation_files/figure-html/dimension_5_m-1.svg)&lt;!-- --&gt;
-]
+Scores Over Time
+
+
 ---
 
 
@@ -290,7 +322,7 @@ Countries are grouped into five groups:
 .center3[
 
 
-![](SPI_generic_presentation_files/figure-html/elplot-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/elplot-1.svg)&lt;!-- --&gt;
 
 
 ]
@@ -299,7 +331,7 @@ Countries are grouped into five groups:
 .center3[
 
 
-![](SPI_generic_presentation_files/figure-html/elplotstacked-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/elplotstacked-1.svg)&lt;!-- --&gt;
 ]
 ---
 
@@ -307,7 +339,7 @@ Countries are grouped into five groups:
 
 
 .center3[
-![](SPI_generic_presentation_files/figure-html/changesplot-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/changesplot-1.svg)&lt;!-- --&gt;
 ]
 
 
@@ -329,6 +361,14 @@ Countries are grouped into five groups:
 .center3[
 
 ]
+
+
+---
+class: inverse, middle, center
+
+Relationship to Other Outcomes
+
+
 
 
 ---
@@ -338,8 +378,9 @@ Countries are grouped into five groups:
 
 
 
+
 .center3[
-![](SPI_generic_presentation_files/figure-html/gdpplot-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/gdpplot-1.svg)&lt;!-- --&gt;
 ]
 
 
@@ -355,15 +396,16 @@ Countries are grouped into five groups:
 
 
 ---
+
 .center3[
-![](SPI_generic_presentation_files/figure-html/dim_corr-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/dimcorr-1.svg)&lt;!-- --&gt;
 ]
 
 ---
 
 # Conclusions
 
-* Statistical Performance Indicators will be released along with the new World Development Report
+* Statistical Performance Indicators will be released at same time as new World Development Report
 
 * Meant to aid in country engagement around statistical capacity
 
@@ -383,7 +425,7 @@ Supplementary Charts and Figures
 
 ---
 .center3[
-![](SPI_generic_presentation_files/figure-html/fcs_charts2-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/fcs_charts2-1.svg)&lt;!-- --&gt;
 
 
 ]
@@ -396,8 +438,17 @@ Supplementary Charts and Figures
 
 
 .center3[
-![](SPI_generic_presentation_files/figure-html/sci-1.svg)&lt;!-- --&gt;
+![](SPI_poverty_presentation_files/figure-html/sci-1.svg)&lt;!-- --&gt;
 ]
+---
+.center3[
+![](SPI_poverty_presentation_files/figure-html/region_chartsnohic-1.svg)&lt;!-- --&gt;
+]
+---
+.center3[
+![](SPI_poverty_presentation_files/figure-html/region_charts_lowpop-1.svg)&lt;!-- --&gt;
+]
+
 
 ---
 class: inverse, middle, center

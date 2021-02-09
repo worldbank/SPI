@@ -125,7 +125,7 @@ pca_df <- spi_index_df %>%
   filter(date==2019) %>%
   filter(!is.na(SPI.INDEX)) %>%
   select(country, starts_with("SPI.")) %>%
-  select(-starts_with('SPI.INDEX')) %>%
+  select(-starts_with('SPI.INDEX'),-SPI.D5.1.DILG, -SPI.D5.5.DIFI) %>%
   column_to_rownames(var='country')
 
 pca_df <- pca_df %>% 
@@ -262,7 +262,7 @@ cluster_df <- spi_index_df %>%
   filter(date==2019) %>%
   filter(!is.na(SPI.INDEX)) %>%
   select(country, starts_with("SPI.")) %>%
-  select(-starts_with('SPI.INDEX')) %>%
+  select(-starts_with('SPI.INDEX'),-SPI.D5.1.DILG, -SPI.D5.5.DIFI) %>%
   column_to_rownames(var='country')
 
 # Enhanced k-means clustering

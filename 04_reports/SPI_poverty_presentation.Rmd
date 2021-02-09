@@ -2,7 +2,7 @@
 title: "Statistical Performance Indicators"
 # subtitle: "Confidential - Please do not re-circulate without permission"
 institute: "World Bank, Development Data Group"
-date: "`r Sys.Date()`"
+date: "February 9th, 2021"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -92,13 +92,13 @@ wgt <- 1
 ```{r load, include=FALSE}
 
 #add in population
-# pop_df <- wbstats::wb(country="all",
-#              indicator='SP.POP.TOTL',
-#              startdate=2004,
-#              enddate=2019) %>%
-#   mutate(date=as.numeric(date)) %>%
-#   mutate(population=value) %>%
-#   select(country, date, population) 
+pop_df <- wbstats::wb(country="all",
+             indicator='SP.POP.TOTL',
+             startdate=2004,
+             enddate=2019) %>%
+  mutate(date=as.numeric(date)) %>%
+  mutate(population=value) %>%
+  select(country, date, population)
 
 #import data
 SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
@@ -131,6 +131,15 @@ SPI_2019 <- SPI %>%
   mutate(ISO_A3_EH=iso3c) %>%
   mutate(across(contains("SPI"),~1*.))
 
+#get SPI with no HIC
+SPI_noHIC <- SPI %>%
+  filter(income!='High income')
+
+SPI_lowpop <- SPI %>%
+  filter(income!='High income') %>%
+  left_join(pop_df) %>%
+  filter(population>=1000000)
+
 #read in TopoJSON from World Bank
 #countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
 #                                     what = "sp")
@@ -146,7 +155,7 @@ SPI_2019 <- SPI %>%
 - SPI are tool for countries/donors to assess statistical system
 
 Based on feedback, goal was for SPI framework to:  
-  - Be forward looking (relevant at least 15 years)   
+  - Be forward looking (relevant ~ 10-15 years)   
   - Measure less advanced systems, as well as more advanced systems
   - Cover entire national statistical system, not just NSO   
   - Give countries incentives to build modern statistical system    
@@ -206,7 +215,7 @@ Based on feedback, goal was for SPI framework to:
   3. Data Products
       * Whether the country is able to produce relevant indicators, primarily related to SDGs    
   4. Data Sources
-      * Censuses and surveys, admin data, geospatial, private/citizen generated data    
+      * Censuses, surveys, admin data, geospatial, private/citizen generated data    
 ---
  # Framework  Overview
 
@@ -218,7 +227,7 @@ Based on feedback, goal was for SPI framework to:
   3. Data Products
       * Whether the country is able to produce relevant indicators, primarily related to SDGs    
   4. Data Sources
-      * Censuses and surveys, admin data, geospatial, private/citizen generated data      
+      * Censuses, surveys, admin data, geospatial, private/citizen generated data      
   5. Data Infrastructure
       * Legislation and governance, standards & methods, skill, partnerships, and finance
 
@@ -227,9 +236,12 @@ Based on feedback, goal was for SPI framework to:
 ---
 # SPI Framework
 
-.center[![unchanged image](SPI_dashboard.png)]
+.center[![unchanged image](SPI_Framework.png)]
 
+---
+# SPI Framework
 
+.center[![unchanged image](SPI_Framework_filled.png)]
 
 ```{r spi_map_index, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
@@ -401,6 +413,10 @@ spi_charts  <- function(data, indicator, title) {
 
   region_SPI_df <- region_SPI_df %>%
     mutate(region=factor(region, levels=region_order))
+  
+    #set color pallete
+  # col_pal <- c("#4D86A5","#CF0BF1","#2DFFDF","#3E517A","#98DA1F","#FC9F5B","#D60B2D")  
+  # names(col_pal) <- unique(map_df$region)
 
    p2 <- ggplot(region_SPI_df, aes(x=Percentage, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
@@ -411,6 +427,11 @@ spi_charts  <- function(data, indicator, title) {
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       expand_limits(x=c(0,100)) +
+      # scale_fill_manual(
+      #   name='Region',
+      #   values=col_pal,
+      #   na.value='grey'
+      # ) +     
      theme_bw() +
      theme(legend.position = 'top',
            title= element_text(size = 20),
@@ -554,6 +575,11 @@ lending_charts <- function(data, indicator, title) {
 
   lending_list <- c("Not classified", "IBRD", "Blend", "IDA" )
   
+  
+    #set color pallete
+  col_pal <- c("#533A71","#6184D8","#50C5B7","#9CEC5B")  
+  names(col_pal) <- lending_list
+  
   p2_alt3 <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
@@ -568,6 +594,11 @@ lending_charts <- function(data, indicator, title) {
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       scale_y_discrete(limits = lending_list) +
+      scale_color_manual(
+        name='Lending Group',
+        values=col_pal,
+        na.value='grey'
+      ) +    
       expand_limits(x=c(0,100)) +
       theme_bw() +
       theme(legend.position = 'top',
@@ -598,7 +629,9 @@ lending_chart_aggregate <- function(data, indicator, title) {
 
   lending_list <- c("Not classified", "IBRD", "Blend", "IDA" )
   
-  
+      #set color pallete
+  col_pal <- c("#533A71","#6184D8","#50C5B7","#9CEC5B")  
+  names(col_pal) <- lending_list
 
   p2_alt3 <- map_df %>%
     group_by(lending) %>%
@@ -614,6 +647,11 @@ lending_chart_aggregate <- function(data, indicator, title) {
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       scale_y_discrete(limits = lending_list) +
+      scale_fill_manual(
+        name='Lending Group',
+        values=col_pal,
+        na.value='grey'
+      ) +    
       expand_limits(x=c(0,100)) +
       theme_bw() +
       theme(legend.position = 'top',
@@ -671,7 +709,10 @@ fcs_charts <- function(data, indicator, title) {
 
   fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
   fcs_list <- c("FCS country","Non-FCS country")
-
+  #set color pallete
+  col_pal <- c("#FFBE0B","#FF006E")  
+  names(col_pal) <- fcs_list
+  
   p2_alt2 <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
@@ -686,6 +727,11 @@ fcs_charts <- function(data, indicator, title) {
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       scale_y_discrete(limits = fcs_list) +
+      scale_color_manual(
+        name='FCS Group',
+        values=col_pal,
+        na.value='grey'
+      ) + 
       expand_limits(x=c(0,100)) +
       theme_bw() +
       theme(legend.position = 'top',
@@ -741,6 +787,11 @@ fcs_chart_aggregate <- function(data, indicator, title) {
   fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
   fcs_list <- c("FCS country","Non-FCS country")
 
+  
+        #set color pallete
+  col_pal <- c("#FFBE0B","#FF006E")  
+  names(col_pal) <- fcs_list
+
   p2_alt2 <- map_df %>%
     group_by(fcs) %>%
     filter(region!='Aggregates') %>%
@@ -755,6 +806,11 @@ fcs_chart_aggregate <- function(data, indicator, title) {
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       scale_y_discrete(limits = fcs_list) +
+      scale_fill_manual(
+        name='FCS Group',
+        values=col_pal,
+        na.value='grey'
+      ) +
       expand_limits(x=c(0,100)) +
       theme_bw() +
       theme(legend.position = 'top',
@@ -847,22 +903,19 @@ Overall Scores Across Countries
 
 
 
-
 ---
-# Overview Summary of Results
+# Index Methodology
 
-  * Next, we will provide overall index
-  * Will present aggregate scores overall and for each dimension    
-
-  * Given imprecision inherent in calculations, we recommend color coding providing subdivisions of maturity.   
+  * Produce overall score combining indicators
   
-Countries are grouped into five groups:   
-
-* **Top 20%**:    Shading in <span style="color:#2ec4b6">dark green</span>.    
-* **4th Quintile**:  Shading in <span style="color:#acece7"> light green</span>.    
-* **3rd Quintile**:   Shading in <span style="color:#f1dc76"> yellow</span>.  
-* **2nd Quintile**:   Shading in <span style="color:#ffbf69"> light orange</span>.  
-* **Bottom 20%**:   Shading in <span style="color:#ff9f1c"> dark orange </span>.   
+  * Three level structure:    
+    * Indicators nested under pillars (sub-dimensions): $SPI.PILLAR_{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I}$  
+    * Pillars (sub-dimensions) nested under dimensions: $SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{\omega_{ds} SPI.PILLAR_{ctds}}{N_S}$   
+    * Dimensions nested under overall score: $SPI.INDEX_{ct} = \sum_{d=1}^{N_D} \frac{\alpha_{d} SPI.DIM_{ctd}}{N_D}$  
+  
+  * Nested structure allows for symmetry, monotonicity, and subgroup decomposability      
+    
+ 
 ---
 
 ```{css, echo=F}
@@ -892,6 +945,9 @@ spi_country_charts('SPI','SPI.INDEX','SPI Overall Scores vary significantly with
 
 ```
 ]
+
+
+
 ---
 .center3[
 ```{r lending_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
@@ -913,6 +969,21 @@ fcs_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators -  Ove
 ```
 
 ]
+---
+# Overview Summary of Results
+
+
+  * Will present aggregate scores overall and for each dimension    
+
+  * Given imprecision inherent in calculations, we recommend color coding providing subdivisions of maturity.   
+  
+Countries are grouped into five groups:   
+
+* **Top 20%**:    Shading in <span style="color:#2ec4b6">dark green</span>.    
+* **4th Quintile**:  Shading in <span style="color:#acece7"> light green</span>.    
+* **3rd Quintile**:   Shading in <span style="color:#f1dc76"> yellow</span>.  
+* **2nd Quintile**:   Shading in <span style="color:#ffbf69"> light orange</span>.  
+* **Bottom 20%**:   Shading in <span style="color:#ff9f1c"> dark orange </span>.  
 ---
 
 
@@ -1014,8 +1085,15 @@ spi_subgroup_mapper('SPI', 'SPI.INDEX','Bottom 20%', 'Bottom 20% have many eleme
 
 ]
 
----
 
+---
+class: inverse, middle, center
+
+Scores by Dimension Across Countries
+
+
+
+---
 .center2[
 ```{r dimension_1_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 spi_mapper('SPI', 'SPI.INDEX.DIM1', 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
@@ -1058,6 +1136,14 @@ spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Di
 
 ```
 ]
+
+
+---
+class: inverse, middle, center
+
+Scores Over Time
+
+
 ---
 
 
@@ -1375,6 +1461,14 @@ changes_fun('SPI.D4.1.4.HOUS', 'SPI Dimension 4 - Household Survey Availability 
 
 
 ---
+class: inverse, middle, center
+
+Relationship to Other Outcomes
+
+
+
+
+---
 
 
     
@@ -1481,6 +1575,7 @@ ge_df_2019 <- ge_df %>%
                      formula = 'y~x', parse = TRUE, size = 4) 
 
 ```
+
 
 
 .center3[
@@ -1602,8 +1697,9 @@ gdp_overperformers_plot + hci_overperformers_plot +
 ```
 
 ---
+
 .center3[
-```{r dim_corr, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=10}
+```{r dimcorr, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=10}
 
 corr_df <- SPI %>%
   ungroup() %>%
@@ -1611,7 +1707,7 @@ corr_df <- SPI %>%
 
 #calculate correlations between teacher practices
 df_corr_plot <-    round(cor(corr_df, use="complete.obs"), 2) 
-colnames(df_corr_plot) <- c('SPI Dimension 1','SPI Dimension 2','SPI Dimension 3','SPI Dimension 4','SPI Dimension 5','SPI Overall')
+colnames(df_corr_plot) <- c('SPI Dimension 1: Data Use','SPI Dimension 2: Data Services','SPI Dimension 3: Data Products','SPI Dimension 4: Data Sources','SPI Dimension 5: Data Infrastructure','SPI Overall')
 rownames(df_corr_plot) <- c('SPI Dimension 1','SPI Dimension 2','SPI Dimension 3','SPI Dimension 4','SPI Dimension 5','SPI Overall')
 
 #plot the correlation in a nicely formatted table
@@ -1640,7 +1736,7 @@ pcorr
 
 # Conclusions
 
-* Statistical Performance Indicators will be released along with the new World Development Report
+* Statistical Performance Indicators will be released at same time as new World Development Report
 
 * Meant to aid in country engagement around statistical capacity
 
@@ -1785,6 +1881,21 @@ spi_sci_plot
 
 ```
 ]
+---
+.center3[
+```{r region_chartsnohic, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('SPI_noHIC','SPI.INDEX','SPI Overall Scores (excluding High Income)')
+
+```
+]
+---
+.center3[
+```{r region_charts_lowpop, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('SPI_lowpop','SPI.INDEX','SPI Overall Scores (excluding High Income & populations less than 1 million)')
+
+```
+]
+
 
 ---
 class: inverse, middle, center
