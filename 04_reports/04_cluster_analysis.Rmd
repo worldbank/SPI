@@ -34,8 +34,7 @@ library(broom)
 #set directories
 dir <- here()
 
-raw_dir <- paste(dir, '01_raw_data', sep="/")
-output_dir <- paste(dir, '03_output_data', sep="/")
+dir <- paste(here(), '03_output_data', sep="/")
 
 #weights (either unity (1) or population)
 wgt <- 1
@@ -54,18 +53,11 @@ pop_df <- wbstats::wb_data(country="all",
   select(country, date, population) 
 
 #import data
-SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
+SPI <- read_csv(paste(dir, 'SPI_index.csv', sep="/")) %>%
     left_join(pop_df) %>%
   mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
 
 spi_index_df <- SPI
-
-
-
-#read in the SPI dataset
-spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
-  left_join(pop_df) %>%
-  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
 
 
 
