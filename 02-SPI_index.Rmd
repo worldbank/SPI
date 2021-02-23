@@ -1,4 +1,21 @@
-
+---
+title: 'Measuring the Statistical Performance of Countries: An Overview of Updates to the World Bank Statistical Capacity Index'
+author: "SPI Team"
+date: "`r Sys.Date()`"
+output:
+  bookdown::word_document2: 
+    toc: yes
+    fig_width: 9
+    fig_height: 6
+abstract: Recognizing the new challenges for national statistical systems in monitoring  the
+  Sustainable Development Goals (SDGs), the World Bank is developing a new, improved  Statistical  Performance
+  Indicators (SPI) to monitor progress of the statistical  performance  of countries.
+  This will replace the Statistical Capacity Index (SCI)  the World  Bank has regularly
+  published since 2004. This short note briefly discusses  the  motivation behind
+  the new SPI, describes some of its major features, and discusses  a  new index based
+  on the indicators.
+bibliography: ./bibliography.bib
+---
 
 
 
@@ -7,12 +24,11 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width 
 library(tidyverse)
 library(flextable)
 library(here)
-# devtools::install_github("worldbank/wbgviz", subdir = "wbgdata")
-# devtools::install_github("worldbank/wbgviz", subdir = "wbgcharts")
-# devtools::install_github("worldbank/wbgviz", subdir = "wbggeo")
-# devtools::install_github("worldbank/wbgviz", subdir = "wbgmaps")
-library(wbggeo)
-library(wbgmaps)
+## devtools::install_github("worldbank/wbgviz", subdir = "wbgcharts")
+## devtools::install_github("worldbank/wbgviz", subdir = "wbggeo")
+## devtools::install_github("worldbank/wbgviz", subdir = "wbgmaps")
+## library(wbggeo)
+## library(wbgmaps)
 library(ggthemes)
 library(Hmisc)
 library(httr)
@@ -23,20 +39,32 @@ library(zoo)
 library(estimatr)
 library(ggpmisc)
 library(ggthemes)
+library(ggtext)
 #set directories
 dir <- here()
 
 raw_dir <- paste(dir, '01_raw_data', sep="/")
 output_dir <- paste(dir, '03_output_data', sep="/")
 
-#weights (either unity (1) or population)
-wgt <- 1
+#weights (either unity (1) or population (2))
+wgt <- 2
 
 ```
 
-# Measuring the Statistical Performance of Countries: An Overview of the Statistical Performance Indicators and Index
 
-The World Bank’s Statistical Capacity Index (SCI) has been widely employed to measure country statistical capacity since its inception two decades ago. We build on the existing advantages of the World Bank’s widely-used SCI, both conceptually and empirically, to offer a new Statistical Performance Index (SPI) that can better measure a country’s statistical performance. We present clearer conceptual motivations, employ a stronger mathematical foundation, and significantly expand the number of indicators and countries covered by this index. We also further provide empirical evidence that further illustrates the strong correlation of this new index with other commonly used development indicators regarding human capital, governance, poverty, and inequality. Our framework can accommodate future directions to further improve this index as the global data landscape evolves.
+```{r themes}
+
+#ggplot theme
+theme_spi <- function () { 
+    theme_bw() %+replace%
+    theme(
+      #plot.title=element_blank() remove all titles from plots (sometimes we may need to bring title outside plot)
+    )
+}
+
+```
+
+
 
 
 ```{r data2, include=FALSE}
@@ -54,7 +82,8 @@ pop_df <- wbstats::wb(country="all",
 #read in the SPI dataset
 spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
   left_join(pop_df) %>%
-  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+  mutate(wgt=wgt,
+         weights=if_else(wgt==2,population,1))  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
 
 
 
@@ -74,9 +103,21 @@ pillars <- read_csv(paste(raw_dir, '/metadata/SPI_pillars.csv', sep=""))
 ```{r programs2, include=FALSE}
 
 
-#Now map the result
-quality = "high"
-maps <- wbgmaps::wbgmaps[[quality]]
+#For mapping the result
+## quality = "high"
+## maps <- wbgmaps::wbgmaps[[quality]]
+#load world bank map data
+load(paste0(raw_dir, '/misc/maps.Rdata'))
+standard_crop_wintri <- function() {
+  l <- list(
+    left=-12000000, right=16396891,
+    top=9400000, bottom=-6500000
+  )
+  l$xlim <- c(l$left, l$right)
+  l$ylim <- c(l$bottom, l$top)
+  l
+}
+
 
 country_metadata <- wbstats::wbcountries()
 
@@ -123,7 +164,7 @@ spi_mapper  <- function(data, indicator, title) {
     geom_path(data = maps$boundaries,
               aes(long, lat, group = group),
               color = "white",
-              size = 0.1,
+              size = 0.3,
               lineend = maps$boundaries$lineend,
               linetype = maps$boundaries$linetype) +
     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
@@ -172,26 +213,26 @@ spi_charts  <- function(data, indicator, title) {
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'top')
 
 
-  # p2_alt <- map_df %>%
-  #   ungroup() %>%
-  #   filter(region!='Aggregates') %>%
-  #   mutate(Percentage=(data_available),
-  #          Label = paste(round(Percentage,0))) %>%
-  #   ggplot(aes(x=Percentage, y=region, color=region)) +
-  #     geom_point() +
-  #     geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
-  #     labs(
-  #     title=str_wrap(paste(title, 'By Country', sep=" - "),100),
-  #     caption = 'Source: SPI Indicators Raw Data',
-  #     subtitle= 'Data Point is for last year available (2019)'
-  #     ) +
-  #     expand_limits(x=c(0,100)) +
-  #     theme_bw() +
-  #     theme(legend.position = 'top')  
+  ## p2_alt <- map_df %>%
+  ##   ungroup() %>%
+  ##   filter(region!='Aggregates') %>%
+  ##   mutate(Percentage=(data_available),
+  ##          Label = paste(round(Percentage,0))) %>%
+  ##   ggplot(aes(x=Percentage, y=region, color=region)) +
+  ##     geom_point() +
+  ##     geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+  ##     labs(
+  ##     title=str_wrap(paste(title, 'By Country', sep=" - "),100),
+  ##     caption = 'Source: SPI Indicators Raw Data',
+  ##     subtitle= 'Data Point is for last year available (2019)'
+  ##     ) +
+  ##     expand_limits(x=c(0,100)) +
+  ##     theme_spi() +
+  ##     theme(legend.position = 'top')  
   
   #by income
     income <- c("Low income", "Lower middle income","Upper middle income","High income")
@@ -211,13 +252,13 @@ spi_charts  <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'top')
     
-  # #add line graph over time
+  ## #add line graph over time
   p4 <- get(data)  %>%
     rename(data_available=!! indicator) %>%
-    # right_join(spi_df_empty) %>%
+    ## right_join(spi_df_empty) %>%
     group_by(income, date) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
     mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
@@ -226,13 +267,13 @@ spi_charts  <- function(data, indicator, title) {
     ggplot(aes(y=Percentage, x=date, color=income)) +
       geom_point() +
       geom_line() +
-      # geom_text_repel(aes(label=Label)) +
+      ## geom_text_repel(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Date', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data'
       ) +
       expand_limits(y=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'top')
   
 
@@ -300,7 +341,7 @@ spi_country_charts  <- function(data, indicator, title) {
         values=col_pal,
         na.value='grey'
       ) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'top') 
    
 p2_alt
@@ -377,7 +418,7 @@ spi_maturity_table <- function(data, indicators, reference_year) {
 
 #define function to pull data from UN Stats and return
 un_pull <- function(series,start, end) {
-  # jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&timePeriodStart=',start,'&timePeriodEnd=',end,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
+  ## jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&timePeriodStart=',start,'&timePeriodEnd=',end,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
       jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
 
     as_tibble() %>%
@@ -394,10 +435,68 @@ FitFlextableToPage <- function(ft, pgwidth = 6){
   return(ft_out)
 }
 
+#add equations to plots
+eq_plot_txt <- function(data) {
+  eq <- lm_robust(SPI.INDEX ~ value, data=data, se_type='HC2')
+  coef <- coef(eq)
+  std_err <- sqrt(diag(vcov(eq)))
+  r_2<- summary(eq)$r.squared
+  sprintf("y = %.3f + %.3f x, R<sup>2</sup> = %.3f <br>    (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
+
+}
+
 ```
 
 
-## SPI Index Methodology 
+```{r metadatatab2}
+####
+## create table
+####
+
+pillars <- pillars %>%
+  mutate(pillar=paste(pillar_number, pillar_name, sep=": ")) %>%
+  select(pillar, spi_indicator_description)
+
+
+pillars_tab <- flextable(pillars) %>%
+  add_header_lines('SPI Pillars Metadata.') %>%
+  set_header_labels(values=list(
+                       pillar="Pillar",
+                       spi_indicator_description="Brief Description"
+                                   )) 
+
+FitFlextableToPage(pillars_tab) %>%
+  width(width=3.2) %>%
+  align( align = "left", part = "body")
+
+
+```
+
+# Measuring the Statistical Performance of Countries: An Overview of the Statistical Performance Indicators and Index
+
+The World Bank’s Statistical Capacity Index (SCI) has been widely employed to measure country statistical capacity since its inception two decades ago. We build on the existing advantages of the World Bank’s widely-used SCI, both conceptually and empirically, to offer a new Statistical Performance Index (SPI) that can better measure a country’s statistical performance. We present clearer conceptual motivations, employ a stronger mathematical foundation, and significantly expand the number of indicators and countries covered by this index. We also further provide empirical evidence that further illustrates the strong correlation of this new index with other commonly used development indicators regarding human capital, governance, poverty, and inequality. Our framework can accommodate future directions to further improve this index as the global data landscape evolves.
+
+### Technical Information
+
+#### Handling Missing Data 
+
+For a full description of the methodology behind each specific indicator, please consult the technical documentation.  However, we did follow an approach of handling missing values and lining up data, which will be describe in general terms below.  For indicators where we had a value for a previous year (say a value in 2018 but not 2019), we would fill in from the previous value.  For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator.
+
+For indicators where we had no data for any years, we chose not to impute a value.  In that case, the value for that indicator is null and the country will not have a value for any pillars or dimensions where that value is used.
+
+
+#### Process for Disputing the Data
+
+Countries will be given an opportunity to dispute the values that make up our indicators.  Our team takes every effort to make sure the data presented in our Statistical Performance Indicators are accurate, but it is possible that the sources we used to assign values for our indicators are not accurate despite these efforts.  Because of this, countries will have a window to provide documentation for any disputed values, and our team will be happy to adjust our scores based on this new information.  Precise details for this process will be made available in the future.
+
+#### Process for Updating Indicators
+
+While we feel our framework is comprehensive and is designed to capture the contours most statistical systems over at least the next 15 years, we fully recognize that our indicators themselves have room for improvement.  At launch, we will tag our version of our statistical performance indicators as version 1.0.  From there, we will likely have a 2-3 year cycle, where we continuously update the values of our indicators, but do not change the methodology for constructing them. At the end of the 2-3 year period, we may introduce a indicator or we may re-evaluate how our current indicators are constructed based on feedback from countries and other groups.  At that point, we will launch a major update as version 2.0, or version 3.0 as the sequence goes.  Smaller updates, where for instance we adjust a countries value based on the data dispute process we describe above, will be labeled with a decimal point as version 1.1 for instance.
+
+In order to be completely transparent, we will track all changes to our methodology through a publicly available github repository and we will publish all code and underlying data to produce our indicators.
+
+
+### SPI Index Methodology 
 
 We next produce an overall score by combining the indicators we have collected.  Our statistical performance indicators have a three level structure, and our SPI overall score will be formed by sequentially aggregating each level.
 
@@ -407,7 +506,7 @@ $$ SPI.PILLAR_{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
 
 where $SPI.PILLAR_{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
 
-After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental statistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.
+After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental statistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.  Additionally, for Dimension 4 on data sources, we give censuses and surveys separate weights, so that censuses get 1/4th weight, surveys get 1/4th weight, admin data gets 1/4th weight, and geospatial gets 1/4th weight.  While censuses and surveys are in the same pillar in our framework, and therefore would typically only receive 1/3 weight in this dimension, because of their importance in producing many indicators, they are given extra weight with a sum of 1/2.
 
 $$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{\omega_{ds} \times SPI.PILLAR_{ctds}}{N_S} $$
 
@@ -425,45 +524,99 @@ Where SPI.INDEX is the SPI overall score. SPI.DIM are the 5 SPI dimensions liste
 
 The nested structure of our index and the summation methods used to build an overall score ensure the axiomatic properties outlined in [@cameron2019measuring].  These include symmetry, monotonicity, and subgroup decomposability.
 
-## Handling Missing Data 
 
-For a full description of the methodology behind each specific indicator, please consult the technical documentation.  However, we did follow an approach of handling missing values and lining up data, which will be describe in general terms below.  For indicators where we had a value for a previous year (say a value in 2018 but not 2019), we would fill in from the previous value.  For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator.
-
-For indicators where we had no data for any years, we chose not to impute a value.  In that case, the value for that indicator is null and the country will not have a value for any pillars or dimensions where that value is used.
+### SPI Overall Scores
 
 
-## Process for Disputing the Data
+```{r spi_df}
 
-Countries will be given an opportunity to dispute the values that make up our indicators.  Our team takes every effort to make sure the data presented in ouf Statistical Performance Indicators are accurate, but it is possible that the sources we used to assign values for our indicators are not accurate despite these efforts.  Because of this, countries will have a window to provide documentation for any disputed values, and our team will be happy to adjust our scores based on this new information.  Precise details for this process will be made available in the future.
-
-## Process for Updating Indicators
-
-While we feel our framework is comprehensive and is designed to capture the contours most statistical systems over at least the next 15 years, we fully recognize that our indicators themselves have room for improvement.  At launch, we will tag our version of our statistical performance indicators as version 1.0.  From there, we will likely have a 2-3 year cycle, where we continuously update the values of our indicators, but do not change the methodology for constructing them. At the end of the 2-3 year period, we may introduce a indicator or we may re-evaluate how our current indicators are constructed based on feedback from countries and other groups.  At that point, we will launch a major update as version 2.0, or version 3.0 as the sequence goes.  Smaller updates, where for instance we adjust a countries value based on the data dispute process we describe above, will be labeled with a decimal point as version 1.1 for instance.
-
-In order to be completely transparent, we will track all changes to our methodology through a publicly available github repository and we will publish all code and underlying data to produce our indicators.
-
-## SPI Overall Scores
-
-
-```{r spi_df2}
-
-# This block of code will create a blank SPI dataset (only containing country info) that will be appended to when each indicator is added.
-# There will be two indicators added for each dimension
-# 1. An indicator with a score between 0-1 for each dimension
-# 2. An indicator with the raw (unscored) values of the indicators
-# The unit for this database will be country*year
+### This block of code will create a blank SPI dataset (only containing country info) that will be appended to when each indicator is added.
+### There will be two indicators added for each dimension
+## 1. An indicator with a score between 0-1 for each dimension
+## 2. An indicator with the raw (unscored) values of the indicators
+## The unit for this database will be country*year
 
 span <- c(2004:2019)
 
 spi_df_empty <- bind_rows(replicate(length(span), wbstats::wbcountries(), simplify = FALSE), .id='date') %>%
   mutate(date=as.numeric(date)+span[1]-1) %>%
-  filter(region!="Aggregates") # take out the aggregates (LAC, SAR, etc)
+  filter(region!="Aggregates") ## take out the aggregates (LAC, SAR, etc)
 
 spi_df <- spi_df_empty
 
 #read list of iso3c codes for matching from UN (https://unstats.un.org/unsd/methodology/m49/)
 iso3c <- read_csv(paste(raw_dir,'metadata/iso_codes.csv', sep="/"),
                   col_types=list(col_character(), col_character(), col_character()))
+
+```
+
+
+```{r index_weights}
+
+#Dimension 1 - Overall Weight
+dim_1 <- 1/5
+#Pillar 1.5: Data Use by International Organizations
+pillar_1_5 <- 1
+
+#Dimension 2 - Overall Weight
+dim_2 <- 1/5
+#Pillar 2.1: Data releases
+pillar_2_1 <- 1/3
+#Pillar 2.2: Online access
+pillar_2_2 <- 1/3
+## Pillar 2.4: Data services
+pillar_2_4 <- 1/3
+
+## Dimension 3 - Overall Weight
+dim_3 <- 1/5
+## Pillar 3: SDG 1
+pillar_3_1 <- 1/16
+## Pillar 3: SDG 2
+pillar_3_2 <- 1/16
+## Pillar 3: SDG 3
+pillar_3_3 <- 1/16
+## Pillar 3: SDG 4
+pillar_3_4 <- 1/16
+## Pillar 3: SDG 5
+pillar_3_5 <- 1/16
+## Pillar 3: SDG 6
+pillar_3_6 <- 1/16
+## Pillar 3: SDG 7
+pillar_3_7 <- 1/16
+## Pillar 3: SDG 8
+pillar_3_8 <- 1/16
+## Pillar 3: SDG 9
+pillar_3_9 <- 1/16
+## Pillar 3: SDG 10
+pillar_3_10 <- 1/16
+## Pillar 3: SDG 11
+pillar_3_11 <- 1/16
+## Pillar 3: SDG 12
+pillar_3_12 <- 1/16
+## Pillar 3: SDG 13
+pillar_3_13 <- 1/16
+## Pillar 3: SDG 15
+pillar_3_15 <- 1/16
+## Pillar 3: SDG 16
+pillar_3_16 <- 1/16
+## Pillar 3: SDG 17
+pillar_3_17 <- 1/16
+
+#Dimension 4 - Overall Weight
+dim_4 <- 1/5
+## Pillar 4.1: censuses and surveys
+pillar_4_1.CEN <- 1/4
+pillar_4_1.SVY <- 1/4
+#Pillar 4.2: administrative data
+pillar_4_2 <- 1/4
+## Pillar 4.3: geospatial data
+pillar_4_3 <- 1/4
+
+## Dimension 5 - Overall Weight
+dim_5 <- 1/5
+## Pillar 5.2: Standards and Methods
+pillar_5_2 <- 1
+
 
 ```
   
@@ -478,9 +631,8 @@ oecd_country_query <-  GET(url = "https://api.worldbank.org/v2/country?region=OE
 oecd_country_df <- oecd_country_query[[2]] %>%
   as_tibble() 
   
-country_mod_list <- oecd_country_df$name  #fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
-country_mod_list <- c(country_mod_list, 'Singapore')
-# create index dataset
+
+## create index dataset
 spi_index_df_temp <- spi_df_final %>%
   select(country, iso3c, date, starts_with("SPI"), income, region, weights, population) %>%
   arrange(-date,country)
@@ -494,8 +646,8 @@ spi_index_df_temp <- spi_index_df_temp %>%
 
 
 #first index 
-# just take a simple numeric average acorss all indicators
-# I will forward fill all indicators if they are missing
+## just take a simple numeric average across all indicators
+## I will forward fill all indicators if they are missing
 spi_index_simple <- spi_index_df_temp %>%
   arrange(country, date) %>%
   group_by(country) %>%
@@ -512,9 +664,9 @@ spi_index_simple <- spi_index_df_temp %>%
 
 
 #################
-# Nested Index
+## Nested Index
 ################
-  spi_index_df <- spi_index_df_temp %>%
+spi_index_df <- spi_index_df_temp %>%
   arrange(country, date) %>%
   group_by(country) %>%
   mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
@@ -522,50 +674,100 @@ spi_index_simple <- spi_index_df_temp %>%
 
 
 
-#Create overall subscores corresponding to John's framework
-  spi_index_df <- spi_index_df %>%
-    mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
+#recalculate index based on the weights
+dim_total <- dim_1 + dim_2 + dim_3 + dim_4 + dim_5
+dim2_total <- pillar_2_1 + pillar_2_2 + pillar_2_4
+dim3_total <- 
+  pillar_3_1 + 
+  pillar_3_2 +
+  pillar_3_3 +
+  pillar_3_4 +
+  pillar_3_5 +
+  pillar_3_6 +
+  pillar_3_7 +
+  pillar_3_8 +
+  pillar_3_9 +
+  pillar_3_10 +
+  pillar_3_11 +
+  pillar_3_12 +
+  pillar_3_13 +
+  pillar_3_15 +
+  pillar_3_16 +
+  pillar_3_17
+dim4_total <- pillar_4_1.CEN + pillar_4_1.SVY + + pillar_4_2 + pillar_4_3
+
+#create index dataset
+spi_index_df <- spi_index_df %>%
+  mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
          INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
          INDEX.SPI.D2.4=SPI.D2.4.NADA,
          INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
-                                            "SPI.D3.2.HNGR",
-                                            "SPI.D3.3.HLTH",
-                                            "SPI.D3.4.EDUC",
-                                            "SPI.D3.5.GEND",
-                                            "SPI.D3.6.WTRS"))),
+                                          "SPI.D3.2.HNGR",
+                                          "SPI.D3.3.HLTH",
+                                          "SPI.D3.4.EDUC",
+                                          "SPI.D3.5.GEND",
+                                          "SPI.D3.6.WTRS"))),
          INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
-                                            "SPI.D3.8.WORK",
-                                            "SPI.D3.9.INDY",
-                                            "SPI.D3.10.NEQL",
-                                            "SPI.D3.11.CITY",
-                                            "SPI.D3.12.CNSP"))),         
+                                          "SPI.D3.8.WORK",
+                                          "SPI.D3.9.INDY",
+                                          "SPI.D3.10.NEQL",
+                                          "SPI.D3.11.CITY",
+                                          "SPI.D3.12.CNSP"))),         
          INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
-                                            "SPI.D3.15.LAND" ))),
+                                          "SPI.D3.15.LAND" ))),
          INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
-                                            "SPI.D3.17.PTNS" ))),
-         INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1'))),
+                                          "SPI.D3.17.PTNS" ))),
+         INDEX.SPI.D4.1.CEN=rowMeans(across(c('SPI.D4.1.1.POPU','SPI.D4.1.2.AGRI','SPI.D4.1.3.BIZZ'))), #separate census and surveys 
+         INDEX.SPI.D4.1.SVY=rowMeans(across(c('SPI.D4.1.4.HOUS','SPI.D4.1.5.AGSVY','SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH','SPI.D4.1.8.BZSVY'))), #separate census and surveys 
          INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2'))),
          INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3'))),
          #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
          INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2'))),
          #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
-                 ) %>%
+  ) %>%
   mutate(
-         SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
-         SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
-         SPI.INDEX.DIM3=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
-         SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
-         SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
-         SPI.INDEX=rowMeans(across(c('SPI.INDEX.DIM1',
-                                     'SPI.INDEX.DIM2',
-                                     'SPI.INDEX.DIM3',
-                                     'SPI.INDEX.DIM4',
-                                     'SPI.INDEX.DIM5')), na.rm=FALSE)
-         ) %>% #
+    SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+    SPI.INDEX.DIM2=(
+      (pillar_2_1/dim2_total)*INDEX.SPI.D2.1 +
+        (pillar_2_2/dim2_total)*INDEX.SPI.D2.2 +
+        (pillar_2_4/dim2_total)*INDEX.SPI.D2.4 )
+    ,
+    SPI.INDEX.DIM3=(
+      (pillar_3_1/dim3_total)*SPI.D3.1.POV +
+        (pillar_3_2/dim3_total)*SPI.D3.2.HNGR +
+        (pillar_3_3/dim3_total)*SPI.D3.3.HLTH +
+        (pillar_3_4/dim3_total)*SPI.D3.4.EDUC +
+        (pillar_3_5/dim3_total)*SPI.D3.5.GEND +
+        (pillar_3_6/dim3_total)*SPI.D3.6.WTRS +
+        (pillar_3_7/dim3_total)*SPI.D3.7.ENRG +
+        (pillar_3_8/dim3_total)*SPI.D3.8.WORK +
+        (pillar_3_9/dim3_total)*SPI.D3.9.INDY +
+        (pillar_3_10/dim3_total)*SPI.D3.10.NEQL +
+        (pillar_3_11/dim3_total)*SPI.D3.11.CITY +
+        (pillar_3_12/dim3_total)*SPI.D3.12.CNSP +
+        (pillar_3_13/dim3_total)*SPI.D3.13.CLMT +
+        (pillar_3_15/dim3_total)*SPI.D3.15.LAND +
+        (pillar_3_16/dim3_total)*SPI.D3.16.INST +
+        (pillar_3_17/dim3_total)*SPI.D3.17.PTNS)
+    ,
+    SPI.INDEX.DIM4=(
+      (pillar_4_1.CEN/dim4_total)*INDEX.SPI.D4.1.CEN +
+      (pillar_4_1.SVY/dim4_total)*INDEX.SPI.D4.1.SVY +
+        (pillar_4_2/dim4_total)*INDEX.SPI.D4.2 +
+        (pillar_4_3/dim4_total)*INDEX.SPI.D4.3 )
+    ,
+    SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+    SPI.INDEX=(dim_1/dim_total)*SPI.INDEX.DIM1 +
+      (dim_2/dim_total)*SPI.INDEX.DIM2 +
+      (dim_3/dim_total)*SPI.INDEX.DIM3 +
+      (dim_4/dim_total)*SPI.INDEX.DIM4 +
+      (dim_5/dim_total)*SPI.INDEX.DIM5 
+    #sum up based on individual dimension weights
+  ) %>% #
   mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
   arrange(-date, -SPI.INDEX) %>%
   select(country, iso3c, date, starts_with('SPI.INDEX'), everything()) 
-  #  filter(date>=2016) #2016 is first year with complete data
+  ##  filter(date>=2016) #2016 is first year with complete data
 
   
 #display top 25
@@ -613,11 +815,11 @@ spi_index_dta %>%
   haven::write_dta(path=paste(output_dir, 'SPI_index.dta', sep="/"))
 
 #save a copy with column labels as well to csv
-l <- lapply(spi_index_dta, attr, "label") # Gives you list of the labeled variables
-l <- as.data.frame(l, stringsAsFactors = F) # Convert list to dataframe
+l <- lapply(spi_index_dta, attr, "label") ## Gives you list of the labeled variables
+l <- as.data.frame(l, stringsAsFactors = F) ## Convert list to dataframe
 spi_index_dta_lab <- rbind(l, spi_index_dta) %>%
   write_excel_csv(path=paste(output_dir, 'SPI_index_labelled.csv', sep="/"),
-                  na="") # Bind the two
+                  na="") ## Bind the two
 
 
 #for rest of paper, restrict to just 2016, which is where we have complete data
@@ -634,7 +836,7 @@ n_countries <- spi_index_df %>%
   filter(!is.na(SPI.INDEX) & date==2019) %>% #countries with value for SPI in 2019
   nrow()
 
-# percentage of world population covered
+## percentage of world population covered
 pop_covered <- spi_index_df %>%
   filter(date==2019) %>%
   mutate(covered=!is.na(SPI.INDEX)) %>%
@@ -852,9 +1054,11 @@ spi_country_charts('spi_index_df','SPI.INDEX.DIM2','Dimension 2: Data Services S
 ```{r maturitytable2}
 
 indicators<-c("SPI.INDEX.DIM2","SPI.D2.1.GDDS",
+              "SPI.D2.2.Openness.subscore",
               "SPI.D2.2.Machine.readable",      "SPI.D2.2.Non.proprietary",
               "SPI.D2.2.Download.options",      "SPI.D2.2.Metadata.available",
-              "SPI.D2.2.Terms.of.use",          "SPI.D2.2.Openness.subscore",     "SPI.D2.4.NADA")
+              "SPI.D2.2.Terms.of.use",
+              "SPI.D2.4.NADA")
 
 maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019) 
 
@@ -882,6 +1086,8 @@ In terms of specific indicators, the top 20% of countries in dimension 2 receive
 
 maturity_tab <- maturity_tab %>%
   flextable() %>%
+  padding(i=4:8,j=1,
+          padding.left=20) %>%
   add_header_lines('Select SPI Indicator Scores by SPI Dimension 2 Maturity Level') 
 
 FitFlextableToPage(maturity_tab) %>%
@@ -895,7 +1101,7 @@ For the data products dimension, we examine whether countries are reporting data
 
 For this indicator, there is a weaker relationship between a country's income level and their performance in this dimension.  No countries receive a maximum score of 100, which would indicate that they report on every SDG indicator at least once inside a 5 year window.  Additionally, no country scores 0, which would indicate that they have reported no information for any of the SDG indicators.
 
-While it is conceivable that some countries may have data values for these indicators on their NSO websites, for instance, rather than posted on the UN Global SDG monitoring database, we took the perspective that to produce a data product that is full usable a country's national statistical system should provide that information in an internationally comparable way.  And we have judged countries accordingly.  Additionally, for countries that have not reported values for SDG monitoring, but do possess a value, a simple way to improve their score on this dimension would be to submit all of their indicators to the UN database.  For OECD countries, we didi supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  Even with this supplemental data from the OECD included, there is considerable room for improvement in reporting on the SDGs.
+While it is conceivable that some countries may have data values for these indicators on their NSO websites, for instance, rather than posted on the UN Global SDG monitoring database, we took the perspective that to produce a data product that is full usable a country's national statistical system should provide that information in an internationally comparable way.  And we have judged countries accordingly.  Additionally, for countries that have not reported values for SDG monitoring, but do possess a value, a simple way to improve their score on this dimension would be to submit all of their indicators to the UN database.  For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  Even with this supplemental data from the OECD included, there is considerable room for improvement in reporting on the SDGs.
 
 We exclude values that were produced by an international organization through modeling  We do include values that are either country reported, country adjusted, estimated, or is included as global monitoring data.  This is based on the UN SDG metadata.  For each value of the indicator, the responsible international agency has been requested to indicate whether the national data were adjusted, estimated, modeled or are the result of global monitoring. The “nature” of the data in the SDG database is determined as follows:
 
@@ -992,7 +1198,7 @@ FitFlextableToPage(maturity_tab) %>%
 
 
 #################
-# Nested Index with high income, OECD coutries top coded
+## Nested Index with high income, OECD countries top coded
 ################
   spi_index_df_dim3_alt <- spi_index_df_temp %>%
   arrange(country, date) %>%
@@ -1051,7 +1257,7 @@ FitFlextableToPage(maturity_tab) %>%
 
 
 #################
-# Nested Index with high income coutries top coded
+## Nested Index with high income coutries top coded
 ################
   spi_index_df_dim3_alt2 <- spi_index_df_temp %>%
   arrange(country, date) %>%
@@ -1320,14 +1526,14 @@ df_corr_plot <-    round(cor(corr_df, use="complete.obs"), 2)
 #plot the correlation in a nicely formatted table
 pcorr<- ggcorrplot::ggcorrplot(df_corr_plot,
                    outline.color = "white",
-                   ggtheme = theme_bw(),
+                   ggtheme = theme_spi(),
                    colors = c("#F8696B", "#FFEB84", "#63BE7B"),
                    legend.title = "Correlation",
                    title = "Correlation Between SPI Dimensions",
                    lab=T) + 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
   scale_y_discrete(labels = function(x) str_wrap(x, width = 16)) +
-  theme_bw() +
+  theme_spi() +
   theme(
     text = element_text(size = 12),
     axis.text.x = element_text(angle=45,vjust=.5)
@@ -1454,7 +1660,7 @@ leave_out_df %>%
     geom_point(size=3) +
     geom_text(aes(label=round(mean_abs_diff,2)),color='black', nudge_y=.2) +
     coord_flip() +
-    theme_bw() +
+    theme_spi() +
     theme(
       panel.grid.minor.y = element_blank(),
       panel.grid.major.y = element_blank(),
@@ -1501,11 +1707,11 @@ anova_dim_plot <- anova_dim_df %>%
   ggplot(aes(x=source_name, y=std_dev))  +
   geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=std_dev), color="black") +
   geom_point(size=3) +
-  # scale_color_manual(name="HCI",
-  #                    labels = c("Over-performers", "Under-performers"),
-  #                    values = c('above'="#1A9850", 'below'="#D73027")) +
+  ## scale_color_manual(name="HCI",
+  ##                    labels = c("Over-performers", "Under-performers"),
+  ##                    values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_bw() +
+  theme_spi() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
@@ -1548,11 +1754,11 @@ anova_pillar_plot <- anova_pillar_df %>%
   ggplot(aes(x=Pillar, y=std_dev))  +
   geom_segment( aes(x=Pillar ,xend=Pillar, y=0, yend=std_dev), color="black") +
   geom_point(size=3) +
-  # scale_color_manual(name="HCI",
-  #                    labels = c("Over-performers", "Under-performers"),
-  #                    values = c('above'="#1A9850", 'below'="#D73027")) +
+  ## scale_color_manual(name="HCI",
+  ##                    labels = c("Over-performers", "Under-performers"),
+  ##                    values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_bw() +
+  theme_spi() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
@@ -1622,20 +1828,12 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_bw() +
+  theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Human Capital Index') +
-  stat_poly_eq(aes(label  = paste(stat(eq.label),
-                                stat(rr.label), sep = "*\", \"*")), 
-                     label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4) +
-    theme(legend.position = 'bottom') +
-  stat_fit_tidy(method = "lm",
-                label.x = "left",
-                method.args = list(formula = y ~ x),
-                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
-                                              stat(x_estimate),
-                                              stat(x_p.value))))
+  geom_richtext(
+    aes(x = 0.5, y = 20,label = eq_plot_txt(hci_df_2018)), hjust=0.2
+  ) 
 
 
 #GDP
@@ -1651,25 +1849,26 @@ gdp_df <- wbstats::wb_data(
 gdp_df_2019 <- gdp_df %>%
   filter(date==2019) 
 
+#text for plot
+eq <- lm_robust(SPI.INDEX ~ log(value), data=gdp_df_2019 , se_type='HC2')
+coef <- coef(eq)
+std_err <- sqrt(diag(vcov(eq)))
+r_2<- summary(eq)$r.squared
+plot_txt <- sprintf("y = %.3f + %.3f ln(x), R^2 = %.3f \n     (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
+
   gdp_spi <- ggplot(data=gdp_df_2019, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
   scale_x_log10(labels = scales::comma) +
-  theme_bw() +
+  theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Log GDP Per Capita') +
   theme(legend.position = 'bottom') +
-  stat_poly_eq(aes(label = paste(stat(eq.label),
-                                stat(rr.label), sep = "*\", \"*")), 
-                     label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4) +
-  stat_fit_tidy(method = "lm",
-                label.x = "left",
-                method.args = list(formula = y ~ x),
-                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
-                                              stat(x_estimate),
-                                              stat(x_p.value))))
+  geom_richtext(
+    aes(x = 1000, y = 20,label = plot_txt), hjust=0.2
+  )   
+
   
 
 
@@ -1693,7 +1892,7 @@ Below we show the scatter plot of the relationship between log GDP per capita, t
 
 ```{r gdpplot}
 
-### Scatterplot log GDP SPI
+#### Scatterplot log GDP SPI
 gdp_spi + hci_spi   +
   plot_annotation(
     title='Plot of SPI overall score on Human Capital Index and GDP per capita',
@@ -1711,7 +1910,7 @@ In order to produce this figure, we estimate an OLS regression of the SPI overal
 
 #get top 10 and bottom 10 over performers compared to gdp and hci
 
-## GDP
+### GDP
 #regress SPI on gdp
 
 indicator <- 'SPI.INDEX'
@@ -1733,8 +1932,10 @@ gdp_underperformers_df <- gdp_df_2019 %>%
 
 gdp_overperformers_plot <-  gdp_overperformers_df %>%
   bind_rows(gdp_underperformers_df) %>%
-  arrange(resid) %>%
-  mutate(country=factor(country, levels=country),
+  arrange(resid) 
+
+gdp_overperformers_plot <- gdp_overperformers_plot %>%
+  mutate(country=factor(country, levels=unique(gdp_overperformers_plot$country)),
          group=if_else(resid>=0, 'above','below')) %>%
   ggplot(aes(x=country, y=resid, color=group)) +
   geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +
@@ -1743,7 +1944,7 @@ gdp_overperformers_plot <-  gdp_overperformers_df %>%
                      labels = c("Over-performers", "Under-performers"),
                      values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_bw() +
+  theme_spi() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
@@ -1755,7 +1956,7 @@ gdp_overperformers_plot <-  gdp_overperformers_df %>%
 
 
 
-### HCI
+#### HCI
 
 
 #regress SPI on hci
@@ -1773,8 +1974,10 @@ hci_underperformers_df <- hci_df_2018 %>%
 
 hci_overperformers_plot <-  hci_overperformers_df %>%
   bind_rows(hci_underperformers_df) %>%
-  arrange(resid) %>%
-  mutate(country=factor(country, levels=country),
+  arrange(resid) 
+
+hci_overperformers_plot <- hci_overperformers_plot %>%
+  mutate(country=factor(country, levels=unique(hci_overperformers_plot$country)),
          group=if_else(resid>=0, 'above','below')) %>%
   ggplot(aes(x=country, y=resid, color=group)) +
   geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +
@@ -1783,7 +1986,7 @@ hci_overperformers_plot <-  hci_overperformers_df %>%
                      labels = c("Over-performers", "Under-performers"),
                      values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_bw() +
+  theme_spi() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
@@ -1839,29 +2042,26 @@ A common justification for improving statistical systems is that doing so can le
 
 [@kraay2010worldwide] produce a set of Worldwide Governance Indicators, including a measure of government effectiveness.  According to the WGI metadata, the government effectiveness indicator captures perceptions of the quality of public services, the quality of the civil service and the degree of its independence from political pressures, the quality of policy formulation and implementation, and the credibility of the government's commitment to such policies. The estimate gives the country's score on the aggregate indicator, in units of a standard normal distribution, i.e. ranging from approximately -2.5 to 2.5.^[Detailed documentation of the WGI, interactive tools for exploring the data, and full access to the underlying source data available at www.govindicators.org. The WGI are produced by Daniel Kaufmann (Natural Resource Governance Institute and Brookings Institution) and Aart Kraay (World Bank Development Research Group).].  The government effectiveness indicator is available from 1996 to 2019.
 
-There is a strong relationship between the SPI overall score and the government effectivenss indicator.  The correlation between the two in 2019 is `r round(corr_ge,2)`.  The scatterplot below shows the relationship between the SPI overall score and the government effectivenss indicator.
+There is a strong relationship between the SPI overall score and the government effectiveness indicator.  The correlation between the two in 2019 is `r round(corr_ge,2)`.  The scatterplot below shows the relationship between the SPI overall score and the government effectiveness indicator.
 
 
 
 
 
 ```{r geplot}
-ge_spi_plot <- ggplot(data=ge_df_2019, aes(x=GE.EST, y=SPI.INDEX)) +
+
+ge_df_2019 <- ge_df_2019 %>%
+  rename(value=GE.EST)
+
+ge_spi_plot <- ggplot(data=ge_df_2019, aes(x=value, y=SPI.INDEX)) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_bw() +
+  theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Government Effectiveness Score (z score)') +
-  stat_poly_eq(aes(label  = paste(stat(eq.label),
-                                stat(rr.label), sep = "*\", \"*")), 
-                     label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4) +
-    stat_fit_tidy(method = "lm",
-                label.x = "left",
-                method.args = list(formula = y ~ x),
-                mapping = aes(label = sprintf("Slope = %.3g,\n p-value = %.3g",
-                                              stat(x_estimate),
-                                              stat(x_p.value)))) +
+  geom_richtext(
+    aes(x = 0.5, y = 5,label = eq_plot_txt(ge_df_2019), hjust=0.2)
+  ) +  
     theme(legend.position = 'bottom') +
   labs(
     title='Plot of SPI overall score on Government Effectiveness',
@@ -1888,7 +2088,7 @@ The table below shows the estimate of $\beta$, the effect of the statistical per
 
 
 ```{r geregsmall, echo=FALSE}
-# 
+## 
 
 
 
@@ -1946,7 +2146,7 @@ ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2019, color=region)) +
   geom_smooth(method='lm', color='blue') +
   geom_segment(aes(x=10,xend=100, y=10,yend=100), color='grey') +
   expand_limits(x=c(10,100),y=c(10,100)) +
-  theme_bw() +
+  theme_spi() +
   labs(
     title='Scatterplot of 2019 SPI overall score  & 2016 SPI overall score',
     caption = 'Solid grey line represents the 45 degree line.  Blue line represents line of best fit (regression line) with a 95% confidence interval shown in a shaded line.'
@@ -1956,7 +2156,7 @@ ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2019, color=region)) +
   theme(legend.position = 'bottom') +
     stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
-                     color='black',
+                     color='blue',
                      label.x.npc = "right", label.y.npc = 0.1,
                      formula = 'y~x', parse = TRUE, size = 4) +
   guides(
@@ -2014,7 +2214,7 @@ As another check, we present the distribution of scores across countries for eac
 Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/IQ.SCI.OVRL?format=json&date=2004:2020&per_page=5000")
 Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
 
-# Parse the JSON content and convert it to a data frame.
+## Parse the JSON content and convert it to a data frame.
 sci_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
   data.frame() %>%
   transmute(
@@ -2129,7 +2329,7 @@ ggplot(spi_index_df, aes(x = SPI.INDEX)) +
   stat_function(fun = dnorm, 
                 color='red',
                 args = list(mean = mean(spi_index_df$SPI.INDEX, na.rm=T), sd = sd(spi_index_df$SPI.INDEX, na.rm=T))) +
-    theme_bw() +
+    theme_spi() +
   labs(
     title='Distribution of SPI overall score across Countries',
     color='Index Name'
@@ -2146,7 +2346,7 @@ ggplot(spi_index_df, aes(x = SPI.INDEX)) +
 ggplot(density_df, aes(x = index_values, color=index_name)) + 
   facet_wrap(~date) +
   geom_density() +
-    theme_bw() +
+    theme_spi() +
   labs(
     title='Distribution of SPI overall score and alternative indices across countries',
     color='Index Name'
@@ -2170,8 +2370,9 @@ Countries and international organizations need to know each national statistical
 
 
 
+## Annex
 
-## Country SPI overall scores
+### Country SPI overall scores
 
 Below, we present the full list of countries by their SPI overall score in 2019.  The first column is the country name and the following columns are the overall SPI overall score, and then the sub-scores for dimension 1,2,3,4 and 5.  
 
@@ -2253,39 +2454,39 @@ index_tab <- index_disp %>%
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks4, reverse=TRUE)) %>%
           bg(j = c('SPI.INDEX.DIM5'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks5, reverse=TRUE))
-# 
-# #make nice looking
-# index_tab <- index_tab %>%
-#   flextable() %>%
-#   add_header_lines('SPI overall score in 2019 and Dimension Scores.') %>%
-#   set_header_labels(values=list(
-#                        country="Country", 
-#                        SPI.INDEX="SPI overall score",
-#                        SPI.INDEX.DIM1="Dim 1: Data Use",
-#                        SPI.INDEX.DIM2="Dim 2: Data Services",
-#                        SPI.INDEX.DIM3="Dim 3: Data Products ",
-#                        SPI.INDEX.DIM4="Dim 4: Data Sources",
-#                        SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
-#                                    )) %>%
-#     bg(j = c('SPI.INDEX'), 
-#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM1'),
-#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM2'),
-#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM3'),
-#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM4'),
-#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM5'),
-#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE))
-# 
-#   
+## 
+## #make nice looking
+## index_tab <- index_tab %>%
+##   flextable() %>%
+##   add_header_lines('SPI overall score in 2019 and Dimension Scores.') %>%
+##   set_header_labels(values=list(
+##                        country="Country", 
+##                        SPI.INDEX="SPI overall score",
+##                        SPI.INDEX.DIM1="Dim 1: Data Use",
+##                        SPI.INDEX.DIM2="Dim 2: Data Services",
+##                        SPI.INDEX.DIM3="Dim 3: Data Products ",
+##                        SPI.INDEX.DIM4="Dim 4: Data Sources",
+##                        SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
+##                                    )) %>%
+##     bg(j = c('SPI.INDEX'), 
+##        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+##     bg(j = c('SPI.INDEX.DIM1'),
+##        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+##     bg(j = c('SPI.INDEX.DIM2'),
+##        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+##     bg(j = c('SPI.INDEX.DIM3'),
+##        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+##     bg(j = c('SPI.INDEX.DIM4'),
+##        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+##     bg(j = c('SPI.INDEX.DIM5'),
+##        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE))
+## 
+##   
 
 FitFlextableToPage(index_tab)
 
 ```
-## Country SPI overall scores over time
+### Country SPI overall scores over time
 
 
 ```{r tabtime, echo=FALSE}
@@ -2380,7 +2581,7 @@ FitFlextableToPage(index_tab_recode)
 
 ```
 
-## Comparison to other measures of statistical performance
+### Comparison to other measures of statistical performance
 
 Next, we compare our index to several other indices of statistical performance that have been created.  This will provide a sense of how rankings differ across measures, how they correlate with other outcomes, and how the distributions of scores compare.  These are the SCI, the Open Data Watch index (ODIN), and version 0 of the SPI overall score that was produced in [@cameron2019measuring] 
 
@@ -2388,12 +2589,12 @@ We first compare the SPI overall score to the older World Bank Statistical Capac
 
 ```{r sci}
 
-### Scatterplot SCI SPI
+#### Scatterplot SCI SPI
 spi_sci_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=SCI, color=region)) +
   facet_wrap(~date) +
-  # geom_point() +
+  ## geom_point() +
   geom_text(aes(label=iso3c)) +
-  theme_bw() +
+  theme_spi() +
   labs(
     title='Scatterplot of Statistical Capacity Index (SCI) and SPI Overall Score'
   ) +
@@ -2489,9 +2690,9 @@ gdp_long <- gdp_reg_df %>%
 
 ggplot(gdp_long, aes(x=log_gdp_pcap,y=index_values, color=region)) +
   facet_wrap(~index_name) +
-  # geom_point() +
+  ## geom_point() +
   geom_text(aes(label=iso3c)) +
-  theme_bw() +
+  theme_spi() +
   labs(
     title='Scatterplot of Alternate Statistical Performance Indices on Log GDP per Capita'
   ) +
@@ -2511,12 +2712,12 @@ We compare the SPI overall score to the Open Data Watch rankings of country stat
 
  
 
-### Scatterplot ODIN SPI
+#### Scatterplot ODIN SPI
 spi_odin_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=ODIN_score, color=region)) +
-  # geom_point() +
+  ## geom_point() +
   facet_wrap(~date) +
   geom_text(aes(label=iso3c)) +
-  theme_bw() +
+  theme_spi() +
   labs(
     title='Scatterplot of SPI overall score on Open Data Watch Index'
   ) +
@@ -2549,12 +2750,12 @@ We compare the SPI overall score to the SPI version 0.  The correlation between 
 ```{r spiv0, echo=FALSE}
 
 
-### Scatterplot SPI SPI_v0
+#### Scatterplot SPI SPI_v0
 spi_spi_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=SPI_v0, color=region)) +
   facet_wrap(~date) +
-  # geom_point() +
+  ## geom_point() +
   geom_text(aes(label=iso3c)) +
-  theme_bw() +
+  theme_spi() +
   labs(
     title='Scatterplot of new SPI overall score on SPI Version 0 Index'
   ) +
@@ -2571,11 +2772,11 @@ spi_spi_plot
 
 ```
 
-## Other Tables and Figures
+### Other Tables and Figures
 
 
 ```{r gereg, echo=FALSE}
-# 
+## 
 
 
 
@@ -2604,12 +2805,12 @@ huxtable::huxreg('Goverment Effectiveness'=ge_spi,
 
 ```
 
-## Indicator Metadata
+### Indicator Metadata
 
 
-```{r metadatatab2}
+```{r metadatatab3}
 ####
-# create table
+## create table
 ####
 
 metatable <- metadata %>%
@@ -2663,7 +2864,7 @@ index_tab <- flextable(metatable) %>%
                       color=color)) +
     scale_color_manual(values = c('decreased' = "red", 'improved' = "green")) +
     coord_polar() +
-    theme_bw() +
+    theme_spi() +
     labs(
       title=paste(title, "Change from 2016-2019", sep=" - "),
       subtitle='Source: Statistical Performance Indicators',
@@ -2676,4 +2877,5 @@ index_tab <- flextable(metatable) %>%
 ```
 
 
+## References
 
