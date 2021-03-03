@@ -83,8 +83,8 @@ spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
 
 #metadata 
 metadata <- data.frame(
-  series = c('SPI.INDEX', 'SPI.INDEX.DIM1', 'SPI.INDEX.DIM2', 'SPI.INDEX.DIM3', 'SPI.INDEX.DIM4', 'SPI.INDEX.DIM5'),
-  indicator_name = c('SPI Overall Score', 'Dimension 1: Data Use', 'Dimension 2: Data Services', 'Dimension 3: Data Products', 'Dimension 4: Data Sources', 'Dimension 5: Data Infrastructure')
+  series = c('SPI.INDEX', 'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5'),
+  indicator_name = c('SPI Overall Score', 'Pillar 1: Data Use', 'Pillar 2: Data Services', 'Pillar 3: Data Products', 'Pillar 4: Data Sources', 'Pillar 5: Data Infrastructure')
 )
 
 #get list of country info
@@ -718,7 +718,7 @@ fcs_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scor
 
 ```
 
-## Correlation between the SPI Dimensions
+## Correlation between the SPI Pillars
 
 ![](plots/dimcorr-1.png)
 
@@ -886,18 +886,18 @@ pov_spi + gini_spi   +
         mutate(across(starts_with("SPI.INDEX"), round,1))
       
       
-      #plot by dimension
+      #plot by Pillar
       colors <- c("SPI Overall Score" = "#390099", "SPI Dim 1 - Data Use" = "#9b5de5", "SPI Dim 2 - Data Services" = "#f15bb5", "SPI Dim 3 - Data Products" = "#fee440", "SPI Dim 4 - Data Sources" = "#00bbf9", "SPI Dim 5 - Data Infrastructure" = "#00f5d4" )
       
       zipper_plt<-ggplot(df_aggregated, aes(x=Country, y=SPI.INDEX)) +
         facet_wrap(~income,scales = 'free_y') +
         geom_segment( aes(x=Country, xend=Country, y=0, yend=100), color="grey", size=1, alpha=0.1) +
         geom_point(aes(color="SPI Overall Score"),size=2,) +
-        geom_point( aes(y=SPI.INDEX.DIM1, color="SPI Dim 1 - Data Use"),size=2,) +
-        geom_point( aes(y=SPI.INDEX.DIM2, color="SPI Dim 2 - Data Services"), size=2,) +
-        geom_point( aes(y=SPI.INDEX.DIM3, color="SPI Dim 3 - Data Products"), size=2,) +
-        geom_point( aes(y=SPI.INDEX.DIM4, color="SPI Dim 4 - Data Sources"), size=2,) +
-        geom_point( aes(y=SPI.INDEX.DIM5, color="SPI Dim 5 - Data Infrastructure"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.PIL1, color="SPI Dim 1 - Data Use"),size=2,) +
+        geom_point( aes(y=SPI.INDEX.PIL2, color="SPI Dim 2 - Data Services"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.PIL3, color="SPI Dim 3 - Data Products"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.PIL4, color="SPI Dim 4 - Data Sources"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.PIL5, color="SPI Dim 5 - Data Infrastructure"), size=2,) +
         #geom_text(aes(label=food_insecure_mod_severe), nudge_y = 3) +
         coord_flip()+
         theme_bw() +
@@ -914,7 +914,7 @@ pov_spi + gini_spi   +
           y="Statistical Performance Indicator",
           color="Legend"
         ) +
-        #ggtitle(str_wrap("Decomposition of Statistical Performance Indicator Scores by Dimension", 120)) + 
+        #ggtitle(str_wrap("Decomposition of Statistical Performance Indicator Scores by Pillar", 120)) + 
         # scale_x_continuous(
         #   breaks = df_aggregated$rank, # specify tick breaks using rank column
         #   labels = df_aggregated$country # specify tick labels using x column
@@ -941,20 +941,20 @@ pov_spi + gini_spi   +
     group_by(income) %>%
     summarise(across(starts_with('SPI.INDEX'), mean, na.rm=T)) %>%
     pivot_longer(
-      cols=c('SPI.INDEX.DIM1', 'SPI.INDEX.DIM2', 'SPI.INDEX.DIM3', 'SPI.INDEX.DIM4', 'SPI.INDEX.DIM5'),
+      cols=c('SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5'),
       values_to='level',
-      names_to='dimension'
+      names_to='Pillar'
     ) %>%
-    mutate(dimension=case_when(
-      dimension=="SPI.INDEX.DIM1" ~ "Dimension 1: Data Use",
-      dimension=="SPI.INDEX.DIM2" ~ "Dimension 2: Data Services",
-      dimension=="SPI.INDEX.DIM3" ~ "Dimension 3: Data Products",
-      dimension=="SPI.INDEX.DIM4" ~ "Dimension 4: Data Sources",
-      dimension=="SPI.INDEX.DIM5" ~ "Dimension 5: Data Infrastructure"
+    mutate(Pillar=case_when(
+      Pillar=="SPI.INDEX.PIL1" ~ "Pillar 1: Data Use",
+      Pillar=="SPI.INDEX.PIL2" ~ "Pillar 2: Data Services",
+      Pillar=="SPI.INDEX.PIL3" ~ "Pillar 3: Data Products",
+      Pillar=="SPI.INDEX.PIL4" ~ "Pillar 4: Data Sources",
+      Pillar=="SPI.INDEX.PIL5" ~ "Pillar 5: Data Infrastructure"
     )) %>%
     group_by(income) %>%
     mutate(level=level/5,
-           total=sum(level)) #divide by 5 so that dimension scores sum to overall score.  This puts equal weight on each dimension in the sum
+           total=sum(level)) #divide by 5 so that Pillar scores sum to overall score.  This puts equal weight on each Pillar in the sum
   
 
 
@@ -968,7 +968,7 @@ pov_spi + gini_spi   +
     name <- 'SPI Overall Score'
     income <- c("Low income", "Lower middle income","Upper middle income","High income")
 #absolute graph
-  ggplot(decomp_stacked_df, aes(x=income, y=level, fill=dimension, label=paste0(round(level,1)))) +
+  ggplot(decomp_stacked_df, aes(x=income, y=level, fill=Pillar, label=paste0(round(level,1)))) +
     geom_bar(stat = "identity", position='stack') +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
     geom_text(aes(y=total,label=paste0('Total = ' ,round(total,1))), size=4, nudge_y=7 ) +
@@ -976,8 +976,8 @@ pov_spi + gini_spi   +
     theme_bw() +
     
     labs(
-      #title='Contribution of each dimension to SPI overall score',
-      subtitle='Each dimension receives equal 1/5th weight in overall score',
+      #title='Contribution of each Pillar to SPI overall score',
+      subtitle='Each pillar receives equal 1/5th weight in overall score',
       caption=paste0(name,' scale = 0 - 100 points.')
     ) +
   scale_x_discrete(limits = income) +
@@ -992,7 +992,7 @@ pov_spi + gini_spi   +
     guides(fill=guide_legend(nrow=2,byrow=TRUE))
   
 #relative graph  
-  ggplot(decomp_stacked_df, aes(x=income, y=100*level/total, fill=dimension, label=paste0(round(100*level/total,1),"%"))) +
+  ggplot(decomp_stacked_df, aes(x=income, y=100*level/total, fill=Pillar, label=paste0(round(100*level/total,1),"%"))) +
     geom_bar(stat = "identity", position='stack') +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
     #geom_text(aes(y=total,label=paste0('Total = ' ,round(total,1))), size=4, nudge_y=7 ) +
@@ -1001,7 +1001,7 @@ pov_spi + gini_spi   +
     ylab('percentage') +
     labs(
       #title='Relative Contribution of each dimension to SPI overall score',
-      subtitle='Each dimension receives equal 1/5th weight in overall score',
+      subtitle='Each pillar receives equal 1/5th weight in overall score',
       caption=paste0(name,' scale = 0 - 100 points.')
     ) +
   scale_x_discrete(limits = income) +
@@ -1085,11 +1085,11 @@ growth_plot <- function(variables, name) {
 }
 
 
-# growth_plot('SPI.INDEX.DIM1', 'SPI Dimension 1 (Data Use) Score')
-# growth_plot('SPI.INDEX.DIM2', 'SPI Dimension 2 (Data Services) Score')
-# growth_plot('SPI.INDEX.DIM3', 'SPI Dimension 3 (Data Products) Score')
-# growth_plot('SPI.INDEX.DIM4', 'SPI Dimension 4 (Data Sources) Score')
-# growth_plot('SPI.INDEX.DIM5', 'SPI Dimension 5 (Data Infrastructure) Score')
+# growth_plot('SPI.INDEX.PIL1', 'SPI Pillar 1 (Data Use) Score')
+# growth_plot('SPI.INDEX.PIL2', 'SPI Pillar 2 (Data Services) Score')
+# growth_plot('SPI.INDEX.PIL3', 'SPI Pillar 3 (Data Products) Score')
+# growth_plot('SPI.INDEX.PIL4', 'SPI Pillar 4 (Data Sources) Score')
+# growth_plot('SPI.INDEX.PIL5', 'SPI Pillar 5 (Data Infrastructure) Score')
 
 
 ```
@@ -1154,11 +1154,11 @@ overall_bottom_40 <- SPI %>%
                 values_from=starts_with('SPI.INDEX')) %>%
     ungroup() %>%
     mutate(overall_growth=(SPI.INDEX_2019-SPI.INDEX_2016),
-           dim1_growth=(SPI.INDEX.DIM1_2019-SPI.INDEX.DIM1_2016),
-           dim2_growth=(SPI.INDEX.DIM2_2019-SPI.INDEX.DIM2_2016),
-           dim3_growth=(SPI.INDEX.DIM3_2019-SPI.INDEX.DIM3_2016),
-           dim4_growth=(SPI.INDEX.DIM4_2019-SPI.INDEX.DIM4_2016),
-           dim5_growth=(SPI.INDEX.DIM5_2019-SPI.INDEX.DIM5_2016)
+           dim1_growth=(SPI.INDEX.PIL1_2019-SPI.INDEX.PIL1_2016),
+           dim2_growth=(SPI.INDEX.PIL2_2019-SPI.INDEX.PIL2_2016),
+           dim3_growth=(SPI.INDEX.PIL3_2019-SPI.INDEX.PIL3_2016),
+           dim4_growth=(SPI.INDEX.PIL4_2019-SPI.INDEX.PIL4_2016),
+           dim5_growth=(SPI.INDEX.PIL5_2019-SPI.INDEX.PIL5_2016)
            ) %>%
     filter(!(is.na(SPI.INDEX_2019) | is.na(SPI.INDEX_2016))) %>%
     mutate(spi_rank=100*rank(SPI.INDEX_2016)/length(SPI.INDEX_2016),
@@ -1189,16 +1189,16 @@ overall_bottom_40 <- SPI %>%
     pivot_longer(
       cols=c('D1', 'D2', 'D3', 'D4', 'D5'),
       values_to='growth',
-      names_to='dimension'
+      names_to='Pillar'
     ) %>%
-    mutate(dimension=case_when(
-      dimension=="D1" ~ "Dimension 1: Data Use",
-      dimension=="D2" ~ "Dimension 2: Data Services",
-      dimension=="D3" ~ "Dimension 3: Data Products",
-      dimension=="D4" ~ "Dimension 4: Data Sources",
-      dimension=="D5" ~ "Dimension 5: Data Infrastructure"
+    mutate(Pillar=case_when(
+      Pillar=="D1" ~ "Pillar 1: Data Use",
+      Pillar=="D2" ~ "Pillar 2: Data Services",
+      Pillar=="D3" ~ "Pillar 3: Data Products",
+      Pillar=="D4" ~ "Pillar 4: Data Sources",
+      Pillar=="D5" ~ "Pillar 5: Data Infrastructure"
     )) %>%
-    mutate(growth=growth/5) #divide by 5 so that dimension scores sum to overall score.  This puts equal weight on each dimension in the sum
+    mutate(growth=growth/5) #divide by 5 so that Pillar scores sum to overall score.  This puts equal weight on each Pillar in the sum
   
 
 
@@ -1211,7 +1211,7 @@ overall_bottom_40 <- SPI %>%
 ```{r elplotstackedplt, echo=FALSE, fig.height=8, fig.width=12}
 name <- 'SPI Overall Score'
 
-  ggplot(elephant_stacked_df, aes(x=spi_bins, y=growth, fill=dimension, label=paste0(round(growth,1)))) +
+  ggplot(elephant_stacked_df, aes(x=spi_bins, y=growth, fill=Pillar, label=paste0(round(growth,1)))) +
     geom_bar(stat = "identity", position='stack') +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
     scale_x_discrete() +
@@ -1331,51 +1331,51 @@ changes_fun('SPI.D1.5.POV', 'SPI Comparable Poverty Data Indicator', 2004, 2019)
 
 ```{r changesplot1, fig.height=12}
 
-changes_fun('SPI.INDEX.DIM1', 'SPI Dimension 1 (Data Use) Score', 2016, 2019)
+changes_fun('SPI.INDEX.PIL1', 'SPI Pillar 1 (Data Use) Score', 2016, 2019)
 
 ```
 
 ```{r changesplot2, fig.height=12}
 
-changes_fun('SPI.INDEX.DIM2', 'SPI Dimension 2 (Data Services) Score', 2016, 2019)
+changes_fun('SPI.INDEX.PIL2', 'SPI Pillar 2 (Data Services) Score', 2016, 2019)
 
 ```
 
 ```{r changesplot3, fig.height=12}
 
-changes_fun('SPI.INDEX.DIM3', 'SPI Dimension 3 (Data Products) Score', 2016, 2019)
+changes_fun('SPI.INDEX.PIL3', 'SPI Pillar 3 (Data Products) Score', 2016, 2019)
 
 ```
 
 ```{r changesplotpovind, fig.height=12}
 
-changes_fun('SPI.D3.1.POV', 'SPI Dimension 3 (Data Products) - SDG 1 Score', 2004, 2019)
+changes_fun('SPI.D3.1.POV', 'SPI Pillar 3 (Data Products) - SDG 1 Score', 2004, 2019)
 
 ```
 ```{r changesplot4, fig.height=12}
 
-changes_fun('SPI.INDEX.DIM4', 'SPI Dimension 4 (Data Sources) Score', 2016, 2019)
+changes_fun('SPI.INDEX.PIL4', 'SPI Pillar 4 (Data Sources) Score', 2016, 2019)
 
 ```
 
 ```{r changesplot4house, fig.height=12}
 
-changes_fun('SPI.D4.1.4.HOUS', 'SPI Dimension 4 - Household Survey Availability - Score', 2010, 2019)
+changes_fun('SPI.D4.1.4.HOUS', 'SPI Pillar 4 - Household Survey Availability - Score', 2010, 2019)
 
 ```
 
 ```{r changesplot5, fig.height=12}
 
-changes_fun('SPI.INDEX.DIM5', 'SPI Dimension 5 (Data Infrastructure) Score', 2016, 2019)
+changes_fun('SPI.INDEX.PIL5', 'SPI Pillar 5 (Data Infrastructure) Score', 2016, 2019)
 
 ```
 # Tables
 
 ## Country SPI overall scores
 
-Below, we present the full list of countries by their SPI overall score in 2019.  The first column is the country name and the following columns are the overall SPI overall score, and then the sub-scores for dimension 1,2,3,4 and 5.  
+Below, we present the full list of countries by their SPI overall score in 2019.  The first column is the country name and the following columns are the overall SPI overall score, and then the sub-scores for Pillar 1,2,3,4 and 5.  
 
-The cells in the table are color coded based on the performance of countries on our index and the sub-scores of the dimensions.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
+The cells in the table are color coded based on the performance of countries on our index and the sub-scores of the pillars.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
 
 Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
 
@@ -1404,30 +1404,30 @@ index_tab <- spi_index_df %>%
   arrange(-SPI.INDEX) %>%
   mutate(across(starts_with('SPI.INDEX'),~1*.),
          across(starts_with('SPI.INDEX'),round,1)) %>%
-  select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) 
+  select(country, SPI.INDEX,SPI.INDEX.PIL1,SPI.INDEX.PIL2,SPI.INDEX.PIL3,SPI.INDEX.PIL4,SPI.INDEX.PIL5) 
 
  #calculate the breaks for the color coding
         brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
         brks <- append(0,brks)
         brks <- append(brks,100)
 
-        brks1 <- quantile(index_tab$SPI.INDEX.DIM1, probs=c(1,2,3,4)/5,na.rm=T)
+        brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)
         brks1 <- append(0,brks1)
         if (max(brks1)<100) brks1 <- append(brks1,100)
         
-        brks2 <- quantile(index_tab$SPI.INDEX.DIM2, probs=c(1,2,3,4)/5,na.rm=T)
+        brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)
         brks2 <- append(0,brks2)
         if (max(brks2)<100) brks2 <- append(brks2,100)
         
-        brks3 <- quantile(index_tab$SPI.INDEX.DIM3, probs=c(1,2,3,4)/5,na.rm=T)
+        brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)
         brks3 <- append(0,brks3)
         if (max(brks3)<100) brks3 <- append(brks3,100)
         
-        brks4 <- quantile(index_tab$SPI.INDEX.DIM4, probs=c(1,2,3,4)/5,na.rm=T)
+        brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)
         brks4 <- append(0,brks4)
         if (max(brks4)<100) brks4 <- append(brks4,100)
         
-        brks5 <- quantile(index_tab$SPI.INDEX.DIM5, probs=c(1,2,3,4)/5,na.rm=T)
+        brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)
         brks5 <- append(0,brks5)
         if (max(brks5)<100) brks5 <- append(brks5,100)
         
@@ -1435,53 +1435,53 @@ index_tab <- spi_index_df %>%
       #make nice looking
       index_tab <- index_tab %>%
         flextable() %>%
-        add_header_lines('SPI overall score in 2019 and Dimension Scores.') %>%
+        add_header_lines('SPI overall score in 2019 and Pillar Scores.') %>%
         set_header_labels(values=list(
                              country="Country",
                              SPI.INDEX="SPI overall score",
-                             SPI.INDEX.DIM1="Dim 1: Data Use",
-                             SPI.INDEX.DIM2="Dim 2: Data Services",
-                             SPI.INDEX.DIM3="Dim 3: Data Products ",
-                             SPI.INDEX.DIM4="Dim 4: Data Sources",
-                             SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
+                             SPI.INDEX.PIL1="Pil 1: Data Use",
+                             SPI.INDEX.PIL2="Pil 2: Data Services",
+                             SPI.INDEX.PIL3="Pil 3: Data Products ",
+                             SPI.INDEX.PIL4="Pil 4: Data Sources",
+                             SPI.INDEX.PIL5="Pil 5: Data Infrastructure"
                                          )) %>%
           bg(j = c('SPI.INDEX'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks, reverse=TRUE)) %>%
-          bg(j = c('SPI.INDEX.DIM1'),
+          bg(j = c('SPI.INDEX.PIL1'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks1, reverse=TRUE)) %>%
-          bg(j = c('SPI.INDEX.DIM2'),
+          bg(j = c('SPI.INDEX.PIL2'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks2, reverse=TRUE)) %>%
-          bg(j = c('SPI.INDEX.DIM3'),
+          bg(j = c('SPI.INDEX.PIL3'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks3, reverse=TRUE)) %>%
-          bg(j = c('SPI.INDEX.DIM4'),
+          bg(j = c('SPI.INDEX.PIL4'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks4, reverse=TRUE)) %>%
-          bg(j = c('SPI.INDEX.DIM5'),
+          bg(j = c('SPI.INDEX.PIL5'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks5, reverse=TRUE))
 # 
 # #make nice looking
 # index_tab <- index_tab %>%
 #   flextable() %>%
-#   add_header_lines('SPI overall score in 2019 and Dimension Scores.') %>%
+#   add_header_lines('SPI overall score in 2019 and Pillar Scores.') %>%
 #   set_header_labels(values=list(
 #                        country="Country", 
 #                        SPI.INDEX="SPI overall score",
-#                        SPI.INDEX.DIM1="Dim 1: Data Use",
-#                        SPI.INDEX.DIM2="Dim 2: Data Services",
-#                        SPI.INDEX.DIM3="Dim 3: Data Products ",
-#                        SPI.INDEX.DIM4="Dim 4: Data Sources",
-#                        SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
+#                        SPI.INDEX.PIL1="Dim 1: Data Use",
+#                        SPI.INDEX.PIL2="Dim 2: Data Services",
+#                        SPI.INDEX.PIL3="Dim 3: Data Products ",
+#                        SPI.INDEX.PIL4="Dim 4: Data Sources",
+#                        SPI.INDEX.PIL5="Dim 5: Data Infrastructure"
 #                                    )) %>%
 #     bg(j = c('SPI.INDEX'), 
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM1'),
+#     bg(j = c('SPI.INDEX.PIL1'),
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM2'),
+#     bg(j = c('SPI.INDEX.PIL2'),
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM3'),
+#     bg(j = c('SPI.INDEX.PIL3'),
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM4'),
+#     bg(j = c('SPI.INDEX.PIL4'),
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM5'),
+#     bg(j = c('SPI.INDEX.PIL5'),
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE))
 # 
 #   
@@ -1539,37 +1539,37 @@ FitFlextableToPage(index_tab_time)
 
 
 
-## Figure A.1: Dimension 1 Scores 
+## Figure A.1: Pillar 1 Scores 
 
 ### Panel A: Global Map
- ![](plots/dimensionsplot1-1.png)
+ ![](plots/pillarsplot1-1.png)
 
 ### Panel B: By Country
-  ![](plots/countrydimensionsplot1-1.png)
-## Figure A.2: Dimension 2 Scores 
-
-### Panel A: Global Map
-  ![](plots/dimensionsplot2-1.png)
-### Panel B: By Country
-   ![](plots/countrydimensionsplot2-1.png)
-## Figure A.3: Dimension 3 Scores
+  ![](plots/countrypillarsplot1-1.png)
+## Figure A.2: Pillar 2 Scores 
 
 ### Panel A: Global Map
-  ![](plots/dimensionsplot3-1.png)
+  ![](plots/pillarsplot2-1.png)
 ### Panel B: By Country
-   ![](plots/countrydimensionsplot3-1.png)
-## Figure A.4: Dimension 4 Scores
+   ![](plots/countrypillarsplot2-1.png)
+## Figure A.3: Pillar 3 Scores
 
 ### Panel A: Global Map
-  ![](plots/dimensionsplot4-1.png)
+  ![](plots/pillarsplot3-1.png)
 ### Panel B: By Country
-   ![](plots/countrydimensionsplot4-1.png)
-## Figure A.5: Dimension 5 Scores
+   ![](plots/countrypillarsplot3-1.png)
+## Figure A.4: Pillar 4 Scores
+
+### Panel A: Global Map
+  ![](plots/pillarsplot4-1.png)
+### Panel B: By Country
+   ![](plots/countrypillarsplot4-1.png)
+## Figure A.5: Pillar 5 Scores
 
 ### Panel A: Global Map   
-  ![](plots/dimensionsplot5-1.png)
+  ![](plots/pillarsplot5-1.png)
 ### Panel B: By Country 
-   ![](plots/countrydimensionsplot5-1.png)
+   ![](plots/countrypillarsplot5-1.png)
 
 ## Unique values in SCI
 
@@ -1597,7 +1597,7 @@ sci_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
          SCI_rank=if_else(is.na(SCI),as.numeric(NA),SCI_rank))
 
 
-#check unique values by dimension.
+#check unique values by Pillar.
 unique_scores_df <- sci_df %>% filter(date==2019) %>% filter(!is.na(SCI)) %>% mutate(SCI=round(SCI,3))
 unique_scores_sci <-length(unique(unique_scores_df$SCI))
 ```
@@ -1824,16 +1824,16 @@ spi_index_df_alt <- spi_index_df_alt %>%
          #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
   ) %>%
   mutate(
-    SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=TRUE),
-    SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=TRUE),
-    SPI.INDEX.DIM3=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
-    SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=TRUE),
-    SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=TRUE),
-    SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.DIM1',
-                                    'SPI.INDEX.DIM2',
-                                    'SPI.INDEX.DIM3',
-                                    'SPI.INDEX.DIM4',
-                                    'SPI.INDEX.DIM5')), na.rm=TRUE)
+    SPI.INDEX.PIL1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=TRUE),
+    SPI.INDEX.PIL2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=TRUE),
+    SPI.INDEX.PIL3=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
+    SPI.INDEX.PIL4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=TRUE),
+    SPI.INDEX.PIL5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=TRUE),
+    SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.PIL1',
+                                    'SPI.INDEX.PIL2',
+                                    'SPI.INDEX.PIL3',
+                                    'SPI.INDEX.PIL4',
+                                    'SPI.INDEX.PIL5')), na.rm=TRUE)
   ) %>% #
   mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
   arrange(-date, -SPI.INDEX.ALT) %>%

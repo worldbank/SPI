@@ -96,9 +96,9 @@ The dialogue between users and suppliers in turn drives the design of statistica
 In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens.  The fourth dimension of the SPI is therefore data sources.  A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.
 
 For the cycle to be complete, capability needs continuously to be reviewed to ensure that it is enough to deliver the products, services and ultimately data use required. The fifth dimension of the SPI is therefore data infrastructure. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
-The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 below.
+The 5 dimensions and associated 22 dimensions of the SPI are as shown in Figure 1 below.
 
-*Figure 1: The Dimensions and Pillars that Construct the New SPI*
+*Figure 1: The Pillars and Dimensions that Construct the New SPI*
 ![](SPI_dashboard.png)
 
 A score against each element would facilitate:    
@@ -115,7 +115,7 @@ A score against each element would facilitate:
 
 
 Key characteristics of the SPI are: (i) uses only publicly accessible data; (ii) transparent methodology; (iii) easily replicable; (iv) provides a long-time series to track progress in performance; (v) captures outcomes and supporting elements; (vi) reflects the SDGs; (vii) facilitates at-a-glance comparisons on a global scale.
-We are collecting data on indicators for the 22 pillars above. For dissemination, the SPI will be presented both in the dashboard format above and as an index for each country. Further details on the construction of the new SPI are provided in the remainder of the document.
+We are collecting data on indicators for the 22 dimensions above. For dissemination, the SPI will be presented both in the dashboard format above and as an index for each country. Further details on the construction of the new SPI are provided in the remainder of the document.
 
 
 
@@ -500,68 +500,33 @@ eq_plot_txt <- function(data) {
 
 ```
 
-# Pillars of the new SPI
+# Pillars and Dimensions of the SPI
 
 
-A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as dimensions. We refer to the 22 cells in the framework in Figure 1 as pillars. Finally, each pillar may be composed of multiple indicators. For instance, the pillar on censuses and surveys is made up indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.
+The SPI is built around five pillars, shown as the rows in the Dashboard in Figure 1, and 22 associated dimensions as shown in the cells of the Dashboard. Each of the 22 dimensions is  composed of one or more indicators. For instance, the dimensions on censuses is made up of indicators on whether population censuses or agricultural censuses have been conducted. In all there are XX indicators in the Dashboard.
 
-## Data use
+## Pillar 1: Data use
 
-The data use dimension is segmented by user type. The tiles on the Dashboard provide an indicator of use of statistics respectively by the legislature, executive, civil society (including sub-national actors), academia and international bodies. A mature system would score well across the tiles. Areas for development would be highlighted by weaker scores in that domain enabling questions to be asked about prioritization amongst user groups and why existing services are not resulting in higher use of national statistics in that segment.
+The data use pillar is segmented by five types of users --  (i) the legislature, (ii) the executive branch, (iii) civil society (including sub-national actors), (iv) academia and (v) international bodies.  Each dimension would have associated indicators to measure performance. A mature system would score well across all dimensions whereas a less mature one would have weaker scores along certain dimensions. The gaps would give insights into  prioritization among user groups and help answer questions as to why the existing services are not resulting in higher use of national statistics in  a particular  segment.
 
-## Data services
+## Pillar 2: Data services
 
-The data services dimension is segmented by service type. The tiles on the Dashboard provide an indicator of the quality of data releases, the richness and openness of online access, the effectiveness of advisory and analytical services related to statistics and the availability and use of data services such as secure microdata access. Advisory and analytical services might incorporate elements related to data stewardship services including ethical consideration of proposals and calling out misuse of data in accordance with the Fundamental Principles of Official Statistics.
+This pillar  segmented by four service types: (i) the quality of data releases, (ii) the richness and openness of online access, (iii) the effectiveness of advisory and analytical services related to statistics, and (iv) the availability and use of data services such as secure microdata access. Advisory and analytical services might incorporate elements related to data stewardship services including ethical consideration of proposals and calling out misuse of data in accordance with the Fundamental Principles of Official Statistics.
 
-## Data products
+## Pillar 3: Data products
 
-The data products dimension is segmented by topic and organized into social, economic, environmental and institutional domains using the typology of the Sustainable Development Goals. This approach enables comparisons across countries and anchors the system in the 2030 agenda so that a global view can be generated whilst enabling different emphasis to be applied in different countries to reflect the user needs of that country.
+The data products pillar is segmented by four topics and organized into (i) social, (ii) economic, (iii) environmental, and (iv) institutional dimensions using the typology of the Sustainable Development Goals (SDGs). This approach anchors the system in the 2030 development agenda and enables comparisons across countries so that a global view can be generated while enabling country specific emphasis to reflect the user needs of that country.
 
-## Data sources
+## Pillar 4: Data sources
 
-The data sources dimension is segmented between sources generated by the statistical office (censuses and surveys) and sources accessed from elsewhere (administrative data, geospatial data, private sector data and citizen generated data). The appropriate balance between these types of source will vary depending on the institutional setting and maturity of the statistical system in each country. High scores should reflect the extent to which the sources being utilized enable the necessary statistical indicators to be generated. For example, a low score on environment statistics may reflect a lack of use of (and low score for) geospatial data. This linkage, which is inherent in the data cycle approach, should help highlight areas for investment if country needs are to be met.
+The data sources pillar is segmented by four sources generated by the (i) statistical office (censuses and surveys), and sources accessed from elsewhere such as (ii)  administrative data, (iii)geospatial data, and (iv) private sector data and citizen generated data. The appropriate balance between these source types will vary depending on a country’s institutional setting and the maturity of its statistical system. High scores should reflect the extent to which the sources being utilized enable the necessary statistical indicators to be generated. For example, a low score on environment statistics (in the data production pillar) may reflect a lack of use of (and low score for) geospatial data (in the data sources pillar). This type of linkage is inherent in the data cycle approach and can help highlight areas for investment if country needs are to be met.
 
-## Data infrastructure
+## Pillar 5: Data infrastructure
 
-The data infrastructure dimension is segmented into hard and soft infrastructure segments itemizing essential cross cutting requirements for an effective statistical system. The segments are:   
-
-  1. Legislation and governance covering the existence of laws and a functioning institutional framework for the statistical system    
+The data infrastructure dimension includes hard and soft infrastructure segments, itemizing essential cross cutting requirements for an effective statistical system. The segments are: (i) legislation and governance covering the existence of laws and a functioning institutional framework for the statistical system; (ii) standards and methods addressing compliance with recognized frameworks and concepts; (iii) skills including level of skills within the statistical system and among users (statistical literacy); (iv) partnerships reflecting the need for the statistical system to be inclusive and coherent; and (v) finance mobilized both domestically and from donors. 
   
-  2. Standards and methods addressing compliance with recognized frameworks and concepts   
-  
-  3. Skills including level of skills within the statistical system and amongst users (statistical literacy)   
-  
-  4. Partnerships reflecting the need for the statistical system to be inclusive and coherent    
-  
-  5. Finance, both domestically and from donors    
-  
-## Indicators and weights    
 
-We are seeking answers to the questions:    
-
-  1. What indicator (that we can measure in practice) could act as a proxy measure for the concept we are trying to capture?   
-  
-  2. What weight can we assign to the indicator that allows this concept to be aggregated with others in a meaningful way?   
-  
-  There will be no right answer to these questions and the proposed approach makes a virtue of this by: 
-  
-  1. Allowing missing values and setting out how missing values are dealt with for the purposes of making comparisons over time and between countries    
-  
-  2. Providing users the opportunity to apply their own weights    
-  
-  3. Releasing the dashboard as a “Beta” and encouraging a research agenda to help fill in gaps and improve any elements   
-  
-  4. Establishing a process for review that enables time series to be respected.   
-  
-  5. Presenting the dashboard within a toolkit for understanding statistical performance   
-
-
-
-Below is a brief description of the 22 pillars in our framework.  A detailed description of the underlying indicators populating the pillars is also available in the annex.
-
-
-
-```{r metadatatab1}
+```{r metadatatab1, eval=FALSE, include=FALSE}
 ####
 # create table
 ####
@@ -585,64 +550,68 @@ FitFlextableToPage(pillars_tab) %>%
 
 ```
 
-# SPI Data
+# Statistical Performance Indicators
 
-Thanks to a large scale data collection effort by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering 14 out of our 22 pillars for our dashboard.  These 54 indicators do allow us to provide data for each of our 5 dimensions on data use, data services, data products, data sources, and data infrastructure.  Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public.  Going forward, the international community must work together to fill these gaps.
+What indicators (that are measurable in practice) could act as a proxy measures for the concepts we are trying to capture? We discuss the Statistical Performance Indicators in this section.
 
-An area of particular concern is in the dimension of data use.  Currently, our dashboard only features data for one of the five pillars in data use.  That is on data use by international organizations.  We are currently blind as to whether statistical systems are providing useful data to their national governments (legislature and executive branches), to civil society, and to academia.  By closing this data gap, country national statistical offices (NSOs) can be better guided in whether the information they are providing is meeting their user's needs.  International organizations can help steer funding for capacity building in areas that are lacking.  And the virtuous data cycle can begin: where better investment leads to more effectiveness, then more innovation, higher value-added, and ultimately greater impact.
+Benefitting from large scale data collection efforts by organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering 14 out of our 22 dimensions for our dashboard. These 54 indicators allow us to provide data for each of our five dimensions on data use, data services, data products, data sources, and data infrastructure. Yet, there remain major gaps in what we are able to measure.  This impedes efforts to measure the performance of statistical systems in certain areas and going forward the international community must work together to fill these gaps.
 
-Another area that needs improvement is in the measurement of advisory and analytical services provided by NSOs, such as data stewardship services and the ethical consideration of proposals.  By measuring this type of work done by NSOs that goes beyond producing data, the international community and the NSOs themselves can better assess whether this type of support is in place.
+Below is a brief description of the indicators (or lack thereof) we have available for the 22 dimensions in the SPI framework. A detailed description of the underlying indicators populating the pillars is also available in the annex. For as many as eight dimensions we either lacked indicators with a developed methodology or else the data collection for that measure was incomplete. 
 
-In the area of data sources, more information is needed particularly in the areas of administrative data, geospatial data, and private and citizen generated data.  While we have measures of administrative data use, particularly on the development of civil registrations and vital statistics systems, we have an incomplete picture of whether the administrative data systems are in place to measure health, education, labor, and social protection program statistics.  For our geospatial indicator, we have a proxy measure of whether the country is able to produce indicators at the sub-national level, but we lack an understanding of how countries are using geospatial information in other ways, for instance using satellite data.  And while the world is increasingly awash with private and citizen generated data, such as on mobility, job searching, or social networking, we were unable to find a reliable source to measure how national statistical systems are incorporating this information.
 
-Finally, many of the soft components of data infrastructure lacked adequate data.  This includes the areas of skill (including data literacy) and partnerships between entities in the national statistical system.  We are making use of the PARIS21 led SDG indicator on whether statistical legislation met the standards of the UN fundamental Principles of Statistics in our dashboard, but were unable to use this in our index, because countries have not sufficiently reported to PARIS21 on this measure.  This is also true of the PARIS21 led SDG indicator on whether the national statistical system is fully funded.  Countries should be encouraged to report on this information.
-
-Below is a brief description of the information (or lack thereof) we have available for the pillars in our framework.  For pillars excluded, we either lacked a source with a developed methodology or else the data collection for that measure was incomplete. This is described below:
-
-  * **Pillar 1.1: Data use by national legislature:**  *Not included because of lack of established methodology.  In principle it may be possible to utilize websites of national legislatures but this will require further work and assessment. *   
-  * **Pillar 1.2: Data use by national executive branch:** *Not included because of lack of established methodology. There are some usable data sources with fairly good coverage (as used by PARIS21) but gaps in data have prevented fuller assessment of suitable methods.*      
-  * **Pillar 1.3: Data use by civil society:**  *Not included because of lack of established methodology. There are some usable data sources with good coverage, for example from social media but more data is required to help assess and allow for likely biases between and within countries.*    
-  * **Pillar 1.4: Data use by academia:**  *Not included because of lack of established methodology. We have not been able to find usable data sources with global coverage on which a new methodology could be developed.*   
-  * **Pillar 1.5: Data use by international organizations:**  *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics, safely managed drinking water, and labor force statistics data for international agencies using metadata. We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further*    
+  * **Dimension 1.1: Data use by national legislature:**  *Not included because of lack of established methodology.  In principle it may be possible to utilize websites of national legislatures but this will require further work and assessment. *   
+  * **Dimension 1.2: Data use by national executive branch:** *Not included because of lack of established methodology. There are some usable data sources with fairly good coverage (as used by [paris21_statistical_2019]) but gaps in data have prevented fuller assessment of suitable methods.*      
+  * **Dimension 1.3: Data use by civil society:**  *Not included because of lack of established methodology. There are some usable data sources with good coverage, for example from social media but more data is required to help assess and allow for likely biases between and within countries.*    
+  * **Dimension 1.4: Data use by academia:**  *Not included because of lack of established methodology. We have not been able to find usable data sources with global coverage on which a new methodology could be developed.*   
+  * **Dimension 1.5: Data use by international organizations:**  *Five measures usefulness or reliability of country produced measures for international organizations. First, on comparability of poverty estimates for the World Bank reporting on international poverty (Source: Povcalnet). Second on usable surveys for statistics on child mortality for the UN Inter-agency Group for Child Mortality Estimation (Source: https://childmortality.org/). Third on accuracy of debt reporting as classified by the World Bank (Source: World Bank WDI metadata).  Fourth, on availability of safely managed drinking water data for use by JMP.  Fifth, on labor force participation data for use by ILO. We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further*    
 
   
-  * **Pillar 2.1: Data Releases:** *SPI.D2.1.GDDS -	SDDS/e-GDDS subscription. This is a good data source but we recognize that it is a proxy for the concept we are seeking to capture rather than a direct measurement.*    
-  * **Pillar 2.2: Online access:** *SPI.D2.2.Openness.subscore	ODIN Open Data Openness score.  This is a well-established data source with good country coverage. In using this indicator, it is important to describe carefully what is captured since the purpose of ODIN is different to the purpose of the SPI.*   
-  * **Pillar 2.3: Advisory/ Analytical Services:**  *Not included because of lack of established methodology. We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further.*    
-  * **Pillar 2.4: Data services:** *SPI.D2.4.NADA	NADA metadata.  We have not been able to find usable data sources with global coverage on which a new methodology could be developed.*
+  * **Dimension 2.1: Data Releases:** *SDDS/e-GDDS subscription. This indicator is based on whether the country subscribes to IMF SDDS+, SDDS, or e-GDDS standards.  The source is the IMF Dissemination Standards Bulletin Board.  This is a good data source but we recognize that it is a proxy for the concept we are seeking to capture rather than a direct measurement.*    
+  * **Dimension 2.2: Online access:** *ODIN Open Data Openness score.  This is a well-established data source with good country coverage. In using this indicator, it is important to describe carefully what is captured since the purpose of ODIN is different to the purpose of the SPI.*   
+  * **Dimension 2.3: Advisory/ Analytical Services:**  *Not included because of lack of established methodology.  This would be new indicator of number of non-recurring products on NSO website (ad hoc/experimental rather than regular releases). The indicator is the number of products found.  No established source exists for this indicator.*    
+  * **Dimension 2.4: Data services:** *NADA metadata.  This indicator checks whether NADA microdata cataloging is available for surveys produced by NSO.  NADA is an open source microdata cataloging system, compliant with the Data Documentation Initiative (DDI) and Dublin Cores RDF metadata standards.  Source: NSO websites.*
   
-  * **Pillar 3.1: Social Statistics:** *Average score for Goal 1-6 indicators. The primary data source is the UN SDG database. Whilst this is a database with comprehensive coverage that all countries have signed up to, it is clear that many (particularly developed countries) are not yet submitting their available national data. Scores for these countries are likely to represent an indicator of their willingness to submit national data rather than their performance in calculating the indicators.  For OECD countries, we supplement the UN SDG database with comparable data submitted to the OECD following the methodology in Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm). *
-  * **Pillar 3.2: Economic Statistics:** *Average score for Goal 7-12 indicators. See 3.1.*  
-  * **Pillar 3.3: Environmental Statistics:**  *Average score for Goal 13-15 indicators. See 3.1.*      
-  * **Pillar 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators. See 3.1.*    
+  * **Dimension 3.1: Social Statistics:** *Average score for Goal 1-6 indicators. The primary data source is the UN SDG database. Whilst this is a database with comprehensive coverage that all countries have signed up to, it is clear that many (particularly developed countries) are not yet submitting their available national data. Scores for these countries are likely to represent an indicator of their willingness to submit national data rather than their performance in calculating the indicators.  For OECD countries, we supplement the UN SDG database with comparable data submitted to the OECD following the methodology in Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm). *
+  * **Dimension 3.2: Economic Statistics:** *Average score for Goal 7-12 indicators. See 3.1.*  
+  * **Dimension 3.3: Environmental Statistics:**  *Average score for Goal 13-15 indicators. See 3.1.*      
+  * **Dimension 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators. See 3.1.*    
 
-  * **Pillar 4.1: Censuses and Surveys:** *Average score Census and Survey Indicators indicators.  In this release of the SPI the data and methods used for this indicator are the same as for the previous SPI. Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt outdated practices for censuses and surveys.*
-  * **Pillar 4.2: Administrative Data:** *Average score for CRVS indicator.  Social Protection, Education, and Labor admin data indicators not included because of lack of established methodology. While our team identified several promising sources for administrative data from the World Bank's ASPIRE team, UNESCO, and ILO, incomplete coverage across countries made us drop these indicators from our index.  A major research and data collection effort is needed from all custodian agencies  to fill in this information, so that a more comprehensive picture of administrative data availability can be produced.  *  
-  * **Pillar 4.3: Geospatial Data:**  *SPI.D4.3.GEO.first.admin.level -	Geospatial data available at 1st Admin Level.  We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the ability of the national statistical system to produce geospatial data. A major research and data collection effort is needed via GGIM to fill in this information, so that a more comprehensive picture of geospatial data capability at the national level can be produced. Until this is done, it we cannot even assess the scale of the data gaps in a comparable way. * 
-  * **Pillar 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology.  Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.*   
+  * **Dimension 4.1: Censuses and Surveys:** *Average score Census and Survey Indicators indicators. Availability of recent censuses and surveys covering broad areas.  The following censuses and surveys are considered: Population & Housing census, Agriculture census, Business/establishment census, Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey, Agriculture survey, Labor Force Survey, Health/Demographic survey, Business/establishment survey. Source: NSO websites, World Bank microdata library, ILO microdata library, IHSN microdata library*    
+  * **Dimension 4.2: Administrative Data:** *Average score for CRVS indicator.  An ideal indicator would include a score based on the density of administrative data available in sectors of social protection, education, labor, and health.  However, social protection, education, health, and labor admin data indicators not included because of lack of established methodology. While our team identified several promising sources for administrative data from the World Bank's ASPIRE team, WHO, UNESCO, and ILO, incomplete coverage across countries made us drop these indicators from our index.  A major research and data collection effort is needed from all custodian agencies  to fill in this information, so that a more comprehensive picture of administrative data availability can be produced.  *  
+  * **Dimension 4.3: Geospatial Data:**  *Geospatial data available at 1st Admin Level.  We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the ability of the national statistical system to produce geospatial data. A major research and data collection effort is needed via GGIM to fill in this information, so that a more comprehensive picture of geospatial data capability at the national level can be produced. Until this is done, it we cannot even assess the scale of the data gaps in a comparable way. * 
+  * **Dimension 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology.  Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.*   
   
-  * **Pillar 5.1: Legislation and governance:**  *Included in dashboard, but not index because of insufficient country coverage.  A global database of statistical and data legislation and governance practice would be a valuable resource for capacity building in general not just for the SPI.*  
-  * **Pillar 5.2: Standards and Methods:** *Average score for Standards and Methods indicators.  In this release of the SPI the data and methods used for this indicator are the same as for the previous SPI. Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt only traditional standards and methods and neglect innovative solutions that may be more valid in the current context.  *  
-  * **Pillar 5.3: Skills:**  *Not included because of lack of established methodology or suitable data sources*    
-  * **Pillar 5.4: Partnerships:**  *Not included because of lack of established methodology or suitable data sources*    
-  * **Pillar 5.5: Finance:**  *Included in dashboard, but not index because of insufficient country coverage and concerns that the indicator has biases that would lead to misleading incentives. * 
+  * **Dimension 5.1: Legislation and governance:**  *Included in dashboard, but not index because of insufficient country coverage.  This indicator is based on PARIS21 indicators on SDG 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Limited country coverage makes cross country comparison limited.  A global database of statistical and data legislation and governance practice would be a valuable resource for capacity building in general not just for the SPI.*  
+  * **Dimension 5.2: Standards and Methods:** *Average score for Standards and Methods indicators. Internationally accepted and recommended methodology, classifications and standards provide the basis for national statistical offices (NSOs) on data integration, facilitating data exchange and providing the foundation for the preparation of relevant statistical indicators.  The following methods and standards are considered:  System of national accounts in use, National Accounts base year, Classification of national industry, CPI base year, Classification of household consumption, Classification of status of employment, Central government accounting status, Compilation of government finance statistics, Compilation of monetary and financial statistics, Business process.  . Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt only traditional standards and methods and neglect innovative solutions that may be more valid in the current context.  *  
+  * **Dimension 5.3: Skills:**  *Not included because of lack of established methodology or suitable data sources.  A new indicator drawing on PARIS21 indicators such as statistical society presence and data literacy could be developed and is an area of future work.*    
+  * **Dimension 5.4: Partnerships:**  *Not included because of lack of established methodology or suitable data sources.  A wew indicator based on textual analysis of NSS reports/websites for references to partner organizations could be developed.  This is an area of future work.*    
+  * **Dimension 5.5: Finance:**  *Included in dashboard, but not index because of insufficient country coverage and concerns that the indicator has biases that would lead to misleading incentives.  The indicator is based on PARIS21 SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). * 
   
 
-This process of eliminating some pillars due to lack of established methodology or country coverage results in 12 pillars. This includes 1 on data use, 3 on data services, 4 on data products, 3 on data sources, and 1 on data infrastructure.
+## Data gaps
+
+An area of particular concern is the pillar of data use. Currently, the dashboard only features indicators for one of the five dimensions of data use, which is data use by international organizations. Indicators on whether statistical systems are providing useful data to their national governments (legislature and executive branches), to civil society, and to academia are absent.  Thus we cannot yet assess if National Statistical Offices (NSOs) are meeting the data needs of a large swathe of users. 
+
+Under the pillar of data services an area that needs improvement is the measurement of advisory and analytical services provided by NSOs, such as data stewardship services and the ethical consideration of proposals. By measuring this type of work done by NSOs that goes beyond producing data, the international community and the NSOs themselves can better assess whether this type of support is in place.
+
+In the data sources pillar, more information is needed particularly in the areas of administrative data, geospatial data, and private and citizen generated data. While we have measures of administrative data use, particularly on the development of civil registrations and vital statistics systems, we have an incomplete picture of whether the administrative data systems are in place to measure health, education, labor, and social protection program statistics. For our geospatial indicator, we have a proxy measure of whether the country is able to produce indicators at the sub-national level, but we lack an understanding of how countries are using geospatial information in other ways, for instance using satellite data. And while the world is increasingly awash with private and citizen generated data, such as on mobility, job searching, or social networking, we were unable to find a reliable source to measure on a global scale how national statistical systems are incorporating this information.
+
+Finally, many of the soft components of data infrastructure pillar lack adequate data. This includes the areas of skills and partnerships between entities in the national statistical system. We are making use of the PARIS21 led SDG indicator on whether statistical legislation met the standards of the UN fundamental Principles of Statistics in our dashboard, but were unable to use this in our index, because of inadequate country coverage. This is also true of the PARIS21 led SDG indicator on whether the national statistical system is fully funded. Countries should be encouraged to report on this information.
+
 
 ## Process for Collecting Data
 
-The SPI team pulls from a variety of sources to populate our indicators.  While greater detail for each specific indicator can be found in our technical documentation (XX https://stacybri.github.io/SPI/ XX) describing each indicator, we will provide a general overview of how we collect data for our indicators.
+The SPI team pulls from a variety of sources to populate our indicators.  While greater detail for each specific indicator can be found in our technical documentation (https://stacybri.github.io/SPI/) describing each indicator, we will provide a general overview of how we collect data for our indicators.
 
-Starting with dimension 1, we collect data four distinct sources.  The World Bank supplies the data for two indicators.  The indicator on availability of comparable poverty data comes from the World Bank's Povcalnet system, and the indicator on quality of debt service data comes from the World Bank's WDI metadata.  Data on the availability of under 5 child mortality data comes from the UN IGME. The indicator on availability of safely managed drinking water data is sources from the JMP, which is a combined effort by the WHO and UNICEF.  The indicator on the availability of source data for measuring labor force participation comes from the ILO.  Each of these sources will be updated annually prior to each annual data release.  The date the data is updated for each of these sources is available in our technical documentation.  
+Starting with pillar 1, we collect data four distinct sources.  The World Bank supplies the data for two indicators.  The indicator on availability of comparable poverty data comes from the World Bank's Povcalnet system, and the indicator on quality of debt service data comes from the World Bank's WDI metadata.  Data on the availability of under 5 child mortality data comes from the UN IGME. The indicator on availability of safely managed drinking water data is sources from the JMP, which is a combined effort by the WHO and UNICEF.  The indicator on the availability of source data for measuring labor force participation comes from the ILO.  Each of these sources will be updated annually prior to each annual data release.  The date the data is updated for each of these sources is available in our technical documentation.  
 
-For dimension 2, we collect data on data dissemination subscriptions based on the IMF's dissemination standards bulletin board website (https://dsbb.imf.org/). We follow the same update schedule for this information as the World Bank's WDI metadata, so that as of the release these two sources are identical.  The online access indicator is sources from the Open Data Watch ODIN openness score.  The date on which we downloaded the data is available in the technical description for this indicator.  The indicator for data services is based on whether a portal is available, compliant with the Data Documentation Initiative (DDI) and Dublin Core’s RDF metadata standards, which has a listing of surveys and microdata sets that can provide the necessary data and reference for follow-up.  This information is collected manually by visiting each NSO website and checking whether or not such a system exists.  In the raw data, a hyperlink is available to the portal, but any changes to the website of the NSO may cause this link to no longer function.
+For pillar 2, we collect data on data dissemination subscriptions based on the IMF's dissemination standards bulletin board website (https://dsbb.imf.org/). We follow the same update schedule for this information as the World Bank's WDI metadata, so that as of the release these two sources are identical.  The online access indicator is sources from the Open Data Watch ODIN openness score.  The date on which we downloaded the data is available in the technical description for this indicator.  The indicator for data services is based on whether a portal is available, compliant with the Data Documentation Initiative (DDI) and Dublin Core’s RDF metadata standards, which has a listing of surveys and microdata sets that can provide the necessary data and reference for follow-up.  This information is collected manually by visiting each NSO website and checking whether or not such a system exists.  In the raw data, a hyperlink is available to the portal, but any changes to the website of the NSO may cause this link to no longer function.
 
-For the data products dimension, we examine whether countries are reporting data to monitor the SDG goals.  For this dimension, indicators are produced using the UN Global SDG monitoring database. For each SDG indicator, we check whether a value is available within a five year window of the date.  For instance, for the date of 2019, we examine whether any value is available between the years 2015-2019. For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  We chose to use the UN Global SDG monitoring database as a primary source, rather than individual NSO websites, because data submitted to the UN Global SDG monitoring database goes through a standardized process including quality control and documentation.
+For the data products pillar, we examine whether countries are reporting data to monitor the SDG goals.  For this pillar, indicators are produced using the UN Global SDG monitoring database. For each SDG indicator, we check whether a value is available within a five year window of the date.  For instance, for the date of 2019, we examine whether any value is available between the years 2015-2019. For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  We chose to use the UN Global SDG monitoring database as a primary source, rather than individual NSO websites, because data submitted to the UN Global SDG monitoring database goes through a standardized process including quality control and documentation.
 
-For dimension 4, on censuses and surveys, we take two complementary approaches to collecting data. The first is to make use of data submitted to the World Bank, IHSN, ILO, and FAO microdata libraries.  We keep only surveys that are marked as nationally representative, and classify surveys (as either health surveys, agriculture surveys, labor force surveys, etc) using the classifications submitted to the microdata libraries.  The contents of our searches in these databases are available in our github repository.  The second approach is a manual data collection effort, where we directly visit NSO websites to be sure no surveys were missed.  For this second approach, where our team visits NSO websites, the survey or census must be publicly available and accessible to be included in this search.  If surveys or censuses are missed in this search, the easiest way for a country to get it included would be to create an entry for the survey at one of the microdata libraries.  Information on the completeness of the CRVS is sourced from the UN SDG global monitoring database.  Information on whether data is available at the 1st administrative level, for our geospatial indicator, is sourced from Open Data Watch, similar to the process for the data openness score.
+For pillar 4, on censuses and surveys, we take two complementary approaches to collecting data. The first is to make use of data submitted to the World Bank, IHSN, ILO, and FAO microdata libraries.  We keep only surveys that are marked as nationally representative, and classify surveys (as either health surveys, agriculture surveys, labor force surveys, etc) using the classifications submitted to the microdata libraries.  The contents of our searches in these databases are available in our github repository.  The second approach is a manual data collection effort, where we directly visit NSO websites to be sure no surveys were missed.  For this second approach, where our team visits NSO websites, the survey or census must be publicly available and accessible to be included in this search.  If surveys or censuses are missed in this search, the easiest way for a country to get it included would be to create an entry for the survey at one of the microdata libraries.  Information on the completeness of the CRVS is sourced from the UN SDG global monitoring database.  Information on whether data is available at the 1st administrative level, for our geospatial indicator, is sourced from Open Data Watch, similar to the process for the data openness score.
 
-For dimension 5, data on the legislation indicator and finance indicators are pulled from the UN SDG global monitoring database.  Indicators in the standards and methods pillar are sourced primarily through the IMF.  Information on the system of national accounts in use and national accounts base year are sourced through the World Bank's WDI metadata.  Data for the business process indicator is sourced through the United Nations Industrial Development Organization (UNIDO) and United Nations Economic Commission for Europe (UNECE).
+For pillar 5, data on the legislation indicator and finance indicators are pulled from the UN SDG global monitoring database.  Indicators in the standards and methods pillar are sourced primarily through the IMF.  Information on the system of national accounts in use and national accounts base year are sourced through the World Bank's WDI metadata.  Data for the business process indicator is sourced through the United Nations Industrial Development Organization (UNIDO) and United Nations Economic Commission for Europe (UNECE).
 
 ## Handling Missing Data 
 
@@ -666,30 +635,29 @@ In order to be completely transparent, we will track all changes to our methodol
 
 We next produce an overall score by combining the indicators we have collected.  Our statistical performance indicators have a three level structure, and our SPI overall score will be formed by sequentially aggregating each level.
 
-To begin we produce a score for each pillar, which is an unweighted average of the indicators within that pillar.  For instance, the Census and Surveys pillar will be formed by taking the unweighted average of the Population Census score, the Agriculture Census score, the Business Census score, the Labor Force Survey score, the Health Survey score, etc.  
+To begin we produce a score for each dimension, which is an unweighted average of the indicators within that dimension  For instance, the Census and Surveys dimension will be formed by taking the unweighted average of the Population Census score, the Agriculture Census score, the Business Census score, the Labor Force Survey score, the Health Survey score, etc.  
 
-$$ SPI.PILLAR_{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
+$$ SPI.DIM_{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
 
-where $SPI.PILLAR_{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
+where $SPI.DIM_{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
 
-After computing a score for the pillar, we then compute a dimension score, which is the average of the pillars in that dimension. For dimensions 1, 2, 4, and 5, we take the unweighted average of the pillars in the dimension.  However, for Dimension 3 on data products, we take a weighted average of the pillars, where the weights are based on the number of SDGs in each pillar (6 SDGs in Pillar 3.1 on social statistics, 6 SDGs in Pillar 3.2 on economic statistics, 2 in Pillar 3.3 on environmental statistics, and 2 in Pillar 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our pillars accordingly.  Additionally, for Dimension 4 on data sources, we give censuses and surveys separate weights, so that censuses get 1/4th weight, surveys get 1/4th weight, admin data gets 1/4th weight, and geospatial gets 1/4th weight.  While censuses and surveys are in the same pillar in our framework, and therefore would typically only receive 1/3 weight in this dimension, because of their importance in producing many indicators, they are given extra weight with a sum of 1/2.
+After computing a score for the dimension, we then compute a pillar score, which is the average of the dimensions in that pillar For pillars 1, 2, 4, and 5, we take the unweighted average of the dimensions in the pillar.  However, for pillar 3 on data products, we take a weighted average of the dimensions, where the weights are based on the number of SDGs in each dimension (6 SDGs in dimension 3.1 on social statistics, 6 SDGs in dimension 3.2 on economic statistics, 2 in dimension 3.3 on environmental statistics, and 2 in dimension 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our dimensions accordingly.  Additionally, for pillar 4 on data sources, we give censuses and surveys separate weights, so that censuses get 1/4th weight, surveys get 1/4th weight, admin data gets 1/4th weight, and geospatial gets 1/4th weight.  While censuses and surveys are in the same dimension in our framework, and therefore would typically only receive 1/3 weight in this pillar, because of their importance in producing many indicators, they are given extra weight with a sum of 1/2.
 
-$$ SPI.DIM_{ctd} = \sum_{s=1}^{N_S} \frac{\omega_{ds} \times SPI.PILLAR_{ctds}}{N_S} $$
+$$ SPI.PIL_{cts} = \sum_{d=1}^{N_d} \frac{\omega_{ds} \times SPI.DIM_{ctds}}{N_d} $$
 
-$\omega_{ds}$ is the weight for pillar s in dimension d.
+$\omega_{ds}$ is the weight for dimension d in pillar s.
 
-After calculating the scores for each dimension, the SPI overall score is the average across the 5 dimensions. 
+After calculating the scores for each pillar, the SPI overall score is the average across the 5 pillars. 
 
 The SPI overall score is scaled to have a maximum score of 100 and a minimum of 0. A score of 100 would indicate that a country has every single element that we measure in place. A score of 0 indicates that none are in place. To be precise:
 
 
 
-$$ SPI.INDEX_{ct} = \sum_{d=1}^{N_D} \frac{SPI.DIM_{ctd}}{N_D} $$
+$$ SPI.INDEX_{ct} = \sum_{s=1}^{N_s} \frac{SPI.PIL_{cts}}{N_s} $$
 
-Where SPI.INDEX is the SPI overall score. SPI.DIM are the 5 SPI dimensions listed above. In the notation, c is a country, t is the date, d is a dimension.  
+Where SPI.INDEX is the SPI overall score. SPI.PIL are the 5 SPI pillars listed above. In the notation, c is a country, t is the date, s is a pillar  
 
 The nested structure of our index and the summation methods used to build an overall score ensure the axiomatic properties outlined in [@cameron2019measuring].  These include symmetry, monotonicity, and subgroup decomposability.
-
 
 # SPI Overall Scores
 
@@ -697,8 +665,8 @@ The nested structure of our index and the summation methods used to build an ove
 ```{r spi_df}
 
 # This block of code will create a blank SPI dataset (only containing country info) that will be appended to when each indicator is added.
-# There will be two indicators added for each dimension
-# 1. An indicator with a score between 0-1 for each dimension
+# There will be two indicators added for each pillar
+# 1. An indicator with a score between 0-1 for each pillar
 # 2. An indicator with the raw (unscored) values of the indicators
 # The unit for this database will be country*year
 
@@ -719,69 +687,69 @@ iso3c <- read_csv(paste(raw_dir,'metadata/iso_codes.csv', sep="/"),
 
 ```{r index_weights}
 
-#Dimension 1 - Overall Weight
-dim_1 <- 1/5
-#Pillar 1.5: Data Use by International Organizations
-pillar_1_5 <- 1
+#Pillar 1 - Overall Weight
+pillar_1 <- 1/5
+#Dimension 1.5: Data Use by International Organizations
+dim_1_5 <- 1
 
 #Dimension 2 - Overall Weight
-dim_2 <- 1/5
-#Pillar 2.1: Data releases
-pillar_2_1 <- 1/3
-#Pillar 2.2: Online access
-pillar_2_2 <- 1/3
-# Pillar 2.4: Data services
-pillar_2_4 <- 1/3
+pillar_2 <- 1/5
+#Dimension 2.1: Data releases
+dim_2_1 <- 1/3
+#Dimension 2.2: Online access
+dim_2_2 <- 1/3
+# Dimension 2.4: Data services
+dim_2_4 <- 1/3
 
 # Dimension 3 - Overall Weight
-dim_3 <- 1/5
-# Pillar 3: SDG 1
-pillar_3_1 <- 1/16
-# Pillar 3: SDG 2
-pillar_3_2 <- 1/16
-# Pillar 3: SDG 3
-pillar_3_3 <- 1/16
-# Pillar 3: SDG 4
-pillar_3_4 <- 1/16
-# Pillar 3: SDG 5
-pillar_3_5 <- 1/16
-# Pillar 3: SDG 6
-pillar_3_6 <- 1/16
-# Pillar 3: SDG 7
-pillar_3_7 <- 1/16
-# Pillar 3: SDG 8
-pillar_3_8 <- 1/16
-# Pillar 3: SDG 9
-pillar_3_9 <- 1/16
-# Pillar 3: SDG 10
-pillar_3_10 <- 1/16
-# Pillar 3: SDG 11
-pillar_3_11 <- 1/16
-# Pillar 3: SDG 12
-pillar_3_12 <- 1/16
-# Pillar 3: SDG 13
-pillar_3_13 <- 1/16
-# Pillar 3: SDG 15
-pillar_3_15 <- 1/16
-# Pillar 3: SDG 16
-pillar_3_16 <- 1/16
-# Pillar 3: SDG 17
-pillar_3_17 <- 1/16
+pillar_3 <- 1/5
+# Dimension 3: SDG 1
+dim_3_1 <- 1/16
+# Dimension 3: SDG 2
+dim_3_2 <- 1/16
+# Dimension 3: SDG 3
+dim_3_3 <- 1/16
+# Dimension 3: SDG 4
+dim_3_4 <- 1/16
+# Dimension 3: SDG 5
+dim_3_5 <- 1/16
+# Dimension 3: SDG 6
+dim_3_6 <- 1/16
+# Dimension 3: SDG 7
+dim_3_7 <- 1/16
+# Dimension 3: SDG 8
+dim_3_8 <- 1/16
+# Dimension 3: SDG 9
+dim_3_9 <- 1/16
+# Dimension 3: SDG 10
+dim_3_10 <- 1/16
+# Dimension 3: SDG 11
+dim_3_11 <- 1/16
+# Dimension 3: SDG 12
+dim_3_12 <- 1/16
+# Dimension 3: SDG 13
+dim_3_13 <- 1/16
+# Dimension 3: SDG 15
+dim_3_15 <- 1/16
+# Dimension 3: SDG 16
+dim_3_16 <- 1/16
+# Dimension 3: SDG 17
+dim_3_17 <- 1/16
 
 #Dimension 4 - Overall Weight
-dim_4 <- 1/5
-# Pillar 4.1: censuses and surveys
-pillar_4_1.CEN <- 1/4
-pillar_4_1.SVY <- 1/4
-#Pillar 4.2: administrative data
-pillar_4_2 <- 1/4
-# Pillar 4.3: geospatial data
-pillar_4_3 <- 1/4
+pillar_4 <- 1/5
+# Dimension 4.1: censuses and surveys
+dim_4_1.CEN <- 1/4
+dim_4_1.SVY <- 1/4
+#Dimension 4.2: administrative data
+dim_4_2 <- 1/4
+# Dimension 4.3: geospatial data
+dim_4_3 <- 1/4
 
 # Dimension 5 - Overall Weight
-dim_5 <- 1/5
-# Pillar 5.2: Standards and Methods
-pillar_5_2 <- 1
+pillar_5 <- 1/5
+# Dimension 5.2: Standards and Methods
+dim_5_2 <- 1
 
 
 ```
@@ -841,26 +809,26 @@ spi_index_df <- spi_index_df_temp %>%
 
 
 #recalculate index based on the weights
-dim_total <- dim_1 + dim_2 + dim_3 + dim_4 + dim_5
-dim2_total <- pillar_2_1 + pillar_2_2 + pillar_2_4
-dim3_total <- 
-  pillar_3_1 + 
-  pillar_3_2 +
-  pillar_3_3 +
-  pillar_3_4 +
-  pillar_3_5 +
-  pillar_3_6 +
-  pillar_3_7 +
-  pillar_3_8 +
-  pillar_3_9 +
-  pillar_3_10 +
-  pillar_3_11 +
-  pillar_3_12 +
-  pillar_3_13 +
-  pillar_3_15 +
-  pillar_3_16 +
-  pillar_3_17
-dim4_total <- pillar_4_1.CEN + pillar_4_1.SVY + + pillar_4_2 + pillar_4_3
+pillar_total <- pillar_1 + pillar_2 + pillar_3 + pillar_4 + pillar_5
+pillar2_total <- dim_2_1 + dim_2_2 + dim_2_4
+pillar3_total <- 
+  dim_3_1 + 
+  dim_3_2 +
+  dim_3_3 +
+  dim_3_4 +
+  dim_3_5 +
+  dim_3_6 +
+  dim_3_7 +
+  dim_3_8 +
+  dim_3_9 +
+  dim_3_10 +
+  dim_3_11 +
+  dim_3_12 +
+  dim_3_13 +
+  dim_3_15 +
+  dim_3_16 +
+  dim_3_17
+pillar4_total <- dim_4_1.CEN + dim_4_1.SVY + + dim_4_2 + dim_4_3
 
 #create index dataset
 spi_index_df <- spi_index_df %>%
@@ -892,42 +860,42 @@ spi_index_df <- spi_index_df %>%
          #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
   ) %>%
   mutate(
-    SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
-    SPI.INDEX.DIM2=(
-      (pillar_2_1/dim2_total)*INDEX.SPI.D2.1 +
-        (pillar_2_2/dim2_total)*INDEX.SPI.D2.2 +
-        (pillar_2_4/dim2_total)*INDEX.SPI.D2.4 )
+    SPI.INDEX.PIL1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+    SPI.INDEX.PIL2=(
+      (dim_2_1/pillar2_total)*INDEX.SPI.D2.1 +
+        (dim_2_2/pillar2_total)*INDEX.SPI.D2.2 +
+        (dim_2_4/pillar2_total)*INDEX.SPI.D2.4 )
     ,
-    SPI.INDEX.DIM3=(
-      (pillar_3_1/dim3_total)*SPI.D3.1.POV +
-        (pillar_3_2/dim3_total)*SPI.D3.2.HNGR +
-        (pillar_3_3/dim3_total)*SPI.D3.3.HLTH +
-        (pillar_3_4/dim3_total)*SPI.D3.4.EDUC +
-        (pillar_3_5/dim3_total)*SPI.D3.5.GEND +
-        (pillar_3_6/dim3_total)*SPI.D3.6.WTRS +
-        (pillar_3_7/dim3_total)*SPI.D3.7.ENRG +
-        (pillar_3_8/dim3_total)*SPI.D3.8.WORK +
-        (pillar_3_9/dim3_total)*SPI.D3.9.INDY +
-        (pillar_3_10/dim3_total)*SPI.D3.10.NEQL +
-        (pillar_3_11/dim3_total)*SPI.D3.11.CITY +
-        (pillar_3_12/dim3_total)*SPI.D3.12.CNSP +
-        (pillar_3_13/dim3_total)*SPI.D3.13.CLMT +
-        (pillar_3_15/dim3_total)*SPI.D3.15.LAND +
-        (pillar_3_16/dim3_total)*SPI.D3.16.INST +
-        (pillar_3_17/dim3_total)*SPI.D3.17.PTNS)
+    SPI.INDEX.PIL3=(
+      (dim_3_1/pillar3_total)*SPI.D3.1.POV +
+        (dim_3_2/pillar3_total)*SPI.D3.2.HNGR +
+        (dim_3_3/pillar3_total)*SPI.D3.3.HLTH +
+        (dim_3_4/pillar3_total)*SPI.D3.4.EDUC +
+        (dim_3_5/pillar3_total)*SPI.D3.5.GEND +
+        (dim_3_6/pillar3_total)*SPI.D3.6.WTRS +
+        (dim_3_7/pillar3_total)*SPI.D3.7.ENRG +
+        (dim_3_8/pillar3_total)*SPI.D3.8.WORK +
+        (dim_3_9/pillar3_total)*SPI.D3.9.INDY +
+        (dim_3_10/pillar3_total)*SPI.D3.10.NEQL +
+        (dim_3_11/pillar3_total)*SPI.D3.11.CITY +
+        (dim_3_12/pillar3_total)*SPI.D3.12.CNSP +
+        (dim_3_13/pillar3_total)*SPI.D3.13.CLMT +
+        (dim_3_15/pillar3_total)*SPI.D3.15.LAND +
+        (dim_3_16/pillar3_total)*SPI.D3.16.INST +
+        (dim_3_17/pillar3_total)*SPI.D3.17.PTNS)
     ,
-    SPI.INDEX.DIM4=(
-      (pillar_4_1.CEN/dim4_total)*INDEX.SPI.D4.1.CEN +
-      (pillar_4_1.SVY/dim4_total)*INDEX.SPI.D4.1.SVY +
-        (pillar_4_2/dim4_total)*INDEX.SPI.D4.2 +
-        (pillar_4_3/dim4_total)*INDEX.SPI.D4.3 )
+    SPI.INDEX.PIL4=(
+      (dim_4_1.CEN/pillar4_total)*INDEX.SPI.D4.1.CEN +
+      (dim_4_1.SVY/pillar4_total)*INDEX.SPI.D4.1.SVY +
+        (dim_4_2/pillar4_total)*INDEX.SPI.D4.2 +
+        (dim_4_3/pillar4_total)*INDEX.SPI.D4.3 )
     ,
-    SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
-    SPI.INDEX=(dim_1/dim_total)*SPI.INDEX.DIM1 +
-      (dim_2/dim_total)*SPI.INDEX.DIM2 +
-      (dim_3/dim_total)*SPI.INDEX.DIM3 +
-      (dim_4/dim_total)*SPI.INDEX.DIM4 +
-      (dim_5/dim_total)*SPI.INDEX.DIM5 
+    SPI.INDEX.PIL5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+    SPI.INDEX=(pillar_1/pillar_total)*SPI.INDEX.PIL1 +
+      (pillar_2/pillar_total)*SPI.INDEX.PIL2 +
+      (pillar_3/pillar_total)*SPI.INDEX.PIL3 +
+      (pillar_4/pillar_total)*SPI.INDEX.PIL4 +
+      (pillar_5/pillar_total)*SPI.INDEX.PIL5 
     #sum up based on individual dimension weights
   ) %>% #
   mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
@@ -1136,29 +1104,29 @@ spi_country_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
 
-## SPI Scores by Dimension
+## SPI Scores by Pillar
 
-Next, we present the scores for each dimension that compose the SPI overall score (Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure).  These figures can help show where/which dimension variation is coming from across countries and to see where countries may be struggling in specific areas.
+Next, we present the scores for each pillar that compose the SPI overall score (Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure).  These figures can help show where/which pillar variation is coming from across countries and to see where countries may be struggling in specific areas.
 
-We apply the same maturity classification approach and apply it to each dimension separately, where we classify countries into quintiles.  For each dimension, we show the maturity levels of countries in a world map and then proceed to discussing scores by region.
+We apply the same maturity classification approach and apply it to each pillar separately, where we classify countries into quintiles.  For each pillar, we show the maturity levels of countries in a world map and then proceed to discussing scores by region.
 
-### Dimension 1: Data Use
+### Pillar 1: Data Use
 
-In the figure below we show a world map displaying the maturity levels based on dimension 1 on data use.  Again, the maturity levels shown are based on the quintiles of the Dimension 1 sub-score.  Overall, the high income countries in North America and Europe tend to rate most highly along this dimension.  
+In the figure below we show a world map displaying the maturity levels based on pillar 1 on data use.  Again, the maturity levels shown are based on the quintiles of the pillar 1 sub-score.  Overall, the high income countries in North America and Europe tend to rate most highly along this pillar  
 
-```{r dimensionsplot1}
+```{r pillarsplot1}
 
-spi_mapper('spi_index_df','SPI.INDEX.DIM1','Dimension 1: Data Use Scores')
+spi_mapper('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
 
 
 
 ```
 
-When looking by country, there is significant dispersion within regions.  It is also notable that several countries including the United States, Mexico, Finland, and Costa Rica, among others, receive the maximum possible score in this dimension of 100.  Several countries score the minimum score as well, including the Syrian Arab Republic, South Sudan, Namibia, and Nauru, among others.
+When looking by country, there is significant dispersion within regions.  It is also notable that several countries including the United States, Mexico, Finland, and Costa Rica, among others, receive the maximum possible score in this pillar of 100.  Several countries score the minimum score as well, including the Syrian Arab Republic, South Sudan, Namibia, and Nauru, among others.
 
-```{r countrydimensionsplot1}
+```{r countrypillarsplot1}
 
-spi_country_charts('spi_index_df','SPI.INDEX.DIM1','Dimension 1: Data Use Scores')
+spi_country_charts('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
 
 
 
@@ -1166,7 +1134,7 @@ spi_country_charts('spi_index_df','SPI.INDEX.DIM1','Dimension 1: Data Use Scores
 
 ```{r maturitytable1}
 
-indicators<-c("SPI.INDEX.DIM1","SPI.D1.5.POV","SPI.D1.5.CHLD.MORT","SPI.D1.5.DT.TDS.DPPF.XP.ZS", "SPI.D1.5.SAFE.MAN.WATER", "SPI.D1.5.LFP")
+indicators<-c("SPI.INDEX.PIL1","SPI.D1.5.POV","SPI.D1.5.CHLD.MORT","SPI.D1.5.DT.TDS.DPPF.XP.ZS", "SPI.D1.5.SAFE.MAN.WATER", "SPI.D1.5.LFP")
 
 maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019) 
 
@@ -1185,41 +1153,41 @@ debt_bottom <- as.numeric(maturity_tab[4,6])
 ```
 
 
-The table below shows the average score on each indicator in Dimension 1 by maturity group.  Countries in the top 20% possess nearly all of the components in Dimension 1, while countries in the bottom 20% are lacking in many areas.  Countries in the bottom 20% in terms of maturity on Dimension 1 have an average of `r poverty_bottom` on the comparable poverty estimate indicator, an average of `r mort_bottom` on the availability of under 5 mortality data, and an average of `r debt_bottom` on debt reporting.
+The table below shows the average score on each indicator in pillar 1 by maturity group.  Countries in the top 20% possess nearly all of the components in pillar 1, while countries in the bottom 20% are lacking in many areas.  Countries in the bottom 20% in terms of maturity on pillar 1 have an average of `r poverty_bottom` on the comparable poverty estimate indicator, an average of `r mort_bottom` on the availability of under 5 mortality data, and an average of `r debt_bottom` on debt reporting.
 
 
 ```{r maturitdisp1}
 
 maturity_tab <- maturity_tab %>%
   flextable() %>%
-  add_header_lines('Select SPI Indicator Scores by SPI Dimension 1 Maturity Level') 
+  add_header_lines('Select SPI Indicator Scores by SPI pillar Maturity Level') 
 
 FitFlextableToPage(maturity_tab) %>%
   align( align = "left", part = "body")
 
 ```
 
-### Dimension 2: Data Services
+### Pillar 2: Data Services
 
-For dimension 2 on data services, again high income countries tend to score highest along this dimension.  India, Morocco, and the Philippines scored highly as well in this dimension. This dimension contains four indicators on quality of data releases, online accessibility, advisory and analytical services (not included due to lack of data), and the availability and use of data services.   
+For pillar 2 on data services, again high income countries tend to score highest along this pillar  India, Morocco, and the Philippines scored highly as well in this pillar This pillar contains four indicators on quality of data releases, online accessibility, advisory and analytical services (not included due to lack of data), and the availability and use of data services.   
 
-```{r dimensionsplot2}
-spi_mapper('spi_index_df','SPI.INDEX.DIM2','Dimension 2: Data Services Scores')
+```{r pillarsplot2}
+spi_mapper('spi_index_df','SPI.INDEX.PIL2','Pillar 2: Data Services Scores')
 
 ```
 
-The next figure shows the variation between countries within regions.  Again, there is substantial heterogeneity within regions on the Dimension 2 sub-score.
+The next figure shows the variation between countries within regions.  Again, there is substantial heterogeneity within regions on the pillar 2 sub-score.
 
-```{r countrydimensionsplot2}
+```{r countrypillarsplot2}
 
-spi_country_charts('spi_index_df','SPI.INDEX.DIM2','Dimension 2: Data Services Scores')
+spi_country_charts('spi_index_df','SPI.INDEX.PIL2','Pillar 2: Data Services Scores')
 
 
 
 ```
 ```{r maturitytable2}
 
-indicators<-c("SPI.INDEX.DIM2","SPI.D2.1.GDDS",
+indicators<-c("SPI.INDEX.PIL2","SPI.D2.1.GDDS",
               "SPI.D2.2.Openness.subscore",
               "SPI.D2.2.Machine.readable",      "SPI.D2.2.Non.proprietary",
               "SPI.D2.2.Download.options",      "SPI.D2.2.Metadata.available",
@@ -1244,7 +1212,7 @@ nada_bottom <- as.numeric(maturity_tab[9,6])
 ```
 
 
-In terms of specific indicators, the top 20% of countries in dimension 2 receive an average score of `r sdds_top` on our indicator measuring country adoption of the IMF's data dissemination standards, while those in the bottom 20% receive an average score of `r sdds_bottom`.  Countries in the bottom 20% receive an average data openness score, produced by Open Data Watch, of `r open_bottom`.  This indicator is made up of several sub-indicators including whether data is available in machine readable format, a non-proprietary format, has download options, metadata available, and terms of use.  For instance, in the bottom 20% of countries the score on whether data is available in a machine readable format is only `r machine_bottom` out of a maximum of 1.  Additionally, countries in the bottom 20% only score an average of `r nada_bottom` on our measure of whether metadata meeting the standards of the Database Documentation Initiative (DDI) is available on surveys conducted.^[For more information, see https://ddialliance.org/]
+In terms of specific indicators, the top 20% of countries in pillar 2 receive an average score of `r sdds_top` on our indicator measuring country adoption of the IMF's data dissemination standards, while those in the bottom 20% receive an average score of `r sdds_bottom`.  Countries in the bottom 20% receive an average data openness score, produced by Open Data Watch, of `r open_bottom`.  This indicator is made up of several sub-indicators including whether data is available in machine readable format, a non-proprietary format, has download options, metadata available, and terms of use.  For instance, in the bottom 20% of countries the score on whether data is available in a machine readable format is only `r machine_bottom` out of a maximum of 1.  Additionally, countries in the bottom 20% only score an average of `r nada_bottom` on our measure of whether metadata meeting the standards of the Database Documentation Initiative (DDI) is available on surveys conducted.^[For more information, see https://ddialliance.org/]
 
 
 
@@ -1254,20 +1222,20 @@ maturity_tab <- maturity_tab %>%
   flextable() %>%
   padding(i=4:8,j=1,
           padding.left=20) %>%
-  add_header_lines('Select SPI Indicator Scores by SPI Dimension 2 Maturity Level') 
+  add_header_lines('Select SPI Indicator Scores by SPI Pillar 2 Maturity Level') 
 
 FitFlextableToPage(maturity_tab) %>%
   align( align = "left", part = "body")
 
 ```
 
-### Dimension 3: Data Products
+### Pillar 3: Data Products
 
-For the data products dimension, we examine whether countries are reporting data to monitor the SDG goals.  For this dimension, indicators are produced using the UN Global SDG monitoring database. For each SDG indicator, we check whether a value is available within a five year window of the date.  For instance, for the date of 2019, we examine whether any value is available between the years 2015-2019.
+For the data products pillar, we examine whether countries are reporting data to monitor the SDG goals.  For this pillar, indicators are produced using the UN Global SDG monitoring database. For each SDG indicator, we check whether a value is available within a five year window of the date.  For instance, for the date of 2019, we examine whether any value is available between the years 2015-2019.
 
-For this indicator, there is a weaker relationship between a country's income level and their performance in this dimension.  No countries receive a maximum score of 100, which would indicate that they report on every SDG indicator at least once inside a 5 year window.  Additionally, no country scores 0, which would indicate that they have reported no information for any of the SDG indicators.
+For this indicator, there is a weaker relationship between a country's income level and their performance in this pillar.  No countries receive a maximum score of 100, which would indicate that they report on every SDG indicator at least once inside a 5 year window.  Additionally, no country scores 0, which would indicate that they have reported no information for any of the SDG indicators.
 
-While it is conceivable that some countries may have data values for these indicators on their NSO websites, for instance, rather than posted on the UN Global SDG monitoring database, we took the perspective that to produce a data product that is full usable a country's national statistical system should provide that information in an internationally comparable way.  And we have judged countries accordingly.  Additionally, for countries that have not reported values for SDG monitoring, but do possess a value, a simple way to improve their score on this dimension would be to submit all of their indicators to the UN database.  For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  Even with this supplemental data from the OECD included, there is considerable room for improvement in reporting on the SDGs.
+While it is conceivable that some countries may have data values for these indicators on their NSO websites, for instance, rather than posted on the UN Global SDG monitoring database, we took the perspective that to produce a data product that is full usable a country's national statistical system should provide that information in an internationally comparable way.  And we have judged countries accordingly.  Additionally, for countries that have not reported values for SDG monitoring, but do possess a value, a simple way to improve their score on this pillar would be to submit all of their indicators to the UN database.  For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  Even with this supplemental data from the OECD included, there is considerable room for improvement in reporting on the SDGs.
 
 We exclude values that were produced by an international organization through modeling  We do include values that are either country reported, country adjusted, estimated, or is included as global monitoring data.  This is based on the UN SDG metadata.  For each value of the indicator, the responsible international agency has been requested to indicate whether the national data were adjusted, estimated, modeled or are the result of global monitoring. The “nature” of the data in the SDG database is determined as follows:
 
@@ -1281,25 +1249,25 @@ We exclude values that were produced by an international organization through mo
 
   * Global monitoring data (G): Produced on a regular basis by the designated agency for global monitoring, based on country data. There is no corresponding figure at the country level.
 
-```{r dimensionsplot3}
-spi_mapper('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
+```{r pillarsplot3}
+spi_mapper('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
 ```
 
 When looking at the country chart, again there is significant variability across countries.  
 
 
-```{r aggdimensionsplot3, eval=FALSE, include=FALSE}
+```{r aggpillarsplot3, eval=FALSE, include=FALSE}
 
-spi_charts('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
+spi_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
 
 
 ```
 
-```{r countrydimensionsplot3}
+```{r countrypillarsplot3}
 
-spi_country_charts('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products Scores')
+spi_country_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
 
 
@@ -1308,7 +1276,7 @@ spi_country_charts('spi_index_df','SPI.INDEX.DIM3','Dimension 3: Data Products S
 
 ```{r maturitytable3}
 
-indicators<-c("SPI.INDEX.DIM3","SPI.D3.1.POV",
+indicators<-c("SPI.INDEX.PIL3","SPI.D3.1.POV",
               "SPI.D3.2.HNGR",
               "SPI.D3.3.HLTH",
               "SPI.D3.4.EDUC",
@@ -1342,7 +1310,7 @@ nada_bottom <- as.numeric(maturity_tab[9,6])
 ```
 
 
-Even countries in the top 20% of this indicator have significant room for improvement in reporting on the SDGs.  The average score for the top 20% on the dimension 3 sub-score is `r spi_top`, while for the bottom 20% the average is `r spi_bottom`.  When looking at the performance for a specific goals, for SDG 1 on poverty, the top 20% in terms of the dimension 3 sub-score receives an average of `r goal1_top` out of a maximum of 1.  Specifically, this means that when looking at reporting on SDG goals in a five year window since 2019, so from 2015-19, the top performing countries are only reporting on `r 100*goal1_top` percent of the SDG indicators.  The bottom 20% receive an average score of `r goal1_bottom`.  The table below shows the full set of breakdowns by SDG.
+Even countries in the top 20% of this indicator have significant room for improvement in reporting on the SDGs.  The average score for the top 20% on the pillar 3 sub-score is `r spi_top`, while for the bottom 20% the average is `r spi_bottom`.  When looking at the performance for a specific goals, for SDG 1 on poverty, the top 20% in terms of the pillar 3 sub-score receives an average of `r goal1_top` out of a maximum of 1.  Specifically, this means that when looking at reporting on SDG goals in a five year window since 2019, so from 2015-19, the top performing countries are only reporting on `r 100*goal1_top` percent of the SDG indicators.  The bottom 20% receive an average score of `r goal1_bottom`.  The table below shows the full set of breakdowns by SDG.
 
 
 
@@ -1350,7 +1318,7 @@ Even countries in the top 20% of this indicator have significant room for improv
 
 maturity_tab <- maturity_tab %>%
   flextable() %>%
-  add_header_lines('Select SPI Indicator Scores by SPI Dimension 2 Maturity Level') 
+  add_header_lines('Select SPI Indicator Scores by SPI Pillar 2 Maturity Level') 
 
 FitFlextableToPage(maturity_tab) %>%
   align( align = "left", part = "body")
@@ -1405,16 +1373,16 @@ FitFlextableToPage(maturity_tab) %>%
          #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
                  ) %>%
   mutate(
-         SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
-         SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
-         SPI.INDEX.DIM3.ALT=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
-         SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
-         SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
-         SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.DIM1',
-                                     'SPI.INDEX.DIM2',
-                                     'SPI.INDEX.DIM3.ALT',
-                                     'SPI.INDEX.DIM4',
-                                     'SPI.INDEX.DIM5')), na.rm=FALSE)
+         SPI.INDEX.PIL1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+         SPI.INDEX.PIL2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
+         SPI.INDEX.PIL3.ALT=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
+         SPI.INDEX.PIL4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
+         SPI.INDEX.PIL5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+         SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.PIL1',
+                                     'SPI.INDEX.PIL2',
+                                     'SPI.INDEX.PIL3.ALT',
+                                     'SPI.INDEX.PIL4',
+                                     'SPI.INDEX.PIL5')), na.rm=FALSE)
          ) %>% #
   mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
   arrange(-date, -SPI.INDEX.ALT) %>%
@@ -1464,20 +1432,20 @@ FitFlextableToPage(maturity_tab) %>%
          #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
                  ) %>%
   mutate(
-         SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
-         SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
-         SPI.INDEX.DIM3.ALT2=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
-         SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
-         SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
-         SPI.INDEX.ALT2=rowMeans(across(c('SPI.INDEX.DIM1',
-                                     'SPI.INDEX.DIM2',
-                                     'SPI.INDEX.DIM3.ALT2',
-                                     'SPI.INDEX.DIM4',
-                                     'SPI.INDEX.DIM5')), na.rm=FALSE)
+         SPI.INDEX.PIL1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+         SPI.INDEX.PIL2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
+         SPI.INDEX.PIL3.ALT2=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
+         SPI.INDEX.PIL4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
+         SPI.INDEX.PIL5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+         SPI.INDEX.ALT2=rowMeans(across(c('SPI.INDEX.PIL1',
+                                     'SPI.INDEX.PIL2',
+                                     'SPI.INDEX.PIL3.ALT2',
+                                     'SPI.INDEX.PIL4',
+                                     'SPI.INDEX.PIL5')), na.rm=FALSE)
          ) %>% #
   mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
   arrange(-date, -SPI.INDEX.ALT2) %>%
-  select(country, iso3c, date, SPI.INDEX.ALT2,SPI.INDEX.DIM3.ALT2, income) %>%
+  select(country, iso3c, date, SPI.INDEX.ALT2,SPI.INDEX.PIL3.ALT2, income) %>%
     mutate(weights=1) %>%
     filter(date>=2016) #2016 is first year with complete data
  
@@ -1493,7 +1461,7 @@ index_compare <- spi_index_df_dim3_alt %>%
   filter(!is.na(SPI.INDEX.ALT)) %>%
   left_join(select(spi_index_df, country, date, SPI.INDEX) ) %>%
   left_join(spi_index_df_dim3_alt2) %>%
-  select(-SPI.INDEX.DIM3.ALT2,-income)
+  select(-SPI.INDEX.PIL3.ALT2,-income)
 
     spi_groups_quantiles <- quantile(index_compare$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
     spi_alt_groups_quantiles <- quantile(index_compare$SPI.INDEX.ALT, probs=c(1,2,3,4)/5,na.rm=T)
@@ -1535,7 +1503,7 @@ index_compare <- spi_index_df_dim3_alt %>%
 ```{r index_compare_plot, eval=FALSE, include=FALSE}
 
 
-spi_charts('spi_index_df_dim3_alt', 'SPI.INDEX.DIM3.ALT','Dimension 3: Data Products - OECD High Income Top Coded')
+spi_charts('spi_index_df_dim3_alt', 'SPI.INDEX.PIL3.ALT','Pillar 3: Data Products - OECD High Income Top Coded')
 
 
 ```
@@ -1543,27 +1511,27 @@ spi_charts('spi_index_df_dim3_alt', 'SPI.INDEX.DIM3.ALT','Dimension 3: Data Prod
 ```{r index_compare_plot2, eval=FALSE, include=FALSE}
 
 
-spi_charts('spi_index_df_dim3_alt2', 'SPI.INDEX.DIM3.ALT2','Dimension 3: Data Products - All High Income Top Coded')
+spi_charts('spi_index_df_dim3_alt2', 'SPI.INDEX.PIL3.ALT2','Pillar 3: Data Products - All High Income Top Coded')
 
 
 ```
 
-### Dimension 4: Data Sources
+### Pillar 4: Data Sources
 
-Dimension 4 examines whether countries have the data sources available that are necessary to produce statistics for public use.  We examine three aspects of data sources: censuses and surveys, administrative data, and geospatial data.  Private and citizen generated data is another important area that we will incorporate when we are able make use of an established source.  For the censuses and surveys we examine, we score on both whether this source exists and how recently the source was produced, as both are needed for accurate reporting of current conditions.  For administrative data and geospatial data, we are using proxies available on the state of these data systems.
+Pillar 4 examines whether countries have the data sources available that are necessary to produce statistics for public use.  We examine three aspects of data sources: censuses and surveys, administrative data, and geospatial data.  Private and citizen generated data is another important area that we will incorporate when we are able make use of an established source.  For the censuses and surveys we examine, we score on both whether this source exists and how recently the source was produced, as both are needed for accurate reporting of current conditions.  For administrative data and geospatial data, we are using proxies available on the state of these data systems.
 
 
 
-```{r dimensionsplot4}
-spi_mapper('spi_index_df','SPI.INDEX.DIM4','Dimension 4: Data Sources Scores')
+```{r pillarsplot4}
+spi_mapper('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
 ```
 
 
 When looking at the country chart, again there is significant variability across countries.  No country receives the maximum score of 100, with many countries falling short particularly on our geospatial indicator.  Somalia is the only country that receives 0 points on this indicator, which is the minimum score.
 
-```{r countrydimensionsplot4}
+```{r countrypillarsplot4}
 
-spi_country_charts('spi_index_df','SPI.INDEX.DIM4','Dimension 4: Data Sources Scores')
+spi_country_charts('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
 
 
 
@@ -1572,7 +1540,7 @@ spi_country_charts('spi_index_df','SPI.INDEX.DIM4','Dimension 4: Data Sources Sc
 
 ```{r maturitytable4}
 
-indicators<-c("SPI.INDEX.DIM4",
+indicators<-c("SPI.INDEX.PIL4",
               "SPI.D4.1.1.POPU",
               "SPI.D4.1.2.AGRI",
               "SPI.D4.1.3.BIZZ",
@@ -1602,27 +1570,27 @@ geo_bottom <- as.numeric(maturity_tab[11,6])
 ```
 
 
-Countries in the top 20% for dimension 4 have an average score of `r spi_top`, while countries in the bottom 20% have an average score of `r spi_bottom`.  The gap between the top 20% and bottom 20% for the population and housing census indicator is `r pop_gap` points on a scale from 0 to 1.  The gap for countries conducting a business/establishment survey is `r business_gap`.  The scores for even top performing countries on our geospatial indicator are low.  The average score for the top 20% in dimension 4 is `r geo_top`, while it is `r geo_bottom` for the bottom 20%.
+Countries in the top 20% for pillar 4 have an average score of `r spi_top`, while countries in the bottom 20% have an average score of `r spi_bottom`.  The gap between the top 20% and bottom 20% for the population and housing census indicator is `r pop_gap` points on a scale from 0 to 1.  The gap for countries conducting a business/establishment survey is `r business_gap`.  The scores for even top performing countries on our geospatial indicator are low.  The average score for the top 20% in pillar 4 is `r geo_top`, while it is `r geo_bottom` for the bottom 20%.
 
 ```{r maturitdisp4}
 
 maturity_tab <- maturity_tab %>%
   flextable() %>%
-  add_header_lines('Select SPI Indicator Scores by SPI Dimension 4 Maturity Level') 
+  add_header_lines('Select SPI Indicator Scores by SPI Pillar 4 Maturity Level') 
 
 FitFlextableToPage(maturity_tab) %>%
   align( align = "left", part = "body")
 
 ```
 
-### Dimension 5: Data Infrastructure
+### Pillar 5: Data Infrastructure
 
-The fifth dimension measures whether countries have the hard and soft infrastructure to produce the data sources, data products, and data services to produce useful data.  For the dimension 5 sub-score, we use only a set of ten methods, standards, and classifications.  We also have collected data on statistical legislation and governance, as well as finance, but these indicators currently lack adequate country coverage to include in our index.
+The fifth pillar measures whether countries have the hard and soft infrastructure to produce the data sources, data products, and data services to produce useful data.  For the pillar 5 sub-score, we use only a set of ten methods, standards, and classifications.  We also have collected data on statistical legislation and governance, as well as finance, but these indicators currently lack adequate country coverage to include in our index.
 
 
 ```{r maturitytable5}
 
-indicators<-c("SPI.INDEX.DIM5",
+indicators<-c("SPI.INDEX.PIL5",
               #"SPI.D5.1.DILG",
               "SPI.D5.2.1.SNAU",
               "SPI.D5.2.2.NABY",
@@ -1645,40 +1613,40 @@ spi_bottom <- as.numeric(maturity_tab[1,6])
 
 ```
 
-Countries scoring in the top 20% tend to be concentrated among the high income countries.  These top scoring countries have an average score for dimension 5 of `r spi_top`, which is near the maximum score of 100.  Countries in the bottom 20% have an average score fo `r spi_bottom`.
+Countries scoring in the top 20% tend to be concentrated among the high income countries.  These top scoring countries have an average score for pillar 5 of `r spi_top`, which is near the maximum score of 100.  Countries in the bottom 20% have an average score fo `r spi_bottom`.
 
-```{r dimensionsplot5}
-spi_mapper('spi_index_df','SPI.INDEX.DIM5','Dimension 5: Data Infrastructure Scores')
-
-```
-
-Several countries score the maximum of 100 in the data infrastructure dimension.  One country, Somalia, scores 0 points in this dimension.  
-
-```{r countrydimensionsplot5}
-
-spi_country_charts('spi_index_df','SPI.INDEX.DIM5','Dimension 5: Data Infrastructure Scores')
-
-
+```{r pillarsplot5}
+spi_mapper('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores')
 
 ```
 
-In the top 20%, the average score is near 100 across all the indicators in dimension 5.  In the bottom 20%, countries score on average close to zero points for the CPI base year, classification of status of employment, central government accounting status, compilation of government finance statistics, and business process indicators.  Bottom 20% countries, score above 0.5 points on the system of national accounts in use and compilation of monetary and financial statistics indicators.
+Several countries score the maximum of 100 in the data infrastructure pillar  One country, Somalia, scores 0 points in this pillar.  
+
+```{r countrypillarsplot5}
+
+spi_country_charts('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores')
+
+
+
+```
+
+In the top 20%, the average score is near 100 across all the indicators in pillar 5.  In the bottom 20%, countries score on average close to zero points for the CPI base year, classification of status of employment, central government accounting status, compilation of government finance statistics, and business process indicators.  Bottom 20% countries, score above 0.5 points on the system of national accounts in use and compilation of monetary and financial statistics indicators.
 
 
 ```{r maturitdisp5}
 
 maturity_tab <- maturity_tab %>%
   flextable() %>%
-  add_header_lines('Select SPI Indicator Scores by SPI Dimension 5 Maturity Level') 
+  add_header_lines('Select SPI Indicator Scores by SPI Pillar 5 Maturity Level') 
 
 FitFlextableToPage(maturity_tab) %>%
   align( align = "left", part = "body")
 
 ```
 
-### Correlations between SPI Dimensions
+### Correlations between SPI pillars
 
-In the following chart, we show the correlations between the SPI overall score and the SPI dimension sub-scores.  All dimensions are positively correlated with one another.  On the other hand, no dimension is perfectly correlated with any of the other dimensions, which would be a sign that a dimension was not provide additional information on the statistical performance of countries.  The dimension with the single highest correlation to the overall measure is dimension 1 on data use.  The indicator with the lowest overall correlation with the SPI overall score is dimension 3 on data products.
+In the following chart, we show the correlations between the SPI overall score and the SPI pillar sub-scores.  All pillars are positively correlated with one another.  On the other hand, no pillar is perfectly correlated with any of the other pillars, which would be a sign that a pillar was not provide additional information on the statistical performance of countries.  The pillar with the single highest correlation to the overall measure is pillar on data use.  The indicator with the lowest overall correlation with the SPI overall score is pillar 3 on data products.
 
 ```{r dimcorr, echo=FALSE}
 
@@ -1695,7 +1663,7 @@ pcorr<- ggcorrplot::ggcorrplot(df_corr_plot,
                    ggtheme = theme_spi(),
                    colors = c("#F8696B", "#FFEB84", "#63BE7B"),
                    legend.title = "Correlation",
-                   title = "Correlation Between SPI Dimensions",
+                   title = "Correlation Between SPI pillars",
                    lab=T) + 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
   scale_y_discrete(labels = function(x) str_wrap(x, width = 16)) +
@@ -1710,15 +1678,15 @@ pcorr
 
 ```
 
-## SPI Scores by Pillar and Indicator
+## SPI Scores by Dimension and Indicator
 
-While there are large differences across regions, income groups, and countries in the SPI overall score, there are also differences across indicators in the strengths and weaknesses of countries that may have the same final score.  For instance, some countries may reach a final score by excelling in the area of data sources, while others may reach a final score by excelling in data infrastructure.  While there are many paths that countries may take to reaching an SPI overall score and only by studying the pillars and indicators for a particular country in detail can you understand why a country gets a particular score, we can at least characterize which of the pillars and indicators are most responsible for differences between countries.
+While there are large differences across regions, income groups, and countries in the SPI overall score, there are also differences across indicators in the strengths and weaknesses of countries that may have the same final score.  For instance, some countries may reach a final score by excelling in the area of data sources, while others may reach a final score by excelling in data infrastructure.  While there are many paths that countries may take to reaching an SPI overall score and only by studying the dimensions and indicators for a particular country in detail can you understand why a country gets a particular score, we can at least characterize which of the dimensions and indicators are most responsible for differences between countries.
 
-In order to do so, we apply a leave-out approach to calculating our SPI overall scores, which can help us understand which pillars and indicators are most impactful.  The leave-out approach is similar in spirit to a jackknife approach (see [@miller1974jackknife] for an introduction), which has been used in a variety of situations to examine the sensitivity of estimates to leaving out specific observations. Specifically for our case, the leave-out approach consists of sequentially deleting indicators one at a time and recalculating the SPI overall scores.  By sequentially omitting indicators, we can calculate the total difference between the SPI overall score incorporating all indicators and an alternative SPI score that is calculated by omitting a single indicator.  We can then rank our pillars and indicators based on which produce the greatest total difference between our SPI overall score and the alternative score.
+In order to do so, we apply a leave-out approach to calculating our SPI overall scores, which can help us understand which dimensions and indicators are most impactful.  The leave-out approach is similar in spirit to a jackknife approach (see [@miller1974jackknife] for an introduction), which has been used in a variety of situations to examine the sensitivity of estimates to leaving out specific observations. Specifically for our case, the leave-out approach consists of sequentially deleting indicators one at a time and recalculating the SPI overall scores.  By sequentially omitting indicators, we can calculate the total difference between the SPI overall score incorporating all indicators and an alternative SPI score that is calculated by omitting a single indicator.  We can then rank our dimensions and indicators based on which produce the greatest total difference between our SPI overall score and the alternative score.
 
 Specifically, the approach is as follows:   
 
-1. Calculate the SPI overall score for each country using all pillars and indicators, $SPI.INDEX_{c}$.    
+1. Calculate the SPI overall score for each country using all dimensions and indicators, $SPI.INDEX_{c}$.    
   
 2. For each indicator $j=1,...,J$ do:   
   
@@ -1773,16 +1741,16 @@ spi_index_df_alt <- spi_index_df_alt %>%
          #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
   ) %>%
   mutate(
-    SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=TRUE),
-    SPI.INDEX.DIM2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=TRUE),
-    SPI.INDEX.DIM3=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
-    SPI.INDEX.DIM4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=TRUE),
-    SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=TRUE),
-    SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.DIM1',
-                                    'SPI.INDEX.DIM2',
-                                    'SPI.INDEX.DIM3',
-                                    'SPI.INDEX.DIM4',
-                                    'SPI.INDEX.DIM5')), na.rm=TRUE)
+    SPI.INDEX.PIL1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=TRUE),
+    SPI.INDEX.PIL2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=TRUE),
+    SPI.INDEX.PIL3=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
+    SPI.INDEX.PIL4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=TRUE),
+    SPI.INDEX.PIL5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=TRUE),
+    SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.PIL1',
+                                    'SPI.INDEX.PIL2',
+                                    'SPI.INDEX.PIL3',
+                                    'SPI.INDEX.PIL4',
+                                    'SPI.INDEX.PIL5')), na.rm=TRUE)
   ) %>% #
   mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
   arrange(-date, -SPI.INDEX.ALT) %>%
@@ -1837,26 +1805,26 @@ leave_out_df %>%
     labs(
       title="SPI Indicator Importance",
       subtitle = "Mean absolute difference in SPI overall scores leaving out indicator",
-      caption="The leave-out approach consists of sequentially deleting pillars or indicators one at a time and recalculating the SPI overall scores."
+      caption="The leave-out approach consists of sequentially deleting dimensions or indicators one at a time and recalculating the SPI overall scores."
     )
 
 ```
 
-The indicator that drives the single largest difference between the SPI overall score and an alternative score omitting the indicator is the civil registration and vital statistics (CRVS) indicator in Pillar 4.2 on administrative data.  This is closely followed by the indicator on whether NADA metadata is provided as a data service.  The indicators creating the smallest difference when omitted tend to the be the individual indicators in dimension 3 on data products.  The indicator with the single smallest difference is in Pillar 3:10 on SDG 10.
+The indicator that drives the single largest difference between the SPI overall score and an alternative score omitting the indicator is the civil registration and vital statistics (CRVS) indicator in dimension 4.2 on administrative data.  This is closely followed by the indicator on whether NADA metadata is provided as a data service.  The indicators creating the smallest difference when omitted tend to the be the individual indicators in pillar 3 on data products.  The indicator with the single smallest difference is in Pillar 3:10 on SDG 10.
 
 
 ```{r anova, eval=FALSE, include=FALSE}
 
-#Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each pillar.
+#Analysis of variance.  In the analysis below, I will calculate the variance in each pillar and in each dimension.
 
-anova_dim_df <- spi_index_df %>%
+anova_pil_df <- spi_index_df %>%
   select(country, iso3c, date, starts_with("SPI.INDEX")) %>%
   pivot_longer(
     cols=starts_with("SPI.INDEX"),
-    names_to='Dimension',
+    names_to='Pillar',
     values_to='value'
   ) %>%
-  group_by(Dimension, date) %>%
+  group_by(Pillar, date) %>%
   nest() %>%
   mutate(
     std_dev=map(
@@ -1865,10 +1833,10 @@ anova_dim_df <- spi_index_df %>%
                 ),
     std_dev=as.numeric(std_dev)
   ) %>%
-  left_join(metadata_full, by = c('Dimension'='source_id'))
+  left_join(metadata_full, by = c('Pillar'='source_id'))
   
 
-anova_dim_plot <- anova_dim_df %>%
+anova_pil_plot <- anova_pil_df %>%
   filter(date==2019) %>%
   ggplot(aes(x=source_name, y=std_dev))  +
   geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=std_dev), color="black") +
@@ -1885,25 +1853,25 @@ anova_dim_plot <- anova_dim_df %>%
   ) +
   xlab("") +
   ylab("Standard Deviation") +
-  ggtitle("Variation in SPI Dimensions")
+  ggtitle("Variation in SPI Pillars")
 
-anova_dim_plot
+anova_pil_plot
 
 ```
 
 ```{r anova2, eval=FALSE, include=FALSE}
 
-#Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each pillar.
+#Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each dimension.
 
 anova_pillar_df <- spi_index_df %>%
-  mutate(INDEX.SPI.D1.5=SPI.INDEX.DIM1/100) %>%
+  mutate(INDEX.SPI.D1.5=SPI.INDEX.PIL1/100) %>%
   select(country, iso3c, date, starts_with("INDEX")) %>%
   pivot_longer(
     cols=starts_with("INDEX"),
-    names_to='Pillar',
+    names_to='Dimension',
     values_to='value'
   ) %>%
-  group_by(Pillar, date) %>%
+  group_by(Dimension, date) %>%
   nest() %>%
   mutate(
     std_dev=map(
@@ -1912,13 +1880,13 @@ anova_pillar_df <- spi_index_df %>%
         ),
     std_dev=as.numeric(std_dev)
   ) %>%
-  left_join(pillars, by = c('Pillar'='pillar_id'))
+  left_join(pillars, by = c('Dimension'='dimension_id'))
   
     
 anova_pillar_plot <- anova_pillar_df %>%
   filter(date==2019) %>%
-  ggplot(aes(x=Pillar, y=std_dev))  +
-  geom_segment( aes(x=Pillar ,xend=Pillar, y=0, yend=std_dev), color="black") +
+  ggplot(aes(x=Dimension, y=std_dev))  +
+  geom_segment( aes(x=Dimension ,xend=Dimension, y=0, yend=std_dev), color="black") +
   geom_point(size=3) +
   # scale_color_manual(name="HCI",
   #                    labels = c("Over-performers", "Under-performers"),
@@ -1932,7 +1900,7 @@ anova_pillar_plot <- anova_pillar_df %>%
   ) +
   xlab("") +
   ylab("Standard Deviation") +
-  ggtitle("Variation in SPI Pillars")
+  ggtitle("Variation in SPI Dimensions")
 
 anova_pillar_plot  
 
@@ -1952,19 +1920,19 @@ spi_index_2019 <- spi_index_df %>%
 
 unique_scores <-  length(unique(spi_index_2019$SPI.INDEX))
 
-#check unique values by dimension.
-unique_scores1 <-  length(unique(spi_index_2019$SPI.INDEX.DIM1))
-unique_scores2 <-  length(unique(spi_index_2019$SPI.INDEX.DIM2))
-unique_scores3 <-  length(unique(spi_index_2019$SPI.INDEX.DIM3))
-unique_scores4 <-  length(unique(spi_index_2019$SPI.INDEX.DIM4))
-unique_scores5 <-  length(unique(spi_index_2019$SPI.INDEX.DIM5))
+#check unique values by pillar.
+unique_scores1 <-  length(unique(spi_index_2019$SPI.INDEX.PIL1))
+unique_scores2 <-  length(unique(spi_index_2019$SPI.INDEX.PIL2))
+unique_scores3 <-  length(unique(spi_index_2019$SPI.INDEX.PIL3))
+unique_scores4 <-  length(unique(spi_index_2019$SPI.INDEX.PIL4))
+unique_scores5 <-  length(unique(spi_index_2019$SPI.INDEX.PIL5))
 
 ```
 
 
-As a check of the data, we calculate the number of unique scores for our SPI overall score. If our SPI overall score produces a large number of tied scores, for instance, then our index will be less able to distinguish between the statistical performance of countries.  When calculating the number of unique values for 2019, we find that there are `r unique_scores` unique scores for `r n_countries` countries.  This means there are `r n_countries-unique_scores` tied values.  When looking within each dimension.  
+As a check of the data, we calculate the number of unique scores for our SPI overall score. If our SPI overall score produces a large number of tied scores, for instance, then our index will be less able to distinguish between the statistical performance of countries.  When calculating the number of unique values for 2019, we find that there are `r unique_scores` unique scores for `r n_countries` countries.  This means there are `r n_countries-unique_scores` tied values.    
 
-When looking at each specific dimension, there are only `r unique_scores1` unique scores for Dimension 1 on data use.  The data use indicator is coming solely from dimension 1.5 on data use by international organizations.  For Dimension 2, there are `r unique_scores2` unique scores.  For Dimension 3, there are `r unique_scores3` unique scores.  There are `r unique_scores4` unique scores for dimension 4, and there are `r unique_scores5` unique scores for dimension 5.
+When looking at each specific pillar, there are only `r unique_scores1` unique scores for pillar on data use.  The data use indicator is coming solely from dimension 1.5 on data use by international organizations.  For pillar, there are `r unique_scores2` unique scores.  For pillar 3, there are `r unique_scores3` unique scores.  There are `r unique_scores4` unique scores for pillar 4, and there are `r unique_scores5` unique scores for pillar 5.
 
 
 
@@ -2540,9 +2508,9 @@ Countries and international organizations need to know each national statistical
 
 ## Country SPI overall scores
 
-Below, we present the full list of countries by their SPI overall score in 2019.  The first column is the country name and the following columns are the overall SPI overall score, and then the sub-scores for dimension 1,2,3,4 and 5.  
+Below, we present the full list of countries by their SPI overall score in 2019.  The first column is the country name and the following columns are the overall SPI overall score, and then the sub-scores for pillar,2,3,4 and 5.  
 
-The cells in the table are color coded based on the performance of countries on our index and the sub-scores of the dimensions.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
+The cells in the table are color coded based on the performance of countries on our index and the sub-scores of the pillars.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
 
 Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
 
@@ -2567,30 +2535,30 @@ col_palette2 <- c("#2ec4b6",  "#f1dc76", "#ff9f1c" )
 #make the table
 index_tab <- index_disp %>%
   filter(date==2019) %>%
-  select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) 
+  select(country, SPI.INDEX,SPI.INDEX.PIL1,SPI.INDEX.PIL2,SPI.INDEX.PIL3,SPI.INDEX.PIL4,SPI.INDEX.PIL5) 
 
  #calculate the breaks for the color coding
         brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
         brks <- append(0,brks)
         brks <- append(brks,100)
 
-        brks1 <- quantile(index_tab$SPI.INDEX.DIM1, probs=c(1,2,3,4)/5,na.rm=T)
+        brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)
         brks1 <- append(0,brks1)
         if (max(brks1)<100) brks1 <- append(brks1,100)
         
-        brks2 <- quantile(index_tab$SPI.INDEX.DIM2, probs=c(1,2,3,4)/5,na.rm=T)
+        brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)
         brks2 <- append(0,brks2)
         if (max(brks2)<100) brks2 <- append(brks2,100)
         
-        brks3 <- quantile(index_tab$SPI.INDEX.DIM3, probs=c(1,2,3,4)/5,na.rm=T)
+        brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)
         brks3 <- append(0,brks3)
         if (max(brks3)<100) brks3 <- append(brks3,100)
         
-        brks4 <- quantile(index_tab$SPI.INDEX.DIM4, probs=c(1,2,3,4)/5,na.rm=T)
+        brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)
         brks4 <- append(0,brks4)
         if (max(brks4)<100) brks4 <- append(brks4,100)
         
-        brks5 <- quantile(index_tab$SPI.INDEX.DIM5, probs=c(1,2,3,4)/5,na.rm=T)
+        brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)
         brks5 <- append(0,brks5)
         if (max(brks5)<100) brks5 <- append(brks5,100)
         
@@ -2598,53 +2566,53 @@ index_tab <- index_disp %>%
       #make nice looking
       index_tab <- index_tab %>%
         flextable() %>%
-        add_header_lines('SPI overall score in 2019 and Dimension Scores.') %>%
+        add_header_lines('SPI overall score in 2019 and Pillar Scores.') %>%
         set_header_labels(values=list(
                              country="Country",
                              SPI.INDEX="SPI overall score",
-                             SPI.INDEX.DIM1="Dim 1: Data Use",
-                             SPI.INDEX.DIM2="Dim 2: Data Services",
-                             SPI.INDEX.DIM3="Dim 3: Data Products ",
-                             SPI.INDEX.DIM4="Dim 4: Data Sources",
-                             SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
+                             SPI.INDEX.PIL1="Pillar 1: Data Use",
+                             SPI.INDEX.PIL2="Pillar 2: Data Services",
+                             SPI.INDEX.PIL3="Pillar 3: Data Products ",
+                             SPI.INDEX.PIL4="Pillar 4: Data Sources",
+                             SPI.INDEX.PIL5="Pillar 5: Data Infrastructure"
                                          )) %>%
           bg(j = c('SPI.INDEX'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks, reverse=TRUE)) %>%
-          bg(j = c('SPI.INDEX.DIM1'),
+          bg(j = c('SPI.INDEX.PIL1'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks1, reverse=TRUE)) %>%
-          bg(j = c('SPI.INDEX.DIM2'),
+          bg(j = c('SPI.INDEX.PIL2'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks2, reverse=TRUE)) %>%
-          bg(j = c('SPI.INDEX.DIM3'),
+          bg(j = c('SPI.INDEX.PIL3'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks3, reverse=TRUE)) %>%
-          bg(j = c('SPI.INDEX.DIM4'),
+          bg(j = c('SPI.INDEX.PIL4'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks4, reverse=TRUE)) %>%
-          bg(j = c('SPI.INDEX.DIM5'),
+          bg(j = c('SPI.INDEX.PIL5'),
              bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks5, reverse=TRUE))
 # 
 # #make nice looking
 # index_tab <- index_tab %>%
 #   flextable() %>%
-#   add_header_lines('SPI overall score in 2019 and Dimension Scores.') %>%
+#   add_header_lines('SPI overall score in 2019 and pillar Scores.') %>%
 #   set_header_labels(values=list(
 #                        country="Country", 
 #                        SPI.INDEX="SPI overall score",
-#                        SPI.INDEX.DIM1="Dim 1: Data Use",
-#                        SPI.INDEX.DIM2="Dim 2: Data Services",
-#                        SPI.INDEX.DIM3="Dim 3: Data Products ",
-#                        SPI.INDEX.DIM4="Dim 4: Data Sources",
-#                        SPI.INDEX.DIM5="Dim 5: Data Infrastructure"
+#                        SPI.INDEX.PIL1="Dim 1: Data Use",
+#                        SPI.INDEX.PIL2="Dim 2: Data Services",
+#                        SPI.INDEX.PIL3="Dim 3: Data Products ",
+#                        SPI.INDEX.PIL4="Dim 4: Data Sources",
+#                        SPI.INDEX.PIL5="Dim 5: Data Infrastructure"
 #                                    )) %>%
 #     bg(j = c('SPI.INDEX'), 
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM1'),
+#     bg(j = c('SPI.INDEX.PIL1'),
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM2'),
+#     bg(j = c('SPI.INDEX.PIL2'),
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM3'),
+#     bg(j = c('SPI.INDEX.PIL3'),
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM4'),
+#     bg(j = c('SPI.INDEX.PIL4'),
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-#     bg(j = c('SPI.INDEX.DIM5'),
+#     bg(j = c('SPI.INDEX.PIL5'),
 #        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE))
 # 
 #   
@@ -2725,9 +2693,9 @@ index_tab_recode <- index_tab_recode %>%
                        country="Country", 
                        SPI.INDEX="SPI Overall Score",
                        spi_groups="SPI Maturity Grouping",
-                       SPI.INDEX.ALT="SPI Overall Score: Top Coding OECD High Income Countries for Dimension 3.",
+                       SPI.INDEX.ALT="SPI Overall Score: Top Coding OECD High Income Countries for pillar 3.",
                        spi_alt_groups="SPI Maturity Grouping: Top Coding OECD High Income",
-                       SPI.INDEX.ALT2="SPI Overall Score: Top Coding All High Income Countries for Dimension 3.",
+                       SPI.INDEX.ALT2="SPI Overall Score: Top Coding All High Income Countries for pillar 3.",
                        spi_alt2_groups="SPI Maturity Grouping: Top Coding All High Income"
                                    )) %>%
     bg(j = c('SPI.INDEX'), 
@@ -2989,7 +2957,7 @@ index_tab <- flextable(metatable) %>%
   add_header_lines('SPI Indicator Metadata.') %>%
   set_header_labels(values=list(
                        source_name="Indicator Name",
-                       SPI_indicator_id="Pillar",
+                       SPI_indicator_id="Dimension",
                        spi_indicator_description="Brief Description",
                        spi_indicator_scoring="Scoring"
                                    ))

@@ -1,0 +1,583 @@
+---
+title: "Statistical Performance Indicators"
+author: ""
+date: ""
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, dpi=500, dev='svg')
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+library(xaringanthemer)
+library(wbggeo)
+library(wbgmaps)
+library(ggthemes)
+library(Hmisc)
+library(here)
+library(patchwork)
+library(ggpmisc)
+library(jsonlite)
+library(httr)
+library(readxl)
+library(kableExtra)
+library(highcharter)
+library(httr)
+library(jsonlite)
+library(geojsonio)
+library(waffle)
+library(hrbrthemes)
+library(ggbeeswarm)
+library(plotly)
+style_mono_accent(base_color = "#009FDA",
+                  title_slide_background_color = 'white',
+                  title_slide_text_color = '#002244',
+                  title_slide_background_image = 'WB_logo.png',
+                  title_slide_background_size = '7',
+                  title_slide_background_position = 'bottom 25px right 25px;',
+                  text_font_google = google_font('Roboto'),
+                  text_font_size = '24px',
+                  )
+
+#set directories
+dir <- here()
+
+raw_dir <- paste(dir, '01_raw_data', sep="/")
+output_dir <- paste(dir, '03_output_data', sep="/")
+
+#weights (either unity (1) or population)
+wgt <- 1
+
+```
+
+```{r load, include=FALSE}
+
+#add in population
+# pop_df <- wbstats::wb(country="all",
+#              indicator='SP.POP.TOTL',
+#              startdate=2004,
+#              enddate=2019) %>%
+#   mutate(date=as.numeric(date)) %>%
+#   mutate(population=value) %>%
+#   select(country, date, population) 
+
+#import data
+SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
+#     left_join(pop_df) %>%
+   mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+
+
+
+
+
+
+#metadata 
+metadata2 <- data.frame(
+  series = c('SPI.INDEX', 'SPI.INDEX.DIM1', 'SPI.INDEX.DIM2', 'SPI.INDEX.DIM3', 'SPI.INDEX.DIM4', 'SPI.INDEX.DIM5'),
+  indicator_name = c('SPI Overall Score', 'Dimension 1: Data Use', 'Dimension 2: Data Services', 'Dimension 3: Data Products', 'Dimension 4: Data Sources', 'Dimension 5: Data Infrastructure')
+)
+
+metadata  <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep="")) %>%
+  rename(series=source_id,
+         indicator_name=source_name) %>%
+  bind_rows(metadata2)
+
+#get list of country info
+country_list <- wbstats::wb_countries()
+
+
+SPI_2019 <- SPI %>%
+  filter(date==2019) %>%
+  filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
+  mutate(across(contains("SPI"),~1*.))
+
+#read in TopoJSON from World Bank
+countries_df <- sf::st_read(paste0(dir,"/01_raw_data/misc/WB_countries_Admin0_lowres.geojson")) %>%
+            mutate(iso3c=ISO_A3_EH,
+                 iso3c=if_else(WB_A3=="NOR",WB_A3,ISO_A3_EH)) #fix norway which has no iso3c
+
+#countries <- geojsonio::topojson_read(paste0(dir,"/misc/WB_countries_Admin0_topojson.json")
+#                                     ) 
+countries <- countries_df %>%
+  geojson_json(geometry='polygon')
+
+#function to plot dimension scores
+plot_fun <- function(variables, title) {
+
+  plot_df <- SPI_2019 %>%
+    rename(value= !! variables) %>%
+    mutate(value=round(value,1)) %>%
+    mutate(income=factor(income, levels=c('High income', 'Upper middle income', 
+                                          'Lower middle income', 'Low income')))
+    #set groups and colors
+    spi_groups_quantiles <- quantile(plot_df$value, probs=c(1,2,3,4)/5,na.rm=T)
+    
+    
+    plot_df <- plot_df %>%
+      mutate(spi_groups=case_when(
+        between(value, spi_groups_quantiles[4],100) ~ "Top 20%",
+        between(value, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+        between(value, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+        between(value, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+        between(value, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+        
+      )) %>%
+      mutate(spi_groups=factor(spi_groups, 
+                               levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+    
+    
+    #set color pallete
+    col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+    names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
+  p <- ggplot(plot_df,aes(income, value, color=spi_groups, label=country)) + 
+    geom_quasirandom() +
+    scale_color_manual(
+        name='',
+        values=col_pal,
+        na.value='grey'
+      ) +
+    theme_ipsum() +
+    ylab('Score') +
+    theme(legend.position='bottom') 
+  
+  ggplotly(p,
+           tooltip=c('label','y')) %>%
+    layout(title=title,
+           legend = list(orientation = "h",   # show entries horizontally
+                     xanchor = "center",  # use center of legend as anchor
+                     x = 0.5,y=-0.2))             # put legend in center of x-axis
+    
+}
+
+```
+
+
+# Introduction
+
+The World Bank's Statistical Performance Indicators (SPI) project is a tool for countries/donors to assess the statistical system of a country.  [Add connection to forthcoming WDR]
+
+The SPI builds on the SCI, which the World Bank has regularly published since 2004. Our new SPI will cover many of the same elements as the SCI, such as statistical methodology, source data, and periodicity, but will also expand into new areas. The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system. We also are committing to making our project open data and open code to build confidence in our work. All code and data can be found at our github repository. https://github.com/stacybri/SPI
+
+By helping countries and development partners identify the strengths and weaknesses of national statistical systems the SPI can support policy advice for countries about their national statistical systems, investment decisions for donors including the World Bank, benchmarking of national statistical systems, and advocacy for national statistics.
+
+Thanks to a large scale data collection effort by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering five dimensions for our dashboard.  These 54 indicators do allow us to provide data for each of our 5 dimensions on data use, data services, data products, data sources, and data infrastructure.  Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public.  Going forward, the international community must work together to fill these gaps.
+
+# What is covered in SPI?
+
+Statistics have no value unless they are used. The first dimension of the SPI is therefore **data use**. A successful statistical system is one that produces data products that are highly used. The SPI contains five indicators of data use.  Below are the dimension 1 aggregate scores by income group, which is formed by averaging across the five indicators.  These indicators are formed by checking whether the country produces useful data for international organizations to monitor global progress.  Scores range between 0 and 100, with a score of 100 being the highest possible score.  For more information, feel free to consult our technical report [insert link to technical report here]. https://stacybri.github.io/SPI/.
+
+```{r dim1, out.height=400, out.width=700}
+
+plot_fun('SPI.INDEX.DIM1', 'Dimension 1: Data Use') 
+
+```
+
+
+
+
+In order to meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second dimension of the SPI is therefore **data services** that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.  Our data services dimension contains indicators on data releases, online accessibility, and availability of detailed survey metadata.  The dimension 2 overall score averages over these indicators.
+
+
+```{r dim2, out.height=400, out.width=700}
+
+plot_fun('SPI.INDEX.DIM2', 'Dimension 2: Data Services')
+
+
+```
+
+
+The dialogue between users and suppliers in turn drives the design of statistical products that are to be created including the quality of product needed for the country requirement. This will incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third dimension of the SPI is therefore **data products**. A successful statistical system is one that generates high quality statistical indicators that can also track progress for the Sustainable Development Goals (SDGs).  Our data products indicators include the fraction of SDG indicators in each goal that have at least one value in a five year span.
+
+
+```{r dim3, out.height=400, out.width=700}
+
+plot_fun('SPI.INDEX.DIM3', 'Dimension 3: Data Products')
+
+
+```
+
+In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens. The fourth dimension of the SPI is therefore **data sources**. A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.
+
+```{r dim4, out.height=400, out.width=700}
+
+plot_fun('SPI.INDEX.DIM4', 'Dimension 4: Data Sources')
+
+
+```
+
+
+For the cycle to be complete, capability needs continuously to be reviewed to ensure that it is enough to deliver the products, services and ultimately data use required. The fifth dimension of the SPI is therefore **data infrastructure**. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
+
+
+```{r dim5, out.height=400, out.width=700}
+
+plot_fun('SPI.INDEX.DIM5', 'Dimension 5: Data Infrastructure')
+
+
+```
+
+The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 below.
+
+*Figure 1: The Dimensions and Pillars that Construct the New SPI*
+![](SPI_dashboard.png)
+
+# SPI Scores
+
+Combining our five dimensions, we form an overall index of statistical performance.  For more details on the methodology, see our technical note [LINK HERE].  https://stacybri.github.io/SPI/measuring-the-statistical-performance-of-countries-an-overview-of-the-statistical-performance-indicators-and-index.html
+
+There are large differences in the SPI overall score across World Bank regions and income groups. Overall, North America has the highest average SPI overall score, while the Sub-Saharan Africa region has the lowest average score.  There is also a clear gradient with respect to income groups. Countries classified as low income have lower scores on average than countries classified as middle income. High income countries have the highest average SPI overall score score.
+
+Click on the region and income group bars for more breakdowns by country.
+
+```{r drilldown, echo=FALSE}
+
+#set groups and colors
+spi_groups_quantiles <- quantile(SPI_2019$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+
+
+SPI_map <- SPI_2019 %>%
+    mutate(spi_groups=case_when(
+      between(SPI.INDEX, spi_groups_quantiles[4],100) ~ "Top 20%",
+      between(SPI.INDEX, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(SPI.INDEX, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(SPI.INDEX, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(SPI.INDEX, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )),
+           value = as.numeric(spi_groups))  
+  
+
+  #set color pallete
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+  names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
+  col_pal_df <- as.data.frame(col_pal) %>%
+    rownames_to_column(var='spi_groups')
+
+#prep data
+region_SPI_df <- SPI_2019 %>%
+    group_by(region) %>%
+    filter(region!='Aggregates') %>%
+    summarise(SPI.INDEX=round(wtd.mean(SPI.INDEX, weights = weights, na.rm=T),0),
+              SPI.INDEX.DIM1=round(wtd.mean(SPI.INDEX.DIM1, weights = weights, na.rm=T),0),
+              SPI.INDEX.DIM2=round(wtd.mean(SPI.INDEX.DIM2, weights = weights, na.rm=T),0),
+              SPI.INDEX.DIM3=round(wtd.mean(SPI.INDEX.DIM3, weights = weights, na.rm=T),0),
+              SPI.INDEX.DIM4=round(wtd.mean(SPI.INDEX.DIM4, weights = weights, na.rm=T),0),
+              SPI.INDEX.DIM5=round(wtd.mean(SPI.INDEX.DIM5, weights = weights, na.rm=T),0)) %>%
+  arrange(-SPI.INDEX) 
+
+region_order <- region_SPI_df$region
+
+region_SPI_df <- region_SPI_df %>%
+  mutate(region=factor(region, levels=region_order))
+
+income_SPI_df <- SPI_2019 %>%
+    mutate(income=factor(income, levels=c('High income', 'Upper middle income', 
+                                          'Lower middle income', 'Low income'))) %>%
+    group_by(income) %>%
+    filter(region!='Aggregates') %>%
+    summarise(SPI.INDEX=round(wtd.mean(SPI.INDEX, weights = weights, na.rm=T),0),
+              SPI.INDEX.DIM1=round(wtd.mean(SPI.INDEX.DIM1, weights = weights, na.rm=T),0),
+              SPI.INDEX.DIM2=round(wtd.mean(SPI.INDEX.DIM2, weights = weights, na.rm=T),0),
+              SPI.INDEX.DIM3=round(wtd.mean(SPI.INDEX.DIM3, weights = weights, na.rm=T),0),
+              SPI.INDEX.DIM4=round(wtd.mean(SPI.INDEX.DIM4, weights = weights, na.rm=T),0),
+              SPI.INDEX.DIM5=round(wtd.mean(SPI.INDEX.DIM5, weights = weights, na.rm=T),0))
+
+#create the drilldown data first
+country_drilldown <- SPI_map %>%
+  mutate(across(starts_with("SPI.INDEX"),round,0)) %>%
+  left_join(col_pal_df) %>% #add colors
+  group_nest(region) %>%
+  mutate(id=region,
+         type='column',
+         data=map(data, mutate, name=country, y=SPI.INDEX, group=spi_groups, color=col_pal),
+         data=map(data,list_parse)
+  )
+
+#create tooltip
+tooltip_category_text <- c("SPI Overall Score: "
+                           # "SPI Dimension 1 Score: ", 
+                           # "SPI Dimension 2 Score: ",
+                           # "SPI Dimension 3 Score: ",
+                           # "SPI Dimension 4 Score: ",
+                           # "SPI Dimension 5 Score: "
+                           )
+tooltip_formatted_values <- c("{point.y}" 
+                              # "{point.SPI.INDEX.DIM1}",
+                              # "{point.SPI.INDEX.DIM2}",
+                              # "{point.SPI.INDEX.DIM3}",
+                              # "{point.SPI.INDEX.DIM4}",
+                              # "{point.SPI.INDEX.DIM5}"
+                              )
+my_tooltips <- tooltip_table(tooltip_category_text, tooltip_formatted_values)
+
+#create overall graph by region
+
+region_graph <- hchart(
+  region_SPI_df,
+  "column",
+  hcaes(x = region, y = SPI.INDEX, name = region, drilldown = region),
+  name = "SPI Overall Score",
+  colorByPoint = FALSE
+)
+
+region_graph <- region_graph %>% 
+  hc_drilldown(
+    allowPointDrilldown = TRUE,
+    series = list_parse(country_drilldown)
+  )  %>%
+  hc_colorAxis(dataClassColor="category", 
+               dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
+                                  list(from=2, to=2, color="#acece7", name="4th Quintile"),
+                                  list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
+                                  list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
+                                  list(from=5, to=5, color="#ff9f1c", name="Bottom 20%")))
+
+region_graph <- region_graph %>%
+  hc_tooltip(
+    useHTML = TRUE,
+    pointFormat = my_tooltips
+    ) %>% 
+  hc_yAxis( title = "SPI Score")  %>% 
+  hc_xAxis( title = "") %>% 
+  hc_title(text = "SPI Overall Scores by Region in 2019" )  %>%
+  hc_subtitle(
+    text = "Click bar to see by country.",
+    style = list(useHTML = TRUE)
+  )
+
+region_graph
+
+
+#create overall graph by income
+
+country_income_drilldown <- SPI_map %>%
+  mutate(across(starts_with("SPI.INDEX"),round,0)) %>%
+  mutate(income=factor(income, levels=c('High income', 'Upper middle income', 
+                                          'Lower middle income', 'Low income'))) %>%
+  left_join(col_pal_df) %>% #add colors
+  group_nest(income) %>%
+  mutate(id=income,
+         type='column',
+         data=map(data, mutate, name=country, y=SPI.INDEX, group=spi_groups, color=col_pal),
+         data=map(data,list_parse)
+  )
+
+income_graph <- hchart(
+  income_SPI_df,
+  "column",
+  hcaes(x = income, y = SPI.INDEX, name = income, drilldown = income),
+  name = "SPI Overall Score",
+  colorByPoint = FALSE
+)
+
+income_graph <- income_graph %>% 
+  hc_drilldown(
+    allowPointDrilldown = TRUE,
+    series = list_parse(country_income_drilldown)
+  ) %>%
+  hc_colorAxis(dataClassColor="category", 
+               dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
+                                  list(from=2, to=2, color="#acece7", name="4th Quintile"),
+                                  list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
+                                  list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
+                                  list(from=5, to=5, color="#ff9f1c", name="Bottom 20%")))
+
+income_graph <- income_graph %>%
+  hc_tooltip(
+    useHTML = TRUE,
+    pointFormat = my_tooltips
+    ) %>% 
+  hc_yAxis( title = "SPI Score") %>% 
+  hc_xAxis( title = "" ) %>%
+  hc_title(text = "SPI Overall Scores by Income Group in 2019" ) %>%
+  hc_subtitle(
+    text = "Click bar to see by country.",
+    style = list(useHTML = TRUE)
+  )
+
+income_graph
+```
+
+```{r text_computations}
+
+#number of countries with data for SPI overall score
+n_countries <- SPI %>%
+  filter(!is.na(SPI.INDEX) & date==2019) %>% #countries with value for SPI in 2019
+  nrow()
+
+# percentage of world population covered
+pop_covered <- SPI %>%
+  filter(date==2019) %>%
+  mutate(covered=!is.na(SPI.INDEX)) %>%
+  mutate(covered_pop=if_else(covered==TRUE, population, 0)) %>%
+  ungroup() %>%
+  summarise(pop_covered=sum(covered_pop, na.rm=T)/sum(population, na.rm=T))
+
+
+```
+
+Next we present a world map containing the SPI overall score values for 2019 for each country.  In total, we have `r n_countries` countries with sufficient data to compute an index value.  This set of countries covers `r 100*round(pop_covered$pop_covered,3)` percent of the world population.
+
+The map is color coded based on the performance of countries on our index.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
+
+Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
+
+* **Top 20%**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#2ec4b6">dark green</span>.    
+* **4th Quantile**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#acece7">light green</span>.    
+* **3rd Quantile**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#f1dc76">yellow</span>.  
+* **2nd Quantile**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#ffbf69">light orange</span>.  
+* **Bottom 20%**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#ff9f1c">dark orange </span>.    
+
+```{r leaflet, out.height=700, out.width=900}
+library(leaflet)
+variable <- "SPI.INDEX"
+
+spi_map_overall<-geojsonio::geojson_read(paste0(dir,"/SPI_data_viz/WB_countries_Admin0_lowres.geojson"),
+                                     what = "sp")
+
+spi_map_overall@data <- spi_map_overall@data %>%
+  mutate(iso3c=ISO_A3_EH,
+         iso3c=if_else(ISO_A3_EH==-99,WB_A3,ISO_A3_EH)) %>%
+  left_join(SPI_2019) 
+
+palette_df <- SPI_2019 %>%
+  select(variable)
+
+brks <- quantile(palette_df[,1], probs=c(1,2,3,4)/5,na.rm=T)
+brks <- append(0,brks)
+col_p <- c("#ff9f1c","#ffbf69","#f1dc76","#acece7")
+
+if (max(brks)<100) {
+  brks <- append(brks,100)
+  col_p <- c("#ff9f1c","#ffbf69","#f1dc76","#acece7","#2ec4b6")
+  
+}        #create pallete
+pal <- colorBin(col_p, 
+                bins=brks,
+                domain=c(0,100),
+                na.color='grey',
+                pretty=FALSE)
+
+
+
+##############
+#create labels
+##############
+
+
+labels <- sprintf(
+  "<strong>%s</strong><br/> <hr size=2>
+            <strong> %s: %g </strong><br/> <hr size=2>
+            ",
+  spi_map_overall@data$NAME_EN,
+  'Indicator Value', round(select(spi_map_overall@data, variable)[,1], digits = 1)
+  
+) %>%
+  lapply(htmltools::HTML)
+
+leaflet(spi_map_overall,
+        options=list(
+        center = c(0, 0),
+        zoom = 2,
+        worldCopyJump = FALSE,
+        maxBounds = list(
+            list(-90, -180),
+            list(90, 180)
+        ))) %>%
+  addProviderTiles(providers$Esri.WorldStreetMap) %>%
+  addPolygons(stroke = FALSE, smoothFactor = 0.3, fillOpacity = 0.7,
+              fillColor = ~pal(select(spi_map_overall@data, variable)[,1]),
+              label=labels) %>%
+  addLegend(pal=pal, 
+            values=~select(spi_map_overall@data, variable)[,1], opacity=0.7, 
+            labFormat = function(type, cuts, p) {  # Here's the trick
+              paste0( c("Bottom 20%","2nd Quintile","3rd Quintile","4th Quintile","Top 20%" ))
+            },
+            title='Indicator value', position="bottomleft")   
+```
+
+Here is an experimental hexagon map alternative.  This is attractive, because all countries are represented as the same physical size.  Just an alternative.
+
+```{r hexmap, out.height=400, out.width=700}
+
+
+########
+# Get data
+########
+# http://www.maartenlambrechts.com/2017/10/22/tutorial-a-worldtilegrid-with-ggplot2.html
+
+url <- "https://gist.githubusercontent.com/maartenzam/787498bbc07ae06b637447dbd430ea0a/raw/9a9dafafb44d8990f85243a9c7ca349acd3a0d07/worldtilegrid.csv"
+
+hexmap <- read_csv(url)
+
+spi_hex <- SPI_map %>%
+  select(iso3c, SPI.INDEX, spi_groups, value) %>%
+  mutate(SPI_Index=round(SPI.INDEX,0))
+
+hexmap <- hexmap %>% 
+  rename_all(str_replace_all, "\\.", "_") %>% 
+  select(x, y, name, alpha_2, alpha_3) %>%
+  mutate(iso2c=alpha_2) %>%
+  left_join(country_list) %>%
+  select(x,y,country,iso3c, region) %>%
+  left_join(spi_hex) %>%
+  filter(!is.na(region))
+
+########
+# Make Chart
+########
+
+hchart(hexmap, "tilemap", hcaes(x = x, y = -y, value=value),  name='SPI Overall Score') %>% 
+  hc_chart(type = "tilemap") %>% 
+  hc_plotOptions(
+    series = list(
+      dataLabels = list(
+        enabled = TRUE,
+        format = "{point.iso3c}",
+        color = "black",
+        style = list(textOutline = FALSE)
+      )
+    )
+  ) %>% 
+  hc_tooltip(
+    
+    pointFormat =  "Score: {point.SPI_Index} <br> Maturity level: {point.spi_groups} <br> Country: {point.country}"
+    ) %>% 
+  hc_colorAxis(dataClassColor="category", 
+     dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
+                        list(from=2, to=2, color="#acece7", name="4th Quintile"),
+                        list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
+                        list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
+                        list(from=5, to=5, color="#ff9f1c", name="Bottom 20%"))) %>%
+  hc_title(
+    text = "SPI Overall Scores in 2019"
+  ) %>%
+  hc_xAxis(visible = FALSE) %>% 
+  hc_yAxis(visible = FALSE) %>% 
+  hc_size(height = 1000)
+
+```
+
+
+# Dashboard
+
+Explore each of our statistical performance indicators and veiw our other results here:
+
+[Maybe we can insert a full dashboard for the user to explore here?]
+
+A prototype that needs some work is here:
+https://datanalytics.worldbank.org/content/686
+
+```{r eval=FALSE, include=FALSE}
+knitr::include_app("https://datanalytics.worldbank.org/content/686", 
+  height = "900px")
+```
+
+# Acknowledgements and Moving Forward
+
+This project was possible because of large scale data collection efforts by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others.  Through these efforts, we were able to compile 54 indicators covering 14 out of our 22 pillars for our dashboard. These 54 indicators do allow us to provide data for each of our 5 dimensions on data use, data services, data products, data sources, and data infrastructure. Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public. Going forward, the international community must work together to fill these gaps.
