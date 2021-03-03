@@ -560,10 +560,10 @@ Below is a brief description of the indicators (or lack thereof) we have availab
 
 
   * **Dimension 1.1: Data use by national legislature:**  *Not included because of lack of established methodology.  In principle it may be possible to utilize websites of national legislatures but this will require further work and assessment. *   
-  * **Dimension 1.2: Data use by national executive branch:** *Not included because of lack of established methodology. There are some usable data sources with fairly good coverage (as used by [paris21_statistical_2019]) but gaps in data have prevented fuller assessment of suitable methods.*      
+  * **Dimension 1.2: Data use by national executive branch:** *Not included because of lack of established methodology. There are some usable data sources with fairly good coverage (as used by [@paris21_statistical_2019]) but gaps in data have prevented fuller assessment of suitable methods.*      
   * **Dimension 1.3: Data use by civil society:**  *Not included because of lack of established methodology. There are some usable data sources with good coverage, for example from social media but more data is required to help assess and allow for likely biases between and within countries.*    
   * **Dimension 1.4: Data use by academia:**  *Not included because of lack of established methodology. We have not been able to find usable data sources with global coverage on which a new methodology could be developed.*   
-  * **Dimension 1.5: Data use by international organizations:**  *Five measures usefulness or reliability of country produced measures for international organizations. First, on comparability of poverty estimates for the World Bank reporting on international poverty (Source: Povcalnet). Second on usable surveys for statistics on child mortality for the UN Inter-agency Group for Child Mortality Estimation (Source: https://childmortality.org/). Third on accuracy of debt reporting as classified by the World Bank (Source: World Bank WDI metadata).  Fourth, on availability of safely managed drinking water data for use by JMP.  Fifth, on labor force participation data for use by ILO. We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further*    
+  * **Dimension 1.5: Data use by international organizations:**  *Five measures usefulness or reliability of country produced measures for international organizations. First, on comparability of poverty estimates for the World Bank reporting on international poverty (Source: Povcalnet). Second on usable surveys for statistics on child mortality for the [UN Inter-agency Group for Child Mortality Estimation](https://childmortality.org/). Third on accuracy of debt reporting as classified by the World Bank (Source: World Bank WDI metadata).  Fourth, on availability of safely managed drinking water data for use by [WHO/UNICEF Joint Monitoring Programme](https://washdata.org/).  Fifth, on labor force participation data for use by ILO. We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further*    
 
   
   * **Dimension 2.1: Data Releases:** *SDDS/e-GDDS subscription. This indicator is based on whether the country subscribes to IMF SDDS+, SDDS, or e-GDDS standards.  The source is the IMF Dissemination Standards Bulletin Board.  This is a good data source but we recognize that it is a proxy for the concept we are seeking to capture rather than a direct measurement.*    
@@ -571,7 +571,7 @@ Below is a brief description of the indicators (or lack thereof) we have availab
   * **Dimension 2.3: Advisory/ Analytical Services:**  *Not included because of lack of established methodology.  This would be new indicator of number of non-recurring products on NSO website (ad hoc/experimental rather than regular releases). The indicator is the number of products found.  No established source exists for this indicator.*    
   * **Dimension 2.4: Data services:** *NADA metadata.  This indicator checks whether NADA microdata cataloging is available for surveys produced by NSO.  NADA is an open source microdata cataloging system, compliant with the Data Documentation Initiative (DDI) and Dublin Cores RDF metadata standards.  Source: NSO websites.*
   
-  * **Dimension 3.1: Social Statistics:** *Average score for Goal 1-6 indicators. The primary data source is the UN SDG database. Whilst this is a database with comprehensive coverage that all countries have signed up to, it is clear that many (particularly developed countries) are not yet submitting their available national data. Scores for these countries are likely to represent an indicator of their willingness to submit national data rather than their performance in calculating the indicators.  For OECD countries, we supplement the UN SDG database with comparable data submitted to the OECD following the methodology in Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm). *
+  * **Dimension 3.1: Social Statistics:** *Average score for Goal 1-6 indicators. The primary data source is the UN SDG database. Whilst this is a database with comprehensive coverage that all countries have signed up to, it is clear that many (particularly developed countries) are not yet submitting their available national data. Scores for these countries are likely to represent an indicator of their willingness to submit national data rather than their performance in calculating the indicators.  For OECD countries, we supplement the UN SDG database with comparable data submitted to the OECD following the methodology in [Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand](https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm). *
   * **Dimension 3.2: Economic Statistics:** *Average score for Goal 7-12 indicators. See 3.1.*  
   * **Dimension 3.3: Environmental Statistics:**  *Average score for Goal 13-15 indicators. See 3.1.*      
   * **Dimension 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators. See 3.1.*    
@@ -601,41 +601,42 @@ Finally, many of the soft components of data infrastructure pillar lack adequate
 
 ## Process for Collecting Data
 
-The SPI team pulls from a variety of sources to populate our indicators.  While greater detail for each specific indicator can be found in our technical documentation (https://stacybri.github.io/SPI/) describing each indicator, we will provide a general overview of how we collect data for our indicators.
+The SPI team pulls from a variety of sources to populate the indicators. While greater detail for each specific indicator can be found in the [technical documentation](https://stacybri.github.io/SPI/) describing each indicator, a general overview of how data is collected are described in this section.
 
-Starting with pillar 1, we collect data four distinct sources.  The World Bank supplies the data for two indicators.  The indicator on availability of comparable poverty data comes from the World Bank's Povcalnet system, and the indicator on quality of debt service data comes from the World Bank's WDI metadata.  Data on the availability of under 5 child mortality data comes from the UN IGME. The indicator on availability of safely managed drinking water data is sources from the JMP, which is a combined effort by the WHO and UNICEF.  The indicator on the availability of source data for measuring labor force participation comes from the ILO.  Each of these sources will be updated annually prior to each annual data release.  The date the data is updated for each of these sources is available in our technical documentation.  
+For pillar 1 on data use, data is collected from four distinct sources. The World Bank supplies data for indicators on availability of comparable poverty data (from the World Bank’s Povcalnet system), and the indicator on quality of debt service data (from the World Bank’s World Development Indicators or WDI metadata). Data on the availability of under 5 child mortality data comes from the [UN Inter-agency Group for Child Mortality Estimation](https://childmortality.org/). The indicator on availability of safely managed drinking water data is sources from the [WHO/UNICEF Joint Monitoring Programme](https://washdata.org/), which is a combined effort by the WHO and UNICEF. The indicator on the availability of source data for measuring labor force participation comes from the ILO. Each of these sources will be updated annually prior to each annual data release. The date the data is updated for each of these sources is available in our technical documentation.
 
-For pillar 2, we collect data on data dissemination subscriptions based on the IMF's dissemination standards bulletin board website (https://dsbb.imf.org/). We follow the same update schedule for this information as the World Bank's WDI metadata, so that as of the release these two sources are identical.  The online access indicator is sources from the Open Data Watch ODIN openness score.  The date on which we downloaded the data is available in the technical description for this indicator.  The indicator for data services is based on whether a portal is available, compliant with the Data Documentation Initiative (DDI) and Dublin Core’s RDF metadata standards, which has a listing of surveys and microdata sets that can provide the necessary data and reference for follow-up.  This information is collected manually by visiting each NSO website and checking whether or not such a system exists.  In the raw data, a hyperlink is available to the portal, but any changes to the website of the NSO may cause this link to no longer function.
+For pillar 2 on data services,  information on data dissemination subscription is collected from the [IMF’s dissemination standards bulletin board](https://dsbb.imf.org/) website. This follows the same update schedule as the World Bank’s WDI metadata, so that as of the release these two sources are identical. The online access indicator is sourced from the Open Data Watch ODIN openness score. The date of the  data download is available in the technical description for this indicator. The indicator for data services is based on whether a portal is available, compliant with the Data Documentation Initiative (DDI) and Dublin Core’s RDF metadata standards, which has a listing of surveys and microdata sets that can provide the necessary data and reference for follow-up. This information is collected manually by visiting each NSO website and checking whether or not such a system exists. In the raw data, a hyperlink is available to the portal, but any changes to the website of the NSO may cause this link to no longer function.
 
-For the data products pillar, we examine whether countries are reporting data to monitor the SDG goals.  For this pillar, indicators are produced using the UN Global SDG monitoring database. For each SDG indicator, we check whether a value is available within a five year window of the date.  For instance, for the date of 2019, we examine whether any value is available between the years 2015-2019. For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  We chose to use the UN Global SDG monitoring database as a primary source, rather than individual NSO websites, because data submitted to the UN Global SDG monitoring database goes through a standardized process including quality control and documentation.
+For the data products dimension, we examine whether countries are reporting data to monitor the SDG goals. For this dimension, indicators are generated using the UN Global SDG monitoring database. For each SDG indicator, we check whether a value is available within a five year window of the date. For instance, for the date of 2019, we examine whether any value is available between the years 2015-2019. For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in [Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand](https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm). We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so. We chose to use the UN Global SDG monitoring database as a primary source, rather than individual NSO websites, because data submitted to the UN Global SDG monitoring database goes through a standardized process including quality control and documentation.
 
-For pillar 4, on censuses and surveys, we take two complementary approaches to collecting data. The first is to make use of data submitted to the World Bank, IHSN, ILO, and FAO microdata libraries.  We keep only surveys that are marked as nationally representative, and classify surveys (as either health surveys, agriculture surveys, labor force surveys, etc) using the classifications submitted to the microdata libraries.  The contents of our searches in these databases are available in our github repository.  The second approach is a manual data collection effort, where we directly visit NSO websites to be sure no surveys were missed.  For this second approach, where our team visits NSO websites, the survey or census must be publicly available and accessible to be included in this search.  If surveys or censuses are missed in this search, the easiest way for a country to get it included would be to create an entry for the survey at one of the microdata libraries.  Information on the completeness of the CRVS is sourced from the UN SDG global monitoring database.  Information on whether data is available at the 1st administrative level, for our geospatial indicator, is sourced from Open Data Watch, similar to the process for the data openness score.
+For dimension 4, on censuses and surveys, we take two complementary approaches to collecting data. The first is to make use of data submitted to the World Bank, IHSN, ILO, and FAO microdata libraries. We keep only surveys that are marked as nationally representative, and classify surveys (as either health surveys, agriculture surveys, labor force surveys, etc) using the classifications submitted to the microdata libraries. The contents of our searches in these databases are available in our github repository. The second approach is a manual data collection effort, where we directly visit NSO websites to be sure no surveys were missed. For this second approach, where our team visits NSO websites, the survey or census must be publicly available and accessible to be included in this search. If surveys or censuses are missed in this search, the easiest way for a country to get it included would be to create an entry for the survey at one of the microdata libraries. Information on the completeness of the Critical Registry and Vital Statistics (CRVS) is sourced from the UN SDG global monitoring database. Information on whether data is available at the 1st administrative level, for our geospatial indicator, is sourced from Open Data Watch, similar to the process for the data openness score.
+For dimension 5, data on the legislation indicator and finance indicators are pulled from the UN SDG global monitoring database. Indicators in the standards and methods pillar are sourced primarily through the IMF. Information on the system of national accounts in use and national accounts base year are sourced through the World Bank’s WDI metadata. Data for the business process indicator is sourced through the United Nations Industrial Development Organization (UNIDO) and United Nations Economic Commission for Europe (UNECE).
 
-For pillar 5, data on the legislation indicator and finance indicators are pulled from the UN SDG global monitoring database.  Indicators in the standards and methods pillar are sourced primarily through the IMF.  Information on the system of national accounts in use and national accounts base year are sourced through the World Bank's WDI metadata.  Data for the business process indicator is sourced through the United Nations Industrial Development Organization (UNIDO) and United Nations Economic Commission for Europe (UNECE).
 
 ## Handling Missing Data 
 
-For a full description of the methodology behind each specific indicator, please consult the technical documentation.  However, we did follow an approach of handling missing values and lining up data, which will be describe in general terms below.  For indicators where we had a value for a previous year (say a value in 2018 but not 2019), we would fill in from the previous value.  For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator.
-
-For indicators where we had no data for any years, we chose not to impute a value.  In that case, the value for that indicator is null and the country will not have a value for any pillars or dimensions where that value is used.
+A full description of the methodology behind each specific indicator is available in the [technical documentation](https://stacybri.github.io/SPI/). However, we did follow a  approach of handling missing values and lining up data, which will be describe in general terms below. For indicators where we had a value for a previous year for a country (say a value in 2018 but not 2019), we would fill in from the previous value. For instance, the open data watch indicators on geo-spatial data was only released in 2018, not 2019, so we filled in the value for 2019 with the value from 2018 as our best estimate of that indicator. For indicators where we had no data for any years, we chose not to impute a value.
 
 
 ## Process for Disputing the Data
 
-Countries will be given an opportunity to dispute the values that make up our indicators.  Our team takes every effort to make sure the data presented in our Statistical Performance Indicators are accurate, but it is possible that the sources we used to assign values for our indicators are not accurate despite these efforts.  Because of this, countries will have a window to provide documentation for any disputed values, and our team will be happy to adjust our scores based on this new information.  Precise details for this process will be made available in the future.
+Countries will be given an opportunity to dispute the values that make up our indicators. The team takes every effort to make sure the data presented in the Statistical Performance Indicators are accurate, but it is possible that the sources we used to assign values for our indicators are occasionally not up to date or accurate despite these efforts. Because of this, countries will have a window to provide documentation for any disputed values through contacting the Bank directly or via data@worldbank.org.
 
 ## Process for Updating Indicators
 
-While we feel our framework is comprehensive and is designed to capture the contours most statistical systems over at least the next 15 years, we fully recognize that our indicators themselves have room for improvement.  At launch, we will tag our version of our statistical performance indicators as version 1.0.  From there, we will likely have a 2-3 year cycle, where we continuously update the values of our indicators, but do not change the methodology for constructing them. At the end of the 2-3 year period, we may introduce a indicator or we may re-evaluate how our current indicators are constructed based on feedback from countries and other groups.  At that point, we will launch a major update as version 2.0, or version 3.0 as the sequence goes.  Smaller updates, where for instance we adjust a countries value based on the data dispute process we describe above, will be labeled with a decimal point as version 1.1 for instance.
+While the framework put forth in this note is comprehensive and is designed to capture the contours of most statistical systems over the next decade and beyond,  the indicators themselves are expected to improve over time. At launch, we will tag the release version of the Statistical Performance Indicators as version 1.0. From there, we will likely have a 2 to3 year cycle, where we continuously update the values of our indicators, but do not change the methodology for constructing them. At the end of the 2-3 year period, we may introduce new indicators or we may re-evaluate how  current indicators are constructed based on feedback from countries and other stakeholders and users. At that point, we will launch a major update as version 2.0, or version 3.0 as the sequence goes. Smaller updates, where for instance we adjust a country’s data , will be labeled with a decimal point as version 1.1 for instance.
 
-In order to be completely transparent, we will track all changes to our methodology through a publicly available github repository and we will publish all code and underlying data to produce our indicators.
+
+In order to be completely transparent, we will track all changes to our methodology through a publicly available [github repository](https://github.com/worldbank/SPI) and we will publish all code and underlying data to produce our indicators.
 
 
 # SPI Index Methodology 
 
-We next produce an overall score by combining the indicators we have collected.  Our statistical performance indicators have a three level structure, and our SPI overall score will be formed by sequentially aggregating each level.
+An overall score is produced by combining the Statistical Performance Indicators. Our statistical performance indicators have a three level structure, and our SPI overall score will be formed by sequentially aggregating each level.
 
-To begin we produce a score for each dimension, which is an unweighted average of the indicators within that dimension  For instance, the Census and Surveys dimension will be formed by taking the unweighted average of the Population Census score, the Agriculture Census score, the Business Census score, the Labor Force Survey score, the Health Survey score, etc.  
+To begin we produce a score for each dimension, which, unless otherwise stated, is an unweighted average of the indicators within that dimension. For instance, the Standards and Methods dimension will be formed by taking the unweighted average of the indicators for the system of national accounts in use, national accounts base year, classification of national industry, CPI base year, classification of household consumption, etc.
+
+
 
 $$ SPI.DIM_{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
 
@@ -749,7 +750,9 @@ dim_4_3 <- 1/4
 # Dimension 5 - Overall Weight
 pillar_5 <- 1/5
 # Dimension 5.2: Standards and Methods
+dim_5_1 <- 0
 dim_5_2 <- 1
+dim_5_5 <- 0
 
 
 ```
@@ -788,10 +791,10 @@ spi_index_simple <- spi_index_df_temp %>%
   select(-starts_with("SPI.D1")) %>%
   mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
   mutate(SPI.INDEX=rowMeans(across(starts_with("SPI")), na.rm=FALSE),
-         SPI.INDEX.DIM2=rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
-         SPI.INDEX.DIM3=rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),
-         SPI.INDEX.DIM4=rowMeans(across(starts_with("SPI.D4")), na.rm=FALSE),
-         SPI.INDEX.DIM5=rowMeans(across(starts_with("SPI.D5")), na.rm=FALSE)
+         SPI.INDEX.PIL2=rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
+         SPI.INDEX.PIL3=rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),
+         SPI.INDEX.PIL4=rowMeans(across(starts_with("SPI.D4")), na.rm=FALSE),
+         SPI.INDEX.PIL5=rowMeans(across(starts_with("SPI.D5")), na.rm=FALSE)
          ) %>% #
   arrange(-date, -SPI.INDEX) %>%
   select(country, iso3c, date, starts_with('SPI.INDEX'), everything())
@@ -829,42 +832,44 @@ pillar3_total <-
   dim_3_16 +
   dim_3_17
 pillar4_total <- dim_4_1.CEN + dim_4_1.SVY + + dim_4_2 + dim_4_3
+pillar5_total <- dim_5_1 + dim_5_2 + dim_5_5
 
 #create index dataset
 spi_index_df <- spi_index_df %>%
-  mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
-         INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
-         INDEX.SPI.D2.4=SPI.D2.4.NADA,
-         INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
+  mutate(SPI.DIM1.5.INDEX=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+         SPI.DIM2.1.INDEX=rowMeans(across(starts_with('SPI.D2.1'))),
+         SPI.DIM2.2.INDEX=SPI.D2.2.Openness.subscore,
+         SPI.DIM2.4.INDEX=SPI.D2.4.NADA,
+         SPI.DIM3.1.INDEX=rowMeans(across(c("SPI.D3.1.POV",
                                           "SPI.D3.2.HNGR",
                                           "SPI.D3.3.HLTH",
                                           "SPI.D3.4.EDUC",
                                           "SPI.D3.5.GEND",
                                           "SPI.D3.6.WTRS"))),
-         INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
+         SPI.DIM3.2.INDEX=rowMeans(across(c("SPI.D3.7.ENRG",
                                           "SPI.D3.8.WORK",
                                           "SPI.D3.9.INDY",
                                           "SPI.D3.10.NEQL",
                                           "SPI.D3.11.CITY",
                                           "SPI.D3.12.CNSP"))),         
-         INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
+         SPI.DIM3.3.INDEX=rowMeans(across(c("SPI.D3.13.CLMT",
                                           "SPI.D3.15.LAND" ))),
-         INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
+         SPI.DIM3.4.INDEX=rowMeans(across(c("SPI.D3.16.INST",
                                           "SPI.D3.17.PTNS" ))),
-         INDEX.SPI.D4.1.CEN=rowMeans(across(c('SPI.D4.1.1.POPU','SPI.D4.1.2.AGRI','SPI.D4.1.3.BIZZ'))), #separate census and surveys 
-         INDEX.SPI.D4.1.SVY=rowMeans(across(c('SPI.D4.1.4.HOUS','SPI.D4.1.5.AGSVY','SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH','SPI.D4.1.8.BZSVY'))), #separate census and surveys 
-         INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2'))),
-         INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3'))),
-         #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
-         INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2'))),
-         #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
+         SPI.DIM4.1.CEN.INDEX=rowMeans(across(c('SPI.D4.1.1.POPU','SPI.D4.1.2.AGRI','SPI.D4.1.3.BIZZ'))), #separate census and surveys 
+         SPI.DIM4.1.SVY.INDEX=rowMeans(across(c('SPI.D4.1.4.HOUS','SPI.D4.1.5.AGSVY','SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH','SPI.D4.1.8.BZSVY'))), #separate census and surveys 
+         SPI.DIM4.2.INDEX=rowMeans(across(starts_with('SPI.D4.2'))),
+         SPI.DIM4.3.INDEX=rowMeans(across(starts_with('SPI.D4.3'))),
+         SPI.DIM5.1.INDEX=rowMeans(across(starts_with('SPI.D5.1'))),
+         SPI.DIM5.2.INDEX=rowMeans(across(starts_with('SPI.D5.2'))),
+         SPI.DIM5.5.INDEX=rowMeans(across(starts_with('SPI.D5.5')))
   ) %>%
   mutate(
-    SPI.INDEX.PIL1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+    SPI.INDEX.PIL1=SPI.DIM1.5.INDEX,
     SPI.INDEX.PIL2=(
-      (dim_2_1/pillar2_total)*INDEX.SPI.D2.1 +
-        (dim_2_2/pillar2_total)*INDEX.SPI.D2.2 +
-        (dim_2_4/pillar2_total)*INDEX.SPI.D2.4 )
+      (dim_2_1/pillar2_total)*SPI.DIM2.1.INDEX +
+        (dim_2_2/pillar2_total)*SPI.DIM2.2.INDEX +
+        (dim_2_4/pillar2_total)*SPI.DIM2.4.INDEX )
     ,
     SPI.INDEX.PIL3=(
       (dim_3_1/pillar3_total)*SPI.D3.1.POV +
@@ -885,12 +890,15 @@ spi_index_df <- spi_index_df %>%
         (dim_3_17/pillar3_total)*SPI.D3.17.PTNS)
     ,
     SPI.INDEX.PIL4=(
-      (dim_4_1.CEN/pillar4_total)*INDEX.SPI.D4.1.CEN +
-      (dim_4_1.SVY/pillar4_total)*INDEX.SPI.D4.1.SVY +
-        (dim_4_2/pillar4_total)*INDEX.SPI.D4.2 +
-        (dim_4_3/pillar4_total)*INDEX.SPI.D4.3 )
+      (dim_4_1.CEN/pillar4_total)*SPI.DIM4.1.CEN.INDEX +
+      (dim_4_1.SVY/pillar4_total)*SPI.DIM4.1.SVY.INDEX +
+        (dim_4_2/pillar4_total)*SPI.DIM4.2.INDEX +
+        (dim_4_3/pillar4_total)*SPI.DIM4.3.INDEX )
     ,
-    SPI.INDEX.PIL5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+    SPI.INDEX.PIL5=(
+      (dim_5_1/pillar5_total)*SPI.DIM5.1.INDEX +
+        (dim_5_2/pillar5_total)*SPI.DIM5.2.INDEX +
+        (dim_5_5/pillar5_total)*SPI.DIM5.5.INDEX ),
     SPI.INDEX=(pillar_1/pillar_total)*SPI.INDEX.PIL1 +
       (pillar_2/pillar_total)*SPI.INDEX.PIL2 +
       (pillar_3/pillar_total)*SPI.INDEX.PIL3 +
@@ -900,7 +908,7 @@ spi_index_df <- spi_index_df %>%
   ) %>% #
   mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
   arrange(-date, -SPI.INDEX) %>%
-  select(country, iso3c, date, starts_with('SPI.INDEX'), everything()) 
+  select(country, iso3c, date, starts_with('SPI.INDEX'),starts_with('SPI.DIM'), everything()) 
   #  filter(date>=2016) #2016 is first year with complete data
 
   
@@ -982,17 +990,28 @@ pop_covered <- spi_index_df %>%
 ```
 
 
-Below we show a set of summary measures for our SPI overall score.  We begin by presenting a world map containing the SPI overall score values for 2019 for each country.  In total, we have `r n_countries` countries with sufficient data to compute an index value.  This set of countries covers `r 100*round(pop_covered$pop_covered,3)` percent of the world population.
+We present a set of summary measures for our SPI overall score.  We begin by presenting a world map containing the SPI overall score values for 2019 for each country.  In total, we have `r n_countries` countries with sufficient data to compute an index value.  This set of countries covers `r 100*round(pop_covered$pop_covered,3)` percent of the world population.
 
 The map is color coded based on the performance of countries on our index.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
 
-Countries shaded in dark red are the lowest performing, countries in dark green are the highest performing.  Countries are grouped into five groups:   
+Countries are grouped into five categories:
+•	Top 20%: .
 
-* **Top 20%**:  Countries in the top 20% are classified in this group.  Shading in <span style="color:#2ec4b6">dark green</span>.    
-* **4th Quantile**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile are in this group.  Shading in <span style="color:#acece7">light green</span>.    
-* **3rd Quantile**: Countries in the 3rd quantile, or those between the 40th and 60th percentile, are classified in this group.  Shading in <span style="color:#f1dc76">yellow</span>.  
-* **2nd Quantile**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile, are in this group.  Shading in <span style="color:#ffbf69">light orange</span>.  
-* **Bottom 20%**: Countries in the bottom 20% are classified in this group.  Shading in <span style="color:#ff9f1c">dark orange </span>.    
+
+
+
+
+
+
+* **Top 20%**:  Countries in the top 20% of the SPI overall score (shading in <span style="color:#2ec4b6">dark green</span>).   
+
+* **4th Quantile**: Countries in the 4th quantile, or those above the 60th percentile but below the 80th percentile (<span style="color:#acece7">light green</span>).    
+
+* **3rd Quantile**: Countries in the 3rd quantile, or those between the 40th and 60th percentile (shading in <span style="color:#f1dc76">yellow</span>).
+
+* **2nd Quantile**: Countries in the 2nd quantile, or those above the 20th percentile but below the 40th percentile (shading in <span style="color:#ffbf69">light orange</span>).  
+
+* **Bottom 20%**: Countries in the bottom 20% (shading in <span style="color:#ff9f1c">dark orange </span>).  
 
 
 ```{r map}
@@ -1346,38 +1365,38 @@ FitFlextableToPage(maturity_tab) %>%
 
 #Create overall subscores corresponding to John's framework
   spi_index_df_dim3_alt <- spi_index_df_dim3_alt %>%
-    mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
-         INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
-         INDEX.SPI.D2.4=SPI.D2.4.NADA,
-         INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
+    mutate(SPI.DIM2.1=rowMeans(across(starts_with('SPI.D2.1'))),
+         SPI.DIM2.2=SPI.D2.2.Openness.subscore,
+         SPI.DIM2.4=SPI.D2.4.NADA,
+         SPI.DIM3.1=rowMeans(across(c("SPI.D3.1.POV",
                                             "SPI.D3.2.HNGR",
                                             "SPI.D3.3.HLTH",
                                             "SPI.D3.4.EDUC",
                                             "SPI.D3.5.GEND",
                                             "SPI.D3.6.WTRS"))),
-         INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
+         SPI.DIM3.2=rowMeans(across(c("SPI.D3.7.ENRG",
                                             "SPI.D3.8.WORK",
                                             "SPI.D3.9.INDY",
                                             "SPI.D3.10.NEQL",
                                             "SPI.D3.11.CITY",
                                             "SPI.D3.12.CNSP"))),         
-         INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
+         SPI.DIM3.3=rowMeans(across(c("SPI.D3.13.CLMT",
                                             "SPI.D3.15.LAND" ))),
-         INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
+         SPI.DIM3.4=rowMeans(across(c("SPI.D3.16.INST",
                                             "SPI.D3.17.PTNS" ))),
-         INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1'))),
-         INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2'))),
-         INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3'))),
-         #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
-         INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2'))),
-         #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
+         SPI.DIM4.1=rowMeans(across(starts_with('SPI.D4.1'))),
+         SPI.DIM4.2=rowMeans(across(starts_with('SPI.D4.2'))),
+         SPI.DIM4.3=rowMeans(across(starts_with('SPI.D4.3'))),
+         #SPI.DIM5.1=rowMeans(across(starts_with('SPI.D5.1'))),
+         SPI.DIM5.2=rowMeans(across(starts_with('SPI.D5.2'))),
+         #SPI.DIM5.5=rowMeans(across(starts_with('SPI.D5.5')))
                  ) %>%
   mutate(
          SPI.INDEX.PIL1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
-         SPI.INDEX.PIL2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
-         SPI.INDEX.PIL3.ALT=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
-         SPI.INDEX.PIL4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
-         SPI.INDEX.PIL5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+         SPI.INDEX.PIL2=rowMeans(across(starts_with("SPI.DIM2")), na.rm=FALSE),
+         SPI.INDEX.PIL3.ALT=(6*SPI.DIM3.1 + 6*SPI.DIM3.2 + 2*SPI.DIM3.3 + 2*SPI.DIM3.4)/16,
+         SPI.INDEX.PIL4=rowMeans(across(starts_with("SPI.DIM4")), na.rm=FALSE),
+         SPI.INDEX.PIL5=rowMeans(across(starts_with("SPI.DIM5")), na.rm=FALSE),
          SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.PIL1',
                                      'SPI.INDEX.PIL2',
                                      'SPI.INDEX.PIL3.ALT',
@@ -1405,38 +1424,38 @@ FitFlextableToPage(maturity_tab) %>%
 
 #Create overall subscores corresponding to John's framework
   spi_index_df_dim3_alt2 <- spi_index_df_dim3_alt2 %>%
-    mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
-         INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
-         INDEX.SPI.D2.4=SPI.D2.4.NADA,
-         INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
+    mutate(SPI.DIM2.1=rowMeans(across(starts_with('SPI.D2.1'))),
+         SPI.DIM2.2=SPI.D2.2.Openness.subscore,
+         SPI.DIM2.4=SPI.D2.4.NADA,
+         SPI.DIM3.1=rowMeans(across(c("SPI.D3.1.POV",
                                             "SPI.D3.2.HNGR",
                                             "SPI.D3.3.HLTH",
                                             "SPI.D3.4.EDUC",
                                             "SPI.D3.5.GEND",
                                             "SPI.D3.6.WTRS"))),
-         INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
+         SPI.DIM3.2=rowMeans(across(c("SPI.D3.7.ENRG",
                                             "SPI.D3.8.WORK",
                                             "SPI.D3.9.INDY",
                                             "SPI.D3.10.NEQL",
                                             "SPI.D3.11.CITY",
                                             "SPI.D3.12.CNSP"))),         
-         INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
+         SPI.DIM3.3=rowMeans(across(c("SPI.D3.13.CLMT",
                                             "SPI.D3.15.LAND" ))),
-         INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
+         SPI.DIM3.4=rowMeans(across(c("SPI.D3.16.INST",
                                             "SPI.D3.17.PTNS" ))),
-         INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1'))),
-         INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2'))),
-         INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3'))),
-         #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
-         INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2'))),
-         #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
+         SPI.DIM4.1=rowMeans(across(starts_with('SPI.D4.1'))),
+         SPI.DIM4.2=rowMeans(across(starts_with('SPI.D4.2'))),
+         SPI.DIM4.3=rowMeans(across(starts_with('SPI.D4.3'))),
+         #SPI.DIM5.1=rowMeans(across(starts_with('SPI.D5.1'))),
+         SPI.DIM5.2=rowMeans(across(starts_with('SPI.D5.2'))),
+         #SPI.DIM5.5=rowMeans(across(starts_with('SPI.D5.5')))
                  ) %>%
   mutate(
          SPI.INDEX.PIL1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
-         SPI.INDEX.PIL2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=FALSE),
-         SPI.INDEX.PIL3.ALT2=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
-         SPI.INDEX.PIL4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=FALSE),
-         SPI.INDEX.PIL5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
+         SPI.INDEX.PIL2=rowMeans(across(starts_with("SPI.DIM2")), na.rm=FALSE),
+         SPI.INDEX.PIL3.ALT2=(6*SPI.DIM3.1 + 6*SPI.DIM3.2 + 2*SPI.DIM3.3 + 2*SPI.DIM3.4)/16,
+         SPI.INDEX.PIL4=rowMeans(across(starts_with("SPI.DIM4")), na.rm=FALSE),
+         SPI.INDEX.PIL5=rowMeans(across(starts_with("SPI.DIM5")), na.rm=FALSE),
          SPI.INDEX.ALT2=rowMeans(across(c('SPI.INDEX.PIL1',
                                      'SPI.INDEX.PIL2',
                                      'SPI.INDEX.PIL3.ALT2',
@@ -1714,38 +1733,38 @@ spi_index_df_alt <- spi_index_df_temp %>%
 
 #Create overall subscores corresponding to John's framework
 spi_index_df_alt <- spi_index_df_alt %>%
-  mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
-         INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
-         INDEX.SPI.D2.4=SPI.D2.4.NADA,
-         INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
+  mutate(SPI.DIM2.1=rowMeans(across(starts_with('SPI.D2.1'))),
+         SPI.DIM2.2=SPI.D2.2.Openness.subscore,
+         SPI.DIM2.4=SPI.D2.4.NADA,
+         SPI.DIM3.1=rowMeans(across(c("SPI.D3.1.POV",
                                           "SPI.D3.2.HNGR",
                                           "SPI.D3.3.HLTH",
                                           "SPI.D3.4.EDUC",
                                           "SPI.D3.5.GEND",
                                           "SPI.D3.6.WTRS")), na.rm=TRUE),
-         INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
+         SPI.DIM3.2=rowMeans(across(c("SPI.D3.7.ENRG",
                                           "SPI.D3.8.WORK",
                                           "SPI.D3.9.INDY",
                                           "SPI.D3.10.NEQL",
                                           "SPI.D3.11.CITY",
                                           "SPI.D3.12.CNSP")), na.rm=TRUE),         
-         INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
+         SPI.DIM3.3=rowMeans(across(c("SPI.D3.13.CLMT",
                                           "SPI.D3.15.LAND" )), na.rm=TRUE),
-         INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
+         SPI.DIM3.4=rowMeans(across(c("SPI.D3.16.INST",
                                           "SPI.D3.17.PTNS" )), na.rm=TRUE),
-         INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1')), na.rm=TRUE),
-         INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2')), na.rm=TRUE),
-         INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3')), na.rm=TRUE),
-         #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
-         INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2')), na.rm=TRUE),
-         #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
+         SPI.DIM4.1=rowMeans(across(starts_with('SPI.D4.1')), na.rm=TRUE),
+         SPI.DIM4.2=rowMeans(across(starts_with('SPI.D4.2')), na.rm=TRUE),
+         SPI.DIM4.3=rowMeans(across(starts_with('SPI.D4.3')), na.rm=TRUE),
+         #SPI.DIM5.1=rowMeans(across(starts_with('SPI.D5.1'))),
+         SPI.DIM5.2=rowMeans(across(starts_with('SPI.D5.2')), na.rm=TRUE),
+         #SPI.DIM5.5=rowMeans(across(starts_with('SPI.D5.5')))
   ) %>%
   mutate(
     SPI.INDEX.PIL1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=TRUE),
-    SPI.INDEX.PIL2=rowMeans(across(starts_with("INDEX.SPI.D2")), na.rm=TRUE),
-    SPI.INDEX.PIL3=(6*INDEX.SPI.D3.1 + 6*INDEX.SPI.D3.2 + 2*INDEX.SPI.D3.3 + 2*INDEX.SPI.D3.4)/16,
-    SPI.INDEX.PIL4=rowMeans(across(starts_with("INDEX.SPI.D4")), na.rm=TRUE),
-    SPI.INDEX.PIL5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=TRUE),
+    SPI.INDEX.PIL2=rowMeans(across(starts_with("SPI.DIM2")), na.rm=TRUE),
+    SPI.INDEX.PIL3=(6*SPI.DIM3.1 + 6*SPI.DIM3.2 + 2*SPI.DIM3.3 + 2*SPI.DIM3.4)/16,
+    SPI.INDEX.PIL4=rowMeans(across(starts_with("SPI.DIM4")), na.rm=TRUE),
+    SPI.INDEX.PIL5=rowMeans(across(starts_with("SPI.DIM5")), na.rm=TRUE),
     SPI.INDEX.ALT=rowMeans(across(c('SPI.INDEX.PIL1',
                                     'SPI.INDEX.PIL2',
                                     'SPI.INDEX.PIL3',
@@ -1864,7 +1883,7 @@ anova_pil_plot
 #Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each dimension.
 
 anova_pillar_df <- spi_index_df %>%
-  mutate(INDEX.SPI.D1.5=SPI.INDEX.PIL1/100) %>%
+  mutate(SPI.DIM1.5=SPI.INDEX.PIL1/100) %>%
   select(country, iso3c, date, starts_with("INDEX")) %>%
   pivot_longer(
     cols=starts_with("INDEX"),
