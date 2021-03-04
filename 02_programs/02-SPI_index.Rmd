@@ -503,7 +503,7 @@ eq_plot_txt <- function(data) {
 # Pillars and Dimensions of the SPI
 
 
-The SPI is built around five pillars, shown as the rows in the Dashboard in Figure 1, and 22 associated dimensions as shown in the cells of the Dashboard. Each of the 22 dimensions is  composed of one or more indicators. For instance, the dimensions on censuses is made up of indicators on whether population censuses or agricultural censuses have been conducted. In all there are XX indicators in the Dashboard.
+The SPI is built around five pillars, shown as the rows in the Dashboard in Figure 1, and 22 associated dimensions as shown in the cells of the Dashboard. Each of the 22 dimensions is  composed of one or more indicators. For instance, the dimensions on censuses is made up of indicators on whether population censuses or agricultural censuses have been conducted. In all there are 54 indicators in the Dashboard.
 
 ## Pillar 1: Data use
 
@@ -860,10 +860,15 @@ spi_index_df <- spi_index_df %>%
          SPI.DIM4.1.SVY.INDEX=rowMeans(across(c('SPI.D4.1.4.HOUS','SPI.D4.1.5.AGSVY','SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH','SPI.D4.1.8.BZSVY'))), #separate census and surveys 
          SPI.DIM4.2.INDEX=rowMeans(across(starts_with('SPI.D4.2'))),
          SPI.DIM4.3.INDEX=rowMeans(across(starts_with('SPI.D4.3'))),
+         
          SPI.DIM5.1.INDEX=rowMeans(across(starts_with('SPI.D5.1'))),
+         SPI.DIM5.1.INDEX=if_else(is.na(SPI.DIM5.1.INDEX),-99,SPI.DIM5.1.INDEX),
+         
          SPI.DIM5.2.INDEX=rowMeans(across(starts_with('SPI.D5.2'))),
-         SPI.DIM5.5.INDEX=rowMeans(across(starts_with('SPI.D5.5')))
-  ) %>%
+         
+         SPI.DIM5.5.INDEX=rowMeans(across(starts_with('SPI.D5.5'))),
+         SPI.DIM5.5.INDEX=if_else(is.na(SPI.DIM5.5.INDEX),-99,SPI.DIM5.5.INDEX) 
+             ) %>%
   mutate(
     SPI.INDEX.PIL1=SPI.DIM1.5.INDEX,
     SPI.INDEX.PIL2=(
