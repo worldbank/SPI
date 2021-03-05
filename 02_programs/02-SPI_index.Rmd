@@ -20,7 +20,9 @@ bibliography: ./bibliography.bib
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.cap = "&nbsp;", fig.path = "plots/", dev = c("png"), dpi=500)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.cap = "&nbsp;",fig.topcaption=TRUE, fig.path = "plots/", dev = c("png"), dpi=500)
+
+
 library(tidyverse)
 library(flextable)
 library(here)
@@ -47,7 +49,7 @@ raw_dir <- paste(dir, '01_raw_data', sep="/")
 output_dir <- paste(dir, '03_output_data', sep="/")
 
 #weights (either unity (1) or population (2))
-wgt <- 2
+wgt <- 1
 
 ```
 
@@ -58,9 +60,11 @@ wgt <- 2
 theme_spi <- function () { 
     theme_bw() %+replace%
     theme(
-      #plot.title=element_blank() remove all titles from plots (sometimes we may need to bring title outside plot)
+      plot.caption = element_text(hjust = -0.2),
+      plot.title=element_blank() #remove all titles from plots (sometimes we may need to bring title outside plot)
     )
 }
+
 
 ```
 
@@ -236,7 +240,7 @@ spi_mapper  <- function(data, indicator, title) {
  print(p1)
 }
 
-spi_charts  <- function(data, indicator, title) {
+spi_region_charts  <- function(data, indicator, title) {
   
     map_df <- get(data) %>%
     filter(date==max(date, na.rm=T)) %>%
@@ -287,6 +291,48 @@ spi_charts  <- function(data, indicator, title) {
   #     theme_spi() +
   #     theme(legend.position = 'top')  
   
+
+  print(p2)
+  
+
+
+    
+}
+
+spi_income_charts  <- function(data, indicator, title) {
+  
+    map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))  
+    
+    
+    
+    
+
+
+  # p2_alt <- map_df %>%
+  #   ungroup() %>%
+  #   filter(region!='Aggregates') %>%
+  #   mutate(Percentage=(data_available),
+  #          Label = paste(round(Percentage,0))) %>%
+  #   ggplot(aes(x=Percentage, y=region, color=region)) +
+  #     geom_point() +
+  #     geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+  #     labs(
+  #     title=str_wrap(paste(title, 'By Country', sep=" - "),100),
+  #     caption = 'Source: SPI Indicators Raw Data',
+  #     subtitle= 'Data Point is for last year available (2019)'
+  #     ) +
+  #     expand_limits(x=c(0,100)) +
+  #     theme_spi() +
+  #     theme(legend.position = 'top')  
+  
   #by income
     income <- c("Low income", "Lower middle income","Upper middle income","High income")
 
@@ -307,6 +353,17 @@ spi_charts  <- function(data, indicator, title) {
       expand_limits(x=c(0,100)) +
       theme_spi() +
       theme(legend.position = 'top')
+    
+
+
+  print(p3)
+
+
+}
+
+spi_time_charts  <- function(data, indicator, title) {
+  
+
     
   # #add line graph over time
   p4 <- get(data)  %>%
@@ -333,10 +390,6 @@ spi_charts  <- function(data, indicator, title) {
             
       
 
-  print(p2)
-  
-
-  print(p3)
 
   print(p4)
     
@@ -467,7 +520,298 @@ spi_maturity_table <- function(data, indicators, reference_year) {
       sumstats_df
  
 
-  }
+}
+
+
+spi_group_table <- function(data, indicators, reference_year, group) {
+
+      df_overall <- get(data) %>%
+      filter(date==as.numeric(reference_year)) %>% 
+      left_join(country_metadata) %>%
+      select(country, iso3c, date, income, region, lending, all_of(indicators), SPI.INDEX) %>%
+      rename(group=!! group)
+    
+    
+    
+    #produce by income
+    sumstats<- df_overall %>%
+      group_by(group) %>%
+      filter(!is.na(group)) %>%
+      select(group, all_of(indicators)) %>%
+      summarise_all(~round(mean(., na.rm=T),1)) 
+    
+    #produce global number
+    sumstats_gl<- df_overall %>%
+      mutate(group='Global') %>%
+      group_by(group) %>%
+      select(group, all_of(indicators)) %>%
+      summarise_all(~round(mean(., na.rm=T),1)) 
+    
+    
+    #transpose data
+    sumstats_df_long <-sumstats 
+    
+    sumstats_df <- as.data.frame(t(sumstats_df_long %>% select(-group)))
+    colnames(sumstats_df) = sumstats_df_long$group 
+    
+    
+    sumstats_df <- sumstats_df %>%
+      rownames_to_column() %>%
+      rename(series=rowname)
+    
+    
+    #create labels df
+    metadata_tab2_overall <- metadata_full %>% 
+      janitor::clean_names() %>%
+      transmute(series=source_id, 
+                indicator_name=source_name)
+    
+    
+    #add variable label
+    sumstats_df <- sumstats_df %>%
+      left_join(metadata_tab2_overall) %>%
+      rename(Series=series,
+             Label=indicator_name) %>%
+      mutate(Label=if_else(is.na(Label),Series,Label)) %>%
+      select(Label, everything()) %>%
+      select(-Series)
+
+      sumstats_df
+ 
+
+}
+
+lending_charts <- function(data, indicator, title) { 
+
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  lending_list <- c("Not classified", "IBRD", "Blend", "IDA" )
+  
+  p2_alt3 <- map_df %>%
+    ungroup() %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=(data_available),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=lending, color=lending)) +
+      geom_point() +
+      geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+      labs(
+      title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = lending_list) +
+      expand_limits(x=c(0,100)) +
+      theme_spi() +
+      theme(legend.position = 'top',
+            title= element_text(size = 20),
+            axis.title.y=element_blank(),
+            text = element_text(size = 14)) 
+   
+p2_alt3 
+  
+ 
+}
+
+lending_chart_aggregate <- function(data, indicator, title) { 
+
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  lending_list <- c("Not classified", "IBRD", "Blend", "IDA" )
+  
+  
+
+  p2_alt3 <- map_df %>%
+    group_by(lending) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=lending, fill=lending)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = lending_list) +
+      expand_limits(x=c(0,100)) +
+      theme_spi() +
+      theme(legend.position = 'top')
+            # title= element_text(size = 20),
+            # axis.title.y=element_blank(),
+            # text = element_text(size = 14)) 
+   
+p2_alt3 
+  
+ 
+}
+
+
+
+fcs_charts <- function(data, indicator, title) { 
+  #FY21 Fragile and conflict-affected situations (http://pubdocs.worldbank.org/en/888211594267968803/FCSList-FY21.pdf)
+  high_intensity_conflict <- c('Afghanistan', 'Libya', 'Somalia', 'Syrian Arab Republic' )
+  
+  medium_intensity_conflict <- c('Burkina Faso', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.',
+                                 'Iraq','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan','Yemen, Rep.')
+  
+  high_institutional_social_fragility <- c('Burundi','Congo, Rep.','Eritrea','Gambia, The','Guinea-Bissau',
+                                           'Haiti','Kosovo','Lao PDR','Lebanon','Liberia','Papua New Guinea',
+                                           'Sudan','Venezuela, RB','West Bank and Gaza','Zimbabwe')
+  
+  small_states <- c('Comoros','Kiribati','Marshall Islands','Micronesia, Fed. Sts.','Solomon Islands','Timor-Leste','Tuvalu')
+  
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    mutate(fcs=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "FCS country",
+      country %in% medium_intensity_conflict ~ "FCS country",
+      country %in% high_institutional_social_fragility ~ "FCS country",
+      country %in% small_states ~ "FCS country",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    mutate(fcs_detail=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "High-Intensity Conflict",
+      country %in% medium_intensity_conflict ~ "Medium-Intensity Conflict",
+      country %in% high_institutional_social_fragility ~ "High Institutional & Social Fragility",
+      country %in% small_states ~ "Small States",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country,fcs,fcs_detail, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
+  fcs_list <- c("FCS country","Non-FCS country")
+
+  p2_alt2 <- map_df %>%
+    ungroup() %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=(data_available),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=fcs, color=fcs)) +
+      geom_point() +
+      geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+      labs(
+      title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = fcs_list) +
+      expand_limits(x=c(0,100)) +
+      theme_spi() +
+      theme(legend.position = 'top')
+            #text=element_text(size=14)) 
+   
+p2_alt2 
+  
+ 
+}
+
+
+fcs_chart_aggregate <- function(data, indicator, title) { 
+  #FY21 Fragile and conflict-affected situations (http://pubdocs.worldbank.org/en/888211594267968803/FCSList-FY21.pdf)
+  high_intensity_conflict <- c('Afghanistan', 'Libya', 'Somalia', 'Syrian Arab Republic' )
+  
+  medium_intensity_conflict <- c('Burkina Faso', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.',
+                                 'Iraq','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan','Yemen, Rep.')
+  
+  high_institutional_social_fragility <- c('Burundi','Congo, Rep.','Eritrea','Gambia, The','Guinea-Bissau',
+                                           'Haiti','Kosovo','Lao PDR','Lebanon','Liberia','Papua New Guinea',
+                                           'Sudan','Venezuela, RB','West Bank and Gaza','Zimbabwe')
+  
+  small_states <- c('Comoros','Kiribati','Marshall Islands','Micronesia, Fed. Sts.','Solomon Islands','Timor-Leste','Tuvalu')
+  
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    mutate(fcs=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "FCS country",
+      country %in% medium_intensity_conflict ~ "FCS country",
+      country %in% high_institutional_social_fragility ~ "FCS country",
+      country %in% small_states ~ "FCS country",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    mutate(fcs_detail=case_when( #create indicators for Fragile and Conflict-affected Situations
+      country %in% high_intensity_conflict ~ "High-Intensity Conflict",
+      country %in% medium_intensity_conflict ~ "Medium-Intensity Conflict",
+      country %in% high_institutional_social_fragility ~ "High Institutional & Social Fragility",
+      country %in% small_states ~ "Small States",
+      TRUE ~ "Non-FCS country"
+    )) %>%
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country,fcs,fcs_detail, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
+  fcs_list <- c("FCS country","Non-FCS country")
+
+  p2_alt2 <- map_df %>%
+    group_by(fcs) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Percentage,0))) %>%
+    ggplot(aes(x=Percentage, y=fcs, fill=fcs)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
+      caption = 'Source: SPI Indicators Raw Data',
+      subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      scale_y_discrete(limits = fcs_list) +
+      expand_limits(x=c(0,100)) +
+      theme_spi() +
+      theme(legend.position = 'top')
+            #text=element_text(size=14)) 
+  
+  
+  
+p2_alt2 
+  
+ 
+}
+
 
 #define function to pull data from UN Stats and return
 un_pull <- function(series,start, end) {
@@ -1019,7 +1363,8 @@ Countries are grouped into five categories:
 * **Bottom 20%**: Countries in the bottom 20% (shading in <span style="color:#ff9f1c">dark orange </span>).  
 
 
-```{r map}
+
+```{r map, fig.cap='SPI Overall Score'}
 #show map and summary stats by region and income group
 
 spi_mapper('spi_index_df','SPI.INDEX','SPI Overall Score')
@@ -1027,7 +1372,29 @@ spi_mapper('spi_index_df','SPI.INDEX','SPI Overall Score')
 ```
 
 
-```{r maturitytable}
+```{r maturitytabovr, fig.cap='Table of SPI Overall and Pillar Scores by Maturity Level'}
+
+indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
+              "SPI.INDEX.PIL4","SPI.INDEX.PIL5")
+
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,2019) 
+
+
+```
+
+```{r maturitdisp0}
+
+maturity_tab <- maturity_tab %>%
+  flextable() %>%
+  add_header_lines('Select SPI Indicator Scores by SPI Maturity Level') 
+
+FitFlextableToPage(maturity_tab) %>%
+  align( align = "left", part = "body")
+
+```
+
+
+```{r maturitytabcont}
 
 indicators<-c("SPI.INDEX","SPI.D1.5.DT.TDS.DPPF.XP.ZS","SPI.D2.2.Openness.subscore","SPI.D3.1.POV",
              "SPI.D4.1.1.POPU","SPI.D5.2.4.CPIBY")
@@ -1067,11 +1434,39 @@ There are large differences in the SPI overall score across World Bank regions a
 
 Finally, when looking over time, since 2016 the SPI overall score values are relatively stable across regions.  There has been some modest increase in the SPI overall score scores for middle income and high income countries, with little progress for low income countries.
 
-Figure 5.2.
-```{r spi_charts}
+```{r spiregcharts, fig.cap='SPI Overall Score - By Region'}
 #show map and summary stats by region and income group
 
-spi_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
+spi_region_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
+
+```
+
+```{r spiincomecharts, fig.topcaption=TRUE, fig.cap='SPI Overall Score - By Income'}
+#show map and summary stats by region and income group
+
+spi_income_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
+
+```
+
+
+```{r spilendcharts, fig.topcaption=TRUE, fig.cap='SPI Overall Score - By Lending'}
+#show map and summary stats by region and income group
+
+lending_chart_aggregate('spi_index_df','SPI.INDEX','SPI Overall Score')
+
+```
+
+```{r spifcscharts, fig.cap='SPI Overall Score - By Fragile/Conflict Situations'}
+#show map and summary stats by region and income group
+
+fcs_chart_aggregate('spi_index_df','SPI.INDEX','SPI Overall Score')
+
+```
+
+```{r spitimecharts, fig.cap='SPI Overall Score - By Year (2016-19)'}
+#show map and summary stats by region and income group
+
+spi_time_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
 
@@ -1120,7 +1515,6 @@ bottom_eap_score <- round(as.numeric(eap_df[nrow(eap_df),2]),1)
 
 While there are large differences across regions, within regions there is significant variation in the SPI overall score.  For instance, in the Latin America & Caribbean World Bank region, `r top_lac` is the highest scoring country on the SPI overall score with a score of `r top_lac_score`.  However, `r bottom_lac`, the lowest scoring country in the region, earns a substantially lower score of `r bottom_lac_score`.  In Sub-Saharan Africa, the highest scoring country is `r top_ssa` with a score of `r top_ssa_score`, while the lowest scoring country is `r bottom_ssa` with a score of `r bottom_ssa_score`.  In the East Asia and Pacific region, the top scoring country is `r top_eap` with a score of `r top_eap_score`, while the lowest scoring country is `r bottom_eap` with a score of `r bottom_eap_score`.
 
-Figure 5.3
 ```{r spicountrycharts}
 #show map and summary stats by region and income group
 
@@ -1142,17 +1536,13 @@ In the figure below we show a world map displaying the maturity levels based on 
 
 spi_mapper('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
 
-
-
 ```
 
 When looking by country, there is significant dispersion within regions.  It is also notable that several countries including the United States, Mexico, Finland, and Costa Rica, among others, receive the maximum possible score in this pillar of 100.  Several countries score the minimum score as well, including the Syrian Arab Republic, South Sudan, Namibia, and Nauru, among others.
 
-```{r countrypillarsplot1}
+```{r countrypillarsplot1, fig.cap='Pillar 1: Data Use Scores'}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
-
-
 
 ```
 
@@ -1177,14 +1567,14 @@ debt_bottom <- as.numeric(maturity_tab[4,6])
 ```
 
 
-The table below shows the average score on each indicator in pillar 1 by maturity group.  Countries in the top 20% possess nearly all of the components in pillar 1, while countries in the bottom 20% are lacking in many areas.  Countries in the bottom 20% in terms of maturity on pillar 1 have an average of `r poverty_bottom` on the comparable poverty estimate indicator, an average of `r mort_bottom` on the availability of under 5 mortality data, and an average of `r debt_bottom` on debt reporting.
+The table below shows the average score on each indicator in pillar 1 by maturity group.  For this table the maturity groupings are based on the SPI overall score.  Countries in the top 20% possess nearly all of the components in pillar 1, while countries in the bottom 20% are lacking in many areas.  Countries in the bottom 20%  have an average of `r poverty_bottom` on the comparable poverty estimate indicator, an average of `r mort_bottom` on the availability of under 5 mortality data, and an average of `r debt_bottom` on debt reporting.
 
 
-```{r maturitdisp1}
+```{r maturitdisp1, fig.cap='Select SPI Indicator Scores by SPI pillar Maturity Level'}
 
 maturity_tab <- maturity_tab %>%
-  flextable() %>%
-  add_header_lines('Select SPI Indicator Scores by SPI pillar Maturity Level') 
+  flextable() 
+  #add_header_lines('Select SPI Indicator Scores by SPI pillar Maturity Level') 
 
 FitFlextableToPage(maturity_tab) %>%
   align( align = "left", part = "body")
@@ -1236,7 +1626,7 @@ nada_bottom <- as.numeric(maturity_tab[9,6])
 ```
 
 
-In terms of specific indicators, the top 20% of countries in pillar 2 receive an average score of `r sdds_top` on our indicator measuring country adoption of the IMF's data dissemination standards, while those in the bottom 20% receive an average score of `r sdds_bottom`.  Countries in the bottom 20% receive an average data openness score, produced by Open Data Watch, of `r open_bottom`.  This indicator is made up of several sub-indicators including whether data is available in machine readable format, a non-proprietary format, has download options, metadata available, and terms of use.  For instance, in the bottom 20% of countries the score on whether data is available in a machine readable format is only `r machine_bottom` out of a maximum of 1.  Additionally, countries in the bottom 20% only score an average of `r nada_bottom` on our measure of whether metadata meeting the standards of the Database Documentation Initiative (DDI) is available on surveys conducted.^[For more information, see https://ddialliance.org/]
+In terms of specific indicators, the top 20% of countries receive an average score of `r sdds_top` on our indicator measuring country adoption of the IMF's data dissemination standards, while those in the bottom 20% receive an average score of `r sdds_bottom`.  Countries in the bottom 20% receive an average data openness score, produced by Open Data Watch, of `r open_bottom`.  This indicator is made up of several sub-indicators including whether data is available in machine readable format, a non-proprietary format, has download options, metadata available, and terms of use.  For instance, in the bottom 20% of countries the score on whether data is available in a machine readable format is only `r machine_bottom` out of a maximum of 1.  Additionally, countries in the bottom 20% only score an average of `r nada_bottom` on our measure of whether metadata meeting the standards of the Database Documentation Initiative (DDI) is available on surveys conducted.^[For more information, see https://ddialliance.org/]
 
 
 
@@ -1259,7 +1649,7 @@ For the data products pillar, we examine whether countries are reporting data to
 
 For this indicator, there is a weaker relationship between a country's income level and their performance in this pillar.  No countries receive a maximum score of 100, which would indicate that they report on every SDG indicator at least once inside a 5 year window.  Additionally, no country scores 0, which would indicate that they have reported no information for any of the SDG indicators.
 
-While it is conceivable that some countries may have data values for these indicators on their NSO websites, for instance, rather than posted on the UN Global SDG monitoring database, we took the perspective that to produce a data product that is full usable a country's national statistical system should provide that information in an internationally comparable way.  And we have judged countries accordingly.  Additionally, for countries that have not reported values for SDG monitoring, but do possess a value, a simple way to improve their score on this pillar would be to submit all of their indicators to the UN database.  For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in "Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand" (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  Even with this supplemental data from the OECD included, there is considerable room for improvement in reporting on the SDGs.
+While it is conceivable that some countries may have data values for these indicators on their NSO websites, for instance, rather than posted on the UN Global SDG monitoring database, we took the perspective that to produce a data product that is full usable a country's national statistical system should provide that information in an internationally comparable way.  And we have judged countries accordingly.  Additionally, for countries that have not reported values for SDG monitoring, but do possess a value, a simple way to improve their score on this pillar would be to submit all of their indicators to the UN database.  For OECD countries, we did supplement the UN SDG database with comparable data submitted to the OECD following the methodology in [Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand](https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm).  We chose to supplement the UN Global SDG monitoring database using this OECD database, because a clear methodology had been established to do so.  Even with this supplemental data from the OECD included, there is considerable room for improvement in reporting on the SDGs.
 
 We exclude values that were produced by an international organization through modeling  We do include values that are either country reported, country adjusted, estimated, or is included as global monitoring data.  This is based on the UN SDG metadata.  For each value of the indicator, the responsible international agency has been requested to indicate whether the national data were adjusted, estimated, modeled or are the result of global monitoring. The “nature” of the data in the SDG database is determined as follows:
 
@@ -1334,7 +1724,7 @@ nada_bottom <- as.numeric(maturity_tab[9,6])
 ```
 
 
-Even countries in the top 20% of this indicator have significant room for improvement in reporting on the SDGs.  The average score for the top 20% on the pillar 3 sub-score is `r spi_top`, while for the bottom 20% the average is `r spi_bottom`.  When looking at the performance for a specific goals, for SDG 1 on poverty, the top 20% in terms of the pillar 3 sub-score receives an average of `r goal1_top` out of a maximum of 1.  Specifically, this means that when looking at reporting on SDG goals in a five year window since 2019, so from 2015-19, the top performing countries are only reporting on `r 100*goal1_top` percent of the SDG indicators.  The bottom 20% receive an average score of `r goal1_bottom`.  The table below shows the full set of breakdowns by SDG.
+Even countries in the top 20%  have significant room for improvement in reporting on the SDGs.  The average score for the top 20%  is `r spi_top`, while for the bottom 20% the average is `r spi_bottom`.  When looking at the performance for a specific goals, for SDG 1 on poverty, the top 20% in terms of the pillar 3 sub-score receives an average of `r goal1_top` out of a maximum of 1.  Specifically, this means that when looking at reporting on SDG goals in a five year window since 2019, so from 2015-19, the top performing countries are only reporting on `r 100*goal1_top` percent of the SDG indicators.  The bottom 20% receive an average score of `r goal1_bottom`.  The table below shows the full set of breakdowns by SDG.
 
 
 
@@ -1594,7 +1984,7 @@ geo_bottom <- as.numeric(maturity_tab[11,6])
 ```
 
 
-Countries in the top 20% for pillar 4 have an average score of `r spi_top`, while countries in the bottom 20% have an average score of `r spi_bottom`.  The gap between the top 20% and bottom 20% for the population and housing census indicator is `r pop_gap` points on a scale from 0 to 1.  The gap for countries conducting a business/establishment survey is `r business_gap`.  The scores for even top performing countries on our geospatial indicator are low.  The average score for the top 20% in pillar 4 is `r geo_top`, while it is `r geo_bottom` for the bottom 20%.
+Countries in the top 20% have an average score of `r spi_top`, while countries in the bottom 20% have an average score of `r spi_bottom`.  The gap between the top 20% and bottom 20% for the population and housing census indicator is `r pop_gap` points on a scale from 0 to 1.  The gap for countries conducting a business/establishment survey is `r business_gap`.  The scores for even top performing countries on our geospatial indicator are low.  The average score for the top 20% in pillar 4 is `r geo_top`, while it is `r geo_bottom` for the bottom 20%.
 
 ```{r maturitdisp4}
 
@@ -2012,7 +2402,7 @@ eq <- lm_robust(SPI.INDEX ~ log(value), data=gdp_df_2019 , se_type='HC2')
 coef <- coef(eq)
 std_err <- sqrt(diag(vcov(eq)))
 r_2<- summary(eq)$r.squared
-plot_txt <- sprintf("y = %.3f + %.3f ln(x), R^2 = %.3f \n     (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
+plot_txt <- sprintf("y = %.3f + %.3f ln(x), R^2 = %.3f<br>    (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
 
   gdp_spi <- ggplot(data=gdp_df_2019, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
@@ -2739,6 +3129,86 @@ FitFlextableToPage(index_tab_recode)
 
 ```
 
+##  SPI Overall and Pillar Scores by Region, Income, & Lending
+
+```{r maturitytabreg, fig.cap='Table of SPI Overall and Pillar Scores by Region'}
+
+indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
+              "SPI.INDEX.PIL4","SPI.INDEX.PIL5")
+
+spi_group_table('spi_index_df',indicators,2019, 'region') %>%
+  flextable() %>%
+  add_header_lines('Select SPI Indicator Scores by SPI Maturity Level') %>%
+  FitFlextableToPage() %>%
+  align( align = "left", part = "body")
+
+
+```
+
+
+
+```{r maturitytabinc, fig.cap='Table of SPI Overall and Pillar Scores by Income Group'}
+
+indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
+              "SPI.INDEX.PIL4","SPI.INDEX.PIL5")
+
+spi_group_table('spi_index_df',indicators,2019, 'income') %>%
+  flextable() %>%
+  add_header_lines('Select SPI Indicator Scores by SPI Maturity Level') %>%
+  FitFlextableToPage() %>%
+  align( align = "left", part = "body")
+
+
+```
+
+```{r maturitytablend, fig.cap='Table of SPI Overall and Pillar Scores by Lending Group'}
+
+indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
+              "SPI.INDEX.PIL4","SPI.INDEX.PIL5")
+
+spi_group_table('spi_index_df',indicators,2019, 'lending') %>%
+  flextable() %>%
+  add_header_lines('Select SPI Indicator Scores by SPI Maturity Level') %>%
+  FitFlextableToPage() %>%
+  align( align = "left", part = "body")
+
+
+```
+
+```{r spiregcharts1, fig.cap='SPI Pillar 1 - Data Use - Score - By Region'}
+#show map and summary stats by region and income group
+
+spi_region_charts('spi_index_df','SPI.INDEX.PIL1','SPI Data Use Score')
+
+```
+
+```{r spiregcharts2, fig.cap='SPI Pillar 2 - Data Services - Score - By Region'}
+#show map and summary stats by region and income group
+
+spi_region_charts('spi_index_df','SPI.INDEX.PIL2','SPI Data Services Score')
+
+```
+
+```{r spiregcharts3, fig.cap='SPI Pillar 3 - Data Products - Score - By Region'}
+#show map and summary stats by region and income group
+
+spi_region_charts('spi_index_df','SPI.INDEX.PIL3','SPI Data Products Score')
+
+```
+
+```{r spiregcharts4, fig.cap='SPI Pillar 4 - Data Sources - Score - By Region'}
+#show map and summary stats by region and income group
+
+spi_region_charts('spi_index_df','SPI.INDEX.PIL4','SPI Data Sources Score')
+
+```
+
+```{r spiregcharts5, fig.cap='SPI Pillar 5 - Data Infrastructure - Score - By Region'}
+#show map and summary stats by region and income group
+
+spi_region_charts('spi_index_df','SPI.INDEX.PIL5','SPI Data Infrastructure Score')
+
+```
 ## Comparison to other measures of statistical performance
 
 Next, we compare our index to several other indices of statistical performance that have been created.  This will provide a sense of how rankings differ across measures, how they correlate with other outcomes, and how the distributions of scores compare.  These are the SCI, the Open Data Watch index (ODIN), and version 0 of the SPI overall score that was produced in [@cameron2019measuring] 
