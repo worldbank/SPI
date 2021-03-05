@@ -1406,7 +1406,7 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~ indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_bw() +
+  theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Human Capital Index') +
   expand_limits(y=c(0,100)) +
@@ -1470,7 +1470,7 @@ ge_df_2019 <- ge_df %>%
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_bw() +
+  theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Government Effectiveness (z score)') +
   expand_limits(y=c(0,100)) +
@@ -1541,7 +1541,7 @@ gdp_overperformers_plot <-  gdp_overperformers_plot %>%
                      labels = c("Over-performers", "Under-performers"),
                      values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_bw() +
+  theme_spi() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
@@ -1583,7 +1583,7 @@ hci_overperformers_plot <- hci_overperformers_plot %>%
                      labels = c("Over-performers", "Under-performers"),
                      values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_bw() +
+  theme_spi() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
