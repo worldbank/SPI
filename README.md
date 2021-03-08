@@ -26,7 +26,7 @@ The 5 pillars and associated 22 dimensions of the SPI are as shown in Figure 1 b
 
 *Figure 1: The Dimensions and Pillars that Construct the New SPI*
 <p align = "center">
-<img src = "02_programs/SPI_dashboard.png" width = "700">
+<img src = "02_programs/SPI_dashboard.PNG" width = "700">
 </p>
 
 
