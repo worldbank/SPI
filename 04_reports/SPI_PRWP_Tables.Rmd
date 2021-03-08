@@ -104,6 +104,16 @@ SPI_2019 <- SPI %>%
 
 ```{r spi_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
+#ggplot theme
+theme_spi <- function () { 
+    theme_bw() %+replace%
+    theme(
+      plot.caption = element_text(hjust = 0),
+      plot.title=element_blank() #remove all titles from plots (sometimes we may need to bring title outside plot)
+    )
+}
+
+
 #For mapping the result
 # quality = "high"
 # maps <- wbgmaps::wbgmaps[[quality]]
@@ -219,7 +229,7 @@ spi_charts  <- function(data, indicator, title) {
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
     theme(
       text=element_text(size=14)
     )
@@ -242,7 +252,7 @@ spi_charts  <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
     theme(
       text=element_text(size=14)
     )
@@ -266,7 +276,7 @@ spi_charts  <- function(data, indicator, title) {
       ) +
     
       expand_limits(y=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
     theme(
       text=element_text(size=14)
     )
@@ -328,7 +338,7 @@ spi_country_charts  <- function(data, indicator, title) {
         values=col_pal,
         na.value='grey'
       ) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'top',
             text=element_text(size=14)
             ) 
@@ -369,7 +379,7 @@ income_charts <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'top',
             text=element_text(size=14) )
    
@@ -408,7 +418,7 @@ spi_income_aggregates <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
     theme(
       text=element_text(size=14)
     )
@@ -450,7 +460,7 @@ lending_charts <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'top',
             text=element_text(size=14) )
    
@@ -494,7 +504,7 @@ lending_chart_aggregate <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'top',
             text=element_text(size=14) )
    
@@ -564,7 +574,7 @@ fcs_charts <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'top',
             text=element_text(size=14)) 
    
@@ -633,7 +643,7 @@ fcs_chart_aggregate <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'top',
             text=element_text(size=14)) 
   
@@ -763,7 +773,7 @@ eq_txt <- sprintf("y = %.3f + %.3f x, R^2 = %.3f \n     (%.3f)   (%.3f)", coef[1
  #  facet_wrap(~indicator) +
  #  geom_text(aes(label=iso3c)) +
  #  geom_smooth(method='lm') +
- #  theme_bw() +
+ #  theme_spi() +
  #  #scale_x_continuous(trans = scales::log2_trans()) +
  #  ylab('SPI Overall Score') +
  #  xlab('Poverty Headcount Ratio at $1.90 a day') +
@@ -786,7 +796,7 @@ pov_spi <- ggplot(data=pov_df_2019, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_bw() +
+  theme_spi() +
   #scale_x_continuous(trans = scales::log2_trans()) +
   ylab('SPI Overall Score') +
   xlab('Poverty Headcount Ratio at $1.90 a day') +
@@ -818,7 +828,7 @@ gini_df_2019 <- gini_df %>%
   # facet_wrap(~indicator) +
   # geom_text(aes(label=iso3c)) +
   # geom_smooth(method='lm') +
-  # theme_bw() +
+  # theme_spi() +
   # ylab('SPI Overall Score') +
   # xlab('Gini Index') +
   # theme(legend.position = 'bottom') +
@@ -840,7 +850,7 @@ gini_spi <- ggplot(data=gini_df_2019, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_bw() +
+  theme_spi() +
   #scale_x_continuous(trans = scales::log2_trans()) +
   ylab('SPI Overall Score') +
   xlab('Gini Index')  +
@@ -900,7 +910,7 @@ pov_spi + gini_spi   +
         geom_point( aes(y=SPI.INDEX.PIL5, color="SPI Dim 5 - Data Infrastructure"), size=2,) +
         #geom_text(aes(label=food_insecure_mod_severe), nudge_y = 3) +
         coord_flip()+
-        theme_bw() +
+        theme_spi() +
         theme(
           panel.grid.major.x = element_blank(),
           panel.grid.major.y = element_blank(),
@@ -973,7 +983,7 @@ pov_spi + gini_spi   +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
     geom_text(aes(y=total,label=paste0('Total = ' ,round(total,1))), size=4, nudge_y=7 ) +
     scale_x_discrete() +
-    theme_bw() +
+    theme_spi() +
     
     labs(
       #title='Contribution of each Pillar to SPI overall score',
@@ -997,7 +1007,7 @@ pov_spi + gini_spi   +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
     #geom_text(aes(y=total,label=paste0('Total = ' ,round(total,1))), size=4, nudge_y=7 ) +
     scale_x_discrete() +
-    theme_bw() +
+    theme_spi() +
     ylab('percentage') +
     labs(
       #title='Relative Contribution of each dimension to SPI overall score',
@@ -1063,7 +1073,7 @@ growth_plot <- function(variables, name) {
     geom_bar(aes(alpha=growth), stat = "identity", fill='#007f5f') +
     ggrepel::geom_text_repel(nudge_y=0.1, size=4,segment.alpha =  0 ) +
     scale_x_discrete() +
-    theme_bw() +
+    theme_spi() +
     xlab(str_wrap('Decile in 2016',40)) +
     ylab(str_wrap('Change in Score (2016-19)',20)) +
     labs(
@@ -1215,7 +1225,7 @@ name <- 'SPI Overall Score'
     geom_bar(stat = "identity", position='stack') +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
     scale_x_discrete() +
-    theme_bw() +
+    theme_spi() +
     xlab(str_wrap('Decile in 2016',40)) +
     ylab(str_wrap('Change in Score (2016-19)',20)) +
     labs(
@@ -1300,7 +1310,7 @@ p <- ggplot(df_country_time, aes(x=Country)) +
         scale_color_manual(values = c('decreased' = "red", 'improved' = "green")) +
         scale_y_continuous(name='SPI Value') +
         coord_flip() +
-        theme_bw() +
+        theme_spi() +
         labs(
           color = 'Change'
         ) +
@@ -1649,7 +1659,7 @@ ggplot(volatility_scatter_df, aes(x=value_2016, y=value_2019, label=iso3c)) +
   xlab('2016 value') +
   ylab('2019 value') +
   expand_limits(x=c(0,100), y=c(0,100)) +
-  theme_bw()
+  theme_spi()
     
 
 ```
@@ -1689,7 +1699,7 @@ ggplot(volatility_trace_sample_df, aes(x=date, y=value, color=indicator)) +
   xlab('') +
   ylab('') +
   expand_limits(y=c(0,100)) +
-  theme_bw() +
+  theme_spi() +
   theme(legend.position = 'top')
     
 
