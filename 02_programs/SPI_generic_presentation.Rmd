@@ -112,8 +112,8 @@ SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
 
 #metadata 
 metadata2 <- data.frame(
-  series = c('SPI.INDEX', 'SPI.INDEX.DIM1', 'SPI.INDEX.DIM2', 'SPI.INDEX.DIM3', 'SPI.INDEX.DIM4', 'SPI.INDEX.DIM5'),
-  indicator_name = c('SPI Overall Score', 'Dimension 1: Data Use', 'Dimension 2: Data Services', 'Dimension 3: Data Products', 'Dimension 4: Data Sources', 'Dimension 5: Data Infrastructure')
+  series = c('SPI.INDEX', 'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5'),
+  indicator_name = c('SPI Overall Score', 'Pillar 1: Data Use', 'Pillar 2: Data Services', 'Pillar 3: Data Products', 'Pillar 4: Data Sources', 'Pillar 5: Data Infrastructure')
 )
 
 metadata  <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep="")) %>%
@@ -171,14 +171,14 @@ Based on feedback, goal was for SPI framework to:
 
 # Framework Overview
 
-- SPI framework covers five dimensions:   
+- SPI framework covers five pillars:   
   1. Data Use
       * Indicators that capture demand side of statistical system 
 
 ---
 # Framework Overview
 
-- SPI framework covers five dimensions:
+- SPI framework covers five pillars:
   1. Data Use
       * Indicators that capture demand side of statistical system   
   2. Data Services
@@ -187,7 +187,7 @@ Based on feedback, goal was for SPI framework to:
 ---
 # Framework Overview
 
-- SPI framework covers five dimensions:
+- SPI framework covers five pillars:
   1. Data Use
       * Indicators that capture demand side of statistical system  
   2. Data Services
@@ -198,7 +198,7 @@ Based on feedback, goal was for SPI framework to:
 ---
 # Framework Overview
 
-- SPI framework covers five dimensions:
+- SPI framework covers five pillars:
   1. Data Use
       * Indicators that capture demand side of statistical system   
   2. Data Services
@@ -210,7 +210,7 @@ Based on feedback, goal was for SPI framework to:
 ---
  # Framework  Overview
 
-- SPI framework covers five dimensions:
+- SPI framework covers five pillars:
   1. Data Use
       * Indicators that capture demand side of statistical system  
   2. Data Services
@@ -852,16 +852,16 @@ Overall Scores Across Countries
 # Overview Summary of Results
 
   * Next, we will provide overall index
-  * Will present aggregate scores overall and for each dimension    
+  * Will present aggregate scores overall and for each pillar    
 
   * Given imprecision inherent in calculations, we recommend color coding providing subdivisions of maturity.   
   
 Countries are grouped into five groups:   
 
 * **Top 20%**:    Shading in <span style="color:#2ec4b6">dark green</span>.    
-* **4th Quantile**:  Shading in <span style="color:#acece7"> light green</span>.    
-* **3rd Quantile**:   Shading in <span style="color:#f1dc76"> yellow</span>.  
-* **2nd Quantile**:   Shading in <span style="color:#ffbf69"> light orange</span>.  
+* **4th Quintile**:  Shading in <span style="color:#acece7"> light green</span>.    
+* **3rd Quintile**:   Shading in <span style="color:#f1dc76"> yellow</span>.  
+* **2nd Quintile**:   Shading in <span style="color:#ffbf69"> light orange</span>.  
 * **Bottom 20%**:   Shading in <span style="color:#ff9f1c"> dark orange </span>.   
 ---
 
@@ -878,6 +878,42 @@ Countries are grouped into five groups:
         background-color: white;
     }
 ```
+.center3[
+```{r region_charts, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_charts('SPI','SPI.INDEX','SPI Overall Scores')
+
+```
+]
+---
+
+.center3[
+```{r country_charts, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_country_charts('SPI','SPI.INDEX','SPI Overall Scores vary significantly within regions.')
+
+```
+]
+---
+.center3[
+```{r lending_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+lending_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
+
+```
+]
+```{r lending_charts2, eval=FALSE, fig.height=8, fig.width=12, message=FALSE, warning=FALSE, include=FALSE}
+lending_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
+
+```
+
+
+---
+.center3[
+```{r fcs_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+fcs_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
+
+```
+
+]
+---
 
 
 .center2[
@@ -897,7 +933,7 @@ spi_subgroup_mapper('SPI', 'SPI.INDEX','Top 20%', 'High income OECD countries te
     curvature = -.3, arrow = arrow(length = unit(2, "mm"))
   ) +
   annotate(geom = "text", x = -3500000, y = 5000000, label = str_wrap("Norway gets perfect scores in data use and data infrastructure and scores highly in data services, data products, and data sources.",20), 
-           vjust = "top", family="Courier")
+           vjust = "top", family="Courier", size=4.5)
   
 
 ```
@@ -913,7 +949,7 @@ spi_subgroup_mapper('SPI', 'SPI.INDEX','4th Quintile', 'Countries in next quinti
     curvature = .3, arrow = arrow(length = unit(2, "mm"))
   ) +
   annotate(geom = "text", x = 8000000, y = -800000, label = str_wrap("Egypt does well in data use and data products, but has room for improvement in openness and does not follow all international classifications.",20), 
-           vjust = "top", family="Courier")
+           vjust = "top", family="Courier", size=4.5)
 
 ```
 ]
@@ -924,17 +960,17 @@ spi_subgroup_mapper('SPI', 'SPI.INDEX','4th Quintile', 'Countries in next quinti
 ```{r overall_map3, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 spi_subgroup_mapper('SPI', 'SPI.INDEX','3rd Quintile', 'Countries in the middle 20% may have multiple areas to improve or significant room for improvement in certain areas.') +
   annotate(
-    geom = "curve", x = 8000000, y = -800000, xend =8645132.0, yend = 3987636, 
+    geom = "curve", x = 7000000, y = -800000, xend =8645132.0, yend = 3987636, 
     curvature = .3, arrow = arrow(length = unit(2, "mm"))
   ) +
-  annotate(geom = "text", x = 8000000, y = -800000, label = str_wrap("China scores poorly in openness, lacks a complete CRVS, and may not make all surveys available to public.  It could rapidly improve by improving openness and making all surveys publicly available.",20), 
-           vjust = "top", family="Courier") +
+  annotate(geom = "text", x = 7000000, y = -800000, label = str_wrap("China scores poorly in openness, lacks a complete CRVS, and may not make all surveys available to public.  It could rapidly improve by improving openness and making all surveys publicly available.",25), 
+           vjust = "top", family="Courier", size=4.5) +
     annotate(
     geom = "curve", x = -1500000, y = -2000000, xend =-5448600, yend = -4014265, 
     curvature = .3, arrow = arrow(length = unit(2, "mm"))
   ) +
   annotate(geom = "text", x = -1500000, y = -2200000, label = str_wrap("Argentina scores poorly in data infrastructure.  It does not follow latest COICOP standards or MFSM 2000, for instance.",20), 
-           vjust = "top", family="Courier")
+           vjust = "top", family="Courier", size=4.5)
 
 ```
 ]
@@ -945,11 +981,11 @@ spi_subgroup_mapper('SPI', 'SPI.INDEX','3rd Quintile', 'Countries in the middle 
 ```{r overall_map4, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 spi_subgroup_mapper('SPI', 'SPI.INDEX','2nd Quintile', 'Countries in the 2nd quintile struggle in multiple areas typically.') +
     annotate(
-    geom = "curve", x = -1500000, y = -2000000, xend =732862.37, yend = 1068770.77, 
+    geom = "curve", x = -1500000, y = -1800000, xend =732862.37, yend = 1068770.77, 
     curvature = -.3, arrow = arrow(length = unit(2, "mm"))
   ) +
-  annotate(geom = "text", x = -1500000, y = -2200000, label = str_wrap("Nigeria last had a population census in 2006 and has an incomplete CRVS.  It also fails to follow many standards and classifications, such as on the compilation of government finance statistics.",30), 
-           vjust = "top", family="Courier")
+  annotate(geom = "text", x = -1500000, y = -1800000, label = str_wrap("Nigeria last had a population census in 2006 and has an incomplete CRVS.  It also fails to follow many standards and classifications, such as on the compilation of government finance statistics.",25), 
+           vjust = "top", family="Courier", size=4.5)
 
 ```
 ]
@@ -960,53 +996,73 @@ spi_subgroup_mapper('SPI', 'SPI.INDEX','2nd Quintile', 'Countries in the 2nd qui
 ```{r overall_map5, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 spi_subgroup_mapper('SPI', 'SPI.INDEX','Bottom 20%', 'Bottom 20% have many elements missing, and contains many FCS countries.') +
     annotate(
-    geom = "curve", x = -1500000, y = -2000000, xend =2152860, yend = -321703, 
+    geom = "curve", x = -1500000, y = -1800000, xend =2152860, yend = -321703, 
     curvature = -.3, arrow = arrow(length = unit(2, "mm"))
   ) +
-  annotate(geom = "text", x = -1500000, y = -2200000, label = str_wrap("The DRC lacks recent SDG indicators in several areas, does not conform to several classification standards, and last had a poverty survey in 2012.",30), 
-           vjust = "top", family="Courier")  +
+  annotate(geom = "text", x = -1500000, y = -1800000, label = str_wrap("The DRC lacks recent SDG indicators in several areas, does not conform to several classification standards, and last had a poverty survey in 2012.",25), 
+           vjust = "top", family="Courier", size=4.5)  +
   annotate(
     geom = "curve", x = 8000000, y = -800000, xend =5557312, yend = 3863723.7, 
     curvature = .3, arrow = arrow(length = unit(2, "mm"))
   ) +
   annotate(geom = "text", x = 8000000, y = -800000, label = str_wrap("Afghanistan has not had a population census since 1979.",20), 
-           vjust = "top", family="Courier")
+           vjust = "top", family="Courier", size=4.5)
 
 
 
 ```
 
 ]
----
-.center3[
-```{r region_charts, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_charts('SPI','SPI.INDEX','SPI Overall Scores')
 
-```
-]
 ---
-.center3[
-```{r country_charts, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-spi_country_charts('SPI','SPI.INDEX','SPI Overall Scores vary significantly within regions.')
 
-```
-]
----
-.center3[
-```{r lending_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-lending_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
-
-```
-]
----
-.center3[
-```{r lending_charts2, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-lending_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
+.center2[
+```{r pillar_1_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.PIL1', 'Statistical Performance Indicators - SPI Pillar 1: Data Use')
 
 ```
 ]
 
 ---
+
+.center2[
+```{r pillar_2_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.PIL2', 'Statistical Performance Indicators - SPI Pillar 2: Data Services')
+
+```
+]
+
+---
+
+.center2[
+```{r pillar_3_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.PIL3', 'Statistical Performance Indicators - SPI Pillar 3: Data Products')
+
+```
+]
+
+---
+
+.center2[
+```{r pillar_4_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.PIL4', 'Statistical Performance Indicators - SPI Pillar 4: Data Sources')
+
+```
+]
+
+---
+
+.center2[
+```{r pillar_5_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_mapper('SPI', 'SPI.INDEX.PIL5', 'Statistical Performance Indicators - SPI Pillar 5: Data Infrastructure')
+
+```
+]
+---
+
+
+
+
 
 .center3[
 ```{r elephant, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=14}
@@ -1075,11 +1131,11 @@ growth_plot <- function(variables, name) {
 }
 
 
-# growth_plot('SPI.INDEX.DIM1', 'SPI Dimension 1 (Data Use) Score')
-# growth_plot('SPI.INDEX.DIM2', 'SPI Dimension 2 (Data Services) Score')
-# growth_plot('SPI.INDEX.DIM3', 'SPI Dimension 3 (Data Products) Score')
-# growth_plot('SPI.INDEX.DIM4', 'SPI Dimension 4 (Data Sources) Score')
-# growth_plot('SPI.INDEX.DIM5', 'SPI Dimension 5 (Data Infrastructure) Score')
+# growth_plot('SPI.INDEX.PIL1', 'SPI Pillar 1 (Data Use) Score')
+# growth_plot('SPI.INDEX.PIL2', 'SPI Pillar 2 (Data Services) Score')
+# growth_plot('SPI.INDEX.PIL3', 'SPI Pillar 3 (Data Products) Score')
+# growth_plot('SPI.INDEX.PIL4', 'SPI Pillar 4 (Data Sources) Score')
+# growth_plot('SPI.INDEX.PIL5', 'SPI Pillar 5 (Data Infrastructure) Score')
 
 
 ```
@@ -1107,11 +1163,11 @@ growth_plot('SPI.INDEX', 'SPI Overall Score')
                 values_from=starts_with('SPI.INDEX')) %>%
     ungroup() %>%
     mutate(overall_growth=(SPI.INDEX_2019-SPI.INDEX_2016),
-           dim1_growth=(SPI.INDEX.DIM1_2019-SPI.INDEX.DIM1_2016),
-           dim2_growth=(SPI.INDEX.DIM2_2019-SPI.INDEX.DIM2_2016),
-           dim3_growth=(SPI.INDEX.DIM3_2019-SPI.INDEX.DIM3_2016),
-           dim4_growth=(SPI.INDEX.DIM4_2019-SPI.INDEX.DIM4_2016),
-           dim5_growth=(SPI.INDEX.DIM5_2019-SPI.INDEX.DIM5_2016)
+           dim1_growth=(SPI.INDEX.PIL1_2019-SPI.INDEX.PIL1_2016),
+           dim2_growth=(SPI.INDEX.PIL2_2019-SPI.INDEX.PIL2_2016),
+           dim3_growth=(SPI.INDEX.PIL3_2019-SPI.INDEX.PIL3_2016),
+           dim4_growth=(SPI.INDEX.PIL4_2019-SPI.INDEX.PIL4_2016),
+           dim5_growth=(SPI.INDEX.PIL5_2019-SPI.INDEX.PIL5_2016)
            ) %>%
     filter(!(is.na(SPI.INDEX_2019) | is.na(SPI.INDEX_2016))) %>%
     mutate(spi_rank=100*rank(SPI.INDEX_2016)/length(SPI.INDEX_2016),
@@ -1142,16 +1198,16 @@ growth_plot('SPI.INDEX', 'SPI Overall Score')
     pivot_longer(
       cols=c('D1', 'D2', 'D3', 'D4', 'D5'),
       values_to='growth',
-      names_to='dimension'
+      names_to='pillar'
     ) %>%
-    mutate(dimension=case_when(
-      dimension=="D1" ~ "Dimension 1: Data Use",
-      dimension=="D2" ~ "Dimension 2: Data Services",
-      dimension=="D3" ~ "Dimension 3: Data Products",
-      dimension=="D4" ~ "Dimension 4: Data Sources",
-      dimension=="D5" ~ "Dimension 5: Data Infrastructure"
+    mutate(pillar=case_when(
+      pillar=="D1" ~ "Pillar 1: Data Use",
+      pillar=="D2" ~ "Pillar 2: Data Services",
+      pillar=="D3" ~ "Pillar 3: Data Products",
+      pillar=="D4" ~ "Pillar 4: Data Sources",
+      pillar=="D5" ~ "Pillar 5: Data Infrastructure"
     )) %>%
-    mutate(growth=growth/5) #divide by 5 so that dimension scores sum to overall score.  This puts equal weight on each dimension in the sum
+    mutate(growth=growth/5) #divide by 5 so that pillar scores sum to overall score.  This puts equal weight on each pillar in the sum
   
 
 
@@ -1164,7 +1220,7 @@ growth_plot('SPI.INDEX', 'SPI Overall Score')
 ```{r elplotstacked, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
 name <- 'SPI Overall Score'
 
-  ggplot(elephant_stacked_df, aes(x=spi_bins, y=growth, fill=dimension, label=paste0(round(growth,1)))) +
+  ggplot(elephant_stacked_df, aes(x=spi_bins, y=growth, fill=pillar, label=paste0(round(growth,1)))) +
     geom_bar(stat = "identity", position='stack') +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
     scale_x_discrete() +
@@ -1284,7 +1340,7 @@ changes_fun('SPI.INDEX', 'SPI Overall Score', 2016, 2019)
 .center3[
 ```{r changesplot2, eval=FALSE, fig.height=9, fig.width=12, message=FALSE, warning=FALSE, dpi=250, include=FALSE}
 
-changes_fun('SPI.INDEX.DIM2', 'SPI Dimension 2 - Data Services - Score', 2016, 2019)
+changes_fun('SPI.INDEX.PIL2', 'SPI Pillar 2 - Data Services - Score', 2016, 2019)
 
 ```
 ]
@@ -1302,7 +1358,7 @@ changes_fun('SPI.D1.5.POV', 'SPI Comparable Poverty Data Indicator', 2009, 2019)
 .center3[
 ```{r changesplotpovind, eval=FALSE, fig.height=9, fig.width=12, message=FALSE, warning=FALSE, dpi=250, include=FALSE}
 
-changes_fun('SPI.D3.1.POV', 'SPI Dimension 3 (Data Products) - SDG 1 Score', 2010, 2019)
+changes_fun('SPI.D3.1.POV', 'SPI Pillar 3 (Data Products) - SDG 1 Score', 2010, 2019)
 
 ```
 ]
@@ -1311,7 +1367,7 @@ changes_fun('SPI.D3.1.POV', 'SPI Dimension 3 (Data Products) - SDG 1 Score', 201
 .center3[
 ```{r changesplot4house, eval=FALSE, fig.height=9, fig.width=12, message=FALSE, warning=FALSE, dpi=250, include=FALSE}
 
-changes_fun('SPI.D4.1.4.HOUS', 'SPI Dimension 4 - Household Survey Availability - Score', 2009, 2019)
+changes_fun('SPI.D4.1.4.HOUS', 'SPI Pillar 4 - Household Survey Availability - Score', 2009, 2019)
 
 
 ```
@@ -1350,7 +1406,7 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~ indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_bw() +
+  theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Human Capital Index') +
   expand_limits(y=c(0,100)) +
@@ -1414,7 +1470,7 @@ ge_df_2019 <- ge_df %>%
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_bw() +
+  theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Government Effectiveness (z score)') +
   expand_limits(y=c(0,100)) +
@@ -1451,10 +1507,8 @@ ge_df_2019 <- ge_df %>%
 
 
 
----
 
-.center3[
-```{r overperformers, echo=FALSE, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+```{r overperformers, eval=FALSE, fig.height=9, fig.width=10, message=FALSE, warning=FALSE, include=FALSE}
 
 #get top 10 and bottom 10 over performers compared to gdp and hci
 
@@ -1487,7 +1541,7 @@ gdp_overperformers_plot <-  gdp_overperformers_plot %>%
                      labels = c("Over-performers", "Under-performers"),
                      values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_bw() +
+  theme_spi() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
@@ -1529,7 +1583,7 @@ hci_overperformers_plot <- hci_overperformers_plot %>%
                      labels = c("Over-performers", "Under-performers"),
                      values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_bw() +
+  theme_spi() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
@@ -1546,7 +1600,7 @@ gdp_overperformers_plot + hci_overperformers_plot +
                   caption=str_wrap('Over and under performers calculated for GDP per capita by using OLS regression of SPI Index in 2019 on Log GDP per capita and calculting residuals from this regression.  Over and Under performers for Human Capital Index calculated similarly.',100)
                   )
 ```
-]
+
 ---
 .center3[
 ```{r dim_corr, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=10}
@@ -1557,8 +1611,8 @@ corr_df <- SPI %>%
 
 #calculate correlations between teacher practices
 df_corr_plot <-    round(cor(corr_df, use="complete.obs"), 2) 
-colnames(df_corr_plot) <- c('SPI Dimension 1','SPI Dimension 2','SPI Dimension 3','SPI Dimension 4','SPI Dimension 5','SPI Overall')
-rownames(df_corr_plot) <- c('SPI Dimension 1','SPI Dimension 2','SPI Dimension 3','SPI Dimension 4','SPI Dimension 5','SPI Overall')
+colnames(df_corr_plot) <- c('SPI Pillar 1','SPI Pillar 2','SPI Pillar 3','SPI Pillar 4','SPI Pillar 5','SPI Overall')
+rownames(df_corr_plot) <- c('SPI Pillar 1','SPI Pillar 2','SPI Pillar 3','SPI Pillar 4','SPI Pillar 5','SPI Overall')
 
 #plot the correlation in a nicely formatted table
 pcorr<- ggcorrplot::ggcorrplot(df_corr_plot,
@@ -1566,7 +1620,7 @@ pcorr<- ggcorrplot::ggcorrplot(df_corr_plot,
                    ggtheme = theme_bw(),
                    colors = c("#F8696B", "#FFEB84", "#63BE7B"),
                    legend.title = "Correlation",
-                   title = "Correlation Between SPI Dimensions",
+                   title = "Correlation Between SPI Pillars",
                    lab=T) + 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
   scale_y_discrete(labels = function(x) str_wrap(x, width = 16)) +
@@ -1604,15 +1658,6 @@ Supplementary Charts and Figures
 
 
 
----
-.center3[
-```{r fcs_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-fcs_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
-
-```
-
-
-]
 ---
 .center3[
 ```{r fcs_charts2, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
@@ -1749,119 +1794,76 @@ Extra Slides
 
 ---
 
-# Data Use (5 Pillars)
+# Data Use (5 Dimensions)
 
-  * <span style="color:grey"> Pillar 1.1: Data use by national legislature:   
+  * <span style="color:grey"> Dimension 1.1: Data use by national legislature:   
     * *Not included because of lack of established methodology*   
-  * <span style="color:grey"> Pillar 1.2: Data use by national executive branch:    
+  * <span style="color:grey"> Dimension 1.2: Data use by national executive branch:    
     * *Researching method on use of statistics in Voluntary National Review documents*      
-  * <span style="color:grey">Pillar 1.3: Data use by civil society:    
+  * <span style="color:grey">Dimension 1.3: Data use by civil society:    
     * *Not included because of lack of established methodology*    
-  * <span style="color:grey">Pillar 1.4: Data use by academia:      
+  * <span style="color:grey">Dimension 1.4: Data use by academia:      
     * *Not included because of lack of established methodology*   
-  * **Pillar 1.5: Data use by international organizations:**  
+  * **Dimension 1.5: Data use by international organizations:**  
     * *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics, safely managed water, labor force data for international agencies using metadata*    
 
 ---
-# Data Services (4 Pillars)
+# Data Services (4 Dimensions)
 
-  * <span style="color:green"> **Pillar 2.1: Data Releases:** 
+  * <span style="color:green"> **Dimension 2.1: Data Releases:** 
     * *SDDS/e-GDDS subscription*    
-  * **Pillar 2.2: Online access:** 
+  * **Dimension 2.2: Online access:** 
     * *ODIN Open Data Openness score*   
-  * <span style="color:grey"> Pillar 2.3: Advisory/ Analytical Services:  
+  * <span style="color:grey"> Dimension 2.3: Advisory/ Analytical Services:  
     * *Not included because of lack of established methodology*    
-  * **Pillar 2.4: Data services:** 
+  * **Dimension 2.4: Data services:** 
     * *NADA metadata available*
     
 ---
   
-# Data Products (4 Pillars) 
+# Data Products (4 Dimensions) 
 
-For these pillars, we pull values from the UN SDG database, calculate the share of SDG indicators with a country produced value per country
+For these Dimensions, we pull values from the UN SDG database, calculate the share of SDG indicators with a country produced value per country
 
-  * **Pillar 3.1: Social Statistics:** 
+  * **Dimension 3.1: Social Statistics:** 
     * *Average score for Goal 1-6 indicators*
-  * **Pillar 3.2: Economic Statistics:** 
+  * **Dimension 3.2: Economic Statistics:** 
     * *Average score for Goal 7-12 indicators*  
-  * **Pillar 3.3: Environmental Statistics:** 
+  * **Dimension 3.3: Environmental Statistics:** 
     * *Average score for Goal 13-15 indicators*      
-  * **Pillar 3.4: Institutional Statistics:**
+  * **Dimension 3.4: Institutional Statistics:**
     * *Average score for Goal 16-17 indicators*
     
 ---
 
-# Data Sources (4 Pillars) 
+# Data Sources (4 Dimensions) 
 
 
-  * **Pillar 4.1: Censuses and Surveys:** 
+  * **Dimension 4.1: Censuses and Surveys:** 
     * *Average score of 8 Census and Survey Indicators*    
-  * **Pillar 4.2: Administrative Data:** 
+  * **Dimension 4.2: Administrative Data:** 
     * *Complete CRVS, <span style="color:grey"> availability of SPL admin data (ASPIRE), Education admin data (UNESCO), Labor admin data (ILO) *  
-  * **Pillar 4.3: Geospatial Data:**  
+  * **Dimension 4.3: Geospatial Data:**  
     * *Geospatial data available at 1st Admin Level according to ODIN* 
-  * <span style="color:grey">Pillar 4.4: Private/citizen generated data:  
+  * <span style="color:grey">Dimension 4.4: Private/citizen generated data:  
     * *Not included because of lack of established methodology*   
     
 ---
 
-# Data Infrastructure (5 Pillars) 
+# Data Infrastructure (5 Dimensions) 
 
 
-  * <span style="color:grey"> Pillar 5.1: Legislation and Governance:     
+  * <span style="color:grey"> Dimension 5.1: Legislation and Governance:     
     * *SDG 17.18.2 - National Statistical Legislation complies with UN Fundamental Principles of Statistics (PARIS21)*  
-  * <span style="color:green"> **Pillar 5.2: Standards and Methods:** 
+  * <span style="color:green"> **Dimension 5.2: Standards and Methods:** 
     * *Average score for 10 Standards and Methods indicators sourced mostly from IMF*  
-  * <span style="color:grey"> Pillar 5.3: Skills:  
+  * <span style="color:grey"> Dimension 5.3: Skills:  
     * *Considering PARIS21 measure of statistical literacy*    
-  * <span style="color:grey"> Pillar 5.4: Partnerships:  
+  * <span style="color:grey"> Dimension 5.4: Partnerships:  
     * *Not included because of lack of established methodology*    
-  * <span style="color:grey"> Pillar 5.5: Finance:  
+  * <span style="color:grey"> Dimension 5.5: Finance:  
     * *SDG 17.18.3 - Statistical Plan fully funded (PARIS21)*   
     
 
 
----
 
-.center2[
-```{r dimension_1_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM1', 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
-
-```
-]
-
----
-
-.center2[
-```{r dimension_2_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM2', 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
-
-```
-]
-
----
-
-.center2[
-```{r dimension_3_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM3', 'Statistical Performance Indicators - SPI Dimension 3: Data Products')
-
-```
-]
-
----
-
-.center2[
-```{r dimension_4_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM4', 'Statistical Performance Indicators - SPI Dimension 4: Data Sources')
-
-```
-]
-
----
-
-.center2[
-```{r dimension_5_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
-
-```
-]

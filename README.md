@@ -6,27 +6,27 @@ The new Statistical Performance Indicators (SPI) builds on the SCI, which the Wo
 
 The new Statistical Performance Indicators (SPI) are designed to monitor how well countries statistical systems are meeting this purpose.  By helping countries and development partners identify the strengths and weaknesses of national statistical systems the SPI can support policy advice for countries about their national statistical systems, investment decisions for donors including the World Bank, benchmarking of national statistical systems, and advocacy for national statistics.  
 
-We identify five key dimensions of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These dimensions can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining.
+We identify five key pillars of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These pillars can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining.
 
 <p align = "center">
-<img src = "misc/SPI_cycle.PNG" width = "700">
+<img src = "02_programs/SPI_cycle.PNG" width = "700">
 </p>
 
 
-Statistics have no value unless they are used. The first dimension of the SPI is therefore data use. A successful statistical system is one that produces data products that are highly used.
+Statistics have no value unless they are used. The first pillar of the SPI is therefore data use. A successful statistical system is one that produces data products that are highly used.
 
-In order to meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second dimension of the SPI is therefore data services that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.
+In order to meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second pillar of the SPI is therefore data services that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.
 
-The dialogue between users and suppliers in turn drives the design of statistical products that are to be created including the quality of product needed for the country requirement. This will incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third dimension of the SPI is therefore data products. A successful statistical system is one that generates high quality statistical indicators that can also track progress for the Sustainable Development Goals (SDGs).
+The dialogue between users and suppliers in turn drives the design of statistical products that are to be created including the quality of product needed for the country requirement. This will incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third pillar of the SPI is therefore data products. A successful statistical system is one that generates high quality statistical indicators that can also track progress for the Sustainable Development Goals (SDGs).
 
-In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens.  The fourth dimension of the SPI is therefore data sources.  A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.
+In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens.  The fourth pillar of the SPI is therefore data sources.  A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.
 
-For the cycle to be complete, capability needs continuously to be reviewed to ensure that it is enough to deliver the products, services and ultimately data use required. The fifth dimension of the SPI is therefore data infrastructure. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
-The 5 dimensions and associated 22 pillars of the SPI are as shown in Figure 1 below.
+For the cycle to be complete, capability needs continuously to be reviewed to ensure that it is enough to deliver the products, services and ultimately data use required. The fifth pillar of the SPI is therefore data infrastructure. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
+The 5 pillars and associated 22 dimensions of the SPI are as shown in Figure 1 below.
 
 *Figure 1: The Dimensions and Pillars that Construct the New SPI*
 <p align = "center">
-<img src = "misc/SPI_dashboard.PNG" width = "700">
+<img src = "02_programs/SPI_dashboard.PNG" width = "700">
 </p>
 
 
