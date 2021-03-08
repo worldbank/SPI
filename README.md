@@ -44,7 +44,7 @@ A score against each element would facilitate:
 
 
 Key characteristics of the SPI are: (i) uses only publicly accessible data; (ii) transparent methodology; (iii) easily replicable; (iv) provides a long-time series to track progress in performance; (v) captures outcomes and supporting elements; (vi) reflects the SDGs; (vii) facilitates at-a-glance comparisons on a global scale.
-We are collecting data on indicators for the 22 pillars above. For dissemination, the SPI will be presented both in the dashboard format above and as an index for each country. Further details on the construction of the new SPI are provided in the remainder of the document.
+We are collecting data on indicators for the 22 dimensions above. For dissemination, the SPI will be presented both in the dashboard format above and as an index for each country. Further details on the construction of the new SPI are provided in the remainder of the document.
 
 # How to use this repository
 
@@ -52,7 +52,7 @@ There are several subfolders in this repository.  Below is a list of the most im
 
 Run_SPI.R contains a master file to run the two most important scripts: 01-data_prep.Rmd and 02-SPI_index.Rmd.  If you just want to reproduce the results, then simply execute this file.
 
-  1. 01_raw_data contains the raw data for the project for each indicator.  This folder contains several subfolders linked to the 22 pillars in our framework.
+  1. 01_raw_data contains the raw data for the project for each indicator.  This folder contains several subfolders linked to the 22 dimensions in our framework.
 
   2. 02_programs contains the cleaning code to clean each indicator.  This code is consolidated into a single R Markdown file, 01-data_prep.Rmd, which also automatically writes a technical document for the indicators.  Inside this technical document, one can find the detailed description and methodology behind each indicator.  The folder also contains code to create an overall index to compare country performance.  The code to create the index is 02-SPI_index.Rmd.
 
@@ -67,5 +67,3 @@ The vast majority of code in this repository is written in the R language.  The 
 This repository contains several files from the R package "renv".  The renv package helps manage specific package versions used to produce the results in this repository.  Because package version conflicts can make code that runs on one system not run on another system, it is important to have a list of the specific package versions used and a workflow for accessing these specific packages.  The renv package provides this.  In order to use renv, see the renv documentation here (https://rstudio.github.io/renv/articles/renv.html).  In general, the renv::restore() command should install all packages found in the renv.lock file in this repository, so that version conflicts do not cause errors.  
 
 There may be some issue with a few packages in particular.  These are World Bank specific packages to produce maps that conform with World Bank geospatial boundaries.  These can be downloaded here (https://github.com/worldbank/wbgviz).
-
-
