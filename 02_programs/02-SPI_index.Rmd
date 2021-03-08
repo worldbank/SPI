@@ -947,7 +947,7 @@ Finally, many of the soft components of the data infrastructure pillar lack adeq
 
 ## Data sources
 
-The SPI draws on a variety of sources to create the indicators. While greater detail for each specific indicator can be found in the [technical documentation](https://stacybri.github.io/SPI/) describing each indicator, a general overview of how data is collected can be found in this section.
+The SPI draws on a variety of sources to create the indicators. While greater detail for each specific indicator can be found in the [technical documentation](https://worldbank.github.io/SPI/) describing each indicator, a general overview of how data is collected can be found in this section.
 
 For pillar 1 on data use, data is collected from four distinct sources. The World Bank supplies data for indicators on availability of comparable poverty data (from the World Bank’s Povcalnet system), and the indicator on quality of debt service data (from the World Bank’s World Development Indicators or WDI metadata). Data on the availability of under 5 child mortality data comes from the [UN Inter-agency Group for Child Mortality Estimation](https://childmortality.org/). The indicator on availability of safely managed drinking water data is sources from the [WHO/UNICEF Joint Monitoring Programme](https://washdata.org/), which is a combined effort by the WHO and UNICEF. The indicator on the availability of source data for measuring labor force participation comes from the ILO. Each of these sources will be updated annually prior to each annual data release. The date the data is updated for each of these sources is available in our technical documentation.
 
@@ -963,7 +963,7 @@ For dimension 5, data on the legislation indicator and finance indicators are pu
 
 ## Handling Missing Data 
 
-A full description of the methodology behind each specific indicator is available in  the [technical documentation](https://stacybri.github.io/SPI/).  For indicators where there is  a value for a previous year for a country (say a value in 2018 but not 2019),  the previous value is used. For instance, the open data watch indicator on geo-spatial data was only released in 2018, not 2019, the value for 2019 uses the  figurefrom 2018 as the estimate for that indicator. For indicators where there is no data for any years, no value has been imputed.
+A full description of the methodology behind each specific indicator is available in  the [technical documentation](https://worldbank.github.io/SPI/).  For indicators where there is  a value for a previous year for a country (say a value in 2018 but not 2019),  the previous value is used. For instance, the open data watch indicator on geo-spatial data was only released in 2018, not 2019, the value for 2019 uses the  figure from 2018 as the estimate for that indicator. For indicators where there is no data for any years, no value has been imputed.
 
 
 ## Process for Disputing the Data
