@@ -993,7 +993,7 @@ $$ SPI.INDEX_{ct} = \sum_{p=1}^{N_p} \frac{SPI.PIL_{ctp}}{N_p} $$
 
 Where SPI.INDEX is the SPI overall score. SPI.PIL are the 5 SPI pillars listed above. In the notation, c is a country, t is the date, p is a pillar  
 
-The nested structure of our index and the summation methods used to build an overall score ensure the axiomatic properties outlined in [@cameron2019measuring].  These include symmetry, monotonicity, and subgroup decomposability.
+The nested structure of our index and the summation methods used to build an overall score ensure the axiomatic properties outlined in [@cameron2019measuring].   These properties include symmetry, monotonicity, and subgroup decomposability.  Symmetry refers to property where if the values of two indicators in a nesting are switched, then the resulting index scores are unaffected.  Monotonicity implies that if the value of an indicator improves, then the resulting index scores improve as well. Subgroup decomposability results from the fact that the scores are a weighted average of the subgroups (either indicators, dimensions, pillars) that make up that score and so can be written as a linear combination of those subgroups.
 
 # SPI Overall Scores
 
@@ -2207,15 +2207,27 @@ leave_out_df <- metadata_full %>%
 
 ```
 
-*Figure 6.15: SPI Indicator Importance*
-```{r leaveoutplot, fig.height=15, fig.width=10}
+*Figure 6.15: SPI Indicator Importance for Top 10 and Bottom 10 Indicators*
 
-leave_out_df %>%
-  mutate(descript=str_wrap(paste(SPI_indicator_id,": ", source_name , sep=""),55)) %>%
+```{r leaveoutplot, fig.height=9}
+
+leave_out_plot_df <- leave_out_df %>%
+  mutate(source_name=gsub("\\(5 year moving average\\)","", source_name),
+         descript=str_wrap(paste(SPI_indicator_id,": ", source_name , sep=""),50)
+         ) %>%
   filter(mean_abs_diff>0) %>%
   arrange(mean_abs_diff) %>%
-  mutate(descript=factor(descript, levels=descript)) %>%
-  ggplot(aes(x=descript, y=mean_abs_diff, color=SPI_indicator_id)) +
+  mutate(descript=factor(descript, levels=descript))
+
+#get top 10 and bottom 10 
+leave_out_plot_df_trunc <- leave_out_plot_df %>%
+  head(10) %>%
+  mutate(group='Bottom 10') %>%
+  bind_rows(leave_out_plot_df %>% tail(10) %>% mutate(group='Top 10')) %>%
+  arrange(mean_abs_diff)
+
+
+  ggplot(leave_out_plot_df_trunc, aes(x=descript, y=mean_abs_diff, color=group)) +
     geom_segment( aes(x=descript ,xend=descript, y=0, yend=mean_abs_diff)) +
     geom_point(size=3) +
     geom_text(aes(label=round(mean_abs_diff,2)),color='black', nudge_y=.2) +
@@ -2224,14 +2236,14 @@ leave_out_df %>%
     theme(
       panel.grid.minor.y = element_blank(),
       panel.grid.major.y = element_blank(),
-      legend.position = 'none'
+      legend.position = 'top'
     ) +
     xlab("") +
     ylab("Mean Absolute Difference") +
     labs(
-      title="SPI Indicator Importance",
+      title="SPI Indicator Importance for Top 10 and Bottom 10 Indicators",
       subtitle = "Mean absolute difference in SPI overall scores leaving out indicator",
-      caption="The leave-out approach consists of sequentially deleting dimensions or indicators one at a time and recalculating the SPI overall scores."
+      caption=str_wrap("The leave-out approach consists of sequentially deleting dimensions or indicators one at a time and recalculating the SPI overall scores.",80)
     )
 
 ```
@@ -2448,7 +2460,7 @@ We would expect a strong positive relationship between GDP per capita of countri
 
 [^1]: To understand what effect taking the log has on this correlation, the correlation in 2019 between (non-logged) GDP per capita and the SPI overall score is `r round(corr_2019_nontrans,2)`. 
 
-Another measure of a country's development is the Human Capital Index (HCI) developed by the World Bank ([@hci2020]).  The Human Capital Index is designed to capture the amount of human capital a child born today can expect to attain by age 18 in a country.  The index combines a country's child mortality, learning adjusted years of schooling, adult survival rates & stunting into one index. For more details, visit the Human Capital Index website (https://www.worldbank.org/en/publication/human-capital).  Again,  a strong positive relationship between a country's HCI value and their Statistical Performance Indicators index might  be expected, as countries with a more developed human capital stock are likely to have greater capacity to produce statistics.  Again, this is what we see.  The correlation between the 2018 value of the HCI (the latest value available at the time of this writing) and the 2018 value of the SPI overall score is `r round(corr_hci_2018,2)`.
+Another measure of a country's development is the Human Capital Index (HCI) developed by the World Bank ([@hci2019]).  The Human Capital Index is designed to capture the amount of human capital a child born today can expect to attain by age 18 in a country.  The index combines a country's child mortality, learning adjusted years of schooling, adult survival rates & stunting into one index.^[For more details, visit the [Human Capital Index website](https://www.worldbank.org/en/publication/human-capital)].  Again,  a strong positive relationship between a country's HCI value and their Statistical Performance Indicators index might  be expected, as countries with a more developed human capital stock are likely to have greater capacity to produce statistics.  Again, this is what we see.  The correlation between the 2018 value of the HCI (the latest value available at the time of this writing) and the 2018 value of the SPI overall score is `r round(corr_hci_2018,2)`.
 
 The scatter plot of the relationship between log GDP per capita, the HCI, and our SPI overall score for the years 2016-2019 is shown below.  In general, countries with higher per capita income and higher levels of human capital tend to have better performing statistical systems according to the SPI measure.  
 
@@ -2909,8 +2921,8 @@ ggplot(spi_index_df, aes(x = SPI.INDEX)) +
 
 ```
 
-*Figure 7.6: Distribution of SPI overall score and alternative indices across countries*
-```{r density2}
+
+```{r density2, eval=FALSE, include=FALSE}
 #show the density of our SPI index compared to other indices
 ggplot(density_df, aes(x = index_values, color=index_name)) + 
   facet_wrap(~date) +
@@ -2923,21 +2935,6 @@ ggplot(density_df, aes(x = index_values, color=index_name)) +
   xlab('Index value') +
   theme(legend.position = 'bottom')
 ```
-
-# Conclusion
-
-The new Statistical Performance Indicators (SPI) will replace the Statistical Capacity Index (SCI), which the World Bank has regularly published since 2004. Although the goals are the same, to be a tool to measure the statistical systems of countries, the new SPI has expanded into new areas including on data use, administrative data, geospatial data, data services, and data infrastructure. The SPI provides a forward looking framework that can help countries measure where they stand in several dimensions and offers an ambitious measurement agenda for the international community.
-
-The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system. The project uses open data and open code to build confidence in the work. The data will also be updated on a yearly basis to track progress over time.
-
-More research and data collection is needed particularly in terms of data use. And while the framework is comprehensive,  specific indicators measuring each pillar and dimension can be improved. One of the functions of the dashboard is as a call to action for the international community to better measure these areas.
-
-Countries and international organizations need to know each national statistical system’s current capabilities, and the new SPI is meant to help fill this gap. Only then can the virtuous cycle of investment, effectiveness, innovation, value added and impact begin.
-
-
-<!-- We identify five key dimensions of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These dimensions can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining. -->
-
-Countries and international organizations need to know each national statistical system's current capabilities, and the new SPI is meant to help fill this gap.  Only then can the virtuous cycle of investment, effectiveness, innovation, value added and impact can begin.
 
 # Further Project Information
 
@@ -2959,6 +2956,23 @@ In order to be completely transparent, all changes to methodology will be tracke
 [Github repository](https://github.com/worldbank/SPI)
 
 [Interactive Dashboard](https://datanalytics.worldbank.org/content/603)
+
+# Conclusion
+
+The new Statistical Performance Indicators (SPI) will replace the Statistical Capacity Index (SCI), which the World Bank has regularly published since 2004. Although the goals are the same, to be a tool to measure the statistical systems of countries, the new SPI has expanded into new areas including on data use, administrative data, geospatial data, data services, and data infrastructure. The SPI provides a forward looking framework that can help countries measure where they stand in several dimensions and offers an ambitious measurement agenda for the international community.
+
+The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system. The project uses open data and open code to build confidence in the work. The data will also be updated on a yearly basis to track progress over time.
+
+More research and data collection is needed particularly in terms of data use. And while the framework is comprehensive,  specific indicators measuring each pillar and dimension can be improved. One of the functions of the dashboard is as a call to action for the international community to better measure these areas.
+
+Countries and international organizations need to know each national statistical system’s current capabilities, and the new SPI is meant to help fill this gap. Only then can the virtuous cycle of investment, effectiveness, innovation, value added and impact begin.
+
+
+<!-- We identify five key dimensions of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These dimensions can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining. -->
+
+Countries and international organizations need to know each national statistical system's current capabilities, and the new SPI is meant to help fill this gap.  Only then can the virtuous cycle of investment, effectiveness, innovation, value added and impact can begin.
+
+
 
 
 # Appendix
@@ -3258,6 +3272,7 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL4','SPI Data Sources Score')
 spi_region_charts('spi_index_df','SPI.INDEX.PIL5','SPI Data Infrastructure Score')
 
 ```
+
 ## Comparison to other measures of statistical performance
 
 Next, the SPI is compared with several other indices of statistical performance that have been created. This provides a sense of how rankings differ across measures, how they correlate with other outcomes, and how the distributions of scores compare. These are the SCI, the Open Data Watch index (ODIN), and version 0 of the SPI overall score that was produced in [@cameron2019measuring] 
