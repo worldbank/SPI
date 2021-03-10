@@ -1667,3 +1667,83 @@ minset_df %>%
 # 
 # set=full_ind_list[which(!full_ind_list %in% minset_df$drop_list[1])]
 ```
+
+
+## Simple Unweighted Index Comparison
+
+
+
+```{r simpleindex, echo=FALSE}
+
+# just take a simple numeric average across all indicators
+# I will forward fill all indicators if they are missing
+spi_index_simple <- spi_index_df %>%
+  select(country, date, iso3c,starts_with('SPI.INDEX'), starts_with('SPI.D1'), starts_with('SPI.D2')
+         , starts_with('SPI.D3'), starts_with('SPI.D4'), starts_with('SPI.D5')) %>%
+  arrange(country, date) %>%
+  group_by(country) %>%
+  select(-c("SPI.D2.2.Machine.readable",
+            "SPI.D2.2.Non.proprietary",
+            "SPI.D2.2.Download.options",
+            "SPI.D2.2.Metadata.available",
+            "SPI.D2.2.Terms.of.use"), -SPI.D5.1.DILG, -SPI.D5.5.DIFI) %>%
+  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
+  mutate(SPI.INDEX.SIMP=100*rowMeans(across(starts_with("SPI.D")), na.rm=FALSE),
+         SPI.INDEX.PIL1.SIMP=100*rowMeans(across(starts_with("SPI.D1")), na.rm=FALSE),
+         SPI.INDEX.PIL2.SIMP=100*rowMeans(across(starts_with("SPI.D2")), na.rm=FALSE),
+         SPI.INDEX.PIL3.SIMP=100*rowMeans(across(starts_with("SPI.D3")), na.rm=FALSE),
+         SPI.INDEX.PIL4.SIMP=100*rowMeans(across(starts_with("SPI.D4")), na.rm=FALSE),
+         SPI.INDEX.PIL5.SIMP=100*rowMeans(across(starts_with("SPI.D5")), na.rm=FALSE)
+         ) %>% #
+  arrange(-date, -SPI.INDEX) %>%
+  select(country, iso3c, date, starts_with('SPI.INDEX')) %>%
+  filter(date %in% c(2016:2019))
+
+#correlations
+cor_ovrl <- cor(spi_index_simple$SPI.INDEX, spi_index_simple$SPI.INDEX.SIMP, use='pairwise.complete' )
+cor_p1 <- cor(spi_index_simple$SPI.INDEX.PIL1, spi_index_simple$SPI.INDEX.PIL1.SIMP, use='pairwise.complete' )
+cor_p2 <- cor(spi_index_simple$SPI.INDEX.PIL2, spi_index_simple$SPI.INDEX.PIL2.SIMP, use='pairwise.complete' )
+cor_p3 <- cor(spi_index_simple$SPI.INDEX.PIL3, spi_index_simple$SPI.INDEX.PIL3.SIMP, use='pairwise.complete' )
+cor_p4 <- cor(spi_index_simple$SPI.INDEX.PIL4, spi_index_simple$SPI.INDEX.PIL4.SIMP, use='pairwise.complete' )
+cor_p5 <- cor(spi_index_simple$SPI.INDEX.PIL5, spi_index_simple$SPI.INDEX.PIL5.SIMP, use='pairwise.complete' )
+
+```
+
+In the analysis below, we compare results over the period 2016-19 for a version of the SPI where we use unweighted aggregation for the SPI indicators to our nested version of the SPI described above. A quick note on terminology.  We will refer to the SPI documented above as the SPI overall score or SPI pillar scores, and we refer to the unweighted index as the unweighted SPI overall score and unweighted SPI pillar scores.
+
+The correlation between the SPI overall score and the unweighted SPI overall score is `r cor_ovrl`.  The correlation between the two for Pillar 1 on data use is `r cor_p1`.  Because only one dimension is included and the indicators in this dimension are given equal weight in the SPI Pillar 1 score, the Pillar 1 score and the unweighted Pillar 1 score are identical.  The correlation for Pillar 2 on data services is `r cor_p2`.  The correlation for Pillar 3 on data products is `r cor_p3`.  Again, because each SDG indicator in Pillar 3 are weighted equally in each index, these scores are identical.  The correlation for Pillar 4 on data sources is `r cor_p4`.  The correlation for Pillar 5 on data infrastructure is `r cor_p5`, because only the methods and standards dimension is included.
+
+i. number of tied scores 
+
+ii. volatility
+
+iii. correlation with the other human capital, governance, poverty, and inequality indexes
+
+
+```{r simpleplot}
+
+simp_plot_df <- spi_index_simple %>%
+  filter(date==2019) %>%
+  pivot_longer(
+    cols=starts_with('SPI.INDEX'),
+    names_to = 'index',
+    values_to = 'value'
+  ) %>%
+  mutate(
+    type=if_else(grepl("SIMP",index),"Unweighted", "Original"),
+    index=gsub(".SIMP","",index)
+  ) %>%
+  pivot_wider(
+    names_from = 'type',
+    values_from = 'value'
+  )
+
+ggplot(simp_plot_df, aes(x=Original, y=Unweighted)) +
+  facet_wrap(~index) +
+  geom_point() +
+  theme_bw() +
+  labs(
+    title="Comparison of SPI Overall Scores and unweighted SPI scores in 2019."
+  )
+```
+
