@@ -1713,11 +1713,6 @@ In the analysis below, we compare results over the period 2016-19 for a version 
 
 The correlation between the SPI overall score and the unweighted SPI overall score is `r cor_ovrl`.  The correlation between the two for Pillar 1 on data use is `r cor_p1`.  Because only one dimension is included and the indicators in this dimension are given equal weight in the SPI Pillar 1 score, the Pillar 1 score and the unweighted Pillar 1 score are identical.  The correlation for Pillar 2 on data services is `r cor_p2`.  The correlation for Pillar 3 on data products is `r cor_p3`.  Again, because each SDG indicator in Pillar 3 are weighted equally in each index, these scores are identical.  The correlation for Pillar 4 on data sources is `r cor_p4`.  The correlation for Pillar 5 on data infrastructure is `r cor_p5`, because only the methods and standards dimension is included.
 
-i. number of tied scores 
-
-ii. volatility
-
-iii. correlation with the other human capital, governance, poverty, and inequality indexes
 
 
 ```{r simpleplot}
@@ -1745,5 +1740,263 @@ ggplot(simp_plot_df, aes(x=Original, y=Unweighted)) +
   labs(
     title="Comparison of SPI Overall Scores and unweighted SPI scores in 2019."
   )
+```
+
+### Number of tied scores 
+
+#### Table. Number of Unique Values for SPI and Unweighted SPI Scores. 
+```{r unique_scores}
+
+#calculate the number of unique values in the SPI Index
+SPI_2019_simple <- spi_index_simple %>%
+  filter(date==2019) %>%
+  filter(!is.na(SPI.INDEX))
+
+unique_scores <-  length(unique(SPI_2019_simple$SPI.INDEX))
+
+#check unique values by pillar.
+unique_scores1 <-  length(unique(SPI_2019_simple$SPI.INDEX.PIL1))
+unique_scores2 <-  length(unique(SPI_2019_simple$SPI.INDEX.PIL2))
+unique_scores3 <-  length(unique(SPI_2019_simple$SPI.INDEX.PIL3))
+unique_scores4 <-  length(unique(SPI_2019_simple$SPI.INDEX.PIL4))
+unique_scores5 <-  length(unique(SPI_2019_simple$SPI.INDEX.PIL5))
+
+#simple index
+unique_scores_simp <-  length(unique(SPI_2019_simple$SPI.INDEX.SIMP))
+
+
+unique_scores1_simp <-  length(unique(SPI_2019_simple$SPI.INDEX.PIL1.SIMP))
+unique_scores2_simp <-  length(unique(SPI_2019_simple$SPI.INDEX.PIL2.SIMP))
+unique_scores3_simp <-  length(unique(SPI_2019_simple$SPI.INDEX.PIL3.SIMP))
+unique_scores4_simp <-  length(unique(SPI_2019_simple$SPI.INDEX.PIL4.SIMP))
+unique_scores5_simp <-  length(unique(SPI_2019_simple$SPI.INDEX.PIL5.SIMP))
+
+unique_tab <- data.frame(Score=c('Overall Score', "Pillar 1", "Pillar 2", "Pillar 3", "Pillar 4", "Pillar 5"),
+                         SPI=c(unique_scores, unique_scores1, unique_scores2, unique_scores3, unique_scores4, unique_scores5),
+                         SPI.SIMP=c(unique_scores_simp, unique_scores1_simp, unique_scores2_simp, unique_scores3_simp, unique_scores4_simp, unique_scores5_simp))
+
+unique_tab %>%
+  flextable() %>%
+  set_header_labels(values=list(
+    Score="Score",
+    SPI="SPI",
+    SPI.SIMP="Unweighted SPI"
+  ))
+
+```
+
+
+
+### Volatility
+
+
+
+```{r volatilitypltsimp}
+volatility_scatter_df <- spi_index_simple %>%
+  select(country, iso3c, date, SPI.INDEX, SPI.INDEX.SIMP) %>%
+  filter(date==2016 | date==2019) %>%
+  as_tibble() %>%
+  pivot_longer(
+    cols=c('SPI.INDEX', 'SPI.INDEX.SIMP'),
+    names_to='indicator',
+    values_to='value'
+  ) %>%
+  pivot_wider(
+    values_from='value',
+    names_from='date',
+    names_prefix='value_'
+  ) %>%
+  mutate(indicator=case_when(
+    indicator=='SPI.INDEX.SIMP' ~ "Unweighted SPI Overall Score",
+    indicator=="SPI.INDEX" ~ "SPI Overall Score"
+  ))
+ggplot(volatility_scatter_df, aes(x=value_2016, y=value_2019, label=iso3c)) +
+  facet_wrap(~indicator) +
+  geom_text(color='#459b9d') +
+  # labs(
+  #   title='Volatility Between 2016 and 2019 for SCI and SPI Overall Scores'
+  # ) +
+  xlab('2016 value') +
+  ylab('2019 value') +
+  expand_limits(x=c(0,100), y=c(0,100)) +
+  theme_spi()
+    
+```
+```{r variancesimp}
+#create a table with the variance for a set of countries
+#randomly seleect a few countries  
+set.seed(9872454)
+volatility_trace_df <- spi_index_simple %>%
+  as_tibble() %>%
+  filter(date>=2016) %>%
+  filter(!is.na(SPI.INDEX) & !is.na(SPI.INDEX.SIMP)) %>%
+  pivot_longer(
+    cols=c('SPI.INDEX', 'SPI.INDEX.SIMP'),
+    names_to='indicator',
+    values_to='value'
+  )  %>%
+  mutate(indicator=case_when(
+    indicator=='SPI.INDEX.SIMP' ~ "Unweighted SPI",
+    indicator=="SPI.INDEX" ~ "SPI Overall Score"
+  ))
+  
+
+variance_avg_df <- volatility_trace_df %>%   
+  group_by(country, indicator) %>%
+  summarise(variance=sd(value)) %>%
+  pivot_wider(
+    names_from='indicator',
+    values_from='variance'
+  ) %>%
+  ungroup() %>%
+  summarise(across(c('Unweighted SPI', 'SPI Overall Score'), mean)) %>%
+  mutate(country="Global Avg")
+
+global_sd_spi_simp <- variance_avg_df$`Unweighted SPI`[1]
+global_sd_spi <- variance_avg_df$`SPI Overall Score`[1]
+```
+
+Below we show a measure of volatility over time in a countries Unweighted SPI or SPI Overall Score.  The volatility measure is the standard deviation of the measure from 2016-19.  The Unweighted SPI has slightly greater volatility across time with a global average standard deviation of `r round(global_sd_spi_simp,1)`.  The SPI Overall Score has a global average standard deviation across time of `r round(global_sd_spi_simp,1)`
+
+### Correlation with the other human capital, governance, poverty, and inequality indexes
+*Table A.6: Scatterplot of Statistical Capacity Index (SCI) and SPI Overall Score on Log GDP*
+```{r scispiregtab1}
+
+
+reg_df <- wbstats::wb_data(
+  indicator='NY.GDP.PCAP.KD',
+  start_date=2016,
+  end_date=2019, return_wide = FALSE
+    ) %>%
+  mutate(value=log(value)) %>%
+  left_join(select(spi_index_simple,iso3c,date, SPI.INDEX,SPI.INDEX.SIMP)) #merge on SPI Index data
+  %>%
+  filter(date==2019)
+
+
+reg_long <- reg_df %>%
+  pivot_longer(
+    cols = c('SPI.INDEX', 'SPI.INDEX.SIMP'),
+    names_to='index',
+    values_to='index_values'
+  ) %>%
+  mutate(
+    index_name=case_when(
+      index=='SPI.INDEX' ~ "SPI overall score",
+      index=='SPI.INDEX.SIMP' ~ "Unweighted SPI Index "
+      
+    )
+  ) %>%
+  filter(date==2019)
+
+#add equations to plots
+  eq <- lm_robust(SPI.INDEX ~ value, data=reg_df, se_type='HC2')
+  coef <- coef(eq)
+  std_err <- sqrt(diag(vcov(eq)))
+  r_2<- summary(eq)$r.squared
+eq_plot_txt1 <-  glue::glue("y = {round(coef[1],3)} + {round(coef[2],3)} x, R<sup>2</sup> = {round(r_2[1],3)} <br> &nbsp;   &nbsp;  	&nbsp; 	&nbsp;   ({round(std_err[1],3)}) &nbsp;   &nbsp;  ({round(std_err[2],3)})" )
+#add equations to plots
+  eq <- lm_robust(SPI.INDEX.SIMP ~ value, data=reg_df, se_type='HC2')
+  coef <- coef(eq)
+  std_err <- sqrt(diag(vcov(eq)))
+  r_2<- summary(eq)$r.squared
+eq_plot_txt2 <-  glue::glue("y = {round(coef[1],3)} + {round(coef[2],3)} x, R<sup>2</sup> = {round(r_2[1],3)} <br> &nbsp;   &nbsp;  	&nbsp; 	&nbsp;   ({round(std_err[1],3)}) &nbsp;   &nbsp;  ({round(std_err[2],3)})" )
+
+
+p1 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX)) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  theme_spi() +
+  #scale_x_continuous(trans = scales::log2_trans()) +
+  ylab('SPI Overall Score') +
+  xlab('Log GDP Per Capita') +
+  geom_richtext(
+    aes(x = 8, y = 10,label = eq_plot_txt1, hjust=0.2)
+  ) 
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2019), hjust = 0) +
+
+p2 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX.SIMP)) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  theme_spi() +
+  #scale_x_continuous(trans = scales::log2_trans()) +
+  ylab('Unweighted SPI Score') +
+  xlab('Log GDP Per Capita') +
+  geom_richtext(
+    aes(x = 8, y = 10,label = eq_plot_txt2, hjust=0.2)
+  ) 
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2019), hjust = 0) +
+
+p1 + p2
+```
+
+*Table A.6: Scatterplot of Statistical Capacity Index (SCI) and SPI Overall Score on Log GDP*
+```{r scispiregtab2}
+
+
+reg_df <- wbstats::wb_data(
+  indicator='NY.GDP.PCAP.KD',
+  start_date=2016,
+  end_date=2019, return_wide = FALSE
+    ) %>%
+  mutate(value=log(value)) %>%
+  left_join(select(spi_index_simple,iso3c,date, SPI.INDEX,SPI.INDEX.SIMP)) #merge on SPI Index data
+  
+
+
+reg_long <- reg_df %>%
+  pivot_longer(
+    cols = c('SPI.INDEX', 'SPI.INDEX.SIMP'),
+    names_to='index',
+    values_to='index_values'
+  ) %>%
+  mutate(
+    index_name=case_when(
+      index=='SPI.INDEX' ~ "SPI overall score",
+      index=='SPI.INDEX.SIMP' ~ "Unweighted SPI Index "
+      
+    )
+  ) %>%
+  filter(date==2019)
+
+#add equations to plots
+  eq <- lm_robust(SPI.INDEX ~ value, data=reg_df, se_type='HC2')
+  coef <- coef(eq)
+  std_err <- sqrt(diag(vcov(eq)))
+  r_2<- summary(eq)$r.squared
+eq_plot_txt1 <-  glue::glue("y = {round(coef[1],3)} + {round(coef[2],3)} x, R<sup>2</sup> = {round(r_2[1],3)} <br> &nbsp;   &nbsp;  	&nbsp; 	&nbsp;   ({round(std_err[1],3)}) &nbsp;   &nbsp;  ({round(std_err[2],3)})" )
+#add equations to plots
+  eq <- lm_robust(SPI.INDEX.SIMP ~ value, data=reg_df, se_type='HC2')
+  coef <- coef(eq)
+  std_err <- sqrt(diag(vcov(eq)))
+  r_2<- summary(eq)$r.squared
+eq_plot_txt2 <-  glue::glue("y = {round(coef[1],3)} + {round(coef[2],3)} x, R<sup>2</sup> = {round(r_2[1],3)} <br> &nbsp;   &nbsp;  	&nbsp; 	&nbsp;   ({round(std_err[1],3)}) &nbsp;   &nbsp;  ({round(std_err[2],3)})" )
+
+
+p1 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX)) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  theme_spi() +
+  #scale_x_continuous(trans = scales::log2_trans()) +
+  ylab('SPI Overall Score') +
+  xlab('Human Capital Index') +
+  geom_richtext(
+    aes(x = 8, y = 10,label = eq_plot_txt1, hjust=0.2)
+  ) 
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2019), hjust = 0) +
+
+p2 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX.SIMP)) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  theme_spi() +
+  #scale_x_continuous(trans = scales::log2_trans()) +
+  ylab('Unweighted SPI Score') +
+  xlab('Human Capital Index') +
+  geom_richtext(
+    aes(x = 8, y = 10,label = eq_plot_txt2, hjust=0.2)
+  ) 
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2019), hjust = 0) +
+
+p1 + p2
 ```
 
