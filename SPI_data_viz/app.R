@@ -974,7 +974,9 @@ server <- function(input, output,session) {
     
    
     
-    
+    #######################
+    # Country Reports
+    #######################
     
     
     lolli_df <- reactive({
@@ -1031,7 +1033,7 @@ server <- function(input, output,session) {
     })
     
     #################
-    # Functions
+    # Functions for Country Report
     #################
     
     country_report_lolli_fn <- function(variables) {
