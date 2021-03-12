@@ -272,7 +272,7 @@ ui <- navbarPage("Statistical Performance Indicators",
                                             sliderInput("dim_1_5", "Dimension 1.5: Data Use by International Organizations",
                                                         min = 0, max = 1, value = 1
                                             ),
-                                            h3("Dimension 2: Data Services"),
+                                            h3("Pillar 2: Data Services"),
                                             sliderInput("pillar_2", "Pillar 2 - Overall Weight",
                                                         min = 0, max = 1, value = (1/5)
                                             ),
