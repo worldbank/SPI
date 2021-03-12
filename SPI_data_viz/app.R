@@ -128,13 +128,13 @@ ui <- navbarPage("Statistical Performance Indicators",
                           ),
                  
                  #####################################################
-                 # Dimension Scores
+                 # Pillar Scores
                  #####################################################
                  
-                 tabPanel("Scores by Dimension",
+                 tabPanel("Scores by Pillar",
                           div(class="outer",style='padding:50px',
                               
-                              h2('Overall Scores by Dimension'),
+                              h2('Overall Scores by Pillar'),
                               selectizeInput("dim_year",
                                              "Reference Year",
                                              choices=c(2016:2019),
@@ -218,23 +218,23 @@ ui <- navbarPage("Statistical Performance Indicators",
                                              multiple=T                              ),
                                              
                               ),
-                          h3('Dimension 1: Data Use'),
+                          h3('Pillar 1: Data Use'),
                           withSpinner(plotlyOutput('plot_dim1',
                                                   width = '80%',
                                                   height='600px')),
-                          h3('Dimension 2: Data Services'),
+                          h3('Pillar 2: Data Services'),
                           withSpinner(plotlyOutput('plot_dim2',
                                                    width = '80%',
                                                  height='350px')),
-                          h3('Dimension 3: Data Products'),
+                          h3('Pillar 3: Data Products'),
                           withSpinner(plotlyOutput('plot_dim3',
                                                    width = '100%',
                                                    height='1300px')),
-                          h3('Dimension 4: Data Sources'),
+                          h3('Pillar 4: Data Sources'),
                           withSpinner(plotlyOutput('plot_dim4',
                                                   width = '80%',
                                                  height='1000px')),
-                          h3('Dimension 5: Data Infrastructure'),
+                          h3('Pillar 5: Data Infrastructure'),
                           withSpinner(plotlyOutput('plot_dim5',
                                                    width = '80%',
                                                  height='900px'
@@ -258,115 +258,120 @@ ui <- navbarPage("Statistical Performance Indicators",
                                                selected=c("All"),
                                                multiple=T),  
                                 withSpinner(DT::dataTableOutput("country_table",
-                                                              width='70%'))
+                                                              width='100%'))
                               ),
                               sidebarPanel(id = "weights",
                                             
                                             h2("Customize Weights for Each Pillar (Weights will automatically sum to 1)"),
-                                            h3("Dimension 1: Data Use"),
-                                            sliderInput("dim_1", "Dimension 1 - Overall Weight",
+                                            h3("Pillar 1: Data Use"),
+                                            sliderInput("pillar_1", "Pillar 1 - Overall Weight",
                                                         min = 0, max = 1, value = (1/5)
                                             ),
-                                            h4("Pillar Weights"),
+                                            h4("Dimension Weights"),
                                             
-                                            sliderInput("pillar_1_5", "Pillar 1.5: Data Use by International Organizations",
+                                            sliderInput("dim_1_5", "Dimension 1.5: Data Use by International Organizations",
                                                         min = 0, max = 1, value = 1
                                             ),
                                             h3("Dimension 2: Data Services"),
-                                            sliderInput("dim_2", "Dimension 2 - Overall Weight",
+                                            sliderInput("pillar_2", "Pillar 2 - Overall Weight",
                                                         min = 0, max = 1, value = (1/5)
                                             ),
-                                            h4("Pillar Weights"),
+                                            h4("Dimension Weights"),
                                             
-                                            sliderInput("pillar_2_1", "Pillar 2.1: Data releases",
+                                            sliderInput("dim_2_1", "Dimension 2.1: Data releases",
                                                         min = 0, max = 1, value = (1/3)
                                             ),
-                                            sliderInput("pillar_2_2", "Pillar 2.2: Online access",
+                                            sliderInput("dim_2_2", "Dimension 2.2: Online access",
                                                         min = 0, max = 1, value = (1/3)
                                             ),
-                                            sliderInput("pillar_2_4", "Pillar 2.4: Data services",
+                                            sliderInput("dim_2_4", "Dimension 2.4: Data access services",
                                                         min = 0, max = 1, value = (1/3)
                                             ),
-                                            h3("Dimension 3: Data Products"),
-                                            sliderInput("dim_3", "Dimension 3 - Overall Weight",
+                                            h3("Pillar 3: Data Products"),
+                                            sliderInput("pillar_3", "Pillar 3 - Overall Weight",
                                                         min = 0, max = 1, value = (1/5)
                                             ),
-                                            h4("Pillar Weights"),
+                                            h4("Dimension Weights"),
                                             
-                                            sliderInput("pillar_3_1", "Pillar 3: SDG 1",
+                                            sliderInput("dim_3_1", "Dimension 3: SDG 1",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_2", "Pillar 3: SDG 2",
+                                            sliderInput("dim_3_2", "Dimension 3: SDG 2",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_3", "Pillar 3: SDG 3",
+                                            sliderInput("dim_3_3", "Dimension 3: SDG 3",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_4", "Pillar 3: SDG 4",
+                                            sliderInput("dim_3_4", "Dimension 3: SDG 4",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_5", "Pillar 3: SDG 5",
+                                            sliderInput("dim_3_5", "Dimension 3: SDG 5",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_6", "Pillar 3: SDG 6",
+                                            sliderInput("dim_3_6", "Dimension 3: SDG 6",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_7", "Pillar 3: SDG 7",
+                                            sliderInput("dim_3_7", "Dimension 3: SDG 7",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_8", "Pillar 3: SDG 8",
+                                            sliderInput("dim_3_8", "Dimension 3: SDG 8",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_9", "Pillar 3: SDG 9",
+                                            sliderInput("dim_3_9", "Dimension 3: SDG 9",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_10", "Pillar 3: SDG 10",
+                                            sliderInput("dim_3_10", "Dimension 3: SDG 10",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_11", "Pillar 3: SDG 11",
+                                            sliderInput("dim_3_11", "Dimension 3: SDG 11",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_12", "Pillar 3: SDG 12",
+                                            sliderInput("dim_3_12", "Dimension 3: SDG 12",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_13", "Pillar 3: SDG 13",
+                                            sliderInput("dim_3_13", "Dimension 3: SDG 13",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_15", "Pillar 3: SDG 15",
+                                            sliderInput("dim_3_15", "Dimension 3: SDG 15",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_16", "Pillar 3: SDG 16",
+                                            sliderInput("dim_3_16", "Dimension 3: SDG 16",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            sliderInput("pillar_3_17", "Pillar 3: SDG 17",
+                                            sliderInput("dim_3_17", "Dimension 3: SDG 17",
                                                         min = 0, max = 1, value = (1/16)
                                             ),
-                                            h3("Dimension 4: Data Sources"),
-                                            sliderInput("dim_4", "Dimension 4 - Overall Weight",
+                                            h3("Pillar 4: Data Sources"),
+                                            sliderInput("pillar_4", "Pillar 4 - Overall Weight",
                                                         min = 0, max = 1, value = (1/5)
                                             ),
-                                            h4("Pillar Weights"),
-                                            sliderInput("pillar_4_1.CEN", "Pillar 4.1: Censuses",
+                                            h4("Dimension Weights"),
+                                            sliderInput("dim_4_1.CEN", "Dimension 4.1: Censuses",
                                                         min = 0, max = 1, value = (1/4)
                                             ),
-                                           sliderInput("pillar_4_1.SVY", "Pillar 4.1: Surveys",
+                                           sliderInput("dim_4_1.SVY", "Dimension 4.1: Surveys",
                                                        min = 0, max = 1, value = (1/4)
                                            ),                                           
-                                            sliderInput("pillar_4_2", "Pillar 4.2: administrative data",
+                                            sliderInput("dim_4_2", "Dimension 4.2: administrative data",
                                                         min = 0, max = 1, value = (1/4)
                                             ),
-                                            sliderInput("pillar_4_3", "Pillar 4.3: geospatial data",
+                                            sliderInput("dim_4_3", "Dimension 4.3: geospatial data",
                                                         min = 0, max = 1, value = (1/4)
                                             ),
-                                            h3("Dimension 5: Data Infrastructure"), 
-                                            sliderInput("dim_5", "Dimension 5 - Overall Weight",
+                                            h3("Pillar 5: Data Infrastructure"), 
+                                            sliderInput("pillar_5", "Pillar 5 - Overall Weight",
                                                         min = 0, max = 1, value = (1/5)
                                             ),
-                                            h4("Pillar Weights"),
-                                            sliderInput("pillar_5_2", "Pillar 5.2: Standards and Methods",
+                                            h4("Dimension Weights"),
+                                           sliderInput("dim_5_1", "Dimension 5.1: Legislation and governance",
+                                                       min = 0, max = 1, value = 0
+                                           ),
+                                           sliderInput("dim_5_2", "Dimension 5.2: Standards and Methods",
                                                         min = 0, max = 1, value = 1
-                                                        )
-                                          
+                                                        ),
+                                           sliderInput("dim_5_5", "Dimension 5.5: Finance",
+                                                       min = 0, max = 1, value = 0
+                                           )                                          
                                             
                                             
                               )
@@ -447,7 +452,7 @@ server <- function(input, output,session) {
         time_df <- time_df %>%
             bind_rows(time_df_gl) 
         
-        if (time_var() %in% c('SPI.INDEX', 'SPI.INDEX.DIM1', 'SPI.INDEX.DIM2', 'SPI.INDEX.DIM3', 'SPI.INDEX.DIM4', 'SPI.INDEX.DIM5')) {
+        if (time_var() %in% c('SPI.INDEX', 'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5')) {
             #fix an issue where main variables need to be rescaled
             time_df <- time_df %>%
                 mutate(y=y/100)
@@ -562,7 +567,7 @@ server <- function(input, output,session) {
     })
 
     ############
-    # Plot by Dimension
+    # Plot by Pillar
     ############
     
     #add country choices
@@ -613,17 +618,17 @@ server <- function(input, output,session) {
         mutate(across(starts_with("SPI.INDEX"), round,1))
       
       
-      #plot by dimension
-      colors <- c("SPI Overall Score" = "#390099", "SPI Dim 1 - Data Use" = "#9b5de5", "SPI Dim 2 - Data Services" = "#f15bb5", "SPI Dim 3 - Data Products" = "#fee440", "SPI Dim 4 - Data Sources" = "#00bbf9", "SPI Dim 5 - Data Infrastructure" = "#00f5d4" )
+      #plot by Pillar
+      colors <- c("SPI Overall Score" = "#390099", "SPI Pillar 1 - Data Use" = "#9b5de5", "SPI Pillar 2 - Data Services" = "#f15bb5", "SPI Pillar 3 - Data Products" = "#fee440", "SPI Pillar 4 - Data Sources" = "#00bbf9", "SPI Pillar 5 - Data Infrastructure" = "#00f5d4" )
       
       zipper_plt<-ggplot(df_aggregated, aes(x=Country, y=SPI.INDEX)) +
         geom_segment( aes(x=Country, xend=Country, y=0, yend=100), color="grey", size=1, alpha=0.1) +
         geom_point(aes(color="SPI Overall Score"),size=2,) +
-        geom_point( aes(y=SPI.INDEX.DIM1, color="SPI Dim 1 - Data Use"),size=2,) +
-        geom_point( aes(y=SPI.INDEX.DIM2, color="SPI Dim 2 - Data Services"), size=2,) +
-        geom_point( aes(y=SPI.INDEX.DIM3, color="SPI Dim 3 - Data Products"), size=2,) +
-        geom_point( aes(y=SPI.INDEX.DIM4, color="SPI Dim 4 - Data Sources"), size=2,) +
-        geom_point( aes(y=SPI.INDEX.DIM5, color="SPI Dim 5 - Data Infrastructure"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.PIL1, color="SPI Pillar 1 - Data Use"),size=2,) +
+        geom_point( aes(y=SPI.INDEX.PIL2, color="SPI Pillar 2 - Data Services"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.PIL3, color="SPI Pillar 3 - Data Products"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.PIL4, color="SPI Pillar 4 - Data Sources"), size=2,) +
+        geom_point( aes(y=SPI.INDEX.PIL5, color="SPI Pillar 5 - Data Infrastructure"), size=2,) +
         #geom_text(aes(label=food_insecure_mod_severe), nudge_y = 3) +
         coord_flip()+
         theme_bw() +
@@ -646,8 +651,8 @@ server <- function(input, output,session) {
         #   labels = df_aggregated$country # specify tick labels using x column
         # ) +
         scale_color_manual(values = colors,
-                           breaks=c("SPI Overall Score", "SPI Dim 1 - Data Use", "SPI Dim 2 - Data Services", "SPI Dim 3 - Data Products", "SPI Dim 4 - Data Sources", "SPI Dim 5 - Data Infrastructure"),
-                           labels=c("SPI Overall Score", "SPI Dim 1 - Data Use", "SPI Dim 2 - Data Services", "SPI Dim 3 - Data Products", "SPI Dim 4 - Data Sources", "SPI Dim 5 - Data Infrastructure"))
+                           breaks=c("SPI Overall Score", "SPI Pillar 1 - Data Use", "SPI Pillar 2 - Data Services", "SPI Pillar 3 - Data Products", "SPI Pillar 4 - Data Sources", "SPI Pillar 5 - Data Infrastructure"),
+                           labels=c("SPI Overall Score", "SPI Pillar 1 - Data Use", "SPI Pillar 2 - Data Services", "SPI Pillar 3 - Data Products", "SPI Pillar 4 - Data Sources", "SPI Pillar 5 - Data Infrastructure"))
       zipper_plt
       
 
@@ -1104,101 +1109,112 @@ server <- function(input, output,session) {
       
 
       
+      
       #recalculate index based on the weights
-      dim_total <- input$dim_1 + input$dim_2 + input$dim_3 + input$dim_4 + input$dim_5
-      dim2_total <- input$pillar_2_1 + input$pillar_2_2 + input$pillar_2_4
-      dim3_total <- 
-        input$pillar_3_1 + 
-        input$pillar_3_2 +
-        input$pillar_3_3 +
-        input$pillar_3_4 +
-        input$pillar_3_5 +
-        input$pillar_3_6 +
-        input$pillar_3_7 +
-        input$pillar_3_8 +
-        input$pillar_3_9 +
-        input$pillar_3_10 +
-        input$pillar_3_11 +
-        input$pillar_3_12 +
-        input$pillar_3_13 +
-        input$pillar_3_15 +
-        input$pillar_3_16 +
-        input$pillar_3_17
-      dim4_total <- input$pillar_4_1.CEN + input$pillar_4_1.SVY + + input$pillar_4_2 + input$pillar_4_3
+      pillar_total <- input$pillar_1 + input$pillar_2 + input$pillar_3 + input$pillar_4 + input$pillar_5
+      pillar2_total <- input$dim_2_1 + input$dim_2_2 + input$dim_2_4
+      pillar3_total <- 
+        input$dim_3_1 + 
+        input$dim_3_2 +
+        input$dim_3_3 +
+        input$dim_3_4 +
+        input$dim_3_5 +
+        input$dim_3_6 +
+        input$dim_3_7 +
+        input$dim_3_8 +
+        input$dim_3_9 +
+        input$dim_3_10 +
+        input$dim_3_11 +
+        input$dim_3_12 +
+        input$dim_3_13 +
+        input$dim_3_15 +
+        input$dim_3_16 +
+        input$dim_3_17
+      pillar4_total <- input$dim_4_1.CEN + input$dim_4_1.SVY + input$dim_4_2 + input$dim_4_3
+      pillar5_total <- input$dim_5_1 + input$dim_5_2 + input$dim_5_5
       
-      
+      #create index dataset
       index_tab <- SPI %>%
         filter(date==input$country_year_choice) %>%
-        mutate(INDEX.SPI.D2.1=rowMeans(across(starts_with('SPI.D2.1'))),
-               INDEX.SPI.D2.2=SPI.D2.2.Openness.subscore,
-               INDEX.SPI.D2.4=SPI.D2.4.NADA,
-               INDEX.SPI.D3.1=rowMeans(across(c("SPI.D3.1.POV",
-                                                "SPI.D3.2.HNGR",
-                                                "SPI.D3.3.HLTH",
-                                                "SPI.D3.4.EDUC",
-                                                "SPI.D3.5.GEND",
-                                                "SPI.D3.6.WTRS"))),
-               INDEX.SPI.D3.2=rowMeans(across(c("SPI.D3.7.ENRG",
-                                                "SPI.D3.8.WORK",
-                                                "SPI.D3.9.INDY",
-                                                "SPI.D3.10.NEQL",
-                                                "SPI.D3.11.CITY",
-                                                "SPI.D3.12.CNSP"))),         
-               INDEX.SPI.D3.3=rowMeans(across(c("SPI.D3.13.CLMT",
-                                                "SPI.D3.15.LAND" ))),
-               INDEX.SPI.D3.4=rowMeans(across(c("SPI.D3.16.INST",
-                                                "SPI.D3.17.PTNS" ))),
-               INDEX.SPI.D4.1=rowMeans(across(starts_with('SPI.D4.1'))),
-               INDEX.SPI.D4.2=rowMeans(across(starts_with('SPI.D4.2'))),
-               INDEX.SPI.D4.3=rowMeans(across(starts_with('SPI.D4.3'))),
-               #INDEX.SPI.D5.1=rowMeans(across(starts_with('SPI.D5.1'))),
-               INDEX.SPI.D5.2=rowMeans(across(starts_with('SPI.D5.2'))),
-               #INDEX.SPI.D5.5=rowMeans(across(starts_with('SPI.D5.5')))
+        mutate(SPI.DIM1.5.INDEX=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
+               SPI.DIM2.1.INDEX=rowMeans(across(starts_with('SPI.D2.1'))),
+               SPI.DIM2.2.INDEX=SPI.D2.2.Openness.subscore,
+               SPI.DIM2.4.INDEX=SPI.D2.4.NADA,
+               SPI.DIM3.1.INDEX=rowMeans(across(c("SPI.D3.1.POV",
+                                                  "SPI.D3.2.HNGR",
+                                                  "SPI.D3.3.HLTH",
+                                                  "SPI.D3.4.EDUC",
+                                                  "SPI.D3.5.GEND",
+                                                  "SPI.D3.6.WTRS"))),
+               SPI.DIM3.2.INDEX=rowMeans(across(c("SPI.D3.7.ENRG",
+                                                  "SPI.D3.8.WORK",
+                                                  "SPI.D3.9.INDY",
+                                                  "SPI.D3.10.NEQL",
+                                                  "SPI.D3.11.CITY",
+                                                  "SPI.D3.12.CNSP"))),         
+               SPI.DIM3.3.INDEX=rowMeans(across(c("SPI.D3.13.CLMT",
+                                                  "SPI.D3.15.LAND" ))),
+               SPI.DIM3.4.INDEX=rowMeans(across(c("SPI.D3.16.INST",
+                                                  "SPI.D3.17.PTNS" ))),
+               SPI.DIM4.1.CEN.INDEX=rowMeans(across(c('SPI.D4.1.1.POPU','SPI.D4.1.2.AGRI','SPI.D4.1.3.BIZZ'))), #separate census and surveys 
+               SPI.DIM4.1.SVY.INDEX=rowMeans(across(c('SPI.D4.1.4.HOUS','SPI.D4.1.5.AGSVY','SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH','SPI.D4.1.8.BZSVY'))), #separate census and surveys 
+               SPI.DIM4.2.INDEX=rowMeans(across(starts_with('SPI.D4.2'))),
+               SPI.DIM4.3.INDEX=rowMeans(across(starts_with('SPI.D4.3'))),
+               
+               SPI.DIM5.1.INDEX=rowMeans(across(starts_with('SPI.D5.1'))),
+               SPI.DIM5.1.INDEX=if_else(is.na(SPI.DIM5.1.INDEX),-99999,SPI.DIM5.1.INDEX),
+               
+               SPI.DIM5.2.INDEX=rowMeans(across(starts_with('SPI.D5.2'))),
+               
+               SPI.DIM5.5.INDEX=rowMeans(across(starts_with('SPI.D5.5'))),
+               SPI.DIM5.5.INDEX=if_else(is.na(SPI.DIM5.5.INDEX),-99999,SPI.DIM5.5.INDEX) 
         ) %>%
         mutate(
-          SPI.INDEX.DIM1=rowMeans(across(starts_with("SPI.D1.5")), na.rm=FALSE),
-          SPI.INDEX.DIM2=(
-            (input$pillar_2_1/dim2_total)*INDEX.SPI.D2.1 +
-              (input$pillar_2_2/dim2_total)*INDEX.SPI.D2.2 +
-              (input$pillar_2_4/dim2_total)*INDEX.SPI.D2.4 )
+          SPI.INDEX.PIL1=SPI.DIM1.5.INDEX,
+          SPI.INDEX.PIL2=(
+            (input$dim_2_1/pillar2_total)*SPI.DIM2.1.INDEX +
+              (input$dim_2_2/pillar2_total)*SPI.DIM2.2.INDEX +
+              (input$dim_2_4/pillar2_total)*SPI.DIM2.4.INDEX )
           ,
-          SPI.INDEX.DIM3=(
-            (input$pillar_3_1/dim3_total)*SPI.D3.1.POV +
-              (input$pillar_3_2/dim3_total)*SPI.D3.2.HNGR +
-              (input$pillar_3_3/dim3_total)*SPI.D3.3.HLTH +
-              (input$pillar_3_4/dim3_total)*SPI.D3.4.EDUC +
-              (input$pillar_3_5/dim3_total)*SPI.D3.5.GEND +
-              (input$pillar_3_6/dim3_total)*SPI.D3.6.WTRS +
-              (input$pillar_3_7/dim3_total)*SPI.D3.7.ENRG +
-              (input$pillar_3_8/dim3_total)*SPI.D3.8.WORK +
-              (input$pillar_3_9/dim3_total)*SPI.D3.9.INDY +
-              (input$pillar_3_10/dim3_total)*SPI.D3.10.NEQL +
-              (input$pillar_3_11/dim3_total)*SPI.D3.11.CITY +
-              (input$pillar_3_12/dim3_total)*SPI.D3.12.CNSP +
-              (input$pillar_3_13/dim3_total)*SPI.D3.13.CLMT +
-              (input$pillar_3_15/dim3_total)*SPI.D3.15.LAND +
-              (input$pillar_3_16/dim3_total)*SPI.D3.16.INST +
-              (input$pillar_3_17/dim3_total)*SPI.D3.17.PTNS)
+          SPI.INDEX.PIL3=(
+            (input$dim_3_1/pillar3_total)*SPI.D3.1.POV +
+              (input$dim_3_2/pillar3_total)*SPI.D3.2.HNGR +
+              (input$dim_3_3/pillar3_total)*SPI.D3.3.HLTH +
+              (input$dim_3_4/pillar3_total)*SPI.D3.4.EDUC +
+              (input$dim_3_5/pillar3_total)*SPI.D3.5.GEND +
+              (input$dim_3_6/pillar3_total)*SPI.D3.6.WTRS +
+              (input$dim_3_7/pillar3_total)*SPI.D3.7.ENRG +
+              (input$dim_3_8/pillar3_total)*SPI.D3.8.WORK +
+              (input$dim_3_9/pillar3_total)*SPI.D3.9.INDY +
+              (input$dim_3_10/pillar3_total)*SPI.D3.10.NEQL +
+              (input$dim_3_11/pillar3_total)*SPI.D3.11.CITY +
+              (input$dim_3_12/pillar3_total)*SPI.D3.12.CNSP +
+              (input$dim_3_13/pillar3_total)*SPI.D3.13.CLMT +
+              (input$dim_3_15/pillar3_total)*SPI.D3.15.LAND +
+              (input$dim_3_16/pillar3_total)*SPI.D3.16.INST +
+              (input$dim_3_17/pillar3_total)*SPI.D3.17.PTNS)
           ,
-          SPI.INDEX.DIM4=(
-            (input$pillar_4_1.CEN/dim4_total)*INDEX.SPI.D4.1.CEN +
-              (input$pillar_4_1.SVY/dim4_total)*INDEX.SPI.D4.1.SVY +
-              (input$pillar_4_2/dim4_total)*INDEX.SPI.D4.2 +
-              (input$pillar_4_3/dim4_total)*INDEX.SPI.D4.3 )
+          SPI.INDEX.PIL4=(
+            (input$dim_4_1.CEN/pillar4_total)*SPI.DIM4.1.CEN.INDEX +
+              (input$dim_4_1.SVY/pillar4_total)*SPI.DIM4.1.SVY.INDEX +
+              (input$dim_4_2/pillar4_total)*SPI.DIM4.2.INDEX +
+              (input$dim_4_3/pillar4_total)*SPI.DIM4.3.INDEX )
           ,
-          SPI.INDEX.DIM5=rowMeans(across(starts_with("INDEX.SPI.D5")), na.rm=FALSE),
-          SPI.INDEX=(input$dim_1/dim_total)*SPI.INDEX.DIM1 +
-            (input$dim_2/dim_total)*SPI.INDEX.DIM2 +
-            (input$dim_3/dim_total)*SPI.INDEX.DIM3 +
-            (input$dim_4/dim_total)*SPI.INDEX.DIM4 +
-            (input$dim_5/dim_total)*SPI.INDEX.DIM5 
+          SPI.INDEX.PIL5=(
+            (input$dim_5_1/pillar5_total)*SPI.DIM5.1.INDEX +
+              (input$dim_5_2/pillar5_total)*SPI.DIM5.2.INDEX +
+              (input$dim_5_5/pillar5_total)*SPI.DIM5.5.INDEX ),
+          SPI.INDEX=(input$pillar_1/pillar_total)*SPI.INDEX.PIL1 +
+            (input$pillar_2/pillar_total)*SPI.INDEX.PIL2 +
+            (input$pillar_3/pillar_total)*SPI.INDEX.PIL3 +
+            (input$pillar_4/pillar_total)*SPI.INDEX.PIL4 +
+            (input$pillar_5/pillar_total)*SPI.INDEX.PIL5 
           #sum up based on individual dimension weights
         ) %>% #
-        mutate(across(starts_with('SPI.INDEX'),~100*.)) %>% #create weighted index
-        select(country, SPI.INDEX,SPI.INDEX.DIM1,SPI.INDEX.DIM2,SPI.INDEX.DIM3,SPI.INDEX.DIM4,SPI.INDEX.DIM5) 
+        mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
+        select(country, SPI.INDEX,SPI.INDEX.PIL1,SPI.INDEX.PIL2,SPI.INDEX.PIL3,SPI.INDEX.PIL4,SPI.INDEX.PIL5) 
+      #  filter(date>=2016) #2016 is first year with complete data
       
-      
-
       
 
       
@@ -1218,15 +1234,15 @@ server <- function(input, output,session) {
       #calculate the breaks for the color coding
       brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
       
-      brks1 <- quantile(index_tab$SPI.INDEX.DIM1, probs=c(1,2,3,4)/5,na.rm=T)
+      brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)
       
-      brks2 <- quantile(index_tab$SPI.INDEX.DIM2, probs=c(1,2,3,4)/5,na.rm=T)
+      brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)
       
-      brks3 <- quantile(index_tab$SPI.INDEX.DIM3, probs=c(1,2,3,4)/5,na.rm=T)
+      brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)
       
-      brks4 <- quantile(index_tab$SPI.INDEX.DIM4, probs=c(1,2,3,4)/5,na.rm=T)
+      brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)
       
-      brks5 <- quantile(index_tab$SPI.INDEX.DIM5, probs=c(1,2,3,4)/5,na.rm=T)
+      brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)
 
       # select countries for table
       
@@ -1238,9 +1254,9 @@ server <- function(input, output,session) {
       )
       
         #make nice looking table
-        DT::datatable(datatab, caption=paste('Overall SPI Index in ',input$country_year_choice,' and Dimension Scores.', sep=""),
+        DT::datatable(datatab, caption=paste('Overall SPI Index in ',input$country_year_choice,' and Pillar Scores.', sep=""),
                       rownames=FALSE,
-                      colnames = c("Country", "SPI Index Value", "Dim 1: Data Use", "Dim 2: Data Services","Dim 3: Data Products ","Dim 4: Data Sources","Dim 5: Data Infrastructure" ),
+                      colnames = c("Country", "SPI Index Value", "Pillar 1: Data Use", "Pillar 2: Data Services","Pillar 3: Data Products ","Pillar 4: Data Sources","Pillar 5: Data Infrastructure" ),
                       class='cell-border stripe',
                       escape = FALSE,
                       extensions = c ('Buttons', 'FixedHeader'), 
@@ -1250,13 +1266,13 @@ server <- function(input, output,session) {
                         pageLength = 60,
                         scrollX = TRUE, 
                         paging=FALSE)) %>%
-          formatRound(columns=c('SPI.INDEX','SPI.INDEX.DIM1','SPI.INDEX.DIM2','SPI.INDEX.DIM3','SPI.INDEX.DIM4','SPI.INDEX.DIM5'), digits=1) %>%
+          formatRound(columns=c('SPI.INDEX','SPI.INDEX.PIL1','SPI.INDEX.PIL2','SPI.INDEX.PIL3','SPI.INDEX.PIL4','SPI.INDEX.PIL5'), digits=1) %>%
           formatStyle(    'SPI.INDEX', backgroundColor = styleInterval(brks, col_palette)) %>%
-          formatStyle(    'SPI.INDEX.DIM1', backgroundColor = styleInterval(brks1, col_palette)) %>%
-          formatStyle(    'SPI.INDEX.DIM2', backgroundColor = styleInterval(brks2, col_palette)) %>%
-          formatStyle(    'SPI.INDEX.DIM3', backgroundColor = styleInterval(brks3, col_palette)) %>%
-          formatStyle(    'SPI.INDEX.DIM4', backgroundColor = styleInterval(brks4, col_palette)) %>%
-          formatStyle(    'SPI.INDEX.DIM5', backgroundColor = styleInterval(brks5, col_palette))
+          formatStyle(    'SPI.INDEX.PIL1', backgroundColor = styleInterval(brks1, col_palette)) %>%
+          formatStyle(    'SPI.INDEX.PIL2', backgroundColor = styleInterval(brks2, col_palette)) %>%
+          formatStyle(    'SPI.INDEX.PIL3', backgroundColor = styleInterval(brks3, col_palette)) %>%
+          formatStyle(    'SPI.INDEX.PIL4', backgroundColor = styleInterval(brks4, col_palette)) %>%
+          formatStyle(    'SPI.INDEX.PIL5', backgroundColor = styleInterval(brks5, col_palette))
             
         
         
