@@ -236,15 +236,15 @@ spi_region_charts  <- function(data, indicator, title) {
   p2 <- map_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=region, fill=region)) +
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       expand_limits(x=c(0,100)) +
       theme_spi() +
@@ -254,15 +254,15 @@ spi_region_charts  <- function(data, indicator, title) {
   # p2_alt <- map_df %>%
   #   ungroup() %>%
   #   filter(region!='Aggregates') %>%
-  #   mutate(Percentage=(data_available),
-  #          Label = paste(round(Percentage,0))) %>%
-  #   ggplot(aes(x=Percentage, y=region, color=region)) +
+  #   mutate(`SPI Score`=(data_available),
+  #          Label = paste(round(`SPI Score`,0))) %>%
+  #   ggplot(aes(x=`SPI Score`, y=region, color=region)) +
   #     geom_point() +
   #     geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
   #     labs(
   #     title=str_wrap(paste(title, 'By Country', sep=" - "),100),
   #     caption = 'Source: World Bank. Statistical Performance Indicators.',
-  #     subtitle= 'Data Point is for last year available (2019)'
+  #     subtitle= 'Based on data for 2019 or the latest year available'
   #     ) +
   #     expand_limits(x=c(0,100)) +
   #     theme_spi() +
@@ -296,15 +296,15 @@ spi_income_charts  <- function(data, indicator, title) {
   # p2_alt <- map_df %>%
   #   ungroup() %>%
   #   filter(region!='Aggregates') %>%
-  #   mutate(Percentage=(data_available),
-  #          Label = paste(round(Percentage,0))) %>%
-  #   ggplot(aes(x=Percentage, y=region, color=region)) +
+  #   mutate(`SPI Score`=(data_available),
+  #          Label = paste(round(`SPI Score`,0))) %>%
+  #   ggplot(aes(x=`SPI Score`, y=region, color=region)) +
   #     geom_point() +
   #     geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
   #     labs(
   #     title=str_wrap(paste(title, 'By Country', sep=" - "),100),
   #     caption = 'Source: World Bank. Statistical Performance Indicators.',
-  #     subtitle= 'Data Point is for last year available (2019)'
+  #     subtitle= 'Based on data for 2019 or the latest year available'
   #     ) +
   #     expand_limits(x=c(0,100)) +
   #     theme_spi() +
@@ -316,15 +316,15 @@ spi_income_charts  <- function(data, indicator, title) {
     p3 <- map_df %>%
     group_by(income) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=income, fill=income)) +
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=income, fill=income)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
@@ -348,10 +348,10 @@ spi_time_charts  <- function(data, indicator, title) {
     # right_join(spi_df_empty) %>%
     group_by(income, date) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
     ungroup() %>%
-    ggplot(aes(y=Percentage, x=date, color=income)) +
+    ggplot(aes(y=`SPI Score`, x=date, color=income)) +
       geom_point() +
       geom_line() +
       # geom_text_repel(aes(label=Label)) +
@@ -415,7 +415,7 @@ spi_country_charts  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Country', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       xlab('Score') +
       expand_limits(x=c(0,100)) +
@@ -579,15 +579,15 @@ lending_charts <- function(data, indicator, title) {
   p2_alt3 <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=(data_available),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=lending, color=lending)) +
+    mutate(`SPI Score`=(data_available),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=lending, color=lending)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
       title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
@@ -625,15 +625,15 @@ lending_chart_aggregate <- function(data, indicator, title) {
   p2_alt3 <- map_df %>%
     group_by(lending) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=lending, fill=lending)) +
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=lending, fill=lending)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
@@ -697,15 +697,15 @@ fcs_charts <- function(data, indicator, title) {
   p2_alt2 <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=(data_available),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=fcs, color=fcs)) +
+    mutate(`SPI Score`=(data_available),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=fcs, color=fcs)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
@@ -766,15 +766,15 @@ fcs_chart_aggregate <- function(data, indicator, title) {
   p2_alt2 <- map_df %>%
     group_by(fcs) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=fcs, fill=fcs)) +
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=fcs, fill=fcs)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
-      caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      caption = str_wrap('Source: World Bank. Statistical Performance Indicators. Non-FCS countries include all countries not classified as FCS.  This includes high income countries.',70),
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
@@ -1347,7 +1347,7 @@ Countries are grouped into five categories as shown on the map in figure 6.1:
 * **Bottom 20%**: Countries in the bottom 20% (shading in <span style="color:#ff9f1c">dark orange </span>).  
 
 
-*Figure 6.1: SPI Overall Score*
+*Figure 6.1: SPI Overall Score by Quintile in 2019*
 ```{r map}
 #show map and summary stats by region and income group
 
@@ -1376,7 +1376,7 @@ pil3_bottom <- as.numeric(maturity_tab[4,6])
 
 The countries scoring in the top 20% have an average SPI overall score  of `r spi_top`.  A maximum score of 100 would indicate that a country has every single element in place that is measured through the SPI.   Meanwhile, countries in the bottom 20% score significantly worse, with average  scores  of `r spi_bottom`.  In Pillar 1, countries in the top quintile have a score of `r pil1_top`, while countries in the bottom quintile have scores of `r pil1_bottom`.  One area where even top quintile countries are not doing as well as possible is on our data products pillar.  Countries in the top quintile score only `r pil3_top` points out of 100 in this area.  Pillar 3 measures whether countries have a value in the past 5 years for each SDG indicator, meaning even the top quintile countries have only around `r pil3_top`% of indicators averaging over the SDGs.
 
-*Table 6.1: Table of SPI Overall and Pillar Scores by Quintile Group*
+*Table 6.1: Table of SPI Overall and Pillar Scores by Quintile Group in 2019*
 ```{r maturitdisp0}
 
 maturity_tab <- maturity_tab %>%
@@ -1410,7 +1410,7 @@ census_bottom <- as.numeric(maturity_tab[5,6])
 
 To highlight a few specific indicators, countries in the top 20% on average get nearly perfect scores in terms of the debt reporting to the World Bank.  The top 20% of countries in the SPI overall score have an average score on their debt reporting of `r debt_top`, with a maximum score of 1 and minimum score of 0, while those in the bottom 20% on the SPI overall score have an average score of `r debt_bottom`.  To take another  example, when looking at scores on whether a population census has been conducted recently, countries in the top 20% score on average `r census_top` on our population census indicator, with a max score of 1 and minimum score of 0, while those in the bottom 20% on our SPI overall score receive `r census_bottom` points on the population census indicator.  The table below shows differences across maturity groups for a select set of indicators.
 
-*Table 6.2: Table of SPI Overall and Select SPI Indicators by Quintile Group*
+*Table 6.2: Table of SPI Overall and Select SPI Indicators by Quintile Group in 2019*
 ```{r maturitdisp}
 
 maturity_tab <- maturity_tab %>%
@@ -1428,14 +1428,15 @@ There are large differences in the SPI overall score across World Bank regions a
 
 Finally, when looking over time, since 2016 the SPI overall score values are relatively stable across regions.  There has been some modest increase in the SPI overall score scores for middle income and high income countries, with little progress for low income countries.
 
-*Figure 6.2.A: SPI Overall Score - By Region*
+*Figure 6.2.A: SPI Overall Score by Region in 2019*
 ```{r spiregcharts}
 #show map and summary stats by region and income group
 
 spi_region_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
-*Figure 6.2.B: SPI Overall Score - By Income*
+
+*Figure 6.2.B: SPI Overall Score by Income Group in 2019*
 ```{r spiincomecharts}
 #show map and summary stats by region and income group
 
@@ -1443,21 +1444,23 @@ spi_income_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
 
-*Figure 6.2.C: SPI Overall Score - By Lending*
+*Figure 6.2.C: SPI Overall Score by Lending Group in 2019*
 ```{r spilendcharts}
 #show map and summary stats by region and income group
 
 lending_chart_aggregate('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
-*Figure 6.2.D: SPI Overall Score - By Fragile/Conflict Situations*
+
+*Figure 6.2.D: SPI Overall Score by Fragile/Conflict Situation Status in 2019*
 ```{r spifcscharts}
 #show map and summary stats by region and income group
 
 fcs_chart_aggregate('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
-*Figure 6.2.E: SPI Overall Score - By Year (2016-19)*
+
+*Figure 6.2.E: SPI Overall Score by Year (2016-19)*
 ```{r spitimecharts}
 #show map and summary stats by region and income group
 
@@ -1510,7 +1513,7 @@ bottom_eap_score <- round(as.numeric(eap_df[nrow(eap_df),2]),1)
 
 As well as large differences across regions, there is significant variation in the SPI overall scores within regions.   For instance, in the Latin America & Caribbean World Bank region, `r top_lac` is the highest scoring country with a score of `r top_lac_score`.  However, `r bottom_lac`, the lowest scoring country in the region, earns a substantially lower score of `r bottom_lac_score`.  In Sub-Saharan Africa, the highest scoring country is `r top_ssa` with a score of `r top_ssa_score`, while the lowest scoring country is `r bottom_ssa` with a score of `r bottom_ssa_score`.  In the East Asia and Pacific region, the top scoring country is `r top_eap` with a score of `r top_eap_score`, while the lowest scoring country is `r bottom_eap` with a score of `r bottom_eap_score`.
 
-*Figure 6.3: SPI Overall Scores - By Country and Region* 
+*Figure 6.3: SPI Overall Scores by Country and Region in 2019* 
 ```{r spicountrycharts}
 #show map and summary stats by region and income group
 
@@ -1526,7 +1529,8 @@ By presenting scores for each of the pillars – data use, data services, data p
 ### Pillar 1: Data Use
 
 Figure 6.4 shows a world map displaying countries based on data use score quintiles Overall, the high income countries in North America and Europe tend to rate most highly along this dimension, whereas Sub Saharan African countries tend to lag.  
-*Figure 6.4: Pillar 1: Data Use Scores* 
+
+*Figure 6.4: Pillar 1: Data Use Scores by Quintile in 2019* 
 ```{r pillarsplot1}
 
 spi_mapper('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
@@ -1535,7 +1539,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
 
 Countries within region show significant dispersion in performance . It is worth noting that several countries such as  the United States, Mexico, Finland, and Costa Rica, among others, receive the maximum possible score in this dimension of 100. Several countries score the minimum score as well, including the Syrian Arab Republic, South Sudan, Namibia, and Nauru, among others.
 
-*Figure 6.5: Pillar 1: Data Use Scores - By Country and Region* 
+*Figure 6.5: Pillar 1: Data Use Scores by Country and Region in 2019* 
 ```{r countrypillarsplot1}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
@@ -1567,7 +1571,7 @@ debt_bottom <- as.numeric(maturity_tab[4,6])
 
 The table below shows the average score on each indicator in pillar 1.  Countries in the top 20% possess nearly all of the components in pillar 1, while countries in the bottom 20% are lacking in many areas.  Countries in the bottom 20%  have an average of `r poverty_bottom` on the comparable poverty estimate indicator, an average of `r mort_bottom` on the availability of under 5 mortality data, and an average of `r debt_bottom` on debt reporting.
 
-*Table 6.3: Select Pillar 1 Indicator Scores by SPI Overall Score Quintile Group*
+*Table 6.3: Select Pillar 1 Indicator Scores by SPI Overall Score Quintile Group in 2019*
 ```{r maturitdisp1}
 
 maturity_tab <- maturity_tab %>%
@@ -1583,7 +1587,7 @@ FitFlextableToPage(maturity_tab) %>%
 
 For pillar 2 on data services, high income countries tend to score highest along this pillar  India, Morocco, and the Philippines scored highly as well in this pillar. This pillar contains four indicators on the quality of data releases, online accessibility, advisory and analytical services (not included due to lack of data), and the availability and use of data access services.   
 
-*Figure 6.6: Pillar 2: Data Services Scores* 
+*Figure 6.6: Pillar 2: Data Services Scores by Quintile in 2019* 
 ```{r pillarsplot2}
 spi_mapper('spi_index_df','SPI.INDEX.PIL2','')
 
@@ -1591,7 +1595,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL2','')
 
 
 
-*Figure 6.7: Pillar 2: Data Services Scores - By Country and Region* 
+*Figure 6.7: Pillar 2: Data Services Scores by Country and Region in 2019* 
 ```{r countrypillarsplot2}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL2','')
@@ -1629,7 +1633,7 @@ nada_bottom <- as.numeric(maturity_tab[9,6])
 In terms of specific indicators, the top 20% of countries receive an average score of `r sdds_top` on the indicator measuring country adoption of the IMF's data dissemination standards, while those in the bottom 20% receive an average score of `r sdds_bottom`.  Countries in the bottom 20% receive an average data openness score, produced by Open Data Watch, of `r open_bottom`.  This indicator is made up of several sub-indicators including whether data is available in machine readable format, a non-proprietary format, has download options, metadata available, and terms of use.  For instance, in the bottom 20% of countries the score on whether data is available in a machine readable format is only `r machine_bottom` out of a maximum of 1.  Additionally, countries in the bottom 20% only score an average of `r nada_bottom` on the measure of whether metadata meeting the standards of the Database Documentation Initiative (DDI) is available on surveys conducted.^[For more information, see https://ddialliance.org/]
 
 
-*Table 6.4: Select Pillar 2 Indicator Scores by SPI Overall Score Quintile Group*
+*Table 6.4: Select Pillar 2 Indicator Scores by SPI Overall Score Quintile Group in 2019*
 ```{r maturitdisp2}
 
 maturity_tab <- maturity_tab %>%
@@ -1665,7 +1669,7 @@ Indicator values that are either country reported, country adjusted, estimated, 
 
   * Global monitoring data (G): Produced on a regular basis by the designated agency for global monitoring, based on country data. There is no corresponding figure at the country level.
 
-*Figure 6.8: Pillar 3: Data Products Scores*
+*Figure 6.8: Pillar 3: Data Products Scores by Quintile in 2019*
 ```{r pillarsplot3}
 spi_mapper('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
@@ -1681,7 +1685,7 @@ spi_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
 ```
 
-*Figure 6.9: Pillar 3: Data Products Scores - By Country and Region* 
+*Figure 6.9: Pillar 3: Data Products Scores by Country and Region in 2019* 
 ```{r countrypillarsplot3}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
@@ -1730,7 +1734,7 @@ nada_bottom <- as.numeric(maturity_tab[9,6])
 Even countries in the top quintile have significant room for improvement in reporting on the SDGs.  The average score for the top 20% of countries is `r spi_top`, while for the bottom 20% it is `r spi_bottom`.  For a specific goal, such as for SDG 1 on poverty, the top 20%  receives an average of `r goal1_top` out of a maximum of 1.  This means that the top performing countries are only reporting on `r 100*goal1_top` percent of the SDG indicators between 2015-19.  The bottom 20% receive an average score of `r goal1_bottom`.  The table below shows the full set of breakdowns by SDGs, suggesting reporting on SDG 5 on Gender lags other goals.
 
 
-*Table 6.5: Select Pillar 3 Indicator Scores by SPI Overall Score Quintile Group*
+*Table 6.5: Select Pillar 3 Indicator Scores by SPI Overall Score Quintile Group in 2019*
 ```{r maturitdisp3}
 
 maturity_tab <- maturity_tab %>%
@@ -1938,7 +1942,7 @@ spi_charts('spi_index_df_dim3_alt2', 'SPI.INDEX.PIL3.ALT2','Pillar 3: Data Produ
 Pillar 4 examines whether countries have the data sources available that are necessary to produce statistics for public use. It includes three aspects of data sources: censuses and surveys, administrative data, and geospatial data. Private and citizen generated data is an important area that is at present not incorporated due to the lack of an established source. For censuses and surveys  the score reflects both whether a data source exists and how recently the source was produced, as both are needed for accurate reporting of current conditions. For administrative data and geospatial data,  proxies regarding the state of these data systems are used.
 
 
-*Figure 6.10: Pillar 4: Data Sources Scores*
+*Figure 6.10: Pillar 4: Data Sources Scores by Quintile in 2019*
 ```{r pillarsplot4}
 spi_mapper('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
 ```
@@ -1946,7 +1950,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
 
 When looking at the country chart, again there is significant variability across countries.  No country receives the maximum score of 100, with many countries falling short particularly on our geospatial indicator.  Somalia is the only country that receives a score of 0.
 
-*Figure 6.11: Pillar 4: Data Sources Scores - By Country and Region*
+*Figure 6.11: Pillar 4: Data Sources Scores by Country and Region in 2019*
 ```{r countrypillarsplot4}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
@@ -1990,7 +1994,7 @@ geo_bottom <- as.numeric(maturity_tab[11,6])
 
 Countries in the top 20% have an average score of `r spi_top`, while countries in the bottom 20% have an average score of `r spi_bottom`.  The gap between the top 20% and bottom 20% for the population and housing census indicator is `r pop_gap` points on a scale from 0 to 1.  The gap for countries conducting a business/establishment survey is `r business_gap`.  The scores on the geospatial indicator are low.  The average score for the top 20%  is `r geo_top`, while it is `r geo_bottom` for the bottom 20%.
 
-*Table 6.6: Select Pillar 4 Indicator Scores by SPI Overall Score Quintile Group*
+*Table 6.6: Select Pillar 4 Indicator Scores by SPI Overall Score Quintile Group in 2019*
 ```{r maturitdisp4}
 
 maturity_tab <- maturity_tab %>%
@@ -2034,7 +2038,7 @@ spi_bottom <- as.numeric(maturity_tab[1,6])
 
 Countries scoring in the top 20% tend to be concentrated among the high income countries.  These top scoring countries have an average score for pillar 5 of `r spi_top`, which is near the maximum score of 100.  Countries in the bottom 20% have an average score fo `r spi_bottom`.
 
-*Figure 6.12: Pillar 5: Data Infrastructure Scores*
+*Figure 6.12: Pillar 5: Data Infrastructure Scores by Quintile in 2019*
 ```{r pillarsplot5}
 spi_mapper('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores')
 
@@ -2042,7 +2046,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores
 
 Several countries score the maximum of 100 in the data infrastructure pillar  One country, Somalia, scores 0 points in this pillar.  
 
-*Figure 6.13: Pillar 5: Data Infrastructure Scores - By Country and Region*
+*Figure 6.13: Pillar 5: Data Infrastructure Scores by Country and Region in 2019*
 ```{r countrypillarsplot5}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores')
@@ -2055,7 +2059,7 @@ spi_country_charts('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructur
 
 Among countries in the top 20%, the average score is near 100 across all the indicators of pillar 5. In the bottom 20%, countries on average score close to zero points for the CPI base year, classification of status of employment, central government accounting status, compilation of government finance statistics, and business process indicators. Bottom 20% countries, score above 0.5 points on the system of national accounts in use and compilation of monetary and financial statistics indicators.
 
-*Table 6.6: Select Pillar 5 Indicator Scores by SPI Overall Score Quintile Group*
+*Table 6.8: Select Pillar 5 Indicator Scores by SPI Overall Score Quintile Group in 2019*
 ```{r maturitdisp5}
 
 maturity_tab <- maturity_tab %>%
@@ -2071,7 +2075,7 @@ FitFlextableToPage(maturity_tab) %>%
 
 In the following chart, correlations between the SPI overall score and the individual SPI pillar scores are shown. All pillars are positively correlated with one another. At the same time, no dimension is perfectly correlated with any of the other dimensions, which would indicate that a dimension was not providing any additional information on the statistical performance of countries. The pillar with the single highest correlation with the overall measure is pillar 1 on data use; pillar 3 on data products has the lowest overall correlation. 
 
-*Figure 6.14: Correlation Between SPI pillars*
+*Figure 6.14: Correlation Between SPI pillars in 2019*
 ```{r dimcorr, echo=FALSE}
 
 corr_df <- spi_index_df %>%
@@ -2207,7 +2211,7 @@ leave_out_df <- metadata_full %>%
 
 ```
 
-*Figure 6.15: SPI Indicator Importance for Top 10 and Bottom 10 Indicators*
+*Figure 6.15: SPI Indicator Importance for Top 10 and Bottom 10 Indicators in 2019*
 
 ```{r leaveoutplot, fig.height=9}
 
@@ -2484,7 +2488,7 @@ In order to produce this figure, an OLS regression of the SPI overall score in 2
 
 This figure identifies some countries that appear to have better performing statistical systems than might be expected (Rwanda, Uganda, Egypt, Mexico, Philippines, Armenia and Turkey appear in green on both charts). There are also countries that appear to have poorer performing statistical systems than expected: there are several small island states for example that appear red on both charts.
 
-*Figure 7.2: Top 15 Over/Under-Performers on SPI overall score compared to GDP per capita and Human Capital Index* 
+*Figure 7.2: Top 15 Over/Under-Performers on SPI overall score compared to GDP per capita and Human Capital Index in 2019* 
 ```{r overperformers}
 
 #get top 10 and bottom 10 over performers compared to gdp and hci
@@ -2627,7 +2631,7 @@ There is a strong relationship between the SPI overall score and the government 
 
 
 
-*Figure 7.3: Plot of SPI overall score on Government Effectiveness*
+*Figure 7.3: Plot of SPI overall score on Government Effectiveness in 2019*
 ```{r geplot}
 
 ge_df_2019 <- ge_df_2019 %>%
@@ -3188,7 +3192,7 @@ FitFlextableToPage(index_tab_recode)
 ```
 
 ##  SPI Overall and Pillar Scores by Region, Income, & Lending
-*Table A.3: Table of SPI Overall and Pillar Scores by Region*
+*Table A.3: Table of SPI Overall and Pillar Scores by Region in 2019*
 ```{r maturitytabreg, fig.cap=''}
 
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
@@ -3204,7 +3208,7 @@ spi_group_table('spi_index_df',indicators,2019, 'region') %>%
 ```
 
 
-*Table A.4: Table of SPI Overall and Pillar Scores by Income Group*
+*Table A.4: Table of SPI Overall and Pillar Scores by Income Group in 2019*
 ```{r maturitytabinc, fig.cap=''}
 
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
@@ -3219,7 +3223,7 @@ spi_group_table('spi_index_df',indicators,2019, 'income') %>%
 
 ```
 
-*Table A.5: Table of SPI Overall and Pillar Scores by Lending Group*
+*Table A.5: Table of SPI Overall and Pillar Scores by Lending Group in 2019*
 ```{r maturitytablend, fig.cap=''}
 
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
@@ -3234,7 +3238,7 @@ spi_group_table('spi_index_df',indicators,2019, 'lending') %>%
 
 ```
 
-*Figure A.1: SPI Pillar 1 - Data Use - Score - By Region*
+*Figure A.1: SPI Pillar 1 - Data Use Score - By Region in 2019*
 ```{r spiregcharts1}
 #show map and summary stats by region and income group
 
@@ -3242,7 +3246,7 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL1','SPI Data Use Score')
 
 ```
 
-*Figure A.2: SPI Pillar 2 - Data Services - Score - By Region*
+*Figure A.2: SPI Pillar 2 - Data Services Score - By Region in 2019*
 ```{r spiregcharts2}
 #show map and summary stats by region and income group
 
@@ -3250,7 +3254,7 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL2','SPI Data Services Score')
 
 ```
 
-*Figure A.3: SPI Pillar 3 - Data Products - Score - By Region*
+*Figure A.3: SPI Pillar 3 - Data Products Score - By Region in 2019*
 ```{r spiregcharts3}
 #show map and summary stats by region and income group
 
@@ -3258,14 +3262,15 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL3','SPI Data Products Score')
 
 ```
 
-*Figure A.4: SPI Pillar 4 - Data Sources - Score - By Region*
+*Figure A.4: SPI Pillar 4 - Data Sources Score - By Region in 2019*
 ```{r spiregcharts4}
 #show map and summary stats by region and income group
 
 spi_region_charts('spi_index_df','SPI.INDEX.PIL4','SPI Data Sources Score')
 
 ```
-*Figure A.5: SPI Pillar 5 - Data Infrastructure - Score - By Region*
+
+*Figure A.5: SPI Pillar 5 - Data Infrastructure Score - By Region in 2019*
 ```{r spiregcharts5}
 #show map and summary stats by region and income group
 
@@ -3345,7 +3350,7 @@ Next, the relationship is shown between Log GDP per capita, the SCI and the SPI 
 Overall, the new SPI overall score has the strongest relationship to GDP per capita.  The linear regression estimates indicate that a 1% increase in GDP per capita is associated with a `r round(spi_coef/100,1)` point increase in the SPI overall score.  The r-squared from this regression is `r round(spi_r2,2)`.
 
 
-*Table A.6: Scatterplot of Statistical Capacity Index (SCI) and SPI Overall Score*
+*Table A.6: Relationship between Statical Performance Measures and GDP per capita.*
 ```{r scispiregtab}
 
 
