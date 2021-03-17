@@ -233,12 +233,26 @@ spi_region_charts  <- function(data, indicator, title) {
     
     
   #add histogram by region 
-  p2 <- map_df %>%
+  region_SPI_df <- map_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(`SPI Score`,0))) %>%
-    ggplot(aes(x=`SPI Score`, y=region, fill=region)) +
+    arrange(-`SPI Score`) 
+  
+  region_order <- c("Sub-Saharan Africa " ,
+                    "South Asia",
+                    "North America",
+                    "Middle East & North Africa",
+                    "Latin America & Caribbean ",
+                    "Europe & Central Asia", 
+                    "East Asia & Pacific"
+                           )
+
+  region_SPI_df <- region_SPI_df %>%
+    mutate(region=factor(region, levels=region_order))
+  
+   p2 <-  ggplot(region_SPI_df, aes(x=`SPI Score`, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
@@ -407,8 +421,18 @@ spi_country_charts  <- function(data, indicator, title) {
   names(col_pal) <- c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
   
 
+  region_order <- c("Sub-Saharan Africa " ,
+                    "South Asia",
+                    "North America",
+                    "Middle East & North Africa",
+                    "Latin America & Caribbean ",
+                    "Europe & Central Asia", 
+                    "East Asia & Pacific"
+                           )
+  
   p2_alt <- SPI_map %>%
     ungroup() %>%
+    mutate(region=factor(region, levels=region_order)) %>%
     ggplot(aes(x=data_available, y=region, color=spi_groups)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
@@ -1709,6 +1733,7 @@ indicators<-c("SPI.INDEX.PIL3","SPI.D3.1.POV",
               "SPI.D3.10.NEQL",
               "SPI.D3.11.CITY",
               "SPI.D3.12.CNSP",
+              "SPI.D3.13.CLMT",
               "SPI.D3.15.LAND",
               "SPI.D3.16.INST",
               "SPI.D3.17.PTNS")

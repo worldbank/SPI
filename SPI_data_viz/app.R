@@ -62,7 +62,8 @@ ui <- navbarPage("Statistical Performance Indicators",
                  # Welcome Section
                  ####################################################
                  tabPanel("Welcome",
-                          fluidPage(theme = shinytheme("cerulean"),
+                          fluidPage(
+                                    theme = shinytheme("cerulean"),
                                     includeMarkdown("header.md"),
                                     h3('Indicator Metadata'),
                                     withSpinner(DT::dataTableOutput("metadata"))
@@ -850,7 +851,8 @@ server <- function(input, output,session) {
 
         
         
-    })
+    }) %>%
+      bindCache(input$year_overall)
     
     # updateSelectizeInput(session, 'color_choices_overall', choices = c('SPI.OVRL.SCR', 'SPI.D1.MSC', 'SPI.D2.CS', 'SPI.D3.AKI', 'SPI.D4.DPO'), server = TRUE)
     
@@ -937,7 +939,7 @@ server <- function(input, output,session) {
         
         
           
-    })
+    }) %>% bindCache(input$color_choices_overall)
     
     # Downloadable csv of selected dataset ----
     output$downloadDataMap <- downloadHandler(
@@ -1072,7 +1074,8 @@ server <- function(input, output,session) {
       
       
       
-    })
+    }) %>%
+      bindCache(input$country_choice)
     
     #################
     # Functions for Country Report
