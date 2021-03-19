@@ -24,7 +24,7 @@ library(Hmisc)
 library(flextable)
 library(skimr)
 
-
+setwd("C:/Users/wb482273/OneDrive - WBG/Data Visualization/CWON/SPI/SPI_data_viz")
 
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv')
@@ -37,6 +37,26 @@ metadata <- metadata_raw %>%
 
 metadata <- read_csv('SPI_index_sources.csv') %>%
   bind_rows(metadata)
+
+metadataind <- metadata %>%
+  filter(str_sub(source_id, 1, 9) %in% "SPI.INDEX") %>%
+  select(source_id, descript) %>%
+  rename("shortname2" = "descript")
+
+metadata_raw <- metadata_raw %>%
+  mutate(shortname = ifelse(str_sub(source_id, 1, 6) %in% "SPI.D3",
+                            gsub(":.*","", source_name), source_name)) %>%
+  mutate(shortname = ifelse(str_sub(source_id, 1, 6) %in% "SPI.D3",
+                            gsub("GOAL","SDG", shortname), shortname),
+         shortname = ifelse(source_id == "SPI.D1.5.CHLD.MORT", "Availability of Mortality rate, under-5 (per 1,000 live births)", 
+                            ifelse(source_id == "SPI.D5.1.DILG", "Legislation Indicator based on SDG 17.18.2", 
+                                   ifelse(source_id == "SPI.D5.5.DIFI", "Statistical Plan fully funded", 
+                                          ifelse(source_id == "SPI.D5.2.5.HOUS", "Household consumption classification", 
+                                                 ifelse(source_id == "SPI.D5.2.9.MONY", "Monetary & financial statistics compilation", 
+                                                        ifelse(source_id == "SPI.D5.2.3.CNIN", "National industry classification", 
+                                                               ifelse(source_id == "SPI.D5.2.6.EMPL", "Status of employment classification", 
+                                                                      ifelse(source_id == "SPI.D5.2.8.FINA", "Govt. finance statistics compilation", 
+                                                                             shortname)))))))))
 
 
 #create named list, which can be useful later
@@ -204,47 +224,30 @@ ui <- navbarPage("Statistical Performance Indicators",
                  ####################################################                 
                  tabPanel("Country Reports",
                           div(class="outer",
-                          
+                              
                               fluidRow(
                                 column(3,
                                        selectizeInput("country_choice",
-                                             "Choose Country",
-                                             choices=as.character(country_info$country),
-                                             selected='Afghanistan')),
+                                                      "Choose Country",
+                                                      choices=as.character(country_info$country),
+                                                      selected='Afghanistan')),
                                 column(3,offset=1,
                                        selectizeInput("year_choice",
-                                             "Choose Year",
-                                             choices=c(2004:2019),
-                                             selected=2019)),  
+                                                      "Choose Year",
+                                                      choices=c(2004:2019),
+                                                      selected=2019)),  
                                 column(3,offset=1,
                                        selectizeInput("comparison_choice",
-                                             "Add Countries to Compare",
-                                             choices=as.character(country_info$country),
-                                             multiple=T                              ))),
-                                             
-                              ),
-                          h3('Pillar 1: Data Use'),
-                          withSpinner(plotlyOutput('plot_dim1',
-                                                  width = '80%',
-                                                  height='600px')),
-                          h3('Pillar 2: Data Services'),
-                          withSpinner(plotlyOutput('plot_dim2',
-                                                   width = '80%',
-                                                 height='350px')),
-                          h3('Pillar 3: Data Products'),
-                          withSpinner(plotlyOutput('plot_dim3',
+                                                      "Add Countries to Compare",
+                                                      choices=as.character(country_info$country),
+                                                      multiple=T                              ))),
+                              
+                          ),
+                          withSpinner(plotlyOutput('fullplot',
                                                    width = '100%',
-                                                   height='1300px')),
-                          h3('Pillar 4: Data Sources'),
-                          withSpinner(plotlyOutput('plot_dim4',
-                                                  width = '80%',
-                                                 height='1000px')),
-                          h3('Pillar 5: Data Infrastructure'),
-                          withSpinner(plotlyOutput('plot_dim5',
-                                                   width = '80%',
-                                                 height='900px'
-                                                 ))
-                              ),
+                                                   height='1250px'
+                          ))
+                 ),
                  #####################################################
                  # Country Table section
                  ####################################################                 
@@ -1081,70 +1084,64 @@ server <- function(input, output,session) {
     # Functions for Country Report
     #################
     
-    country_report_lolli_fn <- function(variables) {
+    output$fullplot <- renderPlotly({
       
-      #set up data
       lollip_df_temp <- lolli_df() %>%
-        select(country, starts_with(variables)) %>%
+        select(country, starts_with('SPI')) %>%
         pivot_longer(
-          cols = starts_with(variables),
+          cols = starts_with('SPI'),
           names_to = 'source_id',
           values_to = 'values'
         ) %>% 
         left_join(metadata_raw) %>%
-        filter(!is.na(source_name)) %>%
-        mutate(source_name=str_wrap(source_name, 30)) %>%
-        mutate(source_name=factor(source_name, levels=unique(source_name)),
-               country=factor(country, levels=unique(country))) 
-        
-      #now use ggplot
-        lollip <- ggplot(lollip_df_temp,
-               aes(x=source_name, y=values, color=country)) +
-        geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=values), color="grey") +
-        geom_point(size=3) +
-        coord_flip() +
+        left_join(metadataind) %>%
+        mutate(shortname = ifelse(!is.na(shortname2), shortname2, shortname),
+               shortname2 = NULL) %>%
+        filter(!is.na(shortname)) %>%
+        mutate(source_name = ifelse(is.na(source_name), shortname, source_name),
+               shortname=factor(shortname, levels=unique(shortname)),
+               country=factor(country, levels=unique(country))) %>%
+        mutate(indi2 = trimws(str_remove(SPI_indicator_id, "Dimension"))) %>%
+        mutate(dimension = substr(indi2, 1, 1)) %>%
+        mutate(dimname = paste("Pillar ", dimension),
+               dimname = ifelse(is.na(dimension), "Index", dimname),
+               shortname=ifelse(dimname == "Pillar  1", str_wrap(shortname, 25), str_wrap(shortname, 12))
+        ) %>%
+        mutate(labtext = paste(paste(country),
+                               paste(source_name),
+                               paste("Score: ", values),
+                               sep = "<br />"))
+      
+      p <- ggplot(lollip_df_temp) +
+        ## For parallel coordinates/Line charts
+        geom_line(aes(x=shortname, y = values, group = country, color = country),
+                  size = 1) +
+        geom_point(aes(x=shortname, y = values, group = country, color = country, text = labtext),
+                   size = 1) +
+        ## For point chart
+        # geom_point(aes(x=shortname, y = values, group = country, color = country, text = labtext),
+        #            size = 3) +
+        labs(x = "", y = "") +
         theme_bw() +
-        scale_x_discrete(limits = rev(levels(lollip_df_temp$source_name))) +
+        facet_wrap(vars(dimname), scales = "free", ncol = 2) +
         theme(
           panel.grid.minor.y = element_blank(),
           panel.grid.major.y = element_blank(),
-          axis.text.y=element_text(size=14),
-          legend.text = element_text(size=14),
+          panel.border = element_blank(),
+          axis.text.y=element_text(size=10),
+          legend.text = element_text(size=8),
           legend.title = element_blank(),
-          legend.position = 'top'
-        ) +
-        xlab("") +
-        ylab("Indicator")
+          #    panel.spacing.y = unit(3, "lines"),
+          strip.background = element_rect(color = "white"))
       
-      ggplotly(lollip)
-    }
-    
-    
-    output$plot_dim1 <- renderPlotly({
-  
-      ggplotly(country_report_lolli_fn('SPI.D1')) %>%
-        layout(autosize = TRUE, margin = list(l = 300, r = 0, b = 0, t = 0, pad = 4))
+      ggplotly(p, tooltip = "text") %>%
+        layout(autosize = TRUE, 
+               margin = list(
+                 #l = 200, r = 0, b = 70, t = 70, 
+                 b= 110, pad = 4)
+        )
       
     })
-    
-    output$plot_dim2 <- renderPlotly({
-      ggplotly(country_report_lolli_fn('SPI.D2')) %>%
-        layout(autosize = TRUE, margin = list(l = 300, r = 0, b = 0, t = 0, pad = 4))
-    })
-    output$plot_dim3 <- renderPlotly({
-      ggplotly(country_report_lolli_fn('SPI.D3')) %>% 
-        layout(autosize = TRUE, margin = list(l = 300, r = 0, b = 0, t = 0, pad = 4))
-    })
-    output$plot_dim4 <- renderPlotly({
-      ggplotly(country_report_lolli_fn('SPI.D4')) %>%
-        layout(autosize = TRUE, margin = list(l = 300, r = 0, b = 0, t = 0, pad = 4))
-    })
-    output$plot_dim5 <- renderPlotly({
-      ggplotly(country_report_lolli_fn('SPI.D5')) %>%
-        layout(autosize = TRUE, margin = list(l = 300, r = 0, b = 0, t = 0, pad = 4))
-    })    
-    
-    
     
     ###########
     # Country Datatable
