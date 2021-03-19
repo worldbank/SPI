@@ -24,8 +24,6 @@ library(Hmisc)
 library(flextable)
 library(skimr)
 
-setwd("C:/Users/wb482273/OneDrive - WBG/Data Visualization/CWON/SPI/SPI_data_viz")
-
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv')
 
