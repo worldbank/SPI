@@ -79,7 +79,7 @@ country_info <- wb_countries() %>%
 
 
 # Define UI for application that draws a histogram
-ui <- navbarPage("Statistical Performance Indicators",
+ui <- navbarPage("Statistical Performance Indicators Data Explorer",
 
                  #####################################################
                  # Welcome Section
@@ -87,6 +87,10 @@ ui <- navbarPage("Statistical Performance Indicators",
                  tabPanel("Welcome",
                           fluidPage(
                                     theme = shinytheme("cerulean"),
+                                    shiny::actionButton(inputId='ab1', label="Visit SPI Homepage", 
+                                                        icon = icon("external-link-square-alt"),
+                                                        # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
+                                                        onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
                                     includeMarkdown("header.md"),
                                     downloadButton("downloadDataAll", "Download the SPI Data"),
                                     h3('Indicator Metadata'),
@@ -866,8 +870,7 @@ server <- function(input, output,session) {
 
         
         
-    }) %>%
-      bindCache(input$year_overall)
+    }) 
     
     # updateSelectizeInput(session, 'color_choices_overall', choices = c('SPI.OVRL.SCR', 'SPI.D1.MSC', 'SPI.D2.CS', 'SPI.D3.AKI', 'SPI.D4.DPO'), server = TRUE)
     
@@ -1089,8 +1092,7 @@ server <- function(input, output,session) {
       
       
       
-    }) %>%
-      bindCache(input$country_choice)
+    }) 
     
     #################
     # Functions for Country Report
