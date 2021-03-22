@@ -85,6 +85,7 @@
 
 # csv files
 !/**/**/*.csv
+!/**/**/*.fst
 
 # png files
 !/02_programs/*.png

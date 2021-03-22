@@ -23,17 +23,18 @@ library(ggcorrplot)
 library(Hmisc)
 library(flextable)
 library(skimr)
+library(fst)
 
 #read in data and metatdata
-SPI <- read_csv('SPI_index.csv')
+SPI <- read_fst('SPI_index.fst')
 
-metadata_raw <- read_csv('SPI_dimensions_sources.csv')
+metadata_raw <- read_fst('SPI_dimensions_sources.fst')
 
 metadata <- metadata_raw %>%
     mutate(descript=paste(SPI_indicator_id,": ", spi_indicator_name," - ",source_name , sep="")) %>%
     select(source_id,  descript, spi_indicator_description,spi_indicator_scoring)
 
-metadata <- read_csv('SPI_index_sources.csv') %>%
+metadata <- read_fst('SPI_index_sources.fst') %>%
   bind_rows(metadata)
 
 metadataind <- metadata %>%
