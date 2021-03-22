@@ -4,18 +4,13 @@ title: "Statistical Performance Indicators"
 institute: "World Bank, Development Data Group"
 date: "`r Sys.Date()`"
 output:
-  xaringan::moon_reader:
+  powerpoint:
     lib_dir: libs
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
     fig_width: 5
     fig_height: 4
     dpi: 250
     fig_caption: true
     background-size: contain;
-    css: xaringan-themer.css
 ---
 
 <style>
