@@ -54,7 +54,12 @@ metadata_raw <- metadata_raw %>%
                                                         ifelse(source_id == "SPI.D5.2.3.CNIN", "National industry classification", 
                                                                ifelse(source_id == "SPI.D5.2.6.EMPL", "Status of employment classification", 
                                                                       ifelse(source_id == "SPI.D5.2.8.FINA", "Govt. finance statistics compilation", 
-                                                                             shortname)))))))))
+                                                                             shortname)))))))),
+         shortname= if_else(is.na(shortname), "N/A", shortname))
+
+
+
+
 
 
 #create named list, which can be useful later
@@ -83,6 +88,7 @@ ui <- navbarPage("Statistical Performance Indicators",
                           fluidPage(
                                     theme = shinytheme("cerulean"),
                                     includeMarkdown("header.md"),
+                                    downloadButton("downloadDataAll", "Download the SPI Data"),
                                     h3('Indicator Metadata'),
                                     withSpinner(DT::dataTableOutput("metadata"))
                                     #h3('Indicator Metadata'),
@@ -260,6 +266,7 @@ ui <- navbarPage("Statistical Performance Indicators",
                         
                                 body, label, input, button, select { 
                                   font-family: "Arial";
+                                  font-size: 16px;
                                 }
                                  
                                 hr {border-top: 1px solid #000000;} ')
@@ -430,7 +437,14 @@ server <- function(input, output,session) {
 
     
     
-    
+  output$downloadDataAll <- downloadHandler(
+    filename = function() {
+      'SPI_Data.csv'
+    },
+    content = function(file) {
+      write.csv(SPI, file, row.names = FALSE)
+    }
+  )
     
     #################################################
     # Overall SPI

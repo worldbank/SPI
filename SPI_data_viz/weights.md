@@ -1,5 +1,7 @@
 
-## Overall Index Scores
+## Customize Weights
+
+**In this tool, users can adjust weights placed on dimensions or pillars to put greater emphasis on certain areas.**
 
 Our statistical performance indicators have a three level structure, and our overall score is formed by sequentially aggregating each level.  The overall score is a weighted average of the underlying pillars, dimensions, and indicators.  See more details in the SPI technical paper (https://worldbank.github.io/SPI/).  This tool allows users to change weights assigned to the pillars and dimensions of the SPI.
 
