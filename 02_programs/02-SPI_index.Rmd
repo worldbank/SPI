@@ -3,7 +3,7 @@ title: 'Measuring the Statistical Performance of Countries: An Overview of Updat
 author: "SPI Team"
 date: "`r Sys.Date()`"
 output:
-  bookdown::word_document2: 
+  bookdown::html_document2: 
     toc: yes
     fig_width: 9
     fig_height: 6
