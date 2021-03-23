@@ -1,0 +1,432 @@
+---
+title: "Statistical Performance Indicators - Admin Data"
+author: "SPI Team"
+institute: "World Bank, Development Data Group"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    fig_width: 5
+    fig_height: 4
+    fig_caption: true
+    background-size: contain;
+    css: xaringan-themer.css
+---
+
+<style>
+
+.center2 {
+  margin: 0;
+  position: absolute;
+  top: -80px;
+  right: 0;  
+  width: 800px;
+  height: 800px;
+}
+.center3 {
+  margin: 0;
+  position: absolute;
+  top: -20px;
+  right: 20px;  
+  width: 800px;
+  height: 800px;
+}
+.reduced{
+   font-size: 0.5em;
+}
+</style>
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+library(kableExtra)
+library(leaflet)
+library(xaringanthemer)
+library(wbggeo)
+library(wbgmaps)
+library(ggthemes)
+library(Hmisc)
+library(plotly)
+library(here)
+library(patchwork)
+
+style_mono_accent(base_color = "#009FDA",
+                  title_slide_background_color = 'white',
+                  title_slide_text_color = '#002244',
+                  title_slide_background_image = 'WB_logo.png',
+                  title_slide_background_size = '7',
+                  title_slide_background_position = 'bottom 25px right 25px;',
+                  text_font_google = google_font('Roboto'),
+                  text_font_size = '24px',
+                  )
+
+#set directories
+dir <- here()
+
+raw_dir <- paste(dir, '01_raw_data', sep="/")
+output_dir <- paste(dir, '03_output_data', sep="/")
+
+#weights (either unity (1) or population)
+wgt <- 1
+
+```
+
+```{r load, include=FALSE}
+
+#add in population
+pop_df <- wbstats::wb(country="all",
+             indicator='SP.POP.TOTL',
+             startdate=2004,
+             enddate=2019) %>%
+  mutate(date=as.numeric(date)) %>%
+  mutate(population=value) %>%
+  select(country, date, population) 
+
+#import data
+SPI <- read_csv(paste(output_dir, 'SPI_data.csv', sep="/")) %>%
+    left_join(pop_df) %>%
+  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+
+
+
+
+
+
+#metadata 
+metadata <- data.frame(
+  series = c('SPI.INDEX', 'SPI.INDEX.DIM1', 'SPI.INDEX.DIM2', 'SPI.INDEX.DIM3', 'SPI.INDEX.DIM4', 'SPI.INDEX.DIM5'),
+  indicator_name = c('SPI Overall Score', 'Dimension 1: Data Use', 'Dimension 2: Data Services', 'Dimension 3: Data Products', 'Dimension 4: Data Sources', 'Dimension 5: Data Infrastructure')
+)
+
+#get list of country info
+country_list <- wbstats::wbcountries()
+
+
+SPI_2019 <- SPI %>%
+  filter(date==2019) %>%
+  filter(!is.na(weights)) %>%
+  mutate(ISO_A3_EH=iso3c) %>%
+  mutate(across(contains("SPI"),~100*.))
+
+#read in TopoJSON from World Bank
+#countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
+#                                     what = "sp")
+
+```
+
+# Introduction
+
+- World Bank Development Data Group (DECDG) will be releasing new set of Statistical Performance Indicators along with WDR
+
+- Will be major overhaul of Statistical Capacity Index
+
+- Statistical Performance Indicators are tool for countries/donors to assess statistical system
+
+Based on TAG feedback, goal was for SPI framework to:  
+  - Be forward looking (relevant at least 15 years)   
+  - Measure less advanced systems, as well as more advanced systems
+  - Cover entire national statistical system, not just NSO   
+  - Give countries incentives to build modern statistical system
+
+
+
+---
+# Building on SCI
+
+- Statistical Performance Indicators build on the Statistical Capacity Index
+
+The SCI (in use since 2004) has three dimensions:   
+  1. Methodology (Balance of payments manual in use, CPI base year, SDDS, etc.)   
+  2. Source Data (Agriculture Census, Health Surveys, etc)    
+  3. Periodicity (values for indicators: access to water, child malnutrition, poverty, etc)   
+
+--
+
+Based on Advisory Group comments, Statistical Performance Indicators build on this:
+  - Includes same (or similar) indicators   
+  - But also expands into new areas    
+  - Open Data and Open Code   
+  - Still will provide time series (minimum 3 years) for indicators   
+
+---
+# Framework Overview
+
+- SPI framework covers five dimensions:   
+  1. Data Use
+      * Indicators that capture demand side of statistical system 
+
+---
+# Framework Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system   
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services
+
+---
+# Framework Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system  
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs
+
+---
+# Framework Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system   
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
+  4. Data Sources
+      * Censuses and surveys, admin data, geospatial, private/citizen generated data    
+
+---
+ # Framework  Overview
+
+- SPI framework covers five dimensions:
+  1. Data Use
+      * Indicators that capture demand side of statistical system  
+  2. Data Services
+      * Information on data releases, online access, advisory/analytical services, and other data services    
+  3. Data Products
+      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
+  4. Data Sources
+      * Censuses and surveys, admin data, geospatial, private/citizen generated data      
+  5. Data Infrastructure
+      * Legislation and Governance, standards, skill, partnerships, and finance
+
+
+
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_dashboard.png)]
+
+
+---
+
+# Data Sources (4 Indicators) 
+
+
+  * **Indicator 4.1: Censuses and Surveys:** 
+    * *Average score of 8 Census and Survey Indicators*    
+  * <span style="color:green">Indicator 4.2: Administrative Data:
+    * *Complete CRVS, availability of SPL admin data (ASPIRE), Education admin data (UNESCO), Labor admin data (ILO) *  
+  * **Indicator 4.3: Geospatial Data:**  
+    * *Geospatial data available at 1st Admin Level according to ODIN* 
+  * <span style="color:grey">Indicator 4.4: Private/citizen generated data:  
+    * *Not included because of lack of established methodology*   
+    
+
+---
+
+    
+
+<!-- --- -->
+<!-- # Labor Admin Data -->
+
+<!-- * ILO shared database containing all administrative data sources used to produce ILO statistics (ILOSTAT)    -->
+
+<!-- * Database contains the following admin sources:     -->
+
+<!--   * Insurance records    -->
+<!--   * Labour inspectorate records    -->
+<!--   * Records of employers' organizations    -->
+<!--   * Employment office records -->
+<!--   * Records of workers' organizations -->
+<!--   * Other administrative records and related sources -->
+
+<!-- * Database extends from 2010 to 2019 and covers 177 countries.  -->
+
+<!-- To produce a score, we calculate the percentage of these six admin sources above that are available for a country in a given year.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score. -->
+
+<!-- --- -->
+
+<!-- .center2[ -->
+<!-- ```{r spi_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14} -->
+
+<!-- #Now map the result -->
+<!-- quality = "high" -->
+<!-- maps <- wbgmaps::wbgmaps[[quality]] -->
+
+
+<!-- country_metadata <- wbstats::wbcountries() -->
+
+<!-- data = SPI_2019 -->
+
+
+
+<!-- spi_mapper <- function(indicator,title_text) { -->
+
+<!--   indicator<-enquo(indicator) -->
+
+
+<!--   SPI_map <- SPI_2019 %>% -->
+<!--       mutate(indicator = !! indicator) %>% -->
+<!--       mutate(indicator = indicator) %>% -->
+<!--       mutate(spi_groups=case_when( #create groupings -->
+<!--       between(indicator, 90, 100) ~ "90-100", -->
+<!--       between( indicator, 80, 90) ~ "80-90", -->
+<!--       between( indicator, 70, 80) ~ "70-80", -->
+<!--       between( indicator, 60, 70) ~ "60-70", -->
+<!--       between( indicator, 50, 60) ~ "50-60", -->
+<!--       between( indicator, 40, 50) ~ "40-50", -->
+<!--       between( indicator, 30, 40) ~ "30-40", -->
+<!--       between( indicator, 20, 30) ~ "20-30", -->
+<!--       between( indicator, 10, 20) ~ "10-20", -->
+<!--       between( indicator, 0, 10) ~ "0-10"  -->
+<!--            )) %>% -->
+<!--       mutate(spi_groups=factor(spi_groups, levels=c("0-10", "10-20","20-30","30-40","40-50","50-60","60-70","70-80", "80-90", "90-100" ))) %>% -->
+<!--     select(iso3c, spi_groups, indicator) %>% -->
+<!--     right_join(country_list) -->
+
+
+
+<!--    ggplot() + -->
+<!--     geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) +  -->
+<!--     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") +  -->
+<!--     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  + -->
+<!--      geom_path(data = maps$boundaries, -->
+<!--                aes(long, lat, group = group), -->
+<!--                color = "white", -->
+<!--                size = 0.1, -->
+<!--                lineend = maps$boundaries$lineend, -->
+<!--               linetype = maps$boundaries$linetype) + -->
+<!--     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) + -->
+<!--     scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) + -->
+<!--     scale_fill_brewer( -->
+<!--       name='SPI Score', -->
+<!--       palette='RdYlGn', -->
+<!--       na.value='grey' -->
+<!--     ) + -->
+<!--     coord_equal() + -->
+<!--     theme_map(base_size=12) + -->
+<!--     labs( -->
+<!--       title=str_wrap(title_text,100), -->
+<!--       caption = 'Source: World Bank. Statistical Performance Indicators' -->
+<!--     ) -->
+
+
+<!-- } -->
+
+<!-- spi_charts  <- function(data, indicator, title) { -->
+
+<!--  indicator<-indicator -->
+
+<!--   map_df <- get(data) %>% -->
+<!--     filter(date==max(date, na.rm=T)) %>% -->
+<!--     filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data. -->
+<!--     group_by( country) %>% -->
+<!--     #summarise(across(!! indicator,last)) %>% -->
+<!--     rename(data_available=!! indicator) %>% -->
+<!--     select(country, date, data_available, weights ) %>% -->
+<!--     right_join(country_metadata) %>% -->
+<!--     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     -->
+
+
+<!--   #add histogram by region  -->
+<!--   p2 <- map_df %>% -->
+<!--     group_by(region) %>% -->
+<!--     filter(region!='Aggregates') %>% -->
+<!--     mutate(Percentage=100*wtd.mean(data_available, weights = weights, na.rm=T), -->
+<!--            Label = paste(round(Percentage,0))) %>% -->
+<!--     ggplot(aes(x=Percentage, y=region, fill=region)) + -->
+<!--       geom_bar(stat="identity",position='dodge') + -->
+<!--       geom_text(aes(label=Label)) + -->
+<!--       labs( -->
+<!--       title=str_wrap(paste(title, 'By Region', sep=" - "),100), -->
+<!--       caption = 'Source: SPI Indicators Raw Data', -->
+<!--       subtitle= 'Data Point is for last year available (2019)' -->
+<!--       ) + -->
+<!--       expand_limits(x=c(0,100)) + -->
+<!--       theme_bw() -->
+
+<!--   #by income -->
+<!--     p3 <- map_df %>% -->
+<!--     group_by(income) %>% -->
+<!--     filter(region!='Aggregates') %>% -->
+<!--     mutate(Percentage=100*wtd.mean(data_available, weights=weights, na.rm=T), -->
+<!--            Label = paste(round(Percentage,0))) %>% -->
+<!--     ggplot(aes(x=Percentage, y=income, fill=income)) + -->
+<!--       geom_bar(stat="identity",position='dodge') + -->
+<!--       geom_text(aes(label=Label)) + -->
+<!--       labs( -->
+<!--       title=str_wrap(paste(title, 'By Income', sep=" - "),100), -->
+<!--       caption = 'Source: SPI Indicators Raw Data', -->
+<!--       subtitle= 'Data Point is for last year available (2019)' -->
+<!--       ) + -->
+<!--       expand_limits(x=c(0,100)) + -->
+<!--       theme_bw() -->
+
+<!--   # #add line graph over time -->
+<!--   p4 <- get(data)  %>% -->
+<!--     rename(data_available=!! indicator) %>% -->
+<!--     # right_join(spi_df_empty) %>% -->
+<!--     group_by( date) %>% -->
+<!--     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>% -->
+<!--     mutate(Percentage=100*mean(data_available, na.rm=T), -->
+<!--            Label = paste(round(Percentage,0))) %>% -->
+<!--     ungroup() %>% -->
+<!--     ggplot(aes(y=Percentage, x=date)) + -->
+<!--       geom_point() + -->
+<!--       geom_line(fill='blue') + -->
+<!--       # geom_text_repel(aes(label=Label)) + -->
+<!--       labs( -->
+<!--       title=str_wrap(paste(title, 'By Date', sep=" - "),100), -->
+<!--       caption = 'Source: SPI Indicators Raw Data' -->
+<!--       ) + -->
+<!--       expand_limits(y=c(0,100)) + -->
+<!--       theme_bw() -->
+
+<!--  (p2 / p3)  -->
+
+<!-- } -->
+
+
+<!-- spi_mapper(SPI.D4.2.4.LBR, 'Statistical Performance Indicators -  Labor Admin Data Scores') -->
+
+
+
+<!-- ``` -->
+
+<!-- ] -->
+
+<!-- ---  -->
+
+
+<!-- ```{css, echo=F} -->
+<!--     /* Table width = 100% max-width */ -->
+
+<!--     .remark-slide table{ -->
+<!--         width: 100%; -->
+<!--     } -->
+
+<!--     /* Change the background color to white for shaded rows (even rows) */ -->
+
+<!--     .remark-slide thead, .remark-slide tr:nth-child(2n) { -->
+<!--         background-color: white; -->
+<!--     } -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- .center3[ -->
+<!-- ```{r overall_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12} -->
+<!-- spi_charts('SPI','SPI.D4.2.4.LBR','Statistical Performance Indicators -  Labor Admin Data Scores') -->
+
+<!-- ``` -->
+
+
+<!-- ] -->
+

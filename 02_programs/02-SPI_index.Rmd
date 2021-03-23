@@ -7,7 +7,7 @@ output:
     toc: yes
     fig_width: 9
     fig_height: 6
-abstract: 'National statistical systems are facing significant challenges. These challenges arise from increasing demands for high quality and trustworthy data to guide decision making, coupled with the rapidly changing landscape of the data revolution. To help create a mechanism for learning amongst national statistical systems, the World Bank is developing improved Statistical Performance Indicators (SPI) to monitor progress of the statistical performance of countries. The SPI focuses on five key dimensions of a country’s statistical performance: (i) data use, (ii) data services, (iii) data products, (iv) data sources, and (v) data infrastructure.  This will replace the Statistical Capacity Index (SCI) the World Bank has regularly published since 2004. This short note briefly discusses the motivation behind the new SPI, describes some of its major features, and discusses a new index based on the indicators.'
+abstract: 'National statistical systems are facing significant challenges. These challenges arise from increasing demands for high quality and trustworthy data to guide decision making, coupled with the rapidly changing landscape of the data revolution. To emphasize the urgent need for transformation and to help create a mechanism for learning amongst national statistical systems, the World Bank has developed new Statistical Performance Indicators (SPI) to monitor the statistical performance of countries. The SPI framework focuses on five key dimensions of a country’s statistical performance: (i) data use, (ii) data services, (iii) data products, (iv) data sources, and (v) data infrastructure.  The SPI will replace the Statistical Capacity Index (SCI) that the World Bank has regularly published since 2004. This note discusses the motivation behind the new SPI methodology, outlines some of its major features, and describes a new index based on the indicators.'
 bibliography: ./bibliography.bib
 ---
 
@@ -62,42 +62,44 @@ theme_spi <- function () {
 
 ```
 
+# Acknowledgements
+
+The work on the Statistical Performance Indicators (SPI) has benefited greatly from the advice, comments and input of many individuals outside the World Bank SPI Team. The work took place under the overall guidance of Haishan Fu, Director of the Development Data Group at the World Bank, who played a key role in helping shape the framework of statistical performance developed here. We are grateful to the SPI Technical Advisory Group consisting of former National Statistician of the Philippines and Director of the Philippine Statistics Authority Lisa Bersales, the Director General of the National Institute of Statistics of Rwanda Yusuf Murangwa, the Chief Statistician of Colombia Juan Oviedo, and the former Director General of Eurostat and Chief Statistician of the European Union Walter Radermacher, and chaired by former National Statistician of the UK, John Pullinger.  
+
+Several World Bank colleagues provided valuable feedback to this project.  They include Claudia P Rodriguez Alas, Rabah Arezki, Joao Pedro Wagner De Azevedo, Benu Bidani, Carlos Rodriguez Castelan, Ximena Del Carpio, Olivier Dupriez, Uche Ekhator, Tony Henri Mathias Jany Fujs, Nada Hamadeh, Craig Hammer, Tim Herzog, Kristen Himelein, Johannes Hoogeveen, Asif Mohammed Islam, Dean Jolliffe, Talip Kilic, Christoph Lakner, Maria Ana Lugo, Daniel Gerszon Mahler, Johan A. Mistiaen, Rinku Murgai, Ambar Narayan, Minh Nguyen, Utz Johann Pape, Martin Rama, Pierella Paci, Carolina Sanchez-Paramo, Ana Florina Pirlea, Emi Suzuki, Emil Daniel Tesliuc, Satoshi Tozaki, Tara Vishwanath, Divyanshi Wadhwa, Matthew Welch, Phillip Wollburg, Salman Zaidi, and Hassan Zaman. Elysee Kiti and Tigist Shibru provided superb administration support. 
+
+Additionally, we benefited from discussions with the following: Louis Marc Ducharme, Jimmy McHugh, Brett Humburg, Francis Cicero de Leon Bobadilla, and Aubriana Wolferts (IMF)); Pietro Gennari (FAO); Francesca Perucci and Yongyi Min (UN Statistics Division); Ramesha Saligrama Krishnamurthy and Rifat Hossain (WHO); Viveka Palm (Eurostat); Rafael Diez de Medina, Ritash Sarna, Marie-Claire Sodergren, and Lara Badre (ILO); Silvia Montoya and Adolfo Imhof (UNESCO Institute of Statistics); Paul Schreyer (OECD); Emily Poskett (ONS, UK); Phil Cockerill (FCDO, UK); Johannes Jutting, Francois Fonteneau, Julia Schmidt, Yu Tian, and Archita Misra (PARIS21); Shaida Badiee, Eric Swanson and Jamison Crowell (Open Data Watch); Claire Melamed (GPSDD); Misha Belkindas (ODW Consulting); Mike Hughes (Full Fact); Peter Rosendorff (New York University); James Hollyer (University of Minnesota); and James Vreeland (Princeton University).
+
+We apologize for any omissions and express our sincere gratitude to everyone, whether or not they are named here, who graciously gave their time and expertise.  We are grateful to the United Kingdom Foreign, Commonwealth and Development Office (FCDO, formerly named the Department for International Development) for funding assistance through Knowledge for Change (KCP) grants, including one for the World Development Report 2021 “Data for Better Lives”.
+
+
 
 # Motivation
 
 National statistical systems are at the heart of the successful governance of nations. They provide an essential public service, helping governments make decisions about the economy, society and environment and enabling citizens to hold those governments to account. 
-The 2030 agenda for sustainable development has created a framework of goals and targets of universal applicability, designed to ensure that no one is left behind. The 2030 agenda requires national statistical systems to work together with other stakeholders within and across nations and regions to measure progress in a consistent and relevant way. At the same time, the data revolution has resulted in previously unimaginable sources of data becoming available that can be mobilized in support of the 2030 agenda in an open, transparent, and ethical manner.
+The 2030 agenda for sustainable development has created a framework of goals and targets of universal applicability, designed to ensure that no one is left behind. This agenda requires national statistical systems to work together with other stakeholders within and across nations and regions to measure progress in a consistent and relevant way. At the same time, the data revolution has resulted in previously unimaginable sources of data becoming available that can be mobilized in support of the 2030 agenda in an open, transparent, and ethical manner.
+However, many nations are struggling to build the necessary financial, human and technological capability to meet these goals. Assessing and improving the capacity of national statistical systems has long been part of the global agenda for statistics. Capacity assessment tools have been developed by organizations including PARIS21, the Food and Agriculture Organization of the United Nations (FAO), the United Nations Economic Commission for Europe (UNECE), the United Nations Economic Commission for Africa (UNECA) and the US Census Bureau. 
+Since 2004, the World Bank’s Statistical Capacity Index (SCI) has been part of this global toolkit. The SCI has been used by several national and international agencies to measure progress in statistical capacity building and related investments. To remain useful in the current and future data landscape, the SCI needs to be updated. The SCI incorporates only a limited number of indicators and does not assess use of data sources beyond traditional censuses and surveys. Neither does the SCI consider data dissemination and how data are used. Finally, the SCI places a large weight on statistical output and activities, while neglecting the infrastructure and resource components of statistical systems.
+The COVID-19 pandemic has added extra motivation and impetus for understanding and improving the performance of national statistical systems. Without good statistics, countries are hamstrung in their response to the pandemic and in navigating towards a better future. The statistical performance indicators proposed in this paper are a response to that motivation. The indicators are intended to be applicable to all nations and to be forward looking and comprehensive. They are designed to be used by national governments and statistical offices as well as international agencies and donors. The aim is to help create a learning data ecosystem that can develop and adapt iteratively to the ever-changing requirements of government and citizens for better data to support better decisions.
 
-However, many nations are struggling to build the necessary financial, human and technological capability to meet these challenges. Assessing and improving the capacity of national statistical systems has long been part of the global agenda for statistics. Capacity assessment tools have been developed by organizations including PARIS21, the Food and Agriculture Organization of the United Nations (FAO), the United Nations Economic Commission for Europe (UNECE), the United Nations Economic Commission for Africa (UNECA) and the US Census Bureau. 
-
-Since 2004, the World Bank’s Statistical Capacity Index (SCI) has been part of this global toolkit. The SCI has been used by several national and international agencies to measure progress in statistical capacity building and related investments. To remain useful in the current and future data landscape, the SCI needs to be updated. The SCI incorporates only a limited number of indicators and does not assess use of data sources beyond traditional censuses and surveys. Neither does the SCI consider data dissemination and how data are used. Finally, the SCI has been criticized for placing too much weight on statistical output and activities, while neglecting the infrastructure and resource components of statistical systems.
-
-The COVID-19 pandemic has added extra motivation and impetus for understanding and improving the performance of national statistical systems. Without good statistics, countries are flying blind in their response to the pandemic and in navigating towards a better future. The statistical performance indicators proposed in this paper are a response to that motivation. The indicators are intended to be applicable to all nations and to be forward looking and comprehensive. They are designed to be used by national governments and statistical offices as well as international agencies and donors. The aim is  to help create a learning data ecosystem that can develop and adapt iteratively to the ever-changing requirements of government and citizens for better data to support better decisions.
 
 
 # Overview of the SPI Framework
 
-The new Statistical Performance Indicators (SPI) build on the Statistical Capacity Indicators (SCI), which the World Bank has regularly published since 2004. The SPI covers several of the same attributes as the SCI, such as statistical methodology, data, and periodicity, but expands into new areas. The goals are to offer a forward looking framework, to measure all statistical systems – less mature to  highly advanced, to  cover the entire national statistical system, not just the National Statistical Office (NSO), and to provide countries incentives to build modern statistical systems. To build transparency and confidence in the work, the data and the code underlying the construction of the SPI are made open for easy replicability.
-
-By helping countries  identify the strengths and weaknesses of their national statistical system, the SPI can be a guide for decisions about priorities for investment and can support the identification of partner countries from which they might learn. This in turn can help countries ensure that development assistance is targeted on areas of most national benefit. The approach is to consider the system as a whole. The SPI incorporates users, producers and partners at various levels. The indicators are designed to be dynamic and forward looking.  Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining.
- 
+The new Statistical Performance Indicators (SPI) build on the Statistical Capacity Indicators The new Statistical Performance Indicators (SPI) build on the Statistical Capacity Index (SCI), which the World Bank regularly published between 2004 and 2021. The SPI framework covers several of the same attributes as the SCI, such as statistical methodology, data, and periodicity, but expands into new areas as well. The goals of introducing the SPI are: to offer a forward looking framework, to measure all statistical systems – from less mature to highly advanced, to cover the entire national statistical system -  not just the National Statistical Office (NSO), and to provide countries incentives to build modern statistical systems. To help build transparency and confidence in the work, as well as to improve understanding and encourage further experimentation, refinement, and improvement of the measures, the data and the code underlying the construction of the SPI are made open.^[The code and data are available on [github]{https://github.com/worldbank/SPI} licensed under the [Creative Commons Attribution 4.0 International License]{https://creativecommons.org/licenses/by/4.0/}, which allows users to freely share, copy, and redistribute any of the materials, as well as adapt, remix, transform, and build upon the material for any purpose, so long as appropriate credit is given the SPI team and the other teams described under the license.]
 
 *Figure 2.1: Virtuous Data Cycle*
 ![](SPI_cycle.png)
 
-In this model, adapted from work done by the Organization for Economic Cooperation and Development, PARIS21 and Open Data Watch, investment leads to higher levels of effectiveness which drives innovation, value added and impact. 
+By helping countries identify the strengths and weaknesses of their national statistical system, the SPI can be a guide to decisions about priorities for investment and can help identify partner countries from which they might learn. This in turn can help both donor and recipient countries ensure that development assistance is targeted on areas of most national benefit. The SPI follows an approach that considers the system as a whole, which incorporates users, producers and partners at various levels. The indicators are designed to be dynamic and forward looking.  Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining.
+In this model, adapted from work done by the Organization for Economic Cooperation and Development, PARIS21 and Open Data Watch, investment in data leads to higher levels of effectiveness which drives innovation, value added and impact. 
+The impact sought from national statistical systems is better decisions and stronger accountability. The way in which national statistical systems contribute to better decisions and stronger accountability is by meeting user needs for statistics. Such user needs are in turn met by the design and production of statistics and statistical indicators. The process of design and production relies on a wide range of organizations, working in partnership with the national statistical office as part of the national statistical system to develop and utilize richer data sources. To be successful the whole data ecosystem needs to build its capability to adapt and thrive.
+Statistics have no value unless they are used. Consequently, the first pillar of the SPI is data use. A successful statistical system is one that produces data products that are highly used.
+To meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second pillar of the SPI is therefore data services that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.
+The dialogue between users and suppliers in turn drives the design and quality of statistical products that are created to meet the country requirement. These products should incorporate accuracy, timeliness, frequency, comparability, and levels of disaggregation. The third pillar of the SPI is therefore data products. A successful statistical system is one that generates high quality statistical indicators that can also track progress toward the Sustainable Development Goals (SDGs).
+In order to create the required products, the statistical system needs to make use of a variety of sources from both within and outside the government. This will include making use of traditional data collection methods like censuses and surveys, and also administrative data, geospatial data, and data generated from the private sector and from citizens. It follows that the fourth pillar of the SPI is data sources. A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced. 
+To complete the virtuous data cycle, the capability of the statistical system needs to be reviewed continuously to ensure that it is strong enough to deliver the data products and services and to promote data use. The fifth pillar of the SPI is therefore data infrastructure. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
 
-The impact sought from national statistical systems is better decisions and stronger accountability. The way in which national statistical systems contribute to better decisions and stronger accountability is by meeting user needs for statistics. Such user needs are in turn met by the design and production of statistics and statistical indicators. The process of design and production relies on a wide range of organizations, working in partnership with the national statistical office as part of the national statistical system. To be successful the whole data ecosystem needs to build its capability to adapt and thrive.
-
-Statistics have no value unless they are used. Consequently, the first pillar of the SPI is **data use**. A successful statistical system is one that produces data products that are highly used.
-
-To meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second pillar of the SPI is therefore **data services** that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.
-
-The dialogue between users and suppliers in turn drives the design and quality of statistical products that are created to meet the country requirement. These products should incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third pillar of the SPI is therefore **data products**. A successful statistical system is one that generates high quality statistical indicators that can also track progress toward the Sustainable Development Goals (SDGs).
-
-In order to create the required products, the statistical system needs to make use of a variety of sources from both within and outside the government. This will include making use of traditional data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens. It follows that the fourth pillar of the SPI is **data sources**. A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced. 
-
-To complete the virtuous data cycle, the capability of the statistical system needs to be reviewed continuously to ensure that it is strong enough to deliver the data products and services and to promote  data use. The fifth pillar of the SPI is therefore **data infrastructure**. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver.
 
 
 
@@ -233,18 +235,32 @@ spi_region_charts  <- function(data, indicator, title) {
     
     
   #add histogram by region 
-  p2 <- map_df %>%
+  region_SPI_df <- map_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=region, fill=region)) +
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    arrange(-`SPI Score`) 
+  
+  region_order <- c("Sub-Saharan Africa " ,
+                    "South Asia",
+                    "North America",
+                    "Middle East & North Africa",
+                    "Latin America & Caribbean ",
+                    "Europe & Central Asia", 
+                    "East Asia & Pacific"
+                           )
+
+  region_SPI_df <- region_SPI_df %>%
+    mutate(region=factor(region, levels=region_order))
+  
+   p2 <-  ggplot(region_SPI_df, aes(x=`SPI Score`, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       expand_limits(x=c(0,100)) +
       theme_spi() +
@@ -254,15 +270,15 @@ spi_region_charts  <- function(data, indicator, title) {
   # p2_alt <- map_df %>%
   #   ungroup() %>%
   #   filter(region!='Aggregates') %>%
-  #   mutate(Percentage=(data_available),
-  #          Label = paste(round(Percentage,0))) %>%
-  #   ggplot(aes(x=Percentage, y=region, color=region)) +
+  #   mutate(`SPI Score`=(data_available),
+  #          Label = paste(round(`SPI Score`,0))) %>%
+  #   ggplot(aes(x=`SPI Score`, y=region, color=region)) +
   #     geom_point() +
   #     geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
   #     labs(
   #     title=str_wrap(paste(title, 'By Country', sep=" - "),100),
   #     caption = 'Source: World Bank. Statistical Performance Indicators.',
-  #     subtitle= 'Data Point is for last year available (2019)'
+  #     subtitle= 'Based on data for 2019 or the latest year available'
   #     ) +
   #     expand_limits(x=c(0,100)) +
   #     theme_spi() +
@@ -296,15 +312,15 @@ spi_income_charts  <- function(data, indicator, title) {
   # p2_alt <- map_df %>%
   #   ungroup() %>%
   #   filter(region!='Aggregates') %>%
-  #   mutate(Percentage=(data_available),
-  #          Label = paste(round(Percentage,0))) %>%
-  #   ggplot(aes(x=Percentage, y=region, color=region)) +
+  #   mutate(`SPI Score`=(data_available),
+  #          Label = paste(round(`SPI Score`,0))) %>%
+  #   ggplot(aes(x=`SPI Score`, y=region, color=region)) +
   #     geom_point() +
   #     geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
   #     labs(
   #     title=str_wrap(paste(title, 'By Country', sep=" - "),100),
   #     caption = 'Source: World Bank. Statistical Performance Indicators.',
-  #     subtitle= 'Data Point is for last year available (2019)'
+  #     subtitle= 'Based on data for 2019 or the latest year available'
   #     ) +
   #     expand_limits(x=c(0,100)) +
   #     theme_spi() +
@@ -316,15 +332,15 @@ spi_income_charts  <- function(data, indicator, title) {
     p3 <- map_df %>%
     group_by(income) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=income, fill=income)) +
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=income, fill=income)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
@@ -348,10 +364,10 @@ spi_time_charts  <- function(data, indicator, title) {
     # right_join(spi_df_empty) %>%
     group_by(income, date) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
     ungroup() %>%
-    ggplot(aes(y=Percentage, x=date, color=income)) +
+    ggplot(aes(y=`SPI Score`, x=date, color=income)) +
       geom_point() +
       geom_line() +
       # geom_text_repel(aes(label=Label)) +
@@ -407,15 +423,25 @@ spi_country_charts  <- function(data, indicator, title) {
   names(col_pal) <- c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
   
 
+  region_order <- c("Sub-Saharan Africa " ,
+                    "South Asia",
+                    "North America",
+                    "Middle East & North Africa",
+                    "Latin America & Caribbean ",
+                    "Europe & Central Asia", 
+                    "East Asia & Pacific"
+                           )
+  
   p2_alt <- SPI_map %>%
     ungroup() %>%
+    mutate(region=factor(region, levels=region_order)) %>%
     ggplot(aes(x=data_available, y=region, color=spi_groups)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
       title=str_wrap(paste(title, 'By Country', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       xlab('Score') +
       expand_limits(x=c(0,100)) +
@@ -579,15 +605,15 @@ lending_charts <- function(data, indicator, title) {
   p2_alt3 <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=(data_available),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=lending, color=lending)) +
+    mutate(`SPI Score`=(data_available),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=lending, color=lending)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
       title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
@@ -625,15 +651,15 @@ lending_chart_aggregate <- function(data, indicator, title) {
   p2_alt3 <- map_df %>%
     group_by(lending) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=lending, fill=lending)) +
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=lending, fill=lending)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
@@ -697,15 +723,15 @@ fcs_charts <- function(data, indicator, title) {
   p2_alt2 <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=(data_available),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=fcs, color=fcs)) +
+    mutate(`SPI Score`=(data_available),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=fcs, color=fcs)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
@@ -766,15 +792,15 @@ fcs_chart_aggregate <- function(data, indicator, title) {
   p2_alt2 <- map_df %>%
     group_by(fcs) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=fcs, fill=fcs)) +
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=fcs, fill=fcs)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
-      caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Data Point is for last year available (2019)'
+      caption = str_wrap('Source: World Bank. Statistical Performance Indicators. Non-FCS countries include all countries not classified as FCS.  This includes high income countries.',70),
+      subtitle= 'Based on data for 2019 or the latest year available'
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
@@ -825,44 +851,47 @@ eq_plot_txt <- function(data) {
 
 # Pillars and Dimensions of the SPI
 
-The pillars of the SPI establish the essential interconnecting elements of a national statistical system. Each one has to be healthy for the system as a whole to generate high levels of value. The pillars correspond to the components of an organizational scorecard: outcomes (benefits for users) are delivered through outputs (services) which are generated by effective internal processes (design and delivery of products). These require the right inputs (data sources) and capabilities (infrastructure).
+The pillars of the SPI establish the essential interconnecting elements of a national statistical system. Each one must be healthy for the system as a whole to generate high levels of value. The pillars correspond to the components of an efficient organizational scorecard: outcomes (benefits for users) are delivered through outputs (services) which are generated by effective internal processes (design and delivery of products). These require the right inputs (data sources) and capabilities (infrastructure).
+Each of the five pillars has specific attributes which we call dimensions. These dimensions offer distinct components of the pillars by which to judge a country’s statistical performance. The framework offers 5 pillars and 22 associated dimensions.  The framework of the SPI is shown in Figure 3.1 below.
 
-Each of the five pillars has specific attributes which we call dimensions. These dimensions offer distinct components of the pillars by which to judge a country’s statistical performance. The framework offers 5 pillars and 22 associated dimensions. The framework of the SPI is as  shown in Figure 3.1 below.
 
 *Figure 3.1: The Pillars and Dimensions that Construct the New SPI*
 ![](SPI_dashboard.png)
   
-The dimensions break down each pillar into the core components or attributes of the system. It is likely that the balance between these dimensions will vary between countries and over time but all are important, and a mature statistical system will score well against each of them. By setting them out in this way, it is possible for countries to ask questions about whether they have the balance right, given their domestic circumstances, when they compare themselves to other countries. The results provide a tool to explore what future investment is needed and where suitable comparators might be found.
+The dimensions break down each pillar into the core components or attributes of the system. It is likely that the balance between these dimensions will vary across countries and overtime but all are important, and a mature statistical system will score well against each of them. By setting them out in this way, it is possible for countries to ask questions about whether they have the balance right, given their domestic circumstances, when they compare themselves to other countries. The results provide a tool to explore what future investment is needed and where suitable comparators might be found.
 
-## Data use
-The data use (outcome) pillar is segmented by five types of users --  (i) the legislature, (ii) the executive branch, (iii) civil society (including sub-national actors), (iv) academia and (v) international bodies.  Each dimension would have associated indicators to measure performance. A mature system would score well across all dimensions whereas a less mature one would have weaker scores along certain dimensions. The gaps would give insights into  prioritization among user groups and help answer questions as to why the existing services are not resulting in higher use of national statistics in  a particular  segment.
+## Pillar 1: Data use
+The data use (outcome) pillar is segmented by five types of users: (i) the legislature, (ii) the executive branch, (iii) civil society (including sub-national actors), (iv) academia and (v) international bodies.  Each dimension would have associated indicators to measure performance. A mature system would score well across all dimensions whereas a less mature one would have weaker scores along certain dimensions. The gaps would give insights into prioritization among user groups and help answer questions as to why the existing services are not resulting in higher use of national statistics in a particular segment.
 
-##	Data services
+##	Pillar 2: Data services
 The data services (output) pillar  is segmented by four service types: (i) the quality of data releases, (ii) the richness and openness of online access, (iii) the effectiveness of advisory and analytical services related to statistics, and (iv) the availability and use of data access services such as secure microdata access. Advisory and analytical services might incorporate elements related to data stewardship services including input to national data strategies, advice on data ethics and calling out misuse of data in accordance with the Fundamental Principles of Official Statistics.
 
-##	Data products
-The data products (internal process) pillar is segmented by four topics and organized into (i) social, (ii) economic, (iii) environmental, and (iv) institutional dimensions using the typology of the Sustainable Development Goals (SDGs). This approach anchors the system in the 2030 development agenda and enables comparisons across countries so that a global view can be generated while enabling country specific emphasis to reflect the user needs of that country.
+##	Pillar 3: Data products
+The data products (internal process) pillar is segmented by four topics and organized into (i) social, (ii) economic, (iii) environmental, and (iv) institutional dimensions using the typology of the Sustainable Development Goals (SDGs). This approach anchors the national statistical system’s performance around the essential data required to support the achievement of the 2030 global goals, and enables comparisons across countries so that a global view can be generated while enabling country specific emphasis to reflect the user needs of that country.
 
-## Data sources
-The data sources (input) pillar is segmented by four sources generated by the (i) statistical office (censuses and surveys), and sources accessed from elsewhere such as (ii)  administrative data, (iii)geospatial data, and (iv) private sector data and citizen generated data. The appropriate balance between these source types will vary depending on a country’s institutional setting and the maturity of its statistical system. High scores should reflect the extent to which the sources being utilized enable the necessary statistical indicators to be generated. For example, a low score on environment statistics (in the data production pillar) may reflect a lack of use of (and low score for) geospatial data (in the data sources pillar). This type of linkage is inherent in the data cycle approach and can help highlight areas for investment if country needs are to be met.
 
-## Data infrastructure
+## Pillar 4: Data sources
+The data sources (input) pillar is segmented by four types of sources generated by (i) the statistical office (censuses and surveys), and sources accessed from elsewhere such as (ii)  administrative data, (iii) geospatial data, and (iv) private sector data and citizen generated data. The appropriate balance between these source types will vary depending on a country’s institutional setting and the maturity of its statistical system. High scores should reflect the extent to which the sources being utilized enable the necessary statistical indicators to be generated. For example, a low score on environment statistics (in the data production pillar) may reflect a lack of use of (and low score for) geospatial data (in the data sources pillar). This type of linkage is inherent in the data cycle approach and can help highlight areas for investment required if country needs are to be met.
+
+## Pillar 5: Data infrastructure
 The data infrastructure (capability) pillar includes hard and soft infrastructure segments, itemizing essential cross cutting requirements for an effective statistical system. The segments are: (i) legislation and governance covering the existence of laws and a functioning institutional framework for the statistical system; (ii) standards and methods addressing compliance with recognized frameworks and concepts; (iii) skills including level of skills within the statistical system and among users (statistical literacy); (iv) partnerships reflecting the need for the statistical system to be inclusive and coherent; and (v) finance mobilized both domestically and from donors.
 
-## A dashboard
-A score against each dimension or pillar, or the overall score, would facilitate:
+## A Dashboard
 
-  1. An understanding of the maturity of the national statistical system (in relation to others, e.g., quintile groups of countries)
+A score for each indicator, dimension, and pillar, and an overall score derived by aggregating the indicators (over these dimensions or over time), would:
+
+  1.	facilitate an understanding of the maturity of the national statistical system (in relation to others, e.g., quintile groups of countries).
   
-  2. This in turn would highlight relative strengths and weaknesses of the system and give an indication of the extent to which the official statistics can be relied upon
+  2.	highlight relative strengths and weaknesses of the system and give an indication of the extent to which the official statistics can be relied upon.
   
-  3. It would also point to which other countries the country in question could learn from as it seeks to improve, and create incentives to develop in a forward looking way
+  3.	point to which other countries a particular country could learn from as it seeks to improve and create incentives to develop in a forward looking way.
   
-  4. A time series would allow assessments  of progress and provide a starting point for assessments of return on investment for funding on capacity building
+  4.	allow assessments of progress and provide a starting point for assessments of return on investments for funding on capacity building.
   
-  5. A dynamic view encouraging continuous improvement. As countries improve, the bar for performance would also get higher.
+  5.	encourage continuous improvement. As countries improve, the bar for performance would also get higher.
 
 Putting the scores together creates a dashboard for each national statistical system and the ability to generate a variety of tools to enable comparison and analysis.
+
 
   
 
@@ -892,43 +921,66 @@ FitFlextableToPage(pillars_tab) %>%
 
 # Statistical Performance Indicators
 
-Each dimension incorporates a number of indicators. These Statistical Performance Indicators embody the granular measures of performance. They can be aggregated to levels of dimensions and pillars, and finally to an overall performance score to get a higher level or more general perspective of a country’s performance.
+##  SPI Dimensions and Indicators
 
-The indicators are designed to act as proxy measures of performance for each dimension. They are not intended to be comprehensive, but they should add value in assessing the strength of performance for that dimension. The intention is that focus should be on the pillars and dimensions rather than the indicators. The indicators are there to be used in combination to help create the dashboard of scores in the framework. 
+Each dimension of the five pillars incorporates several indicators. These Statistical Performance Indicators embody the granular measures of performance. They can be aggregated to levels of dimensions and pillars, and finally to an overall performance score to get a higher level or a more general perspective of a country’s performance.
 
-The selection of indicators for the SPI has followed the following principles: (i) use of publicly accessible data; (ii) transparent methodology; (iii) easy replicability; (iv) a long-time series to track performance; (v) portrayal of outcomes and their supporting elements; (vi) reflective of the SDGs; (vii) at-a-glance comparisons on a global scale. Benefitting from large scale data collection efforts by organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others,  54 indicators covering 14 out of the 22 dimensions for the dashboard have been compiled. These 54 indicators provide data for each of the five pillars on data use, data services, data products, data sources, and data infrastructure. Yet, there remain major gaps in what it is currently possible to measure.  This impedes efforts to measure the performance of statistical systems in certain areas and going forward the international community must work together to fill these gaps.
+The indicators are designed to act as proxy measures of performance for each dimension. While not comprehensive, they should add value in assessing country performance along that dimension. The intention is for the pillars and dimensions to be the focus rather than the specific indicators. 
+The indicators for the SPI are selected following these principles: (i) use of publicly accessible data; (ii) transparent methodology; (iii) easy replicability; (iv) a time series to track performance; (v) clear portrayal of outcomes and their supporting elements; (vi) being reflective of the SDGs; (vii) enable at-a-glance comparisons on a global scale.
 
-Below is a brief description of the indicators (or lack thereof) we have available for the 22 dimensions in the SPI framework. A detailed description of the underlying indicators populating the pillars is also available in the annex. For as many as eight dimensions there was no indicator with a developed methodology or else the data collection for that measure was incomplete. 
+Benefitting from large scale data collection efforts by organizations such as the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, 51 indicators covering 14 out of the 22 dimensions for the dashboard have been compiled. These 51 indicators provide data for each of the five pillars on data use, data services, data products, data sources, and data infrastructure. Yet, there remain major gaps in several pillars because indicators to assess performance still need to be developed, and in some cases, indicators have limited data coverage.  This data availability challenge impedes efforts to measure the performance of statistical systems in certain areas and going forward countries and their international partners must work together to fill these gaps. 
+
+Below is a brief description of the indicators (or lack thereof) we have available for the 22 dimensions in the SPI framework. A detailed description of the indicators is also available in the annex. For as many as eight dimensions there was no indicator with a developed methodology, or the data collection for that measure was incomplete. 
+
+  * **Dimension 1.1: Data use by national legislature:** Not included because of lack of established methodology. In principle it may be possible to utilize websites of national legislatures but this will require further work and assessment. 
+
+  * **Dimension 1.2: Data use by national executive branch:** Not included because of lack of established methodology. There are some usable data sources (as used by [@paris21_statistical_2019]) but gaps in data across countries have prevented full adoption.
+
+  * **Dimension 1.3: Data use by civil society:** Not included because of lack of established methodology. There are some usable data sources with good coverage, for example from social media but more data is required to help assess and allow for likely biases between and within countries.
+
+  * **Dimension 1.4: Data use by academia:** Not included because of lack of established methodology. We have not been able to find usable data sources with global coverage on which a new methodology could be developed.
+
+  * **Dimension 1.5: Data use by international organizations:** Five measures of usefulness or reliability of country produced measures for international organizations have been included. First, on comparability of poverty estimates for the World Bank reporting on international poverty using  [Povcalnet](http://iresearch.worldbank.org/PovcalNet) ([@castaneda2020september]). Second on usable surveys for statistics on child mortality for the [UN Inter-agency Group for Child Mortality Estimation](https://childmortality.org/) ([@united2020levels]). Third on accuracy of debt reporting as classified by the World Bank (Source: World Bank WDI metadata).  Fourth, on availability of safely managed drinking water data for use by [WHO/UNICEF Joint Monitoring Programme](https://washdata.org/) ([@who2018jmp]).  Fifth, on labor force participation data for use by ILO. While these data sources provide only a partial coverag of data used by international organizations, they do provide an indication of the performance of the national statistical system.
+
+
+  * **Dimension 2.1: Data Releases:** SDDS/e-GDDS subscription. This indicator is based on whether the country subscribes to IMF SDDS+, SDDS, or e-GDDS standards. The source is the IMF Dissemination Standards Bulletin Board. This is a reliable data source but we recognize that it is a proxy for the concept we are seeking to capture rather than a direct measurement.
+
+  * **Dimension 2.2: Online access:** ODIN Open Data Openness score (Crowell et al). This is a well-established data source with good country coverage, which scores countries based on whether indicators are available online in a format that is machine readable, in a non-proprietary format, downloadable, with metadata available and terms of use. Scores range from 0-1. For more details, consult the [ODIN technical documentation](https://docs.google.com/document/d/1MBK0hN6MoQrii7_E1bmRXmsUcE8Fbb-Q32nxm8d8qTw/edit).
+
+  * **Dimension 2.3: Advisory/ Analytical Services:** Not included because of lack of established methodology. This could be a new indicator of the number of non-recurring products on NSO website (ad hoc/experimental rather than regular releases). The indicator is the number of products found. No established source exists for this indicator.
+
+  * **Dimension 2.4: Data access services:** NADA metadata. This indicator checks whether NADA microdata cataloging is available for surveys produced by NSO. NADA is an open source microdata cataloging system, compliant with the Data Documentation Initiative (DDI) and Dublin Cores RDF metadata standards. Source: NSO websites.
+
+  * **Dimension 3.1: Social Statistics:** Availability of indicators for the Sustainable Development Goals 1-6, measured by an average score. The primary data source is the UN SDG database. While this is a database with comprehensive coverage that all countries have signed up to, many countries are not yet submitting all their available national data. For this reason, scores for some countries thus may not fully capture their performance in calculating the indicators. For OECD countries, we supplement the UN SDG database with comparable data submitted to the OECD following the methodology in M[Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand](https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm). 
+
+  * **Dimension 3.2: Economic Statistics:** Availability of Goal 7-12 indicators, measured by an average score. See 3.1. 
+
+  * **Dimension 3.3: Environmental Statistics:** Availability of Goal 13 & 15 indicators, measured by an average score. Goal 14 - Life on Water - is not included because land-locked countries do not report on these indicators. See 3.1.
+
+  * **Dimension 3.4: Institutional Statistics:** Availability of Goal 16-17 indicators measured by an average score. See 3.1.
+
+  * **Dimension 4.1: Censuses and Surveys:** Availability of recent censuses and surveys covering broad areas. The following censuses and surveys are considered: Population & Housing census, Agriculture census, Business/establishment census, Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey, Agriculture survey, Labor Force Survey, Health/Demographic survey, Business/establishment survey. Source: NSO websites, World Bank microdata library, ILO microdata library, IHSN microdata library.
+
+  * **Dimension 4.2: Administrative Data:** Availability of Civil Registration and Vital Statistics (CRVS) indicator. An ideal indicator for this dimension would include a score based on the density of administrative data available in sectors including social protection, education, labor, and health. However, social protection, education, health, and labor admin data indicators are not included because of lack of established methodology. While several promising sources for administrative data from the World Bank’s ASPIRE team, WHO, UNESCO, and ILO have been identified, these were not included due to incomplete coverage across countries. Further research and data collection effort would be needed to fill in this information, so that a more comprehensive picture of administrative data availability can be produced. 
+
+  * **Dimension 4.3: Geospatial Data:** Geospatial data available at 1st Admin Level. This data source from Open Data Watch focuses on data availability at the sub-national level and provides a partial understanding of a country’s ability to produce geospatial data. A research and data collection effort is needed to develop a more comprehensive global database of the availability of key geospatial indicators. 
+
+  * **Dimension 4.4: Private/citizen generated data:** Not included because of lack of established methodology. Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.
+
+  * **Dimension 5.1: Legislation and governance:** This indicator is based on PARIS21 indicators on SDG 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Limited country coverage makes cross country comparison limited. As a result, this is included in the dashboard, but not in the overall SPI score or index.
+
+  * **Dimension 5.2: Standards and Methods:** This set of indicators is based on countries’ use of internationally accepted and recommended methodologies, classifications and standards regarding data integration. These indicators help facilitate data exchange and provide the foundation for the preparation of relevant statistical indicators. The following methods and standards are considered: System of national accounts in use, National Accounts base year, Classification of national industry, CPI base year, Classification of household consumption, Classification of status of employment, Central government accounting status, Compilation of government finance statistics, Compilation of monetary and financial statistics, Business process. Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt only traditional standards and methods and neglect innovative solutions that may be more valid in the current context. 
+
+  * **Dimension 5.3: Skills:** Not included because of lack of established methodology or suitable data sources. A new indicator drawing on PARIS21 indicators such as statistical society presence and data literacy could be developed and is an area of future work.
+
+  * **Dimension 5.4: Partnerships:** Not included because of lack of established methodology or suitable data sources. A new indicator based on textual analysis of NSS reports/websites for references to partner organizations could be developed. This is an area of future work.
+
+  * **Dimension 5.5: Finance:** The indicator is based on PARIS21 SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). It is included in dashboard, but not in the overall SPI score or index because of insufficient country coverage. For more details: [@yu_tian_partner_2020]. 
 
 
 
-  * **Dimension 1.1: Data use by national legislature:**  *Not included because of lack of established methodology.  In principle it may be possible to utilize websites of national legislatures but this will require further work and assessment. *   
-  * **Dimension 1.2: Data use by national executive branch:** *Not included because of lack of established methodology. There are some usable data sources with fairly good coverage (as used by [@paris21_statistical_2019]) but gaps in data have prevented fuller assessment of suitable methods.*      
-  * **Dimension 1.3: Data use by civil society:**  *Not included because of lack of established methodology. There are some usable data sources with good coverage, for example from social media but more data is required to help assess and allow for likely biases between and within countries.*    
-  * **Dimension 1.4: Data use by academia:**  *Not included because of lack of established methodology. We have not been able to find usable data sources with global coverage on which a new methodology could be developed.*   
-  * **Dimension 1.5: Data use by international organizations:**  *Five measures usefulness or reliability of country produced measures for international organizations. First, on comparability of poverty estimates for the World Bank reporting on international poverty (Source: Povcalnet). Second on usable surveys for statistics on child mortality for the [UN Inter-agency Group for Child Mortality Estimation](https://childmortality.org/). Third on accuracy of debt reporting as classified by the World Bank (Source: World Bank WDI metadata).  Fourth, on availability of safely managed drinking water data for use by [WHO/UNICEF Joint Monitoring Programme](https://washdata.org/).  Fifth, on labor force participation data for use by ILO. We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further*    
 
-  
-  * **Dimension 2.1: Data Releases:** *SDDS/e-GDDS subscription. This indicator is based on whether the country subscribes to IMF SDDS+, SDDS, or e-GDDS standards.  The source is the IMF Dissemination Standards Bulletin Board.  This is a good data source but we recognize that it is a proxy for the concept we are seeking to capture rather than a direct measurement.*    
-  * **Dimension 2.2: Online access:** *ODIN Open Data Openness score.  This is a well-established data source with good country coverage. In using this indicator, it is important to describe carefully what is captured since the purpose of ODIN is different to the purpose of the SPI.*   
-  * **Dimension 2.3: Advisory/ Analytical Services:**  *Not included because of lack of established methodology.  This would be new indicator of number of non-recurring products on NSO website (ad hoc/experimental rather than regular releases). The indicator is the number of products found.  No established source exists for this indicator.*    
-  * **Dimension 2.4: Data services:** *NADA metadata.  This indicator checks whether NADA microdata cataloging is available for surveys produced by NSO.  NADA is an open source microdata cataloging system, compliant with the Data Documentation Initiative (DDI) and Dublin Cores RDF metadata standards.  Source: NSO websites.*
-  
-  * **Dimension 3.1: Social Statistics:** *Average score for Goal 1-6 indicators. The primary data source is the UN SDG database. Whilst this is a database with comprehensive coverage that all countries have signed up to, it is clear that many (particularly developed countries) are not yet submitting their available national data. Scores for these countries are likely to represent an indicator of their willingness to submit national data rather than their performance in calculating the indicators.  For OECD countries, we supplement the UN SDG database with comparable data submitted to the OECD following the methodology in [Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand](https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm). *
-  * **Dimension 3.2: Economic Statistics:** *Average score for Goal 7-12 indicators. See 3.1.*  
-  * **Dimension 3.3: Environmental Statistics:**  *Average score for Goal 13-15 indicators. See 3.1.*      
-  * **Dimension 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators. See 3.1.*    
 
-  * **Dimension 4.1: Censuses and Surveys:** *Average score Census and Survey Indicators indicators. Availability of recent censuses and surveys covering broad areas.  The following censuses and surveys are considered: Population & Housing census, Agriculture census, Business/establishment census, Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey, Agriculture survey, Labor Force Survey, Health/Demographic survey, Business/establishment survey. Source: NSO websites, World Bank microdata library, ILO microdata library, IHSN microdata library*    
-  * **Dimension 4.2: Administrative Data:** *Average score for CRVS indicator.  An ideal indicator would include a score based on the density of administrative data available in sectors of social protection, education, labor, and health.  However, social protection, education, health, and labor admin data indicators not included because of lack of established methodology. While our team identified several promising sources for administrative data from the World Bank's ASPIRE team, WHO, UNESCO, and ILO, incomplete coverage across countries made us drop these indicators from our index.  A major research and data collection effort is needed from all custodian agencies  to fill in this information, so that a more comprehensive picture of administrative data availability can be produced.  *  
-  * **Dimension 4.3: Geospatial Data:**  *Geospatial data available at 1st Admin Level.  We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the ability of the national statistical system to produce geospatial data. A major research and data collection effort is needed via GGIM to fill in this information, so that a more comprehensive picture of geospatial data capability at the national level can be produced. Until this is done, it we cannot even assess the scale of the data gaps in a comparable way. * 
-  * **Dimension 4.4: Private/citizen generated data:**  *Not included because of lack of established methodology.  Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.*   
-  
-  * **Dimension 5.1: Legislation and governance:**  *Included in dashboard, but not index because of insufficient country coverage.  This indicator is based on PARIS21 indicators on SDG 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Limited country coverage makes cross country comparison limited.  A global database of statistical and data legislation and governance practice would be a valuable resource for capacity building in general not just for the SPI.*  
-  * **Dimension 5.2: Standards and Methods:** *Average score for Standards and Methods indicators. Internationally accepted and recommended methodology, classifications and standards provide the basis for national statistical offices (NSOs) on data integration, facilitating data exchange and providing the foundation for the preparation of relevant statistical indicators.  The following methods and standards are considered:  System of national accounts in use, National Accounts base year, Classification of national industry, CPI base year, Classification of household consumption, Classification of status of employment, Central government accounting status, Compilation of government finance statistics, Compilation of monetary and financial statistics, Business process.  . Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt only traditional standards and methods and neglect innovative solutions that may be more valid in the current context.  *  
-  * **Dimension 5.3: Skills:**  *Not included because of lack of established methodology or suitable data sources.  A new indicator drawing on PARIS21 indicators such as statistical society presence and data literacy could be developed and is an area of future work.*    
-  * **Dimension 5.4: Partnerships:**  *Not included because of lack of established methodology or suitable data sources.  A wew indicator based on textual analysis of NSS reports/websites for references to partner organizations could be developed.  This is an area of future work.*    
-  * **Dimension 5.5: Finance:**  *Included in dashboard, but not index because of insufficient country coverage and concerns that the indicator has biases that would lead to misleading incentives.  The indicator is based on PARIS21 SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). * 
   
 
 ## Data gaps
@@ -959,22 +1011,9 @@ For dimension 4, on censuses and surveys, two complementary approaches are taken
 
 For dimension 5, data on the legislation indicator and finance indicators are pulled from the UN SDG global monitoring database. Indicators in the standards and methods pillar are sourced primarily through the IMF. Information on the system of national accounts in use and national accounts base year are sourced through the World Bank’s WDI metadata. Data for the business process indicator is sourced through the United Nations Industrial Development Organization (UNIDO) and United Nations Economic Commission for Europe (UNECE).
 
-
-
 ## Handling Missing Data 
 
 A full description of the methodology behind each specific indicator is available in  the [technical documentation](https://worldbank.github.io/SPI/).  For indicators where there is  a value for a previous year for a country (say a value in 2018 but not 2019),  the previous value is used. For instance, the open data watch indicator on geo-spatial data was only released in 2018, not 2019, the value for 2019 uses the  figure from 2018 as the estimate for that indicator. For indicators where there is no data for any years, no value has been imputed.
-
-
-## Process for Disputing the Data
-
-Countries will be given an opportunity to dispute the values that make up the indicators. The team takes every effort to make sure the data presented in the Statistical Performance Indicators are accurate, but it is possible that the sources used to assign values for the indicators are occasionally not up to date or accurate despite these efforts. Because of this, countries will have a window to provide documentation for any disputed values through contacting the Bank directly or via data@worldbank.org.
-
-## Process for Updating Indicators
-
-While the framework put forth in this note is comprehensive and is designed to capture the contours of most statistical systems over the next decade and beyond,  the indicators themselves are expected to improve over time. At the release version of the Statistical Performance Indicators will be tagged as version 1.0. From there, we will likely have a 2 to3 year cycle, where the values of the indicators are continuously, but the methodology for constructing them is not changed. At the end of the 2-3 year period, new indicators may be introduced or  current indicators re-evaluated based on feedback from countries and other stakeholders and users. At that point, a major update will be launched as version 2.0, or version 3.0 as the sequence goes. Smaller updates, where for instance a country’s data is adjusted,  , will be labeled with a decimal point as version 1.1 for instance.
-
-In order to be completely transparent, all changes to methodology will be tracked through a publicly available [github repository](https://github.com/worldbank/SPI) and all code and underlying data to produce the indicators will be published.
 
 
 
@@ -986,27 +1025,27 @@ To begin we produce a score for each dimension, which, unless otherwise stated, 
 
 
 
-$$ SPI.DIM_{ctds} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdsi}}{N_I} $$
+$$ SPI.DIM_{ctdp} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctdpi}}{N_I} $$
 
-where $SPI.DIM_{ctds}$ is pillar s, in dimension d, in time period t, and country c.  $SPI.IND_{ctdsi}$ is an indicator (e.g. population census score).
+where $SPI.DIM_{ctdp}$ is pillar p, in dimension d, in time period t, and country c.  $SPI.IND_{ctdpi}$ is an indicator (e.g. population census score).
 
-After computing a score for the dimension, we then compute a pillar score, which is the average of the dimensions in that pillar For pillars 1, 2, 4, and 5, we take the unweighted average of the dimensions in the pillar.  However, for pillar 3 on data products, we take a weighted average of the dimensions, where the weights are based on the number of SDGs in each dimension (6 SDGs in dimension 3.1 on social statistics, 6 SDGs in dimension 3.2 on economic statistics, 2 in dimension 3.3 on environmental statistics, and 2 in dimension 3.4 on institutional statistics).  We take the perspective that all SDGs are of equal importance, and therefore weight our dimensions accordingly.  Additionally, for pillar 4 on data sources, we give censuses and surveys separate weights, so that censuses get 1/4th weight, surveys get 1/4th weight, admin data gets 1/4th weight, and geospatial gets 1/4th weight.  While censuses and surveys are in the same dimension in our framework, and therefore would typically only receive 1/3 weight in this pillar, because of their importance in producing many indicators, they are given extra weight with a sum of 1/2.
+After computing a score for the dimension, we then compute a pillar score, which is the average of the dimensions in that pillar For pillars 1, 2, 4, and 5, we take the unweighted average of the dimensions in the pillar.  However, for pillar 3 on data products, we take a weighted average of the dimensions, where the weights are based on the number of SDGs in each dimension (6 SDGs in dimension 3.1 on social statistics, 6 SDGs in dimension 3.2 on economic statistics, 2 in dimension 3.3 on environmental statistics, and 2 in dimension 3.4 on institutional statistics).^[SDG 14 - Life Below Water - is omitted because land-locked countries do not report on these indicators.]  We take the perspective that all SDGs are of equal importance, and therefore weight our dimensions accordingly.  Additionally, for pillar 4 on data sources, we give censuses and surveys separate weights, so that censuses get 1/4th weight, surveys get 1/4th weight, admin data gets 1/4th weight, and geospatial gets 1/4th weight.  While censuses and surveys are in the same dimension in our framework, and therefore would typically only receive 1/3 weight in this pillar, because of their importance in producing many indicators, they are given extra weight with a sum of 1/2.
 
-$$ SPI.PIL_{cts} = \sum_{d=1}^{N_d} \frac{\omega_{ds} \times SPI.DIM_{ctds}}{N_d} $$
+$$ SPI.PIL_{ctp} = \sum_{d=1}^{N_d} \frac{\omega_{dp} \times SPI.DIM_{ctdp}}{N_d} $$
 
-$\omega_{ds}$ is the weight for dimension d in pillar s.
+$\omega_{dp}$ is the weight for dimension d in pillar p.
 
 After calculating the scores for each pillar, the SPI overall score is the average across the 5 pillars. 
 
-The SPI overall score is scaled to have a maximum score of 100 and a minimum of 0. A score of 100 would indicate that a country has every single element that we measure in place. A score of 0 indicates that none are in place. To be precise:
+The SPI overall score has a maximum score of 100 and a minimum of 0. A score of 100 would indicate that a country has every single element that we measure in place. A score of 0 indicates that none are in place. To be precise:
 
 
 
-$$ SPI.INDEX_{ct} = \sum_{s=1}^{N_s} \frac{SPI.PIL_{cts}}{N_s} $$
+$$ SPI.INDEX_{ct} = \sum_{p=1}^{N_p} \frac{SPI.PIL_{ctp}}{N_p} $$
 
-Where SPI.INDEX is the SPI overall score. SPI.PIL are the 5 SPI pillars listed above. In the notation, c is a country, t is the date, s is a pillar  
+Where SPI.INDEX is the SPI overall score. SPI.PIL are the 5 SPI pillars listed above. In the notation, c is a country, t is the date, p is a pillar  
 
-The nested structure of our index and the summation methods used to build an overall score ensure the axiomatic properties outlined in [@cameron2019measuring].  These include symmetry, monotonicity, and subgroup decomposability.
+The nested structure of our index and the summation methods used to build an overall score ensure the axiomatic properties outlined in [@cameron2019measuring].   These properties include symmetry, monotonicity, and subgroup decomposability.  Symmetry refers to property where if the values of two indicators in a nesting are switched, then the resulting index scores are unaffected.  Monotonicity implies that if the value of an indicator improves, then the resulting index scores improve as well. Subgroup decomposability results from the fact that the scores are a weighted average of the subgroups (either indicators, dimensions, pillars) that make up that score and so can be written as a linear combination of those subgroups.
 
 # SPI Overall Scores
 
@@ -1360,7 +1399,7 @@ Countries are grouped into five categories as shown on the map in figure 6.1:
 * **Bottom 20%**: Countries in the bottom 20% (shading in <span style="color:#ff9f1c">dark orange </span>).  
 
 
-*Figure 6.1: SPI Overall Score*
+*Figure 6.1: SPI Overall Score by Quintile in 2019*
 ```{r map}
 #show map and summary stats by region and income group
 
@@ -1389,7 +1428,7 @@ pil3_bottom <- as.numeric(maturity_tab[4,6])
 
 The countries scoring in the top 20% have an average SPI overall score  of `r spi_top`.  A maximum score of 100 would indicate that a country has every single element in place that is measured through the SPI.   Meanwhile, countries in the bottom 20% score significantly worse, with average  scores  of `r spi_bottom`.  In Pillar 1, countries in the top quintile have a score of `r pil1_top`, while countries in the bottom quintile have scores of `r pil1_bottom`.  One area where even top quintile countries are not doing as well as possible is on our data products pillar.  Countries in the top quintile score only `r pil3_top` points out of 100 in this area.  Pillar 3 measures whether countries have a value in the past 5 years for each SDG indicator, meaning even the top quintile countries have only around `r pil3_top`% of indicators averaging over the SDGs.
 
-*Table 6.1: Table of SPI Overall and Pillar Scores by Quintile Group*
+*Table 6.1: Table of SPI Overall and Pillar Scores by Quintile Group in 2019*
 ```{r maturitdisp0}
 
 maturity_tab <- maturity_tab %>%
@@ -1423,7 +1462,7 @@ census_bottom <- as.numeric(maturity_tab[5,6])
 
 To highlight a few specific indicators, countries in the top 20% on average get nearly perfect scores in terms of the debt reporting to the World Bank.  The top 20% of countries in the SPI overall score have an average score on their debt reporting of `r debt_top`, with a maximum score of 1 and minimum score of 0, while those in the bottom 20% on the SPI overall score have an average score of `r debt_bottom`.  To take another  example, when looking at scores on whether a population census has been conducted recently, countries in the top 20% score on average `r census_top` on our population census indicator, with a max score of 1 and minimum score of 0, while those in the bottom 20% on our SPI overall score receive `r census_bottom` points on the population census indicator.  The table below shows differences across maturity groups for a select set of indicators.
 
-*Table 6.2: Table of SPI Overall and Select SPI Indicators by Quintile Group*
+*Table 6.2: Table of SPI Overall and Select SPI Indicators by Quintile Group in 2019*
 ```{r maturitdisp}
 
 maturity_tab <- maturity_tab %>%
@@ -1441,14 +1480,15 @@ There are large differences in the SPI overall score across World Bank regions a
 
 Finally, when looking over time, since 2016 the SPI overall score values are relatively stable across regions.  There has been some modest increase in the SPI overall score scores for middle income and high income countries, with little progress for low income countries.
 
-*Figure 6.2.A: SPI Overall Score - By Region*
+*Figure 6.2.A: SPI Overall Score by Region in 2019*
 ```{r spiregcharts}
 #show map and summary stats by region and income group
 
 spi_region_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
-*Figure 6.2.B: SPI Overall Score - By Income*
+
+*Figure 6.2.B: SPI Overall Score by Income Group in 2019*
 ```{r spiincomecharts}
 #show map and summary stats by region and income group
 
@@ -1456,21 +1496,23 @@ spi_income_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
 
-*Figure 6.2.C: SPI Overall Score - By Lending*
+*Figure 6.2.C: SPI Overall Score by Lending Group in 2019*
 ```{r spilendcharts}
 #show map and summary stats by region and income group
 
 lending_chart_aggregate('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
-*Figure 6.2.D: SPI Overall Score - By Fragile/Conflict Situations*
+
+*Figure 6.2.D: SPI Overall Score by Fragile/Conflict Situation Status in 2019*
 ```{r spifcscharts}
 #show map and summary stats by region and income group
 
 fcs_chart_aggregate('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
-*Figure 6.2.E: SPI Overall Score - By Year (2016-19)*
+
+*Figure 6.2.E: SPI Overall Score by Year (2016-19)*
 ```{r spitimecharts}
 #show map and summary stats by region and income group
 
@@ -1523,7 +1565,7 @@ bottom_eap_score <- round(as.numeric(eap_df[nrow(eap_df),2]),1)
 
 As well as large differences across regions, there is significant variation in the SPI overall scores within regions.   For instance, in the Latin America & Caribbean World Bank region, `r top_lac` is the highest scoring country with a score of `r top_lac_score`.  However, `r bottom_lac`, the lowest scoring country in the region, earns a substantially lower score of `r bottom_lac_score`.  In Sub-Saharan Africa, the highest scoring country is `r top_ssa` with a score of `r top_ssa_score`, while the lowest scoring country is `r bottom_ssa` with a score of `r bottom_ssa_score`.  In the East Asia and Pacific region, the top scoring country is `r top_eap` with a score of `r top_eap_score`, while the lowest scoring country is `r bottom_eap` with a score of `r bottom_eap_score`.
 
-*Figure 6.3: SPI Overall Scores - By Country and Region* 
+*Figure 6.3: SPI Overall Scores by Country and Region in 2019* 
 ```{r spicountrycharts}
 #show map and summary stats by region and income group
 
@@ -1539,7 +1581,8 @@ By presenting scores for each of the pillars – data use, data services, data p
 ### Pillar 1: Data Use
 
 Figure 6.4 shows a world map displaying countries based on data use score quintiles Overall, the high income countries in North America and Europe tend to rate most highly along this dimension, whereas Sub Saharan African countries tend to lag.  
-*Figure 6.4: Pillar 1: Data Use Scores* 
+
+*Figure 6.4: Pillar 1: Data Use Scores by Quintile in 2019* 
 ```{r pillarsplot1}
 
 spi_mapper('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
@@ -1548,7 +1591,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
 
 Countries within region show significant dispersion in performance . It is worth noting that several countries such as  the United States, Mexico, Finland, and Costa Rica, among others, receive the maximum possible score in this dimension of 100. Several countries score the minimum score as well, including the Syrian Arab Republic, South Sudan, Namibia, and Nauru, among others.
 
-*Figure 6.5: Pillar 1: Data Use Scores - By Country and Region* 
+*Figure 6.5: Pillar 1: Data Use Scores by Country and Region in 2019* 
 ```{r countrypillarsplot1}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
@@ -1580,7 +1623,7 @@ debt_bottom <- as.numeric(maturity_tab[4,6])
 
 The table below shows the average score on each indicator in pillar 1.  Countries in the top 20% possess nearly all of the components in pillar 1, while countries in the bottom 20% are lacking in many areas.  Countries in the bottom 20%  have an average of `r poverty_bottom` on the comparable poverty estimate indicator, an average of `r mort_bottom` on the availability of under 5 mortality data, and an average of `r debt_bottom` on debt reporting.
 
-*Table 6.3: Select Pillar 1 Indicator Scores by SPI Overall Score Quintile Group*
+*Table 6.3: Select Pillar 1 Indicator Scores by SPI Overall Score Quintile Group in 2019*
 ```{r maturitdisp1}
 
 maturity_tab <- maturity_tab %>%
@@ -1596,7 +1639,7 @@ FitFlextableToPage(maturity_tab) %>%
 
 For pillar 2 on data services, high income countries tend to score highest along this pillar  India, Morocco, and the Philippines scored highly as well in this pillar. This pillar contains four indicators on the quality of data releases, online accessibility, advisory and analytical services (not included due to lack of data), and the availability and use of data access services.   
 
-*Figure 6.6: Pillar 2: Data Services Scores* 
+*Figure 6.6: Pillar 2: Data Services Scores by Quintile in 2019* 
 ```{r pillarsplot2}
 spi_mapper('spi_index_df','SPI.INDEX.PIL2','')
 
@@ -1604,7 +1647,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL2','')
 
 
 
-*Figure 6.7: Pillar 2: Data Services Scores - By Country and Region* 
+*Figure 6.7: Pillar 2: Data Services Scores by Country and Region in 2019* 
 ```{r countrypillarsplot2}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL2','')
@@ -1642,7 +1685,7 @@ nada_bottom <- as.numeric(maturity_tab[9,6])
 In terms of specific indicators, the top 20% of countries receive an average score of `r sdds_top` on the indicator measuring country adoption of the IMF's data dissemination standards, while those in the bottom 20% receive an average score of `r sdds_bottom`.  Countries in the bottom 20% receive an average data openness score, produced by Open Data Watch, of `r open_bottom`.  This indicator is made up of several sub-indicators including whether data is available in machine readable format, a non-proprietary format, has download options, metadata available, and terms of use.  For instance, in the bottom 20% of countries the score on whether data is available in a machine readable format is only `r machine_bottom` out of a maximum of 1.  Additionally, countries in the bottom 20% only score an average of `r nada_bottom` on the measure of whether metadata meeting the standards of the Database Documentation Initiative (DDI) is available on surveys conducted.^[For more information, see https://ddialliance.org/]
 
 
-*Table 6.4: Select Pillar 2 Indicator Scores by SPI Overall Score Quintile Group*
+*Table 6.4: Select Pillar 2 Indicator Scores by SPI Overall Score Quintile Group in 2019*
 ```{r maturitdisp2}
 
 maturity_tab <- maturity_tab %>%
@@ -1678,7 +1721,7 @@ Indicator values that are either country reported, country adjusted, estimated, 
 
   * Global monitoring data (G): Produced on a regular basis by the designated agency for global monitoring, based on country data. There is no corresponding figure at the country level.
 
-*Figure 6.8: Pillar 3: Data Products Scores*
+*Figure 6.8: Pillar 3: Data Products Scores by Quintile in 2019*
 ```{r pillarsplot3}
 spi_mapper('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
@@ -1694,7 +1737,7 @@ spi_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
 ```
 
-*Figure 6.9: Pillar 3: Data Products Scores - By Country and Region* 
+*Figure 6.9: Pillar 3: Data Products Scores by Country and Region in 2019* 
 ```{r countrypillarsplot3}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
@@ -1718,6 +1761,7 @@ indicators<-c("SPI.INDEX.PIL3","SPI.D3.1.POV",
               "SPI.D3.10.NEQL",
               "SPI.D3.11.CITY",
               "SPI.D3.12.CNSP",
+              "SPI.D3.13.CLMT",
               "SPI.D3.15.LAND",
               "SPI.D3.16.INST",
               "SPI.D3.17.PTNS")
@@ -1743,7 +1787,7 @@ nada_bottom <- as.numeric(maturity_tab[9,6])
 Even countries in the top quintile have significant room for improvement in reporting on the SDGs.  The average score for the top 20% of countries is `r spi_top`, while for the bottom 20% it is `r spi_bottom`.  For a specific goal, such as for SDG 1 on poverty, the top 20%  receives an average of `r goal1_top` out of a maximum of 1.  This means that the top performing countries are only reporting on `r 100*goal1_top` percent of the SDG indicators between 2015-19.  The bottom 20% receive an average score of `r goal1_bottom`.  The table below shows the full set of breakdowns by SDGs, suggesting reporting on SDG 5 on Gender lags other goals.
 
 
-*Table 6.5: Select Pillar 3 Indicator Scores by SPI Overall Score Quintile Group*
+*Table 6.5: Select Pillar 3 Indicator Scores by SPI Overall Score Quintile Group in 2019*
 ```{r maturitdisp3}
 
 maturity_tab <- maturity_tab %>%
@@ -1951,7 +1995,7 @@ spi_charts('spi_index_df_dim3_alt2', 'SPI.INDEX.PIL3.ALT2','Pillar 3: Data Produ
 Pillar 4 examines whether countries have the data sources available that are necessary to produce statistics for public use. It includes three aspects of data sources: censuses and surveys, administrative data, and geospatial data. Private and citizen generated data is an important area that is at present not incorporated due to the lack of an established source. For censuses and surveys  the score reflects both whether a data source exists and how recently the source was produced, as both are needed for accurate reporting of current conditions. For administrative data and geospatial data,  proxies regarding the state of these data systems are used.
 
 
-*Figure 6.10: Pillar 4: Data Sources Scores*
+*Figure 6.10: Pillar 4: Data Sources Scores by Quintile in 2019*
 ```{r pillarsplot4}
 spi_mapper('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
 ```
@@ -1959,7 +2003,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
 
 When looking at the country chart, again there is significant variability across countries.  No country receives the maximum score of 100, with many countries falling short particularly on our geospatial indicator.  Somalia is the only country that receives a score of 0.
 
-*Figure 6.11: Pillar 4: Data Sources Scores - By Country and Region*
+*Figure 6.11: Pillar 4: Data Sources Scores by Country and Region in 2019*
 ```{r countrypillarsplot4}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
@@ -2003,7 +2047,7 @@ geo_bottom <- as.numeric(maturity_tab[11,6])
 
 Countries in the top 20% have an average score of `r spi_top`, while countries in the bottom 20% have an average score of `r spi_bottom`.  The gap between the top 20% and bottom 20% for the population and housing census indicator is `r pop_gap` points on a scale from 0 to 1.  The gap for countries conducting a business/establishment survey is `r business_gap`.  The scores on the geospatial indicator are low.  The average score for the top 20%  is `r geo_top`, while it is `r geo_bottom` for the bottom 20%.
 
-*Table 6.6: Select Pillar 4 Indicator Scores by SPI Overall Score Quintile Group*
+*Table 6.6: Select Pillar 4 Indicator Scores by SPI Overall Score Quintile Group in 2019*
 ```{r maturitdisp4}
 
 maturity_tab <- maturity_tab %>%
@@ -2047,7 +2091,7 @@ spi_bottom <- as.numeric(maturity_tab[1,6])
 
 Countries scoring in the top 20% tend to be concentrated among the high income countries.  These top scoring countries have an average score for pillar 5 of `r spi_top`, which is near the maximum score of 100.  Countries in the bottom 20% have an average score fo `r spi_bottom`.
 
-*Figure 6.12: Pillar 5: Data Infrastructure Scores*
+*Figure 6.12: Pillar 5: Data Infrastructure Scores by Quintile in 2019*
 ```{r pillarsplot5}
 spi_mapper('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores')
 
@@ -2055,7 +2099,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores
 
 Several countries score the maximum of 100 in the data infrastructure pillar  One country, Somalia, scores 0 points in this pillar.  
 
-*Figure 6.13: Pillar 5: Data Infrastructure Scores - By Country and Region*
+*Figure 6.13: Pillar 5: Data Infrastructure Scores by Country and Region in 2019*
 ```{r countrypillarsplot5}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores')
@@ -2068,7 +2112,7 @@ spi_country_charts('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructur
 
 Among countries in the top 20%, the average score is near 100 across all the indicators of pillar 5. In the bottom 20%, countries on average score close to zero points for the CPI base year, classification of status of employment, central government accounting status, compilation of government finance statistics, and business process indicators. Bottom 20% countries, score above 0.5 points on the system of national accounts in use and compilation of monetary and financial statistics indicators.
 
-*Table 6.6: Select Pillar 5 Indicator Scores by SPI Overall Score Quintile Group*
+*Table 6.8: Select Pillar 5 Indicator Scores by SPI Overall Score Quintile Group in 2019*
 ```{r maturitdisp5}
 
 maturity_tab <- maturity_tab %>%
@@ -2084,7 +2128,7 @@ FitFlextableToPage(maturity_tab) %>%
 
 In the following chart, correlations between the SPI overall score and the individual SPI pillar scores are shown. All pillars are positively correlated with one another. At the same time, no dimension is perfectly correlated with any of the other dimensions, which would indicate that a dimension was not providing any additional information on the statistical performance of countries. The pillar with the single highest correlation with the overall measure is pillar 1 on data use; pillar 3 on data products has the lowest overall correlation. 
 
-*Figure 6.14: Correlation Between SPI pillars*
+*Figure 6.14: Correlation Between SPI pillars in 2019*
 ```{r dimcorr, echo=FALSE}
 
 corr_df <- spi_index_df %>%
@@ -2220,15 +2264,27 @@ leave_out_df <- metadata_full %>%
 
 ```
 
-*Figure 6.15: SPI Indicator Importance*
-```{r leaveoutplot, fig.height=15, fig.width=10}
+*Figure 6.15: SPI Indicator Importance for Top 10 and Bottom 10 Indicators in 2019*
 
-leave_out_df %>%
-  mutate(descript=str_wrap(paste(SPI_indicator_id,": ", source_name , sep=""),55)) %>%
+```{r leaveoutplot, fig.height=9}
+
+leave_out_plot_df <- leave_out_df %>%
+  mutate(source_name=gsub("\\(5 year moving average\\)","", source_name),
+         descript=str_wrap(paste(SPI_indicator_id,": ", source_name , sep=""),50)
+         ) %>%
   filter(mean_abs_diff>0) %>%
   arrange(mean_abs_diff) %>%
-  mutate(descript=factor(descript, levels=descript)) %>%
-  ggplot(aes(x=descript, y=mean_abs_diff, color=SPI_indicator_id)) +
+  mutate(descript=factor(descript, levels=descript))
+
+#get top 10 and bottom 10 
+leave_out_plot_df_trunc <- leave_out_plot_df %>%
+  head(10) %>%
+  mutate(group='Bottom 10') %>%
+  bind_rows(leave_out_plot_df %>% tail(10) %>% mutate(group='Top 10')) %>%
+  arrange(mean_abs_diff)
+
+
+  ggplot(leave_out_plot_df_trunc, aes(x=descript, y=mean_abs_diff, color=group)) +
     geom_segment( aes(x=descript ,xend=descript, y=0, yend=mean_abs_diff)) +
     geom_point(size=3) +
     geom_text(aes(label=round(mean_abs_diff,2)),color='black', nudge_y=.2) +
@@ -2237,14 +2293,14 @@ leave_out_df %>%
     theme(
       panel.grid.minor.y = element_blank(),
       panel.grid.major.y = element_blank(),
-      legend.position = 'none'
+      legend.position = 'top'
     ) +
     xlab("") +
     ylab("Mean Absolute Difference") +
     labs(
-      title="SPI Indicator Importance",
+      title="SPI Indicator Importance for Top 10 and Bottom 10 Indicators",
       subtitle = "Mean absolute difference in SPI overall scores leaving out indicator",
-      caption="The leave-out approach consists of sequentially deleting dimensions or indicators one at a time and recalculating the SPI overall scores."
+      caption=str_wrap("The leave-out approach consists of sequentially deleting dimensions or indicators one at a time and recalculating the SPI overall scores.",80)
     )
 
 ```
@@ -2461,7 +2517,7 @@ We would expect a strong positive relationship between GDP per capita of countri
 
 [^1]: To understand what effect taking the log has on this correlation, the correlation in 2019 between (non-logged) GDP per capita and the SPI overall score is `r round(corr_2019_nontrans,2)`. 
 
-Another measure of a country's development is the Human Capital Index (HCI) developed by the World Bank ([@hci2020]).  The Human Capital Index is designed to capture the amount of human capital a child born today can expect to attain by age 18 in a country.  The index combines a country's child mortality, learning adjusted years of schooling, adult survival rates & stunting into one index. For more details, visit the Human Capital Index website (https://www.worldbank.org/en/publication/human-capital).  Again,  a strong positive relationship between a country's HCI value and their Statistical Performance Indicators index might  be expected, as countries with a more developed human capital stock are likely to have greater capacity to produce statistics.  Again, this is what we see.  The correlation between the 2018 value of the HCI (the latest value available at the time of this writing) and the 2018 value of the SPI overall score is `r round(corr_hci_2018,2)`.
+Another measure of a country's development is the Human Capital Index (HCI) developed by the World Bank ([@hci2019]).  The Human Capital Index is designed to capture the amount of human capital a child born today can expect to attain by age 18 in a country.  The index combines a country's child mortality, learning adjusted years of schooling, adult survival rates & stunting into one index.^[For more details, visit the [Human Capital Index website](https://www.worldbank.org/en/publication/human-capital)].  Again,  a strong positive relationship between a country's HCI value and their Statistical Performance Indicators index might  be expected, as countries with a more developed human capital stock are likely to have greater capacity to produce statistics.  Again, this is what we see.  The correlation between the 2018 value of the HCI (the latest value available at the time of this writing) and the 2018 value of the SPI overall score is `r round(corr_hci_2018,2)`.
 
 The scatter plot of the relationship between log GDP per capita, the HCI, and our SPI overall score for the years 2016-2019 is shown below.  In general, countries with higher per capita income and higher levels of human capital tend to have better performing statistical systems according to the SPI measure.  
 
@@ -2485,7 +2541,7 @@ In order to produce this figure, an OLS regression of the SPI overall score in 2
 
 This figure identifies some countries that appear to have better performing statistical systems than might be expected (Rwanda, Uganda, Egypt, Mexico, Philippines, Armenia and Turkey appear in green on both charts). There are also countries that appear to have poorer performing statistical systems than expected: there are several small island states for example that appear red on both charts.
 
-*Figure 7.2: Top 15 Over/Under-Performers on SPI overall score compared to GDP per capita and Human Capital Index* 
+*Figure 7.2: Top 15 Over/Under-Performers on SPI overall score compared to GDP per capita and Human Capital Index in 2019* 
 ```{r overperformers}
 
 #get top 10 and bottom 10 over performers compared to gdp and hci
@@ -2628,7 +2684,7 @@ There is a strong relationship between the SPI overall score and the government 
 
 
 
-*Figure 7.3: Plot of SPI overall score on Government Effectiveness*
+*Figure 7.3: Plot of SPI overall score on Government Effectiveness in 2019*
 ```{r geplot}
 
 ge_df_2019 <- ge_df_2019 %>%
@@ -2922,8 +2978,8 @@ ggplot(spi_index_df, aes(x = SPI.INDEX)) +
 
 ```
 
-*Figure 7.6: Distribution of SPI overall score and alternative indices across countries*
-```{r density2}
+
+```{r density2, eval=FALSE, include=FALSE}
 #show the density of our SPI index compared to other indices
 ggplot(density_df, aes(x = index_values, color=index_name)) + 
   facet_wrap(~date) +
@@ -2936,6 +2992,27 @@ ggplot(density_df, aes(x = index_values, color=index_name)) +
   xlab('Index value') +
   theme(legend.position = 'bottom')
 ```
+
+# Further Project Information
+
+
+## Process for Disputing the Data
+
+Countries will be given an opportunity to dispute the values that make up the indicators. The team takes every effort to make sure the data presented in the Statistical Performance Indicators are accurate, but it is possible that the sources used to assign values for the indicators are occasionally not up to date or accurate despite these efforts. Because of this, countries will have a window to provide documentation for any disputed values through contacting the Bank directly or via data@worldbank.org.
+
+## Process for Updating Indicators
+
+While the framework put forth in this note is comprehensive and is designed to capture the contours of most statistical systems over the next decade and beyond,  the indicators themselves are expected to improve over time. At the release version of the Statistical Performance Indicators will be tagged as version 1.0. From there, we will likely have a 2 to3 year cycle, where the values of the indicators are continuously, but the methodology for constructing them is not changed. At the end of the 2-3 year period, new indicators may be introduced or  current indicators re-evaluated based on feedback from countries and other stakeholders and users. At that point, a major update will be launched as version 2.0, or version 3.0 as the sequence goes. Smaller updates, where for instance a country’s data is adjusted,  , will be labeled with a decimal point as version 1.1 for instance.
+
+In order to be completely transparent, all changes to methodology will be tracked through a publicly available [github repository](https://github.com/worldbank/SPI) and all code and underlying data to produce the indicators will be published.
+
+## Links to Resources
+
+[Project Website](www.worldbank.org/spi)
+
+[Github repository](https://github.com/worldbank/SPI)
+
+[Interactive Dashboard](https://datanalytics.worldbank.org/content/603)
 
 # Conclusion
 
@@ -2951,6 +3028,7 @@ Countries and international organizations need to know each national statistical
 <!-- We identify five key dimensions of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These dimensions can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining. -->
 
 Countries and international organizations need to know each national statistical system's current capabilities, and the new SPI is meant to help fill this gap.  Only then can the virtuous cycle of investment, effectiveness, innovation, value added and impact can begin.
+
 
 
 
@@ -3167,7 +3245,7 @@ FitFlextableToPage(index_tab_recode)
 ```
 
 ##  SPI Overall and Pillar Scores by Region, Income, & Lending
-*Table A.3: Table of SPI Overall and Pillar Scores by Region*
+*Table A.3: Table of SPI Overall and Pillar Scores by Region in 2019*
 ```{r maturitytabreg, fig.cap=''}
 
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
@@ -3183,7 +3261,7 @@ spi_group_table('spi_index_df',indicators,2019, 'region') %>%
 ```
 
 
-*Table A.4: Table of SPI Overall and Pillar Scores by Income Group*
+*Table A.4: Table of SPI Overall and Pillar Scores by Income Group in 2019*
 ```{r maturitytabinc, fig.cap=''}
 
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
@@ -3198,7 +3276,7 @@ spi_group_table('spi_index_df',indicators,2019, 'income') %>%
 
 ```
 
-*Table A.5: Table of SPI Overall and Pillar Scores by Lending Group*
+*Table A.5: Table of SPI Overall and Pillar Scores by Lending Group in 2019*
 ```{r maturitytablend, fig.cap=''}
 
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
@@ -3213,7 +3291,7 @@ spi_group_table('spi_index_df',indicators,2019, 'lending') %>%
 
 ```
 
-*Figure A.1: SPI Pillar 1 - Data Use - Score - By Region*
+*Figure A.1: SPI Pillar 1 - Data Use Score - By Region in 2019*
 ```{r spiregcharts1}
 #show map and summary stats by region and income group
 
@@ -3221,7 +3299,7 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL1','SPI Data Use Score')
 
 ```
 
-*Figure A.2: SPI Pillar 2 - Data Services - Score - By Region*
+*Figure A.2: SPI Pillar 2 - Data Services Score - By Region in 2019*
 ```{r spiregcharts2}
 #show map and summary stats by region and income group
 
@@ -3229,7 +3307,7 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL2','SPI Data Services Score')
 
 ```
 
-*Figure A.3: SPI Pillar 3 - Data Products - Score - By Region*
+*Figure A.3: SPI Pillar 3 - Data Products Score - By Region in 2019*
 ```{r spiregcharts3}
 #show map and summary stats by region and income group
 
@@ -3237,20 +3315,22 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL3','SPI Data Products Score')
 
 ```
 
-*Figure A.4: SPI Pillar 4 - Data Sources - Score - By Region*
+*Figure A.4: SPI Pillar 4 - Data Sources Score - By Region in 2019*
 ```{r spiregcharts4}
 #show map and summary stats by region and income group
 
 spi_region_charts('spi_index_df','SPI.INDEX.PIL4','SPI Data Sources Score')
 
 ```
-*Figure A.5: SPI Pillar 5 - Data Infrastructure - Score - By Region*
+
+*Figure A.5: SPI Pillar 5 - Data Infrastructure Score - By Region in 2019*
 ```{r spiregcharts5}
 #show map and summary stats by region and income group
 
 spi_region_charts('spi_index_df','SPI.INDEX.PIL5','SPI Data Infrastructure Score')
 
 ```
+
 ## Comparison to other measures of statistical performance
 
 Next, the SPI is compared with several other indices of statistical performance that have been created. This provides a sense of how rankings differ across measures, how they correlate with other outcomes, and how the distributions of scores compare. These are the SCI, the Open Data Watch index (ODIN), and version 0 of the SPI overall score that was produced in [@cameron2019measuring] 
@@ -3323,7 +3403,7 @@ Next, the relationship is shown between Log GDP per capita, the SCI and the SPI 
 Overall, the new SPI overall score has the strongest relationship to GDP per capita.  The linear regression estimates indicate that a 1% increase in GDP per capita is associated with a `r round(spi_coef/100,1)` point increase in the SPI overall score.  The r-squared from this regression is `r round(spi_r2,2)`.
 
 
-*Table A.6: Scatterplot of Statistical Capacity Index (SCI) and SPI Overall Score*
+*Table A.6: Relationship between Statical Performance Measures and GDP per capita.*
 ```{r scispiregtab}
 
 
