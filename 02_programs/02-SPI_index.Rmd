@@ -2923,7 +2923,7 @@ odin_df <- odin_df %>%
 
 
 #read in the old SPI
-SPI_v0_df <- readxl::read_excel(path='C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/FinalCopy of SPI SCORE 2016-2018-DW.xlsx', skip=2) %>%
+SPI_v0_df <- readxl::read_excel(path=paste(raw_dir, '/misc/SPI_v0_scores.xlsx', sep=""), skip=2) %>%
   transmute(
     iso3c=Country,
     SPI_2016=as.numeric(Overall...7),
