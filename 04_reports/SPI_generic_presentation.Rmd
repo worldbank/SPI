@@ -4,13 +4,18 @@ title: "Statistical Performance Indicators"
 institute: "World Bank, Development Data Group"
 date: "`r Sys.Date()`"
 output:
-  powerpoint:
+  xaringan::moon_reader:
     lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
     fig_width: 5
     fig_height: 4
     dpi: 250
     fig_caption: true
     background-size: contain;
+    css: xaringan-themer.css
 ---
 
 <style>
@@ -388,21 +393,21 @@ spi_charts  <- function(data, indicator, title) {
   region_SPI_df <- map_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    summarise(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    arrange(-Percentage) 
+    summarise(Score=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Score,0))) %>%
+    arrange(-Score) 
   
   region_order <- region_SPI_df$region
 
   region_SPI_df <- region_SPI_df %>%
     mutate(region=factor(region, levels=region_order))
 
-   p2 <- ggplot(region_SPI_df, aes(x=Percentage, y=region, fill=region)) +
+   p2 <- ggplot(region_SPI_df, aes(x=Score, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
+      caption = 'Source: World Bank Statistical Performance Indicators',
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       expand_limits(x=c(0,100)) +
@@ -418,14 +423,14 @@ spi_charts  <- function(data, indicator, title) {
     p3 <- map_df %>%
     group_by(income) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights=weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=income, fill=income)) +
+    mutate(Score=wtd.mean(data_available, weights=weights, na.rm=T),
+           Label = paste(round(Score,0))) %>%
+    ggplot(aes(x=Score, y=income, fill=income)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
+      caption = 'Source: World Bank Statistical Performance Indicators',
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       scale_y_discrete(limits = income) +
@@ -438,16 +443,16 @@ spi_charts  <- function(data, indicator, title) {
     # right_join(spi_df_empty) %>%
     group_by( date) %>%
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
-    mutate(Percentage=mean(data_available, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
+    mutate(Score=mean(data_available, na.rm=T),
+           Label = paste(round(Score,0))) %>%
     ungroup() %>%
-    ggplot(aes(y=Percentage, x=date)) +
+    ggplot(aes(y=Score, x=date)) +
       geom_point() +
       geom_line(fill='blue') +
       # geom_text_repel(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Date', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data'
+      caption = 'Source: World Bank Statistical Performance Indicators'
       ) +
     
       expand_limits(y=c(0,100)) +
@@ -494,9 +499,9 @@ spi_country_charts  <- function(data, indicator, title) {
     region_SPI_df <- map_df %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
-    summarise(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    arrange(-Percentage) 
+    summarise(Score=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Score,0))) %>%
+    arrange(-Score) 
   
   region_order <- region_SPI_df$region
 
@@ -508,7 +513,7 @@ spi_country_charts  <- function(data, indicator, title) {
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
       title=str_wrap(title,65),
-      caption = 'Source: SPI Indicators Raw Data',
+      caption = 'Source: World Bank Statistical Performance Indicators',
       subtitle= 'Statistical Performance Indicators - Overall Scores - 2019'
       ) +
       xlab('Score') +
@@ -552,14 +557,14 @@ lending_charts <- function(data, indicator, title) {
   p2_alt3 <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=(data_available),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=lending, color=lending)) +
+    mutate(Score=(data_available),
+           Label = paste(round(Score,0))) %>%
+    ggplot(aes(x=Score, y=lending, color=lending)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
       title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
+      caption = 'Source: World Bank Statistical Performance Indicators',
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       scale_y_discrete(limits = lending_list) +
@@ -598,14 +603,14 @@ lending_chart_aggregate <- function(data, indicator, title) {
   p2_alt3 <- map_df %>%
     group_by(lending) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=lending, fill=lending)) +
+    mutate(Score=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Score,0))) %>%
+    ggplot(aes(x=Score, y=lending, fill=lending)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
+      caption = 'Source: World Bank Statistical Performance Indicators',
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       scale_y_discrete(limits = lending_list) +
@@ -670,21 +675,26 @@ fcs_charts <- function(data, indicator, title) {
   p2_alt2 <- map_df %>%
     ungroup() %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=(data_available),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=fcs, color=fcs)) +
+    mutate(Score=(data_available),
+           Label = paste(round(Score,0))) %>%
+    ggplot(aes(x=Score, y=fcs_detail, color=fcs_detail)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
+      caption = 'Source: World Bank Statistical Performance Indicators',
       subtitle= 'Data Point is for last year available (2019)'
+      ) +
+      guides(
+        color="FCS"
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
       theme_bw() +
       theme(legend.position = 'top',
-            text=element_text(size=14)) 
+            title= element_text(size = 20),
+            axis.title.y=element_blank(),
+            text = element_text(size = 14)) 
    
 p2_alt2 
   
@@ -739,21 +749,23 @@ fcs_chart_aggregate <- function(data, indicator, title) {
   p2_alt2 <- map_df %>%
     group_by(fcs) %>%
     filter(region!='Aggregates') %>%
-    mutate(Percentage=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=fcs, fill=fcs)) +
+    mutate(Score=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Score,0))) %>%
+    ggplot(aes(x=Score, y=fcs, fill=fcs)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
-      title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
+      title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations', sep=" - "),60),
+      caption = 'Source: World Bank Statistical Performance Indicators',
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
       theme_bw() +
       theme(legend.position = 'top',
-            text=element_text(size=14)) 
+            title= element_text(size = 20),
+            axis.title.y=element_blank(),
+            text = element_text(size = 14)) 
   
   
   
@@ -1401,7 +1413,7 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~ indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_spi() +
+  theme_bw() +
   ylab('SPI Overall Score') +
   xlab('Human Capital Index') +
   expand_limits(y=c(0,100)) +
@@ -1465,7 +1477,7 @@ ge_df_2019 <- ge_df %>%
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_spi() +
+  theme_bw() +
   ylab('SPI Overall Score') +
   xlab('Government Effectiveness (z score)') +
   expand_limits(y=c(0,100)) +
@@ -1536,7 +1548,7 @@ gdp_overperformers_plot <-  gdp_overperformers_plot %>%
                      labels = c("Over-performers", "Under-performers"),
                      values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_spi() +
+  theme_bw() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
@@ -1578,7 +1590,7 @@ hci_overperformers_plot <- hci_overperformers_plot %>%
                      labels = c("Over-performers", "Under-performers"),
                      values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_spi() +
+  theme_bw() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
