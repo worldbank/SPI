@@ -646,6 +646,8 @@ Because of the large data files and runtime of the program to calculate these in
 
 products_table <- spi_income_table('spi_df_final', 'SPI.D3','2019')
 
+products_region_table <- spi_region_table('spi_df_final', 'SPI.D3','2019')
+
 #export table to word
 ft <- flextable(products_table) %>%
   add_header_lines("Percentage of SDG Indicator Values Available by Goal That Meet Metadata Standards") 
