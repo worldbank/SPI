@@ -670,7 +670,7 @@ fcs_charts <- function(data, indicator, title) {
   
 
   fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
-  fcs_list <- c("FCS country","Non-FCS country")
+  #fcs_list <- c("FCS country","Non-FCS country")
 
   p2_alt2 <- map_df %>%
     ungroup() %>%
@@ -683,11 +683,10 @@ fcs_charts <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
       caption = 'Source: World Bank Statistical Performance Indicators',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Data Point is for last year available (2019)',
+      color="FCS"
       ) +
-      guides(
-        color="FCS"
-      ) +
+
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
       theme_bw() +
@@ -744,20 +743,21 @@ fcs_chart_aggregate <- function(data, indicator, title) {
   
 
   fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
-  fcs_list <- c("FCS country","Non-FCS country")
+  #fcs_list <- c("FCS country","Non-FCS country")
 
   p2_alt2 <- map_df %>%
-    group_by(fcs) %>%
+    group_by(fcs_detail) %>%
     filter(region!='Aggregates') %>%
     mutate(Score=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Score,0))) %>%
-    ggplot(aes(x=Score, y=fcs, fill=fcs)) +
+    ggplot(aes(x=Score, y=fcs_detail, fill=fcs_detail)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations', sep=" - "),60),
       caption = 'Source: World Bank Statistical Performance Indicators',
-      subtitle= 'Data Point is for last year available (2019)'
+      subtitle= 'Data Point is for last year available (2019)',
+      color='FCS'
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
