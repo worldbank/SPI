@@ -57,10 +57,12 @@
 
 # R-scrips and Rmarkdown-scripts
 !/**/**/*.R
+!/**/**/*.Rproj
 !/**/**/*.Rmd
 !renv*
 !renv.lock
 !/**/**/*.Rdata
+
 
 # HTML files
 !/**/**/*.html

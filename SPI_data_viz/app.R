@@ -23,7 +23,7 @@ library(ggcorrplot)
 library(Hmisc)
 library(flextable)
 library(skimr)
-
+library(shinyWidgets)
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv')
 
@@ -234,21 +234,25 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",
                           div(class="outer",
                               
                               fluidRow(
-                                column(3,
+                                column(2,
                                        selectizeInput("country_choice",
                                                       "Choose Country",
                                                       choices=as.character(country_info$country),
                                                       selected='Afghanistan')),
-                                column(3,offset=1,
+                                column(2,offset=1,
                                        selectizeInput("year_choice",
                                                       "Choose Year",
                                                       choices=c(2004:2019),
                                                       selected=2019)),  
-                                column(3,offset=1,
+                                column(2,offset=1,
                                        selectizeInput("comparison_choice",
                                                       "Add Countries to Compare",
                                                       choices=as.character(country_info$country),
-                                                      multiple=T                              ))),
+                                                      multiple=T                              )),
+                                column(1, offset=1,
+                                       materialSwitch(inputId = "toggle", label = "Single/Multi Column",
+                                                      status='success'))
+                                ),
                               
                           ),
                           withSpinner(plotlyOutput('fullplot',
@@ -1137,7 +1141,7 @@ server <- function(input, output,session) {
         #            size = 3) +
         labs(x = "", y = "") +
         theme_bw() +
-        facet_wrap(vars(dimname), scales = "free", ncol = 2) +
+        facet_wrap(vars(dimname), scales = "free", ncol = (as.numeric(input$toggle)+1)) +
         theme(
           panel.grid.minor.y = element_blank(),
           panel.grid.major.y = element_blank(),
