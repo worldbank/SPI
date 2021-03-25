@@ -1106,6 +1106,7 @@ server <- function(input, output,session) {
       
       lollip_df_temp <- lolli_df() %>%
         select(country, starts_with('SPI')) %>%
+        relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
         pivot_longer(
           cols = starts_with('SPI'),
           names_to = 'source_id',
@@ -1117,18 +1118,29 @@ server <- function(input, output,session) {
                shortname2 = NULL) %>%
         filter(!is.na(shortname)) %>%
         mutate(source_name = ifelse(is.na(source_name), shortname, source_name),
-               shortname=factor(shortname, levels=unique(shortname)),
+               shortname=factor(shortname, ordered=TRUE),
                country=factor(country, levels=unique(country))) %>%
         mutate(indi2 = trimws(str_remove(SPI_indicator_id, "Dimension"))) %>%
         mutate(dimension = substr(indi2, 1, 1)) %>%
         mutate(dimname = paste("Pillar ", dimension),
-               dimname = ifelse(is.na(dimension), "Index", dimname),
-               shortname=ifelse(dimname == "Pillar  1", str_wrap(shortname, 25), str_wrap(shortname, 12))
+               dimname = case_when(
+                 dimname=="Pillar  1" ~ "Pillar 1: Data Use",
+                 dimname=="Pillar  2" ~ "Pillar 2: Data Services",
+                 dimname=="Pillar  3" ~ "Pillar 3: Data Products",
+                 dimname=="Pillar  4" ~ "Pillar 4: Data Sources",
+                 dimname=="Pillar  5" ~ "Pillar 5: Data Infrastructure",
+                 TRUE ~ "Overall Index"
+               ),
+               shortname=ifelse(dimname == "Pillar  1: Data Use", str_wrap(shortname, 25), str_wrap(shortname, 12))
         ) %>%
         mutate(labtext = paste(paste(country),
                                paste(source_name),
                                paste("Score: ", values),
                                sep = "<br />"))
+      
+      #order the categories
+      lollip_df_temp <- lollip_df_temp %>%
+        mutate(shortname=factor(shortname, levels = unique(lollip_df_temp$shortname)))
       
       p <- ggplot(lollip_df_temp) +
         ## For parallel coordinates/Line charts
@@ -1150,7 +1162,8 @@ server <- function(input, output,session) {
           legend.text = element_text(size=8),
           legend.title = element_blank(),
           #    panel.spacing.y = unit(3, "lines"),
-          strip.background = element_rect(color = "white"))
+          strip.background = element_rect(fill = "#43ACE9"),
+          strip.text = element_text(colour = 'white'))
       
       ggplotly(p, tooltip = "text") %>%
         layout(autosize = TRUE, 
