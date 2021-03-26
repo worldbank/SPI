@@ -10,7 +10,7 @@ cross-country comparisons of performance at a point in time.
 
 This application allows users to explore the Statistical Performance Index and the indicators that populate it.  
 
-The first tab in the application, Global Picture, shows a map of the overall index score, along with aggregate scores for each indicator by World Bank region.
+The first tab in the application, Global Picture, shows a map of the overall index score, along with scores for each indicator, dimension, or pillar.
 
 In the second tab, the user can explore details for each country as well by selecting the "Country Reports" tab.
 

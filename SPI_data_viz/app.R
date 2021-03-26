@@ -285,16 +285,26 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",
                               mainPanel(
                                 includeMarkdown("weights.md"),
                                 fluidRow(
-                                  column(4,
+                                  column(2,
                                     selectizeInput("country_year_choice",
                                                  "Choose Year",
                                                  choices=c(2016:2019),
                                                  selected=2019)),
-                                  column(4,offset=1,
+                                  column(2,offset=1,
                                     selectizeInput("country_tab", "Select Countries",
                                                    choices=NULL,
                                                    selected=c("All"),
-                                                   multiple=T))
+                                                   multiple=T)),
+                                  column(2,offset=1,
+                                         selectizeInput("income_tab", "Select Income Groups",
+                                                        choices=NULL,
+                                                        selected=c("All"),
+                                                        multiple=T)),
+                                  column(2,offset=1,
+                                         selectizeInput("region_tab", "Select Region Groups",
+                                                        choices=NULL,
+                                                        selected=c("All"),
+                                                        multiple=T))                                  
                                 ),  
                                 withSpinner(DT::dataTableOutput("country_table",
                                                               width='100%'))
@@ -638,8 +648,15 @@ server <- function(input, output,session) {
     #add country choices
     choice <- unique(as.character(country_info$country))
     choice<-append('All',choice)
+    #add region choices
+    region_choice <- unique(as.character(country_info$region))
+    region_choice<-append('All',region_choice)
+    #add income choices
+    income_choice <- unique(as.character(country_info$income))
+    income_choice<-append('All',income_choice)    
     # 
     updateSelectizeInput(session, 'country', choices = choice, selected=c("All"), server=TRUE)
+    
     # 
     # hgt <- reactive({
     #   20*(100*length(input$choice)/(length(unique(country_info$country)+1)))
@@ -923,7 +940,7 @@ server <- function(input, output,session) {
             "<strong>%s</strong><br/> <hr size=2>
             <strong> %s: %g </strong><br/> <hr size=2>
             ",
-            spi_map_overall@data$NAME_EN,
+            spi_map_overall@data$WB_NAME,
             'Indicator Value', round(select(spi_map_overall@data, map_var())[,1], digits = 1)
 
         ) %>%
@@ -1178,6 +1195,8 @@ server <- function(input, output,session) {
     # Country Datatable
     ###########
     updateSelectizeInput(session, 'country_tab', choices = choice, selected=c("All"), server=TRUE)
+    updateSelectizeInput(session, 'income_tab', choices = income_choice, selected=c("All"), server=TRUE)
+    updateSelectizeInput(session, 'region_tab', choices = region_choice, selected=c("All"), server=TRUE)
     
     #show hide dimension weights
     shinyjs::onclick("toggleDimension1",
@@ -1298,7 +1317,7 @@ server <- function(input, output,session) {
           #sum up based on individual dimension weights
         ) %>% #
         mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
-        select(country, SPI.INDEX,SPI.INDEX.PIL1,SPI.INDEX.PIL2,SPI.INDEX.PIL3,SPI.INDEX.PIL4,SPI.INDEX.PIL5) 
+        select(country, SPI.INDEX,SPI.INDEX.PIL1,SPI.INDEX.PIL2,SPI.INDEX.PIL3,SPI.INDEX.PIL4,SPI.INDEX.PIL5, region, income) 
       #  filter(date>=2016) #2016 is first year with complete data
       
       
@@ -1332,12 +1351,31 @@ server <- function(input, output,session) {
 
       # select countries for table
       
-      if (!("All" %in% input$country_tab))
+      if (!("All" %in% input$country_tab) ) {
         datatab <- index_tab %>%
-        filter(country %in% input$country_tab) 
-      else (
-        datatab <- index_tab
-      )
+        filter((country %in% input$country_tab)) 
+      }  else {
+        datatab <- index_tab 
+      }
+      
+      #select regions for table
+      if (!("All" %in% input$region_tab)) {
+        datatab <- datatab %>%
+        filter((region %in% input$region_tab)) 
+      }  else {
+        datatab <- datatab
+      }
+
+      #select income groups for table
+      if (!("All" %in% input$income_tab)) {
+        datatab <- datatab %>%
+          filter((income %in% input$income_tab)) %>%
+          select(-income, -region)
+      }  else {
+        datatab <- datatab %>%
+          select(-income, -region)
+      }        
+
       
         #make nice looking table
         DT::datatable(datatab, caption=paste('Overall SPI Index in ',input$country_year_choice,' and Pillar Scores.', sep=""),

@@ -603,8 +603,9 @@ lending_chart_aggregate <- function(data, indicator, title) {
   p2_alt3 <- map_df %>%
     group_by(lending) %>%
     filter(region!='Aggregates') %>%
-    mutate(Score=wtd.mean(data_available, weights = weights, na.rm=T),
+    summarise(Score=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Score,0))) %>%
+    #write_excel_csv('C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/charts_data/lending_data.csv') %>%
     ggplot(aes(x=Score, y=lending, fill=lending)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
@@ -750,6 +751,7 @@ fcs_chart_aggregate <- function(data, indicator, title) {
     filter(region!='Aggregates') %>%
     mutate(Score=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(Score,0))) %>%
+    #write_excel_csv('C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/charts_data/fcs_data.csv') %>%
     ggplot(aes(x=Score, y=fcs, fill=fcs)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
@@ -1522,6 +1524,12 @@ ge_df_2019 <- ge_df %>%
 ## GDP
 #regress SPI on gdp
 m_spi <- lm(SPI.INDEX ~ log(value) , data = gdp_df_2019) 
+
+m_gdp <- lm(log(value) ~  SPI.INDEX, data = gdp_df_2019) 
+
+
+gdp_all_df <- gdp_df_2019 %>%
+  modelr::add_predictions(m_gdp)
 
 gdp_overperformers_df <- gdp_df_2019 %>%
   modelr::add_residuals(m_spi) %>%

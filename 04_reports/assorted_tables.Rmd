@@ -503,6 +503,130 @@ spi_region_table_count <- function(data, indicator, reference_year) {
         sumstats_df
  
 
+}
+
+
+spi_lending_table <- function(data, indicator, reference_year) {
+
+  indicator<-indicator
+  
+  
+  
+  df_overall <- get(data) %>%
+    filter(date==as.numeric(reference_year)) %>% 
+    select(country, iso3c, date, income, lending, starts_with(indicator))
+
+    #produce by lending
+        sumstats<- df_overall %>%
+            group_by(lending) %>%
+            filter(!is.na(lending)) %>%
+            select(lending, starts_with(indicator)) %>%
+            summarise_all(~round(100*mean(., na.rm=T),1)) 
+        
+        #produce global number
+        sumstats_gl<- df_overall %>%
+            mutate(lending='Global') %>%
+            group_by(lending) %>%
+            select(lending, starts_with(indicator)) %>%
+            summarise_all(~round(100*mean(., na.rm=T),1)) 
+        
+        
+        #transpose data
+        sumstats_df_long <-sumstats_gl %>%
+            bind_rows(sumstats) 
+        
+        sumstats_df <- as.data.frame(t(sumstats_df_long %>% select(-lending)))
+        colnames(sumstats_df) = sumstats_df_long$lending 
+        
+        
+        sumstats_df <- sumstats_df %>%
+            rownames_to_column() %>%
+            rename(series=rowname)
+        
+        
+        #create labels df
+        metadata_tab2_overall <- metadata %>% 
+            janitor::clean_names() %>%
+            transmute(series=source_id, 
+                      indicator_name=source_name)
+        
+        
+        #add variable label
+        sumstats_df <- sumstats_df %>%
+            left_join(metadata_tab2_overall) %>%
+            rename(Series=series,
+                   Label=indicator_name) %>%
+            mutate(Label=if_else(is.na(Label),Series,Label)) %>%
+            select(Label, c("Global",
+                            "IDA",
+                            "Blend",
+                            "IBRD",
+                            "Not classified"))
+
+        sumstats_df
+ 
+
+  }
+spi_lending_table_count <- function(data, indicator, reference_year) {
+
+  indicator<-indicator
+  
+  
+  
+  df_overall <- get(data) %>%
+    filter(date==as.numeric(reference_year)) %>% 
+    select(country, iso3c, date, income, lending, starts_with(indicator))
+
+    #produce by lending
+        sumstats<- df_overall %>%
+            group_by(lending) %>%
+            filter(!is.na(lending)) %>%
+            select(lending, starts_with(indicator)) %>%
+            summarise_all(~round(sum(., na.rm=T),1)) 
+        
+        #produce global number
+        sumstats_gl<- df_overall %>%
+            mutate(lending='Global') %>%
+            group_by(lending) %>%
+            select(lending, starts_with(indicator)) %>%
+            summarise_all(~round(sum(., na.rm=T),1)) 
+        
+        
+        #transpose data
+        sumstats_df_long <-sumstats_gl %>%
+            bind_rows(sumstats) 
+        
+        sumstats_df <- as.data.frame(t(sumstats_df_long %>% select(-lending)))
+        colnames(sumstats_df) = sumstats_df_long$lending 
+        
+        
+        sumstats_df <- sumstats_df %>%
+            rownames_to_column() %>%
+            rename(series=rowname)
+        
+        
+        #create labels df
+        metadata_tab2_overall <- metadata %>% 
+            janitor::clean_names() %>%
+            transmute(series=source_id, 
+                      indicator_name=source_name)
+        
+        
+        #add variable label
+        sumstats_df <- sumstats_df %>%
+            left_join(metadata_tab2_overall) %>%
+            rename(Series=series,
+                   Label=indicator_name) %>%
+            mutate(Label=if_else(is.na(Label),Series,Label)) %>%
+            select(Label, c("Global",
+                            "IDA",
+                            "Blend",
+                            "IBRD",
+                            "Not classified"))
+
+        sumstats_df
+ 
+
   }
 #define function to pull data from UN Stats and return
 un_pull <- function(series,start, end) {
@@ -648,6 +772,8 @@ products_table <- spi_income_table('spi_df_final', 'SPI.D3','2019')
 
 products_region_table <- spi_region_table('spi_df_final', 'SPI.D3','2019')
 
+products_lending_table <- spi_lending_table('spi_df_final', 'SPI.D3','2019')
+
 #export table to word
 ft <- flextable(products_table) %>%
   add_header_lines("Percentage of SDG Indicator Values Available by Goal That Meet Metadata Standards") 
@@ -754,6 +880,8 @@ cen_table <- spi_income_table('df_10yr', c('Population Census Last 10 Years','Po
 cen_table_count <- spi_income_table_count('df_10yr', c('No Population Census Last 10 Years','No Population Census Last 20 Years', 'total'),'2019')
 
 cen_table_count_reg <- spi_region_table_count('df_10yr', c('No Population Census Last 10 Years','No Population Census Last 20 Years', 'total'),'2019')
+
+cen_table_count_lend <- spi_lending_table_count('df_10yr', c('No Population Census Last 10 Years','No Population Census Last 20 Years', 'total'),'2019')
 
 #export table to word
 ft <- flextable(cen_table) %>%
