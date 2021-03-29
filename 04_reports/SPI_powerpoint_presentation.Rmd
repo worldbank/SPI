@@ -233,6 +233,20 @@ Based on feedback, goal was for SPI framework to:
 
 ```{r spi_map_index, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
 
+#ggplot theme
+theme_spi <- function () { 
+    theme_hc() %+replace%
+    theme(
+      plot.caption = element_text(hjust = 0),
+      plot.title=element_blank(), #remove all titles from plots (sometimes we may need to bring title outside plot)
+      plot.subtitle=element_blank(),
+      legend.position = 'none',
+      text = element_text(size=14),
+      axis.text = element_text(size=16)
+    )
+}
+
+
 #Now map the result
 quality = "high"
 maps <- wbgmaps::wbgmaps[[quality]]
@@ -296,14 +310,15 @@ spi_mapper <- function(data, indicator, title) {
     ) +
     coord_equal() +
     theme_map(base_size=12) +
-    labs(
-      title=str_wrap(title,80),
-      subtitle='Statistical Performance Indicators - Overall Scores - 2019',
-      caption = 'Source: World Bank. Statistical Performance Indicators'
-    ) +
+    # labs(
+    #   title=str_wrap(title,80),
+    #   subtitle='Statistical Performance Indicators - Overall Scores - 2019',
+    #   caption = 'Source: World Bank. Statistical Performance Indicators'
+    # ) +
     theme(
     title= element_text(size = 20),
-    text = element_text(size = 14)
+    text = element_text(size = 14),
+    legend.position='blank'
     )
  print(p1)
 }
@@ -411,8 +426,8 @@ spi_charts  <- function(data, indicator, title) {
       subtitle= 'Data Point is for last year available (2019)'
       ) +
       expand_limits(x=c(0,100)) +
-     theme_bw() +
-     theme(legend.position = 'top',
+     theme_spi() +
+     theme(
            title= element_text(size = 20),
            axis.title.y=element_blank(),
            text = element_text(size = 14)) 
@@ -435,7 +450,7 @@ spi_charts  <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
-      theme_bw()
+      theme_spi()
     
   # #add line graph over time
   p4 <- get(data)  %>%
@@ -456,11 +471,67 @@ spi_charts  <- function(data, indicator, title) {
       ) +
     
       expand_limits(y=c(0,100)) +
-      theme_bw()
+      theme_spi()
       
  p2 
     
 }
+
+income_charts  <- function(data, indicator, title) {
+  
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  #add histogram by region 
+  region_SPI_df <- map_df %>%
+    group_by(region) %>%
+    filter(region!='Aggregates') %>%
+    summarise(Score=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(Score,0))) %>%
+    arrange(-Score) 
+  
+  region_order <- region_SPI_df$region
+
+  region_SPI_df <- region_SPI_df %>%
+    mutate(region=factor(region, levels=region_order))
+
+
+  #by income
+    income <- c("Low income", "Lower middle income","Upper middle income","High income")
+
+    p3 <- map_df %>%
+    group_by(income) %>%
+    filter(region!='Aggregates') %>%
+    mutate(Score=wtd.mean(data_available, weights=weights, na.rm=T),
+           Label = paste(round(Score,0))) %>%
+    ggplot(aes(x=Score, y=income, fill=income)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      # labs(
+      # title=str_wrap(paste(title, 'By Income', sep=" - "),100),
+      # caption = 'Source: World Bank Statistical Performance Indicators',
+      # subtitle= 'Data Point is for last year available (2019)'
+      # ) +
+      scale_y_discrete(limits = income) +
+      expand_limits(x=c(0,100)) +
+      theme_spi()
+    
+
+      
+ p3
+    
+}
+
 
 spi_country_charts  <- function(data, indicator, title) {
   
@@ -523,8 +594,8 @@ spi_country_charts  <- function(data, indicator, title) {
         values=col_pal,
         na.value='grey'
       ) +
-      theme_bw() +
-      theme(legend.position = 'top',
+      theme_spi() +
+      theme(
             title= element_text(size = 20),
             axis.title.y=element_blank(),
             text = element_text(size = 14)) 
@@ -569,8 +640,8 @@ lending_charts <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
-      theme(legend.position = 'top',
+      theme_spi() +
+      theme(
             title= element_text(size = 20),
             axis.title.y=element_blank(),
             text = element_text(size = 14)) 
@@ -609,15 +680,15 @@ lending_chart_aggregate <- function(data, indicator, title) {
     ggplot(aes(x=Score, y=lending, fill=lending)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
-      labs(
-      title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
-      caption = 'Source: World Bank Statistical Performance Indicators',
-      subtitle= 'Data Point is for last year available (2019)'
-      ) +
+      # labs(
+      # title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
+      # caption = 'Source: World Bank Statistical Performance Indicators',
+      # subtitle= 'Data Point is for last year available (2019)'
+      # ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
-      theme(legend.position = 'top',
+      theme_spi() +
+      theme(
             title= element_text(size = 20),
             axis.title.y=element_blank(),
             text = element_text(size = 14)) 
@@ -681,16 +752,16 @@ fcs_charts <- function(data, indicator, title) {
     ggplot(aes(x=Score, y=fcs, color=fcs)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
-      labs(
-      title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations', sep=" - "),70),
-      caption = 'Source: World Bank Statistical Performance Indicators',
-      subtitle= 'Data Point is for last year available (2019)',
-      color="FCS"
-      ) +
+      # labs(
+      # title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations', sep=" - "),70),
+      # caption = 'Source: World Bank Statistical Performance Indicators',
+      # subtitle= 'Data Point is for last year available (2019)',
+      # color="FCS"
+      # ) +
 
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
+      theme_spi() +
       theme(legend.position = 'none',
             title= element_text(size = 20),
             axis.title.y=element_blank(),
@@ -763,8 +834,8 @@ fcs_chart_aggregate <- function(data, indicator, title) {
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
-      theme_bw() +
-      theme(legend.position = 'top',
+      theme_spi() +
+      theme(
             title= element_text(size = 20),
             axis.title.y=element_blank(),
             text = element_text(size = 14)) 
@@ -901,6 +972,12 @@ spi_country_charts('SPI','SPI.INDEX','SPI Overall Scores vary significantly with
 
 ```
 ]
+---
+.center3[
+```{r inc_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+income_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
+
+```
 ---
 .center3[
 ```{r lending_charts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
@@ -1118,7 +1195,7 @@ growth_plot <- function(variables, name) {
     geom_bar(aes(alpha=growth), stat = "identity", fill='#007f5f') +
     ggrepel::geom_text_repel(nudge_y=0.1, size=4,segment.alpha =  0 ) +
     scale_x_discrete() +
-    theme_bw() +
+    theme_spi() +
     xlab(str_wrap('Decile in 2016',40)) +
     ylab(str_wrap('Change in Score (2016-19)',20)) +
     labs(
@@ -1233,7 +1310,7 @@ name <- 'SPI Overall Score'
     geom_bar(stat = "identity", position='stack') +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
     scale_x_discrete() +
-    theme_bw() +
+    theme_spi() +
     xlab(str_wrap('Decile in 2016',40)) +
     ylab(str_wrap('Change in Score (2016-19)',20)) +
     labs(
@@ -1320,7 +1397,7 @@ p <- ggplot(df_country_time, aes(x=Country)) +
         scale_y_continuous(name='SPI Value') +
         scale_x_discrete(labels = scales::wrap_format(20)) +
         coord_flip() +
-        theme_bw() +
+        theme_spi() +
         labs(
           color = 'Change'
         ) +
@@ -1415,7 +1492,7 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~ indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_bw() +
+  theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Human Capital Index') +
   expand_limits(y=c(0,100)) +
@@ -1453,7 +1530,7 @@ gdp_df_2019_chart <- gdp_df_2019 %>%
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
   scale_x_log10(labels = scales::comma) +
-  theme_bw() +
+  theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Log GDP Per Capita') +
   expand_limits(y=c(0,100)) +
@@ -1479,7 +1556,7 @@ ge_df_2019 <- ge_df %>%
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
-  theme_bw() +
+  theme_spi() +
   ylab('SPI Overall Score') +
   xlab('Government Effectiveness (z score)') +
   expand_limits(y=c(0,100)) +
@@ -1556,7 +1633,7 @@ gdp_overperformers_plot <-  gdp_overperformers_plot %>%
                      labels = c("Over-performers", "Under-performers"),
                      values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_bw() +
+  theme_spi() +
   labs(
     title=str_wrap('Top 15 Over/Under-Performers on SPI Index Compared to GDP per capita', 50),
     caption=str_wrap('Over and under performers calculated for GDP per capita by using OLS regression of SPI Index in 2019 on Log GDP per capita and calculting residuals from this regression.',100)
@@ -1602,7 +1679,7 @@ hci_overperformers_plot <- hci_overperformers_plot %>%
                      labels = c("Over-performers", "Under-performers"),
                      values = c('above'="#1A9850", 'below'="#D73027")) +
   coord_flip() +
-  theme_bw() +
+  theme_spi() +
   theme(
     panel.grid.minor.y = element_blank(),
     panel.grid.major.y = element_blank(),
@@ -1636,14 +1713,14 @@ rownames(df_corr_plot) <- c('SPI Pillar 1','SPI Pillar 2','SPI Pillar 3','SPI Pi
 #plot the correlation in a nicely formatted table
 pcorr<- ggcorrplot::ggcorrplot(df_corr_plot,
                    outline.color = "white",
-                   ggtheme = theme_bw(),
+                   ggtheme = theme_spi(),
                    colors = c("#F8696B", "#FFEB84", "#63BE7B"),
                    legend.title = "Correlation",
                    title = "Correlation Between SPI Pillars",
                    lab=T) + 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
   scale_y_discrete(labels = function(x) str_wrap(x, width = 16)) +
-  theme_bw() +
+  theme_spi() +
   theme(
     text = element_text(size = 12),
     axis.text.x = element_text(angle=45,vjust=.5)
@@ -1787,7 +1864,7 @@ spi_sci_plot <- ggplot(scatter_df, aes(y=SPI.INDEX,x=index_values)) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm', 
               color='blue') +
-  theme_bw() + 
+  theme_spi() + 
   stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
                      color='black',
