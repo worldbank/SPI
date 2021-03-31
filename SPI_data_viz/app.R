@@ -24,6 +24,8 @@ library(Hmisc)
 library(flextable)
 library(skimr)
 library(shinyWidgets)
+library(highcharter)
+
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv')
 
@@ -46,15 +48,22 @@ metadata_raw <- metadata_raw %>%
                             gsub(":.*","", source_name), source_name)) %>%
   mutate(shortname = ifelse(str_sub(source_id, 1, 6) %in% "SPI.D3",
                             gsub("GOAL","SDG", shortname), shortname),
-         shortname = ifelse(source_id == "SPI.D1.5.CHLD.MORT", "Availability of Mortality rate, under-5 (per 1,000 live births)", 
-                            ifelse(source_id == "SPI.D5.1.DILG", "Legislation Indicator based on SDG 17.18.2", 
-                                   ifelse(source_id == "SPI.D5.5.DIFI", "Statistical Plan fully funded", 
-                                          ifelse(source_id == "SPI.D5.2.5.HOUS", "Household consumption classification", 
-                                                 ifelse(source_id == "SPI.D5.2.9.MONY", "Monetary & financial statistics compilation", 
-                                                        ifelse(source_id == "SPI.D5.2.3.CNIN", "National industry classification", 
-                                                               ifelse(source_id == "SPI.D5.2.6.EMPL", "Status of employment classification", 
-                                                                      ifelse(source_id == "SPI.D5.2.8.FINA", "Govt. finance statistics compilation", 
-                                                                             shortname)))))))),
+         shortname = case_when(
+           source_id == "SPI.D1.5.POV" ~"Availability of Comparable Poverty Data", 
+           source_id == "SPI.D1.5.CHLD.MORT" ~"Availability of Mortality rate, under-5", 
+           source_id == "SPI.D1.5.DT.TDS.DPPF.XP.ZS	" ~"Quality of Debt Reporting", 
+           source_id == "SPI.D1.5.SAFE.MAN.WATER" ~"Availability of Safely Managed Water Data", 
+           source_id == "SPI.D1.5.LFP	" ~"Availability of Labor Force Participation Data", 
+           
+           source_id == "SPI.D5.1.DILG"~ "Legislation Indicator based on SDG 17.18.2", 
+           source_id == "SPI.D5.1.DILG"~ "Legislation Indicator based on SDG 17.18.2", 
+           source_id == "SPI.D5.5.DIFI"~ "Statistical Plan fully funded", 
+           source_id == "SPI.D5.2.5.HOUS"~ "Household consumption classification", 
+           source_id == "SPI.D5.2.9.MONY"~ "Monetary & financial statistics compilation", 
+           source_id == "SPI.D5.2.3.CNIN"~ "National industry classification", 
+           source_id == "SPI.D5.2.6.EMPL"~ "Status of employment classification", 
+           source_id == "SPI.D5.2.8.FINA"~ "Govt. finance statistics compilation", 
+           TRUE ~ shortname),
          shortname= if_else(is.na(shortname), "N/A", shortname))
 
 
@@ -119,20 +128,36 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",
                                        downloadButton("downloadDataMap", "Download"))
 
                           )),
-                              
-                              fluidRow(
-
-                                  # If not using custom CSS, set height of leafletOutput to a number instead of percent
-                                  withSpinner(leafletOutput("spi_map_overall", width='auto', height='75vh')
-                                                            )
-
-                                  
-
-                                    
-
+                          useShinyjs(),
+                          #radioButtons("togglemap", NULL, choices = c(Map = "Map", Table = "table")),
+                          wellPanel(
+                            withSpinner(leafletOutput("spi_map_overall", width='auto', height='75vh')),
+                            p('The boundaries, colors, denominations and any other information shown on this map do not imply, on the part of the World Bank Group, any judgment on the legal status of any territory, or any endorsement or acceptance of such boundaries.')
+                            
+                            ),
+                          wellPanel(
+                            fluidRow(
+                              column(3,offset=1,
+                                     selectizeInput("country_tab_orig", "Select Countries",
+                                                    choices=NULL,
+                                                    selected=c("All"),
+                                                    multiple=T)),
+                              column(3,offset=1,
+                                     selectizeInput("income_tab_orig", "Select Income Groups",
+                                                    choices=NULL,
+                                                    selected=c("All"),
+                                                    multiple=T)),
+                              column(3,offset=1,
+                                     selectizeInput("region_tab_orig", "Select Region Groups",
+                                                    choices=NULL,
+                                                    selected=c("All"),
+                                                    multiple=T))                                  
+                            ),  
+                            withSpinner(DT::dataTableOutput("country_table_orig",
+                                                            width='100%'))
+                          )
                               
                           
-                          )
        
                         ),
                  
@@ -255,10 +280,7 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",
                                 ),
                               
                           ),
-                          withSpinner(plotlyOutput('fullplot',
-                                                   width = '100%',
-                                                   height='1250px'
-                          ))
+                          withSpinner(uiOutput(('fullplot' )))
                  ),
                  #####################################################
                  # Country Table section
@@ -893,6 +915,93 @@ server <- function(input, output,session) {
         
     }) 
     
+    ##################
+    # Country Table
+    ##################
+    updateSelectizeInput(session, 'country_tab_orig', choices = choice, selected=c("All"), server=TRUE)
+    updateSelectizeInput(session, 'income_tab_orig', choices = income_choice, selected=c("All"), server=TRUE)
+    updateSelectizeInput(session, 'region_tab_orig', choices = region_choice, selected=c("All"), server=TRUE)
+    
+    
+    output$country_table_orig <- DT::renderDataTable({
+      
+      #get country file
+      index_tab <- df_overall() %>%
+        select(country, SPI.INDEX,SPI.INDEX.PIL1,SPI.INDEX.PIL2,SPI.INDEX.PIL3,
+               SPI.INDEX.PIL4,SPI.INDEX.PIL5, region, income)
+      
+      #colors
+      col_palette <- c("#ff9f1c","#ffbf69","#f1dc76","#acece7","#2ec4b6")
+      
+      col_palette2 <- c("#FFBE0B",  "#E7BB25",  "#1A9850")
+      
+      #calculate the breaks for the color coding
+      brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)
+      
+      # select countries for table
+      
+      if (!("All" %in% input$country_tab_orig) ) {
+        datatab <- index_tab %>%
+          filter((country %in% input$country_tab_orig)) 
+      }  else {
+        datatab <- index_tab 
+      }
+      
+      #select regions for table
+      if (!("All" %in% input$region_tab_orig)) {
+        datatab <- datatab %>%
+          filter((region %in% input$region_tab_orig)) 
+      }  else {
+        datatab <- datatab
+      }
+      
+      #select income groups for table
+      if (!("All" %in% input$income_tab_orig)) {
+        datatab <- datatab %>%
+          filter((income %in% input$income_tab_orig)) %>%
+          select(-income, -region)
+      }  else {
+        datatab <- datatab %>%
+          select(-income, -region)
+      }        
+      
+      
+      #make nice looking table
+      DT::datatable(datatab, caption=paste('Overall SPI Index in ',input$year_overall,' and Pillar Scores.', sep=""),
+                    rownames=FALSE,
+                    colnames = c("Country", "SPI Index Value", "Pillar 1: Data Use", "Pillar 2: Data Services","Pillar 3: Data Products ","Pillar 4: Data Sources","Pillar 5: Data Infrastructure" ),
+                    class='cell-border stripe',
+                    escape = FALSE,
+                    extensions = c ('Buttons', 'FixedHeader'), 
+                    options=list(
+                      dom = 'Bfrtip',
+                      buttons = c('copy', 'csv', 'excel'),
+                      pageLength = 60,
+                      scrollX = TRUE, 
+                      paging=FALSE)) %>%
+        formatRound(columns=c('SPI.INDEX','SPI.INDEX.PIL1','SPI.INDEX.PIL2','SPI.INDEX.PIL3','SPI.INDEX.PIL4','SPI.INDEX.PIL5'), digits=1) %>%
+        formatStyle(    'SPI.INDEX', backgroundColor = styleInterval(brks, col_palette)) %>%
+        formatStyle(    'SPI.INDEX.PIL1', backgroundColor = styleInterval(brks1, col_palette)) %>%
+        formatStyle(    'SPI.INDEX.PIL2', backgroundColor = styleInterval(brks2, col_palette)) %>%
+        formatStyle(    'SPI.INDEX.PIL3', backgroundColor = styleInterval(brks3, col_palette)) %>%
+        formatStyle(    'SPI.INDEX.PIL4', backgroundColor = styleInterval(brks4, col_palette)) %>%
+        formatStyle(    'SPI.INDEX.PIL5', backgroundColor = styleInterval(brks5, col_palette))
+      
+      
+      
+    })
+    
+    
     # updateSelectizeInput(session, 'color_choices_overall', choices = c('SPI.OVRL.SCR', 'SPI.D1.MSC', 'SPI.D2.CS', 'SPI.D3.AKI', 'SPI.D4.DPO'), server = TRUE)
     
     map_var <- reactive({
@@ -978,7 +1087,7 @@ server <- function(input, output,session) {
         
         
           
-    }) %>% bindCache(input$color_choices_overall)
+    }) 
     
     # Downloadable csv of selected dataset ----
     output$downloadDataMap <- downloadHandler(
@@ -989,6 +1098,27 @@ server <- function(input, output,session) {
         write.csv(df_overall(), file, row.names = FALSE)
       }
     )
+    
+    # observeEvent(input$togglemap,{
+    #   req(input$togglemap)
+    #   if (input$togglemap == "Map"){
+    #     hide("country_tab_orig")
+    #     hide("income_tab_orig")
+    #     hide("region_tab_orig")
+    #     hide("country_table_orig")
+    #     
+    #     show("spi_map_overall")
+    #   }else {
+    #     show("country_tab_orig")
+    #     show("income_tab_orig")
+    #     show("region_tab_orig")
+    #     show("country_table_orig")
+    #     
+    #     hide("spi_map_overall")
+    #   }
+    # })
+    
+ 
     
     # ####
     # # SPI AKI Summary Stats
@@ -1119,8 +1249,7 @@ server <- function(input, output,session) {
     # Functions for Country Report
     #################
     
-    output$fullplot <- renderPlotly({
-      
+    country_report_lolli_fn <- function(variables, title, scale) {
       lollip_df_temp <- lolli_df() %>%
         select(country, starts_with('SPI')) %>%
         relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
@@ -1157,43 +1286,114 @@ server <- function(input, output,session) {
       
       #order the categories
       lollip_df_temp <- lollip_df_temp %>%
-        mutate(shortname=factor(shortname, levels = unique(lollip_df_temp$shortname)))
+        mutate(shortname=factor(shortname, levels = unique(lollip_df_temp$shortname))) %>%
+        filter(grepl(variables,source_id)) %>%
+        select(shortname, values, dimname, country, source_name ) %>%
+        mutate(values=round(values,2))
+    
+    
+    highchart() %>%
+      hc_add_series(data = lollip_df_temp,
+                    hcaes(x=shortname, y = values, group = country),
+                    type = "column") %>%
+      hc_xAxis(type='category') %>%
+      hc_yAxis(min=0,max=scale) %>%
+      hc_title(text=title)
+}
+    
+    output$fullplot <- renderUI({
       
-      p <- ggplot(lollip_df_temp) +
-        ## For parallel coordinates/Line charts
-        geom_line(aes(x=shortname, y = values, group = country, color = country),
-                  size = 1) +
-        geom_point(aes(x=shortname, y = values, group = country, color = country, text = labtext),
-                   size = 1) +
-        ## For point chart
-        # geom_point(aes(x=shortname, y = values, group = country, color = country, text = labtext),
-        #            size = 3) +
-        labs(x = "", y = "") +
-        theme_bw() +
-        facet_wrap(vars(dimname), scales = "free", ncol = (as.numeric(input$toggle)+1)) +
-        theme(
-          panel.grid.minor.y = element_blank(),
-          panel.grid.major.y = element_blank(),
-          panel.border = element_blank(),
-          axis.text.y=element_text(size=10),
-          legend.text = element_text(size=8),
-          legend.title = element_blank(),
-          #    panel.spacing.y = unit(3, "lines"),
-          strip.background = element_rect(fill = "#43ACE9"),
-          strip.text = element_text(colour = 'white'))
-      
-      ggplotly(p, tooltip = "text") %>%
-        layout(autosize = TRUE, 
-               margin = list(
-                 #l = 200, r = 0, b = 70, t = 70, 
-                 b= 110, pad = 4)
-        )
+    p0 <- country_report_lolli_fn('SPI.INDEX','Overall Index', 100)
+    #   
+    p1 <- country_report_lolli_fn('SPI.D1', "Pillar 1: Data Use",1)
+    p2 <- country_report_lolli_fn('SPI.D2', "Pillar 2: Data Services",1)
+    p3 <- country_report_lolli_fn('SPI.D3', "Pillar 3: Data Products",1)
+    p4 <- country_report_lolli_fn('SPI.D4', "Pillar 4: Data Sources",1)
+    p5 <- country_report_lolli_fn('SPI.D5', "Pillar 5: Data Infrastructure",1)
+    
+
+    hw_grid(p0,p1,p2,p3,p4,p5, ncol=(as.numeric(input$toggle)+1), rowheight = 300)
       
     })
+      
+    # #plotly
+    # renderPlotly({
+    #   
+    #   lollip_df_temp <- lolli_df() %>%
+    #     select(country, starts_with('SPI')) %>%
+    #     relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
+    #     pivot_longer(
+    #       cols = starts_with('SPI'),
+    #       names_to = 'source_id',
+    #       values_to = 'values'
+    #     ) %>% 
+    #     left_join(metadata_raw) %>%
+    #     left_join(metadataind) %>%
+    #     mutate(shortname = ifelse(!is.na(shortname2), shortname2, shortname),
+    #            shortname2 = NULL) %>%
+    #     filter(!is.na(shortname)) %>%
+    #     mutate(source_name = ifelse(is.na(source_name), shortname, source_name),
+    #            shortname=factor(shortname, ordered=TRUE),
+    #            country=factor(country, levels=unique(country))) %>%
+    #     mutate(indi2 = trimws(str_remove(SPI_indicator_id, "Dimension"))) %>%
+    #     mutate(dimension = substr(indi2, 1, 1)) %>%
+    #     mutate(dimname = paste("Pillar ", dimension),
+    #            dimname = case_when(
+    #              dimname=="Pillar  1" ~ "Pillar 1: Data Use",
+    #              dimname=="Pillar  2" ~ "Pillar 2: Data Services",
+    #              dimname=="Pillar  3" ~ "Pillar 3: Data Products",
+    #              dimname=="Pillar  4" ~ "Pillar 4: Data Sources",
+    #              dimname=="Pillar  5" ~ "Pillar 5: Data Infrastructure",
+    #              TRUE ~ "Overall Index"
+    #            ),
+    #            shortname=ifelse(dimname == "Pillar  1: Data Use", str_wrap(shortname, 25), str_wrap(shortname, 12))
+    #     ) %>%
+    #     mutate(labtext = paste(paste(country),
+    #                            paste(source_name),
+    #                            paste("Score: ", values),
+    #                            sep = "<br />"))
+    #   
+    #   #order the categories
+    #   lollip_df_temp <- lollip_df_temp %>%
+    #     mutate(shortname=factor(shortname, levels = unique(lollip_df_temp$shortname)))
+    #   
+    #   p <- ggplot(lollip_df_temp) +
+    #     ## For parallel coordinates/Line charts
+    #     geom_line(aes(x=shortname, y = values, group = country, color = country),
+    #               size = 1) +
+    #     geom_point(aes(x=shortname, y = values, group = country, color = country, text = labtext),
+    #                size = 1) +
+    #     ## For point chart
+    #     #geom_point(aes(x=shortname, y = values, group = country, color = country, text = labtext),
+    #     #            size = 3) +
+    #     labs(x = "", y = "") +
+    #     theme_bw() +
+    #     facet_wrap(vars(dimname), scales = "free", ncol = (as.numeric(input$toggle)+1)) +
+    #     theme(
+    #       panel.grid.minor.y = element_blank(),
+    #       panel.grid.major.y = element_blank(),
+    #       panel.border = element_blank(),
+    #       axis.text.y=element_text(size=10),
+    #       legend.text = element_text(size=8),
+    #       legend.title = element_blank(),
+    #       panel.spacing.y = unit(1, "lines"),
+    #       strip.background = element_rect(fill = "#43ACE9"),
+    #       strip.text = element_text(colour = 'white', size=13))
+    #   
+    #   ggplotly(p, tooltip = "text") %>%
+    #     layout(autosize = TRUE, 
+    #            margin = list(
+    #              #l = 200, r = 0, b = 70, t = 70, 
+    #              #b= 110, pad = 4
+    #              )
+    #     )
+    #   
+    # })
     
     ###########
     # Country Datatable
     ###########
+
     updateSelectizeInput(session, 'country_tab', choices = choice, selected=c("All"), server=TRUE)
     updateSelectizeInput(session, 'income_tab', choices = income_choice, selected=c("All"), server=TRUE)
     updateSelectizeInput(session, 'region_tab', choices = region_choice, selected=c("All"), server=TRUE)
