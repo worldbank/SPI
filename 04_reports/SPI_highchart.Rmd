@@ -263,6 +263,8 @@ SPI_highchart_map <- highchart(type = "map") %>%
 
 SPI_highchart_map
 ```
+
+
 ```{r leaflet}
 library(leaflet)
 variable <- "SPI.INDEX"
@@ -331,16 +333,80 @@ leaflet(spi_map_overall,
             title='Indicator value', position="bottomleft")   
 ```
 
-```{r old, eval=FALSE, include=FALSE}
+```{r old, echo=FALSE}
 
 
+ country_report_lolli_fn <- function(variables, title, scale) {
+      lollip_df_temp <- SPI_2019 %>%
+        select(country, starts_with('SPI')) %>%
+        relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
+        pivot_longer(
+          cols = starts_with('SPI'),
+          names_to = 'source_id',
+          values_to = 'values'
+        ) %>% 
+        left_join(metadata_raw) %>%
+        left_join(metadataind) %>%
+        mutate(shortname = ifelse(!is.na(shortname2), shortname2, shortname),
+               shortname2 = NULL) %>%
+        filter(!is.na(shortname)) %>%
+        mutate(source_name = ifelse(is.na(source_name), shortname, source_name),
+               shortname=factor(shortname, ordered=TRUE),
+               country=factor(country, levels=unique(country))) %>%
+        mutate(indi2 = trimws(str_remove(SPI_indicator_id, "Dimension"))) %>%
+        mutate(dimension = substr(indi2, 1, 1)) %>%
+        mutate(dimname = paste("Pillar ", dimension),
+               dimname = case_when(
+                 dimname=="Pillar  1" ~ "Pillar 1: Data Use",
+                 dimname=="Pillar  2" ~ "Pillar 2: Data Services",
+                 dimname=="Pillar  3" ~ "Pillar 3: Data Products",
+                 dimname=="Pillar  4" ~ "Pillar 4: Data Sources",
+                 dimname=="Pillar  5" ~ "Pillar 5: Data Infrastructure",
+                 TRUE ~ "Overall Index"
+               ),
+               shortname=ifelse(dimname == "Pillar  1: Data Use", str_wrap(shortname, 25), str_wrap(shortname, 12))
+        ) %>%
+        mutate(labtext = paste(paste(country),
+                               paste(source_name),
+                               paste("Score: ", values),
+                               sep = "<br />"))
+      
+      #order the categories
+      lollip_df_temp <- lollip_df_temp %>%
+        mutate(shortname=factor(shortname, levels = unique(lollip_df_temp$shortname))) %>%
+        filter(grepl(variables,source_id)) %>%
+        select(shortname, values, dimname, country, source_name,source_id ) %>%
+        mutate(values=round(values,2)) 
+ }
+
+
+spi_2 <- country_report_lolli_fn('SPI.INDEX','Overall Index', 100) %>%
+  rename_with(~gsub(".","_",.x, fixed=TRUE)) %>%
+  nest(-country) %>%
+    mutate(
+      data = map(data, mutate_mapping, hcaes(x=shortname, y = values)),
+      data = map(data, list_parse)
+    )
+  
+
+SPI_map <- SPI_map %>%
+  rename_with(~gsub(".","_",.x, fixed=TRUE)) %>%
+  left_join(spi_2)
+
+x <- c("SPI Overall Score:", "Pillar 1 Score")
+y <- c(
+  "$ {point.data_available}", "{point.SPI_INDEX_PIL1}"
+)
+
+tt <- tooltip_table(x, y)
 
 SPI_highchart_map <- hcmap('custom/world-robinson-lowres',
       data=SPI_map,
       joinBy=c('iso-a3','iso3c'),
       name='SPI Overall Score',
       value='value',
-      tooltip = list(pointFormat = "{point.country} {point.data_available}")) %>%
+      tooltip = list(pointFormat = tt)
+      ) %>%
   hc_colorAxis(dataClassColor="category", 
      dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
                         list(from=2, to=2, color="#acece7", name="4th Quintile"),
@@ -349,8 +415,18 @@ SPI_highchart_map <- hcmap('custom/world-robinson-lowres',
                         list(from=5, to=5, color="#ff9f1c", name="Bottom 20%"))) %>%
   hc_title(
     text = "SPI Overall Scores in 2019"
-  )
+  )  
 
+  
+  
+  
+  # hc_tooltip(useHTML = TRUE, pointFormatter = tooltip_chart(
+  #     accesor = "ttdata",
+  #     hc_opts = list(chart = list(type = "column"),
+  #                    xAxis = list(type = 'category'),
+  #                    yAxis = list(min=0,max=100)
+  #                    )
+  #   ))
 
 
 
