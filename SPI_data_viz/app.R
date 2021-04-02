@@ -1140,11 +1140,11 @@ server <- function(input, output,session) {
       
       map_df <- df_overall() %>%
         filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
-        group_by( country) %>%
         #summarise(across(!! indicator,last)) %>%
-        rename(data_available= !! map_var()) %>%
+        select(map_var(), everything()) %>%
+        mutate(data_available= .[[1]]) %>%
         mutate(data_available=if_else(is.na(data_available) | data_available==-99, as.numeric(NA), round(as.numeric(data_available),1)))     %>%
-        ungroup()
+        rename_with(~gsub(".","_",.x, fixed=TRUE)) 
       
       
       
@@ -1169,6 +1169,7 @@ server <- function(input, output,session) {
           mutate(spi_groups=factor(spi_groups, 
                                    levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )),
                  value = as.numeric(spi_groups))  
+          
         
         #set color pallete
         col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
@@ -1180,7 +1181,17 @@ server <- function(input, output,session) {
                         joinBy=c('ISO_A3','iso3c'),
                         name=input$color_choices_overall,
                         value='value',
-                        tooltip = list(pointFormat = "{point.country} {point.data_available} {point.SPI.INDEX} {point.SPI.INDEX.PIL1}  {point.SPI.INDEX.PIL2}  {point.SPI.INDEX.PIL3}  {point.SPI.INDEX.PIL4}  {point.SPI.INDEX.PIL5}")) %>%
+                        tooltip = list(
+                          pointFormat = "{point.country}: {point.data_available:,.1f} <br>
+                                         <b>SPI Overall Score:</b> {point.SPI_INDEX:,.1f} <br>
+                                         <b>Data User Score: </b> {point.SPI_INDEX_PIL1:,.1f} <br>
+                                         <b>Data Services Score: </b> {point.SPI_INDEX_PIL2:,.1f} <br>
+                                         <b>Data Products Score: </b> {point.SPI_INDEX_PIL3:,.1f} <br>
+                                         <b>Data Sources Score: </b> {point.SPI_INDEX_PIL4:,.1f} <br>
+                                         <b>Data Infrastructure Score: </b> {point.SPI_INDEX_PIL5:,.1f}"
+                          
+                        )
+          ) %>%
           hc_colorAxis(dataClassColor="category", 
                        dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
                                           list(from=2, to=2, color="#acece7", name="4th Quintile"),
@@ -1210,7 +1221,16 @@ server <- function(input, output,session) {
                         joinBy=c('ISO_A3','iso3c'),
                         name=input$color_choices_overall,
                         value='value',
-                        tooltip = list(pointFormat = "{point.country} {point.data_available}")) %>%
+                        tooltip = list(
+                          pointFormat = "{point.country}: {point.data_available:,.1f} <br>
+                                         <b>SPI Overall Score:</b> {point.SPI_INDEX:,.1f} <br>
+                                         <b>Data User Score: </b> {point.SPI_INDEX_PIL1:,.1f} <br>
+                                         <b>Data Services Score: </b> {point.SPI_INDEX_PIL2:,.1f} <br>
+                                         <b>Data Products Score: </b> {point.SPI_INDEX_PIL3:,.1f} <br>
+                                         <b>Data Sources Score: </b> {point.SPI_INDEX_PIL4:,.1f} <br>
+                                         <b>Data Infrastructure Score: </b> {point.SPI_INDEX_PIL5:,.1f}"
+                        )
+                        ) %>%
           hc_colorAxis(dataClassColor="category") %>%
           hc_mapNavigation(
             enabled = TRUE,

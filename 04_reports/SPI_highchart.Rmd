@@ -338,7 +338,7 @@ leaflet(spi_map_overall,
 
  country_report_lolli_fn <- function(variables, title, scale) {
       lollip_df_temp <- SPI_2019 %>%
-        select(country, starts_with('SPI')) %>%
+        select(country,iso3c, starts_with('SPI')) %>%
         relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
         pivot_longer(
           cols = starts_with('SPI'),
@@ -375,18 +375,24 @@ leaflet(spi_map_overall,
       lollip_df_temp <- lollip_df_temp %>%
         mutate(shortname=factor(shortname, levels = unique(lollip_df_temp$shortname))) %>%
         filter(grepl(variables,source_id)) %>%
-        select(shortname, values, dimname, country, source_name,source_id ) %>%
+        select(shortname, values, dimname, country, source_name,source_id,iso3c ) %>%
         mutate(values=round(values,2)) 
  }
 
 
 spi_2 <- country_report_lolli_fn('SPI.INDEX','Overall Index', 100) %>%
   rename_with(~gsub(".","_",.x, fixed=TRUE)) %>%
-  nest(-country) %>%
+  transmute(iso3c=iso3c,
+            x=shortname,
+            y=values) %>%
+  nest(-iso3c) %>%
     mutate(
-      data = map(data, mutate_mapping, hcaes(x=shortname, y = values)),
+      data = map(data, mutate_mapping, hcaes(x=x, y = y), drop = TRUE),
       data = map(data, list_parse)
-    )
+    ) %>%
+  rename(
+    ttdata=data
+  )
   
 
 SPI_map <- SPI_map %>%
@@ -405,8 +411,11 @@ SPI_highchart_map <- hcmap('custom/world-robinson-lowres',
       joinBy=c('iso-a3','iso3c'),
       name='SPI Overall Score',
       value='value',
-      tooltip = list(pointFormat = tt)
-      ) %>%
+      tooltip = list(
+        pointFormat = "{point.country}: {point.SPI.INDEX:,.0f} <br>
+        Pillar 1 Score: {point.SPI.INDEX.PIL1:,.0f}"
+      )
+    ) %>%
   hc_colorAxis(dataClassColor="category", 
      dataClasses = list(list(from=1, to=1, color="#2ec4b6", name="Top 20%"),
                         list(from=2, to=2, color="#acece7", name="4th Quintile"),
@@ -417,16 +426,6 @@ SPI_highchart_map <- hcmap('custom/world-robinson-lowres',
     text = "SPI Overall Scores in 2019"
   )  
 
-  
-  
-  
-  # hc_tooltip(useHTML = TRUE, pointFormatter = tooltip_chart(
-  #     accesor = "ttdata",
-  #     hc_opts = list(chart = list(type = "column"),
-  #                    xAxis = list(type = 'category'),
-  #                    yAxis = list(min=0,max=100)
-  #                    )
-  #   ))
 
 
 
