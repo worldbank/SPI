@@ -1040,8 +1040,7 @@ server <- function(input, output,session) {
           formatStyle(    'SPI.INDEX.PIL2', backgroundColor = styleInterval(brks2, col_palette)) %>%
           formatStyle(    'SPI.INDEX.PIL3', backgroundColor = styleInterval(brks3, col_palette)) %>%
           formatStyle(    'SPI.INDEX.PIL4', backgroundColor = styleInterval(brks4, col_palette)) %>%
-          formatStyle(    'SPI.INDEX.PIL5', backgroundColor = styleInterval(brks5, col_palette))
-        
+          formatStyle(    'SPI.INDEX.PIL5', backgroundColor = styleInterval(brks5, col_palette)) 
       
       
     })

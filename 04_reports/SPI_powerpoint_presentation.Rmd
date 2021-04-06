@@ -1743,6 +1743,11 @@ gdp_overperformers_plot <-  gdp_overperformers_plot %>%
 #regress SPI on hci
 m_spi_hci <- lm(SPI.INDEX ~ value , data = hci_df_2018) 
 
+m_hc_spii <- lm(value ~ SPI.INDEX  , data = hci_df_2018) 
+
+hci_all_df <- hci_df_2018 %>%
+  modelr::add_predictions(m_hc_spii)
+
 hci_overperformers_df <- hci_df_2018 %>%
   modelr::add_residuals(m_spi_hci) %>%
   arrange(-resid) %>%
