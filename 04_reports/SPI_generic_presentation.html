@@ -3,7 +3,7 @@
   <head>
     <title>Statistical Performance Indicators</title>
     <meta charset="utf-8" />
-    <meta name="date" content="2021-03-25" />
+    <meta name="date" content="2021-04-07" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -13,7 +13,7 @@ class: center, middle, inverse, title-slide
 
 # Statistical Performance Indicators
 ### World Bank, Development Data Group
-### 2021-03-25
+### 2021-04-07
 
 ---
 
@@ -57,17 +57,17 @@ class: center, middle, inverse, title-slide
 
 # Introduction
 
-- World Bank Development Data Group (DECDG) will be releasing new set of Statistical Performance Indicators (SPI) along with WDR
+- World Bank Development Data Group (DECDG) released new set of Statistical Performance Indicators (SPI) along with WDR
 
-- Will be major overhaul of Statistical Capacity Index
+- Major overhaul of Statistical Capacity Indicator (SCI)
 
-- SPI are tool for countries/donors to assess statistical system
+- Tool for countries/donors to assess statistical system
 
-Based on feedback, goal was for SPI framework to:  
-  - Be forward looking (relevant at least 15 years)   
-  - Measure less advanced systems, as well as more advanced systems
-  - Cover entire national statistical system, not just NSO   
-  - Give countries incentives to build modern statistical system    
+SPI is:  
+  - Forward looking (relevant at least 15 years)   
+  - Measures less advanced systems, as well as more advanced systems
+  - Cover entire national statistical system 
+  - Gives countries incentives to build modern statistical system    
   - Open data and open code
 
 
@@ -100,7 +100,7 @@ Based on feedback, goal was for SPI framework to:
   1. Data Use
       * Indicators that capture demand side of statistical system   
   2. Data Services
-      * Information on data releases, online access, advisory/analytical services, and other data services
+      * Information on data releases, online access, advisory/analytical services, and other data access services
 
 ---
 # Framework Overview
@@ -109,7 +109,7 @@ Based on feedback, goal was for SPI framework to:
   1. Data Use
       * Indicators that capture demand side of statistical system  
   2. Data Services
-      *  Information on data releases, online access, advisory/analytical services, and other data services    
+      *  Information on data releases, online access, advisory/analytical services, and other data access services    
   3. Data Products
       * Whether the country is able to produce relevant indicators, primarily related to SDGs
 
@@ -120,7 +120,7 @@ Based on feedback, goal was for SPI framework to:
   1. Data Use
       * Indicators that capture demand side of statistical system   
   2. Data Services
-      *  Information on data releases, online access, advisory/analytical services, and other data services    
+      *  Information on data releases, online access, advisory/analytical services, and other data access services    
   3. Data Products
       * Whether the country is able to produce relevant indicators, primarily related to SDGs    
   4. Data Sources
@@ -132,7 +132,7 @@ Based on feedback, goal was for SPI framework to:
   1. Data Use
       * Indicators that capture demand side of statistical system  
   2. Data Services
-      * Information on data releases, online access, advisory/analytical services, and other data services    
+      * Information on data releases, online access, advisory/analytical services, and other data access services    
   3. Data Products
       * Whether the country is able to produce relevant indicators, primarily related to SDGs    
   4. Data Sources
@@ -146,7 +146,10 @@ Based on feedback, goal was for SPI framework to:
 # SPI Framework
 
 .center[![unchanged image](SPI_dashboard.png)]
+---
+# SPI Framework
 
+.center[![unchanged image](SPI_Framework_filled.png)]
 
 
 
@@ -158,11 +161,34 @@ Based on feedback, goal was for SPI framework to:
 ---
 class: inverse, middle, center
 
+Index Methodology
+
+
+
+---
+# Index Methodology
+
+  * Produce overall score and sub-component scores combining indicators
+  * Based on Cameron, Dang, Dinc, Foster, and Lokshin (2021)
+  
+  * Three level structure:    
+    * Indicators nested under dimensions : `\(SPI.DIM_{ctpd} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctpdi}}{N_I}\)`  
+    * Dimensions nested under pillars: `\(SPI.PIL_{ctp} = \sum_{d=1}^{N_d} \frac{\omega_{pd} \times SPI.DIM_{ctpd}}{N_d}\)`   
+    * Pillars nested under overall score: `\(SPI.INDEX_{ct} = \sum_{p=1}^{N_p} \frac{SPI.PIL_{ctp}}{N_p}\)`  
+  
+  * Nested structure allows for symmetry, monotonicity, and subgroup decomposability      
+
+---
+class: inverse, middle, center
+
+
+     
+---
+class: inverse, middle, center
+
 Overall Scores Across Countries
 
-
-
-
+ 
 
 ---
 # Overview Summary of Results
@@ -352,7 +378,7 @@ Countries are grouped into five groups:
 
 
 
-
+![](SPI_generic_presentation_files/figure-html/overperformers-1.svg)&lt;!-- --&gt;
 
 ---
 .center3[
@@ -363,7 +389,7 @@ Countries are grouped into five groups:
 
 # Conclusions
 
-* Statistical Performance Indicators will be released along with the new World Development Report
+* Statistical Performance Indicators released along with the new World Development Report
 
 * Meant to aid in country engagement around statistical capacity
 
