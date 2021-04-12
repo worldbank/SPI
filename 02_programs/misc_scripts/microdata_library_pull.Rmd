@@ -64,6 +64,14 @@ download.file(ilo_base_url,temp)
 study_df_ilo <- read_csv(temp) #convert to dataframe
 write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv", sep="")) #write to csv
 
+#pull from FAO
+temp <- tempfile()
+fao_base_url <- 'https://microdata.fao.org/index.php/catalog/export/csv?ps=5000&collection[]=agriculture-census-surveys' 
+download.file(fao_base_url,temp)
+study_df_fao <- read_csv(temp) #convert to dataframe
+write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep="")) #write to csv
+
+
 
 
 
@@ -131,6 +139,49 @@ gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
 
 ```
 
+# FAO Library
+
+```{r micro_series_info_FAO}
+
+
+#get list of survey ids
+fao_series <- study_df_fao$id
+
+
+
+
+
+#use purr to loop over list of surveys and return some extra info
+series_info_fn_fao <- function(series) {
+      
+  info <- fromJSON(paste('https://microdata.fao.org/index.php/metadata/export/',series,'/json', sep=""))    
+  series_info <- as.character(info$study_desc$series_statement$series_name)
+  geog_coverage <- as.character(info$study_desc$study_info$geog_coverage)
+  tibble::tibble(series_info, geog_coverage)
+}
+
+
+#now produce a dataframe with the more info on survey
+study_df_fao <- study_df_fao %>%
+  mutate(series_info_dat=map(fao_series, possibly(series_info_fn_fao, 
+                                           otherwise = 'Something Wrong'
+                                           )
+                     )
+  ) %>%
+  unnest(series_info_dat,
+         keep_empty=TRUE)
+
+study_df_fao <- study_df_fao %>%
+  mutate(across(where(is.list), as.character))
+
+
+write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv",sep="")) #write to csv
+gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
+
+
+
+
+```
 
 
 ```{r save, echo=TRUE}
@@ -142,12 +193,12 @@ series_types_wb <- study_df_internal %>%
   summarise(n=n()
             )
 
-saver <- function(indicator,filename) {
+saver <- function(data, indicator,filename) {
   
   indicator<-indicator
 
   
-survey_df <- study_df_internal %>%
+survey_df <- get(data) %>%
   filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
   rename(country=nation,
          indicator_date=year_end) %>% 
@@ -170,10 +221,12 @@ survey_df <- study_df_internal %>%
   write_excel_csv(survey_df, path = paste(output_dir, filename, sep="")) #write to csv
 }
 
-saver('lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
+saver('study_df_internal','lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
 
-saver('ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
+saver('study_df_internal','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
+saver('study_df_fao','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA_FAO.csv')
 
+saver('study_df_fao','ag/census|Agricultural Census' , 'D4.1.2.CEN.AGRI_NADA_FAO.csv')
 
 
  
@@ -211,9 +264,9 @@ survey_df <- study_df_internal %>%
 
  # saver('lfs' , 'D4.1.6.SVY.LABR_NADA.csv')
 
-saver('dhs|mics|whs|hea' , 'D4.1.7.SVY.HLTH_NADA.csv')
+saver('study_df_internal','dhs|mics|whs|hea' , 'D4.1.7.SVY.HLTH_NADA.csv')
 
-saver('Business Survey' , 'D4.1.8.SVY.BIZZ_NADA.csv')
+saver('study_df_internal','Business Survey' , 'D4.1.8.SVY.BIZZ_NADA.csv')
 
 
 #slightly modified code for estabilishment census

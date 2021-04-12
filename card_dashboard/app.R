@@ -10,11 +10,21 @@
 library(shiny)
 library(tidyverse)
 library(wbstats)
+library(highcharter)
+library(treemap)
+library(viridis)
 
 SPI <- read_csv('SPI_index.csv')
 
 
-metadata_card <- read_csv('SPI_card_sources.csv') 
+metadata_card <- read_csv('SPI_card_sources.csv') %>%
+    mutate(Pillar = case_when(
+        grepl('Dimension 1', descript) ~ "Pillar 1: Data Use",
+        grepl('Dimension 2', descript) ~ "Pillar 2: Data Services",
+        grepl('Dimension 3', descript) ~ "Pillar 3: Data Products",
+        grepl('Dimension 4', descript) ~ "Pillar 4: Data Sources",
+        grepl('Dimension 5', descript) ~ "Pillar 5: Data Infrastructure",
+    ))
 
 country_info <- wb_countries() %>%
     mutate(income=income_level,
@@ -63,6 +73,9 @@ ui <- fluidPage(
                        height: 150px;
                        padding: 2px 16px;
                        }')),
+    highchartOutput(
+        'treemap'
+    ),
     fluidRow(
         column(2,
                selectizeInput("country_choice_card",
@@ -126,7 +139,8 @@ server <- function(input, output, session) {
                 value>0 & value <1 ~ "#FDE74C",
                 value==1 ~ "#457B9D",
                 TRUE ~ "gray"
-            )) %>%
+            ),
+            max=1) %>%
             arrange(descript)
         
 
@@ -135,7 +149,17 @@ server <- function(input, output, session) {
         
     }) 
     
-    
+    output$treemap <- renderHighchart({
+        
+      dout <- data_to_hierarchical(card_df(), c('Pillar', 'descript'), value)
+      
+      hchart(dout, type = "treemap",
+             layoutAlgorithm= 'squarified',
+             allowDrillToNode=TRUE,
+             allowTraversingTree=TRUE)
+      
+        
+    })
    
 
 
