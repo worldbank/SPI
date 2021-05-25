@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistical Performance Indicators</title>
+    <meta charset="utf-8" />
+    <meta name="date" content="2021-05-25" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/tabwid/tabwid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Statistical Performance Indicators
+### World Bank, Development Data Group
+### 2021-05-25
+
+---
+
+
+&lt;style&gt;
+
+.center2 {
+  margin: 0;
+  position: absolute;
+  top: -80px;
+  right: 0;  
+  width: 800px;
+  height: 800px;
+  dpi: 250;
+}
+.center3 {
+  margin: 0;
+  position: absolute;
+  top: 20px;
+  right: 40px;  
+  width: 800px;
+  height: 800px;
+  dpi: 250;
+}
+.reduced{
+   font-size: 0.5em;
+}
+&lt;/style&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Introduction
+
+- World Bank Development Data Group (DECDG) released new set of Statistical Performance Indicators (SPI) along with WDR
+
+- Major overhaul of Statistical Capacity Indicator (SCI)
+
+- Tool for countries/donors to assess statistical system
+
+SPI is:  
+  - Forward looking (relevant at least 15 years)   
+  - Measures less advanced systems, as well as more advanced systems
+  - Cover entire national statistical system 
+  - Gives countries incentives to build modern statistical system    
+  - Open data and open code
+
+
+
+&lt;!-- --- --&gt;
+&lt;!-- # Building on SCI --&gt;
+
+&lt;!-- - Statistical Performance Indicators build on Statistical Capacity Index --&gt;
+
+
+
+&lt;!-- Based on comments, Statistical Performance Indicators build on this:     --&gt;
+&lt;!--   - Includes same (or similar) indicators    --&gt;
+&lt;!--   - But also expands into new areas     --&gt;
+&lt;!--   - Open Data and Open Code    --&gt;
+&lt;!--   - Still will provide time series (minimum 3 years) for indicators    --&gt;
+
+---
+# SPI Framework
+
+
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_framework1.png)]
+
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_framework2.png)]
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_framework3.png)]
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_framework4.png)]
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_framework5.png)]
+
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_framework_filled.png)]
+
+
+
+
+
+
+
+
+---
+# SPI Score
+
+* SPI score = sum of statistical performance indicators   
+* Index can be broken into components to see where a country leads and lags
+
+.center[![](spi_agg.png)]
+
+---
+# Index Methodology
+
+  * Produce overall score and sub-component scores combining indicators
+  * Based on Cameron, Dang, Dinc, Foster, and Lokshin (2021)
+  
+  * Three level structure:    
+    * Indicators nested under dimensions : `\(SPI.DIM_{ctpd} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctpdi}}{N_I}\)`  
+    * Dimensions nested under pillars: `\(SPI.PIL_{ctp} = \sum_{d=1}^{N_d} \frac{\omega_{pd} \times SPI.DIM_{ctpd}}{N_d}\)`   
+    * Pillars nested under overall score: `\(SPI.INDEX_{ct} = \sum_{p=1}^{N_p} \frac{SPI.PIL_{ctp}}{N_p}\)`  
+  
+  * Nested structure allows for symmetry, monotonicity, and subgroup decomposability      
+
+
+---
+class: inverse, middle, center
+
+Overall Scores Across Countries
+
+ 
+
+---
+# Overview Summary of Results
+
+  * Next, we will provide overall index
+  * Will present aggregate scores overall and for each pillar    
+
+  * Given imprecision inherent in calculations, we recommend color coding providing subdivisions of maturity.   
+  
+Countries are grouped into five groups:   
+
+* **Top 20%**:    Shading in &lt;span style="color:#2ec4b6"&gt;dark green&lt;/span&gt;.    
+* **4th Quintile**:  Shading in &lt;span style="color:#acece7"&gt; light green&lt;/span&gt;.    
+* **3rd Quintile**:   Shading in &lt;span style="color:#f1dc76"&gt; yellow&lt;/span&gt;.  
+* **2nd Quintile**:   Shading in &lt;span style="color:#ffbf69"&gt; light orange&lt;/span&gt;.  
+* **Bottom 20%**:   Shading in &lt;span style="color:#ff9f1c"&gt; dark orange &lt;/span&gt;.   
+
+
+&lt;style type="text/css"&gt;
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: 100%;
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+&lt;/style&gt;
+
+---
+
+
+.center2[
+![](SPI_EAP_presentation_files/figure-html/overall_map-1.svg)&lt;!-- --&gt;
+]
+
+---
+
+.center3[
+![](SPI_EAP_presentation_files/figure-html/region_charts-1.svg)&lt;!-- --&gt;
+]
+---
+
+.center3[
+![](SPI_EAP_presentation_files/figure-html/country_charts-1.svg)&lt;!-- --&gt;
+]
+
+---
+
+
+
+
+
+.center3[
+
+
+
+
+![](SPI_EAP_presentation_files/figure-html/elplot-1.svg)&lt;!-- --&gt;
+
+
+]
+---
+
+.center3[
+
+
+![](SPI_EAP_presentation_files/figure-html/elplotstacked-1.svg)&lt;!-- --&gt;
+]
+---
+
+
+
+
+.center3[
+![](SPI_EAP_presentation_files/figure-html/changesplot-1.svg)&lt;!-- --&gt;
+]
+
+---
+.center3[
+![](SPI_EAP_presentation_files/figure-html/changesplot2-1.svg)&lt;!-- --&gt;
+]
+
+.center3[
+
+]
+
+
+
+.center3[
+
+]
+
+
+.center3[
+
+]
+
+
+
+---
+    
+
+
+
+.center3[
+![](SPI_EAP_presentation_files/figure-html/gdpplot-1.svg)&lt;!-- --&gt;
+]
+
+
+---
+
+
+![](SPI_EAP_presentation_files/figure-html/eapoverperformers-1.svg)&lt;!-- --&gt;
+
+
+
+
+
+
+
+
+---
+
+
+.reduced[
+
+&lt;template id="9fd3a74f-8ae6-49e8-b374-33f37dec2af5"&gt;&lt;style&gt;
+.tabwid table{
+  border-collapse:collapse;
+  line-height:1;
+  margin-left:auto;
+  margin-right:auto;
+  border-width: 0;
+  display: table;
+  margin-top: 1.275em;
+  margin-bottom: 1.275em;
+  border-spacing: 0;
+  border-color: transparent;
+}
+.tabwid_left table{
+  margin-left:0;
+}
+.tabwid_right table{
+  margin-right:0;
+}
+.tabwid td {
+    padding: 0;
+}
+.tabwid a {
+  text-decoration: none;
+}
+.tabwid thead {
+    background-color: transparent;
+}
+.tabwid tfoot {
+    background-color: transparent;
+}
+.tabwid table tr {
+background-color: transparent;
+}
+&lt;/style&gt;&lt;div class="tabwid"&gt;&lt;style&gt;.cl-fcf5f5b0{border-collapse:collapse;}.cl-fa9fc6b0{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-fa9fc6b1{font-family:'Arial';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-faa014ee{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-faa014ef{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-faa1746a{width:54pt;background-clip: padding-box;background-color:rgba(251, 201, 109, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa1746b{width:54pt;background-clip: padding-box;background-color:rgba(255, 191, 105, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa1746c{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa1746d{width:54pt;background-clip: padding-box;background-color:rgba(241, 220, 118, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa1746e{width:54pt;background-clip: padding-box;background-color:rgba(172, 236, 231, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa1746f{width:54pt;background-clip: padding-box;background-color:rgba(46, 196, 182, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa17470{width:54pt;background-clip: padding-box;background-color:rgba(255, 159, 28, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa17471{width:54pt;background-clip: padding-box;background-color:rgba(46, 196, 182, 1.00);vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa17472{width:54pt;background-clip: padding-box;background-color:rgba(241, 220, 118, 1.00);vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa17473{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa17474{width:54pt;background-clip: padding-box;background-color:rgba(255, 191, 105, 1.00);vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa19b70{width:54pt;background-clip: padding-box;background-color:rgba(202, 231, 194, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa19b71{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa19b72{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-faa19b73{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}&lt;/style&gt;&lt;table class='cl-fcf5f5b0'&gt;&lt;thead&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td  colspan="7"class="cl-faa19b71"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b0"&gt;SPI overall score in 2019 and Pillar Scores for EAP Borrowing Countries.&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa19b73"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b0"&gt;Country&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa19b72"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b0"&gt;SPI overall score&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa19b72"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b0"&gt;Data Use&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa19b72"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b0"&gt;Data Services&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa19b72"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b0"&gt;Data Products &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa19b72"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b0"&gt;Data Sources&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa19b72"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b0"&gt;Data Infrastructure&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Cambodia&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;56.2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746a"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;70.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;59.2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;60.4&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;46.4&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;45&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;China&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;58.2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa19b70"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;83.4&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;46.4&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;59.7&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;36.6&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;65&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Fiji&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;57.6&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa19b70"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;80.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;59.5&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;52.9&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;50.6&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;45&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Indonesia&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;72.2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;100.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;87.3&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;74.9&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;43.8&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;55&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Kiribati&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;24.5&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;20.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;25.8&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;46.2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;15.5&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;15&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Lao PDR&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;54.1&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;90.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;56.6&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;53.4&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;40.5&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;30&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Malaysia&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;71.1&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa19b70"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;80.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;84.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;73.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;68.2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;50&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Marshall Islands&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;20.9&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;20.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;24.1&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;38.7&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;11.5&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;10&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Micronesia, Fed. Sts.&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;23.8&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;20.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;25.6&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;41.7&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;16.8&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;15&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Mongolia&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;76.3&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;100.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;80.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;77.5&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;63.9&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;60&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Myanmar&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;63.8&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;100.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;67.1&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;73.8&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;42.9&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;35&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Papua New Guinea&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;40.8&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746a"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;60.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;55.3&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;50.7&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;18.3&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;20&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Philippines&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;75.7&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;100.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;88.3&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;75.2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;80.2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;35&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Samoa&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;57.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;90.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;63.5&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;50.4&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;36.3&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;45&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Solomon Islands&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;41.7&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746a"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;60.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;60.4&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;47.5&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;20.4&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;20&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Thailand&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;76.1&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;100.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;76.5&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746f"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;76.2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;57.9&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;70&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Timor-Leste&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;51.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;50.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;58.2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746d"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;59.3&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;32.7&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746e"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;55&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa1746c"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Vanuatu&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;40.7&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746a"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;60.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;59.1&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;45.7&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa1746b"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;23.6&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17470"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;15&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr style="overflow-wrap:break-word;"&gt;&lt;td class="cl-faa17473"&gt;&lt;p class="cl-faa014ee"&gt;&lt;span class="cl-fa9fc6b1"&gt;Vietnam&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17472"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;66.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17471"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;100.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17472"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;64.0&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17474"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;55.1&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17471"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;75.7&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td class="cl-faa17472"&gt;&lt;p class="cl-faa014ef"&gt;&lt;span class="cl-fa9fc6b1"&gt;35&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;/template&gt;
+&lt;div class="flextable-shadow-host" id="b624a84a-6559-4241-ad79-2dbd75087f4b"&gt;&lt;/div&gt;
+&lt;script&gt;
+var dest = document.getElementById("b624a84a-6559-4241-ad79-2dbd75087f4b");
+var template = document.getElementById("9fd3a74f-8ae6-49e8-b374-33f37dec2af5");
+var caption = template.content.querySelector("caption");
+if(caption) {
+  caption.style.cssText = "display:block;text-align:center;";
+  var newcapt = document.createElement("p");
+  newcapt.appendChild(caption)
+  dest.parentNode.insertBefore(newcapt, dest.previousSibling);
+}
+var fantome = dest.attachShadow({mode: 'open'});
+var templateContent = template.content;
+fantome.appendChild(templateContent);
+&lt;/script&gt;
+]
+
+---
+
+# Conclusions
+
+* Statistical Performance Indicators released along with the new World Development Report
+
+* Meant to aid in country engagement around statistical capacity
+
+* All countries have room for improvement, including high income countries
+
+* Framework is meant to be comprehensive &amp; flexible enough to allow customization.    
+
+
+---
+
+# Resources
+
+* SPI Website
+  * https://worldbank.org/spi
+
+* Data and Code available on Github    
+  * https://github.com/worldbank/SPI
+
+* SPI Data Explorer    
+  * https://datanalytics.worldbank.org/SPI/
+
+---
+class: inverse, middle, center
+
+Supplementary Charts and Figures
+
+
+
+---
+.center3[
+![](SPI_EAP_presentation_files/figure-html/fcs_charts2-1.svg)&lt;!-- --&gt;
+
+
+]
+---
+
+
+
+
+
+
+
+.center3[
+![](SPI_EAP_presentation_files/figure-html/sci-1.svg)&lt;!-- --&gt;
+]
+
+---
+class: inverse, middle, center
+
+Extra Slides
+
+
+---
+
+# Data Use (5 Dimensions)
+
+  * &lt;span style="color:grey"&gt; Dimension 1.1: Data use by national legislature:   
+    * *Not included because of lack of established methodology*   
+  * &lt;span style="color:grey"&gt; Dimension 1.2: Data use by national executive branch:    
+    * *Researching method on use of statistics in Voluntary National Review documents*      
+  * &lt;span style="color:grey"&gt;Dimension 1.3: Data use by civil society:    
+    * *Not included because of lack of established methodology*    
+  * &lt;span style="color:grey"&gt;Dimension 1.4: Data use by academia:      
+    * *Not included because of lack of established methodology*   
+  * **Dimension 1.5: Data use by international organizations:**  
+    * *Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics, safely managed water, labor force data for international agencies using metadata*    
+
+---
+# Data Services (4 Dimensions)
+
+  * &lt;span style="color:green"&gt; **Dimension 2.1: Data Releases:** 
+    * *SDDS/e-GDDS subscription*    
+  * **Dimension 2.2: Online access:** 
+    * *ODIN Open Data Openness score*   
+  * &lt;span style="color:grey"&gt; Dimension 2.3: Advisory/ Analytical Services:  
+    * *Not included because of lack of established methodology*    
+  * **Dimension 2.4: Data services:** 
+    * *NADA metadata available*
+    
+---
+  
+# Data Products (4 Dimensions) 
+
+For these Dimensions, we pull values from the UN SDG database, calculate the share of SDG indicators with a country produced value per country
+
+  * **Dimension 3.1: Social Statistics:** 
+    * *Average score for Goal 1-6 indicators*
+  * **Dimension 3.2: Economic Statistics:** 
+    * *Average score for Goal 7-12 indicators*  
+  * **Dimension 3.3: Environmental Statistics:** 
+    * *Average score for Goal 13-15 indicators*      
+  * **Dimension 3.4: Institutional Statistics:**
+    * *Average score for Goal 16-17 indicators*
+    
+---
+
+# Data Sources (4 Dimensions) 
+
+
+  * **Dimension 4.1: Censuses and Surveys:** 
+    * *Average score of 8 Census and Survey Indicators*    
+  * **Dimension 4.2: Administrative Data:** 
+    * *Complete CRVS, &lt;span style="color:grey"&gt; availability of SPL admin data (ASPIRE), Education admin data (UNESCO), Labor admin data (ILO) *  
+  * **Dimension 4.3: Geospatial Data:**  
+    * *Geospatial data available at 1st Admin Level according to ODIN* 
+  * &lt;span style="color:grey"&gt;Dimension 4.4: Private/citizen generated data:  
+    * *Not included because of lack of established methodology*   
+    
+---
+
+# Data Infrastructure (5 Dimensions) 
+
+
+  * &lt;span style="color:grey"&gt; Dimension 5.1: Legislation and Governance:     
+    * *SDG 17.18.2 - National Statistical Legislation complies with UN Fundamental Principles of Statistics (PARIS21)*  
+  * &lt;span style="color:green"&gt; **Dimension 5.2: Standards and Methods:** 
+    * *Average score for 10 Standards and Methods indicators sourced mostly from IMF*  
+  * &lt;span style="color:grey"&gt; Dimension 5.3: Skills:  
+    * *Considering PARIS21 measure of statistical literacy*    
+  * &lt;span style="color:grey"&gt; Dimension 5.4: Partnerships:  
+    * *Not included because of lack of established methodology*    
+  * &lt;span style="color:grey"&gt; Dimension 5.5: Finance:  
+    * *SDG 17.18.3 - Statistical Plan fully funded (PARIS21)*   
+    
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

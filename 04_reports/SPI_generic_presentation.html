@@ -3,7 +3,7 @@
   <head>
     <title>Statistical Performance Indicators</title>
     <meta charset="utf-8" />
-    <meta name="date" content="2021-04-07" />
+    <meta name="date" content="2021-05-21" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -13,7 +13,7 @@ class: center, middle, inverse, title-slide
 
 # Statistical Performance Indicators
 ### World Bank, Development Data Group
-### 2021-04-07
+### 2021-05-21
 
 ---
 
@@ -86,70 +86,35 @@ SPI is:
 &lt;!--   - Still will provide time series (minimum 3 years) for indicators    --&gt;
 
 ---
-
-# Framework Overview
-
-- SPI framework covers five pillars:   
-  1. Data Use
-      * Indicators that capture demand side of statistical system 
-
----
-# Framework Overview
-
-- SPI framework covers five pillars:
-  1. Data Use
-      * Indicators that capture demand side of statistical system   
-  2. Data Services
-      * Information on data releases, online access, advisory/analytical services, and other data access services
-
----
-# Framework Overview
-
-- SPI framework covers five pillars:
-  1. Data Use
-      * Indicators that capture demand side of statistical system  
-  2. Data Services
-      *  Information on data releases, online access, advisory/analytical services, and other data access services    
-  3. Data Products
-      * Whether the country is able to produce relevant indicators, primarily related to SDGs
-
----
-# Framework Overview
-
-- SPI framework covers five pillars:
-  1. Data Use
-      * Indicators that capture demand side of statistical system   
-  2. Data Services
-      *  Information on data releases, online access, advisory/analytical services, and other data access services    
-  3. Data Products
-      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
-  4. Data Sources
-      * Censuses and surveys, admin data, geospatial, private/citizen generated data    
----
- # Framework  Overview
-
-- SPI framework covers five pillars:
-  1. Data Use
-      * Indicators that capture demand side of statistical system  
-  2. Data Services
-      * Information on data releases, online access, advisory/analytical services, and other data access services    
-  3. Data Products
-      * Whether the country is able to produce relevant indicators, primarily related to SDGs    
-  4. Data Sources
-      * Censuses and surveys, admin data, geospatial, private/citizen generated data      
-  5. Data Infrastructure
-      * Legislation and governance, standards &amp; methods, skill, partnerships, and finance
-
+# SPI Framework
 
 
 ---
 # SPI Framework
 
-.center[![unchanged image](SPI_dashboard.png)]
+.center[![unchanged image](SPI_framework1.png)]
+
 ---
 # SPI Framework
 
-.center[![unchanged image](SPI_Framework_filled.png)]
+.center[![unchanged image](SPI_framework2.png)]
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_framework3.png)]
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_framework4.png)]
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_framework5.png)]
+
+---
+# SPI Framework
+
+.center[![unchanged image](SPI_framework_filled.png)]
 
 
 
@@ -159,30 +124,15 @@ SPI is:
 
 
 ---
-class: inverse, middle, center
+# SPI Score
 
-Index Methodology
+* SPI score = sum of statistical performance indicators   
+* Index can be broken into components to see where a country leads and lags
 
-
-
----
-# Index Methodology
-
-  * Produce overall score and sub-component scores combining indicators
-  * Based on Cameron, Dang, Dinc, Foster, and Lokshin (2021)
-  
-  * Three level structure:    
-    * Indicators nested under dimensions : `\(SPI.DIM_{ctpd} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctpdi}}{N_I}\)`  
-    * Dimensions nested under pillars: `\(SPI.PIL_{ctp} = \sum_{d=1}^{N_d} \frac{\omega_{pd} \times SPI.DIM_{ctpd}}{N_d}\)`   
-    * Pillars nested under overall score: `\(SPI.INDEX_{ct} = \sum_{p=1}^{N_p} \frac{SPI.PIL_{ctp}}{N_p}\)`  
-  
-  * Nested structure allows for symmetry, monotonicity, and subgroup decomposability      
-
----
-class: inverse, middle, center
+.center[![](spi_agg.png)]
 
 
-     
+
 ---
 class: inverse, middle, center
 
@@ -364,6 +314,7 @@ Countries are grouped into five groups:
 
 
 
+
 .center3[
 ![](SPI_generic_presentation_files/figure-html/gdpplot-1.svg)&lt;!-- --&gt;
 ]
@@ -374,7 +325,7 @@ Countries are grouped into five groups:
 
 
 
-
+---
 
 
 
@@ -504,6 +455,18 @@ For these Dimensions, we pull values from the UN SDG database, calculate the sha
     * *SDG 17.18.3 - Statistical Plan fully funded (PARIS21)*   
     
 
+---
+# Index Methodology
+
+  * Produce overall score and sub-component scores combining indicators
+  * Based on Cameron, Dang, Dinc, Foster, and Lokshin (2021)
+  
+  * Three level structure:    
+    * Indicators nested under dimensions : `\(SPI.DIM_{ctpd} = \sum_{i=1}^{N_I} \frac{SPI.IND_{ctpdi}}{N_I}\)`  
+    * Dimensions nested under pillars: `\(SPI.PIL_{ctp} = \sum_{d=1}^{N_d} \frac{\omega_{pd} \times SPI.DIM_{ctpd}}{N_d}\)`   
+    * Pillars nested under overall score: `\(SPI.INDEX_{ct} = \sum_{p=1}^{N_p} \frac{SPI.PIL_{ctp}}{N_p}\)`  
+  
+  * Nested structure allows for symmetry, monotonicity, and subgroup decomposability      
 
 
     </textarea>

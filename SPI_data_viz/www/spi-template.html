@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!-- these stylesheets are cribbed from RStudio Connect to ensure compatibility. They are already in your template
+     so you don't need to add them again
+-->
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/shared/shiny.min.css" rel="stylesheet" />
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/font-awesome-5.13.0/css/all.min.css" rel="stylesheet" />
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/font-awesome-5.13.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/shared/selectize/css/selectize.bootstrap3.css" rel="stylesheet" />
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/highcharts-8.1.2/css/motion.css" rel="stylesheet" />
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/shinyWidgets/shinyWidgets.min.css" rel="stylesheet" />
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/shared/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet" />
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/shared/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/shared/bootstrap/accessibility/css/bootstrap-accessibility.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/shinythemes/css/cerulean.min.css"/>
+<link rel="stylesheet" href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/shinycssloaders-assets/spinner.css"/>
+<link rel="stylesheet" href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/shinycssloaders-assets/css-loaders.css"/>
+<link rel="stylesheet" type="text/css" href="https://datanalytics.worldbank.org/SPI/_w_fe7cde78/__assets__/rstudio-connect.css"/>
+
+<!-- add this stylesheet after all others -->
+<link rel="stylesheet" type="text/css" href="spi-template.css"/>
+</head>
+<body>
+
+<!-- BEGIN minimalist header.
+
+     You can change class="container" to class="container-fluid" to get fixed vs. full-width containers
+     for any given element. I assumed the Shiny tool is designed to be "container-fluid" but the site menu in AEM is non-fluid,
+     so we might want it to be consistent here too
+-->
+<div class="container-fluid">
+<div class="navbar-header">
+  <a href="https://www.worldbank.org" class="navbar-brand">
+    <img title="" alt="" class="img-responsive" src="https://www.worldbank.org/content/dam/wbr/logo/logo-wb-header-en.svg"/>
+  </a>
+</div>
+</div>
+
+<div class="container-fluid breadcrumb">
+<div class="row"><div class="col-xs-12 page-title">
+<a class="breadcrumb" href="//worldbank.org/en/programs/statistical-performance-indicators">Statistical Performance Indicators</a>
+
+</div></div>
+</div>
+
+<div class="container-fluid title">
+<div class="row"><div class="col-xs-12">
+<h1>Statistical Performance Indicators (SPI)</h1>
+</div></div>
+</div>
+
+<!-- SPI site menu; the titles and links should match what's in AEM -->
+<div class="subnav-wrapper">
+<div class="container subnavigation">
+<div class="row"><div class="col-xs-12">
+    <ul>
+        <li><a title="Home" href="//worldbank.org/en/programs/statistical-performance-indicators">Home</a></li>
+        <li><a title="Explore Data" href="//www.worldbank.org/en/programs/statistical-performance-indicators/Explore-Data">Explore Data</a></li>
+        <li><a title="Framework" href="//www.worldbank.org/en/programs/statistical-performance-indicators/Framework">Framework</a></li>
+        <li><a title="FAQ" href="//www.worldbank.org/en/programs/statistical-performance-indicators/FAQ">FAQ</a></li>
+    </ul>
+</div></div>
+</div>
+</div>
+
+<!-- END minimalist header -->
+
+<!-- the tab template is copied verbatim from the Shiny app and restyled via CSS separately. You shouldn't need to change anything -->
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <span class="navbar-brand">Statistical Performance Indicators Data Explorer</span>
+      </div>
+      <ul class="nav navbar-nav shiny-tab-input shiny-bound-input" id="container" data-tabsetid="5460">
+        <li class="active">
+          <a href="#tab-5460-1" data-toggle="tab" data-value="Global Picture">Global Picture</a>
+        </li>
+        <li>
+          <a href="#tab-5460-2" data-toggle="tab" data-value="Country Reports">Country Reports</a>
+        </li>
+        <li>
+          <a href="#tab-5460-3" data-toggle="tab" data-value="Country Time Trends">Country Time Trends</a>
+        </li>
+        <li>
+          <a href="#tab-5460-4" data-toggle="tab" data-value="Create Your Own SPI">Create Your Own SPI</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+
+<div class="container-fluid">
+<div class="row"><div class="col-xs-12">
+<h1>Dashboard goes here</h1>
+<h3>Instructions</h3>
+<ol>
+<li>Copy the files <a href="spi-template.css">spi-template.css</a>, <a href="andes/304244_1_0.woff">andes/304244_1_0.woff</a>,
+  <a href="andes/304244_1_0.woff2">andes/304244_1_0.woff2</a> and
+  <a href="andes/304244_1_0.ttf">andes/304244_1_0.ttf</a> to the SPI
+  project directory on the Connect server</li>
+<li>View Source on this page</li>
+<li>Copy the line with "spi-template.css" and the HTML code after "BEGIN minimalist header" up to "END minimalist header" to your HTML template</li>
+<li>If you changed any relative paths in step 2 you'll need to change the URLs for spi-template.css and the font reference at the top of the CSS file</li>
+</ol>
+
+</div></div>
+
+</body>
+</html>

@@ -108,9 +108,76 @@ sketch = htmltools::withTags(table(
   )
 ))
 
+
+
+
 # Define UI for application that draws a histogram
-ui <- navbarPage("Statistical Performance Indicators Data Explorer",id='container',
-                 theme = shinytheme("cerulean"),
+ui <- navbarPage(id='container',
+                 windowTitle="Statistical Performance Indicators Data Explorer",
+                 tags$body(HTML('
+                                  
+                                  <div class="navbar-header">
+                                  <a href="https://www.worldbank.org" class="navbar-brand">
+                                  <img title="" alt="" class="img-responsive" src="https://www.worldbank.org/content/dam/wbr/logo/logo-wb-header-en.svg"/>
+                                  </a>
+                                  </div>
+                                  </div>
+                                  
+                                  <div class="container-fluid breadcrumb">
+                                  <div class="row"><div class="col-xs-12 page-title">
+                                  <a class="breadcrumb" href="//www.worldbank.org/en/programs/statistical-performance-indicators">Statistical Performance Indicators</a>
+                                  
+                                  </div></div>
+                                  </div>
+                                  
+                                  <div class="container-fluid title">
+                                  <div class="row"><div class="col-xs-12">
+                                  <h1>Statistical Performance Indicators (SPI) </h1>
+                                  </div></div>
+                                  </div>
+                                  
+                                    <div class="subnav-wrapper">
+                                    <div class="container subnavigation">
+                                    <div class="row"><div class="col-xs-12">
+                                        <ul> 
+                                            <li><a title="Home" href="//www.worldbank.org/en/programs/statistical-performance-indicators">Home</a></li>
+                                            <li><a title="Explore Data" href="//www.worldbank.org/en/programs/statistical-performance-indicators/Explore-Data">Explore Data</a></li>
+                                            <li><a title="Framework" href="//www.worldbank.org/en/programs/statistical-performance-indicators/Framework">Framework</a></li>
+                                            <li><a title="FAQ" href="//www.worldbank.org/en/programs/statistical-performance-indicators/FAQ">FAQ</a></li>
+                                        </ul>
+                                    </div></div>
+                                    </div>
+                                    ')),            
+                 
+  #                
+  # tags$div(
+  #   class="navbar-brand",
+  #   tags$a(href = "https://www.worldbank.org",
+  #          tags$img(
+  #            title="",
+  #            class="img-responsive",
+  #            src="https://www.worldbank.org/content/dam/wbr/logo/logo-wb-header-en.svg"
+  #          ))
+  # )  ,
+  # tags$div(
+  #   class="container-fluid breadcrumb",
+  #   tags$div(class="row",
+  #            tags$div(
+  #              class="col-xs-12 page-title",
+  #              tags$a(
+  #                class="breadcrumb",
+  #                title="Statistical Performance Indicators",
+  #                href="//worldbank.org/en/programs/statistical-performance-indicators"
+  #              ),
+  #              
+  #            )),
+  #   
+  #title="Statistical Performance Indicators Data Explorer",
+  
+                 theme='cerulean.min.css',
+
+
+                
                  #####################################################
                  # Welcome Section
                  ####################################################
@@ -133,12 +200,14 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",id='containe
                  # Global Map and Statistics Section
                  ####################################################
                  tabPanel("Global Picture",tabName ='tab1',
-                          
-                          div(class="outer",
-                              shiny::actionButton(inputId='ab1', label="Visit SPI Homepage", 
-                                                 icon = icon("external-link-square-alt"),
-                                                 # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
-                                                 onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
+                          tags$head(
+                            tags$link(rel = "stylesheet", type = "text/css", href = "spi-template.css")
+                          ),
+                          # div(class="outer",
+                          #     shiny::actionButton(inputId='ab1', label="Visit SPI Homepage", 
+                          #                        icon = icon("external-link-square-alt"),
+                          #                        # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
+                          #                        onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
                               fluidRow(
                                 column(3,
                                       selectizeInput("color_choices_overall", "Choose Indicator", 
@@ -153,7 +222,7 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",id='containe
                                 column(2,offset=1,
                                        downloadButton("downloadDataMap", "Download"))
 
-                          )),
+                          ),
                           useShinyjs(),
                           #radioButtons("togglemap", label="Show Map or Show Table", choices = c(Map = "Map", Table = "Table")),
                           wellPanel(style="background:white",
@@ -264,11 +333,11 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",id='containe
                  # Country Reports section
                  ####################################################                 
                  tabPanel("Country Reports",tabName ='tab2',
-                          div(class="outer",
-                              shiny::actionButton(inputId='ab2', label="Visit SPI Homepage", 
-                                                  icon = icon("external-link-square-alt"),
-                                                  # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
-                                                  onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
+                          # div(class="outer",
+                          #     shiny::actionButton(inputId='ab2', label="Visit SPI Homepage", 
+                          #                         icon = icon("external-link-square-alt"),
+                          #                         # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
+                          #                         onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
                               fluidRow(
                                 column(2,
                                        selectizeInput("country_choice",
@@ -290,7 +359,7 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",id='containe
                                                       status='success'))
                                 ),
                               
-                          ),
+                          
                           withSpinner(uiOutput(('fullplot' )))
                  ),
                  #####################################################
@@ -298,11 +367,11 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",id='containe
                  #####################################################
                  
                  tabPanel("Country Time Trends",
-                          div(class="outer",style='padding:50px',
-                              shiny::actionButton(inputId='ab3', label="Visit SPI Homepage", 
-                                                  icon = icon("external-link-square-alt"),
-                                                  # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
-                                                  onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
+                          # div(class="outer",style='padding:50px',
+                          #     shiny::actionButton(inputId='ab3', label="Visit SPI Homepage", 
+                          #                         icon = icon("external-link-square-alt"),
+                          #                         # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
+                          #                         onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
                               h2("Time Trends of Statistical Performance Indicators"),
                               fluidRow(
                                 column(2,
@@ -324,9 +393,9 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",id='containe
                               ),
                               downloadButton("downloadDataTrends", "Download"),
                               
-                              withSpinner(highchartOutput('plot_time')),
+                              withSpinner(highchartOutput('plot_time'))
 
-                          )
+                          
                  ),
                  #####################################################
                  # Country Table section
@@ -347,14 +416,14 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",id='containe
                                  
                                 hr {border-top: 1px solid #000000;} ')
                           )),
-                          div(class="outer",  
-                             sidebarLayout( 
-                              
+                          # div(class="outer",  
+                          #    sidebarLayout( 
+                          #     
                               mainPanel(
-                                shiny::actionButton(inputId='ab3', label="Visit SPI Homepage", 
-                                                    icon = icon("external-link-square-alt"),
-                                                    # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
-                                                    onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
+                          #       shiny::actionButton(inputId='ab3', label="Visit SPI Homepage", 
+                          #                           icon = icon("external-link-square-alt"),
+                          #                           # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
+                          #                           onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
                                 includeMarkdown("weights.md"),
                                 fluidRow(
                                   column(2,
@@ -390,6 +459,7 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",id='containe
                                 withSpinner(DT::dataTableOutput("country_changes",
                                                                 width='100%'))
                               ),
+                              
                               sidebarPanel(id = "weights",
                                             
                                             h2("Customize Weights"),
@@ -526,10 +596,10 @@ ui <- navbarPage("Statistical Performance Indicators Data Explorer",id='containe
                               )
                               
                           )
-                          )
+                          
                  )
                  
-)
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output,session) {

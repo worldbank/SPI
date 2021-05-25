@@ -112,7 +112,7 @@ SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
 
 #metadata 
 metadata2 <- data.frame(
-  series = c('SPI.INDEX', 'SPI.INDEX.DIM1', 'SPI.INDEX.DIM2', 'SPI.INDEX.DIM3', 'SPI.INDEX.DIM4', 'SPI.INDEX.DIM5'),
+  series = c('SPI.INDEX', 'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5'),
   indicator_name = c('SPI Overall Score', 'Dimension 1: Data Use', 'Dimension 2: Data Services', 'Dimension 3: Data Products', 'Dimension 4: Data Sources', 'Dimension 5: Data Infrastructure')
 )
 
@@ -646,11 +646,11 @@ growth_plot <- function(variables, name) {
 }
 
 
-# growth_plot('SPI.INDEX.DIM1', 'SPI Dimension 1 (Data Use) Score')
-# growth_plot('SPI.INDEX.DIM2', 'SPI Dimension 2 (Data Services) Score')
-# growth_plot('SPI.INDEX.DIM3', 'SPI Dimension 3 (Data Products) Score')
-# growth_plot('SPI.INDEX.DIM4', 'SPI Dimension 4 (Data Sources) Score')
-# growth_plot('SPI.INDEX.DIM5', 'SPI Dimension 5 (Data Infrastructure) Score')
+# growth_plot('SPI.INDEX.PIL1', 'SPI Dimension 1 (Data Use) Score')
+# growth_plot('SPI.INDEX.PIL2', 'SPI Dimension 2 (Data Services) Score')
+# growth_plot('SPI.INDEX.PIL3', 'SPI Dimension 3 (Data Products) Score')
+# growth_plot('SPI.INDEX.PIL4', 'SPI Dimension 4 (Data Sources) Score')
+# growth_plot('SPI.INDEX.PIL5', 'SPI Dimension 5 (Data Infrastructure) Score')
 
 
 ```
@@ -1115,7 +1115,7 @@ For these pillars, we pull values from the UN SDG database, calculate the share 
 
 .center2[
 ```{r dimension_1_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM1', 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
+spi_mapper('SPI', 'SPI.INDEX.PIL1', 'Statistical Performance Indicators - SPI Dimension 1: Data Use')
 
 ```
 ]
@@ -1124,7 +1124,7 @@ spi_mapper('SPI', 'SPI.INDEX.DIM1', 'Statistical Performance Indicators - SPI Di
 
 .center2[
 ```{r dimension_2_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM2', 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
+spi_mapper('SPI', 'SPI.INDEX.PIL2', 'Statistical Performance Indicators - SPI Dimension 2: Data Services')
 
 ```
 ]
@@ -1133,7 +1133,7 @@ spi_mapper('SPI', 'SPI.INDEX.DIM2', 'Statistical Performance Indicators - SPI Di
 
 .center2[
 ```{r dimension_3_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM3', 'Statistical Performance Indicators - SPI Dimension 3: Data Products')
+spi_mapper('SPI', 'SPI.INDEX.PIL3', 'Statistical Performance Indicators - SPI Dimension 3: Data Products')
 
 ```
 ]
@@ -1142,7 +1142,7 @@ spi_mapper('SPI', 'SPI.INDEX.DIM3', 'Statistical Performance Indicators - SPI Di
 
 .center2[
 ```{r dimension_4_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM4', 'Statistical Performance Indicators - SPI Dimension 4: Data Sources')
+spi_mapper('SPI', 'SPI.INDEX.PIL4', 'Statistical Performance Indicators - SPI Dimension 4: Data Sources')
 
 ```
 ]
@@ -1151,7 +1151,7 @@ spi_mapper('SPI', 'SPI.INDEX.DIM4', 'Statistical Performance Indicators - SPI Di
 
 .center2[
 ```{r dimension_5_m, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
-spi_mapper('SPI', 'SPI.INDEX.DIM5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
+spi_mapper('SPI', 'SPI.INDEX.PIL5', 'Statistical Performance Indicators - SPI Dimension 5: Data Infrastructure')
 
 ```
 ]

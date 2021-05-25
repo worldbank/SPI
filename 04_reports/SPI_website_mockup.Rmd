@@ -142,13 +142,15 @@ plot_fun <- function(variables, title) {
     ylab('Score') +
     theme(legend.position='bottom') 
   
-  ggplotly(p,
-           tooltip=c('label','y')) %>%
-    layout(title=title,
-           legend = list(orientation = "h",   # show entries horizontally
-                     xanchor = "center",  # use center of legend as anchor
-                     x = 0.5,y=-0.2))             # put legend in center of x-axis
-    
+  # ggplotly(p,
+  #          tooltip=c('label','y')) %>%
+  #   layout(title=title,
+  #          legend = list(orientation = "h",   # show entries horizontally
+  #                    xanchor = "center",  # use center of legend as anchor
+  #                    x = 0.5,y=-0.2))             # put legend in center of x-axis
+  # 
+plot_df  
+     
 }
 
 ```
@@ -170,8 +172,10 @@ Statistics have no value unless they are used. The first dimension of the SPI is
 
 ```{r dim1, out.height=400, out.width=700}
 
-plot_fun('SPI.INDEX.DIM1', 'Dimension 1: Data Use') 
+pil1 <- plot_fun('SPI.INDEX.PIL1', 'Pillar 1: Data Use') 
 
+
+write_excel_csv(pil1,'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/charts_data/pillar1_data.csv')   
 ```
 
 

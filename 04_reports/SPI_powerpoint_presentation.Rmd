@@ -1460,32 +1460,32 @@ print(p)
 ```
 
 .center3[
-```{r changesplot, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+```{r changesplota, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
 
 changes_fun('SPI.INDEX', 'SPI Overall Score for East Asia and Pacific', 2016, 2019)
 
 ```
-```{r changesplot, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+```{r changesplotb, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
 
 changes_fun('SPI.INDEX.PIL1', 'SPI Pillar 1 - Data Use - Score for East Asia and Pacific', 2016, 2019)
 
 ```
-```{r changesplot, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+```{r changesplotc, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
 
 changes_fun('SPI.INDEX.PIL2', 'SPI Pillar 2 - Data Services - Score for East Asia and Pacific', 2016, 2019)
 
 ```
-```{r changesplot, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+```{r changesplotd, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
 
 changes_fun('SPI.INDEX.PIL3', 'SPI Pillar 3 - Data Products - Score for East Asia and Pacific', 2016, 2019)
 
 ```
-```{r changesplot, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+```{r changesplote, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
 
 changes_fun('SPI.INDEX.PIL4', 'SPI Pillar 4 - Data Sources - Score for East Asia and Pacific', 2016, 2019)
 
 ```
-```{r changesplot, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
+```{r changesplot1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=9, fig.width=10}
 
 changes_fun('SPI.INDEX.PIL5', 'SPI Pillar 5 - Data Infrastructure - Score for East Asia and Pacific', 2016, 2019)
 
@@ -1696,9 +1696,16 @@ m_gdp <- lm(log(value) ~  SPI.INDEX, data = gdp_df_2019)
 gdp_all_df <- gdp_df_2019 %>%
   modelr::add_predictions(m_gdp)
 
+#write_excel_csv(gdp_all_df,'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/charts_data/gdp_overperformers_data.csv') 
+
+
 gdp_overperformers_df <- gdp_df_2019 %>%
   modelr::add_residuals(m_spi) %>%
   arrange(-resid) %>%
+  mutate(
+    group=if_else(resid>=0, 'Over-performers','Under-performers')
+  ) %>%
+  write_excel_csv('C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/charts_data/gdp_overperformers_data.csv') %>%
   head(15)
 
 gdp_underperformers_df <- gdp_df_2019 %>%
@@ -1788,6 +1795,118 @@ gdp_overperformers_plot
 #   plot_annotation(title='Top 15 Over/Under-Performers on SPI Index Compared to GDP per capita ',
 #                   caption=str_wrap('Over and under performers calculated for GDP per capita by using OLS regression of SPI Index in 2019 on Log GDP per capita and calculting residuals from this regression. ',100)
 #                  )
+```
+---
+
+```{r menaoverperformers, echo=FALSE, fig.height=9, fig.width=12, message=FALSE, warning=FALSE}
+
+#get top 10 and bottom 10 over performers compared to gdp and hci
+
+## GDP
+#regress SPI on gdp
+m_spi <- lm(SPI.INDEX ~ log(value) , data = gdp_df_2019) 
+
+m_gdp <- lm(log(value) ~  SPI.INDEX, data = gdp_df_2019) 
+
+
+#countries in mena to consider
+mena_cntry <- c('Malta',
+                'Egypt, Arab Rep.'	,
+                'West Bank and Gaza',
+                'Kuwait',
+                'Tunisia',
+                'Saudi Arabia',
+                'Qatar',
+                'Jordan',
+                'United Arab Emirates',
+                'Morocco',
+                'Oman',
+                'Iran, Islamic Rep.',
+                'Algeria',
+                'Bahrain',
+                'Lebanon',
+                'Yemen, Rep.',
+                'Djibouti',
+                'Iraq',
+                'Syrian Arab Republic',
+                'Libya')
+
+gdp_overperformers_plot_mena <- gdp_df_2019 %>%
+  modelr::add_residuals(m_spi) %>%
+  arrange(-resid) %>%
+  filter(country %in% mena_cntry) %>%
+  arrange(resid) %>%
+  filter(!is.na(resid))
+
+
+
+gdp_overperformers_plot_mena <-  gdp_overperformers_plot_mena %>%
+  mutate(country=factor(country, levels=unique(gdp_overperformers_plot_mena$country)),
+         group=if_else(resid>=0, 'above','below')) %>%
+  ggplot(aes(x=country, y=resid, color=group)) +
+  geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +
+  geom_point(size=5) +
+  scale_color_manual(name="GDP per Capita",
+                     labels = c("Over-performers", "Under-performers"),
+                     values = c('above'="#1A9850", 'below'="#D73027")) +
+  coord_flip() +
+  theme_spi() +
+  labs(
+    title=str_wrap('GDP per capita', 50)
+    # caption=str_wrap('Over and under performers calculated for GDP per capita by using OLS regression of SPI Index in 2019 on Log GDP per capita and calculting residuals from this regression.',100)
+  ) +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    legend.position = 'bottom'
+  ) +
+  xlab("") +
+  ylab("SPI (deviation)") 
+
+
+
+### HCI
+
+
+#regress SPI on hci
+m_spi_hci <- lm(SPI.INDEX ~ value , data = hci_df_2018) 
+
+m_hc_spii <- lm(value ~ SPI.INDEX  , data = hci_df_2018) 
+
+
+
+hci_overperformers_plot_mena <- hci_df_2018 %>%
+  modelr::add_residuals(m_spi_hci) %>%
+  filter(country %in% mena_cntry) %>%
+  arrange(resid) %>%
+  filter(!is.na(resid))
+
+
+hci_overperformers_plot_mena <- hci_overperformers_plot_mena %>%
+  mutate(country=factor(country, levels=unique(hci_overperformers_plot_mena$country)),
+         group=if_else(resid>=0, 'above','below')) %>%
+  ggplot(aes(x=country, y=resid, color=group)) +
+  geom_segment( aes(x=country ,xend=country, y=0, yend=resid), color="black") +
+  geom_point(size=5) +
+  scale_color_manual(name="HCI",
+                     labels = c("Over-performers", "Under-performers"),
+                     values = c('above'="#1A9850", 'below'="#D73027")) +
+  coord_flip() +
+  theme_spi() +
+  theme(
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.y = element_blank(),
+    legend.position = 'bottom'
+  ) +
+  xlab("") +
+  ylab("SPI (deviation)") +
+  ggtitle("Human Capital Index")
+
+
+gdp_overperformers_plot_mena  + hci_overperformers_plot_mena +
+  plot_annotation(title='MENA Over/Under-Performers on SPI Index Compared to GDP per capita & Human Capital Index (HCI)',
+                  caption=str_wrap('Over and under performers calculated for GDP per capita (or HCI) by using OLS regression of SPI Index in 2019 on Log GDP per capita and calculting residuals from this regression. ',100)
+                 )
 ```
 
 ---
