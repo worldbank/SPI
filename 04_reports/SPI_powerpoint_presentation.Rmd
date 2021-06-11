@@ -1080,7 +1080,21 @@ spi_subgroup_mapper('SPI', 'SPI.INDEX','4th Quintile', 'Countries in next quinti
            vjust = "top", family="Courier", size=4.5)
 
 ```
+
+```{r overall_map2b, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
+spi_subgroup_mapper('SPI', 'SPI.INDEX','4th Quintile', 'Countries in next quintile have many strengths but may lack in certain areas.') +
+  annotate(
+    geom = "curve", x = 7000000, y = -1200000, xend =10683000, yend = -619752, 
+    curvature = -.3, arrow = arrow(length = unit(2, "mm"))
+  ) +
+  annotate(geom = "text", x = 7000000, y = -1200000, label = str_wrap("Indonesia does well in data use and data products, but lacks complete CRVS and does not follow all international classifications.",20), 
+           vjust = "top", family="Courier", size=4.5)
+
+```
+
 ]
+
+
 
 ---
 

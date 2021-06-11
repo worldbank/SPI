@@ -744,7 +744,41 @@ p2_alt2
 
 
 
-
+spi_income_aggregates <- function(data, indicator, title) {
+   indicator<-indicator
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( country) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(country, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))   
+  
+    income <- c("Low income", "Lower middle income","Upper middle income","High income")
+    p3 <- map_df %>%
+    group_by(income) %>%
+    filter(region!='Aggregates') %>%
+    mutate(`SPI Score`=wtd.mean(data_available, weights=weights, na.rm=T),
+           Label = paste(round(`SPI Score`,1))) %>%
+    ggplot(aes(x=`SPI Score`, y=income)) +
+      geom_bar(stat="identity",position='dodge', fill="#0096c7") +
+      geom_text(aes(label=Label), nudge_x=7 ) +
+      # labs(
+      # title=str_wrap(paste(title, 'By Income', sep=" - "),100),
+      # caption = 'Source: World Bank. Statistical Performance Indicators.',
+      # subtitle= 'Based on data for 2019 or the latest year available'
+      # ) +
+      scale_y_discrete(limits = income) +
+      expand_limits(x=c(0,100)) +
+      theme_spi() +
+    theme(
+      text=element_text(size=14)
+    )
+    
+    p3
+}
 
 
 ```
@@ -1043,8 +1077,106 @@ spi_mapper('SPI', 'SPI.INDEX.PIL5', 'Statistical Performance Indicators - SPI Pi
 ]
 ---
 
+```{r incomecharts, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+spi_income_aggregates('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores') +
+  theme_clean() +
+  theme(
+    axis.text.y = element_text(size=18),
+    axis.title.y = element_blank()
+                               
+  )
+```
+
+---
 
 
+```{r decompstacked, echo=FALSE}
+  decomp_stacked_df <- SPI %>%
+    filter(date==2019) %>%
+    select(country, income, iso3c, date, starts_with('SPI.INDEX')) %>%
+    filter(!is.na(SPI.INDEX)) 
+    
+  
+  #summarise into decile bins
+  decomp_stacked_df <- decomp_stacked_df %>%
+    group_by(income) %>%
+    summarise(across(starts_with('SPI.INDEX'), mean, na.rm=T)) %>%
+    pivot_longer(
+      cols=c('SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5'),
+      values_to='level',
+      names_to='Pillar'
+    ) %>%
+    mutate(Pillar=case_when(
+      Pillar=="SPI.INDEX.PIL1" ~ "Pillar 1: Data Use",
+      Pillar=="SPI.INDEX.PIL2" ~ "Pillar 2: Data Services",
+      Pillar=="SPI.INDEX.PIL3" ~ "Pillar 3: Data Products",
+      Pillar=="SPI.INDEX.PIL4" ~ "Pillar 4: Data Sources",
+      Pillar=="SPI.INDEX.PIL5" ~ "Pillar 5: Data Infrastructure"
+    )) %>%
+    group_by(income) %>%
+    mutate(level=level/5,
+           total=sum(level)) #divide by 5 so that Pillar scores sum to overall score.  This puts equal weight on each Pillar in the sum
+  
+```
+
+```{r decompstackedplt, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+    name <- 'SPI Overall Score'
+    income <- c("Low income", "Lower middle income","Upper middle income","High income")
+#absolute graph
+  ggplot(decomp_stacked_df, aes(x=income, y=level, fill=Pillar, label=paste0(round(level,1)))) +
+    geom_bar(stat = "identity", position='stack') +
+    geom_text(size = 4, position = position_stack(vjust = 0.5)) +
+    geom_text(aes(y=total,label=paste0('Total = ' ,round(total,1))), size=4, nudge_y=7 ) +
+    scale_x_discrete() +
+    theme_clean() +
+    
+    # labs(
+    #   #title='Contribution of each Pillar to SPI overall score',
+    #   #subtitle='Each pillar receives equal 1/5th weight in overall score',
+    #   #caption=paste0(name,' scale = 0 - 100 points.')
+    # ) +
+  scale_x_discrete(limits = income) +
+    coord_flip() +
+  expand_limits(y=c(0,100)) +
+  theme(
+    text=element_text(size=14),
+    title= element_text(size = 14),
+    legend.position = 'bottom',
+    axis.title.y = element_blank(),
+    axis.text.y = element_text(size=18)
+
+  ) +
+    guides(fill=guide_legend(nrow=2,byrow=TRUE))
+```
+
+---
+
+```{r decompstackedplt2, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+#relative graph  
+  ggplot(decomp_stacked_df, aes(x=income, y=100*level/total, fill=Pillar, label=paste0(round(100*level/total,1),"%"))) +
+    geom_bar(stat = "identity", position='stack') +
+    geom_text(size = 4, position = position_stack(vjust = 0.5)) +
+    #geom_text(aes(y=total,label=paste0('Total = ' ,round(total,1))), size=4, nudge_y=7 ) +
+    scale_x_discrete()  +
+    ylab('percentage') +
+    # labs(
+    #   #title='Relative Contribution of each dimension to SPI overall score',
+    #   subtitle='Each pillar receives equal 1/5th weight in overall score',
+    #   caption=paste0(name,' scale = 0 - 100 points.')
+    # ) +
+  scale_x_discrete(limits = income) +
+    coord_flip() +
+  expand_limits(y=c(0,100)) +
+    theme_clean() +
+  theme(
+    text=element_text(size=14),
+    title= element_text(size = 14),
+    legend.position = 'bottom',
+    axis.title.y = element_blank(),
+    axis.text.y = element_text(size=18)
+  ) +
+    guides(fill=guide_legend(nrow=2,byrow=TRUE))  
+```
 
 
 .center3[

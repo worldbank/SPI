@@ -1482,7 +1482,8 @@ server <- function(input, output,session) {
           #sum up based on individual dimension weights
         ) %>% #
         mutate(across(starts_with('SPI.INDEX'),~100*.)) %>%
-        select(country, SPI.INDEX,SPI.INDEX.PIL1,SPI.INDEX.PIL2,SPI.INDEX.PIL3,SPI.INDEX.PIL4,SPI.INDEX.PIL5, region, income) 
+        select(country, SPI.INDEX,SPI.INDEX.PIL1,SPI.INDEX.PIL2,SPI.INDEX.PIL3,SPI.INDEX.PIL4,SPI.INDEX.PIL5, region, income) %>%
+        arrange(-SPI.INDEX)
       #  filter(date>=2016) #2016 is first year with complete data
       
       
