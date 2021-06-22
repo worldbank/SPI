@@ -25,6 +25,7 @@ library(flextable)
 library(skimr)
 library(shinyWidgets)
 library(highcharter)
+library(officer)
 
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv')
@@ -358,8 +359,9 @@ ui <- navbarPage(id='container',
                                        materialSwitch(inputId = "toggle", label = "Single/Multi Column",
                                                       status='success'))
                                 ),
-                              
-                          
+                          #country report: https://github.com/worldbank/SPI/blob/master/country_reports/Albania%20Country%20Report.docx?raw=true    
+                          uiOutput("rep"),
+
                           withSpinner(uiOutput(('fullplot' )))
                  ),
                  #####################################################
@@ -614,7 +616,16 @@ server <- function(input, output,session) {
       write.csv(SPI, file, row.names = FALSE)
     }
   )
-    
+  
+
+  url <- reactive({
+    tags$a(paste0("Download ",input$country_choice," Country Report"), href=paste0("https://github.com/worldbank/SPI/blob/master/country_reports/",input$country_choice,"%20Country%20Report.docx?raw=true"))
+  }) 
+  output$rep <- renderUI({
+    tagList(url())
+  })
+  
+
     #################################################
     # Overall SPI
     #################################################
