@@ -100,7 +100,6 @@
 !/**/**/*.pptx
 
 #word
-!/SPI_data_viz/**/*.docx
 
 #PNG files in the reports folder
 !/04_reports/*.png
