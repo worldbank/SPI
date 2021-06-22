@@ -101,6 +101,9 @@
 !/04_reports/*.png
 !/04_reports/*.PNG
 
+#Country reports
+!/country_reports/*.docx
+
 #######################
 # Include all the files with passwords or tokens here. All files named
 # password or passwords are with this template ignored no matter which
