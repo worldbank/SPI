@@ -49,7 +49,7 @@ window=5 #set the window for the moving averages
 # 2. An indicator with the raw (unscored) values of the indicators
 # The unit for this database will be country*year
 
-span <- c(2004:2019)
+span <- c(2004:2020)
 
 spi_df_empty <- bind_rows(replicate(length(span), wbstats::wbcountries(), simplify = FALSE), .id='date') %>%
   mutate(date=as.numeric(date)+span[1]-1) %>%
@@ -118,7 +118,7 @@ spi_mapper  <- function(data, indicator, title) {
     theme_map(base_size=12) +
     labs(
       title=str_wrap(title,100),
-      subtitle= 'Data Point is for last year available (usually 2019)',
+      subtitle= 'Data Point is for last year available (usually 2020)',
       caption = 'Source: SPI Indicator.',
       fill='SPI Indicator Value'
     )
@@ -135,7 +135,7 @@ spi_mapper  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
-      subtitle= 'Data Point is for last year available (usually 2019)'
+      subtitle= 'Data Point is for last year available (usually 2020)'
       ) +
       expand_limits(x=c(0,100)) +
       theme_bw()
@@ -152,7 +152,7 @@ spi_mapper  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
-      subtitle= 'Data Point is for last year available (usually 2019)'
+      subtitle= 'Data Point is for last year available (usually 2020)'
       ) +
       expand_limits(x=c(0,100)) +
       theme_bw()
@@ -359,7 +359,7 @@ Below is a brief description of the information (or lack thereof) we have availa
   * **Dimension 2.3: Advisory/ Analytical Services:**  *Not included because of lack of established methodology. We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further.*    
   * **Dimension 2.4: Data services:** *SPI.D2.4.NADA	NADA metadata.  We have not been able to find usable data sources with global coverage on which a new methodology could be developed.*
   
-  * **Dimension 3.1: Social Statistics:** *Average score for Goal 1-6 indicators. The primary data source is the UN SDG database. Whilst this is a database with comprehensive coverage that all countries have signed up to, it is clear that many (particularly developed countries) are not yet submitting their available national data. Scores for these countries are likely to represent an indicator of their willingness to submit national data rather than their performance in calculating the indicators.  For OECD countries, we supplement the UN SDG database with comparable data submitted to the OECD following the methodology in Measuring Distance to the SDG Targets 2019: An Assessment of Where OECD Countries Stand (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2019-a8caf3fa-en.htm). *
+  * **Dimension 3.1: Social Statistics:** *Average score for Goal 1-6 indicators. The primary data source is the UN SDG database. Whilst this is a database with comprehensive coverage that all countries have signed up to, it is clear that many (particularly developed countries) are not yet submitting their available national data. Scores for these countries are likely to represent an indicator of their willingness to submit national data rather than their performance in calculating the indicators.  For OECD countries, we supplement the UN SDG database with comparable data submitted to the OECD following the methodology in Measuring Distance to the SDG Targets 2020: An Assessment of Where OECD Countries Stand (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2020-a8caf3fa-en.htm). *
   * **Dimension 3.2: Economic Statistics:** *Average score for Goal 7-12 indicators. See 3.1.*  
   * **Dimension 3.3: Environmental Statistics:**  *Average score for Goal 13-15 indicators. See 3.1.*      
   * **Dimension 3.4: Institutional Statistics:** *Average score for Goal 16-17 indicators. See 3.1.*    
@@ -400,7 +400,7 @@ Not included because of lack of established methodology. There are some usable d
 vnr_use_df <- read_csv(paste(raw_dir, "/1.2_DUNE/UN_VNR_use_of_numbers.csv", sep="")) %>%
   group_by(country) %>%
   filter(year==max(year, na.rm=T)) %>%
-  mutate(date=2019)
+  mutate(date=2020)
 
 
 vnr_use_merge <- vnr_use_df %>% 
@@ -700,7 +700,7 @@ study_df_ihsn <- study_df_ihsn %>%
 pop <-wbstats::wb(country="countries_only", 
               indicator='SP.POP.TOTL',
               startdate=2004,
-              enddate=2019,
+              enddate=2020,
               removeNA=FALSE) %>%
      transmute(
        iso3c=iso3c,
@@ -713,7 +713,7 @@ pop <-wbstats::wb(country="countries_only",
 topics_list <- unique(study_df_ihsn$topic)
 
   #Now calculate our SPI score for this indicator
-  for (i in 2004:2019) {
+  for (i in 2004:2020) {
    temp <- study_df_ihsn %>%
     filter(date<=i) %>% #get a list of all surveys conducted before the year
     group_by(country, topic) %>%
@@ -738,11 +738,11 @@ topics_list <- unique(study_df_ihsn$topic)
     assign(paste('academic_use_df',i,sep="_"), temp)
   }
 
-  academic_use_df <- academic_use_df_2019
+  academic_use_df <- academic_use_df_2020
 
   
     
-for (i in 2004:2018) {
+for (i in 2004:2019) {
     academic_use_df <- bind_rows(academic_use_df, get(paste('academic_use_df',i,sep="_")))
   }
   
@@ -813,7 +813,7 @@ print(g2)
 
 #do the plots  
    ggplot() +
-    geom_map(data = filter(academic_use_map, date==2019), aes(map_id = iso3c, fill = academic_use_rank), map = maps$countries) + 
+    geom_map(data = filter(academic_use_map, date==2020), aes(map_id = iso3c, fill = academic_use_rank), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -837,7 +837,7 @@ print(g2)
       caption = 'Source: IHSN'
     )
    
-   filter(academic_use_map, date==2019) %>%
+   filter(academic_use_map, date==2020) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     summarise(downloads_per_capita=mean(downloads_per_capita, na.rm=T),
@@ -936,12 +936,12 @@ df <- pcn %>%
 
 
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2004:2019) {
+for (reference_year in 2004:2020) {
   
-    #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
-  if (reference_year==2019) {
+    #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
+  if (reference_year==2020) {
     rec_window=7
-  } else if (reference_year==2018) {
+  } else if (reference_year==2019) {
     rec_window=6
   } else {
     rec_window=5
@@ -992,7 +992,7 @@ for (reference_year in 2004:2019) {
 }
 
 #now append together and save
-for (i in c(2004:2019)) {
+for (i in c(2004:2020)) {
   
   temp<-get(paste('D3.1.AKI_',i, sep=""))
   
@@ -1051,13 +1051,13 @@ D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '1.5_DUIO/UN IGME Child Mortality 
          D3.CHLD.MORT=OBS_VALUE)
 
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2004:2019) {
+for (reference_year in 2004:2020) {
   
   
-      #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
-  if (reference_year==2019) {
+      #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
+  if (reference_year==2020) {
     rec_window=7
-  } else if (reference_year==2018) {
+  } else if (reference_year==2019) {
     rec_window=6
   } else {
     rec_window=5
@@ -1105,7 +1105,7 @@ for (reference_year in 2004:2019) {
 }
 
 #now append together and save
-for (i in c(2004:2019)) {
+for (i in c(2004:2020)) {
   
   temp<-get(paste('D3.3.AKI_',i, sep=""))
   
@@ -1186,7 +1186,7 @@ Quality:
 # WDI metadata was gathered using previous vintages of WDI from 2016-19
 # Metadata was gathered and saved as csv files in the 011_data folder
 
-for (i in 2016:2019) {
+for (i in 2016:2020) {
   temp <- read_csv(file = paste(raw_dir, "/metadata/WDI_metadata_",i,".csv", sep="" )) %>%
     as_tibble(.name_repair='universal') %>%
     mutate(National.accounts.reference.year=as.numeric(National.accounts.reference.year),
@@ -1195,7 +1195,7 @@ for (i in 2016:2019) {
     assign(paste("WDI_metadata",i,sep="_"), temp)
 }
 
-WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_2018, WDI_metadata_2019)
+WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_2018, WDI_metadata_2019, WDI_metadata_2020)
 ```
 
 
@@ -1333,15 +1333,15 @@ window_fun <- function(date_start, date_end) {
 ####
 # 8 Year window
 ####
-#create this database for each year from 2004 to 2019 using a 8 year window
+#create this database for each year from 2004 to 2020 using a 8 year window
 
 
 
-for (i in c(2015:2019)) {
+for (i in c(2015:2020)) {
   
   end=i
-  #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
-  if (end==2019) {
+  #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
+  if (end==2020) {
     start=i-9
   } else if (end==2018) {
     start=i-8
@@ -1358,7 +1358,7 @@ if (exists('safe_managed_df')) {
   rm('safe_managed_df')
 }
 #now append together and save
-for (i in c(2015:2019)) {
+for (i in c(2015:2020)) {
   
   temp<-get(paste('safe_managed_',i, sep=""))
   
@@ -1448,16 +1448,16 @@ ilo_fun <- function(date_start, date_end) {
 ####
 # 5 Year window
 ####
-#create this database for each year from 2004 to 2019 using a 10 year window
+#create this database for each year from 2004 to 2020 using a 10 year window
 
 
 
-for (i in c(2010:2019)) {
+for (i in c(2010:2020)) {
   
   end=i
   
-    #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
-  if (end==2019) {
+    #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
+  if (end==2020) {
     start=i-6
   } else if (end==2018) {
     start=i-5
@@ -1473,7 +1473,7 @@ if (exists('lfp_data_df')) {
   rm('lfp_data_df')
 }
 #now append together and save
-for (i in c(2010:2019)) {
+for (i in c(2010:2020)) {
   
   temp<-get(paste('lfp_data_',i, sep=""))
   
@@ -2154,6 +2154,7 @@ census_fun  <- function(data, input_var) {
   cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_145.csv", sep="" )) %>% #bring in data collected for an original set of 145 countries, then an additional 10, then several more high income counries.
     bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_10.csv", sep="" ))) %>%
     bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_high.csv", sep="" ))) %>%            
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, ".2020.csv", sep="" ))) %>%            #add in 2020 data
     write_excel_csv(path = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
     distinct() %>%
     group_by(iso3c, country) %>% 
@@ -2184,7 +2185,7 @@ census_fun  <- function(data, input_var) {
     
   
   #Now calculate our SPI score for this indicator
-  for (i in 2004:2019) {
+  for (i in 2004:2020) {
    temp <- cs_df %>%
     mutate(date=i) %>%
     mutate(recency_indicator=((date>=indicator_date)) ) %>% #restrict to censuses that do not occur after reference date
@@ -2206,9 +2207,9 @@ census_fun  <- function(data, input_var) {
     assign(paste('temp',i,sep="_"), temp)
   }
 
-  temp <- temp_2019
+  temp <- temp_2020
   
-  for (i in 2004:2018) {
+  for (i in 2004:2019) {
     temp <- bind_rows(temp, get(paste('temp',i,sep="_")))
   }
   temp
@@ -2224,7 +2225,8 @@ survey_fun  <- function(data, input_var) {
   #read in csv file that was manually collected.
   cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_145.csv", sep="" )) %>% #bring in data collected for an original set of 145 countries, then an additional 10, then several more high income counries.
     bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_10.csv", sep="" ))) %>%
-    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_high.csv", sep="" ))) %>%            
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_high.csv", sep="" ))) %>%   
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, ".2020.csv", sep="" ))) %>%        #add in 2020 data    
     write_excel_csv(path = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
     distinct() %>%
     group_by( country) %>% 
@@ -2255,12 +2257,12 @@ survey_fun  <- function(data, input_var) {
     
   
   #Now calculate our SPI score for this indicator
-  for (i in 2004:2019) {
+  for (i in 2004:2020) {
    temp <- cs_df %>%
     mutate(date=i) %>%
     mutate(window=case_when( #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
-      date==2019 ~ 12,
-      date==2018 ~ 11,
+      date==2020 ~ 12,
+      date==2019 ~ 11,
       TRUE ~ 10
     )) %>%
     mutate(recency_indicator=((date-indicator_date<=window) & (date-indicator_date>=0)) ) %>% #restrict to surveys inside 10 year period 
@@ -2281,9 +2283,9 @@ survey_fun  <- function(data, input_var) {
     assign(paste('temp',i,sep="_"), temp)
   }
 
-  temp <- temp_2019
+  temp <- temp_2020
   
-  for (i in 2004:2018) {
+  for (i in 2004:2019) {
     temp <- bind_rows(temp, get(paste('temp',i,sep="_")))
   }
   temp
@@ -2362,28 +2364,28 @@ spi_df <- spi_df %>%
 
 #now do the figures 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.1.POPU))
-spi_mapper('cs_df_map', 'SPI.D4.1.1.POPU', 'Population Census Available in Past 20 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.1.POPU', 'Population Census Available in Past 20 Years in 2020' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.2.AGRI))
-spi_mapper('cs_df_map', 'SPI.D4.1.2.AGRI', 'Agriculture Census Available in Past 20 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.2.AGRI', 'Agriculture Census Available in Past 20 Years in 2020' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.3.BIZZ))
-spi_mapper('cs_df_map', 'SPI.D4.1.3.BIZZ', 'Business/Establishment Census Available in Past 20 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.3.BIZZ', 'Business/Establishment Census Available in Past 20 Years in 2020' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.4.HOUS))
-spi_mapper('cs_df_map', 'SPI.D4.1.4.HOUS', 'Household Survey Availablility in Past 10 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.4.HOUS', 'Household Survey Availablility in Past 10 Years in 2020' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.5.AGSVY))
-spi_mapper('cs_df_map', 'SPI.D4.1.5.AGSVY', 'Agriculture Survey Availablility in Past 10 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.5.AGSVY', 'Agriculture Survey Availablility in Past 10 Years in 2020' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.6.LABR))
-spi_mapper('cs_df_map', 'SPI.D4.1.6.LABR', 'Labor Force Survey Availablility in Past 10 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.6.LABR', 'Labor Force Survey Availablility in Past 10 Years in 2020' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.7.HLTH))
-spi_mapper('cs_df_map', 'SPI.D4.1.7.HLTH', 'Health Survey Availablility in Past 10 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.7.HLTH', 'Health Survey Availablility in Past 10 Years in 2020' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.8.BZSVY))
-spi_mapper('cs_df_map', 'SPI.D4.1.8.BZSVY', 'Business Survey Availablility in Past 10 Years in 2019' )
+spi_mapper('cs_df_map', 'SPI.D4.1.8.BZSVY', 'Business Survey Availablility in Past 10 Years in 2020' )
 
 
 ```
@@ -2449,8 +2451,8 @@ aspire_fun <- function(date_start, date_end) {
 ####
 # X Year moving average
 ####
-#create this database for each year from 2004 to 2019 using a X year average
-for (i in c(2004:2019)) {
+#create this database for each year from 2004 to 2020 using a X year average
+for (i in c(2004:2020)) {
   
   start=i-(window-1)
   end=i
@@ -2463,7 +2465,7 @@ if (exists('aspire_df')) {
   rm('aspire_df')
 }
 #now append together and save
-for (i in c(2004:2019)) {
+for (i in c(2004:2020)) {
   
   temp<-get(paste('aspire_',i, sep=""))
   
@@ -2514,13 +2516,13 @@ spi_mapper('aspire_map', 'SPI.D4.2.1.SPL', 'Administrative Data Available on Ben
 # countries <- 'AFG+ALB+DZA+ASM+AND+AGO+AIA+ATG+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BMU+BTN+BOL+BIH+BWA+BRA+VGB+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CYM+CAF+TCD+CHL+CHN+HKG+MAC+COL+COM+COG+COK+CRI+CIV+HRV+CUB+CUW+CYP+CZE+PRK+COD+DNK+DJI+DMA+DOM+ECU+EGY+SLV+GNQ+ERI+EST+SWZ+ETH+FJI+FIN+FRA+GUF+PYF+GAB+GMB+GEO+DEU+GHA+GIB+GRC+GRL+GRD+GLP+GUM+GTM+GIN+GNB+GUY+HTI+VAT+HND+HUN+ISL+IND+IDN+IRN+IRQ+IRL+ISR+ITA+JAM+JPN+JOR+KAZ+KEN+KIR+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LIE+LTU+LUX+MDG+MWI+MYS+MDV+MLI+MLT+MHL+MTQ+MRT+MUS+MEX+FSM+MCO+MNG+MNE+MSR+MAR+MOZ+MMR+NAM+NRU+NPL+NLD+ANT+NCL+NZL+NIC+NER+NGA+NIU+MKD+NOR+OMN+PAK+PLW+PSE+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+KOR+MDA+REU+ROU+RUS+RWA+SHN+KNA+LCA+SPM+VCT+WSM+SMR+STP+SAU+SEN+SRB+SYC+SLE+SGP+SXM+SVK+SVN+SLB+SOM+ZAF+SSD+ESP+LKA+SDN+XDN+SUR+SWE+CHE+SYR+TJK+THA+TLS+TGO+TKL+TON+TTO+TUN+TUR+TKM+TCA+TUV+UGA+UKR+ARE+GBR+TZA+USA+URY+UZB+VUT+VEN+VNM+WLF+YEM+ZMB+ZWE+SDG+40675+40330+40334+40344+40606+40617+40603+40614+40618+40612+40616+40619+40611+40613+40630+40650+40651+40656+40642+40620+40640+UIS+40510+40525+40530+40505+40515+40520+40500+40535+40540+40550+WB+40044+40042+40030+40043+40041/all'
 # 
 # start <- '2000'
-# end <- '2019'
+# end <- '2020'
 # 
 # #build the API query
 # url <- paste('http://api.uis.unesco.org/sdmx.ashx/GetData/SDG4_DS/',indicators, countries,'?startTime=',start,'&endTime=',end,sep="")
 # 
 # #read the data
-# url <- 'https://api.uis.unesco.org/sdmx/data/UNESCO,SDG4,2.0/ADMIN.NB.._T._T._T.G2_3+GLAST............?startPeriod=2013&endPeriod=2019&format=csv-sdmx&locale=en&subscription-key=fd406abcbf3d4e318741b8537c92fe43'
+# url <- 'https://api.uis.unesco.org/sdmx/data/UNESCO,SDG4,2.0/ADMIN.NB.._T._T._T.G2_3+GLAST............?startPeriod=2013&endPeriod=2020&format=csv-sdmx&locale=en&subscription-key=fd406abcbf3d4e318741b8537c92fe43'
 
 unesco_df_raw <- read_csv(file=paste(raw_dir, '4.2_SOAD','UIS_SDG_MONITOR', 'SDG_DATA_NATIONAL.csv', sep="/"))
 
@@ -2582,7 +2584,7 @@ Source: World Bank WDI Metadata.
 
 #read in data from UNSD database on SDGs
 df_birth <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_BRTH90N.csv', sep="/")) %>% #Countries with birth registration data that are at least 90 percent complete (1 = YES; 0 = NO)
-  filter(date>=2015 & date<=2019) %>%
+  filter(date>=2015 & date<=2020) %>%
   left_join(spi_df_empty) %>%
   transmute(
     iso3c=iso3c,
@@ -2593,7 +2595,7 @@ df_birth <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_BRTH90N.csv', sep="
   )
 
 df_death <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_DETH75N.csv', sep="/")) %>% #Countries with death registration data that are at least 75 percent complete (1 = YES; 0 = NO)
-  filter(date>=2015& date<=2019) %>%
+  filter(date>=2015& date<=2020) %>%
   left_join(spi_df_empty) %>%
     transmute(
     iso3c=iso3c,
@@ -2656,7 +2658,7 @@ spi_mapper('crvs_map', 'SPI.D4.2.3.CRVS', 'Complete Civil Registration & Vital S
 <!--   * Records of workers' organizations -->
 <!--   * Other administrative records and related sources -->
 
-<!-- * Database extends from 2010 to 2019 and covers 177 countries.  -->
+<!-- * Database extends from 2010 to 2020 and covers 177 countries.  -->
 
 <!-- To produce a score, we calculate the percentage of these six admin sources above that are available for a country in a given year.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score. -->
 
@@ -3049,7 +3051,7 @@ The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Dat
 ```{r legislation_governance}
 
 
-D5.1_DILG <- un_pull('SG_STT_FPOS', '2004', '2019') %>%
+D5.1_DILG <- un_pull('SG_STT_FPOS', '2004', '2020') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.1.DILG=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
@@ -3291,15 +3293,15 @@ D5.2.4.CPIBY.IMF.RAW <- D5.2.4.CPI.REF %>%
          CPI_ref_period=as.numeric(CPI_ref_period),
          CPI_weight_change=str_sub(last_change,1,4),
          CPI_weight_change=as.numeric(CPI_weight_change)) %>%
-  mutate(RAW.D5.2.4.CPIBY.IMF=if_else((CPI_weight_change>=2019 & CPI_ref_period<2020), "annual chained",as.character(CPI_ref_period))) %>%
+  mutate(RAW.D5.2.4.CPIBY.IMF=if_else((CPI_weight_change>=2020 & CPI_ref_period<2021), "annual chained",as.character(CPI_ref_period))) %>%
   mutate(RAW.D5.2.4.CPIBY.IMF=if_else((iso3c=='AUS' | iso3c=='NZL'),"annual chained",as.character(RAW.D5.2.4.CPIBY.IMF))) #replace Australia and New Zealand as annual chain linking.  They use quarterly cpi releases and do not show up in this dataset
   
-#score from 2010 to 2019  
+#score from 2010 to 2020  
 if (exists('D5.2.4.CPIBY.IMF')) {
     rm(D5.2.4.CPIBY.IMF)
 } 
 
-for (i in c(2015:2019)) {
+for (i in c(2015:2020)) {
   temp <- D5.2.4.CPIBY.IMF.RAW %>%
     mutate(date=i) %>%
     mutate(SPI.D5.2.4.CPIBY.IMF=case_when(
@@ -3352,6 +3354,7 @@ statistics in these different areas.
 
 #read in csv file.
 D5.2.5.HOUS <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.csv", sep="/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.2020.csv", sep="/" )) %>% #add 2020 data
   mutate(SPI.D5.2.5.HOUS=case_when(
     HOUS=="COICOP" ~ 1, 
     TRUE ~ 0 
@@ -3384,7 +3387,7 @@ D5.2.5.HOUS.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compi
   mutate(IMF_code=as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
   select(iso3c, RAW.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS.IMF ) %>%
-  mutate(date=2019)
+  mutate(date=2020)
   
   
 D5.2.5.HOUS <-  D5.2.5.HOUS %>%
@@ -3479,7 +3482,7 @@ D5.2.7.CGOV.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compi
   mutate(IMF_code=as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
   select(iso3c, RAW.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV.IMF ) %>%
-  mutate(date=2019)
+  mutate(date=2020)
   
   
 D5.2.7.CGOV <-  D5.2.7.CGOV %>%
@@ -3570,7 +3573,7 @@ D5.2.9.MONY.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compi
   mutate(IMF_code=as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
   select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) %>%
-  mutate(date=2019)
+  mutate(date=2020)
   
   
 D5.2.9.MONY <-  D5.2.9.MONY %>%
@@ -3640,34 +3643,34 @@ spi_df <- spi_df %>%
 
 #now do the figures 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.1.SNAU))
-spi_mapper('msc_df_map', 'SPI.D5.2.1.SNAU', 'System of National Accounts in use in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.1.SNAU', 'System of National Accounts in use in 2020' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.2.NABY))
-spi_mapper('msc_df_map', 'SPI.D5.2.2.NABY', 'National Accounts base year in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.2.NABY', 'National Accounts base year in 2020' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.3.CNIN))
-spi_mapper('msc_df_map', 'SPI.D5.2.3.CNIN', 'Classification of national industry in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.3.CNIN', 'Classification of national industry in 2020' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.4.CPIBY))
-spi_mapper('msc_df_map', 'SPI.D5.2.4.CPIBY', 'CPI base year in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.4.CPIBY', 'CPI base year in 2020' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.5.HOUS))
-spi_mapper('msc_df_map', 'SPI.D5.2.5.HOUS', 'Classification of household consumption in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.5.HOUS', 'Classification of household consumption in 2020' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.6.EMPL))
-spi_mapper('msc_df_map', 'SPI.D5.2.6.EMPL', 'Classification of status of employment in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.6.EMPL', 'Classification of status of employment in 2020' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.7.CGOV))
-spi_mapper('msc_df_map', 'SPI.D5.2.7.CGOV', 'Central government accounting status in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.7.CGOV', 'Central government accounting status in 2020' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.8.FINA))
-spi_mapper('msc_df_map', 'SPI.D5.2.8.FINA', 'Compilation of government finance statistics in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.8.FINA', 'Compilation of government finance statistics in 2020' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.9.MONY))
-spi_mapper('msc_df_map', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics in 2020' )
 
 msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.10.GSBP))
-spi_mapper('msc_df_map', 'SPI.D5.2.10.GSBP', 'Business process in 2019' )
+spi_mapper('msc_df_map', 'SPI.D5.2.10.GSBP', 'Business process in 2020' )
 
 ```
 
@@ -3758,7 +3761,7 @@ Source of this data is UNSD and Paris21.
 ```{r finance}
 
 #pull from unsd api
-D5.5_DIFI <- un_pull('SG_STT_NSDSFND', '2004', '2019') %>%
+D5.5_DIFI <- un_pull('SG_STT_NSDSFND', '2004', '2020') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
@@ -3827,7 +3830,7 @@ spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Sou
 
 #examine other finance indicators
 #pull from unsd api
-D5.5_DIFI_test <- un_pull('SG_STT_NSDSFDGVT', '2004', '2019') %>%
+D5.5_DIFI_test <- un_pull('SG_STT_NSDSFDGVT', '2004', '2020') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
@@ -3857,7 +3860,7 @@ Below we will append the data together and save the final files together.
 pop_df <- wbstats::wb(country="all",
              indicator='SP.POP.TOTL',
              startdate=2004,
-             enddate=2019) %>%
+             enddate=2020) %>%
   mutate(date=as.numeric(date)) %>%
   mutate(population=value) %>%
   select(country, date, population)
@@ -3871,7 +3874,7 @@ spi_df_final <- spi_df %>%
 
 
 ####
-#lining up data to 2019 and filling in some values for OECD countries.  
+#lining up data to 2020 and filling in some values for OECD countries.  
 ####
 #get a list of oecd countries
 oecd_country_query <-  GET(url = "https://api.worldbank.org/v2/country?region=OED&format=json") %>%
