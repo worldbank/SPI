@@ -3253,7 +3253,8 @@ Consumer Price Index serves as indicators of inflation and reflects changes in t
 D5.2.4.CPIBY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.csv", sep="/" )) %>%
   bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.2020.csv", sep="/" ))) %>% # add in 2020 data
   mutate(SPI.D5.2.4.CPIBY=case_when(
-    CPIBY=="annual chained" ~ 1, 
+    str_to_lower(CPIBY)=="annual chained" ~ 1, 
+    str_to_lower(CPIBY)=="annually chained" ~ 1, 
     (date-as.numeric(CPIBY))<=10 ~ 0.5, #within 10 years of reference period
     TRUE ~ 0 
   ),
@@ -3452,7 +3453,7 @@ units, the picture they provide of central government activities is usually inco
 
 #read in csv file.
 D5.2.7.CGOV <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.2020.csv", sep="/" ))) #add in 2020 data
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.2020.csv", sep="/" ))) %>% #add in 2020 data
   mutate(SPI.D5.2.7.CGOV=case_when(
     CGOV=="AC" ~ 1, 
     CGOV=="CA" ~ 0.5,
