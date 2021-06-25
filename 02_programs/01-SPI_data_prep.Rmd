@@ -1397,7 +1397,7 @@ Scoring:
 #https://www.ilo.org/shinyapps/bulkexplorer2/?lang=en&segment=indicator&id=EAP_DWAP_SEX_AGE_RT_A&ref_area=AFG+ALB+DZA+ASM+AND+AGO+AIA+ATG+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BMU+BTN+BOL+BIH+BWA+BRA+VGB+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CYM+CAF+TCD+CHL+CHN+COL+COM+COG+COD+COK+CRI+HRV+CUB+CUW+CYP+CZE+CIV+DNK+DJI+DMA+DOM+ECU+EGY+SLV+GNQ+EST+SWZ+ETH+FRO+FLK+FJI+FIN+FRA+GUF+PYF+GAB+GMB+GEO+DEU+GHA+GIB+GRC+GRL+GRD+GLP+GUM+GTM+GGY+GIN+GNB+GUY+HTI+HND+HKG+HUN+ISL+IND+IDN+IRN+IRQ+IRL+IMN+ISR+ITA+JAM+JPN+JEY+JOR+KAZ+KEN+KIR+KOR+KOS+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LIE+LTU+LUX+MAC+MDG+MWI+MYS+MDV+MLI+MLT+MHL+MTQ+MRT+MUS+MEX+FSM+MDA+MCO+MNG+MNE+MSR+MAR+MOZ+MMR+NAM+NRU+NPL+NLD+ANT+NCL+NZL+NIC+NER+NGA+NIU+NFK+MKD+MNP+NOR+PSE+OMN+PAK+PLW+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+ROU+RUS+RWA+REU+SHN+KNA+LCA+VCT+WSM+SMR+STP+SAU+SEN+SRB+SYC+SLE+SGP+SVK+SVN+SLB+ZAF+SSD+ESP+LKA+SDN+SUR+SWE+CHE+SYR+TWN+TJK+TZA+THA+TLS+TGO+TON+TTO+TUN+TUR+TKM+TCA+TUV+UGA+UKR+ARE+GBR+USA+VIR+URY+UZB+VUT+VEN+VNM+YEM+ZMB+ZWE&sex=SEX_T&classif1=AGE_5YRBANDS_TOTAL&timefrom=2010&timeto=2020
 
 #modelled
-# https://www.ilo.org/shinyapps/bulkexplorer2/?lang=en&segment=indicator&id=EAP_2WAP_SEX_AGE_RT_A&ref_area=AFG+ALB+DZA+AGO+ARG+ARM+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BTN+BOL+BIH+BWA+BRA+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CAF+TCD+CHA+CHL+CHN+COL+COM+COG+COD+CRI+HRV+CUB+CYP+CZE+CIV+DNK+DJI+DOM+ECU+EGY+SLV+GNQ+ERI+EST+SWZ+ETH+FJI+FIN+FRA+PYF+GAB+GMB+GEO+DEU+GHA+GRC+GUM+GTM+GIN+GNB+GUY+HTI+HND+HKG+HUN+ISL+IND+IDN+IRN+IRQ+IRL+ISR+ITA+JAM+JPN+JOR+KAZ+KEN+PRK+KOR+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LTU+LUX+MAC+MDG+MWI+MYS+MDV+MLI+MLT+MRT+MUS+MEX+MDA+MNG+MNE+MAR+MOZ+MMR+NAM+NPL+NLD+NCL+NZL+NIC+NER+NGA+MKD+NOR+PSE+OMN+PAK+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+ROU+RUS+RWA+LCA+VCT+WSM+STP+SAU+SEN+SRB+SLE+SGP+SVK+SVN+SLB+SOM+ZAF+SSD+ESP+LKA+SDN+SUR+SWE+CHE+SYR+TWN+TJK+TZA+THA+TLS+TGO+TON+TTO+TUN+TUR+TKM+UGA+UKR+ARE+GBR+USA+VIR+URY+UZB+VUT+VEN+VNM+ESH+YEM+ZMB+ZWE+X01+X02+X03+X04+X05+X06+X07+X08+X09+X93+X10+X11+X12+X13+X14+X15+X16+X81+X17+X18+X19+X20+X21+X22+X23+X24+X25+X26+X27+X28+X29+X30+X31+X32+X33+X34+X35+X36+X94+X37+X38+X39+X40+X41+X42+X43+X44+X45+X46+X86+X47+X48+X49+X51+X52+X53+X54+X55+X56+X57+X58+X59+X60+X95+X61+X62+X63+X64+X65+X66+X67+X68+X69+X70+X71+X72+X73+X78+X96+X75+X76+X77+X74+X79+X84+X85+X92+X82+X83+X87+X88+X89+X90+X91&sex=SEX_T&classif1=AGE_5YRBANDS_TOTAL&timefrom=2010&timeto=2021
+# https://www.ilo.org/shinyapps/bulkexplorer2/?lang=en&segment=indicator&id=EAP_2WAP_SEX_AGE_RT_A&ref_area=AFG+ALB+DZA+AGO+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BTN+BOL+BIH+BWA+BRA+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CAF+TCD+CHA+CHL+CHN+COL+COM+COG+COD+CRI+HRV+CUB+CYP+CZE+CIV+DNK+DJI+DOM+ECU+EGY+SLV+GNQ+ERI+EST+SWZ+ETH+FJI+FIN+FRA+PYF+GAB+GMB+GEO+DEU+GHA+GRC+GUM+GTM+GIN+GNB+GUY+HTI+HND+HKG+HUN+ISL+IND+IDN+IRN+IRQ+IRL+ISR+ITA+JAM+JPN+JOR+KAZ+KEN+PRK+KOR+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LTU+LUX+MAC+MDG+MWI+MYS+MDV+MLI+MLT+MRT+MUS+MEX+MDA+MNG+MNE+MAR+MOZ+MMR+NAM+NPL+NLD+NCL+NZL+NIC+NER+NGA+MKD+NOR+PSE+OMN+PAK+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+ROU+RUS+RWA+LCA+VCT+WSM+STP+SAU+SEN+SRB+SLE+SGP+SVK+SVN+SLB+SOM+ZAF+SSD+ESP+LKA+SDN+SUR+SWE+CHE+SYR+TWN+TJK+TZA+THA+TLS+TGO+TON+TTO+TUN+TUR+TKM+UGA+UKR+ARE+GBR+USA+VIR+URY+UZB+VUT+VEN+VNM+ESH+YEM+ZMB+ZWE+X01+X02+X03+X04+X05+X06+X07+X08+X09+X93+X10+X11+X12+X13+X14+X15+X16+X81+X17+X18+X19+X20+X21+X22+X23+X24+X25+X26+X27+X28+X29+X30+X31+X32+X33+X34+X35+X36+X94+X37+X38+X39+X40+X41+X42+X43+X44+X45+X46+X86+X47+X48+X49+X51+X52+X53+X54+X55+X56+X57+X58+X59+X60+X95+X61+X62+X63+X64+X65+X66+X67+X68+X69+X70+X71+X72+X73+X78+X96+X75+X76+X77+X74+X79+X84+X85+X92+X82+X83+X87+X88+X89+X90+X91&sex=SEX_T&classif1=AGE_5YRBANDS_TOTAL&timefrom=2010&timeto=2021
 
 #read in ILO reference areas
 ilo_ref_area <- read_csv(file= paste0(raw_dir,"/metadata/ILO_reference_area.csv")) %>%
@@ -1405,37 +1405,37 @@ ilo_ref_area <- read_csv(file= paste0(raw_dir,"/metadata/ILO_reference_area.csv"
             country=ref_area.label)
                          
 #read in the ILO data downloaded on November 24, 2020
-lfp_estimated <- read_excel(path = paste0(raw_dir,"/1.5_DUIO/ILO_lfp_country_estimated.xlsx"),
-                            skip=5) %>%
+lfp_estimated <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_modelled-2021-06-25.csv")) %>%
   as_tibble(.name_repair = 'universal') %>%
   mutate(country=case_when(
-    Reference.area=="Gambia" ~ "Gambia, The",
-    TRUE ~ Reference.area
+    ref_area.label=="Gambia" ~ "Gambia, The",
+    TRUE ~ ref_area.label
     ),
-    date=Time,
-    estimated_value=Total) %>%
+    date=time,
+    estimated_value=obs_value) %>%
     left_join(ilo_ref_area) %>%
-  select(iso3c, date, Sex, estimated_value ) 
+  select(iso3c, date,  estimated_value ) 
 
 #reported data by countries
-lfp_reported <- read_excel(path = paste0(raw_dir,"/1.5_DUIO/ILO_lfp_country_reported.xlsx"),
-                           skip=5)%>%
+lfp_reported <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_survey-2021-06-25.csv")) %>%
   as_tibble(.name_repair = 'universal') %>%
   mutate(country=case_when(
-    Reference.area=="Gambia" ~ "Gambia, The",
-    TRUE ~ Reference.area
+    ref_area.label=="Gambia" ~ "Gambia, The",
+    TRUE ~ ref_area.label
     ),
-    date=Time,
-    reported_value=..15.) %>%
+    date=time,
+    reported_value=obs_value) %>%
     left_join(ilo_ref_area) %>%
-  select(iso3c, date, Source.type, Sex, reported_value )
+  select(iso3c, date, source.label, reported_value )
 
 #merge the two together
 lfp_data <- lfp_reported %>%
   left_join(lfp_estimated) %>%
-  mutate(estimate_diff=reported_value-estimated_value,
-         lfs_source=(Source.type=="Labour force survey")) %>%
+  mutate(estimate_diff=if_else(!is.na(estimated_value),reported_value-estimated_value,0),
+         lfs_source=(grepl("LFS",source.label))) %>%
   filter(iso3c %in% country_metadata$iso3c)
+
+
 
 
 #score the data
@@ -1466,7 +1466,7 @@ for (i in c(2010:2020)) {
     #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
   if (end==2020) {
     start=i-6
-  } else if (end==2018) {
+  } else if (end==2019) {
     start=i-5
   } else {
     start=i-4
