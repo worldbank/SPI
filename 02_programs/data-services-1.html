@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-03-09" />
+<meta name="date" content="2021-06-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="data-use-1.html"/>
 <link rel="next" href="data-products-1.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -282,7 +282,7 @@ e-GDDS websites.</p>
 <span id="cb12-33"><a href="data-services-1.html#cb12-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="st">&#39;iso3c&#39;</span>, <span class="st">&#39;country&#39;</span>, <span class="st">&#39;date&#39;</span>,  <span class="st">&#39;IMF.data.dissemination.standard&#39;</span>)  ) <span class="sc">%&gt;%</span></span>
 <span id="cb12-34"><a href="data-services-1.html#cb12-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IDDS=</span>IMF.data.dissemination.standard) <span class="sc">%&gt;%</span></span>
 <span id="cb12-35"><a href="data-services-1.html#cb12-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D2.1.GDDS=</span><span class="fu">case_when</span>(</span>
-<span id="cb12-36"><a href="data-services-1.html#cb12-36" aria-hidden="true" tabindex="-1"></a>    IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard Plus (SDDS+)&quot;</span> <span class="sc">|</span> IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard (SDDS)&quot;</span><span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb12-36"><a href="data-services-1.html#cb12-36" aria-hidden="true" tabindex="-1"></a>    IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard Plus (SDDS+)&quot;</span> <span class="sc">|</span> IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard Plus (SDDS Plus)&quot;</span> <span class="sc">|</span> IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard (SDDS)&quot;</span><span class="sc">~</span> <span class="dv">1</span>, </span>
 <span id="cb12-37"><a href="data-services-1.html#cb12-37" aria-hidden="true" tabindex="-1"></a>    IDDS<span class="sc">==</span><span class="st">&quot;Enhanced General Data Dissemination System (e-GDDS)&quot;</span><span class="sc">~</span> <span class="fl">0.5</span>,</span>
 <span id="cb12-38"><a href="data-services-1.html#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> ),</span>
 <span id="cb12-39"><a href="data-services-1.html#cb12-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">SDDS=</span><span class="fu">case_when</span>(</span>
@@ -362,7 +362,7 @@ If the TOU contains one or more restrictive clauses, it receives 0 points and is
 <p>For more details, consult the ODIN technical documentation:
 <a href="https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit#" class="uri">https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit#</a></p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="data-services-1.html#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#read in ODIN data</span></span>
-<span id="cb14-2"><a href="data-services-1.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2015</span><span class="sc">:</span><span class="dv">2018</span>) {</span>
+<span id="cb14-2"><a href="data-services-1.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2015</span>,<span class="dv">2016</span>,<span class="dv">2017</span>,<span class="dv">2018</span>,<span class="dv">2020</span>)) {</span>
 <span id="cb14-3"><a href="data-services-1.html#cb14-3" aria-hidden="true" tabindex="-1"></a>   temp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste</span>(raw_dir, <span class="st">&#39;/2.2_DSOA/&#39;</span>,<span class="st">&#39;ODIN_&#39;</span>,i,<span class="st">&#39;.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>))  <span class="sc">%&gt;%</span></span>
 <span id="cb14-4"><a href="data-services-1.html#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as_tibble</span>(<span class="at">.name_repair =</span> <span class="st">&#39;universal&#39;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb14-5"><a href="data-services-1.html#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">date=</span>i) <span class="sc">%&gt;%</span></span>
@@ -372,7 +372,7 @@ If the TOU contains one or more restrictive clauses, it receives 0 points and is
 <span id="cb14-9"><a href="data-services-1.html#cb14-9" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb14-10"><a href="data-services-1.html#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-11"><a href="data-services-1.html#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#bind different years together</span></span>
-<span id="cb14-12"><a href="data-services-1.html#cb14-12" aria-hidden="true" tabindex="-1"></a>openness_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018)</span>
+<span id="cb14-12"><a href="data-services-1.html#cb14-12" aria-hidden="true" tabindex="-1"></a>openness_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018,openness_df_2020)</span>
 <span id="cb14-13"><a href="data-services-1.html#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-14"><a href="data-services-1.html#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-15"><a href="data-services-1.html#cb14-15" aria-hidden="true" tabindex="-1"></a>openness_df <span class="ot">&lt;-</span> openness_df <span class="sc">%&gt;%</span></span>

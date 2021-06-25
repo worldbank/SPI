@@ -228,7 +228,12 @@ saver('study_df_fao','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA_FAO.cs
 
 saver('study_df_fao','ag/census|Agricultural Census' , 'D4.1.2.CEN.AGRI_NADA_FAO.csv')
 
+# save FAO and Microdatalib datasets
+ag_svys_df <- study_df_internal %>%
+  select(-c('created','changed')) %>%
+  bind_rows(study_df_fao) 
 
+saver('ag_svys_df','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
  
  # use ILO for source of labor force surveys
 survey_df_ilo <- study_df_ilo %>%

@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-03-09" />
+<meta name="date" content="2021-06-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="data-infrastructure-1.html"/>
 
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -236,7 +236,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb58-2"><a href="final-dataset.html#cb58-2" aria-hidden="true" tabindex="-1"></a>pop_df <span class="ot">&lt;-</span> wbstats<span class="sc">::</span><span class="fu">wb</span>(<span class="at">country=</span><span class="st">&quot;all&quot;</span>,</span>
 <span id="cb58-3"><a href="final-dataset.html#cb58-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">indicator=</span><span class="st">&#39;SP.POP.TOTL&#39;</span>,</span>
 <span id="cb58-4"><a href="final-dataset.html#cb58-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">startdate=</span><span class="dv">2004</span>,</span>
-<span id="cb58-5"><a href="final-dataset.html#cb58-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">enddate=</span><span class="dv">2019</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb58-5"><a href="final-dataset.html#cb58-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">enddate=</span><span class="dv">2020</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb58-6"><a href="final-dataset.html#cb58-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="fu">as.numeric</span>(date)) <span class="sc">%&gt;%</span></span>
 <span id="cb58-7"><a href="final-dataset.html#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">population=</span>value) <span class="sc">%&gt;%</span></span>
 <span id="cb58-8"><a href="final-dataset.html#cb58-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, date, population)</span>
@@ -250,7 +250,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb58-16"><a href="final-dataset.html#cb58-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb58-17"><a href="final-dataset.html#cb58-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb58-18"><a href="final-dataset.html#cb58-18" aria-hidden="true" tabindex="-1"></a><span class="do">####</span></span>
-<span id="cb58-19"><a href="final-dataset.html#cb58-19" aria-hidden="true" tabindex="-1"></a><span class="co">#lining up data to 2019 and filling in some values for OECD countries.  </span></span>
+<span id="cb58-19"><a href="final-dataset.html#cb58-19" aria-hidden="true" tabindex="-1"></a><span class="co">#lining up data to 2020 and filling in some values for OECD countries.  </span></span>
 <span id="cb58-20"><a href="final-dataset.html#cb58-20" aria-hidden="true" tabindex="-1"></a><span class="do">####</span></span>
 <span id="cb58-21"><a href="final-dataset.html#cb58-21" aria-hidden="true" tabindex="-1"></a><span class="co">#get a list of oecd countries</span></span>
 <span id="cb58-22"><a href="final-dataset.html#cb58-22" aria-hidden="true" tabindex="-1"></a>oecd_country_query <span class="ot">&lt;-</span>  <span class="fu">GET</span>(<span class="at">url =</span> <span class="st">&quot;https://api.worldbank.org/v2/country?region=OED&amp;format=json&quot;</span>) <span class="sc">%&gt;%</span></span>

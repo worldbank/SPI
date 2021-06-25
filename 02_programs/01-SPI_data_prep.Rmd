@@ -2835,7 +2835,7 @@ spi_df <- spi_df %>%
 
 #do the plots  
    ggplot() +
-    geom_map(data = filter(geo_df, date==2018), aes(map_id = iso3c, fill = RAW.D4.3.GEO.first.admin.level), map = maps$countries) + 
+    geom_map(data = filter(geo_df, date==2020), aes(map_id = iso3c, fill = RAW.D4.3.GEO.first.admin.level), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -2859,7 +2859,7 @@ spi_df <- spi_df %>%
       caption = 'Source: ODIN'
     )
    
-   filter(geo_df, date==2018) %>%
+   filter(geo_df, date==2020) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     mutate(Percentage=mean(RAW.D4.3.GEO.first.admin.level),
@@ -2893,7 +2893,7 @@ spi_df <- spi_df %>%
       theme_bw()   
    
    ggplot() +
-    geom_map(data = filter(geo_df, date==2018), aes(map_id = iso3c, fill = RAW.D4.3.GEO.second.admin.level), map = maps$countries) + 
+    geom_map(data = filter(geo_df, date==2020), aes(map_id = iso3c, fill = RAW.D4.3.GEO.second.admin.level), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -2917,7 +2917,7 @@ spi_df <- spi_df %>%
       caption = 'Source: ODIN'
     )   
    
-    filter(geo_df, date==2018) %>%
+    filter(geo_df, date==2020) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     mutate(Percentage=mean(RAW.D4.3.GEO.second.admin.level),
