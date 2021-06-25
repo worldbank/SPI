@@ -314,7 +314,8 @@ Below is a brief description of the 22 dimensions in our framework.
 pillars <- read_csv(paste(raw_dir, '/metadata/SPI_pillars.csv', sep=""))
 
 pillars <- pillars %>%
-  mutate(dimension=paste(dimension_number, dimension_name, sep=": ")) %>%
+  mutate(dimension=paste(dimension_number, dimension_name, sep=": "),
+         spi_indicator_description=Description) %>%
   select(dimension, spi_indicator_description)
 
 
@@ -1041,7 +1042,7 @@ Note: Because surveys are reported with a lag, we start measuring whether compar
 
 
 
-D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '1.5_DUIO/UN IGME Child Mortality and Stillbirth Estimates.csv', sep="/")) %>%
+D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '1.5_DUIO/UN IGME Child Mortality and Stillbirth Estimates_2020.csv', sep="/")) %>%
   as_tibble(.name_repair = 'universal') %>%
   filter(Indicator=='Under-five mortality rate' & Sex=='Total') %>% #keep just observations for under 5 child mortality and for both sexes
   filter(Observation.Status=='Included in IGME') %>% # Also keep only surveys that met IGME criteria for inclusion as a nationally representative statistic
@@ -1392,6 +1393,12 @@ Scoring:
 
 ```{r lfp}
 
+#request for surveys data
+#https://www.ilo.org/shinyapps/bulkexplorer2/?lang=en&segment=indicator&id=EAP_DWAP_SEX_AGE_RT_A&ref_area=AFG+ALB+DZA+ASM+AND+AGO+AIA+ATG+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BMU+BTN+BOL+BIH+BWA+BRA+VGB+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CYM+CAF+TCD+CHL+CHN+COL+COM+COG+COD+COK+CRI+HRV+CUB+CUW+CYP+CZE+CIV+DNK+DJI+DMA+DOM+ECU+EGY+SLV+GNQ+EST+SWZ+ETH+FRO+FLK+FJI+FIN+FRA+GUF+PYF+GAB+GMB+GEO+DEU+GHA+GIB+GRC+GRL+GRD+GLP+GUM+GTM+GGY+GIN+GNB+GUY+HTI+HND+HKG+HUN+ISL+IND+IDN+IRN+IRQ+IRL+IMN+ISR+ITA+JAM+JPN+JEY+JOR+KAZ+KEN+KIR+KOR+KOS+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LIE+LTU+LUX+MAC+MDG+MWI+MYS+MDV+MLI+MLT+MHL+MTQ+MRT+MUS+MEX+FSM+MDA+MCO+MNG+MNE+MSR+MAR+MOZ+MMR+NAM+NRU+NPL+NLD+ANT+NCL+NZL+NIC+NER+NGA+NIU+NFK+MKD+MNP+NOR+PSE+OMN+PAK+PLW+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+ROU+RUS+RWA+REU+SHN+KNA+LCA+VCT+WSM+SMR+STP+SAU+SEN+SRB+SYC+SLE+SGP+SVK+SVN+SLB+ZAF+SSD+ESP+LKA+SDN+SUR+SWE+CHE+SYR+TWN+TJK+TZA+THA+TLS+TGO+TON+TTO+TUN+TUR+TKM+TCA+TUV+UGA+UKR+ARE+GBR+USA+VIR+URY+UZB+VUT+VEN+VNM+YEM+ZMB+ZWE&sex=SEX_T&classif1=AGE_5YRBANDS_TOTAL&timefrom=2010&timeto=2020
+
+#modelled
+# https://www.ilo.org/shinyapps/bulkexplorer2/?lang=en&segment=indicator&id=EAP_2WAP_SEX_AGE_RT_A&ref_area=AFG+ALB+DZA+AGO+ARG+ARM+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BTN+BOL+BIH+BWA+BRA+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CAF+TCD+CHA+CHL+CHN+COL+COM+COG+COD+CRI+HRV+CUB+CYP+CZE+CIV+DNK+DJI+DOM+ECU+EGY+SLV+GNQ+ERI+EST+SWZ+ETH+FJI+FIN+FRA+PYF+GAB+GMB+GEO+DEU+GHA+GRC+GUM+GTM+GIN+GNB+GUY+HTI+HND+HKG+HUN+ISL+IND+IDN+IRN+IRQ+IRL+ISR+ITA+JAM+JPN+JOR+KAZ+KEN+PRK+KOR+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LTU+LUX+MAC+MDG+MWI+MYS+MDV+MLI+MLT+MRT+MUS+MEX+MDA+MNG+MNE+MAR+MOZ+MMR+NAM+NPL+NLD+NCL+NZL+NIC+NER+NGA+MKD+NOR+PSE+OMN+PAK+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+ROU+RUS+RWA+LCA+VCT+WSM+STP+SAU+SEN+SRB+SLE+SGP+SVK+SVN+SLB+SOM+ZAF+SSD+ESP+LKA+SDN+SUR+SWE+CHE+SYR+TWN+TJK+TZA+THA+TLS+TGO+TON+TTO+TUN+TUR+TKM+UGA+UKR+ARE+GBR+USA+VIR+URY+UZB+VUT+VEN+VNM+ESH+YEM+ZMB+ZWE+X01+X02+X03+X04+X05+X06+X07+X08+X09+X93+X10+X11+X12+X13+X14+X15+X16+X81+X17+X18+X19+X20+X21+X22+X23+X24+X25+X26+X27+X28+X29+X30+X31+X32+X33+X34+X35+X36+X94+X37+X38+X39+X40+X41+X42+X43+X44+X45+X46+X86+X47+X48+X49+X51+X52+X53+X54+X55+X56+X57+X58+X59+X60+X95+X61+X62+X63+X64+X65+X66+X67+X68+X69+X70+X71+X72+X73+X78+X96+X75+X76+X77+X74+X79+X84+X85+X92+X82+X83+X87+X88+X89+X90+X91&sex=SEX_T&classif1=AGE_5YRBANDS_TOTAL&timefrom=2010&timeto=2021
+
 #read in ILO reference areas
 ilo_ref_area <- read_csv(file= paste0(raw_dir,"/metadata/ILO_reference_area.csv")) %>%
   transmute(iso3c=ref_area,
@@ -1601,7 +1608,7 @@ D2.1_DSDR <- df %>%
   select(c('iso3c', 'country', 'date',  'IMF.data.dissemination.standard')  ) %>%
   mutate(IDDS=IMF.data.dissemination.standard) %>%
   mutate(SPI.D2.1.GDDS=case_when(
-    IDDS=="Special Data Dissemination Standard Plus (SDDS+)" | IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
+    IDDS=="Special Data Dissemination Standard Plus (SDDS+)" | IDDS=="Special Data Dissemination Standard Plus (SDDS Plus)" | IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
     IDDS=="Enhanced General Data Dissemination System (e-GDDS)"~ 0.5,
     TRUE ~ 0 ),
     SDDS=case_when(
@@ -1688,7 +1695,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 ```{r online_access}
 
   #read in ODIN data
-  for (i in 2015:2018) {
+  for (i in c(2015,2016,2017,2018,2020)) {
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
@@ -1699,7 +1706,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
   }
 
 #bind different years together
-openness_df <- bind_rows(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018)
+openness_df <- bind_rows(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018,openness_df_2020)
 
 
 openness_df <- openness_df %>%
@@ -1737,7 +1744,7 @@ spi_df <- spi_df %>%
 
 #do the plots  
    ggplot() +
-    geom_map(data = filter(openness_df, date==2018), aes(map_id = iso3c, fill = RAW.D2.2.Openness.subscore), map = maps$countries) + 
+    geom_map(data = filter(openness_df, date==2020), aes(map_id = iso3c, fill = RAW.D2.2.Openness.subscore), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -1761,7 +1768,7 @@ spi_df <- spi_df %>%
       caption = 'Source: ODIN'
     )
    
-   filter(openness_df, date==2018) %>%
+   filter(openness_df, date==2020) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     mutate(Percentage=mean(RAW.D2.2.Openness.subscore),
@@ -2151,10 +2158,7 @@ census_fun  <- function(data, input_var) {
   input_var <- input_var
 
   #read in csv file.
-  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_145.csv", sep="" )) %>% #bring in data collected for an original set of 145 countries, then an additional 10, then several more high income counries.
-    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_10.csv", sep="" ))) %>%
-    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_high.csv", sep="" ))) %>%            
-    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, ".2020.csv", sep="" ))) %>%            #add in 2020 data
+  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, ".2020.csv", sep="" ))  %>% #bring in data collected for  2020 data
     write_excel_csv(path = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
     distinct() %>%
     group_by(iso3c, country) %>% 
@@ -2223,10 +2227,7 @@ survey_fun  <- function(data, input_var) {
   input_var <- input_var
 
   #read in csv file that was manually collected.
-  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_145.csv", sep="" )) %>% #bring in data collected for an original set of 145 countries, then an additional 10, then several more high income counries.
-    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_10.csv", sep="" ))) %>%
-    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, "_high.csv", sep="" ))) %>%   
-    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, ".2020.csv", sep="" ))) %>%        #add in 2020 data    
+  cs_df <- read_csv(file = paste(raw_dir, '/4.1_SOCS/raw/', data, ".2020.csv", sep="" )) %>%        #add in 2020 manual data    
     write_excel_csv(path = paste(raw_dir, '/4.1_SOCS/', data, "_manual.csv", sep="" )) %>%
     distinct() %>%
     group_by( country) %>% 
@@ -2785,7 +2786,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 ```{r geo}
 
   #read in ODIN data
-  for (i in 2015:2018) {
+  for (i in c(2015,2016,2017, 2018, 2020)) {
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
@@ -2796,7 +2797,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
   }
 
 #bind different years together
-geo_df <- bind_rows(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018)
+geo_df <- bind_rows(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018, geo_df_2020)
 
 
 #create geo scores
@@ -3222,6 +3223,7 @@ D5.2.2.NABY <- df %>%
 
 #read in csv file.
 D5.2.3.CNIN <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.3.CNIN.csv", sep="/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.3.CNIN.2020.csv", sep="/" ))) %>% #add in 2020 data
   mutate(SPI.D5.2.3.CNIN=case_when(
     str_to_lower(CNIN)=="nace rev2" | str_to_lower(CNIN)=="rev4" ~ 1, 
     str_to_lower(CNIN)=="nace rev1" | str_to_lower(CNIN)=="rev3" ~ 0.5, 
@@ -3249,6 +3251,7 @@ Consumer Price Index serves as indicators of inflation and reflects changes in t
 
 #read in csv file.
 D5.2.4.CPIBY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.csv", sep="/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.2020.csv", sep="/" ))) %>% # add in 2020 data
   mutate(SPI.D5.2.4.CPIBY=case_when(
     CPIBY=="annual chained" ~ 1, 
     (date-as.numeric(CPIBY))<=10 ~ 0.5, #within 10 years of reference period
@@ -3354,7 +3357,7 @@ statistics in these different areas.
 
 #read in csv file.
 D5.2.5.HOUS <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.2020.csv", sep="/" )) %>% #add 2020 data
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.2020.csv", sep="/" ))) %>% #add 2020 data
   mutate(SPI.D5.2.5.HOUS=case_when(
     HOUS=="COICOP" ~ 1, 
     TRUE ~ 0 
@@ -3416,6 +3419,7 @@ Classification of status of employment refers to employment data that are
 
 #read in csv file.
 D5.2.6.EMPL <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.csv", sep="/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.2020.csv", sep="/" ))) %>% # add in 2020 data
   mutate(SPI.D5.2.6.EMPL=case_when(
     EMPL=="ICSE-93" | EMPL=="NAICS" ~ 1, 
     TRUE ~ 0 
@@ -3448,6 +3452,7 @@ units, the picture they provide of central government activities is usually inco
 
 #read in csv file.
 D5.2.7.CGOV <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.csv", sep="/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.2020.csv", sep="/" ))) #add in 2020 data
   mutate(SPI.D5.2.7.CGOV=case_when(
     CGOV=="AC" ~ 1, 
     CGOV=="CA" ~ 0.5,
@@ -3510,6 +3515,7 @@ is harmonized with the SNA2008.
 
 #read in csv file.
 D5.2.8.FINA <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.csv", sep="/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.2020.csv", sep="/" ))) %>% #add in 2020 data
   mutate(SPI.D5.2.8.FINA=case_when(
     FINA=="2014" | FINA=="ESA 2010"~ 1, 
     FINA=="2001" ~ 0.5,
@@ -3541,6 +3547,7 @@ the compilation of monetary and financial statistics in addition to MFSM.
 
 #read in csv file.
 D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep="/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.2020.csv", sep="/" ))) %>% #add in 2020 data
   mutate(SPI.D5.2.9.MONY=case_when(
     MONY=="MFSM 2000" | MONY=="MFSMCG 2016"~ 1, 
     TRUE ~ 0 
@@ -3605,6 +3612,7 @@ related to "business statistics" but refers to the statistical office, simply ex
 
 #read in csv file.
 D5.2.10.GSBP <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.csv", sep="/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.2020.csv", sep="/" ))) %>% #add in 2020 data
   mutate(SPI.D5.2.10.GSBP=case_when(
     str_to_lower(GSBP)=="yes" ~ 1, 
     TRUE ~ 0 
