@@ -209,7 +209,8 @@ ui <- navbarPage(id='container',
                           #                        icon = icon("external-link-square-alt"),
                           #                        # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
                           #                        onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
-                              fluidRow(
+
+                          fluidRow(
                                 column(3,
                                       selectizeInput("color_choices_overall", "Choose Indicator", 
                                              choices=metadata$descript,
@@ -232,6 +233,9 @@ ui <- navbarPage(id='container',
                             p(id='map_p','The boundaries, colors, denominations and any other information shown on this map do not imply, on the part of the World Bank Group, any judgment on the legal status of any territory, or any endorsement or acceptance of such boundaries.')
                             
                             ),
+                          p('Of the framework’s 22 dimensions, 14 have established methods and suitable data sources for a current total of 51 indicators. 
+                            But 8 of the dimensions do not yet have measurable indicators. One function of the framework is thus to motivate countries and the international 
+                            community to improve the statistical performance on those 14 dimensions—and to do more to establish methods and sources for the 8 remaining dimensions.'),
                           wellPanel(
                             fluidRow(
                               column(3,offset=1,
