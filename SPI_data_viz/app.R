@@ -891,17 +891,20 @@ server <- function(input, output,session) {
             between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
             between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
             between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
-            between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+            between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%",
+            TRUE ~ "Not available"
             
           )) %>%
           mutate(spi_groups=factor(spi_groups, 
-                                   levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )),
-                 value = as.numeric(spi_groups))  
+                                   levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%", "Not available" )),
+                 value = as.numeric(spi_groups),
+                 across(c('SPI_INDEX','SPI_INDEX_PIL1','SPI_INDEX_PIL2','SPI_INDEX_PIL3','SPI_INDEX_PIL4','SPI_INDEX_PIL5'),
+                        ~if_else(is.na(.),"Not available",as.character(round(.,1)))))  
           
         
         #set color pallete
-        col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
-        names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+        col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c", "#ced4da")  
+        names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%", "Not available" )
         
         SPI_highchart_map <- highchart(type = "map") %>%
           hc_add_series(mapData = countries,
@@ -926,7 +929,8 @@ server <- function(input, output,session) {
                                           list(from=2, to=2, color="#acece7", name="4th Quintile"),
                                           list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
                                           list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
-                                          list(from=5, to=5, color="#ff9f1c", name="Bottom 20%"))) %>% 
+                                          list(from=5, to=5, color="#ff9f1c", name="Bottom 20%"),
+                                          list(from=6, to=6, color="#ced4da", name="Not available"))) %>% 
           hc_mapNavigation(
             enabled = TRUE,
             enableMouseWheelZoom = TRUE,
