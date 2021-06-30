@@ -29,7 +29,7 @@ for (cntry in nada_sites$iso3c) {
   if (!is.na(site)) {
     tryCatch({
       req<-GET(site)
-      
+      print(req)
       if (req$status_code==200) {
         status=TRUE
       } else {
