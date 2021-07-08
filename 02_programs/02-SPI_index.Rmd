@@ -2496,7 +2496,7 @@ gdp_df <- wbstats::wb_data(
 
 #get the correlation for 2020
 gdp_df_2020 <- gdp_df %>%
-  filter(date==2019) 
+  filter(date==2020) 
 
 #text for plot
 eq <- lm_robust(SPI.INDEX ~ log(value), data=gdp_df_2020 , se_type='HC2')
