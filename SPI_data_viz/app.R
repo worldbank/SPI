@@ -1187,6 +1187,7 @@ server <- function(input, output,session) {
         select(shortname, values, dimname, country, source_name ) %>%
         mutate(values=round(values,2))
     
+    cols <- c('#2C2C4C', '#D3EDC5','#C0D2DE','#A9BFDA','#92929E','#575797','#8186A6', '#FFFEBD','#CEE2CD')
     
     highchart() %>%
       hc_add_series(data = lollip_df_temp,
@@ -1194,7 +1195,11 @@ server <- function(input, output,session) {
                     type = "column") %>%
       hc_xAxis(type='category') %>%
       hc_yAxis(min=0,max=scale) %>%
-      hc_title(text=title)
+      hc_title(text=title) %>%
+      hc_colors(cols) %>%
+      hc_legend(
+        verticalAlign='top'
+      )
 }
     
     output$fullplot <- renderUI({
@@ -1356,6 +1361,9 @@ server <- function(input, output,session) {
     
     output$plot_time <- renderHighchart({
       
+      cols <- c('#2C2C4C', '#89CF63','#739CB5','#648CBD','#92929E','#7B7B8A','#575798', '#FFFC37','#81B57E')
+      
+      
       hchart(
         time_trends_df(),
         type='line',
@@ -1370,6 +1378,10 @@ server <- function(input, output,session) {
         ) %>%
         hc_yAxis(
           min=0
+        ) %>%
+        hc_colors(cols) %>%
+        hc_legend(
+          verticalAlign='top'
         )
       
     })
