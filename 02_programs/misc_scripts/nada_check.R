@@ -53,4 +53,7 @@ for (cntry in nada_sites$iso3c) {
   
 }
 
+nada_sites %>% left_join(working_nada_df) %>% write_excel_csv( 'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/Nada2020.csv')
 
+
+write_excel_csv(working_nada_df, 'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/Nada2020.csv')
