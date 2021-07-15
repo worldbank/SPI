@@ -5,6 +5,7 @@
 
 
 library(shiny)
+library(shinydashboard)
 library(shinyjs)
 library(tidyverse)
 library(plotly)
@@ -138,7 +139,7 @@ ui <- navbarPage(id='container',
                                   </div>
                                   
                                     <div class="subnav-wrapper">
-                                    <div class="container subnavigation">
+                                    <div class="container-fluid subnavigation">
                                     <div class="row"><div class="col-xs-12">
                                         <ul> 
                                             <li><a title="Home" href="//www.worldbank.org/en/programs/statistical-performance-indicators">Home</a></li>
@@ -200,9 +201,10 @@ ui <- navbarPage(id='container',
                  #####################################################
                  # Global Map and Statistics Section
                  ####################################################
-                 tabPanel("Global Picture",tabName ='tab1',
+                 tabPanel("Global Picture",value ='global-picture',
                           tags$head(
-                            tags$link(rel = "stylesheet", type = "text/css", href = "spi-template.css")
+                            tags$link(rel = "stylesheet", type = "text/css", href = "spi-template.css"),
+                            
                           ),
                           # div(class="outer",
                           #     shiny::actionButton(inputId='ab1', label="Visit SPI Homepage", 
@@ -337,7 +339,7 @@ ui <- navbarPage(id='container',
                  #####################################################
                  # Country Reports section
                  ####################################################                 
-                 tabPanel("Country Reports",tabName ='tab2',
+                 tabPanel("Country Reports",value ='country-reports',
                           # div(class="outer",
                           #     shiny::actionButton(inputId='ab2', label="Visit SPI Homepage", 
                           #                         icon = icon("external-link-square-alt"),
@@ -372,7 +374,7 @@ ui <- navbarPage(id='container',
                  # Time Trends
                  #####################################################
                  
-                 tabPanel("Country Time Trends",
+                 tabPanel("Country Time Trends", value='country-trends',
                           # div(class="outer",style='padding:50px',
                           #     shiny::actionButton(inputId='ab3', label="Visit SPI Homepage", 
                           #                         icon = icon("external-link-square-alt"),
@@ -406,7 +408,7 @@ ui <- navbarPage(id='container',
                  #####################################################
                  # Country Table section
                  ####################################################                 
-                 tabPanel("Create Your Own SPI",tabName ='tab3',
+                 tabPanel("Create Your Own SPI",value ='custom-weights',
                           shinyjs::useShinyjs(), #need this for some advanced features like hiding items in UI
                           #css
                           tags$head(tags$style(
@@ -610,7 +612,23 @@ ui <- navbarPage(id='container',
 # Define server logic required to draw a histogram
 server <- function(input, output,session) {
 
+  # #get url links
+  observe({
+    query <- parseQueryString(session$clientData$url_search) #retrieve infor from url
+    query1 <- paste(names(query), query, sep = "=", collapse=", ")
+    print(query1)
     
+    if (query1 == "tab=country-reports") {
+      updateNavbarPage(session, inputId = "container", selected = "country-reports")
+    } 
+    else if (query1 == "tab=country-trends") {
+      updateTabItems(session, inputId = "container", selected = "country-trends")
+    } else if (query1 == "tab=custom-weights") {
+      updateTabItems(session, inputId = "container", selected = "custom-weights")
+    } else {
+      updateTabItems(session, inputId = "container", selected = "global-picture")
+        }
+  })
     
   output$downloadDataAll <- downloadHandler(
     filename = function() {
@@ -934,15 +952,18 @@ server <- function(input, output,session) {
                                           list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
                                           list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
                                           list(from=5, to=5, color="#ff9f1c", name="Bottom 20%"),
-                                          list(from=6, to=6, color="#ced4da", name="Not available"))) %>% 
+                                          list(from=6, to=6, color="#ced4da", name="Not available"))
+                                               ) %>% 
           hc_mapNavigation(
             enabled = TRUE,
             enableMouseWheelZoom = TRUE,
             enableDoubleClickZoom = TRUE
           ) %>%
           hc_legend(
-            verticalAlign = "top"
-          )
+            verticalAlign = "top",
+            itemStyle = list(fontSize = "16px")
+            
+          ) 
         
         SPI_highchart_map
         
@@ -973,7 +994,12 @@ server <- function(input, output,session) {
             enabled = TRUE,
             enableMouseWheelZoom = TRUE,
             enableDoubleClickZoom = TRUE
-          )
+          ) %>%
+          hc_legend(
+            verticalAlign = "top",
+            itemStyle = list(fontSize = "16px")
+            
+          ) 
 
         SPI_highchart_map
         
@@ -1148,6 +1174,7 @@ server <- function(input, output,session) {
     country_report_lolli_fn <- function(variables, title, scale) {
       lollip_df_temp <- lolli_df() %>%
         select(country, starts_with('SPI')) %>%
+        select(country, SPI.INDEX, everything()) %>%
         relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
         pivot_longer(
           cols = starts_with('SPI'),
@@ -1193,13 +1220,18 @@ server <- function(input, output,session) {
       hc_add_series(data = lollip_df_temp,
                     hcaes(x=shortname, y = values, group = country),
                     type = "column") %>%
-      hc_xAxis(type='category') %>%
+      hc_xAxis(type='category',
+               labels=list(
+                 style = list(fontSize = "16px", color = "#000000"))) %>%
       hc_yAxis(min=0,max=scale) %>%
-      hc_title(text=title) %>%
+      hc_title(text=title,
+               style = list(fontSize = "24px", color = "#000000", fontWeight = "bold")) %>%
       hc_colors(cols) %>%
       hc_legend(
-        verticalAlign='top'
+        verticalAlign='top',
+        itemStyle = list(fontSize = "16px")
       )
+    
 }
     
     output$fullplot <- renderUI({
@@ -1331,12 +1363,16 @@ server <- function(input, output,session) {
       #check if there is a country comparison group and if so add
       if (length(input$comparison_choice_time)==0) {
         
-        df_trends %>%
+        t <- df_trends %>%
           filter(country==input$country_choice_time) %>%
           bind_rows(region_agg) %>%
           bind_rows(income_agg) %>%
+          ungroup() %>%
           filter(!is.na(Score))%>%
           mutate(Score=round(Score, 1))
+        
+        t %>%
+          mutate(country=factor(country, levels=unique(t$country)))
         
       } else if (length(input$comparison_choice_time)>0) {
         
@@ -1346,13 +1382,18 @@ server <- function(input, output,session) {
           filter(country %in% input$comparison_choice_time)
         
         
-        df_trends %>%
+        t <- df_trends %>%
           filter(country==input$country_choice_time) %>%
           bind_rows(region_agg) %>%
           bind_rows(income_agg) %>%
           bind_rows(df_compare) %>%
+          ungroup() %>%
           filter(!is.na(Score)) %>%
           mutate(Score=round(Score, 1))
+        
+        t %>%
+          mutate(country=factor(country, levels=unique(t$country)))
+          
       }
       
       
@@ -1372,16 +1413,29 @@ server <- function(input, output,session) {
           y=Score,
           group=country
         ),
+        lineWidth=6,
+        marker=list(
+          radius=6
+        )
       ) %>%
         hc_xAxis(
-          allowDecimals=FALSE
+          allowDecimals=FALSE,
+          title=list(
+            style = list(fontSize = "18px", color = "#000000")),
+          labels=list(
+            style = list(fontSize = "16px", color = "#000000"))
         ) %>%
         hc_yAxis(
-          min=0
+          min=0,
+          title=list(
+            style = list(fontSize = "18px", color = "#000000")),
+          labels=list(
+            style = list(fontSize = "16px", color = "#000000"))
         ) %>%
         hc_colors(cols) %>%
         hc_legend(
-          verticalAlign='top'
+          verticalAlign='top',
+          itemStyle = list(fontSize = "18px")
         )
       
     })
