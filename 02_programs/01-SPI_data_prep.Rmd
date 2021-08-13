@@ -1242,6 +1242,14 @@ We take therefore useable data if it appears within an 8 year window of the refe
 
 
 ```{r safely_managed, eval=FALSE, include=FALSE}
+span <- c(2000:2020)
+
+smw_template_df <- data.frame(
+  geo=c("National","Rural","Urban")
+)
+
+smw_empty_df <- bind_rows(replicate(length(span), smw_template_df, simplify = FALSE), .id='year') %>%
+  mutate(year=as.numeric(year)+span[1]-1)
 
 #function to download data from hyperlink from OECD
 hyper_read <-  function(hyperlink) {
@@ -1272,6 +1280,8 @@ hyper_read <-  function(hyperlink) {
        data_available=max(data_available, na.rm=T),
        data_quality=max(data_quality, na.rm=T),
        data_value = mean(as.numeric(value),na.rm=T))  %>% 
+      ungroup() %>%
+       right_join(smw_empty_df) %>% #fill in missing years in database.
        group_by(geo) %>%
        mutate(max_value=max(data_value, na.rm=T),
          max_value=if_else(max_value!=-Inf,max_value,-99)
@@ -1344,7 +1354,7 @@ for (i in c(2015:2020)) {
   #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
   if (end==2020) {
     start=i-9
-  } else if (end==2018) {
+  } else if (end==2019) {
     start=i-8
   } else {
     start=i-7
@@ -1825,7 +1835,7 @@ NADA is an open source microdata cataloging system, compliant with the Data Docu
 
 #read in csv file.
 D2.4_NADA <- read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.20202.csv", sep="/" ))) %>%
+  bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.2020.csv", sep="/" ))) %>%
   mutate(SPI.D2.4.NADA=case_when(
     NADA==1 ~ 1, 
     NADA==0 ~ 0, 

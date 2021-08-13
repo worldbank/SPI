@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-07-02" />
+<meta name="date" content="2021-08-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -419,20 +419,21 @@ collected from the households and businesses when needed.</p>
 0 Points. No</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="data-services-1.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#read in csv file.</span></span>
 <span id="cb15-2"><a href="data-services-1.html#cb15-2" aria-hidden="true" tabindex="-1"></a>D2<span class="fl">.4</span>_NADA <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="fu">paste</span>(raw_dir, <span class="st">&#39;/2.4_DSDS/&#39;</span>, <span class="st">&quot;D2.4.NADA.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span> )) <span class="sc">%&gt;%</span></span>
-<span id="cb15-3"><a href="data-services-1.html#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D2.4.NADA=</span><span class="fu">case_when</span>(</span>
-<span id="cb15-4"><a href="data-services-1.html#cb15-4" aria-hidden="true" tabindex="-1"></a>    NADA<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
-<span id="cb15-5"><a href="data-services-1.html#cb15-5" aria-hidden="true" tabindex="-1"></a>    NADA<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="dv">0</span>, </span>
-<span id="cb15-6"><a href="data-services-1.html#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> </span>
-<span id="cb15-7"><a href="data-services-1.html#cb15-7" aria-hidden="true" tabindex="-1"></a>  ))  <span class="sc">%&gt;%</span></span>
-<span id="cb15-8"><a href="data-services-1.html#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D2.4.NADA=</span>NADA,</span>
-<span id="cb15-9"><a href="data-services-1.html#cb15-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">RAW.D2.4.NADA_text=</span>NADA_text) <span class="sc">%&gt;%</span></span>
-<span id="cb15-10"><a href="data-services-1.html#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, country, date, RAW.D2.<span class="fl">4.</span>NADA,RAW.D2.<span class="fl">4.</span>NADA_text, SPI.D2.<span class="fl">4.</span>NADA  ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-11"><a href="data-services-1.html#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date, country)</span>
-<span id="cb15-12"><a href="data-services-1.html#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="data-services-1.html#cb15-13" aria-hidden="true" tabindex="-1"></a>D2<span class="fl">.4</span>_NADA_map <span class="ot">&lt;-</span> D2<span class="fl">.4</span>_NADA <span class="sc">%&gt;%</span></span>
-<span id="cb15-14"><a href="data-services-1.html#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SPI.D2.<span class="fl">4.</span>NADA<span class="sc">&gt;</span><span class="dv">0</span>)</span>
-<span id="cb15-15"><a href="data-services-1.html#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="data-services-1.html#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;D2.4_NADA_map&#39;</span>, <span class="st">&#39;RAW.D2.4.NADA&#39;</span>, <span class="st">&#39;NADA in Place&#39;</span> )</span></code></pre></div>
+<span id="cb15-3"><a href="data-services-1.html#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="fu">read_csv</span>(<span class="at">file =</span> <span class="fu">paste</span>(raw_dir, <span class="st">&#39;/2.4_DSDS/&#39;</span>, <span class="st">&quot;D2.4.NADA.2020.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span> ))) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="data-services-1.html#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D2.4.NADA=</span><span class="fu">case_when</span>(</span>
+<span id="cb15-5"><a href="data-services-1.html#cb15-5" aria-hidden="true" tabindex="-1"></a>    NADA<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb15-6"><a href="data-services-1.html#cb15-6" aria-hidden="true" tabindex="-1"></a>    NADA<span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="dv">0</span>, </span>
+<span id="cb15-7"><a href="data-services-1.html#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> </span>
+<span id="cb15-8"><a href="data-services-1.html#cb15-8" aria-hidden="true" tabindex="-1"></a>  ))  <span class="sc">%&gt;%</span></span>
+<span id="cb15-9"><a href="data-services-1.html#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D2.4.NADA=</span>NADA,</span>
+<span id="cb15-10"><a href="data-services-1.html#cb15-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">RAW.D2.4.NADA_text=</span>NADA_text) <span class="sc">%&gt;%</span></span>
+<span id="cb15-11"><a href="data-services-1.html#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, country, date, RAW.D2.<span class="fl">4.</span>NADA,RAW.D2.<span class="fl">4.</span>NADA_text, SPI.D2.<span class="fl">4.</span>NADA  ) <span class="sc">%&gt;%</span></span>
+<span id="cb15-12"><a href="data-services-1.html#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date, country)</span>
+<span id="cb15-13"><a href="data-services-1.html#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="data-services-1.html#cb15-14" aria-hidden="true" tabindex="-1"></a>D2<span class="fl">.4</span>_NADA_map <span class="ot">&lt;-</span> D2<span class="fl">.4</span>_NADA <span class="sc">%&gt;%</span></span>
+<span id="cb15-15"><a href="data-services-1.html#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SPI.D2.<span class="fl">4.</span>NADA<span class="sc">&gt;</span><span class="dv">0</span>)</span>
+<span id="cb15-16"><a href="data-services-1.html#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="data-services-1.html#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;D2.4_NADA_map&#39;</span>, <span class="st">&#39;RAW.D2.4.NADA&#39;</span>, <span class="st">&#39;NADA in Place&#39;</span> )</span></code></pre></div>
 <p><img src="01-SPI_data_prep_files/figure-html/nada-1.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/nada-2.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/nada-3.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/nada-4.png" width="960" /></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="data-services-1.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#add to spi databases</span></span>
 <span id="cb16-2"><a href="data-services-1.html#cb16-2" aria-hidden="true" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>

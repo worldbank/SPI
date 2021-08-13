@@ -5,6 +5,7 @@
 #load packages
 library(tidyverse)
 library(here)
+library(readxl)
 
 #set paths
 dir <- here()
@@ -18,6 +19,72 @@ metadata_full <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep=
   rename(source_name=descript) %>%
   bind_rows(metadata) %>%
   mutate(short_desc=str_extract(spi_indicator_description,boundary('sentence')))
+
+###############
+# create program to produce aggregates
+###############
+
+#read in classifications
+class_df <- read_excel(paste(raw_dir, '/misc/WB_Groups_FY21_CSCIDA.xlsx', sep="")) %>%
+  rename(
+    iso3c=WB_Country_Code,
+    country=WB_Country_Name,
+    WB_Group_Code=WB_Group_Code,
+    WB_Group_Name=WB_Group_Name
+  )
+#class_df <- read_excel('http://databank.worldbank.org/data/download/site-content/CLASS.xlsx',sheet = "Groups")
+
+
+
+#prgoram to do aggregations
+#user must choose a group (i.e. IFC) and a weight specified as a World Bank series code (i.e. population=SP.POP.TOTL).  Type 'none' for unweighted
+SPI_agg_fun  <- function(group, weight) {
+  
+  #pull weights from WDI (either population or gni)
+  if (weight!='none') {
+    weights_df <- wbstats::wb_data(
+      indicator=c(weight),
+      start_date = 2016,
+      end_date=2020,
+      gapfill = TRUE,
+      mrv=5,
+      return_wide = FALSE
+    ) %>%
+      rename(weight=value)
+    
+    #create list of countires in group
+    class_join_df <- class_df %>%
+      filter(WB_Group_Code==group)
+    
+    #produce weighted aggregate
+    agg_df <- databank_df %>%
+      left_join(class_join_df) %>%
+      left_join(weights_df) %>%
+      group_by(WB_Group_Code, source_id) %>%
+      summarise(
+        value=Hmisc::wtd.mean(value,weights = weight, na.rm=TRUE)
+      )
+    
+  } else {
+    
+    #create list of countires in group
+    class_join_df <- class_df %>%
+      filter(WB_Group_Code==group)
+    
+    #produce weighted aggregate
+    agg_df <- databank_df %>%
+      left_join(class_join_df) %>%
+      left_join(weights_df) %>%
+      group_by(WB_Group_Code, source_id) %>%
+      summarise(
+        value=mean(value, na.rm=TRUE)
+      )
+        
+  }
+  
+  agg_df  
+  
+}
 
 ###############
 #now using this info, create series metadata
@@ -76,7 +143,7 @@ spi_footnote <- spi_raw %>%
 
 
 #reshape to match databank format
-databank_df <- SPI %>%
+databank_df <- SPI_index %>%
   pivot_longer(
     cols=matches('SPI'),
     names_to = 'source_id',
@@ -107,8 +174,9 @@ excel <- list('Indicators'=databank_df,
 writexl::write_xlsx(excel,
                     path=paste(output_dir, "/SPI_databank.xlsx", sep=""))
 
-xlsx::write.xlsx((databank_df, path=paste(output_dir, "/SPI_databank.xlsx", sep=""),
+xlsx::write.xlsx((databank_df, file=paste(output_dir, "/SPI_databank.xlsx", sep=""),
                  sheetName = 'Indicators')
+                 
 xlsx::write.xlsx(series_metadata, file=paste(output_dir, "/SPI_databank.xlsx", sep=""),
                  sheetName = 'Series_Metadata',
                  append=TRUE)
