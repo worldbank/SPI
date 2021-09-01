@@ -1348,17 +1348,18 @@ index_tab_time <- index_tab_time %>%
                        SPI.INDEX.2018="2018",
                        SPI.INDEX.2017="2017",
                        SPI.INDEX.2016="2016"
-                                   )) %>%
-    bg(j = c('SPI.INDEX.2020'), 
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%  
-    bg(j = c('SPI.INDEX.2019'), 
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.2018'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.2017'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.2016'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) 
+                                   )) 
+# %>%
+#     bg(j = c('SPI.INDEX.2020'), 
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%  
+#     bg(j = c('SPI.INDEX.2019'), 
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+#     bg(j = c('SPI.INDEX.2018'),
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+#     bg(j = c('SPI.INDEX.2017'),
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+#     bg(j = c('SPI.INDEX.2016'),
+#        bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) 
 
   
 

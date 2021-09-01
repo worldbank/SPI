@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>7 Final Dataset | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
-  <meta name="description" content="7 Final Dataset | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <title>Page not found | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
+  <meta name="description" content="Page not found | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="7 Final Dataset | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta property="og:title" content="Page not found | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="7 Final Dataset | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
+  <meta name="twitter:title" content="Page not found | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
   
   
   
@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="data-infrastructure-1.html"/>
+
 
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -232,84 +232,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="final-dataset" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Final Dataset</h1>
-<p>Below we will append the data together and save the final files together.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="final-dataset.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">#add in population</span></span>
-<span id="cb58-2"><a href="final-dataset.html#cb58-2" aria-hidden="true" tabindex="-1"></a>pop_df <span class="ot">&lt;-</span> wbstats<span class="sc">::</span><span class="fu">wb</span>(<span class="at">country=</span><span class="st">&quot;all&quot;</span>,</span>
-<span id="cb58-3"><a href="final-dataset.html#cb58-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">indicator=</span><span class="st">&#39;SP.POP.TOTL&#39;</span>,</span>
-<span id="cb58-4"><a href="final-dataset.html#cb58-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">startdate=</span><span class="dv">2004</span>,</span>
-<span id="cb58-5"><a href="final-dataset.html#cb58-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">enddate=</span><span class="dv">2020</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb58-6"><a href="final-dataset.html#cb58-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="fu">as.numeric</span>(date)) <span class="sc">%&gt;%</span></span>
-<span id="cb58-7"><a href="final-dataset.html#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">population=</span>value) <span class="sc">%&gt;%</span></span>
-<span id="cb58-8"><a href="final-dataset.html#cb58-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, date, population)</span>
-<span id="cb58-9"><a href="final-dataset.html#cb58-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-10"><a href="final-dataset.html#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="co"># create final dataset</span></span>
-<span id="cb58-11"><a href="final-dataset.html#cb58-11" aria-hidden="true" tabindex="-1"></a>spi_df_final <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
-<span id="cb58-12"><a href="final-dataset.html#cb58-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb58-13"><a href="final-dataset.html#cb58-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(spi_df_empty) <span class="sc">%&gt;%</span></span>
-<span id="cb58-14"><a href="final-dataset.html#cb58-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(pop_df) <span class="sc">%&gt;%</span></span>
-<span id="cb58-15"><a href="final-dataset.html#cb58-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>date,country)</span>
-<span id="cb58-16"><a href="final-dataset.html#cb58-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-17"><a href="final-dataset.html#cb58-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-18"><a href="final-dataset.html#cb58-18" aria-hidden="true" tabindex="-1"></a><span class="do">####</span></span>
-<span id="cb58-19"><a href="final-dataset.html#cb58-19" aria-hidden="true" tabindex="-1"></a><span class="co">#lining up data to 2020 and filling in some values for OECD countries.  </span></span>
-<span id="cb58-20"><a href="final-dataset.html#cb58-20" aria-hidden="true" tabindex="-1"></a><span class="do">####</span></span>
-<span id="cb58-21"><a href="final-dataset.html#cb58-21" aria-hidden="true" tabindex="-1"></a><span class="co">#get a list of oecd countries</span></span>
-<span id="cb58-22"><a href="final-dataset.html#cb58-22" aria-hidden="true" tabindex="-1"></a>oecd_country_query <span class="ot">&lt;-</span>  <span class="fu">GET</span>(<span class="at">url =</span> <span class="st">&quot;https://api.worldbank.org/v2/country?region=OED&amp;format=json&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb58-23"><a href="final-dataset.html#cb58-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">content</span>( <span class="at">as =</span> <span class="st">&quot;text&quot;</span>, <span class="at">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb58-24"><a href="final-dataset.html#cb58-24" aria-hidden="true" tabindex="-1"></a>  jsonlite<span class="sc">::</span><span class="fu">fromJSON</span>( <span class="at">flatten =</span> <span class="cn">TRUE</span>) </span>
-<span id="cb58-25"><a href="final-dataset.html#cb58-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-26"><a href="final-dataset.html#cb58-26" aria-hidden="true" tabindex="-1"></a><span class="co">#do some conversion to produce a dataframe</span></span>
-<span id="cb58-27"><a href="final-dataset.html#cb58-27" aria-hidden="true" tabindex="-1"></a>oecd_country_df <span class="ot">&lt;-</span> oecd_country_query[[<span class="dv">2</span>]] <span class="sc">%&gt;%</span></span>
-<span id="cb58-28"><a href="final-dataset.html#cb58-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() </span>
-<span id="cb58-29"><a href="final-dataset.html#cb58-29" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb58-30"><a href="final-dataset.html#cb58-30" aria-hidden="true" tabindex="-1"></a>country_mod_list <span class="ot">&lt;-</span> oecd_country_df<span class="sc">$</span>name  <span class="co">#fill in the missing values for OECDs with 1s because by participating in OECD these countries have this</span></span>
-<span id="cb58-31"><a href="final-dataset.html#cb58-31" aria-hidden="true" tabindex="-1"></a>country_mod_list <span class="ot">&lt;-</span> <span class="fu">c</span>(country_mod_list, <span class="st">&#39;Singapore&#39;</span>)</span>
-<span id="cb58-32"><a href="final-dataset.html#cb58-32" aria-hidden="true" tabindex="-1"></a>spi_df_final <span class="ot">&lt;-</span> spi_df_final <span class="sc">%&gt;%</span></span>
-<span id="cb58-33"><a href="final-dataset.html#cb58-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country, date) <span class="sc">%&gt;%</span></span>
-<span id="cb58-34"><a href="final-dataset.html#cb58-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country) <span class="sc">%&gt;%</span></span>
-<span id="cb58-35"><a href="final-dataset.html#cb58-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), na.locf, <span class="at">na.rm=</span><span class="cn">FALSE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb58-36"><a href="final-dataset.html#cb58-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="st">&quot;SPI.D1.5.POV&quot;</span>,</span>
-<span id="cb58-37"><a href="final-dataset.html#cb58-37" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;SPI.D2.1.GDDS&quot;</span>,</span>
-<span id="cb58-38"><a href="final-dataset.html#cb58-38" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;SPI.D5.1.DILG&quot;</span>,</span>
-<span id="cb58-39"><a href="final-dataset.html#cb58-39" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;SPI.D5.2.3.CNIN&quot;</span>, <span class="st">&quot;SPI.D5.2.5.HOUS&quot;</span>, <span class="st">&quot;SPI.D5.2.6.EMPL&quot;</span>, <span class="st">&quot;SPI.D5.2.8.FINA&quot;</span>,</span>
-<span id="cb58-40"><a href="final-dataset.html#cb58-40" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;SPI.D5.2.10.GSBP&quot;</span>,</span>
-<span id="cb58-41"><a href="final-dataset.html#cb58-41" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;SPI.D5.5.DIFI&quot;</span>),</span>
-<span id="cb58-42"><a href="final-dataset.html#cb58-42" aria-hidden="true" tabindex="-1"></a>                <span class="sc">~</span><span class="fu">if_else</span>(( (income<span class="sc">==</span><span class="st">&#39;High income&#39;</span>)  <span class="sc">&amp;</span> (country <span class="sc">%in%</span> country_mod_list)),<span class="dv">1</span>,.)                )) </span></code></pre></div>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="final-dataset.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#write to csv</span></span>
-<span id="cb59-2"><a href="final-dataset.html#cb59-2" aria-hidden="true" tabindex="-1"></a>spi_df_final <span class="sc">%&gt;%</span></span>
-<span id="cb59-3"><a href="final-dataset.html#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb59-4"><a href="final-dataset.html#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(is.list, as.character)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-5"><a href="final-dataset.html#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_excel_csv</span>( <span class="at">path =</span> <span class="fu">paste</span>(output_dir, <span class="st">&#39;SPI_data.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>))</span>
-<span id="cb59-6"><a href="final-dataset.html#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-7"><a href="final-dataset.html#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="co">#label data</span></span>
-<span id="cb59-8"><a href="final-dataset.html#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="co">#read in metadata</span></span>
-<span id="cb59-9"><a href="final-dataset.html#cb59-9" aria-hidden="true" tabindex="-1"></a>names_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&#39;source_id&#39;</span><span class="ot">=</span><span class="fu">colnames</span>(spi_df_final))</span>
-<span id="cb59-10"><a href="final-dataset.html#cb59-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-11"><a href="final-dataset.html#cb59-11" aria-hidden="true" tabindex="-1"></a>spi_meta <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste</span>(raw_dir, <span class="st">&#39;/metadata/SPI_dimensions_sources.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-12"><a href="final-dataset.html#cb59-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(names_df) <span class="sc">%&gt;%</span></span>
-<span id="cb59-13"><a href="final-dataset.html#cb59-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source_name=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(source_name), <span class="fu">paste</span>(source_id), source_name)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-14"><a href="final-dataset.html#cb59-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">factor</span>(source_id, <span class="at">levels=</span><span class="fu">colnames</span>(spi_df_final)))</span>
-<span id="cb59-15"><a href="final-dataset.html#cb59-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-16"><a href="final-dataset.html#cb59-16" aria-hidden="true" tabindex="-1"></a><span class="co">#label data</span></span>
-<span id="cb59-17"><a href="final-dataset.html#cb59-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-18"><a href="final-dataset.html#cb59-18" aria-hidden="true" tabindex="-1"></a><span class="fu">label</span>(spi_df_final) <span class="ot">=</span> <span class="fu">as.list</span>(spi_meta<span class="sc">$</span>source_name)</span>
-<span id="cb59-19"><a href="final-dataset.html#cb59-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-20"><a href="final-dataset.html#cb59-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-21"><a href="final-dataset.html#cb59-21" aria-hidden="true" tabindex="-1"></a><span class="co">#write to stata</span></span>
-<span id="cb59-22"><a href="final-dataset.html#cb59-22" aria-hidden="true" tabindex="-1"></a>spi_df_final <span class="sc">%&gt;%</span></span>
-<span id="cb59-23"><a href="final-dataset.html#cb59-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(is.list, as.character)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-24"><a href="final-dataset.html#cb59-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">gsub</span>(<span class="st">&quot;.&quot;</span>,<span class="st">&quot;_&quot;</span>,.x, <span class="at">fixed=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb59-25"><a href="final-dataset.html#cb59-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>lat,<span class="sc">-</span>long) <span class="sc">%&gt;%</span></span>
-<span id="cb59-26"><a href="final-dataset.html#cb59-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_dta</span>( <span class="at">path =</span> <span class="fu">paste</span>(output_dir, <span class="st">&#39;SPI_data.dta&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>))</span></code></pre></div>
+<div id="page-not-found" class="section level1">
+<h1>Page not found</h1>
+<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
+<p>You may want to try searching to find the page's new location, or use
+the table of contents to find the page you are looking for.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="data-infrastructure-1.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
 
     </div>
   </div>

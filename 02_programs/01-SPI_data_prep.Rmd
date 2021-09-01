@@ -1706,10 +1706,11 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 
   #read in ODIN data
   for (i in c(2015,2016,2017,2018,2020)) {
-   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
+   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""),)  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
-        filter(Data.categories=='All Categories')
+        filter(Data.categories=='All Categories') %>%
+        select(-Year)
 
 
     assign(paste('openness_df',i,sep="_"), temp)
@@ -2801,7 +2802,8 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
-        filter(Data.categories=='All Categories')
+        filter(Data.categories=='All Categories') %>%
+        select(-Year)
 
 
     assign(paste('geo_df',i,sep="_"), temp)

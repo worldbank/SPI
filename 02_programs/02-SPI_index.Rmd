@@ -114,12 +114,12 @@ To complete the virtuous data cycle, the capability of the statistical system ne
 ```{r data, include=FALSE}
 
 #add in population
-pop_df <- wbstats::wb(country="all",
+pop_df <- wbstats::wb_data(country="all",
              indicator='SP.POP.TOTL',
-             startdate=2004,
-             enddate=2020) %>%
+             start_date=2004,
+             end_date=2020) %>%
   mutate(date=as.numeric(date)) %>%
-  mutate(population=value) %>%
+  mutate(population=SP.POP.TOTL) %>%
   select(country, date, population) 
 
 
@@ -2897,7 +2897,8 @@ unique_scores_sci <-length(unique(unique_scores_df$SCI))
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
-        filter(Data.categories=='All Categories')
+        filter(Data.categories=='All Categories') %>%
+        select(-Year)
 
 
     assign(paste('odin_df',i,sep="_"), temp)
