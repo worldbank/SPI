@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-09-03" />
+<meta name="date" content="2021-09-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -397,7 +397,9 @@ and demographics.</p>
 <span id="cb33-35"><a href="data-sources-1.html#cb33-35" aria-hidden="true" tabindex="-1"></a>    )  <span class="sc">%&gt;%</span></span>
 <span id="cb33-36"><a href="data-sources-1.html#cb33-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb33-37"><a href="data-sources-1.html#cb33-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">c</span>(<span class="st">&#39;iso3c&#39;</span>,  <span class="st">&#39;date&#39;</span>, <span class="st">&#39;Latest.agricultural.census&#39;</span>, <span class="st">&#39;indicator&#39;</span>)  ) <span class="sc">%&gt;%</span></span>
-<span id="cb33-38"><a href="data-sources-1.html#cb33-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(date, iso3c)</span></code></pre></div>
+<span id="cb33-38"><a href="data-sources-1.html#cb33-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(date, iso3c) <span class="sc">%&gt;%</span></span>
+<span id="cb33-39"><a href="data-sources-1.html#cb33-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">indiator=</span><span class="fu">if_else</span>((iso3c<span class="sc">==</span><span class="st">&quot;SGP&quot;</span> <span class="sc">&amp;</span> date<span class="sc">&gt;=</span><span class="dv">2015</span>),<span class="dv">1</span>,indicator),</span>
+<span id="cb33-40"><a href="data-sources-1.html#cb33-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">Latest.agricultural.census=</span><span class="fu">if_else</span>((iso3c<span class="sc">==</span><span class="st">&quot;SGP&quot;</span> <span class="sc">&amp;</span> date<span class="sc">&gt;=</span><span class="dv">2015</span>),<span class="st">&#39;Admin data sources&#39;</span>,Latest.agricultural.census)) <span class="co">#Singapore Stat provided the SPI team with documentation on their agriculture statistics. https://www.singstat.gov.sg/publications/reference/ebook/industry/agriculture-animal-production-and-fisheries</span></span></code></pre></div>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="data-sources-1.html#cb34-1" aria-hidden="true" tabindex="-1"></a>census_fun  <span class="ot">&lt;-</span> <span class="cf">function</span>(data, input_var) {</span>
 <span id="cb34-2"><a href="data-sources-1.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb34-3"><a href="data-sources-1.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> data</span>
@@ -803,32 +805,55 @@ two years of data between 2015-2017. Scores can be compared across topics and co
 <span id="cb43-12"><a href="data-sources-1.html#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="co">#bind different years together</span></span>
 <span id="cb43-13"><a href="data-sources-1.html#cb43-13" aria-hidden="true" tabindex="-1"></a>geo_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018, geo_df_2020)</span>
 <span id="cb43-14"><a href="data-sources-1.html#cb43-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-15"><a href="data-sources-1.html#cb43-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-16"><a href="data-sources-1.html#cb43-16" aria-hidden="true" tabindex="-1"></a><span class="co">#create geo scores</span></span>
-<span id="cb43-17"><a href="data-sources-1.html#cb43-17" aria-hidden="true" tabindex="-1"></a>geo_df <span class="ot">&lt;-</span> geo_df <span class="sc">%&gt;%</span></span>
-<span id="cb43-18"><a href="data-sources-1.html#cb43-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Country.Code, date, First.administrative.level, Second.administrative.level) <span class="sc">%&gt;%</span></span>
-<span id="cb43-19"><a href="data-sources-1.html#cb43-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">iso3c=</span>Country.Code) <span class="sc">%&gt;%</span></span>
-<span id="cb43-20"><a href="data-sources-1.html#cb43-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>( iso3c) <span class="sc">%&gt;%</span></span>
-<span id="cb43-21"><a href="data-sources-1.html#cb43-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">right_join</span>(country_metadata) <span class="sc">%&gt;%</span></span>
-<span id="cb43-22"><a href="data-sources-1.html#cb43-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">D4.3.GEO.first.admin.level=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(First.administrative.level), <span class="dv">0</span>, First.administrative.level),</span>
-<span id="cb43-23"><a href="data-sources-1.html#cb43-23" aria-hidden="true" tabindex="-1"></a>           <span class="at">D4.3.GEO.second.admin.level=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(Second.administrative.level), <span class="dv">0</span>, Second.administrative.level))    </span>
-<span id="cb43-24"><a href="data-sources-1.html#cb43-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb43-25"><a href="data-sources-1.html#cb43-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-26"><a href="data-sources-1.html#cb43-26" aria-hidden="true" tabindex="-1"></a><span class="co">#do some quick renaming and formatting</span></span>
-<span id="cb43-27"><a href="data-sources-1.html#cb43-27" aria-hidden="true" tabindex="-1"></a>geo_df_temp1 <span class="ot">&lt;-</span> geo_df <span class="sc">%&gt;%</span> </span>
-<span id="cb43-28"><a href="data-sources-1.html#cb43-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">paste</span>(<span class="st">&#39;RAW&#39;</span>,., <span class="at">sep=</span><span class="st">&quot;.&quot;</span>), <span class="at">.cols=</span><span class="fu">c</span>(<span class="st">&#39;D4.3.GEO.first.admin.level&#39;</span>, <span class="st">&#39;D4.3.GEO.second.admin.level&#39;</span>) ) </span>
-<span id="cb43-29"><a href="data-sources-1.html#cb43-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-30"><a href="data-sources-1.html#cb43-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-31"><a href="data-sources-1.html#cb43-31" aria-hidden="true" tabindex="-1"></a>geo_df_temp2 <span class="ot">&lt;-</span> geo_df <span class="sc">%&gt;%</span> </span>
-<span id="cb43-32"><a href="data-sources-1.html#cb43-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="st">&#39;D4.3.GEO.first.admin.level&#39;</span>, <span class="st">&#39;D4.3.GEO.second.admin.level&#39;</span>), <span class="sc">~</span>.<span class="sc">/</span><span class="dv">100</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb43-33"><a href="data-sources-1.html#cb43-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">paste</span>(<span class="st">&#39;SPI&#39;</span>,., <span class="at">sep=</span><span class="st">&quot;.&quot;</span>), <span class="at">.cols=</span><span class="fu">c</span>(<span class="st">&#39;D4.3.GEO.first.admin.level&#39;</span>, <span class="st">&#39;D4.3.GEO.second.admin.level&#39;</span>) ) </span>
-<span id="cb43-34"><a href="data-sources-1.html#cb43-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-35"><a href="data-sources-1.html#cb43-35" aria-hidden="true" tabindex="-1"></a>geo_df <span class="ot">&lt;-</span> geo_df_temp1 <span class="sc">%&gt;%</span></span>
-<span id="cb43-36"><a href="data-sources-1.html#cb43-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(geo_df_temp2)</span>
-<span id="cb43-37"><a href="data-sources-1.html#cb43-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-38"><a href="data-sources-1.html#cb43-38" aria-hidden="true" tabindex="-1"></a><span class="co">#add to spi df</span></span>
-<span id="cb43-39"><a href="data-sources-1.html#cb43-39" aria-hidden="true" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
-<span id="cb43-40"><a href="data-sources-1.html#cb43-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(geo_df)</span></code></pre></div>
+<span id="cb43-15"><a href="data-sources-1.html#cb43-15" aria-hidden="true" tabindex="-1"></a><span class="co">#for some small countries, the data at 1st admin level is not included.  These countries include:</span></span>
+<span id="cb43-16"><a href="data-sources-1.html#cb43-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Andorra, Anguilla, Antigua and Barbuda, Bahrain, Dominica, Hong Kong, Macao, Maldives, Malta, Marshall Islands, </span></span>
+<span id="cb43-17"><a href="data-sources-1.html#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Micronesia, Monaco, Palau, Sao Tome and Principe, San Marino, Seychelles, Singapore, St. Kitts and Nevis, St. Lucia, </span></span>
+<span id="cb43-18"><a href="data-sources-1.html#cb43-18" aria-hidden="true" tabindex="-1"></a><span class="co"># St. Vincent and the Grenadines, Tonga, and Liechtenstein</span></span>
+<span id="cb43-19"><a href="data-sources-1.html#cb43-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-20"><a href="data-sources-1.html#cb43-20" aria-hidden="true" tabindex="-1"></a>geo_country_list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;ADO&#39;</span>,<span class="st">&#39;AIA&#39;</span>,<span class="st">&#39;ATG&#39;</span>,<span class="st">&#39;BHR&#39;</span>,<span class="st">&#39;DMA&#39;</span>, <span class="st">&#39;HKG&#39;</span>,<span class="st">&#39;MAC&#39;</span>,<span class="st">&#39;MDV&#39;</span>, <span class="st">&#39;MLT&#39;</span>, <span class="st">&#39;MHL&#39;</span>,</span>
+<span id="cb43-21"><a href="data-sources-1.html#cb43-21" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;FSM&#39;</span>, <span class="st">&#39;MCO&#39;</span>, <span class="st">&#39;PLW&#39;</span>,<span class="st">&#39;STP&#39;</span>, <span class="st">&#39;SMR&#39;</span>, <span class="st">&#39;SYC&#39;</span>, <span class="st">&#39;SGP&#39;</span>,<span class="st">&#39;KNA&#39;</span>, <span class="st">&#39;LCA&#39;</span>, <span class="st">&#39;VCT&#39;</span>,</span>
+<span id="cb43-22"><a href="data-sources-1.html#cb43-22" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;TON&#39;</span>, <span class="st">&#39;LIE&#39;</span>)</span>
+<span id="cb43-23"><a href="data-sources-1.html#cb43-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-24"><a href="data-sources-1.html#cb43-24" aria-hidden="true" tabindex="-1"></a>geo_df <span class="ot">&lt;-</span> geo_df <span class="sc">%&gt;%</span></span>
+<span id="cb43-25"><a href="data-sources-1.html#cb43-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">First.administrative.level=</span><span class="fu">case_when</span>(</span>
+<span id="cb43-26"><a href="data-sources-1.html#cb43-26" aria-hidden="true" tabindex="-1"></a>      Country.Code <span class="sc">%in%</span> geo_country_list <span class="sc">~</span> Coverage.subscore,</span>
+<span id="cb43-27"><a href="data-sources-1.html#cb43-27" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> First.administrative.level</span>
+<span id="cb43-28"><a href="data-sources-1.html#cb43-28" aria-hidden="true" tabindex="-1"></a>          ),</span>
+<span id="cb43-29"><a href="data-sources-1.html#cb43-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">Second.administrative.level=</span><span class="fu">case_when</span>(</span>
+<span id="cb43-30"><a href="data-sources-1.html#cb43-30" aria-hidden="true" tabindex="-1"></a>      Country.Code <span class="sc">%in%</span> geo_country_list <span class="sc">~</span> Coverage.subscore,</span>
+<span id="cb43-31"><a href="data-sources-1.html#cb43-31" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> Second.administrative.level</span>
+<span id="cb43-32"><a href="data-sources-1.html#cb43-32" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb43-33"><a href="data-sources-1.html#cb43-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb43-34"><a href="data-sources-1.html#cb43-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-35"><a href="data-sources-1.html#cb43-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-36"><a href="data-sources-1.html#cb43-36" aria-hidden="true" tabindex="-1"></a><span class="co">#create geo scores</span></span>
+<span id="cb43-37"><a href="data-sources-1.html#cb43-37" aria-hidden="true" tabindex="-1"></a>geo_df <span class="ot">&lt;-</span> geo_df <span class="sc">%&gt;%</span></span>
+<span id="cb43-38"><a href="data-sources-1.html#cb43-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Country.Code, date, First.administrative.level, Second.administrative.level) <span class="sc">%&gt;%</span></span>
+<span id="cb43-39"><a href="data-sources-1.html#cb43-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">iso3c=</span>Country.Code) <span class="sc">%&gt;%</span></span>
+<span id="cb43-40"><a href="data-sources-1.html#cb43-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>( iso3c) <span class="sc">%&gt;%</span></span>
+<span id="cb43-41"><a href="data-sources-1.html#cb43-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">right_join</span>(country_metadata) <span class="sc">%&gt;%</span></span>
+<span id="cb43-42"><a href="data-sources-1.html#cb43-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">D4.3.GEO.first.admin.level=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(First.administrative.level), <span class="dv">0</span>, First.administrative.level),</span>
+<span id="cb43-43"><a href="data-sources-1.html#cb43-43" aria-hidden="true" tabindex="-1"></a>           <span class="at">D4.3.GEO.second.admin.level=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(Second.administrative.level), <span class="dv">0</span>, Second.administrative.level))    </span>
+<span id="cb43-44"><a href="data-sources-1.html#cb43-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-45"><a href="data-sources-1.html#cb43-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-46"><a href="data-sources-1.html#cb43-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-47"><a href="data-sources-1.html#cb43-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-48"><a href="data-sources-1.html#cb43-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-49"><a href="data-sources-1.html#cb43-49" aria-hidden="true" tabindex="-1"></a><span class="co">#do some quick renaming and formatting</span></span>
+<span id="cb43-50"><a href="data-sources-1.html#cb43-50" aria-hidden="true" tabindex="-1"></a>geo_df_temp1 <span class="ot">&lt;-</span> geo_df <span class="sc">%&gt;%</span> </span>
+<span id="cb43-51"><a href="data-sources-1.html#cb43-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">paste</span>(<span class="st">&#39;RAW&#39;</span>,., <span class="at">sep=</span><span class="st">&quot;.&quot;</span>), <span class="at">.cols=</span><span class="fu">c</span>(<span class="st">&#39;D4.3.GEO.first.admin.level&#39;</span>, <span class="st">&#39;D4.3.GEO.second.admin.level&#39;</span>) ) </span>
+<span id="cb43-52"><a href="data-sources-1.html#cb43-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-53"><a href="data-sources-1.html#cb43-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-54"><a href="data-sources-1.html#cb43-54" aria-hidden="true" tabindex="-1"></a>geo_df_temp2 <span class="ot">&lt;-</span> geo_df <span class="sc">%&gt;%</span> </span>
+<span id="cb43-55"><a href="data-sources-1.html#cb43-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="st">&#39;D4.3.GEO.first.admin.level&#39;</span>, <span class="st">&#39;D4.3.GEO.second.admin.level&#39;</span>), <span class="sc">~</span>.<span class="sc">/</span><span class="dv">100</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb43-56"><a href="data-sources-1.html#cb43-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">paste</span>(<span class="st">&#39;SPI&#39;</span>,., <span class="at">sep=</span><span class="st">&quot;.&quot;</span>), <span class="at">.cols=</span><span class="fu">c</span>(<span class="st">&#39;D4.3.GEO.first.admin.level&#39;</span>, <span class="st">&#39;D4.3.GEO.second.admin.level&#39;</span>) ) </span>
+<span id="cb43-57"><a href="data-sources-1.html#cb43-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-58"><a href="data-sources-1.html#cb43-58" aria-hidden="true" tabindex="-1"></a>geo_df <span class="ot">&lt;-</span> geo_df_temp1 <span class="sc">%&gt;%</span></span>
+<span id="cb43-59"><a href="data-sources-1.html#cb43-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(geo_df_temp2)</span>
+<span id="cb43-60"><a href="data-sources-1.html#cb43-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-61"><a href="data-sources-1.html#cb43-61" aria-hidden="true" tabindex="-1"></a><span class="co">#add to spi df</span></span>
+<span id="cb43-62"><a href="data-sources-1.html#cb43-62" aria-hidden="true" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
+<span id="cb43-63"><a href="data-sources-1.html#cb43-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(geo_df)</span></code></pre></div>
 <p><img src="01-SPI_data_prep_files/figure-html/geo_plots-1.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/geo_plots-2.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/geo_plots-3.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/geo_plots-4.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/geo_plots-5.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/geo_plots-6.png" width="960" /></p>
 </div>
 </div>

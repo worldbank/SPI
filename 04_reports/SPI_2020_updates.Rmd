@@ -778,6 +778,9 @@ eq_plot_txt <- function(data) {
 
 ```
 
+## Minor Methodological Changes
+
+For the wb_ial data measure, small countries are defined as having a surface area of 1,500 sq km. or less and are exlcuded from the calculation. In ODIN 2020/21, this includes Andorra, Anguilla, Antigua and Barbuda, Bahrain, Dominica, Hong Kong, Macao, Maldives, Malta, Marshall Islands, Micronesia, Monaco, Palau, Sao Tome and Principe, San Marino, Seychelles, Singapore, St. Kitts and Nevis, St. Lucia, St. Vincent and the Grenadines, Tonga, and Liechtenstein.  For these countries, because they have no data available at the 1st admin level from ODIN, they are given the ODIN overall coverage score, in place of the availability of data at the 1st admin level score.
 
 ## Country Changes because of changes in SPI vintanges
 

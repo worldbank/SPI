@@ -2154,7 +2154,9 @@ ag_census_df <- df %>%
     )  %>%
     ungroup() %>%
     select(c('iso3c',  'date', 'Latest.agricultural.census', 'indicator')  ) %>%
-    arrange(date, iso3c)
+    arrange(date, iso3c) %>%
+  mutate(indiator=if_else((iso3c=="SGP" & date>=2015),1,indicator),
+         Latest.agricultural.census=if_else((iso3c=="SGP" & date>=2015),'Admin data sources',Latest.agricultural.census)) #Singapore Stat provided the SPI team with documentation on their agriculture statistics. https://www.singstat.gov.sg/publications/reference/ebook/industry/agriculture-animal-production-and-fisheries
   
     
 
@@ -2812,6 +2814,26 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 #bind different years together
 geo_df <- bind_rows(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018, geo_df_2020)
 
+#for some small countries, the data at 1st admin level is not included.  These countries include:
+# Andorra, Anguilla, Antigua and Barbuda, Bahrain, Dominica, Hong Kong, Macao, Maldives, Malta, Marshall Islands, 
+# Micronesia, Monaco, Palau, Sao Tome and Principe, San Marino, Seychelles, Singapore, St. Kitts and Nevis, St. Lucia, 
+# St. Vincent and the Grenadines, Tonga, and Liechtenstein
+
+geo_country_list <- c('ADO','AIA','ATG','BHR','DMA', 'HKG','MAC','MDV', 'MLT', 'MHL',
+                      'FSM', 'MCO', 'PLW','STP', 'SMR', 'SYC', 'SGP','KNA', 'LCA', 'VCT',
+                      'TON', 'LIE')
+
+geo_df <- geo_df %>%
+  mutate(First.administrative.level=case_when(
+      Country.Code %in% geo_country_list ~ Coverage.subscore,
+      TRUE ~ First.administrative.level
+          ),
+    Second.administrative.level=case_when(
+      Country.Code %in% geo_country_list ~ Coverage.subscore,
+      TRUE ~ Second.administrative.level
+          )
+  )
+  
 
 #create geo scores
 geo_df <- geo_df %>%
@@ -2821,6 +2843,9 @@ geo_df <- geo_df %>%
     right_join(country_metadata) %>%
     mutate(D4.3.GEO.first.admin.level=if_else(is.na(First.administrative.level), 0, First.administrative.level),
            D4.3.GEO.second.admin.level=if_else(is.na(Second.administrative.level), 0, Second.administrative.level))    
+
+
+
   
 
 #do some quick renaming and formatting
@@ -3193,7 +3218,7 @@ constant price estimates be changed periodically to reflect changes in economic 
 
   
 
-D5.2.2.NABY <- df %>%
+ df %>%
   mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
          country=Table.Name) %>%
   select(c('iso3c', 'country', 'date',  'National.accounts.base.year')  ) %>%
@@ -3201,6 +3226,11 @@ D5.2.2.NABY <- df %>%
   mutate(NABY_dates=gsub("\\d{2}/","",NABY) ) %>%
   mutate(NABY_dates=str_extract(NABY_dates, "\\d{4}") ) %>%
   mutate(NABY_dates=if_else(NABY=="20015/2016","2016",NABY_dates)) %>% #fix an issue in WDI metadata
+  arrange(iso3c,date) %>%
+  write_excel_csv(paste(raw_dir, "5.2_DISM","D5.2.2.NABY_raw_metadata.csv", sep="/" )) 
+
+
+D5.2.2.NABY <- read_csv(paste(raw_dir, "5.2_DISM","D5.2.2.NABY.2020.csv", sep="/" )) %>%
   mutate(SPI.D5.2.2.NABY=case_when(
     NABY=="Original chained constant price data are rescaled." ~ 1, 
     (date-as.numeric(NABY_dates))<=10 ~ 0.5, #within 10 years of reference period

@@ -3187,10 +3187,32 @@ index_tab_time <- spi_index_df %>%
     names_prefix='SPI.INDEX.'
   )
 
+
+#quintile groups
+        brks <- quantile(index_tab_time$SPI.INDEX.2020, probs=c(1,2,3,4)/5,na.rm=T)
+        brks <- append(0,brks)
+        brks <- append(brks,100)
+        brks1 <- quantile(index_tab_time$SPI.INDEX.2019, probs=c(1,2,3,4)/5,na.rm=T)
+        brks1 <- append(0,brks1)
+        if (max(brks1)<100) brks1 <- append(brks1,100)
+        
+        brks2 <- quantile(index_tab_time$SPI.INDEX.2018, probs=c(1,2,3,4)/5,na.rm=T)
+        brks2 <- append(0,brks2)
+        if (max(brks2)<100) brks2 <- append(brks2,100)
+        
+        brks3 <- quantile(index_tab_time$SPI.INDEX.2017, probs=c(1,2,3,4)/5,na.rm=T)
+        brks3 <- append(0,brks3)
+        if (max(brks3)<100) brks3 <- append(brks3,100)
+        
+        brks4 <- quantile(index_tab_time$SPI.INDEX.2016, probs=c(1,2,3,4)/5,na.rm=T)
+        brks4 <- append(0,brks4)
+        if (max(brks4)<100) brks4 <- append(brks4,100)
+        
+
 #make nice looking
 index_tab_time <- index_tab_time %>%
   flextable() %>%
-  #add_header_lines('SPI overall scores over time') %>%
+  add_header_lines('SPI overall scores over time') %>%
   set_header_labels(values=list(
                        country="Country", 
                        SPI.INDEX.2020="2020",
@@ -3199,16 +3221,16 @@ index_tab_time <- index_tab_time %>%
                        SPI.INDEX.2017="2017",
                        SPI.INDEX.2016="2016"
                                    )) %>%
-    bg(j = c('SPI.INDEX.2020'), 
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%  
-    bg(j = c('SPI.INDEX.2019'), 
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.2020'),
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.2019'),
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks1, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.2018'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks2, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.2017'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) %>%
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks3, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.2016'),
-       bg = scales::col_quantile(col_palette, domain=NULL, n=5, reverse=TRUE)) 
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks4, reverse=TRUE))
 
   
 
