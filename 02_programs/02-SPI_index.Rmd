@@ -13,7 +13,7 @@ bibliography: ./bibliography.bib
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.path = "plots/", dev = c("png"), dpi=500)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.path 018= "plots/", dev = c("png"), dpi=500)
 
 
 library(tidyverse)
@@ -2534,7 +2534,7 @@ It would be expected that a strong positive relationship between GDP per capita 
 
 [^1]: To understand what effect taking the log has on this correlation, the correlation in 2020 between (non-logged) GDP per capita and the SPI overall score is `r round(corr_2020_nontrans,2)`. 
 
-Another measure of a country's development is the Human Capital Index (HCI) developed by the World Bank ([@hci2019]).  The Human Capital Index is designed to capture the amount of human capital a child born today can expect to attain by age 18 in a country.  The index combines a country's child mortality, learning adjusted years of schooling, adult survival rates & stunting into one index.^[For more details, visit the [Human Capital Index website](https://www.worldbank.org/en/publication/human-capital)].  Again,  a strong positive relationship between a country's HCI value and their Statistical Performance Indicators index might  be expected, as countries with a more developed human capital stock are likely to have greater capacity to produce statistics.  Again, this is what is seen.  The correlation between the 2018 value of the HCI (the latest value available at the time of this writing) and the 2018 value of the SPI overall score is `r round(corr_hci_2018,2)`.
+Another measure of a country's development is the Human Capital Index (HCI) developed by the World Bank ([@hci2019]).  The Human Capital Index is designed to capture the amount of human capital a child born today can expect to attain by age 18 in a country.  The index combines a country's child mortality, learning adjusted years of schooling, adult survival rates & stunting into one index.^[For more details, visit the [Human Capital Index website](https://www.worldbank.org/en/publication/human-capital)].  Again,  a strong positive relationship between a country's HCI value and their Statistical Performance Indicators index might  be expected, as countries with a more developed human capital stock are likely to have greater capacity to produce statistics.  Again, this is what is seen.  The correlation between the 2020 value of the HCI and the 2020 value of the SPI overall score is `r round(corr_hci_2018,2)`.
 
 The scatter plot of the relationship between log GDP per capita, the HCI, and our SPI overall score for the years 2016-2020 is shown below.  In general, countries with higher per capita income and higher levels of human capital tend to have better performing statistical systems according to the SPI measure.  
 

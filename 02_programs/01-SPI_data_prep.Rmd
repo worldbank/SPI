@@ -2182,7 +2182,7 @@ census_fun  <- function(data, input_var) {
       temp_col = map(
         data, 
         ~ str_extract_all(.x$input_var, "\\d{4}") %>% 
-          flatten() %>% 
+          flatten_chr() %>% 
           map_chr(~return(.x)) %>% 
           as_tibble()
       )
@@ -2251,7 +2251,7 @@ survey_fun  <- function(data, input_var) {
       temp_col = map(
         data, 
         ~ str_extract_all(.x$input_var, "\\d{4}") %>% 
-          flatten() %>% 
+          flatten_chr() %>% 
           map_chr(~return(.x)) %>% 
           as_tibble()
       )

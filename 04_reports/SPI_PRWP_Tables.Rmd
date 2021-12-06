@@ -60,10 +60,9 @@ pop_df <- wbstats::wb_data(country="all",
   mutate(population=SP.POP.TOTL) %>%
   select(country, date, population) 
 #import data
-SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
+spi_index_df <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
     left_join(pop_df) %>%
   mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
-spi_index_df <- SPI
 #read in the SPI dataset
 spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
   left_join(pop_df) %>%
@@ -75,10 +74,20 @@ metadata <- data.frame(
 )
 #get list of country info
 country_list <- wbstats::wb_countries()
-SPI_2020 <- SPI %>%
+
+SPI_WDI <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_index.csv') %>%
+    left_join(pop_df) %>%
+  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+
+
+SPI_2020 <- spi_index_df %>%
   filter(date==2020) %>%
   filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
   mutate(ISO_A3_EH=iso3c) 
+
+
+SPI <- SPI_2020 %>%
+  bind_rows(SPI_WDI)
 #read in TopoJSON from World Bank
 #countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
 #                                     what = "sp")
@@ -629,7 +638,12 @@ lending_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators - 
 ```{r lendingcharts2, echo=FALSE, message=FALSE, warning=FALSE}
 lending_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
 ```
+## SPI Overall Scores by Region
 
+![](plots/spiregcharts-1.png)
+
+
+![](plots/spicountrycharts-1.png)
 
 ## SPI Overall Scores by FCS Status in 2020
 
@@ -1328,7 +1342,7 @@ FitFlextableToPage(index_tab)
 col_palette <- c("#2ec4b6", "#acece7", "#f1dc76",  "#ffbf69","#ff9f1c"   )
 col_palette2 <- c("#2ec4b6",  "#f1dc76", "#ff9f1c" )
 #make the table
-index_tab_time <- spi_index_df %>%
+index_tab_time <- SPI %>%
   select(country, date, SPI.INDEX) %>%
   mutate(SPI.INDEX=round(SPI.INDEX,1)) %>%
   filter(!is.na(SPI.INDEX)) %>%
@@ -1559,7 +1573,7 @@ variance_avg_df <- volatility_trace_df %>%
     values_from='variance'
   ) %>%
   ungroup() %>%
-  summarise(across(c('SCI', 'SPI Overall Score'), mean)) %>%
+  summarise(across(c('SCI', 'SPI Overall Score'), mean, na.rm=T)) %>%
   mutate(country="Global Avg")
 global_sd_sci <- variance_avg_df$SCI[1]
 global_sd_spi <- variance_avg_df$`SPI Overall Score`[1]
