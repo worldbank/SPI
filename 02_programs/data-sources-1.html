@@ -24,7 +24,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2021-09-13" />
+<meta name="date" content="2021-12-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -60,6 +60,7 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
@@ -416,7 +417,7 @@ and demographics.</p>
 <span id="cb34-14"><a href="data-sources-1.html#cb34-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">temp_col =</span> <span class="fu">map</span>(</span>
 <span id="cb34-15"><a href="data-sources-1.html#cb34-15" aria-hidden="true" tabindex="-1"></a>        data, </span>
 <span id="cb34-16"><a href="data-sources-1.html#cb34-16" aria-hidden="true" tabindex="-1"></a>        <span class="sc">~</span> <span class="fu">str_extract_all</span>(.x<span class="sc">$</span>input_var, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">d{4}&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-17"><a href="data-sources-1.html#cb34-17" aria-hidden="true" tabindex="-1"></a>          <span class="fu">flatten</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb34-17"><a href="data-sources-1.html#cb34-17" aria-hidden="true" tabindex="-1"></a>          <span class="fu">flatten_chr</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb34-18"><a href="data-sources-1.html#cb34-18" aria-hidden="true" tabindex="-1"></a>          <span class="fu">map_chr</span>(<span class="sc">~</span><span class="fu">return</span>(.x)) <span class="sc">%&gt;%</span> </span>
 <span id="cb34-19"><a href="data-sources-1.html#cb34-19" aria-hidden="true" tabindex="-1"></a>          <span class="fu">as_tibble</span>()</span>
 <span id="cb34-20"><a href="data-sources-1.html#cb34-20" aria-hidden="true" tabindex="-1"></a>      )</span>
@@ -484,7 +485,7 @@ and demographics.</p>
 <span id="cb34-82"><a href="data-sources-1.html#cb34-82" aria-hidden="true" tabindex="-1"></a>      <span class="at">temp_col =</span> <span class="fu">map</span>(</span>
 <span id="cb34-83"><a href="data-sources-1.html#cb34-83" aria-hidden="true" tabindex="-1"></a>        data, </span>
 <span id="cb34-84"><a href="data-sources-1.html#cb34-84" aria-hidden="true" tabindex="-1"></a>        <span class="sc">~</span> <span class="fu">str_extract_all</span>(.x<span class="sc">$</span>input_var, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">d{4}&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-85"><a href="data-sources-1.html#cb34-85" aria-hidden="true" tabindex="-1"></a>          <span class="fu">flatten</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb34-85"><a href="data-sources-1.html#cb34-85" aria-hidden="true" tabindex="-1"></a>          <span class="fu">flatten_chr</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb34-86"><a href="data-sources-1.html#cb34-86" aria-hidden="true" tabindex="-1"></a>          <span class="fu">map_chr</span>(<span class="sc">~</span><span class="fu">return</span>(.x)) <span class="sc">%&gt;%</span> </span>
 <span id="cb34-87"><a href="data-sources-1.html#cb34-87" aria-hidden="true" tabindex="-1"></a>          <span class="fu">as_tibble</span>()</span>
 <span id="cb34-88"><a href="data-sources-1.html#cb34-88" aria-hidden="true" tabindex="-1"></a>      )</span>

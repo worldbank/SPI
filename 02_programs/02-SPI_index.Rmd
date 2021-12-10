@@ -13,7 +13,7 @@ bibliography: ./bibliography.bib
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.path 018= "plots/", dev = c("png"), dpi=500)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.path = "plots/", dev = c("png"), dpi=500)
 
 
 library(tidyverse)
@@ -1180,6 +1180,7 @@ spi_index_df_temp <- spi_df_final %>%
 
 #Drop certain indicators that don't make cut because of imcomplete coverage usually
 spi_index_df_temp <- spi_index_df_temp %>%
+  mutate(SPI.D4.3.GEO.first.admin.level=if_else(SPI.D4.3.GEO.first.admin.level<SPI.D4.3.GEO.second.admin.level,SPI.D4.3.GEO.second.admin.level, SPI.D4.3.GEO.first.admin.level )) %>% # some countries report data at 2nd admin level but not first.  This change addresses this fact, so that countries are given credit is they report at geographic level lower than 1st admin level.
   select( -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level) 
 
 
