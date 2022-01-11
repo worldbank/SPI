@@ -64,15 +64,16 @@ download.file(ilo_base_url,temp)
 study_df_ilo <- read_csv(temp) #convert to dataframe
 write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv", sep="")) #write to csv
 
+# second ILO source
+ilo_sources_catalog<-read_csv('https://www.ilo.org/ilostat-files/Documents/sources_en.csv')
+write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catalog.csv", sep="")) #write to csv
+
 #pull from FAO
 temp <- tempfile()
 fao_base_url <- 'https://microdata.fao.org/index.php/catalog/export/csv?ps=5000&collection[]=agriculture-census-surveys' 
 download.file(fao_base_url,temp)
 study_df_fao <- read_csv(temp) #convert to dataframe
 write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep="")) #write to csv
-
-
-
 
 
 #internal use studies from World Bank microdata library
@@ -244,6 +245,61 @@ survey_df_ilo <- study_df_ilo %>%
   left_join(country_metadata) %>%
   select(country, indicator_date)
 
+#ILO country list
+countries_ilo <- study_df_ilo %>%
+  mutate(iso3c=str_sub(idno,1,3),
+         Country=nation) %>%
+  mutate(iso3c=if_else(iso3c=='KOS','XKX',iso3c)) %>% #fix kosovo
+  group_by(iso3c, Country ) %>%
+  filter(row_number()==1) %>%
+  ungroup() %>%
+  select(Country,iso3c)
+
+#read in data sources file from ILO as well
+ilo_sources_catalog_final <- ilo_sources_catalog %>%
+  filter(Source=="Labour Force Survey") %>%
+  mutate(indicator_date=str_sub(`Latest period available`,start=1,end=4),
+         indicator_date=as.numeric(indicator_date),
+         country=Country
+         ) %>%
+    mutate(country=case_when(
+    country=="Bahamas" ~ "Bahamas, The",                  
+    country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
+    country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
+    country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
+    country=="Congo"  ~ "Congo, Rep."        ,           
+    country=="Curacao"  ~  "Curacao"       ,                
+    country=="Czechia"   ~  "Czech Republic"     ,        
+    country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
+    country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
+    country=="United Kingdom"   ~  "United Kingdom"    ,         
+    country=="Gambia"    ~  "Gambia, The"     ,           
+    country=="Iran, Islamic Republic of"  ~ "Iran, Islamic Rep." ,
+    country=="Moldova, Republic of" ~ "Moldova",
+    country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
+    country=="Republic of Korea"   ~ "Korea, Rep."   ,               
+    country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
+    country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
+    country=="Saint Lucia"   ~ "St. Lucia",
+    country=="Republic of Moldova"   ~  "Moldova"   ,                  
+    country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
+    country=="Slovakia"   ~  "Slovak Republic"             ,
+    country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
+    country=="United States of America"  ~ "United States"  ,                
+    country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
+    country=="Occupied Palestinian Territory" ~ "Palestine",
+    country=="Tanzania, United Republic of" ~ "Tanzania",
+    country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
+    country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
+    country=="Viet Nam"  ~ "Vietnam"        ,              
+    country=="Yemen"  ~ "Yemen, Rep.",
+    country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
+    TRUE ~ country
+  )) %>%
+  left_join(country_metadata) %>%
+  select(country,iso3c, indicator_date ) %>%
+  filter(!is.na(iso3c))
+
 
 #add Microdatalib
 indicator<-'lfs'
@@ -257,6 +313,7 @@ survey_df <- study_df_internal %>%
   )) %>%
   filter(grepl(indicator, series_info)) %>%
   bind_rows(survey_df_ilo) %>%
+  bind_rows(ilo_sources_catalog_final) %>%
   group_by(country, indicator_date) %>%
   summarise(freq=n(),
             title=first(title)) %>%

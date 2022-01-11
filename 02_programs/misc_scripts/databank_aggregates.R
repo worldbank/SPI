@@ -21,7 +21,12 @@ metadata_full <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep=
 SPI_index <- read_csv('https://github.com/worldbank/SPI/raw/master/03_output_data/SPI_index.csv') %>%
   filter(date>=2016)
   
+SPI_2020 <- read_csv(paste0(output_dir, "/SPI_index.csv")) %>%
+  filter(date==2020)
 
+SPI_index <- SPI_index %>%
+  bind_rows(SPI_2020) %>%
+  arrange(-date, country)
 
 #reshape to match databank format
 databank_df <- SPI_index %>%
@@ -53,14 +58,21 @@ databank_df <- databank_df %>%
 ###############
 
 #read in classifications
-class_df <- read_excel(paste(raw_dir, '/misc/WB_Groups_FY21_CSCIDA.xlsx', sep="")) %>%
+# class_df <- read_excel(paste(raw_dir, '/misc/WB_Groups_FY21_CSCIDA.xlsx', sep="")) %>%
+#   rename(
+#     iso3c=WB_Country_Code,
+#     country=WB_Country_Name,
+#     WB_Group_Code=WB_Group_Code,
+#     WB_Group_Name=WB_Group_Name
+#   )
+
+class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xls', sep=""),sheet = "Groups") %>%
   rename(
-    iso3c=WB_Country_Code,
-    country=WB_Country_Name,
-    WB_Group_Code=WB_Group_Code,
-    WB_Group_Name=WB_Group_Name
+    iso3c=CountryCode,
+    country=CountryName,
+    WB_Group_Code=GroupCode,
+    WB_Group_Name=GroupName
   )
-#class_df <- read_excel('http://databank.worldbank.org/data/download/site-content/CLASS.xlsx',sheet = "Groups")
 
 weight<-'none'
   
