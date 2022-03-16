@@ -1,0 +1,163 @@
+---
+title: "SPI Data Validation"
+author: "Brian Stacy"
+date: "3/11/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+library(tidyverse)
+library(dataCompareR)
+library(validate)
+library(here)
+library(ggcorrplot)
+#set directories
+dir <- here()
+
+end_year<- 2020
+
+raw_dir <- paste(dir, '01_raw_data', sep="/")
+output_dir <- paste(dir, '03_output_data', sep="/")
+```
+
+# Validation
+
+Now will validate the data the was produced.  This will occur in two steps.
+
+First, the overall data set (SPI_data.csv) will be compared to the original dataset published on github.  It is natural for some values to change from this vintage compared to last vintage, as the underlying data sources have been updated.  However, this comparison will systematically monitor the differences and potentially highlight unexpected changes.  The dataCompareR package will be used for this purpose in R.
+
+
+Second, the overall data set will be compared to a set of expected values for each column.  The exact expected values will be listed below, but the general idea is to check that the values adhere to rational min/max values and positive correlate in expected ways.  
+
+## Comparison to Existing Vintage of Data
+
+First the latest vintage of the SPI data is read from the [SPI github repo](https://github.com/worldbank/SPI/blob/master/03_output_data/SPI_data.csv). Next this data is compared automatically to the data that is produced using the current raw data found in the 03_output_data directory in this repo.  Comparison is done automatically using the utilities in the [DataCompareR](https://github.com/capitalone/dataCompareR) R package.
+
+```{r compdf}
+
+
+SPI_df_v1 <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_data.csv')
+
+SPI_df_new <- read_csv(paste(output_dir, 'SPI_data.csv', sep="/"))
+
+comp_SPI <- rCompare(SPI_df_v1, SPI_df_new, keys = c('iso3c','date'))
+
+```
+
+```{r compres}
+
+summary(comp_SPI)
+
+```
+
+# Comparison to Expectations
+
+Next the values of individual columns in the dataset are checked against expectations.  The expectations are things like the expected minimum and maximum value of a column in the dataset or expected correlations between variables.  For instance, the availability of SDG indicators columns are the fraction of SDG indicators in a goal with a value in the previous 5 years. Thus, they should be between 0 and 1.  
+
+The full list of expectations is printed below.
+
+```{r expectations, warning=FALSE, paged.print=TRUE}
+#define the expectations for each column
+
+#set overall rules for number of countries and span of years
+
+cntry_list <- unique(SPI_df_v1$iso3c)
+
+
+SPI_ind_list_v <- grepl('SPI.', colnames(SPI_df_v1))
+SPI_ind_list <- colnames(SPI_df_v1)[SPI_ind_list_v]
+
+
+rules <- validator(
+    countries_included=iso3c %in% cntry_list, #check number of countries included
+    dates_covered=date %in% c(2004:end_year), #check dates included
+    
+    # check for each country that the dates are available
+    dates_by_country=contains_exactly(
+      keys=data.frame(date=c(2004:end_year)),
+      by=iso3c
+    ),
+    
+    #go through list of SPI constructed indicators and make sure they are between 0 and 1
+    SPI.D1.5.POV_minmax=in_range(SPI.D1.5.POV  ,0,1),                  
+    SPI.D1.5.CHLD.MORT_minmax=in_range(SPI.D1.5.CHLD.MORT  ,0,1),               
+    SPI.D1.5.DT.TDS.DPPF.XP.ZS_minmax=in_range(SPI.D1.5.DT.TDS.DPPF.XP.ZS   ,0,1),      
+    SPI.D1.5.SAFE.MAN.WATER_minmax=in_range(SPI.D1.5.SAFE.MAN.WATER   ,0,1),         
+    SPI.D1.5.LFP_minmax=in_range(SPI.D1.5.LFP     ,0,1),                 
+    SPI.D2.1.GDDS_minmax=in_range(SPI.D2.1.GDDS    ,0,1),                 
+    SPI.D2.2.Machine.readable_minmax=in_range(SPI.D2.2.Machine.readable   ,0,1),       
+    SPI.D2.2.Non.proprietary_minmax=in_range(SPI.D2.2.Non.proprietary    ,0,1),      
+    SPI.D2.2.Download.options_minmax=in_range(SPI.D2.2.Download.options   ,0,1),       
+    SPI.D2.2.Metadata.available_minmax=in_range(SPI.D2.2.Metadata.available  ,0,1),      
+    SPI.D2.2.Terms.of.use_minmax=in_range(SPI.D2.2.Terms.of.use      ,0,1),        
+    SPI.D2.2.Openness.subscore_minmax=in_range(SPI.D2.2.Openness.subscore   ,0,1),     
+    SPI.D2.4.NADA_minmax=in_range(SPI.D2.4.NADA      ,0,1), 
+    SPI.D3.1.POV_minmax=in_range(SPI.D3.1.POV    ,0,1),                 
+    SPI.D3.2.HNGR_minmax=in_range(SPI.D3.2.HNGR   ,0,1),                
+    SPI.D3.3.HLTH_minmax=in_range(SPI.D3.3.HLTH    ,0,1),               
+    SPI.D3.4.EDUC_minmax=in_range(SPI.D3.4.EDUC    ,0,1),                 
+    SPI.D3.5.GEND_minmax=in_range(SPI.D3.5.GEND    ,0,1),                 
+    SPI.D3.6.WTRS_minmax=in_range(SPI.D3.6.WTRS    ,0,1), 
+    SPI.D3.7.ENRG_minmax=in_range(SPI.D3.7.ENRG   ,0,1),          
+    SPI.D3.8.WORK_minmax=in_range( SPI.D3.8.WORK    ,0,1),       
+    SPI.D3.9.INDY_minmax=in_range(SPI.D3.9.INDY    ,0,1),         
+    SPI.D3.10.NEQL_minmax=in_range(SPI.D3.10.NEQL    ,0,1),          
+    SPI.D3.11.CITY_minmax=in_range(SPI.D3.11.CITY    ,0,1),                
+    SPI.D3.12.CNSP_minmax=in_range(SPI.D3.12.CNSP    ,0,1),       
+    SPI.D3.15.LAND_minmax=in_range(SPI.D3.15.LAND     ,0,1),        
+    SPI.D3.16.INST_minmax=in_range(SPI.D3.16.INST     ,0,1),      
+    SPI.D3.17.PTNS_minmax=in_range(SPI.D3.17.PTNS     ,0,1),       
+    SPI.D3.13.CLMT_minmax=in_range(SPI.D3.13.CLMT     ,0,1),         
+    SPI.D4.1.1.POPU_minmax=in_range(SPI.D4.1.1.POPU    ,0,1),               
+    SPI.D4.1.2.AGRI_minmax=in_range(SPI.D4.1.2.AGRI     ,0,1),    
+    SPI.D4.1.3.BIZZ_minmax=in_range(SPI.D4.1.3.BIZZ     ,0,1),       
+    SPI.D4.1.4.HOUS_minmax=in_range(SPI.D4.1.4.HOUS     ,0,1),      
+    SPI.D4.1.5.AGSVY_minmax=in_range(SPI.D4.1.5.AGSVY    ,0,1),      
+    SPI.D4.1.6.LABR_minmax=in_range(SPI.D4.1.6.LABR      ,0,1),    
+    SPI.D4.1.7.HLTH_minmax=in_range(SPI.D4.1.7.HLTH      ,0,1),             
+    SPI.D4.1.8.BZSVY_minmax=in_range(SPI.D4.1.8.BZSVY     ,0,1), 
+    SPI.D4.2.3.CRVS_minmax=in_range(SPI.D4.2.3.CRVS      ,0,1),          
+    SPI.D4.3.GEO.first.admin.level_minmax=in_range(SPI.D4.3.GEO.first.admin.level   ,0,1), 
+    SPI.D4.3.GEO.second.admin.level_minmax=in_range(SPI.D4.3.GEO.second.admin.level  ,0,1), 
+    SPI.D5.1.DILG_minmax=in_range(SPI.D5.1.DILG     ,0,1),                
+    SPI.D5.2.1.SNAU_minmax=in_range(SPI.D5.2.1.SNAU   ,0,1),                
+    SPI.D5.2.2.NABY_minmax=in_range(SPI.D5.2.2.NABY    ,0,1),              
+    SPI.D5.2.3.CNIN_minmax=in_range(SPI.D5.2.3.CNIN    ,0,1),                
+    SPI.D5.2.4.CPIBY_minmax=in_range(SPI.D5.2.4.CPIBY    ,0,1),              
+    SPI.D5.2.5.HOUS_minmax=in_range(SPI.D5.2.5.HOUS    ,0,1),                
+    SPI.D5.2.6.EMPL_minmax=in_range(SPI.D5.2.6.EMPL     ,0,1),              
+    SPI.D5.2.7.CGOV_minmax=in_range(SPI.D5.2.7.CGOV    ,0,1),               
+    SPI.D5.2.8.FINA_minmax=in_range(SPI.D5.2.8.FINA     ,0,1),             
+    SPI.D5.2.9.MONY_minmax=in_range(SPI.D5.2.9.MONY    ,0,1),               
+    SPI.D5.2.10.GSBP_minmax=in_range(SPI.D5.2.10.GSBP   ,0,1),               
+    SPI.D5.3.DISK_minmax=in_range(SPI.D5.3.DISK     ,0,1),                
+    SPI.D5.5.DIFI_minmax=in_range(SPI.D5.5.DIFI   ,0,1)      
+)
+
+
+out  <- confront(SPI_df_new, rules)
+summary(out)
+
+```
+
+```{r corrleations, fig.width=15, fig.height=15}
+
+#check the correlations between the indicators
+
+corr_df <- SPI_df_new %>%
+  select(SPI_ind_list) %>%
+  as.matrix()
+
+cor <- Hmisc::rcorr(corr_df )
+
+cor_df <- round(cor$r,1)
+p.mat<-cor_pmat(corr_df)
+
+
+ggcorrplot(cor_df,   outline.col="white", 
+           colors=c('red', 'white', 'blue'), p.mat=p.mat,insig = "blank", lab=TRUE, digits=1)
+
+```
+
+

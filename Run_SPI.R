@@ -12,6 +12,9 @@
 # If you do not have this install, please install before running these files.
 # You can find more information here: https://here.r-lib.org/
 library(here)
+library(tidyverse)
+
+library(microbenchmark)
 
 # set directory path
 dir <- here()
@@ -26,7 +29,9 @@ dir <- here()
 # Run 01-SPI_data_prep.Rmd.  This is a bookdown document, which simultaneously runs
 # the cleaning code and produces technical documentation.
 library(rmarkdown)
+
 rmarkdown::render(input = paste0(dir,"/02_programs/01-SPI_data_prep.Rmd"))
+
 
 # Run 02-SPI_index.Rmd.  This is an Rmarkdown file, which simultaneously runs the
 # code to produce the index, but also creates a word document with technical details

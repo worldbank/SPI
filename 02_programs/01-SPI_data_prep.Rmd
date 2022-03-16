@@ -954,8 +954,8 @@ for (reference_year in 2004:2020) {
 
         mutate(frequency=((reference_year-as.numeric(year))<=rec_window) & (reference_year>=as.numeric(year))) %>% 
         filter(frequency==TRUE) %>%
-        group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
-        summarise(SPI.D1.5.POV_5=n())  %>%
+        dplyr::group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
+        dplyr::summarise(SPI.D1.5.POV_5=n())  %>%
         ungroup() %>%
         group_by(countrycode) %>% #now get a total by country with the max number of comparable estimates
         summarise(SPI.D1.5.POV_5=max(SPI.D1.5.POV_5, na.rm=T)) %>%
@@ -963,14 +963,14 @@ for (reference_year in 2004:2020) {
         mutate(date=reference_year,
                  iso3c=countrycode) %>%
         left_join(country_metadata) %>%
-        select( country,iso3c, date, starts_with('SPI.D1.5.POV')) 
+        dplyr::select( country,iso3c, date, starts_with('SPI.D1.5.POV')) 
 
   temp_10<-df %>%
         filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
         mutate(frequency=((reference_year-as.numeric(year))<=12) & (reference_year>=as.numeric(year))) %>% 
         filter(frequency==TRUE) %>%
-        group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
-        summarise(SPI.D1.5.POV_10=n())  %>%
+        dplyr::group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
+        dplyr::summarise(SPI.D1.5.POV_10=n())  %>%
         ungroup() %>%
         group_by(countrycode) %>% #now get a total by country with the max number of comparable estimates
         summarise(SPI.D1.5.POV_10=max(SPI.D1.5.POV_10, na.rm=T)) %>%
@@ -978,7 +978,7 @@ for (reference_year in 2004:2020) {
         mutate(date=reference_year,
                  iso3c=countrycode) %>%
         left_join(country_metadata) %>%
-        select( country,iso3c, date, starts_with('SPI.D1.5.POV')) 
+        dplyr::select( country,iso3c, date, starts_with('SPI.D1.5.POV')) 
 
   temp <- temp_5 %>%
     left_join(temp_10) %>%
@@ -1076,7 +1076,7 @@ for (reference_year in 2004:2020) {
           )) %>%
           mutate(SPI.D1.5.CHLD.MORT_5=SPI.FREQ.D1.5.CHLD.MORT) %>%
           mutate(date=reference_year) %>%
-          select( country, date, starts_with('SPI.')) %>%
+          dplyr::select( country, date, starts_with('SPI.')) %>%
           select(-SPI.FREQ.D1.5.CHLD.MORT)
 
   temp_10 <-D3.3.AKI.MORT %>%
@@ -1090,7 +1090,7 @@ for (reference_year in 2004:2020) {
           )) %>%
           mutate(SPI.D1.5.CHLD.MORT_10=SPI.FREQ.D1.5.CHLD.MORT) %>%
           mutate(date=reference_year) %>%
-          select( country, date, starts_with('SPI.')) %>%
+          dplyr::select( country, date, starts_with('SPI.')) %>%
           select(-SPI.FREQ.D1.5.CHLD.MORT)
   
   temp <- temp_5 %>%
@@ -1218,7 +1218,7 @@ D3.15.AKI <- WDI_metadata %>%
           )) %>% 
   mutate(SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else(((Income.Group=="High income" | iso3c %in% c("WBG", "PSE")) & is.na(External_debt_Reporting)),1,SPI.D1.5.DT.TDS.DPPF.XP.ZS)) %>% #fix an issue where high income countries are not judged on their debt reporting.  Also give credit to West Bank and Gaza as they are not an IMF country
   ungroup() %>%
-  select(iso3c, date,  contains('SPI.D1.5.DT.TDS.DPPF.XP.ZS')) 
+  dplyr::select(iso3c, date,  contains('SPI.D1.5.DT.TDS.DPPF.XP.ZS')) 
 
 ```
 
@@ -1261,7 +1261,7 @@ hyper_read <-  function(hyperlink) {
                           skip=4,
                           sheet='Data Summary') %>%
       filter(!is.na(year)) %>%
-      select(source, type, year, starts_with('w_')) %>%
+      dplyr::select(source, type, year, starts_with('w_')) %>%
       mutate(across(starts_with('w_'),as.character)) %>%
       pivot_longer( #reshape to compare national urban rural estimates
         cols = starts_with('w_'),
@@ -1454,8 +1454,8 @@ lfp_data <- lfp_reported %>%
 ilo_fun <- function(date_start, date_end) {
   temp <- lfp_data %>%
     filter(between(date,date_start,date_end) ) %>%
-    group_by(iso3c) %>%
-    summarise(SPI.D1.5.LFP.ACC=as.numeric(mean(estimate_diff, na.rm=T)<=10),
+    dplyr::group_by(iso3c) %>%
+    dplyr::summarise(SPI.D1.5.LFP.ACC=as.numeric(mean(estimate_diff, na.rm=T)<=10),
               SPI.D1.5.LFP.SOURCE=max(lfs_source, na.rm=T),
               SPI.D1.5.LFP=(SPI.D1.5.LFP.ACC+SPI.D1.5.LFP.SOURCE)/2) %>%
     select(iso3c, SPI.D1.5.LFP) %>%
@@ -1949,7 +1949,7 @@ un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data_',window,'yr.csv',se
          SPI.D3.16.INST = SPI.D3.16,
          SPI.D3.17.PTNS = SPI.D3.17
 ) %>%
-  select(country, date, starts_with("SPI")) %>%
+  dplyr::select(country, date, starts_with("SPI")) %>%
   select(-SPI.D3.14.LFWT)
 
 #add to spi databases
@@ -1958,7 +1958,7 @@ spi_df <- spi_df %>%
 
 #map the values
 un_sdg_map <- un_sdg_df %>%
-  select(country, date, starts_with("SPI")) 
+  dplyr::select(country, date, starts_with("SPI")) 
 
 spi_mapper('un_sdg_map','SPI.D3.1.POV','Goal 1: No Poverty')
 spi_mapper('un_sdg_map','SPI.D3.2.HNGR','Goal 2: No Hunger')
@@ -2311,55 +2311,55 @@ survey_fun  <- function(data, input_var) {
 cs1_df <-pop_census_df %>%
   rename(RAW.D4.1.1.POPU=Latest.population.census,
          SPI.D4.1.1.POPU=indicator) %>%
-  select(iso3c, date, starts_with("SPI"), starts_with("RAW"))
+  dplyr::select(iso3c, date, starts_with("SPI"), starts_with("RAW"))
 
 #Agriculture census  
 cs2_df <-ag_census_df %>%
   rename(RAW.D4.1.2.AGRI=Latest.agricultural.census,
          SPI.D4.1.2.AGRI=indicator) %>%
-  select(iso3c, date, starts_with("SPI"), starts_with("RAW"))
+  dplyr::select(iso3c, date, starts_with("SPI"), starts_with("RAW"))
 
 #Business/establishment census 
 cs3_df <-census_fun('D4.1.3.CEN.BIZZ', 'BIZZ.CENSUS') %>%
   rename(RAW.D4.1.3.BIZZ=input_var,
          RAW.D4.1.3.BIZZ.CENSUS_nada=nada_dates,
          SPI.D4.1.3.BIZZ=indicator) %>%
-  select(country, date, starts_with("SPI"), starts_with("RAW"))
+  dplyr::select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey
 cs4_df <-survey_fun('D4.1.4.SVY.HOUS', 'HOUS.SURVEYS') %>%
   rename(RAW.D4.1.4.HOUS=input_var,
          RAW.D4.1.4.HOUS.SURVEYS_nada=nada_dates,
          SPI.D4.1.4.HOUS=indicator) %>%
-  select(country, date, starts_with("SPI"), starts_with("RAW"))
+  dplyr::select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Agriculture survey 
 cs5_df <-survey_fun('D4.1.5.SVY.AGRI', 'AGRI.SURVEYS') %>%
   rename(RAW.D4.1.5.AGSVY=input_var,
          RAW.D4.1.5.AGRI.SURVEYS_nada=nada_dates,
          SPI.D4.1.5.AGSVY=indicator) %>%
-  select(country, date, starts_with("SPI"), starts_with("RAW"))
+  dplyr::select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Labor Force Survey 
 cs6_df <-survey_fun('D4.1.6.SVY.LABR', 'LABR.SURVEYS') %>%
   rename(RAW.D4.1.6.LABR=input_var,
          RAW.D4.1.6.LABR.SURVEYS_nada=nada_dates,
          SPI.D4.1.6.LABR=indicator) %>%
-  select(country, date, starts_with("SPI"), starts_with("RAW"))
+  dplyr::select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Health/Demographic survey
 cs7_df <-survey_fun('D4.1.7.SVY.HLTH', 'HLTH.SURVEYS') %>%
   rename(RAW.D4.1.7.HLTH=input_var,
          RAW.D4.1.7.HLTH.SURVEYS_nada=nada_dates,
          SPI.D4.1.7.HLTH=indicator) %>%
-  select(country, date, starts_with("SPI"), starts_with("RAW"))
+  dplyr::select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 #Business/establishment survey  
 cs8_df <-survey_fun('D4.1.8.SVY.BIZZ', 'BIZZ.SURVEYS') %>%
   rename(RAW.D4.1.8.BZSVY=input_var,
          RAW.D4.1.8.BIZZ.SURVEYS_nada=nada_dates,
          SPI.D4.1.8.BZSVY=indicator) %>%
-  select(country, date, starts_with("SPI"), starts_with("RAW"))
+  dplyr::select(country, date, starts_with("SPI"), starts_with("RAW"))
 
 
 #brind all censuses and surveys together
@@ -2722,7 +2722,7 @@ ilo_df <- ilo_df %>%
   mutate(across(starts_with('ILO.Source.type.filled'),~zoo::rollmean(.,k=window,fill=NA,align='left'),.names="{col}.MA5")) %>% #X year rolling average
   ungroup() %>%
   mutate(SPI.D4.2.4.LBR=if_else(is.na(ILO.Source.type.filled.MA5),0, ILO.Source.type.filled.MA5)) %>%
-  select(c('iso3c', 'country', 'date', 'SPI.D4.2.4.LBR'), starts_with('RAW.D4.2.4.LBR')  ) %>%
+  dplyr::select(c('iso3c', 'country', 'date', 'SPI.D4.2.4.LBR'), starts_with('RAW.D4.2.4.LBR')  ) %>%
   select(-ends_with('available'))
 
 #add to spi databases
@@ -3919,7 +3919,7 @@ pop_df <- wbstats::wb(country="all",
 
 # create final dataset
 spi_df_final <- spi_df %>%
-  select(country, iso3c, date, starts_with("SPI"), starts_with("RAW")) %>%
+  dplyr::select(country, iso3c, date, starts_with("SPI"), starts_with("RAW")) %>%
   right_join(spi_df_empty) %>%
   left_join(pop_df) %>%
   arrange(-date,country)
@@ -3984,5 +3984,7 @@ spi_df_final %>%
   write_dta( path = paste(output_dir, 'SPI_data.dta', sep="/"))
 
 ```
+
+
 
 

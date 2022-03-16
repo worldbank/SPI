@@ -32,6 +32,10 @@ library(estimatr)
 library(ggpmisc)
 library(ggthemes)
 library(ggtext)
+library(fixest)
+library(modelsummary)
+library(WDI)
+
 #set directories
 dir <- here()
 raw_dir <- paste(dir, '01_raw_data', sep="/")
@@ -992,6 +996,374 @@ ggplot(naby_age_df, aes(x=naby_age, y=country_len, color=income)) +
     legend.position = 'bottom'
   )
 
+
+```
+
+# Estimating Relationship between Statistical Performance and Economic Growth
+
+```{r regdf}
+options(modelsummary_factory_word = 'flextable')
+custom_theme <- function(x, ...) {
+    x %>% set_table_properties(layout = "autofit")
+}
+options("modelsummary_theme_flextable" = custom_theme)
+
+
+#get some potential predictors
+# predictors_df <- WDI(
+#   indicator = c('NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS','SE.SEC.CMPT.LO.ZS','NE.TRD.GNFS.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST"),
+#   start=2015,
+#   end=2020,
+#   extra=TRUE
+#   ) %>% 
+#   dplyr::arrange(iso3c,-year) %>%
+#   filter(region!="Aggregates") %>%
+#   rename(date=year)
+
+predictors_df <- wbstats::wb_data(country="countries_only",
+             indicator=c('NY.GDP.PCAP.KD', 'NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS','NE.TRD.GNFS.ZS', 'HD.HCI.OVRL','SE.PRM.ENRR','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS"),
+             start_date=2010,
+             end_date=2020) %>%
+  mutate(date=as.numeric(date)) %>%
+  group_by(iso3c) %>%
+  fill(c( 'NY.GDP.PCAP.KD','NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS', 'SE.PRM.ENRR', 'HD.HCI.OVRL','NE.TRD.GNFS.ZS','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS"), .direction="downup") %>%
+  ungroup() %>%
+  mutate(WGI.OVL=(CC.EST + GE.EST + PV.EST + RQ.EST + RL.EST + VA.EST)/6)
+
+#get central government debt data from IMF which is more complete source
+imf_dta <- haven::read_dta("C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Blog - SPI and Bond Spreads/01_Data/Global Debt Database_121521_to_DATAMAPPER.dta" ) %>% 
+  rename(imf_code=ifscode,
+         date=year) %>%
+  left_join(read_csv(file="C:/Users/wb469649/Documents/Github/Gender-SPI/01_raw_data/metadata/IMF_country_codes.csv")) %>%
+  select(iso3c, date, cg)
+
+# predictors_df <- predictors_df %>%
+#   left_join(imf_dta)
+
+SPI_2016 <- SPI %>%
+  filter(date>=2016) %>%
+  group_by(iso3c) %>%
+  fill(c( 'SPI.INDEX'), .direction="downup") %>%
+  ungroup() %>%
+  filter(!is.na(SPI.INDEX))
+
+countries_2016 <- unique(SPI_2016$country)
+
+#add in some metadata about the country
+reg_df <- SPI_2016 %>%
+  select(country, iso3c, date, region, SPI.INDEX) %>%
+  left_join(predictors_df) %>%
+  filter(between(date,2016,2020)) %>%
+  filter(!(is.na(SPI.INDEX) | 
+             is.na(NY.GDP.PCAP.KD) |
+             is.na(NV.IND.MANF.ZS) |
+             is.na(NV.AGR.TOTL.ZS) |
+             is.na(SE.PRM.ENRR) |
+             is.na(NE.TRD.GNFS.ZS) |
+             #is.na(cg) | 
+             #is.na(BN.CAB.XOKA.GD.ZS) |
+             is.na(CC.EST) |
+             is.na(GE.EST) |
+             is.na(PV.EST) |
+             is.na(RQ.EST) |
+             is.na(RL.EST) |
+             is.na(VA.EST) ))
+
+ncountry <- length(unique(reg_df$country))
+
+#use modelsumary to predict
+#modelsummary output
+gm <- tibble::tribble(
+  ~raw,        ~clean,          ~fmt,
+  "nobs",      "N",             0,
+  "r.squared", "R Sq.", 2)
+
+
+cross_reg_df <- reg_df %>%
+  arrange(country) %>%
+  group_by(country, iso3c) %>%
+  summarise(growth=log(first(NY.GDP.PCAP.KD))-log(last(NY.GDP.PCAP.KD)),
+            across(c('SPI.INDEX','NY.GDP.PCAP.KD','NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS','NE.TRD.GNFS.ZS','SE.PRM.ENRR', 'HD.HCI.OVRL','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST",  "WGI.OVL",'region'),~last(.))
+            
+            )
+
+
+
+#create regression models
+ models <- list(
+
+ 'Longitudinal Model (Region FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL   | date + region, data=reg_df, se='cluster', cluster='country') ,
+
+
+  'Longitudinal Model (Country RE/Year FE)' = plm::plm(log(NY.GDP.PCAP.KD) ~  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  + factor(date), data=reg_df, model='random', index=c('iso3c')) ,
+ 
+
+ 'Longitudinal Model (Country FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country')
+ 
+
+ )
+
+
+ modelsummary(models,
+              estimate= "{estimate}{stars}",
+              vcov=list(NULL,"HC1",NULL),
+              coef_rename = c("SPI.INDEX"  = "SPI Overall Score",
+                              "NV.IND.MANF.ZS"  = "Manufacturing value added (% of GDP)",
+                              "NV.AGR.TOTL.ZS"= "Agriculture, forestry, fishing value added (% of GDP)",
+                              "BN.CAB.XOKA.GD.ZS"= "Current account balance (% of GDP)",
+                              "HD.HCI.OVRL" = "Human Capital Index (0-1 scale)",
+                              "SE.PRM.ENRR" = "School Enrollment, Primary (% gross)" ,
+                              "NE.TRD.GNFS.ZS" = "Trade (% of GDP)",
+                              "WGI.OVL" = "WGI Index",
+                              "CC.EST" = "WGI: Control of Corruption: Estimate",
+                              "GE.EST" = "WGI: Governance Effectiveness: Estimate",
+                              "PV.EST" = "WGI: Political Stability and Absence of Violence/Terrorism: Estimate",
+                              "RQ.EST" = "WGI: Regulatory Quality: Estimate",
+                              "RL.EST" = "WGI: Rule of Law: Estimate",
+                              "VA.EST" = "WGI: Voice and Accountability: Estimate"),
+              gof_map = gm,
+              notes="Data from the World Bank's World Development Indicators (WDI) and SPI.  WDI series codes include NY.GDP.MKTP.KD.ZG, NV.IND.MANF.ZS, NV.AGR.TOTL.ZS,SE.PRM.ENRR,BN.CAB.XOKA.GD.ZS, CC.EST, GE.EST, PV.EST, RQ.EST, RL.EST, VA.EST.  Data for year 2016-2020.  Data accessed on March 15, 2022.  In cases where data is missing for a particular covariate, the data is imputed using the nearest available value. Standard errors clustered at the country level.",
+              escape = FALSE
+              )
+```
+
+```{r eval=FALSE, include=FALSE}
+# test between fixed and random effects estiamtes
+
+fixed <- plm::plm(log(NY.GDP.PCAP.KD) ~   SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + BN.CAB.XOKA.GD.ZS + WGI.OVL + factor(date), data=reg_df, model='within', index=c('iso3c'))
+
+summary(fixed)
+
+random <- plm::plm(log(NY.GDP.PCAP.KD) ~   SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + BN.CAB.XOKA.GD.ZS + WGI.OVL + factor(date) , data=reg_df, model='random', index=c('iso3c'))
+
+summary(random)
+
+plm::phtest(fixed, random)
+
+```
+
+In this analysis, the relationship between statistical performance and economic growth will be examined using several econometric models. In all models the sample consists of `r ncountry` countries, which have a non-missing covariates available in 2016, and the time span consists of years between 2016 and 2020.^[`r length(countries_2016)` countries have a non-missing SPI score in 2016.  The binding constraint keeping most countries from having an SPI score in 2016 is the availability of data from the Open Data Inventory (ODIN), produced by Open Data Watch, which was used for the SPI measures of data openness and geospatial information. The remainder of countries omitted lack either a human capital index score or some cases trade data.]  
+
+The first model is a cross-sectional model relating the percentage change in GDP per capita between 2016 and 2020 as the outcome variable to the value of the Statistical Performance Indicator and other covariates.
+
+$$ Grwth_{i,16-20} = \alpha + \beta_1 SPI_{i,16} + \beta_2 GDPpc_{i,16} + \beta3 MFG_{i,16} + \beta_4 AG_{i,16} + \beta_5 HCI_{i,16} + \beta_6 Trade_{i,16} + \beta_7 PolInst_{i,16} + \epsilon_i $$
+
+where $ Grwth_{i,16-20}$ is the percentage change in GDP per capita in 2015 inflation adjusted US dollars for country $i$ between 2016 and 2020.  $SPI_{i,16}$ is the value of the SPI overall score at the start of the period in 2016.  $GDPpc_{i,16}$ is the initial level of GDP per capita in 2016.  $MFG_{i,16}$ and $AG_{i,16}$ are manufacturing value added and agricultural, forestry, and fishing value added as a percentage of GDP, which are measures of the sectoral composition of the economy.  $HCI_{i,16}$ is the level of the World Bank's [Human Capital Index](https://openknowledge.worldbank.org/handle/10986/30498) at the start of the period.^[The first year of data available for the human capital index is in 2017, which is used as the value at the start of the period.]  $Trade_{i,16}$ is the level of trade (exports + imports) as a percentage of GDP at the start of the period.  Finally, $PolInst_{i,16}$ are measures of political institutions as measured by the [World Governance Indicators (WGI)](http://info.worldbank.org/governance/wgi/).  These include the WGI scores related to control of corruption, governance effectiveness, political stability and absence of violence/terrorism, regulatory quality, rule of law, and voice and accountability.  $\epsilon_i$ is an idiosyncratic error term.
+
+The second model is a longitudinal model that will be estimated using a panel estimator with country random effects and year fixed effects.
+
+$$ GDPpc_{i,t} = \alpha + \beta_1 SPI_{i,t}  + \beta3 MFG_{i,t} + \beta_4 AG_{i,t} + \beta_5 HCI_{i,t} + \beta_6 Trade_{i,t} + \beta_7 PolInst_{i,t} + c_{i} + \tau_{t} + \epsilon_{i,t} $$
+
+In this case, $GPDpc_{i,t}$ is log GDP per capita for country i in year t.  $c_{i}$ represents the unobserved effect for country $i$ and $\tau$ is the unobserved effect for year $t$.  
+
+
+## Intermediate Impacts
+
+### FDI
+```{r echo=FALSE}
+#create regression models
+
+cross_reg_fdi_df <- reg_df %>%
+  arrange(country) %>%
+  group_by(country, iso3c) %>%
+  summarise(growth=first(BX.KLT.DINV.WD.GD.ZS)-last(BX.KLT.DINV.WD.GD.ZS),
+            across(c('SPI.INDEX','NY.GDP.PCAP.KD','NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS','NE.TRD.GNFS.ZS','SE.PRM.ENRR', 'HD.HCI.OVRL','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "WGI.OVL",'region'),~last(.))
+            
+            )
+
+ fdi_models <- list(
+
+
+ 'Longitudinal Model (Region FE/Year FE)' = feols(BX.KLT.DINV.WD.GD.ZS ~ SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date + region, data=reg_df, se='cluster', cluster='country') ,
+
+
+  'Longitudinal Model (Country RE/Year FE)' = plm::plm(BX.KLT.DINV.WD.GD.ZS ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL + factor(date), data=reg_df, model='random', index=c('iso3c')) ,
+ 
+
+ 'Longitudinal Model (Country FE/Year FE)' = feols(BX.KLT.DINV.WD.GD.ZS ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country') 
+
+ )
+
+
+ modelsummary(fdi_models,
+              estimate= "{estimate}{stars}",
+              vcov=list(NULL,"HC1",NULL),
+              coef_rename = c("SPI.INDEX"  = "SPI Overall Score",
+                              "NV.IND.MANF.ZS"  = "Manufacturing value added (% of GDP)",
+                              "NV.AGR.TOTL.ZS"= "Agriculture, forestry, fishing value added (% of GDP)",
+                              "BN.CAB.XOKA.GD.ZS"= "Current account balance (% of GDP)",
+                              "HD.HCI.OVRL" = "Human Capital Index (0-1 scale)",
+                              "SE.PRM.ENRR" = "School Enrollment, Primary (% gross)" ,
+                              "NE.TRD.GNFS.ZS" = "Trade (% of GDP)",
+                              "WGI.OVL" = "WGI Index",
+                              "CC.EST" = "WGI: Control of Corruption: Estimate",
+                              "GE.EST" = "WGI: Governance Effectiveness: Estimate",
+                              "PV.EST" = "WGI: Political Stability and Absence of Violence/Terrorism: Estimate",
+                              "RQ.EST" = "WGI: Regulatory Quality: Estimate",
+                              "RL.EST" = "WGI: Rule of Law: Estimate",
+                              "VA.EST" = "WGI: Voice and Accountability: Estimate"),
+              gof_map = gm,
+              notes="Data from the World Bank's World Development Indicators (WDI) and SPI.  WDI series codes include NY.GDP.MKTP.KD.ZG, NV.IND.MANF.ZS, NV.AGR.TOTL.ZS,SE.PRM.ENRR,BN.CAB.XOKA.GD.ZS, CC.EST, GE.EST, PV.EST, RQ.EST, RL.EST, VA.EST.  Data for year 2016-2020.  Data accessed on March 15, 2022.  In cases where data is missing for a particular covariate, the data is imputed using the nearest available value. Standard errors clustered at the country level.",
+              escape = FALSE
+              )
+```
+
+
+### Government Effectiveness
+```{r}
+
+cross_reg_ge_df <- reg_df %>%
+  arrange(country) %>%
+  group_by(country, iso3c) %>%
+  summarise(init_ge=last(GE.EST),
+            GE.EST=first(GE.EST),
+            across(c('SPI.INDEX','NY.GDP.PCAP.KD','NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS','NE.TRD.GNFS.ZS','SE.PRM.ENRR', 'HD.HCI.OVRL','BN.CAB.XOKA.GD.ZS', 'CC.EST', 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "WGI.OVL",'region'),~last(.))
+            
+            )
+
+reg_ge_df <- reg_df %>%
+  arrange(iso3c,date) %>%
+  group_by(iso3c) %>%
+  mutate(growth=GE.EST-lag(GE.EST)) 
+
+#create regression models
+ GE_models <- list(
+
+
+ 'Longitudinal Model (Region FE/Year FE)' = feols(GE.EST ~ SPI.INDEX   + HD.HCI.OVRL + factor(date) | date + region , data=reg_df , se='cluster', cluster='country') ,
+
+
+  'Longitudinal Model (Country RE/Year FE)' = plm::plm(GE.EST ~  SPI.INDEX +  HD.HCI.OVRL   + factor(date), data=reg_df, model='random', index=c('iso3c')) ,
+ 
+
+ 'Longitudinal Model (Country FE/Year FE)' = feols(GE.EST ~  SPI.INDEX +  HD.HCI.OVRL   | country+date , data=reg_df) 
+
+ )
+
+
+ modelsummary(GE_models,
+              estimate= "{estimate}{stars}",
+              vcov=list(NULL,"stata",NULL),
+              coef_rename = c("SPI.INDEX"  = "SPI Overall Score",
+                              "NV.IND.MANF.ZS"  = "Manufacturing value added (% of GDP)",
+                              "NV.AGR.TOTL.ZS"= "Agriculture, forestry, fishing value added (% of GDP)",
+                              "BX.KLT.DINV.WD.GD.ZS"= "Foreign direct investment, net inflows (% of GDP)",
+                              "SE.PRM.ENRR" = "School Enrollment, Primary (% gross)" ,
+                              "NE.TRD.GNFS.ZS" = "Trade (% of GDP)",
+                              "CC.EST" = "WGI: Control of Corruption: Estimate",
+                              "GE.EST" = "WGI: Governance Effectiveness: Estimate",
+                              "PV.EST" = "WGI: Political Stability and Absence of Violence/Terrorism: Estimate",
+                              "RQ.EST" = "WGI: Regulatory Quality: Estimate",
+                              "RL.EST" = "WGI: Rule of Law: Estimate",
+                              "VA.EST" = "WGI: Voice and Accountability: Estimate"),
+              gof_map = gm,
+              notes="Data from the World Bank's World Development Indicators (WDI) and SPI.  WDI series codes include NY.GDP.PCAP.CD, NV.IND.MANF.ZS, NV.AGR.TOTL.ZS,SE.PRM.ENRR,NE.TRD.GNFS.ZS, CC.EST, GE.EST, PV.EST, RQ.EST, RL.EST, VA.EST.  Data for year 2016-2020.  Data accessed on March 15, 2022.  In cases where data is missing for a particular covariate, the data is imputed using the nearest available value.",
+              escape = FALSE
+              )
+```
+
+
+## Bond Spreads
+
+```{r bonddata}
+# Bonds
+
+# Load data
+
+sp <- readxl::read_excel("C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Blog - SPI and Bond Spreads/01_Data/LIB127603_govt bond spreads_final.xlsx", 
+                 sheet = "batch1")
+# data are 10 year govt bonds, yield to maturity, with us govt bonds as benchmark
+
+# This reshaping is a bit unconventional but does the job. The problem is that the date varies across columns, and therefore we can't use "normal" pivot_longer() or gather()
+
+sp_dates <- pivot_longer(select(sp, contains("date")), contains("date"), names_to = "name_date", values_to = "date")
+sp_dates$ID <- seq.int(nrow(sp_dates))
+
+sp_values <- pivot_longer(select(sp, contains("value")), contains("value"))
+sp_values$ID <- seq.int(nrow(sp_dates))
+
+df <-  left_join(sp_dates, sp_values)
+
+# Clean up df
+df$name <- substr(df$name,1,3)
+df <- df %>% select(-c(ID, name_date))
+df <- df %>% rename(iso3c =  name)
+df <- df %>% rename(spread =  value)
+df<-df[!(df$iso3c=="VEN"),] # remove venezuela
+df<-df[!(df$iso3c=="ARG"),] # and argentina as huge outliers
+
+#usa$date <- axis.Date(1, as.Date(usa$date, origin = "1970-01-01"))
+
+# Extract year from date variable and summarize by year
+df$year <- format(df$date, format = "%Y")
+df <- select(df,-c("date"))
+
+# Add USA (by definition, spread of 0)
+usa<-tibble(year = c(2021,2020,2019,2018,2017,2016,2015),
+            iso3c = rep("USA",7),
+            spread = rep(0,7))
+df <- rbind(df, usa)
+
+# Summarize by year
+bond_spread_summary_df <- df %>%
+  group_by(year, iso3c) %>%
+  summarise(spread = mean(spread, na.rm = TRUE))
+bond_spread_summary_df$date <- as.numeric(bond_spread_summary_df$year)
+
+
+#get relevant data from WDI
+# select relevant series and years
+relevant_series = c("GC.DOD.TOTL.GD.ZS", "BN.CAB.XOKA.GD.ZS", "NY.GDP.MKTP.KD.ZG", "NY.GDP.PCAP.KD", "NE.TRD.GNFS.ZS", "FP.CPI.TOTL.ZG", "DT.DOD.DECT.GN.ZS")
+
+bond_control_df <- wbstats::wb_data(country="countries_only",
+             indicator=relevant_series,
+             start_date=2010,
+             end_date=2020) %>%
+  mutate(date=as.numeric(date)) %>%
+  group_by(iso3c) %>%
+  fill(relevant_series, .direction="downup") %>%
+  ungroup() 
+
+
+bond_control_df <- bond_control_df %>%
+  left_join(imf_dta)
+
+```
+
+```{r}
+
+
+
+bond_spread_reg_df <- SPI_2016 %>%
+  select(country, iso3c, date, region, SPI.INDEX) %>%
+  left_join(bond_control_df) %>%
+  left_join(bond_spread_summary_df) %>%
+  filter(!is.na(spread))
+
+
+bond_models <- list(
+
+    'Longitudinal Model (Region FE/Year FE)' = feols(spread ~  SPI.INDEX  + BN.CAB.XOKA.GD.ZS + NY.GDP.MKTP.KD.ZG + NY.GDP.PCAP.KD + NE.TRD.GNFS.ZS + FP.CPI.TOTL.ZG + cg  | region +  date , data=bond_spread_reg_df, se='cluster', cluster='country') ,
+  
+    'Longitudinal Model (Country FE/Year FE)' = feols(spread ~  SPI.INDEX  + BN.CAB.XOKA.GD.ZS + NY.GDP.MKTP.KD.ZG + NY.GDP.PCAP.KD + NE.TRD.GNFS.ZS + FP.CPI.TOTL.ZG + cg | country+date , data=bond_spread_reg_df, se='cluster', cluster='country')
+
+ )
+
+
+ modelsummary(bond_models,
+              estimate= "{estimate}{stars}",
+              coef_rename = c("SPI.INDEX"  = "SPI Overall Score",
+                              "cg"  = "Central government debt, total (% of GDP)",
+                              "BN.CAB.XOKA.GD.ZS"= "Current account balance (% of GDP)",
+                              "NY.GDP.MKTP.KD.ZG"= "GDP per capita (constant 2015 US$)",
+                              "NY.GDP.PCAP.KD" = "GDP growth (annual %)" ,
+                              "NE.TRD.GNFS.ZS" = "Trade (% of GDP)",
+                              "FP.CPI.TOTL.ZG" = "Inflation, consumer prices (annual %)",
+                              "DT.DOD.DECT.GN.ZS" = "External debt stocks (% of GNI)"),
+              gof_map = gm,
+              notes="Data from the World Bank's World Development Indicators (WDI) and SPI.  WDI series codes include NY.GDP.PCAP.CD, NV.IND.MANF.ZS, NV.AGR.TOTL.ZS,SE.PRM.ENRR,NE.TRD.GNFS.ZS, CC.EST, GE.EST, PV.EST, RQ.EST, RL.EST, VA.EST.  Data for year 2016-2020.  Data accessed on March 15, 2022.  In cases where data is missing for a particular covariate, the data is imputed using the nearest available value.",
+              escape = FALSE
+              )
 
 ```
 
