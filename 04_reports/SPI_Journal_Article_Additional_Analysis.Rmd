@@ -1028,7 +1028,11 @@ predictors_df <- wbstats::wb_data(country="countries_only",
   group_by(iso3c) %>%
   fill(c( 'NY.GDP.PCAP.KD','NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS', 'SE.PRM.ENRR', 'HD.HCI.OVRL','NE.TRD.GNFS.ZS','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS"), .direction="downup") %>%
   ungroup() %>%
-  mutate(WGI.OVL=(CC.EST + GE.EST + PV.EST + RQ.EST + RL.EST + VA.EST)/6)
+  mutate(WGI.OVL=(CC.EST + GE.EST + PV.EST + RQ.EST + RL.EST + VA.EST)/6,
+         lag_outcome=lag(NY.GDP.PCAP.KD),
+         lag_fdi=lag(BX.KLT.DINV.WD.GD.ZS),
+         lag_ge=lag(GE.EST)
+         )
 
 #get central government debt data from IMF which is more complete source
 imf_dta <- haven::read_dta("C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Blog - SPI and Bond Spreads/01_Data/Global Debt Database_121521_to_DATAMAPPER.dta" ) %>% 
@@ -1043,7 +1047,7 @@ imf_dta <- haven::read_dta("C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Blog - SP
 SPI_2016 <- SPI %>%
   filter(date>=2016) %>%
   group_by(iso3c) %>%
-  fill(c( 'SPI.INDEX'), .direction="downup") %>%
+  fill(starts_with( 'SPI.INDEX'), .direction="downup") %>%
   ungroup() %>%
   filter(!is.na(SPI.INDEX))
 
@@ -1051,7 +1055,7 @@ countries_2016 <- unique(SPI_2016$country)
 
 #add in some metadata about the country
 reg_df <- SPI_2016 %>%
-  select(country, iso3c, date, region, SPI.INDEX) %>%
+  select(country, iso3c, date, region, SPI.INDEX, SPI.INDEX.PIL1, SPI.INDEX.PIL2, SPI.INDEX.PIL3, SPI.INDEX.PIL4, SPI.INDEX.PIL5) %>%
   left_join(predictors_df) %>%
   filter(between(date,2016,2020)) %>%
   filter(!(is.na(SPI.INDEX) | 
@@ -1067,7 +1071,8 @@ reg_df <- SPI_2016 %>%
              is.na(PV.EST) |
              is.na(RQ.EST) |
              is.na(RL.EST) |
-             is.na(VA.EST) ))
+             is.na(VA.EST) )) %>%
+  mutate(region_year_fe=paste(region,date,sep=" - "))
 
 ncountry <- length(unique(reg_df$country))
 
@@ -1092,13 +1097,22 @@ cross_reg_df <- reg_df %>%
 #create regression models
  models <- list(
 
- 'Longitudinal Model (Region FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL   | date + region, data=reg_df, se='cluster', cluster='country') ,
 
+ 'Dynamic Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  log(lag_outcome) + SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date   , data=reg_df, se='cluster', cluster='country') ,
 
-  'Longitudinal Model (Country RE/Year FE)' = plm::plm(log(NY.GDP.PCAP.KD) ~  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  + factor(date), data=reg_df, model='random', index=c('iso3c')) ,
+ 'Dynamic Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  log(lag_outcome) +  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  | date  , data=reg_df, se='cluster', cluster='country') ,
+   
+   
+ # 'Longitudinal Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date, data=reg_df, se='cluster', cluster='country') ,
+ # 
+ # 'Longitudinal Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date , data=reg_df, se='cluster', cluster='country') ,
+
+  # 'Longitudinal Model (Country RE/Year FE)' = plm::plm(log(NY.GDP.PCAP.KD) ~  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  + factor(date), data=reg_df, model='random', index=c('iso3c')) ,
  
 
- 'Longitudinal Model (Country FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country')
+ 'Longitudinal Model (Country FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country'),
+ 
+ 'Longitudinal Model (Country FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country')
  
 
  )
@@ -1106,7 +1120,7 @@ cross_reg_df <- reg_df %>%
 
  modelsummary(models,
               estimate= "{estimate}{stars}",
-              vcov=list(NULL,"HC1",NULL),
+              #vcov=list(NULL,"HC1",NULL),
               coef_rename = c("SPI.INDEX"  = "SPI Overall Score",
                               "NV.IND.MANF.ZS"  = "Manufacturing value added (% of GDP)",
                               "NV.AGR.TOTL.ZS"= "Agriculture, forestry, fishing value added (% of GDP)",
@@ -1130,21 +1144,23 @@ cross_reg_df <- reg_df %>%
 ```{r eval=FALSE, include=FALSE}
 # test between fixed and random effects estiamtes
 
-fixed <- plm::plm(log(NY.GDP.PCAP.KD) ~   SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + BN.CAB.XOKA.GD.ZS + WGI.OVL + factor(date), data=reg_df, model='within', index=c('iso3c'))
+fixed <- plm::plm(log(NY.GDP.PCAP.KD) ~   SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + BN.CAB.XOKA.GD.ZS + WGI.OVL  , data=reg_df, model='within', index=c('iso3c'), effect='twoways')
 
 summary(fixed)
 
-random <- plm::plm(log(NY.GDP.PCAP.KD) ~   SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + BN.CAB.XOKA.GD.ZS + WGI.OVL + factor(date) , data=reg_df, model='random', index=c('iso3c'))
+random <- plm::plm(log(NY.GDP.PCAP.KD) ~   SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + BN.CAB.XOKA.GD.ZS + WGI.OVL  , data=reg_df, model='random', index=c('iso3c'))
 
 summary(random)
 
-plm::phtest(fixed, random)
+
+
+plm::phtest(fixed, random, method="aux", vcov=function(x) vcovHC(x, method="white2", type="HC3"))
 
 ```
 
-In this analysis, the relationship between statistical performance and economic growth will be examined using several econometric models. In all models the sample consists of `r ncountry` countries, which have a non-missing covariates available in 2016, and the time span consists of years between 2016 and 2020.^[`r length(countries_2016)` countries have a non-missing SPI score in 2016.  The binding constraint keeping most countries from having an SPI score in 2016 is the availability of data from the Open Data Inventory (ODIN), produced by Open Data Watch, which was used for the SPI measures of data openness and geospatial information. The remainder of countries omitted lack either a human capital index score or some cases trade data.]  
+In this analysis, the relationship between statistical performance and economic growth and other intermediate indicators of economic growth will be examined using a longitudinal econometric model. The sample consists of `r ncountry` countries, which have a non-missing covariates available in 2016, and the time span consists of years between 2016 and 2020.^[`r length(countries_2016)` countries have a non-missing SPI score in 2016.  The binding constraint keeping most countries from having an SPI score in 2016 is the availability of data from the Open Data Inventory (ODIN), produced by Open Data Watch, which was used for the SPI measures of data openness and geospatial information. The remainder of countries omitted lack either a human capital index score or some cases trade data.]  
 
-The first model is a cross-sectional model relating the percentage change in GDP per capita between 2016 and 2020 as the outcome variable to the value of the Statistical Performance Indicator and other covariates.
+The longitudinal model relating the percentage change in GDP per capita between 2016 and 2020 to the value of the Statistical Performance Indicator and other covariates takes the following form.
 
 $$ Grwth_{i,16-20} = \alpha + \beta_1 SPI_{i,16} + \beta_2 GDPpc_{i,16} + \beta3 MFG_{i,16} + \beta_4 AG_{i,16} + \beta_5 HCI_{i,16} + \beta_6 Trade_{i,16} + \beta_7 PolInst_{i,16} + \epsilon_i $$
 
