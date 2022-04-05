@@ -12,6 +12,7 @@ output:
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.cap = "")
+library(plm)
 library(tidyverse)
 library(flextable)
 library(here)
@@ -99,7 +100,7 @@ SPI <- SPI_2020 %>%
 
 # Estimating Relationship between Statistical Performance and Economic Growth
 
-```{r regdf}
+```{r regdf, echo=FALSE}
 options(modelsummary_factory_word = 'flextable')
 custom_theme <- function(x, ...) {
     x %>% set_table_properties(layout = "autofit")
@@ -119,17 +120,19 @@ options("modelsummary_theme_flextable" = custom_theme)
 #   rename(date=year)
 
 predictors_df <- wbstats::wb_data(country="countries_only",
-             indicator=c('NY.GDP.PCAP.KD', 'NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS','NE.TRD.GNFS.ZS', 'HD.HCI.OVRL','SE.PRM.ENRR','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS"),
+             indicator=c('NY.GDP.PCAP.KD', 'NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS','NE.TRD.GNFS.ZS', 'HD.HCI.OVRL','SE.PRM.ENRR','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS", "SI.POV.DDAY", "SI.POV.GINI"),
              start_date=2010,
              end_date=2020) %>%
   mutate(date=as.numeric(date)) %>%
   arrange(iso3c, date) %>%
   group_by(iso3c) %>%
-  fill(c( 'NY.GDP.PCAP.KD','NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS', 'SE.PRM.ENRR', 'HD.HCI.OVRL','NE.TRD.GNFS.ZS','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS"), .direction="downup") %>%
+  fill(c( 'NY.GDP.PCAP.KD','NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS', 'SE.PRM.ENRR', 'HD.HCI.OVRL','NE.TRD.GNFS.ZS','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS","SI.POV.DDAY", "SI.POV.GINI"), .direction="downup") %>%
   mutate(WGI.OVL=(CC.EST + GE.EST + PV.EST + RQ.EST + RL.EST + VA.EST)/6,
          lag_outcome=lag(NY.GDP.PCAP.KD),
          lag_fdi=lag(BX.KLT.DINV.WD.GD.ZS),
-         lag_ge=lag(GE.EST)
+         lag_ge=lag(GE.EST),
+         lag_poverty=lag(SI.POV.DDAY),
+         lag_gini=lag(SI.POV.GINI)
          )  %>%
   ungroup()
 
@@ -180,8 +183,7 @@ ncountry <- length(unique(reg_df$country))
 #modelsummary output
 gm <- tibble::tribble(
   ~raw,        ~clean,          ~fmt,
-  "nobs",      "N",             0,
-  "r.squared", "R Sq.", 2)
+  "nobs",      "N",             0)
 
 
 cross_reg_df <- reg_df %>%
@@ -207,12 +209,16 @@ cross_reg_df <- reg_df %>%
  # 
  # 'Longitudinal Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date , data=reg_df, se='cluster', cluster='country') ,
 
-  # 'Longitudinal Model (Country RE/Year FE)' = plm::plm(log(NY.GDP.PCAP.KD) ~  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  + factor(date), data=reg_df, model='random', index=c('iso3c')) ,
- 
+ # 'Longitudinal Model (Country RE/Year FE)' = plm::plm(log(NY.GDP.PCAP.KD) ~  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  + factor(date), data=reg_df, model='random', index=c('iso3c')) ,
+ # 
 
  'Longitudinal Model (Country FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country'),
  
- 'Longitudinal Model (Country FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country')
+ 'Longitudinal Model (Country FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country'),
+ 
+ 'Arellano & Bond Panel GMM (Country FE/Year FE)' = pgmm(formula=log(NY.GDP.PCAP.KD) ~ lag(log(NY.GDP.PCAP.KD), 1) +  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | lag(log(NY.GDP.PCAP.KD), 2), data=reg_df, model='twosteps', effect='twoways', index=c('iso3c', 'date')),
+ 
+ 'Arellano & Bond Panel GMM (Country FE/Year FE)' = pgmm(formula=log(NY.GDP.PCAP.KD) ~ lag(log(NY.GDP.PCAP.KD), 1) +  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | lag(log(NY.GDP.PCAP.KD), 2), data=reg_df, model='twosteps', effect='twoways', index=c('iso3c', 'date'))
  
 
  )
@@ -221,7 +227,7 @@ cross_reg_df <- reg_df %>%
 
 ```
 
-```{r eval=FALSE, include=FALSE}
+```{r include=FALSE}
 # test between fixed and random effects estiamtes
 
 fixed <- plm::plm(log(NY.GDP.PCAP.KD) ~   SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + BN.CAB.XOKA.GD.ZS + WGI.OVL  , data=reg_df, model='within', index=c('iso3c'), effect='twoways')
@@ -252,15 +258,17 @@ $$ GDPpc_{i,t} = \alpha + \beta_1 SPI_{i,t}  + \beta2 MFG_{i,t} + \beta_3 AG_{i,
 
 In this case,  the log lagged GDP per capita for country i in year t is dropped from the model.  $c_{i}$ representing the unobserved effect for country $i$ is included in the model, which accounts for time constant factors affecting GDP per capita in a specific country.
 
+Finally, an Arellano and Bond (1991) estimator is considered, which estimates the Dynamic model above, but additionally controls for country fixed effects.  The dynamic model is estimated using Panel GMM by taking the first difference of the outcome and regressors, which includes the lagged dependent variable, and instruments for the lagged dependent variable using further lags of the dependent variable.  This is required, because the first difference of the lagged dependent variable will mechanically be correlated with the error term, and so the instrumental variables are required.  
+
 An additional variant within each model is included as well, where the $SPI_{i,t}$ variable is split into the scores for each of the five SPI pillars (data use, data services, data products, data sources, and data infrastructure).  This specification allows the examination of which specific pillar may be driving changes in GDP per capita.
 
 Results from estimating the models is below.  The "Dynamic Model" is estimated via OLS.  The "Longitudinal Model" is estimated using the panel fixed effects estimator (also known as the "within estimator") as discussed in Wooldridge (2010).  
 
-In column (1) of the table which show estimates from the "Dynamic model", the results indicate that a one unit (scale 0-100) on the SPI overall score increases GDP per capita by 0.1%.  This is statistically significant at  the 1% level.  To give some perspective, the median country grew 5.5 points on the SPI overall score between 2016 and 2020.  The 75th percentile country grew 9.7 points and the 90th percentile country grew 13.3 points on the SPI scale.  A country that grew at the 75th percentile then would have seen GDP per capita grow by nearly 1% according to these estimates.  In column (2) which breaks down the impacts into the underlying SPI pillar effects, shows a statistically significant (1% level), but small effect of Pillar 5 on data infrastructure of 0.03%.  None of the other SPI pillars have detectable effects on GDP per capita.
+In column (1) of the table which show estimates from the "Dynamic model", the results indicate that a one unit (scale 0-100) on the SPI overall score is associated with a increase of GDP per capita of 0.1%.  This is statistically significant at  the 1% level.  To give some perspective, the median country grew 5.5 points on the SPI overall score between 2016 and 2020.  The 75th percentile country grew 9.7 points and the 90th percentile country grew 13.3 points on the SPI scale.  A country that grew at the 75th percentile then would tend to have seen GDP per capita grow by nearly 1% according to these estimates.  In column (2) which breaks down the impacts into the underlying SPI pillar effects, shows a statistically significant (1% level), but small correlation of Pillar 5 on data infrastructure of 0.03%.  None of the other SPI pillars have detectable associations with GDP per capita.
 
-In column (3), the "Longitudinal Model" estimates indicate no statistically significant impact of the SPI overall score on GDP per capita, although the sign and magnitude is similar as in the dynamic model.  Column (4) indicates that the SPI Pillar 5 score on data infrastructure has a statistically significant effect (at 1% level) on GDP per capita.  
+In column (3), the "Longitudinal Model" estimates indicate no statistically significant association of the SPI overall score on GDP per capita, although the sign and magnitude is similar as in the dynamic model.  Column (4) indicates that the SPI Pillar 5 score on data infrastructure has a statistically significant effect (at 10% level) on GDP per capita.  The Arellano and Bond estimator in columns (5) and (6) show now statistically significant associations.
 
-One potential explanation of the statistically significant impact of the SPI Pillar 5 score on data infrastructure is that the data infrastructure indicators measure the recency of the national accounts base year and the system of national accounts (for instance SNA 2008 or older).  Improvements in the accounting of national accounts could lead to upward revisions in GDP for a country and a positive effect of these improvements on log GDP per capita.
+One potential explanation of the statistically significant association of the SPI Pillar 5 score on data infrastructure is that the data infrastructure indicators measure the recency of the national accounts base year and the system of national accounts (for instance SNA 2008 or older).  Improvements in the accounting of national accounts could lead to upward revisions in GDP for a country and a positive effect of these improvements on log GDP per capita.
 
 Table. Relationship between Log GDP per capita and SPI scores using data from 2016-2020.
 
@@ -275,6 +283,7 @@ Table. Relationship between Log GDP per capita and SPI scores using data from 20
                               "SPI.INDEX.PIL4"  = "SPI Pillar 4 Score",
                               "SPI.INDEX.PIL5"  = "SPI Pillar 5 Score",
                               "log(lag_outcome)" = "Log lagged GDP per capita" ,
+                              "lag(log(NY.GDP.PCAP.KD), 1)" = "Log lagged GDP per capita" ,
                               "NV.IND.MANF.ZS"  = "Manufacturing value added (% of GDP)",
                               "NV.AGR.TOTL.ZS"= "Agriculture, forestry, fishing value added (% of GDP)",
                               "BN.CAB.XOKA.GD.ZS"= "Current account balance (% of GDP)",
@@ -298,15 +307,253 @@ Table. Relationship between Log GDP per capita and SPI scores using data from 20
               )
 ```
 
+As a specification check, an additional estimator is considered.  Rather than estimating the longitudinal model using country fixed effects using the within estimator, a country random effects estimator is considered.  The country random effects estimator imposes a stronger assumption that the country heterogeneity term, $c_i$, is uncorrleated with the other regressors.  This assumption, if valid, justifies the use of the more efficient random effects estimator.  However, a Hausman test of the assumption, which compares estimates from the fixed effects and random effects estimator (Wooldridge (2010), pg 328), is performed, and the test results in a rejection of the uncorrelatedness assumption.  Thus the random effects estimator may be biased. 
+
+
+Table. Alternative Specification with Country Random Effects Estimator
+```{r}
+
+
+#create regression models
+ models <- list(
+
+
+ 'Dynamic Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  log(lag_outcome) + SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date   , data=reg_df, se='cluster', cluster='country') ,
+
+ # 'Dynamic Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  log(lag_outcome) +  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  | date  , data=reg_df, se='cluster', cluster='country') ,
+   
+   
+ # 'Longitudinal Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date, data=reg_df, se='cluster', cluster='country') ,
+ # 
+ # 'Longitudinal Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date , data=reg_df, se='cluster', cluster='country') ,
+
+ 'Longitudinal Model (Country RE/Year FE)' = plm::plm(log(NY.GDP.PCAP.KD) ~  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  + factor(date), data=reg_df, model='random', index=c('iso3c')) ,
+ # 
+
+ 'Longitudinal Model (Country FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country'),
+ 
+'Arellano & Bond Dynamic Model (Country FE/Year FE)' = pgmm(formula=log(NY.GDP.PCAP.KD) ~ lag(log(NY.GDP.PCAP.KD), 1) +  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | lag(log(NY.GDP.PCAP.KD), 2), data=reg_df, model='twosteps', effect='twoways', index=c('iso3c', 'date'))
+ 
+ # 'Longitudinal Model (Country FE/Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country')
+ 
+
+ )
+
+gm2 <- tibble::tribble(
+  ~raw,        ~clean,          ~fmt,
+  "nobs",      "N",             0,
+  "r.squared", "R Sq.", 2)
+
+ modelsummary(models,
+              estimate= "{estimate}{stars}",
+              #vcov=list(NULL,"HC1",NULL),
+              coef_rename = c("SPI.INDEX"  = "SPI Overall Score",
+                              "SPI.INDEX.PIL1"  = "SPI Pillar 1 Score",
+                              "SPI.INDEX.PIL2"  = "SPI Pillar 2 Score",
+                              "SPI.INDEX.PIL3"  = "SPI Pillar 3 Score",
+                              "SPI.INDEX.PIL4"  = "SPI Pillar 4 Score",
+                              "SPI.INDEX.PIL5"  = "SPI Pillar 5 Score",
+                              "log(lag_outcome)" = "Log lagged GDP per capita" ,
+                              "lag(log(NY.GDP.PCAP.KD), 1)" = "Log lagged GDP per capita" ,
+                              "NV.IND.MANF.ZS"  = "Manufacturing value added (% of GDP)",
+                              "NV.AGR.TOTL.ZS"= "Agriculture, forestry, fishing value added (% of GDP)",
+                              "BN.CAB.XOKA.GD.ZS"= "Current account balance (% of GDP)",
+                              "HD.HCI.OVRL" = "Human Capital Index (0-1 scale)",
+                              "SE.PRM.ENRR" = "School Enrollment, Primary (% gross)" ,
+                              "NE.TRD.GNFS.ZS" = "Trade (% of GDP)",
+                              "WGI.OVL" = "WGI Index",
+                              "CC.EST" = "WGI: Control of Corruption: Estimate",
+                              "GE.EST" = "WGI: Governance Effectiveness: Estimate",
+                              "PV.EST" = "WGI: Political Stability and Absence of Violence/Terrorism: Estimate",
+                              "RQ.EST" = "WGI: Regulatory Quality: Estimate",
+                              "RL.EST" = "WGI: Rule of Law: Estimate",
+                              "VA.EST" = "WGI: Voice and Accountability: Estimate"),
+              gof_map = gm,
+              notes="Data from the World Bank's World Development Indicators (WDI) and SPI.  WDI series codes include NY.GDP.MKTP.KD.ZG, NV.IND.MANF.ZS, NV.AGR.TOTL.ZS,SE.PRM.ENRR,BN.CAB.XOKA.GD.ZS, CC.EST, GE.EST, PV.EST, RQ.EST, RL.EST, VA.EST.  Data for year 2016-2020.  Data accessed on March 15, 2022.  Dynamic model includes lagged outcome in model.  Longitudinal model controls for country fixed effects.  In cases where data is missing for a particular covariate, the data is imputed using the nearest available value. Standard errors clustered at the country level.
+              ***=0.001 level
+              **=0.01 level
+              *=0.05 level
+              +=0.1 level"
+              #escape = FALSE
+              )
+# m <- plm::pgmm(log(NY.GDP.PCAP.KD) ~ lag(log(NY.GDP.PCAP.KD), 1) +  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | lag(log(NY.GDP.PCAP.KD), 2:3), data=reg_df, model='twosteps', effect='twoways', index=c('iso3c', 'date')) 
+# summary(m)
+ 
+```
+
+
+
+```{r include=FALSE}
+# test between fixed and random effects estiamtes
+
+fixed <- plm::plm(log(NY.GDP.PCAP.KD) ~   SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + BN.CAB.XOKA.GD.ZS + WGI.OVL  , data=reg_df, model='within', index=c('iso3c'), effect='twoways')
+
+#summary(fixed)
+
+random <- plm::plm(log(NY.GDP.PCAP.KD) ~   SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + BN.CAB.XOKA.GD.ZS + WGI.OVL  , data=reg_df, model='random', index=c('iso3c'))
+
+#summary(random)
+
+
+
+htest <- plm::phtest(fixed, random, method="aux", vcov=function(x) vcovHC(x, method="white2", type="HC3"))
+
+```
+
+## Poverty & Gini Impacts
+
+
+Another two associations are considered: the association of the SPI on the $1.90 headcount ratio and the association on the Gini coefficent.  Data for both are sourced from the World Bank's Povcalnet. The same specifications are estimated as previously, except in the case of a dynamic model, the lagged dependent variables are replaced with either lagged poverty or the lagged Gini coefficient as the case may be.
+
+Estimates are reported in the tables below.  Overall, there is little detectable association of the SPI with these outcomes.
+
+Table. Relationship between $1.90 Poverty Headcount Ratio and SPI scores using data from 2016-2020.
+
+```{r echo=FALSE}
+
+#create regression models
+ models <- list(
+
+
+ 'Dynamic Model (Year FE)' = feols(SI.POV.DDAY ~  lag_poverty + SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date   , data=reg_df, se='cluster', cluster='country') ,
+
+ 'Dynamic Model (Year FE)' = feols(SI.POV.DDAY ~  lag_poverty +  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  | date  , data=reg_df, se='cluster', cluster='country') ,
+   
+   
+ # 'Longitudinal Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date, data=reg_df, se='cluster', cluster='country') ,
+ # 
+ # 'Longitudinal Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date , data=reg_df, se='cluster', cluster='country') ,
+
+ # 'Longitudinal Model (Country RE/Year FE)' = plm::plm(log(NY.GDP.PCAP.KD) ~  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  + factor(date), data=reg_df, model='random', index=c('iso3c')) ,
+ # 
+
+ 'Longitudinal Model (Country FE/Year FE)' = feols(SI.POV.DDAY ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country'),
+ 
+ 'Longitudinal Model (Country FE/Year FE)' = feols(SI.POV.DDAY ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country'),
+ 
+ 'Arellano & Bond Panel GMM (Country FE/Year FE)' = pgmm(formula=SI.POV.DDAY ~ lag(SI.POV.DDAY, 1) +  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | lag(SI.POV.DDAY, 2), data=reg_df, model='twosteps', effect='twoways', index=c('iso3c', 'date')),
+ 
+ 'Arellano & Bond Panel GMM (Country FE/Year FE)' = pgmm(formula=SI.POV.DDAY ~ lag(SI.POV.DDAY, 1) +  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | lag(SI.POV.DDAY, 2), data=reg_df, model='twosteps', effect='twoways', index=c('iso3c', 'date'))
+ 
+
+ )
+
+
+
+ modelsummary(models,
+              estimate= "{estimate}{stars}",
+              #vcov=list(NULL,"HC1",NULL),
+              coef_rename = c("SPI.INDEX"  = "SPI Overall Score",
+                              "SPI.INDEX.PIL1"  = "SPI Pillar 1 Score",
+                              "SPI.INDEX.PIL2"  = "SPI Pillar 2 Score",
+                              "SPI.INDEX.PIL3"  = "SPI Pillar 3 Score",
+                              "SPI.INDEX.PIL4"  = "SPI Pillar 4 Score",
+                              "SPI.INDEX.PIL5"  = "SPI Pillar 5 Score",
+                              "log(lag_poverty)" = "lagged Poverty" ,
+                              "lag(SI.POV.DDAY, 1)" = "lagged Poverty" ,
+                              "NV.IND.MANF.ZS"  = "Manufacturing value added (% of GDP)",
+                              "NV.AGR.TOTL.ZS"= "Agriculture, forestry, fishing value added (% of GDP)",
+                              "BN.CAB.XOKA.GD.ZS"= "Current account balance (% of GDP)",
+                              "HD.HCI.OVRL" = "Human Capital Index (0-1 scale)",
+                              "SE.PRM.ENRR" = "School Enrollment, Primary (% gross)" ,
+                              "NE.TRD.GNFS.ZS" = "Trade (% of GDP)",
+                              "WGI.OVL" = "WGI Index",
+                              "CC.EST" = "WGI: Control of Corruption: Estimate",
+                              "GE.EST" = "WGI: Governance Effectiveness: Estimate",
+                              "PV.EST" = "WGI: Political Stability and Absence of Violence/Terrorism: Estimate",
+                              "RQ.EST" = "WGI: Regulatory Quality: Estimate",
+                              "RL.EST" = "WGI: Rule of Law: Estimate",
+                              "VA.EST" = "WGI: Voice and Accountability: Estimate"),
+              gof_map = gm,
+              notes="Data from the World Bank's World Development Indicators (WDI) and SPI.  WDI series codes include NY.GDP.MKTP.KD.ZG, NV.IND.MANF.ZS, NV.AGR.TOTL.ZS,SE.PRM.ENRR,BN.CAB.XOKA.GD.ZS, CC.EST, GE.EST, PV.EST, RQ.EST, RL.EST, VA.EST.  Data for year 2016-2020.  Data accessed on March 15, 2022.  Dynamic model includes lagged outcome in model.  Longitudinal model controls for country fixed effects.  In cases where data is missing for a particular covariate, the data is imputed using the nearest available value. Standard errors clustered at the country level.
+              ***=0.001 level
+              **=0.01 level
+              *=0.05 level
+              +=0.1 level"
+              #escape = FALSE
+              )
+
+```
+
+
+
+Table. Relationship between Gini Coefficient and SPI scores using data from 2016-2020.
+
+```{r echo=FALSE}
+
+#create regression models
+ models <- list(
+
+
+ 'Dynamic Model (Year FE)' = feols(SI.POV.GINI ~  lag_gini + SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date   , data=reg_df, se='cluster', cluster='country') ,
+
+ 'Dynamic Model (Year FE)' = feols(SI.POV.GINI ~  lag_gini +  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  | date  , data=reg_df, se='cluster', cluster='country') ,
+   
+   
+ # 'Longitudinal Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date, data=reg_df, se='cluster', cluster='country') ,
+ # 
+ # 'Longitudinal Model (Year FE)' = feols(log(NY.GDP.PCAP.KD) ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | date , data=reg_df, se='cluster', cluster='country') ,
+
+ # 'Longitudinal Model (Country RE/Year FE)' = plm::plm(log(NY.GDP.PCAP.KD) ~  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL  + factor(date), data=reg_df, model='random', index=c('iso3c')) ,
+ # 
+
+ 'Longitudinal Model (Country FE/Year FE)' = feols(SI.POV.GINI ~  SPI.INDEX + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country'),
+ 
+ 'Longitudinal Model (Country FE/Year FE)' = feols(SI.POV.GINI ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 + NV.IND.MANF.ZS + NV.AGR.TOTL.ZS +  SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | country+date , data=reg_df, se='cluster', cluster='country'),
+ 
+ 'Arellano & Bond Panel GMM (Country FE/Year FE)' = pgmm(formula=SI.POV.GINI ~ lag(SI.POV.GINI, 1) +  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | lag(SI.POV.GINI, 2), data=reg_df, model='twosteps', effect='twoways', index=c('iso3c', 'date')),
+ 
+ 'Arellano & Bond Panel GMM (Country FE/Year FE)' = pgmm(formula=SI.POV.GINI ~ lag(SI.POV.GINI, 1) +  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | lag(SI.POV.GINI, 2), data=reg_df, model='twosteps', effect='twoways', index=c('iso3c', 'date'))
+ 
+
+ )
+
+
+
+ modelsummary(models,
+              estimate= "{estimate}{stars}",
+              #vcov=list(NULL,"HC1",NULL),
+              coef_rename = c("SPI.INDEX"  = "SPI Overall Score",
+                              "SPI.INDEX.PIL1"  = "SPI Pillar 1 Score",
+                              "SPI.INDEX.PIL2"  = "SPI Pillar 2 Score",
+                              "SPI.INDEX.PIL3"  = "SPI Pillar 3 Score",
+                              "SPI.INDEX.PIL4"  = "SPI Pillar 4 Score",
+                              "SPI.INDEX.PIL5"  = "SPI Pillar 5 Score",
+                              "log(lag_gini)" = "lagged Gini" ,
+                              "lag(SI.POV.GINI, 1)" = "lagged Gini" ,
+                              "NV.IND.MANF.ZS"  = "Manufacturing value added (% of GDP)",
+                              "NV.AGR.TOTL.ZS"= "Agriculture, forestry, fishing value added (% of GDP)",
+                              "BN.CAB.XOKA.GD.ZS"= "Current account balance (% of GDP)",
+                              "HD.HCI.OVRL" = "Human Capital Index (0-1 scale)",
+                              "SE.PRM.ENRR" = "School Enrollment, Primary (% gross)" ,
+                              "NE.TRD.GNFS.ZS" = "Trade (% of GDP)",
+                              "WGI.OVL" = "WGI Index",
+                              "CC.EST" = "WGI: Control of Corruption: Estimate",
+                              "GE.EST" = "WGI: Governance Effectiveness: Estimate",
+                              "PV.EST" = "WGI: Political Stability and Absence of Violence/Terrorism: Estimate",
+                              "RQ.EST" = "WGI: Regulatory Quality: Estimate",
+                              "RL.EST" = "WGI: Rule of Law: Estimate",
+                              "VA.EST" = "WGI: Voice and Accountability: Estimate"),
+              gof_map = gm,
+              notes="Data from the World Bank's World Development Indicators (WDI) and SPI.  WDI series codes include NY.GDP.MKTP.KD.ZG, NV.IND.MANF.ZS, NV.AGR.TOTL.ZS,SE.PRM.ENRR,BN.CAB.XOKA.GD.ZS, CC.EST, GE.EST, PV.EST, RQ.EST, RL.EST, VA.EST.  Data for year 2016-2020.  Data accessed on March 15, 2022.  Dynamic model includes lagged outcome in model.  Longitudinal model controls for country fixed effects.  In cases where data is missing for a particular covariate, the data is imputed using the nearest available value. Standard errors clustered at the country level.
+              ***=0.001 level
+              **=0.01 level
+              *=0.05 level
+              +=0.1 level"
+              #escape = FALSE
+              )
+
+```
+
 
 ## Intermediate Impacts on the economy
 
-In addition to looking at the impact of improvements in statistical performance on GDP per capita, two additional impacts are considered: improvements in government effectiveness according to the WGI and reductions in dollar denominated government bond spreads.^[ A version of the bond spreads analysis was first published in a World Bank blog post(https://blogs.worldbank.org/opendata/not-all-data-are-created-equal-why-adoption-international-data-standards-pays) by Lucas Kitzmueller, Brian Stacy, Daniel Mahler, and Umar Serajuddin on September 1, 2021.]  A very similar econometric model is used for these two additional outcomes: a dynamic model and a longitudinal model with country fixed effects.
+In addition to looking at the association of improvements in statistical performance on GDP per capita, two additional associations are considered: improvements in government effectiveness according to the WGI and reductions in dollar denominated government bond spreads.^[ A version of the bond spreads analysis was first published in a World Bank blog post(https://blogs.worldbank.org/opendata/not-all-data-are-created-equal-why-adoption-international-data-standards-pays) by Lucas Kitzmueller, Brian Stacy, Daniel Mahler, and Umar Serajuddin on September 1, 2021.]  A very similar econometric model is used for these two additional outcomes: a dynamic model and a longitudinal model with country fixed effects.
 
 
-In the case of government effectiveness, the lag of government effectiveness is included in the dynamic model (rather than log lagged GDP per capita). Additionally, the sectoral composition (manufacturing and agriculture) and trade control variables are excluded from the analysis as there is no clear theoretical reason for why these controls should affect governement effectiveness.  Government effectiveness is measured using the World Governance Indicators.
+In the case of government effectiveness, the lag of government effectiveness is included in the dynamic model (rather than log lagged GDP per capita). Additionally, the sectoral composition (manufacturing and agriculture) and trade control variables are excluded from the analysis as there is no clear theoretical reason for why these controls should affect government effectiveness.  Government effectiveness is measured using the World Governance Indicators.
 
-In the table below, there is no detectable relationship between the SPI overall score and government effectiveness in the dynamic or longitudinal models.  However, the SPI pillar 2 score on data services and openness has a statistically significant impact at the 5% level in the dynamic model, with a similar sign and magnitude but insignificant in the longitudinal model.  A ten unit improvement in data services is associated with an improvement of .01 standard deviations of government effectiveness.  The SPI pillar 3 scores on data sources is statistically significant at the 1% level in the longitudinal model suggesting a 10 point improvement in data products, measuring the availability of SDG indicators for the country, is associated with a .04 standard deviation improvement in government effectiveness.  One interpretation is that additional access (pillar 2) and availability (pillar 3) of data for the country improves government effectiveness.
+In the table below, there is no detectable relationship between the SPI overall score and government effectiveness in the dynamic or longitudinal models.  However, the SPI pillar 2 score on data services and openness has a statistically significant association at the 5% level in the dynamic model, with a similar sign and magnitude but insignificant in the longitudinal model.  A ten unit improvement in data services is associated with an improvement of .01 standard deviations of government effectiveness.  The SPI pillar 3 scores on data sources is statistically significant at the 1% level in the longitudinal model suggesting a 10 point improvement in data products, measuring the availability of SDG indicators for the country, is associated with a .04 standard deviation improvement in government effectiveness.  One interpretation is that additional access (pillar 2) and availability (pillar 3) of data for the country improves government effectiveness.
 
 Table. Relationship between Government Effectiveness and SPI scores using data from 2016-2020.
 
@@ -337,7 +584,11 @@ reg_ge_df <- reg_df %>%
 
  'Longitudinal Model (Country FE/Year FE)' = feols(GE.EST ~  SPI.INDEX +  SE.PRM.ENRR   | country+date , data=reg_df) ,
  
-  'Longitudinal Model (Country FE/Year FE)' = feols(GE.EST ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 +  SE.PRM.ENRR   | country+date , data=reg_df) 
+  'Longitudinal Model (Country FE/Year FE)' = feols(GE.EST ~  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 +  SE.PRM.ENRR   | country+date , data=reg_df) ,
+ 
+ 'Arellano & Bond Panel GMM (Country FE/Year FE)' = pgmm(formula=GE.EST ~ lag(GE.EST, 1) +  SPI.INDEX +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | lag(GE.EST, 2), data=reg_df, model='twosteps', effect='twoways', index=c('iso3c', 'date')),
+ 
+ 'Arellano & Bond Panel GMM (Country FE/Year FE)' = pgmm(formula=GE.EST ~ lag(GE.EST, 1) +  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5 +  NV.IND.MANF.ZS + NV.AGR.TOTL.ZS + SE.PRM.ENRR  + NE.TRD.GNFS.ZS + WGI.OVL | lag(GE.EST, 2), data=reg_df, model='twosteps', effect='twoways', index=c('iso3c', 'date'))
 
  )
 
@@ -352,6 +603,7 @@ reg_ge_df <- reg_df %>%
                               "SPI.INDEX.PIL4"  = "SPI Pillar 4 Score",
                               "SPI.INDEX.PIL5"  = "SPI Pillar 5 Score",
                               "lag_ge" = "lagged Government Effectiveness" ,
+                              "lag(GE.EST, 1)" = "lagged Government Effectiveness" ,
                               "NV.IND.MANF.ZS"  = "Manufacturing value added (% of GDP)",
                               "NV.AGR.TOTL.ZS"= "Agriculture, forestry, fishing value added (% of GDP)",
                               "BX.KLT.DINV.WD.GD.ZS"= "Foreign direct investment, net inflows (% of GDP)",
@@ -466,7 +718,7 @@ The data on 10 year dollar denominated government bond spreads was collected fro
 
 The dynamic model in column (1) indicates that an improvement of 10 points on the SPI overall score is associated with a reduction in bond spreads of roughly 37 basis points, which would be equivalent to a reduction of interest rates of .37 percentage points.  Column (2) indicates that this is driven by the improvements in data infrastructure (pillar 5), which indicate that a 10 point improvement in data infrastructure is associated with a reduction of around 16 basis points in bond spreads.  Data infrastructure includes several indicators on whether for instance the country uses the latest system of national accounts, system of classifying monetary and financial statistics, system of government finance statistics, and system of central government accounting, and has a recent CPI base year.
 
-The estimates from the longitudinal model are highly imprecise in column (3) and (4), so no clear relationships can be identified.
+The estimates from the longitudinal model are highly imprecise in column (3) and (4), so no clear relationships can be identified.  The Arellano and Bond estimator has large standard errors as well.
 
 Table. Relationship between Dollar Denominated Government Bond Spreads and SPI scores using data from 2016-2020.
 
@@ -485,7 +737,11 @@ bond_models <- list(
  
     'Longitudinal Model (Country FE/Year FE)' = feols(spread ~  SPI.INDEX  + BN.CAB.XOKA.GD.ZS + NY.GDP.MKTP.KD.ZG + NY.GDP.PCAP.KD + NE.TRD.GNFS.ZS + FP.CPI.TOTL.ZG + cg | country+date , data=bond_spread_reg_df, se='cluster', cluster='country'), 
  
-     'Longitudinal Model (Country FE/Year FE)' = feols(spread ~   SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5  + BN.CAB.XOKA.GD.ZS + NY.GDP.MKTP.KD.ZG + NY.GDP.PCAP.KD + NE.TRD.GNFS.ZS + FP.CPI.TOTL.ZG + cg | country+date , data=bond_spread_reg_df, se='cluster', cluster='country')
+     'Longitudinal Model (Country FE/Year FE)' = feols(spread ~   SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5  + BN.CAB.XOKA.GD.ZS + NY.GDP.MKTP.KD.ZG + NY.GDP.PCAP.KD + NE.TRD.GNFS.ZS + FP.CPI.TOTL.ZG + cg | country+date , data=bond_spread_reg_df, se='cluster', cluster='country'),
+ 
+  'Arellano & Bond Panel GMM (Country FE/Year FE)' = pgmm(formula=spread ~ lag(spread, 1) +   SPI.INDEX  + BN.CAB.XOKA.GD.ZS + NY.GDP.MKTP.KD.ZG + NY.GDP.PCAP.KD + NE.TRD.GNFS.ZS + FP.CPI.TOTL.ZG + cg | lag(spread, 2), data=bond_spread_reg_df, model='twosteps', effect='twoways', index=c('country', 'date')),
+ 
+ 'Arellano & Bond Panel GMM (Country FE/Year FE)' = pgmm(formula=spread ~ lag(spread, 1) +  SPI.INDEX.PIL1 + SPI.INDEX.PIL2 + SPI.INDEX.PIL3 + SPI.INDEX.PIL4 + SPI.INDEX.PIL5  + BN.CAB.XOKA.GD.ZS + NY.GDP.MKTP.KD.ZG + NY.GDP.PCAP.KD + NE.TRD.GNFS.ZS + FP.CPI.TOTL.ZG + cg | lag(spread, 2), data=bond_spread_reg_df, model='twosteps', effect='twoways', index=c('country', 'date'))
 
  )
 
@@ -499,6 +755,7 @@ bond_models <- list(
                               "SPI.INDEX.PIL4"  = "SPI Pillar 4 Score",
                               "SPI.INDEX.PIL5"  = "SPI Pillar 5 Score",
                               "lag_spread" = "lagged Bond Spread" ,
+                              "lag(spread, 1)" = "lagged Bond Spread",
                               "cg"  = "Central government debt, total (% of GDP)",
                               "BN.CAB.XOKA.GD.ZS"= "Current account balance (% of GDP)",
                               "NY.GDP.MKTP.KD.ZG"= "GDP per capita (constant 2015 US$)",

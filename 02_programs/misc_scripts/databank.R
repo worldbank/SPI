@@ -174,7 +174,7 @@ excel <- list('Indicators'=databank_df,
 writexl::write_xlsx(excel,
                     path=paste(output_dir, "/SPI_databank.xlsx", sep=""))
 
-xlsx::write.xlsx((databank_df, file=paste(output_dir, "/SPI_databank.xlsx", sep=""),
+xlsx::write.xlsx(databank_df, file=paste(output_dir, "/SPI_databank.xlsx", sep=""),
                  sheetName = 'Indicators')
                  
 xlsx::write.xlsx(series_metadata, file=paste(output_dir, "/SPI_databank.xlsx", sep=""),
