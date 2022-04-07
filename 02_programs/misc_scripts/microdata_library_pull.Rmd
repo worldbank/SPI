@@ -98,7 +98,7 @@ matches_wb_public <- study_df_internal %>%
 
 # Microdatalib
 
-```{r micro_series_info}
+```{r micro_series_info, echo=FALSE}
 
 
 #get list of survey ids
@@ -177,7 +177,7 @@ study_df_fao <- study_df_fao %>%
 
 
 write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv",sep="")) #write to csv
-gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
+#gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
 
 
 
@@ -358,7 +358,7 @@ survey_df <- study_df_internal %>%
 ```
 
 
-```{r ihsn_map, echo=FALSE, fig.height=14, fig.width=14}
+```{r ihsn_map, eval=FALSE, fig.height=14, fig.width=14, include=FALSE}
 
 
 #Now map the result
