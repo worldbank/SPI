@@ -39,7 +39,7 @@ output_dir <- paste(dir, '03_output_data', sep="/")
 #parameters
 window=5 #set the window for the moving averages
 
-date=2021
+end_date=2021
 
 ```
 
@@ -51,7 +51,7 @@ date=2021
 # 2. An indicator with the raw (unscored) values of the indicators
 # The unit for this database will be country*year
 
-span <- c(2004:2020)
+span <- c(2004:end_date)
 
 spi_df_empty <- bind_rows(replicate(length(span), wbstats::wbcountries(), simplify = FALSE), .id='date') %>%
   mutate(date=as.numeric(date)+span[1]-1) %>%
@@ -120,7 +120,7 @@ spi_mapper  <- function(data, indicator, title) {
     theme_map(base_size=12) +
     labs(
       title=str_wrap(title,100),
-      subtitle= 'Data Point is for last year available (usually 2020)',
+      subtitle= paste0('Data Point is for last year available (usually ',end_date,')'),
       caption = 'Source: SPI Indicator.',
       fill='SPI Indicator Value'
     )
@@ -137,7 +137,7 @@ spi_mapper  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
-      subtitle= 'Data Point is for last year available (usually 2020)'
+      subtitle= paste0('Data Point is for last year available (usually ',end_date,')'),
       ) +
       expand_limits(x=c(0,100)) +
       theme_bw()
@@ -154,7 +154,7 @@ spi_mapper  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
       caption = 'Source: SPI Indicators Raw Data',
-      subtitle= 'Data Point is for last year available (usually 2020)'
+      subtitle= paste0('Data Point is for last year available (usually ',end_date,')'),
       ) +
       expand_limits(x=c(0,100)) +
       theme_bw()
@@ -403,7 +403,7 @@ Not included because of lack of established methodology. There are some usable d
 vnr_use_df <- read_csv(paste(raw_dir, "/1.2_DUNE/UN_VNR_use_of_numbers.csv", sep="")) %>%
   group_by(country) %>%
   filter(year==max(year, na.rm=T)) %>%
-  mutate(date=2020)
+  mutate(date=end_date)
 
 
 vnr_use_merge <- vnr_use_df %>% 
@@ -703,7 +703,7 @@ study_df_ihsn <- study_df_ihsn %>%
 pop <-wbstats::wb(country="countries_only", 
               indicator='SP.POP.TOTL',
               startdate=2004,
-              enddate=2020,
+              enddate=end_date,
               removeNA=FALSE) %>%
      transmute(
        iso3c=iso3c,
@@ -716,7 +716,7 @@ pop <-wbstats::wb(country="countries_only",
 topics_list <- unique(study_df_ihsn$topic)
 
   #Now calculate our SPI score for this indicator
-  for (i in 2004:2020) {
+  for (i in 2004:end_date) {
    temp <- study_df_ihsn %>%
     filter(date<=i) %>% #get a list of all surveys conducted before the year
     group_by(country, topic) %>%
@@ -741,7 +741,7 @@ topics_list <- unique(study_df_ihsn$topic)
     assign(paste('academic_use_df',i,sep="_"), temp)
   }
 
-  academic_use_df <- academic_use_df_2020
+  academic_use_df <- academic_use_df_end_date
 
   
     
@@ -816,7 +816,7 @@ print(g2)
 
 #do the plots  
    ggplot() +
-    geom_map(data = filter(academic_use_map, date==2020), aes(map_id = iso3c, fill = academic_use_rank), map = maps$countries) + 
+    geom_map(data = filter(academic_use_map, date==end_date), aes(map_id = iso3c, fill = academic_use_rank), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -840,7 +840,7 @@ print(g2)
       caption = 'Source: IHSN'
     )
    
-   filter(academic_use_map, date==2020) %>%
+   filter(academic_use_map, date==end_date) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     summarise(downloads_per_capita=mean(downloads_per_capita, na.rm=T),
@@ -916,7 +916,7 @@ library(povcalnetR)
 #https://github.com/worldbank/Global_Poverty_Blogs/blob/master/bg_povcalnet_comparability/R/comparability_breaks.R
 
 # some contants
-year_range <- 1990:2020
+year_range <- 1990:2021
 metadata_path <- "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/506801/povcalnet_comparability.csv"
 
 # Load data ---------------------------------------------------------------
@@ -939,10 +939,10 @@ df <- pcn %>%
 
 
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2004:2020) {
+for (reference_year in 2004:end_date) {
   
     #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
-  if (reference_year==2020) {
+  if (reference_year>=2020) {
     rec_window=7
   } else if (reference_year==2019) {
     rec_window=6
@@ -995,7 +995,7 @@ for (reference_year in 2004:2020) {
 }
 
 #now append together and save
-for (i in c(2004:2020)) {
+for (i in c(2004:end_date)) {
   
   temp<-get(paste('D3.1.AKI_',i, sep=""))
   
@@ -1044,7 +1044,7 @@ Note: Because surveys are reported with a lag, we start measuring whether compar
 
 
 
-D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '1.5_DUIO/UN IGME Child Mortality and Stillbirth Estimates_2020.csv', sep="/")) %>%
+D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '1.5_DUIO/UN IGME Child Mortality and Stillbirth Estimates_2021.csv', sep="/")) %>%
   as_tibble(.name_repair = 'universal') %>%
   filter(Indicator=='Under-five mortality rate' & Sex=='Total') %>% #keep just observations for under 5 child mortality and for both sexes
   filter(Observation.Status=='Included in IGME') %>% # Also keep only surveys that met IGME criteria for inclusion as a nationally representative statistic
@@ -1054,13 +1054,13 @@ D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '1.5_DUIO/UN IGME Child Mortality 
          D3.CHLD.MORT=OBS_VALUE)
 
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2004:2020) {
+for (reference_year in 2004:end_date) {
   
   
-      #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
-  if (reference_year==2020) {
+      #extend the window for more recent years.  For instance, end_date surveys are reported with a lag, so give them two year grace period
+  if (reference_year==end_date) {
     rec_window=7
-  } else if (reference_year==2019) {
+  } else if (reference_year==(end_date-1)) {
     rec_window=6
   } else {
     rec_window=5
@@ -1108,7 +1108,7 @@ for (reference_year in 2004:2020) {
 }
 
 #now append together and save
-for (i in c(2004:2020)) {
+for (i in c(2004:end_date)) {
   
   temp<-get(paste('D3.3.AKI_',i, sep=""))
   
@@ -1244,7 +1244,7 @@ We take therefore useable data if it appears within an 8 year window of the refe
 
 
 ```{r safely_managed, eval=FALSE, include=FALSE}
-span <- c(2000:2020)
+span <- c(2000:end_date)
 
 smw_template_df <- data.frame(
   geo=c("National","Rural","Urban")
@@ -1346,17 +1346,17 @@ window_fun <- function(date_start, date_end) {
 ####
 # 8 Year window
 ####
-#create this database for each year from 2004 to 2020 using a 8 year window
+#create this database for each year from 2004 to end_date using a 8 year window
 
 
 
-for (i in c(2015:2020)) {
+for (i in c(2015:end_date)) {
   
   end=i
-  #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
-  if (end==2020) {
+  #extend the window for more recent years.  For instance, end_date surveys are reported with a lag, so give them two year grace period
+  if (end==end_date) {
     start=i-9
-  } else if (end==2019) {
+  } else if (end==(end_date-1)) {
     start=i-8
   } else {
     start=i-7
@@ -1371,7 +1371,7 @@ if (exists('safe_managed_df')) {
   rm('safe_managed_df')
 }
 #now append together and save
-for (i in c(2015:2020)) {
+for (i in c(2015:end_date)) {
   
   temp<-get(paste('safe_managed_',i, sep=""))
   
@@ -1406,7 +1406,7 @@ Scoring:
 ```{r lfp}
 
 #request for surveys data
-#https://www.ilo.org/shinyapps/bulkexplorer2/?lang=en&segment=indicator&id=EAP_DWAP_SEX_AGE_RT_A&ref_area=AFG+ALB+DZA+ASM+AND+AGO+AIA+ATG+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BMU+BTN+BOL+BIH+BWA+BRA+VGB+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CYM+CAF+TCD+CHL+CHN+COL+COM+COG+COD+COK+CRI+HRV+CUB+CUW+CYP+CZE+CIV+DNK+DJI+DMA+DOM+ECU+EGY+SLV+GNQ+EST+SWZ+ETH+FRO+FLK+FJI+FIN+FRA+GUF+PYF+GAB+GMB+GEO+DEU+GHA+GIB+GRC+GRL+GRD+GLP+GUM+GTM+GGY+GIN+GNB+GUY+HTI+HND+HKG+HUN+ISL+IND+IDN+IRN+IRQ+IRL+IMN+ISR+ITA+JAM+JPN+JEY+JOR+KAZ+KEN+KIR+KOR+KOS+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LIE+LTU+LUX+MAC+MDG+MWI+MYS+MDV+MLI+MLT+MHL+MTQ+MRT+MUS+MEX+FSM+MDA+MCO+MNG+MNE+MSR+MAR+MOZ+MMR+NAM+NRU+NPL+NLD+ANT+NCL+NZL+NIC+NER+NGA+NIU+NFK+MKD+MNP+NOR+PSE+OMN+PAK+PLW+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+ROU+RUS+RWA+REU+SHN+KNA+LCA+VCT+WSM+SMR+STP+SAU+SEN+SRB+SYC+SLE+SGP+SVK+SVN+SLB+ZAF+SSD+ESP+LKA+SDN+SUR+SWE+CHE+SYR+TWN+TJK+TZA+THA+TLS+TGO+TON+TTO+TUN+TUR+TKM+TCA+TUV+UGA+UKR+ARE+GBR+USA+VIR+URY+UZB+VUT+VEN+VNM+YEM+ZMB+ZWE&sex=SEX_T&classif1=AGE_5YRBANDS_TOTAL+AGE_5YRBANDS_Y05-09+AGE_5YRBANDS_Y10-14+AGE_5YRBANDS_Y15-19+AGE_5YRBANDS_Y20-24+AGE_5YRBANDS_Y25-29+AGE_5YRBANDS_Y30-34+AGE_5YRBANDS_Y35-39+AGE_5YRBANDS_Y40-44+AGE_5YRBANDS_Y45-49+AGE_5YRBANDS_Y50-54+AGE_5YRBANDS_Y55-59+AGE_5YRBANDS_Y60-64+AGE_5YRBANDS_YGE65+AGE_10YRBANDS_TOTAL+AGE_10YRBANDS_YLT15+AGE_10YRBANDS_Y15-24+AGE_10YRBANDS_Y25-34+AGE_10YRBANDS_Y35-44+AGE_10YRBANDS_Y45-54+AGE_10YRBANDS_Y55-64+AGE_10YRBANDS_YGE65+AGE_AGGREGATE_TOTAL+AGE_AGGREGATE_YLT15+AGE_AGGREGATE_Y15-24+AGE_AGGREGATE_Y25-54+AGE_AGGREGATE_Y55-64+AGE_AGGREGATE_YGE65+AGE_YTHADULT_YGE15+AGE_YTHADULT_Y15-64+AGE_YTHADULT_Y15-24+AGE_YTHADULT_YGE25&timefrom=2010&timeto=2020
+#https://www.ilo.org/shinyapps/bulkexplorer2/?lang=en&segment=indicator&id=EAP_DWAP_SEX_AGE_RT_A&ref_area=AFG+ALB+DZA+ASM+AND+AGO+AIA+ATG+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BMU+BTN+BOL+BIH+BWA+BRA+VGB+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CYM+CAF+TCD+CHL+CHN+COL+COM+COG+COD+COK+CRI+HRV+CUB+CUW+CYP+CZE+CIV+DNK+DJI+DMA+DOM+ECU+EGY+SLV+GNQ+EST+SWZ+ETH+FRO+FLK+FJI+FIN+FRA+GUF+PYF+GAB+GMB+GEO+DEU+GHA+GIB+GRC+GRL+GRD+GLP+GUM+GTM+GGY+GIN+GNB+GUY+HTI+HND+HKG+HUN+ISL+IND+IDN+IRN+IRQ+IRL+IMN+ISR+ITA+JAM+JPN+JEY+JOR+KAZ+KEN+KIR+KOR+KOS+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LIE+LTU+LUX+MAC+MDG+MWI+MYS+MDV+MLI+MLT+MHL+MTQ+MRT+MUS+MEX+FSM+MDA+MCO+MNG+MNE+MSR+MAR+MOZ+MMR+NAM+NRU+NPL+NLD+ANT+NCL+NZL+NIC+NER+NGA+NIU+NFK+MKD+MNP+NOR+PSE+OMN+PAK+PLW+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+ROU+RUS+RWA+REU+SHN+KNA+LCA+VCT+WSM+SMR+STP+SAU+SEN+SRB+SYC+SLE+SGP+SVK+SVN+SLB+ZAF+SSD+ESP+LKA+SDN+SUR+SWE+CHE+SYR+TWN+TJK+TZA+THA+TLS+TGO+TON+TTO+TUN+TUR+TKM+TCA+TUV+UGA+UKR+ARE+GBR+USA+VIR+URY+UZB+VUT+VEN+VNM+YEM+ZMB+ZWE&sex=SEX_T&classif1=AGE_5YRBANDS_TOTAL+AGE_5YRBANDS_Y05-09+AGE_5YRBANDS_Y10-14+AGE_5YRBANDS_Y15-19+AGE_5YRBANDS_Y20-24+AGE_5YRBANDS_Y25-29+AGE_5YRBANDS_Y30-34+AGE_5YRBANDS_Y35-39+AGE_5YRBANDS_Y40-44+AGE_5YRBANDS_Y45-49+AGE_5YRBANDS_Y50-54+AGE_5YRBANDS_Y55-59+AGE_5YRBANDS_Y60-64+AGE_5YRBANDS_YGE65+AGE_10YRBANDS_TOTAL+AGE_10YRBANDS_YLT15+AGE_10YRBANDS_Y15-24+AGE_10YRBANDS_Y25-34+AGE_10YRBANDS_Y35-44+AGE_10YRBANDS_Y45-54+AGE_10YRBANDS_Y55-64+AGE_10YRBANDS_YGE65+AGE_AGGREGATE_TOTAL+AGE_AGGREGATE_YLT15+AGE_AGGREGATE_Y15-24+AGE_AGGREGATE_Y25-54+AGE_AGGREGATE_Y55-64+AGE_AGGREGATE_YGE65+AGE_YTHADULT_YGE15+AGE_YTHADULT_Y15-64+AGE_YTHADULT_Y15-24+AGE_YTHADULT_YGE25&timefrom=2010&timeto=2021
 
 #modelled
 # https://www.ilo.org/shinyapps/bulkexplorer2/?lang=en&segment=indicator&id=EAP_2WAP_SEX_AGE_RT_A&ref_area=AFG+ALB+DZA+AGO+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BTN+BOL+BIH+BWA+BRA+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CAF+TCD+CHA+CHL+CHN+COL+COM+COG+COD+CRI+HRV+CUB+CYP+CZE+CIV+DNK+DJI+DOM+ECU+EGY+SLV+GNQ+ERI+EST+SWZ+ETH+FJI+FIN+FRA+PYF+GAB+GMB+GEO+DEU+GHA+GRC+GUM+GTM+GIN+GNB+GUY+HTI+HND+HKG+HUN+ISL+IND+IDN+IRN+IRQ+IRL+ISR+ITA+JAM+JPN+JOR+KAZ+KEN+PRK+KOR+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LTU+LUX+MAC+MDG+MWI+MYS+MDV+MLI+MLT+MRT+MUS+MEX+MDA+MNG+MNE+MAR+MOZ+MMR+NAM+NPL+NLD+NCL+NZL+NIC+NER+NGA+MKD+NOR+PSE+OMN+PAK+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+ROU+RUS+RWA+LCA+VCT+WSM+STP+SAU+SEN+SRB+SLE+SGP+SVK+SVN+SLB+SOM+ZAF+SSD+ESP+LKA+SDN+SUR+SWE+CHE+SYR+TWN+TJK+TZA+THA+TLS+TGO+TON+TTO+TUN+TUR+TKM+UGA+UKR+ARE+GBR+USA+VIR+URY+UZB+VUT+VEN+VNM+ESH+YEM+ZMB+ZWE+X01+X02+X03+X04+X05+X06+X07+X08+X09+X93+X10+X11+X12+X13+X14+X15+X16+X81+X17+X18+X19+X20+X21+X22+X23+X24+X25+X26+X27+X28+X29+X30+X31+X32+X33+X34+X35+X36+X94+X37+X38+X39+X40+X41+X42+X43+X44+X45+X46+X86+X47+X48+X49+X51+X52+X53+X54+X55+X56+X57+X58+X59+X60+X95+X61+X62+X63+X64+X65+X66+X67+X68+X69+X70+X71+X72+X73+X78+X96+X75+X76+X77+X74+X79+X84+X85+X92+X82+X83+X87+X88+X89+X90+X91&sex=SEX_T&classif1=AGE_5YRBANDS_TOTAL+AGE_5YRBANDS_Y05-09+AGE_5YRBANDS_Y10-14+AGE_5YRBANDS_Y15-19+AGE_5YRBANDS_Y20-24+AGE_5YRBANDS_Y25-29+AGE_5YRBANDS_Y30-34+AGE_5YRBANDS_Y35-39+AGE_5YRBANDS_Y40-44+AGE_5YRBANDS_Y45-49+AGE_5YRBANDS_Y50-54+AGE_5YRBANDS_Y55-59+AGE_5YRBANDS_Y60-64+AGE_5YRBANDS_YGE65+AGE_10YRBANDS_TOTAL+AGE_10YRBANDS_YLT15+AGE_10YRBANDS_Y15-24+AGE_10YRBANDS_Y25-34+AGE_10YRBANDS_Y35-44+AGE_10YRBANDS_Y45-54+AGE_10YRBANDS_Y55-64+AGE_10YRBANDS_YGE65+AGE_AGGREGATE_TOTAL+AGE_AGGREGATE_YLT15+AGE_AGGREGATE_Y15-24+AGE_AGGREGATE_Y25-54+AGE_AGGREGATE_Y55-64+AGE_AGGREGATE_YGE65+AGE_YTHADULT_YGE15+AGE_YTHADULT_Y15-64+AGE_YTHADULT_Y15-24+AGE_YTHADULT_YGE25&timefrom=2010&timeto=2021
@@ -1417,7 +1417,7 @@ ilo_ref_area <- read_csv(file= paste0(raw_dir,"/metadata/ILO_reference_area.csv"
             country=ref_area.label)
                          
 #read in the ILO data downloaded on November 24, 2020
-lfp_estimated <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_modelled-2021-06-25.csv")) %>%
+lfp_estimated <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_modelled-2022-04-07.csv")) %>%
   as_tibble(.name_repair = 'universal') %>%
   mutate(country=case_when(
     ref_area.label=="Gambia" ~ "Gambia, The",
@@ -1429,7 +1429,7 @@ lfp_estimated <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_modelled-2021-06-25.
   select(iso3c, date,  estimated_value ) 
 
 #reported data by countries
-lfp_reported <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_survey-2021-06-25.csv")) %>%
+lfp_reported <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_survey-2022-04-07.csv")) %>%
   as_tibble(.name_repair = 'universal') %>%
   mutate(country=case_when(
     ref_area.label=="Gambia" ~ "Gambia, The",
@@ -1471,14 +1471,14 @@ ilo_fun <- function(date_start, date_end) {
 
 
 
-for (i in c(2010:2020)) {
+for (i in c(2010:end_date)) {
   
   end=i
   
     #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
-  if (end==2020) {
+  if (end==end_date) {
     start=i-6
-  } else if (end==2019) {
+  } else if (end_date-1) {
     start=i-5
   } else {
     start=i-4
@@ -1492,7 +1492,7 @@ if (exists('lfp_data_df')) {
   rm('lfp_data_df')
 }
 #now append together and save
-for (i in c(2010:2020)) {
+for (i in c(2010:end_date)) {
   
   temp<-get(paste('lfp_data_',i, sep=""))
   
@@ -1707,7 +1707,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 ```{r online_access}
 
   #read in ODIN data
-  for (i in c(2015,2016,2017,2018,2020)) {
+  for (i in c(2015,2016,2017,2018,2020, 2021)) {
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""),)  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
@@ -1719,7 +1719,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
   }
 
 #bind different years together
-openness_df <- bind_rows(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018,openness_df_2020)
+openness_df <- bind_rows(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018,openness_df_2020,openness_df_2021)
 
 
 openness_df <- openness_df %>%
@@ -1757,7 +1757,7 @@ spi_df <- spi_df %>%
 
 #do the plots  
    ggplot() +
-    geom_map(data = filter(openness_df, date==2020), aes(map_id = iso3c, fill = RAW.D2.2.Openness.subscore), map = maps$countries) + 
+    geom_map(data = filter(openness_df, date==end_date), aes(map_id = iso3c, fill = RAW.D2.2.Openness.subscore), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -1781,7 +1781,7 @@ spi_df <- spi_df %>%
       caption = 'Source: ODIN'
     )
    
-   filter(openness_df, date==2020) %>%
+   filter(openness_df, date==end_date) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     mutate(Percentage=mean(RAW.D2.2.Openness.subscore),
@@ -2205,7 +2205,7 @@ census_fun  <- function(data, input_var) {
     
   
   #Now calculate our SPI score for this indicator
-  for (i in 2004:2020) {
+  for (i in 2004:end_date) {
    temp <- cs_df %>%
     mutate(date=i) %>%
     mutate(recency_indicator=((date>=indicator_date)) ) %>% #restrict to censuses that do not occur after reference date
@@ -2227,9 +2227,9 @@ census_fun  <- function(data, input_var) {
     assign(paste('temp',i,sep="_"), temp)
   }
 
-  temp <- temp_2020
+  temp <- temp_2021
   
-  for (i in 2004:2019) {
+  for (i in 2004:2020) {
     temp <- bind_rows(temp, get(paste('temp',i,sep="_")))
   }
   temp
@@ -2274,12 +2274,12 @@ survey_fun  <- function(data, input_var) {
     
   
   #Now calculate our SPI score for this indicator
-  for (i in 2004:2020) {
+  for (i in 2004:end_date) {
    temp <- cs_df %>%
     mutate(date=i) %>%
     mutate(window=case_when( #extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period
-      date==2020 ~ 12,
-      date==2019 ~ 11,
+      date==end_date ~ 12,
+      date==(end_date-1) ~ 11,
       TRUE ~ 10
     )) %>%
     mutate(recency_indicator=((date-indicator_date<=window) & (date-indicator_date>=0)) ) %>% #restrict to surveys inside 10 year period 
@@ -2300,9 +2300,9 @@ survey_fun  <- function(data, input_var) {
     assign(paste('temp',i,sep="_"), temp)
   }
 
-  temp <- temp_2020
+  temp <- temp_2021
   
-  for (i in 2004:2019) {
+  for (i in 2004:2020) {
     temp <- bind_rows(temp, get(paste('temp',i,sep="_")))
   }
   temp
@@ -2381,28 +2381,28 @@ spi_df <- spi_df %>%
 
 #now do the figures 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.1.POPU))
-spi_mapper('cs_df_map', 'SPI.D4.1.1.POPU', 'Population Census Available in Past 20 Years in 2020' )
+spi_mapper('cs_df_map', 'SPI.D4.1.1.POPU', 'Population Census Available in Past 20 Years in 2021' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.2.AGRI))
-spi_mapper('cs_df_map', 'SPI.D4.1.2.AGRI', 'Agriculture Census Available in Past 20 Years in 2020' )
+spi_mapper('cs_df_map', 'SPI.D4.1.2.AGRI', 'Agriculture Census Available in Past 20 Years in 2021' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.3.BIZZ))
-spi_mapper('cs_df_map', 'SPI.D4.1.3.BIZZ', 'Business/Establishment Census Available in Past 20 Years in 2020' )
+spi_mapper('cs_df_map', 'SPI.D4.1.3.BIZZ', 'Business/Establishment Census Available in Past 20 Years in 2021' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.4.HOUS))
-spi_mapper('cs_df_map', 'SPI.D4.1.4.HOUS', 'Household Survey Availablility in Past 10 Years in 2020' )
+spi_mapper('cs_df_map', 'SPI.D4.1.4.HOUS', 'Household Survey Availablility in Past 10 Years in 2021' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.5.AGSVY))
-spi_mapper('cs_df_map', 'SPI.D4.1.5.AGSVY', 'Agriculture Survey Availablility in Past 10 Years in 2020' )
+spi_mapper('cs_df_map', 'SPI.D4.1.5.AGSVY', 'Agriculture Survey Availablility in Past 10 Years in 2021' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.6.LABR))
-spi_mapper('cs_df_map', 'SPI.D4.1.6.LABR', 'Labor Force Survey Availablility in Past 10 Years in 2020' )
+spi_mapper('cs_df_map', 'SPI.D4.1.6.LABR', 'Labor Force Survey Availablility in Past 10 Years in 2021' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.7.HLTH))
-spi_mapper('cs_df_map', 'SPI.D4.1.7.HLTH', 'Health Survey Availablility in Past 10 Years in 2020' )
+spi_mapper('cs_df_map', 'SPI.D4.1.7.HLTH', 'Health Survey Availablility in Past 10 Years in 2021' )
 
 cs_df_map <- cs_df %>%  filter(!is.na(SPI.D4.1.8.BZSVY))
-spi_mapper('cs_df_map', 'SPI.D4.1.8.BZSVY', 'Business Survey Availablility in Past 10 Years in 2020' )
+spi_mapper('cs_df_map', 'SPI.D4.1.8.BZSVY', 'Business Survey Availablility in Past 10 Years in 2021' )
 
 
 ```
@@ -2468,8 +2468,8 @@ aspire_fun <- function(date_start, date_end) {
 ####
 # X Year moving average
 ####
-#create this database for each year from 2004 to 2020 using a X year average
-for (i in c(2004:2020)) {
+#create this database for each year from 2004 to 2021 using a X year average
+for (i in c(2004:end_date)) {
   
   start=i-(window-1)
   end=i
@@ -2482,7 +2482,7 @@ if (exists('aspire_df')) {
   rm('aspire_df')
 }
 #now append together and save
-for (i in c(2004:2020)) {
+for (i in c(2004:end_date)) {
   
   temp<-get(paste('aspire_',i, sep=""))
   
@@ -2802,7 +2802,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 ```{r geo}
 
   #read in ODIN data
-  for (i in c(2015,2016,2017, 2018, 2020)) {
+  for (i in c(2015,2016,2017, 2018, 2020, 2021)) {
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
@@ -2814,7 +2814,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
   }
 
 #bind different years together
-geo_df <- bind_rows(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018, geo_df_2020)
+geo_df <- bind_rows(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018, geo_df_2020, geo_df_2021)
 
 #for some small countries, the data at 1st admin level is not included.  These countries include:
 # Andorra, Anguilla, Antigua and Barbuda, Bahrain, Dominica, Hong Kong, Macao, Maldives, Malta, Marshall Islands, 
@@ -2875,7 +2875,7 @@ spi_df <- spi_df %>%
 
 #do the plots  
    ggplot() +
-    geom_map(data = filter(geo_df, date==2020), aes(map_id = iso3c, fill = RAW.D4.3.GEO.first.admin.level), map = maps$countries) + 
+    geom_map(data = filter(geo_df, date==end_date), aes(map_id = iso3c, fill = RAW.D4.3.GEO.first.admin.level), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -2899,7 +2899,7 @@ spi_df <- spi_df %>%
       caption = 'Source: ODIN'
     )
    
-   filter(geo_df, date==2020) %>%
+   filter(geo_df, date==end_date) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     mutate(Percentage=mean(RAW.D4.3.GEO.first.admin.level),
@@ -2933,7 +2933,7 @@ spi_df <- spi_df %>%
       theme_bw()   
    
    ggplot() +
-    geom_map(data = filter(geo_df, date==2020), aes(map_id = iso3c, fill = RAW.D4.3.GEO.second.admin.level), map = maps$countries) + 
+    geom_map(data = filter(geo_df, date==end_date), aes(map_id = iso3c, fill = RAW.D4.3.GEO.second.admin.level), map = maps$countries) + 
     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
      geom_path(data = maps$boundaries,
@@ -2957,7 +2957,7 @@ spi_df <- spi_df %>%
       caption = 'Source: ODIN'
     )   
    
-    filter(geo_df, date==2020) %>%
+    filter(geo_df, date==end_date) %>%
     group_by(region) %>%
     filter(region!='Aggregates') %>%
     mutate(Percentage=mean(RAW.D4.3.GEO.second.admin.level),
@@ -3914,7 +3914,7 @@ Below we will append the data together and save the final files together.
 pop_df <- wbstats::wb(country="all",
              indicator='SP.POP.TOTL',
              startdate=2004,
-             enddate=2020) %>%
+             enddate=end_date) %>%
   mutate(date=as.numeric(date)) %>%
   mutate(population=value) %>%
   select(country, date, population)
@@ -3928,7 +3928,7 @@ spi_df_final <- spi_df %>%
 
 
 ####
-#lining up data to 2020 and filling in some values for OECD countries.  
+#lining up data to end_date and filling in some values for OECD countries.  
 ####
 #get a list of oecd countries
 oecd_country_query <-  GET(url = "https://api.worldbank.org/v2/country?region=OED&format=json") %>%
