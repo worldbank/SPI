@@ -39,6 +39,8 @@ output_dir <- paste(dir, '03_output_data', sep="/")
 #parameters
 window=5 #set the window for the moving averages
 
+date=2021
+
 ```
 
 ```{r spi_df}

@@ -20,8 +20,8 @@ library(tidytext)
 library(rsdmx)
 library(here)
 library(purrr)
-library(wbggeo)
-library(wbgmaps)
+# library(wbggeo)
+# library(wbgmaps)
 library(ggthemes)
 
 
