@@ -1189,7 +1189,7 @@ Quality:
 # WDI metadata was gathered using previous vintages of WDI from 2016-19
 # Metadata was gathered and saved as csv files in the 011_data folder
 
-for (i in 2016:2020) {
+for (i in 2016:2021) {
   temp <- read_csv(file = paste(raw_dir, "/metadata/WDI_metadata_",i,".csv", sep="" )) %>%
     as_tibble(.name_repair='universal') %>%
     mutate(National.accounts.reference.year=as.numeric(National.accounts.reference.year),
@@ -1198,7 +1198,7 @@ for (i in 2016:2020) {
     assign(paste("WDI_metadata",i,sep="_"), temp)
 }
 
-WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_2018, WDI_metadata_2019, WDI_metadata_2020)
+WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_2018, WDI_metadata_2019, WDI_metadata_2020, WDI_metadata_2021)
 ```
 
 
@@ -1419,24 +1419,22 @@ ilo_ref_area <- read_csv(file= paste0(raw_dir,"/metadata/ILO_reference_area.csv"
 #read in the ILO data downloaded on November 24, 2020
 lfp_estimated <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_modelled-2022-04-07.csv")) %>%
   as_tibble(.name_repair = 'universal') %>%
-  mutate(country=case_when(
-    ref_area=="Gambia" ~ "Gambia, The",
-    TRUE ~ ref_area
-    ),
+  mutate(iso3c=ref_area,
     date=time,
     estimated_value=obs_value) %>%
-    left_join(ilo_ref_area) %>%
+    #left_join(ilo_ref_area) %>%
   select(iso3c, date,  estimated_value ) 
 
 #reported data by countries
 lfp_reported <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_survey-2022-04-07.csv")) %>%
   as_tibble(.name_repair = 'universal') %>%
   mutate(country=case_when(
-    ref_area=="Gambia" ~ "Gambia, The",
-    TRUE ~ ref_area
+    ref_area.label=="Gambia" ~ "Gambia, The",
+    TRUE ~ ref_area.label
     ),
     date=time,
-    reported_value=obs_value) %>%
+    reported_value=obs_value,
+    source=source.label) %>%
     left_join(ilo_ref_area) %>%
   select(iso3c, date, source, reported_value )
 
