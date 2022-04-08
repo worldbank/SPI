@@ -14,7 +14,6 @@
 library(here)
 library(tidyverse)
 
-library(microbenchmark)
 
 # set directory path
 dir <- here()

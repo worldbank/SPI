@@ -1420,8 +1420,8 @@ ilo_ref_area <- read_csv(file= paste0(raw_dir,"/metadata/ILO_reference_area.csv"
 lfp_estimated <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_modelled-2022-04-07.csv")) %>%
   as_tibble(.name_repair = 'universal') %>%
   mutate(country=case_when(
-    ref_area.label=="Gambia" ~ "Gambia, The",
-    TRUE ~ ref_area.label
+    ref_area=="Gambia" ~ "Gambia, The",
+    TRUE ~ ref_area
     ),
     date=time,
     estimated_value=obs_value) %>%
@@ -1432,19 +1432,19 @@ lfp_estimated <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_modelled-2022-04-07.
 lfp_reported <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_survey-2022-04-07.csv")) %>%
   as_tibble(.name_repair = 'universal') %>%
   mutate(country=case_when(
-    ref_area.label=="Gambia" ~ "Gambia, The",
-    TRUE ~ ref_area.label
+    ref_area=="Gambia" ~ "Gambia, The",
+    TRUE ~ ref_area
     ),
     date=time,
     reported_value=obs_value) %>%
     left_join(ilo_ref_area) %>%
-  select(iso3c, date, source.label, reported_value )
+  select(iso3c, date, source, reported_value )
 
 #merge the two together
 lfp_data <- lfp_reported %>%
   left_join(lfp_estimated) %>%
   mutate(estimate_diff=if_else(!is.na(estimated_value),reported_value-estimated_value,0),
-         lfs_source=(grepl("LFS",source.label))) %>%
+         lfs_source=(grepl("LFS",source))) %>%
   filter(iso3c %in% country_metadata$iso3c)
 
 
@@ -2601,7 +2601,7 @@ Source: World Bank WDI Metadata.
 
 #read in data from UNSD database on SDGs
 df_birth <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_BRTH90N.csv', sep="/")) %>% #Countries with birth registration data that are at least 90 percent complete (1 = YES; 0 = NO)
-  filter(date>=2015 & date<=2020) %>%
+  filter(date>=2015 & date<=end_date) %>%
   left_join(spi_df_empty) %>%
   transmute(
     iso3c=iso3c,
@@ -2612,7 +2612,7 @@ df_birth <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_BRTH90N.csv', sep="
   )
 
 df_death <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_DETH75N.csv', sep="/")) %>% #Countries with death registration data that are at least 75 percent complete (1 = YES; 0 = NO)
-  filter(date>=2015& date<=2020) %>%
+  filter(date>=2015& date<=end_date) %>%
   left_join(spi_df_empty) %>%
     transmute(
     iso3c=iso3c,
@@ -3092,7 +3092,7 @@ The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Dat
 ```{r legislation_governance}
 
 
-D5.1_DILG <- un_pull('SG_STT_FPOS', '2004', '2020') %>%
+D5.1_DILG <- un_pull('SG_STT_FPOS', '2004', '2021') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.1.DILG=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
@@ -3884,7 +3884,7 @@ spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Sou
 
 #examine other finance indicators
 #pull from unsd api
-D5.5_DIFI_test <- un_pull('SG_STT_NSDSFDGVT', '2004', '2020') %>%
+D5.5_DIFI_test <- un_pull('SG_STT_NSDSFDGVT', '2004', '2021') %>%
   select(iso3c, date,value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
