@@ -41,6 +41,7 @@ library(WDI)
 dir <- here()
 raw_dir <- paste(dir, '01_raw_data', sep="/")
 output_dir <- paste(dir, '03_output_data', sep="/")
+dashboard_dir <- 'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/regression_dashboard'
 #weights (either unity (1) or population)
 wgt <- 1
 ```
@@ -136,6 +137,24 @@ predictors_df <- wbstats::wb_data(country="countries_only",
          )  %>%
   ungroup()
 
+#non imputed
+
+non_imp_predictors_df <- wbstats::wb_data(country="countries_only",
+             indicator=c('NY.GDP.PCAP.KD', 'NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS','NE.TRD.GNFS.ZS', 'HD.HCI.OVRL','SE.PRM.ENRR','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS", "SI.POV.DDAY", "SI.POV.GINI"),
+             start_date=2010,
+             end_date=2020) %>%
+  mutate(date=as.numeric(date)) %>%
+  arrange(iso3c, date) %>%
+  group_by(iso3c) %>%
+  #fill(c( 'NY.GDP.PCAP.KD','NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS', 'SE.PRM.ENRR', 'HD.HCI.OVRL','NE.TRD.GNFS.ZS','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS","SI.POV.DDAY", "SI.POV.GINI"), .direction="downup") %>%
+  mutate(WGI.OVL=(CC.EST + GE.EST + PV.EST + RQ.EST + RL.EST + VA.EST)/6,
+         lag_outcome=lag(NY.GDP.PCAP.KD),
+         lag_fdi=lag(BX.KLT.DINV.WD.GD.ZS),
+         lag_ge=lag(GE.EST),
+         lag_poverty=lag(SI.POV.DDAY),
+         lag_gini=lag(SI.POV.GINI)
+         )  %>%
+  ungroup()
 
 #get central government debt data from IMF which is more complete source
 imf_dta <- haven::read_dta("C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Blog - SPI and Bond Spreads/01_Data/Global Debt Database_121521_to_DATAMAPPER.dta" ) %>% 
@@ -176,6 +195,33 @@ reg_df <- SPI_2016 %>%
              is.na(RL.EST) |
              is.na(VA.EST) )) %>%
   mutate(region_year_fe=paste(region,date,sep=" - "))
+
+write_excel_csv(reg_df, paste0(dashboard_dir, "/reg_dashboard_data.csv"))
+
+#nonimputed
+#add in some metadata about the country
+non_imp_reg_df <- SPI_2016 %>%
+  select(country, iso3c, date, region, SPI.INDEX, SPI.INDEX.PIL1, SPI.INDEX.PIL2, SPI.INDEX.PIL3, SPI.INDEX.PIL4, SPI.INDEX.PIL5) %>%
+  left_join(non_imp_predictors_df) %>%
+  filter(between(date,2016,2020)) %>%
+  filter(!(is.na(SPI.INDEX) | 
+             is.na(NY.GDP.PCAP.KD) |
+             is.na(NV.IND.MANF.ZS) |
+             is.na(NV.AGR.TOTL.ZS) |
+             is.na(SE.PRM.ENRR) |
+             is.na(NE.TRD.GNFS.ZS) |
+             #is.na(cg) | 
+             #is.na(BN.CAB.XOKA.GD.ZS) |
+             is.na(CC.EST) |
+             is.na(GE.EST) |
+             is.na(PV.EST) |
+             is.na(RQ.EST) |
+             is.na(RL.EST) |
+             is.na(VA.EST) )) %>%
+  mutate(region_year_fe=paste(region,date,sep=" - "))
+
+write_excel_csv(non_imp_reg_df, paste0(dashboard_dir, "/non_imputed_reg_dashboard_data.csv"))
+
 
 ncountry <- length(unique(reg_df$country))
 
