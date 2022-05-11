@@ -1338,8 +1338,22 @@ index_disp <- spi_index_df %>%
 
 ```{r saver, include=FALSE}
 
+SPI_WDI <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_index.csv') %>%
+    left_join(pop_df) %>%
+  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
 
-spi_index_df %>%
+
+SPI_2020 <- spi_index_df %>%
+  filter(date==2020) %>%
+  #filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
+  mutate(ISO_A3_EH=iso3c) 
+
+
+SPI <- SPI_2020 %>%
+  bind_rows(SPI_WDI)
+
+
+SPI %>%
   write_excel_csv(path=paste(output_dir, 'SPI_index.csv', sep="/"))
 
 #add stata labels and save a stata version
@@ -1352,7 +1366,7 @@ metadata_info <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep=
   bind_rows(metadata_info)
 
 #create a copy of the data to save to stata
-spi_index_dta <- spi_index_df
+spi_index_dta <- SPI
 
 #get a list of the labels and apply them
 labels <- metadata_info[match(colnames(spi_index_dta),metadata_info$source_id),2]
@@ -1362,6 +1376,9 @@ names(labels) <-colnames(spi_index_dta)
 label(spi_index_dta) <- as.list(labels)
 
 #save stata compatible version with labels
+
+
+
 spi_index_dta %>%
   janitor::clean_names() %>%
   haven::write_dta(path=paste(output_dir, 'SPI_index.dta', sep="/"))
@@ -1375,7 +1392,7 @@ spi_index_dta_lab <- rbind(l, spi_index_dta) %>%
 
 
 #for rest of paper, restrict to just 2016, which is where we have complete data
-spi_index_df <- spi_index_df %>%
+spi_index_df <- SPI %>%
   filter(date>=2016)
 
 ```
