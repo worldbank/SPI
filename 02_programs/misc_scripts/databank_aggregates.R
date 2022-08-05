@@ -25,7 +25,7 @@ SPI_2020 <- read_csv(paste0(output_dir, "/SPI_index.csv")) %>%
   filter(date==2020)
 
 SPI_index <- SPI_index %>%
-  bind_rows(SPI_2020) %>%
+  #bind_rows(SPI_2020) %>%
   arrange(-date, country)
 
 #reshape to match databank format
@@ -66,12 +66,20 @@ databank_df <- databank_df %>%
 #     WB_Group_Name=WB_Group_Name
 #   )
 
-class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xls', sep=""),sheet = "Groups") %>%
+# class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xls', sep=""),sheet = "Groups") %>%
+#   rename(
+#     iso3c=CountryCode,
+#     country=CountryName,
+#     WB_Group_Code=GroupCode,
+#     WB_Group_Name=GroupName
+#   )
+
+class_df <- read_excel(paste(raw_dir, '/misc/FY21_group_list.xlsx', sep=""),sheet = "Sheet1") %>%
   rename(
-    iso3c=CountryCode,
-    country=CountryName,
-    WB_Group_Code=GroupCode,
-    WB_Group_Name=GroupName
+    iso3c=Code,
+    country=Name,
+    WB_Group_Code=`Group code`,
+    WB_Group_Name=`Group name`
   )
 
 weight<-'none'
