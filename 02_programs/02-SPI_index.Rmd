@@ -3,7 +3,7 @@ title: 'Measuring the Statistical Performance of Countries: An Overview of Updat
 author: "SPI Team"
 date: "`r Sys.Date()`"
 output:
-  bookdown::gitbook: 
+  bookdown::word_document2: 
     fig_width: 9
     fig_height: 6
 abstract: 'National statistical systems are facing significant challenges. These challenges arise from increasing demands for high quality and trustworthy data to guide decision making, coupled with the rapidly changing landscape of the data revolution. To emphasize the urgent need for transformation and to help create a mechanism for learning amongst national statistical systems, the World Bank has developed new Statistical Performance Indicators (SPI) to monitor the statistical performance of countries. The SPI framework focuses on five key dimensions of a country’s statistical performance: (i) data use, (ii) data services, (iii) data products, (iv) data sources, and (v) data infrastructure.  The SPI will replace the Statistical Capacity Index (SCI) that the World Bank has regularly published since 2004. This note discusses the motivation behind the new SPI methodology, outlines some of its major features, and describes a new index based on the indicators.'

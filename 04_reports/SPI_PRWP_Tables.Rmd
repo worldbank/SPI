@@ -662,8 +662,77 @@ fcs_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scor
 
 ## Correlation of SPI with Income and Human Capital Levels
 
-![](plots/gdpplot-1.png)
 
+```{r log_gdp}
+
+#HCI
+hci_df <- wbstats::wb_data(country="countries_only", 
+              indicator='HD.HCI.OVRL',
+              start_date=2016,
+              end_date=2020,
+              return_wide = F) %>%
+  left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
+
+#get the correlation for 2020
+hci_df_2018 <- hci_df %>%
+  filter(date==2020) 
+
+
+
+
+hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
+  facet_wrap(~indicator) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  theme_spi() +
+  ylab('SPI Overall Score') +
+  xlab('Human Capital Index') +
+  geom_richtext(
+    aes(x = 0.5, y = 20,label = eq_plot_txt(hci_df_2018)), hjust=0.2
+  ) +
+  labs(caption="Source: All indicators come from the World Bank. SPI and HCI data are for the year 2020.")
+
+
+#GDP
+gdp_df <- wbstats::wb_data(
+  indicator='NY.GDP.PCAP.KD',
+  start_date=2016,
+  end_date=2020,
+  return_wide = F
+    ) %>%
+  left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
+
+#get the correlation for 2020
+gdp_df_2020 <- gdp_df %>%
+  filter(date==2020) 
+
+#text for plot
+eq <- lm_robust(SPI.INDEX ~ log(value), data=gdp_df_2020 , se_type='HC2')
+coef <- coef(eq)
+std_err <- sqrt(diag(vcov(eq)))
+r_2<- summary(eq)$r.squared
+plot_txt <- sprintf("y = %.3f + %.3f ln(x), R^2 = %.3f<br>    (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
+
+  gdp_spi <- ggplot(data=gdp_df_2020, aes(x=value, y=SPI.INDEX)) +
+  facet_wrap(~indicator) +
+  geom_text(aes(label=iso3c)) +
+  geom_smooth(method='lm') +
+  scale_x_log10(labels = scales::comma) +
+  theme_spi() +
+  ylab('SPI Overall Score') +
+  xlab('Log GDP Per Capita') +
+  theme(legend.position = 'bottom') +
+  geom_richtext(
+    aes(x = 1000, y = 20,label = plot_txt), hjust=0.2
+  ) +
+  labs(caption="Source: All indicators come from the World Bank. SPI and HCI data are for the year 2020.")
+
+
+hci_spi
+
+gdp_spi
+  
+```
 ## Correlation of SPI with Government Effectiveness
 
 ![](plots/geplot-1.png)
@@ -778,7 +847,7 @@ gini_spi <- ggplot(data=gini_df_2020, aes(x=value, y=SPI.INDEX)) +
 pov_spi + gini_spi   +
   plot_annotation(
     #title='Plot of SPI overall score on Poverty Ratio and Gini Index',
-    caption='Source: All indicators come from the World Bank. SI.POV.DDAY & SI.POV.GINI.'
+    caption='Source: All indicators come from the World Bank. SI.POV.DDAY & SI.POV.GINI. SPI data for year 2020. \n Poverty and Gini values are latest values available for countries.'
     )
   
 ```

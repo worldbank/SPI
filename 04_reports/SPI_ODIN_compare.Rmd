@@ -33,6 +33,9 @@ library(estimatr)
 library(ggpmisc)
 library(ggthemes)
 library(ggtext)
+library(modelsummary)
+
+
 #set directories
 dir <- here()
 raw_dir <- paste(dir, '01_raw_data', sep="/")
@@ -47,15 +50,14 @@ wgt <- 1
 pop_df <- wbstats::wb_data(country="all",
              indicator='SP.POP.TOTL',
              start_date=2004,
-             end_date=2019) %>%
+             end_date=2020) %>%
   mutate(date=as.numeric(date)) %>%
   mutate(population=SP.POP.TOTL) %>%
   select(country, date, population) 
 #import data
-SPI <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
+spi_index_df <- read_csv(paste(output_dir, 'SPI_index.csv', sep="/")) %>%
     left_join(pop_df) %>%
   mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
-spi_index_df <- SPI
 #read in the SPI dataset
 spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
   left_join(pop_df) %>%
@@ -67,13 +69,23 @@ metadata <- data.frame(
 )
 #get list of country info
 country_list <- wbstats::wb_countries()
-SPI_2019 <- SPI %>%
-  filter(date==2019) %>%
+
+SPI_WDI <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_index.csv') %>%
+    left_join(pop_df) %>%
+  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+
+
+SPI_2020 <- spi_index_df %>%
+  filter(date==2020) %>%
   filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
   mutate(ISO_A3_EH=iso3c) 
-#read in TopoJSON from World Bank
-#countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
-#                                     what = "sp")
+
+
+SPI <- SPI_2020 %>%
+  bind_rows(SPI_WDI)
+
+spi_index_df <- SPI
+
 ```
 
 ```{r spi_map, echo=FALSE, message=FALSE, warning=FALSE, fig.height=14, fig.width=14}
@@ -100,7 +112,7 @@ standard_crop_wintri <- function() {
   l
 }
 country_metadata <- wbstats::wbcountries()
-data = SPI_2019
+data = SPI
 spi_mapper <- function(data, indicator, title) {
   
  indicator<-indicator
@@ -576,12 +588,13 @@ FitFlextableToPage <- function(ft, pgwidth = 6){
   return(ft_out)
 }
 #add equations to plots
-eq_plot_txt <- function(data) {
-  eq <- lm_robust(SPI.INDEX ~ value, data=data, se_type='HC2')
+eq_plot_txt <- function(data, inp, var) {
+  eq <- lm_robust(inp ~ var, data=data, se_type='HC2')
   coef <- coef(eq)
   std_err <- sqrt(diag(vcov(eq)))
   r_2<- summary(eq)$r.squared
-  glue::glue("y = {round(coef[1],3)} + {round(coef[2],3)} x, R<sup>2</sup> = {round(r_2[1],3)} <br> &nbsp;   &nbsp;  	&nbsp; 	&nbsp;   ({round(std_err[1],3)}) &nbsp;   &nbsp;  ({round(std_err[2],3)})" )
+  sprintf("y = %.3f + %.3f x, R<sup>2</sup> = %.3f <br>    (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
+
 }
 ```
 
@@ -596,7 +609,7 @@ eq_plot_txt <- function(data) {
 # 2. An indicator with the raw (unscored) values of the indicators
 # The unit for this database will be country*year
 
-span <- c(2004:2019)
+span <- c(2004:2020)
 
 spi_df_empty <- bind_rows(replicate(length(span), wbstats::wbcountries(), simplify = FALSE), .id='date') %>%
   mutate(date=as.numeric(date)+span[1]-1) %>%
@@ -643,10 +656,12 @@ unique_scores_sci <-length(unique(unique_scores_df$SCI))
 
 
 #read in ODIN data
-  for (i in 2015:2018) {
+  for (i in c(2015, 2016, 2017, 2018, 2020)) {
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
         as_tibble(.name_repair = 'universal') %>%
-        mutate(date=i) %>%
+        mutate(date=i,
+               Year=as.numeric(Year)) %>%
+          
         filter(Data.categories=='All Categories')
 
 
@@ -654,7 +669,7 @@ unique_scores_sci <-length(unique(unique_scores_df$SCI))
   }
 
     #bind different years together
-odin_df <- bind_rows(odin_df_2015, odin_df_2016, odin_df_2017, odin_df_2018)
+odin_df <- bind_rows(odin_df_2015, odin_df_2016, odin_df_2017, odin_df_2018, odin_df_2020)
 
 
 odin_df <- odin_df %>%
@@ -670,6 +685,22 @@ odin_df <- odin_df %>%
   mutate(across(starts_with("ODIN"), na.locf, na.rm=FALSE)) %>%
   select(country, date, starts_with("ODIN"))
 
+
+##add in gdp
+gdp_df <- wbstats::wb_data(country="all",
+             indicator=c('NY.GDP.PCAP.PP.KD', "GE.EST"),
+             start_date=2004,
+             end_date=2020) %>%
+  mutate(date=as.numeric(date)) 
+
+#poverty
+pov_df <- wbstats::wb_data(country="countries_only", 
+              indicator=c('SI.POV.DDAY', "HD.HCI.OVRL","SI.POV.GINI"),
+              start_date=2004,
+              end_date=2020,
+              mrv=10,
+              gapfill=TRUE,
+              return_wide = T)
 
 #read in the old SPI
 SPI_v0_df <- readxl::read_excel(path='C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/FinalCopy of SPI SCORE 2016-2018-DW.xlsx', skip=2) %>%
@@ -691,14 +722,16 @@ SPI_v0_df <- readxl::read_excel(path='C:/Users/wb469649/OneDrive - WBG/DECIS/SPI
 #create one database
 comparison_df <- spi_index_df %>%
   ungroup() %>%
-  filter(date %in% c(2016:2018)) %>%
+  filter(date %in% c(2016:2020)) %>%
   arrange(-SPI.INDEX) %>%
   mutate(across(starts_with('SPI.INDEX'),~1*.),
          across(starts_with('SPI.INDEX'),round,1)) %>%
   select(country, iso3c, date, income, region, SPI.INDEX) %>%
   left_join(sci_df) %>%
   left_join(odin_df) %>%
-  left_join(SPI_v0_df)
+  left_join(SPI_v0_df) %>%
+  left_join(gdp_df) %>%
+  left_join(pov_df)
 
 
 
@@ -734,7 +767,119 @@ spi_odin_plot
 
 ```
 
-Below we show a selection of 30 countries, where we calculate the countries with the largest changes in country rankings between ODIN and the SPI overall score.  Differences in country rankings are compared, rather than scores, because even though the SPI and ODIN overall scores are both on a 0-100 scale, they measures are not directly comparable.  Data is for 2018, since this is the latest year available with both an ODIN and SPI overall score.  Countries shaded in green have a higher ranking in the SPI than in ODIN.  Taking Chile for an example, ODIN ranks Chile as the 116th best system among the 174 countries, while the SPI ranks Chile as the 36th best system.  ODIN penalizes Chile for not having metadata for the indicators on their NSO website and not having terms of use and data download options.  While it may be the case that the Chile NSO website struggles in this area, Chile scores very highly in data infrastructure, reporting on the SDGs, and on data dissemination standards for the IMF.  
+```{r odin_gdp, echo=FALSE}
+
+ 
+
+### Scatterplot ODIN SPI
+odin_gdp_plot <- ggplot((comparison_df %>% filter(date==2020)), aes(y=ODIN_score,x=NY.GDP.PCAP.PP.KD, color=region)) +
+  # geom_point() +
+  facet_wrap(~date) +
+  geom_text(aes(label=iso3c)) +
+  scale_x_log10(labels=scales::comma) +
+  theme_spi() +
+  labs(
+    title='Scatterplot of Open Data Watch Index on GDP per capita, PPP (constant 2017 international $)'
+  ) +
+  ylab('ODIN value') +
+  xlab('GDP per capita, PPP (constant 2017 international $)') +
+  theme(legend.position = 'bottom')
+
+odin_gdp_plot
+
+lm(ODIN_score ~ log10(NY.GDP.PCAP.PP.KD), data=(comparison_df %>% filter(date==2020))) %>% summary()
+
+### Scatterplot ODIN SPI
+spi_gdp_plot <- ggplot((comparison_df %>% filter(date==2020)), aes(y=SPI.INDEX,x=NY.GDP.PCAP.PP.KD, color=region)) +
+  # geom_point() +
+  facet_wrap(~date) +
+  geom_text(aes(label=iso3c)) +
+  scale_x_log10(labels=scales::comma) +
+  theme_spi() +
+  labs(
+    title='Scatterplot of Open Data Watch Index on GDP per capita, PPP (constant 2017 international $)'
+  ) +
+  ylab('SPI overall score') +
+  xlab('GDP per capita, PPP (constant 2017 international $)') +
+  theme(legend.position = 'bottom')
+
+spi_gdp_plot
+
+lm(SPI.INDEX ~ log10(NY.GDP.PCAP.PP.KD), data=(comparison_df %>% filter(date==2020))) %>% summary()
+
+
+```
+
+```{r}
+
+
+#create regression models
+ models <- list(
+
+
+ 'ODIN' = lm_robust(ODIN_score ~  log10(NY.GDP.PCAP.PP.KD) , data=(comparison_df %>% filter(date==2020)), se_type='HC2') ,
+
+ 'SPI' = lm_robust(SPI.INDEX ~  log10(NY.GDP.PCAP.PP.KD)    , data=(comparison_df %>% filter(date==2020)), se_type='HC2'), 
+   
+ 'ODIN' = lm_robust(ODIN_score ~  SI.POV.DDAY , data=(comparison_df %>% filter(date==2020)), se_type='HC2') ,
+
+ 'SPI' = lm_robust(SPI.INDEX ~  SI.POV.DDAY   , data=(comparison_df %>% filter(date==2020)), se_type='HC2') ,
+ 
+  'ODIN' = lm_robust(ODIN_score ~  SI.POV.GINI , data=(comparison_df %>% filter(date==2020)), se_type='HC2') ,
+
+ 'SPI' = lm_robust(SPI.INDEX ~  SI.POV.GINI   , data=(comparison_df %>% filter(date==2020)), se_type='HC2') ,
+ 
+  'ODIN' = lm_robust(ODIN_score ~  HD.HCI.OVRL , data=(comparison_df %>% filter(date==2020)), se_type='HC2') ,
+
+ 'SPI' = lm_robust(SPI.INDEX ~  HD.HCI.OVRL    , data=(comparison_df %>% filter(date==2020)), se_type='HC2'), 
+   
+ 'ODIN' = lm_robust(ODIN_score ~  GE.EST , data=(comparison_df %>% filter(date==2020)), se_type='HC2') ,
+
+ 'SPI' = lm_robust(SPI.INDEX ~  GE.EST   , data=(comparison_df %>% filter(date==2020)), se_type='HC2')   
+ 
+
+ )
+
+
+ modelsummary(models,
+              estimate= "{estimate}{stars}",
+              #vcov=list(NULL,"HC1",NULL),
+              coef_rename = c("SPI.INDEX"  = "SPI Overall Score",
+                              "ODIN_score" = "ODIN",
+                              "SI.POV.DDAY" = "$1.90 Poverty Headcount Ratio",
+                              "SI.POV.GINI" = "Gini Index",
+                              "SPI.INDEX.PIL1"  = "SPI Pillar 1 Score",
+                              "SPI.INDEX.PIL2"  = "SPI Pillar 2 Score",
+                              "SPI.INDEX.PIL3"  = "SPI Pillar 3 Score",
+                              "SPI.INDEX.PIL4"  = "SPI Pillar 4 Score",
+                              "SPI.INDEX.PIL5"  = "SPI Pillar 5 Score",
+                              "log10(NY.GDP.PCAP.PP.KD)"= "Log GDP per capita",
+                              "log(lag_outcome)" = "Log lagged GDP per capita" ,
+                              "lag(log(NY.GDP.PCAP.KD), 1)" = "Log lagged GDP per capita" ,
+                              "NV.IND.MANF.ZS"  = "Manufacturing value added (% of GDP)",
+                              "NV.AGR.TOTL.ZS"= "Agriculture, forestry, fishing value added (% of GDP)",
+                              "BN.CAB.XOKA.GD.ZS"= "Current account balance (% of GDP)",
+                              "HD.HCI.OVRL" = "Human Capital Index (0-1 scale)",
+                              "SE.PRM.ENRR" = "School Enrollment, Primary (% gross)" ,
+                              "NE.TRD.GNFS.ZS" = "Trade (% of GDP)",
+                              "WGI.OVL" = "WGI Index",
+                              "CC.EST" = "WGI: Control of Corruption: Estimate",
+                              "GE.EST" = "WGI: Governance Effectiveness: Estimate",
+                              "PV.EST" = "WGI: Political Stability and Absence of Violence/Terrorism: Estimate",
+                              "RQ.EST" = "WGI: Regulatory Quality: Estimate",
+                              "RL.EST" = "WGI: Rule of Law: Estimate",
+                              "VA.EST" = "WGI: Voice and Accountability: Estimate"),
+              notes="Data from the World Bank's World Development Indicators (WDI) and ODIN website.Data for year 2020. 
+              ***=0.001 level
+              **=0.01 level
+              *=0.05 level
+              +=0.1 level",
+              escape = FALSE
+              )
+```
+
+
+Below we show a selection of 30 countries, where we calculate the countries with the largest changes in country rankings between ODIN and the SPI overall score.  Differences in country rankings are compared, rather than scores, because even though the SPI and ODIN overall scores are both on a 0-100 scale, they measures are not directly comparable.  Data is for 2020, since this is the latest year available with both an ODIN and SPI overall score.  Countries shaded in green have a higher ranking in the SPI than in ODIN.  Taking Chile for an example, ODIN ranks Chile as the 116th best system among the 174 countries, while the SPI ranks Chile as the 36th best system.  ODIN penalizes Chile for not having metadata for the indicators on their NSO website and not having terms of use and data download options.  While it may be the case that the Chile NSO website struggles in this area, Chile scores very highly in data infrastructure, reporting on the SDGs, and on data dissemination standards for the IMF.  
 
 On the other side, a country like Oman is rated as the 26th best system by ODIN and 103rd best system by the SPI.  Oman gets very high openness scores by ODIN.  However, for the SPI, Oman performs below average on data infrastructure compared to high income countries, lacking many of the standards and classifications.  Jamaica is rated as the 36th best system by ODIN and the 113th best by the SPI.  Jamaice scores poorly on data infrastructure by the SPI.  
 
@@ -743,7 +888,7 @@ On the other side, a country like Oman is rated as the 26th best system by ODIN 
 #get top 10 and bottom 10 over performers compared to odin 
 
 odin_overperformers_df_full <- comparison_df %>%
-  filter(date==2018) %>%
+  filter(date==2020) %>%
   filter(!is.na(SPI.INDEX)) %>%
   filter(!is.na(ODIN_score)) %>%
   mutate(
@@ -757,7 +902,7 @@ odin_overperformers_df <- odin_overperformers_df_full %>%
   head(15)
 
 odin_underperformers_df <- comparison_df %>%
-  filter(date==2018) %>%
+  filter(date==2020) %>%
   filter(!is.na(SPI.INDEX)) %>%
   filter(!is.na(ODIN_score)) %>%
   mutate(
@@ -791,7 +936,7 @@ odin_overperformers_plot <- odin_overperformers_plot %>%
   ) +
   xlab("") +
   ylab("Difference in ODIN Country Rank SPI Country Rank") +
-  ggtitle("Difference in Country Ranks Between ODIN and SPI Overall Scores for 2018",
+  ggtitle("Difference in Country Ranks Between ODIN and SPI Overall Scores for 2020",
           subtitle = 'Only shows selection of 30 countries with largest gaps')
 
 
@@ -805,7 +950,97 @@ odin_overperformers_df_full %>%
   select(country, SPI.INDEX, ODIN_score, SPI_ranked, ODIN_ranked, difference_ranked) %>%
   arrange(-SPI.INDEX) %>%
   flextable() %>%
-  add_header_lines('SPI and ODIN Country Rankings in 2018')
+  add_header_lines('SPI and ODIN Country Rankings in 2020')
 
 ```
 
+## Comparison of Pillar 3 of SPI and ODIN Coverage Measure
+
+In the following, we will investigate how SPI rankings would change if the SPI pillar 3 is substituted with the ODIN indicator coverage and disaggregation score and the overall coverage subscore.
+
+```{r}
+#create version of SPI using the ODIN coverage subscore
+
+spi_odin_combined <- SPI_2020 %>%
+  left_join((odin_df_2020 %>% rename(iso3c=Country.Code))) %>%
+  left_join(gdp_df) %>%
+  mutate(spi_overall_odin_score=(
+           SPI.INDEX.PIL1+SPI.INDEX.PIL2+Coverage.subscore+
+           SPI.INDEX.PIL4+SPI.INDEX.PIL5)/5)
+
+ggplot(spi_odin_combined, aes(x=SPI.INDEX, y=spi_overall_odin_score)) +
+  geom_point() +
+  geom_text_repel(aes(label=iso3c)) +
+  geom_smooth(method = "lm") +
+  geom_richtext(
+    aes(x = 30, y = 75,label = eq_plot_txt(spi_odin_combined, SPI.INDEX, spi_overall_odin_score), hjust=0.2)
+  ) +
+  xlab("SPI Overall Score: 2020") +
+  ylab("SPI Overall Score with ODIN Coverage Score: 2020") +
+  ggtitle(str_wrap('Comparison of SPI Overall Score in 2020 with Hypothetical SPI Overall Score that uses ODIN coverage score rather than SPI Pillar 3 score',75),
+          subtitle = 'All Pillars given equal weight') +
+  theme_bw()
+  
+           
+
+```
+```{r}
+ggplot(spi_odin_combined, aes(y=SPI.INDEX.PIL3, x=NY.GDP.PCAP.PP.KD)) +
+  geom_point() +
+  geom_text_repel(aes(label=iso3c)) +
+  geom_smooth(method = "lm") +
+  scale_x_log10(labels=scales::comma) +
+  geom_richtext(
+    aes(x = 1000, y = 20,label = eq_plot_txt(spi_odin_combined, SPI.INDEX.PIL3, log10(NY.GDP.PCAP.PP.KD)), hjust=0.2)
+  ) +
+  xlab("GDP per capita, PPP (constant 2017 $)") +
+  ylab("SPI Pillar 3 Score") +
+  ggtitle(str_wrap('Comparison of SPI Pillar 3 Score in 2020 to GDP per capita, PPP',75)) +
+  theme_bw()
+```
+
+```{r}
+ggplot(spi_odin_combined, aes(y=Coverage.subscore, x=NY.GDP.PCAP.PP.KD)) +
+  geom_point() +
+  geom_text_repel(aes(label=iso3c)) +
+  geom_smooth(method = "lm") +
+  scale_x_log10(labels=scales::comma) +
+  geom_richtext(
+    aes(x = 1000, y = 20,label = eq_plot_txt(spi_odin_combined, Coverage.subscore, log10(NY.GDP.PCAP.PP.KD)), hjust=0.2)
+  ) +
+  xlab("GDP per capita, PPP (constant 2017 $)") +
+  ylab("ODIN coverage subscore") +
+  ggtitle(str_wrap('Comparison of ODIN coverage Score in 2020 to GDP per capita, PPP',75)) +
+  theme_bw()
+```
+
+
+```{r}
+ggplot(spi_odin_combined, aes(y=SPI.INDEX, x=NY.GDP.PCAP.PP.KD)) +
+  geom_point() +
+  geom_text_repel(aes(label=iso3c)) +
+  geom_smooth(method = "lm") +
+  scale_x_log10(labels=scales::comma) +
+  geom_richtext(
+    aes(x = 1000, y = 20,label = eq_plot_txt(spi_odin_combined, SPI.INDEX, log10(NY.GDP.PCAP.PP.KD)), hjust=0.2)
+  ) +
+  xlab("GDP per capita, PPP (constant 2017 $)") +
+  ylab("SPI Overall Score") +
+  ggtitle(str_wrap('Comparison of SPI Overall Score in 2020 to GDP per capita, PPP',75)) +
+  theme_bw()
+```
+
+```{r}
+ggplot(spi_odin_combined, aes(y=spi_overall_odin_score, x=NY.GDP.PCAP.PP.KD)) +
+  geom_point() +
+  geom_text_repel(aes(label=iso3c)) +
+  geom_smooth(method = "lm") +
+  scale_x_log10(labels=scales::comma) +
+  geom_richtext(
+    aes(x = 1000, y = 20,label = eq_plot_txt(spi_odin_combined, spi_overall_odin_score, log10(NY.GDP.PCAP.PP.KD)), hjust=0.2)
+  ) +
+  xlab("GDP per capita, PPP (constant 2017 $)") +
+  ylab("Hypothetical SPI Overall Score that uses ODIN coverage score") +
+  ggtitle(str_wrap('Comparison of Hypothetical SPI Overall Score that uses ODIN coverage score in 2020 to GDP per capita, PPP',75)) +
+  theme_bw()
+```

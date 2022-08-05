@@ -127,6 +127,9 @@ predictors_df <- wbstats::wb_data(country="countries_only",
   mutate(date=as.numeric(date)) %>%
   arrange(iso3c, date) %>%
   group_by(iso3c) %>%
+  mutate(across(c( 'NY.GDP.PCAP.KD','NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS', 'SE.PRM.ENRR', 'HD.HCI.OVRL','NE.TRD.GNFS.ZS','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS","SI.POV.DDAY", "SI.POV.GINI"),
+                ~if_else(is.na(.),1,0),
+                .names="{.col}_imp_tag")) %>% #add tag for data that is imputed
   fill(c( 'NY.GDP.PCAP.KD','NV.IND.MANF.ZS', 'NV.AGR.TOTL.ZS', 'SE.PRM.ENRR', 'HD.HCI.OVRL','NE.TRD.GNFS.ZS','BN.CAB.XOKA.GD.ZS', 'CC.EST', "GE.EST", 'PV.EST', "RQ.EST", "RL.EST", "VA.EST", "BX.KLT.DINV.WD.GD.ZS","SI.POV.DDAY", "SI.POV.GINI"), .direction="downup") %>%
   mutate(WGI.OVL=(CC.EST + GE.EST + PV.EST + RQ.EST + RL.EST + VA.EST)/6,
          lag_outcome=lag(NY.GDP.PCAP.KD),
@@ -169,7 +172,7 @@ imf_dta <- haven::read_dta("C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Blog - SP
 SPI_2016 <- SPI %>%
   filter(date>=2016) %>%
   group_by(iso3c) %>%
-  fill(starts_with( 'SPI.INDEX'), .direction="downup") %>%
+  #fill(starts_with( 'SPI.INDEX'), .direction="downup") %>%
   ungroup() %>%
   filter(!is.na(SPI.INDEX))
 
@@ -180,6 +183,7 @@ reg_df <- SPI_2016 %>%
   select(country, iso3c, date, region, SPI.INDEX, SPI.INDEX.PIL1, SPI.INDEX.PIL2, SPI.INDEX.PIL3, SPI.INDEX.PIL4, SPI.INDEX.PIL5) %>%
   left_join(predictors_df) %>%
   filter(between(date,2016,2020)) %>%
+  write_excel_csv(paste0(dashboard_dir, "/SPI_full_regression_data.csv")) %>%
   filter(!(is.na(SPI.INDEX) | 
              is.na(NY.GDP.PCAP.KD) |
              is.na(NV.IND.MANF.ZS) |
