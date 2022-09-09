@@ -20,8 +20,8 @@ library(tidytext)
 library(rsdmx)
 library(here)
 library(purrr)
-library(wbggeo)
-library(wbgmaps)
+# library(wbggeo)
+# library(wbgmaps)
 library(ggthemes)
 
 
@@ -177,11 +177,47 @@ study_df_fao <- study_df_fao %>%
 
 
 write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv",sep="")) #write to csv
-gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
+#gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
 
 
 
 
+```
+
+
+```{r householdsurveys}
+#access household surveys in PIP (povcalnet)
+url <- "https://api.worldbank.org/pip/v1/survey-metadata"
+pip_df <- fromJSON(url,
+                        simplifyDataFrame = TRUE
+                         ) %>%
+  filter(survey_coverage=="national") %>%
+  rename(indicator_date=reporting_year,
+         iso3c=country_code) %>% 
+  select(iso3c, indicator_date) %>%
+  left_join(country_metadata) %>%
+  select(country, indicator_date)
+
+
+survey_df <- study_df_internal %>%
+  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
+  rename(country=nation,
+         indicator_date=year_start) %>% 
+  mutate(country=case_when(
+    country=="Gambia" ~ "Gambia, The",
+    TRUE ~ country
+  )) %>%
+  filter(grepl('lsms|hh/is|hh/ies|Income/Expenditure/Household Survey', series_info)) %>%
+  bind_rows(pip_df) %>%
+  group_by(country, indicator_date) %>%
+  summarise(freq=n(),
+            title=first(title)) %>%
+  group_by(country) %>%
+  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
+         nada_title = paste0(title, collapse = "; ")) %>%
+  select(country,indicator_date, nada_dates, nada_title)
+
+write_excel_csv(survey_df, path = paste(output_dir, 'D4.1.4.SVY.HOUS_NADA.csv', sep="")) #write to csv
 ```
 
 
@@ -222,12 +258,17 @@ survey_df <- get(data) %>%
   write_excel_csv(survey_df, path = paste(output_dir, filename, sep="")) #write to csv
 }
 
-saver('study_df_internal','lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
+#houshold surveys with pip surveys included
+study_df_hh <- study_df_internal
+
+#saver('study_df_internal','lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
 
 saver('study_df_internal','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
 saver('study_df_fao','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA_FAO.csv')
 
 saver('study_df_fao','ag/census|Agricultural Census' , 'D4.1.2.CEN.AGRI_NADA_FAO.csv')
+
+
 
 # save FAO and Microdatalib datasets
 ag_svys_df <- study_df_internal %>%

@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3 Data Services | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
   <meta name="description" content="3 Data Services | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3 Data Services | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
   <meta property="og:type" content="book" />
-  
   
   
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2022-02-16" />
+<meta name="date" content="2022-09-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +32,6 @@
   
 <link rel="prev" href="data-use-1.html"/>
 <link rel="next" href="data-products-1.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -51,8 +49,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
 
 
@@ -233,15 +232,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="data-services-1" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Data Services</h1>
+<div id="data-services-1" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Data Services<a href="data-services-1.html#data-services-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Cleaning for Data Services Indicators. Data Services (4 Indicators):<br />
 - 2.1_DSDR - Indicator 2.1: Data releases<br />
 - 2.2_DSOA - Indicator 2.2: Online access<br />
 - 2.3_DSAS - Indicator 2.3: Advisory/ Analytical Services<br />
 - 2.4_DSDS - Indicator 2.4: Data services</p>
-<div id="dimension-2.1-data-releases" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Dimension 2.1: Data Releases</h2>
+<div id="dimension-2.1-data-releases" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Dimension 2.1: Data Releases<a href="data-services-1.html#dimension-2.1-data-releases" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Data Dissemination Standard (SDDS) and electronic General Data Dissemination Standard (e-GDDS) were
 established by the International Monetary Fund (IMF) for member countries that have or that might seek
 access to international capital markets, to guide them in providing their economic and financial data to the public.
@@ -306,11 +305,11 @@ e-GDDS websites.</p>
 <span id="cb13-2"><a href="data-services-1.html#cb13-2" aria-hidden="true" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
 <span id="cb13-3"><a href="data-services-1.html#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(D2<span class="fl">.1</span>_DSDR)</span></code></pre></div>
 </div>
-<div id="dimension-2.2-online-access" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Dimension 2.2: Online access</h2>
+<div id="dimension-2.2-online-access" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Dimension 2.2: Online access<a href="data-services-1.html#dimension-2.2-online-access" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>This indicator measures the richness and openness of online access.</p>
-<div id="source" class="section level3" number="3.2.1">
-<h3><span class="header-section-number">3.2.1</span> Source</h3>
+<div id="source" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Source<a href="data-services-1.html#source" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Our source for this indicator is Open Data Watch. Data was last accessed on December 17, 2020. From Open Data watch:</p>
 <blockquote>
 <p>The Open Data Inventory (ODIN) assesses the coverage and openness of official statistics to help identify gaps, promote open data policies, improve access, and encourage dialogue
@@ -324,21 +323,21 @@ two years of data between 2015-2017. Scores can be compared across topics and co
 - Metadata Available<br />
 - Terms of Use</p>
 <p>A description for each of these five dimensions is below:</p>
-<div id="machine-readability" class="section level4" number="3.2.1.1">
-<h4><span class="header-section-number">3.2.1.1</span> Machine Readability</h4>
+<div id="machine-readability" class="section level4 hasAnchor" number="3.2.1.1">
+<h4><span class="header-section-number">3.2.1.1</span> Machine Readability<a href="data-services-1.html#machine-readability" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <blockquote>
 <p>Openness element 1 measures whether data are available in a machine readable format such as XLS, XLSX, CSV, and JSON. Machine-readable file formats allow users to easily process data using a computer. When data are made available in formats that are not machine readable, users cannot easily access and modify the data, which severely restricts the scope of the data’s use. In many cases PDF versions of datasets within reports can be useful to users, as the text in conjunction with the tables gives context and explanation to the figures which helps less technical users understand the data. Because of this, ODIN assessments do not penalize countries for making datasets available in PDF or other non-machine readable formats, unless these formats are the only option for exporting data. Scores are not penalized for having identical datasets in both machine readable and non-readable formats. Compression formats do not affect machine readability scores, only non-proprietary scores (see next page). Scores are given by data category, not indicator.</p>
 </blockquote>
 </div>
-<div id="non-proprietary-format" class="section level4" number="3.2.1.2">
-<h4><span class="header-section-number">3.2.1.2</span> Non-Proprietary format</h4>
+<div id="non-proprietary-format" class="section level4 hasAnchor" number="3.2.1.2">
+<h4><span class="header-section-number">3.2.1.2</span> Non-Proprietary format<a href="data-services-1.html#non-proprietary-format" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <blockquote>
 <p>For the elements of data openness, scoring is calculated independent of the data coverage.
 If data files are compressed in RAR format (which is proprietary), data for that indicator should be considered proprietary even if the enclosing files are in a non-proprietary format. Files compressed in ZIP format are not affected.</p>
 </blockquote>
 </div>
-<div id="download-options" class="section level4" number="3.2.1.3">
-<h4><span class="header-section-number">3.2.1.3</span> Download Options</h4>
+<div id="download-options" class="section level4 hasAnchor" number="3.2.1.3">
+<h4><span class="header-section-number">3.2.1.3</span> Download Options<a href="data-services-1.html#download-options" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <blockquote>
 <p>Openness element 3 measures whether data are available with three different download options: bulk download, API, and user-select options.
 A bulk download is defined at the indicator level as: The ability to download all data recorded in ODIN for a particular indicator (all years, disaggregations, and subnational data) in one file, or multiple files that can be downloaded simultaneously. Bulk downloads are a key component of the Open Definition, which requires data to be “provided as a whole . . . and downloadable via the internet.”
@@ -346,8 +345,8 @@ User-selectable download options are defined as: Users must be able to select an
 API stands for Application Programming Interface. Ideally, APIs should be clearly displayed on the website. ODIN assumes APIs are available for the NSOs entire data collection used in ODIN, unless clearly stated. ODIN assessors do not register for use or test API functionality. For more information on APIs, see this guide. Scores are given by data category, not indicator.</p>
 </blockquote>
 </div>
-<div id="metadata-available" class="section level4" number="3.2.1.4">
-<h4><span class="header-section-number">3.2.1.4</span> Metadata Available</h4>
+<div id="metadata-available" class="section level4 hasAnchor" number="3.2.1.4">
+<h4><span class="header-section-number">3.2.1.4</span> Metadata Available<a href="data-services-1.html#metadata-available" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <blockquote>
 <p>Openness element 4 measures whether metadata are made available. Scores are given by data category, not indicator. Metadata are defined at the indicator level as information about how the data are defined/calculated and collected. ODIN classifies metadata into three categories: (1) Not Available, (2) Incomplete, and (3) Complete. The following must be available to classify metadata as complete:
 • Definition of the indicator, or definition of key terms used in the indicator description (as applicable), or how the indicator was calculated.
@@ -356,8 +355,8 @@ API stands for Application Programming Interface. Ideally, APIs should be clearl
 If the metadata only have one or two of the above elements, they are scored as incomplete</p>
 </blockquote>
 </div>
-<div id="terms-of-use" class="section level4" number="3.2.1.5">
-<h4><span class="header-section-number">3.2.1.5</span> Terms of Use</h4>
+<div id="terms-of-use" class="section level4 hasAnchor" number="3.2.1.5">
+<h4><span class="header-section-number">3.2.1.5</span> Terms of Use<a href="data-services-1.html#terms-of-use" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <blockquote>
 <p>Openness element 5 measures whether data are available with an open terms of use. Generally, terms of use (TOU) will apply to an entire website or data portal (unless otherwise specified). In these cases, all data found on the same website and/or portal will receive the same score. If a portal is located on the same domain as the NSO website, the terms of use on the NSO site will apply. If the data are located on a portal or website on a different domain, another terms of use will need to be present. For a policy/ license to be accepted as a terms of use, it must clearly refer to the data found on the website. Terms of use that refer to nondata content (such as pictures, logos, etc.) of the website are not considered. A copyright symbol at the bottom of the page is not sufficient. A sentence indicating a recommended citation format is not sufficient.
 Terms of use are classified the following ways: (1) Not Available, (2) Restrictive, (3) Semi-Restrictive, and (4) Open.
@@ -409,12 +408,12 @@ If the TOU contains one or more restrictive clauses, it receives 0 points and is
 </div>
 </div>
 </div>
-<div id="dimension-2.3-advisory-analytical-services" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> Dimension 2.3: Advisory/ Analytical Services</h2>
+<div id="dimension-2.3-advisory-analytical-services" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Dimension 2.3: Advisory/ Analytical Services<a href="data-services-1.html#dimension-2.3-advisory-analytical-services" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>No established source exists for this indicator. This is experimental.</p>
 </div>
-<div id="dimension-2.4-data-services" class="section level2" number="3.4">
-<h2><span class="header-section-number">3.4</span> Dimension 2.4: Data services</h2>
+<div id="dimension-2.4-data-services" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Dimension 2.4: Data services<a href="data-services-1.html#dimension-2.4-data-services" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>NSO has a listing of surveys and microdata sets that can provide the necessary
 data and reference for follow-up. Upon well-defined request and procedure per
 the national law and practice, users and practitioners can obtain the data

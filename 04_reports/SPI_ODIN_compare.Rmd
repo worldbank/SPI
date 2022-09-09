@@ -878,6 +878,65 @@ lm(SPI.INDEX ~ log10(NY.GDP.PCAP.PP.KD), data=(comparison_df %>% filter(date==20
               )
 ```
 
+```{r}
+#test for significant differences
+library(systemfit)
+
+ systemmodels <- list(
+
+
+ 'ODINGDP' = ODIN_score ~  log10(NY.GDP.PCAP.PP.KD)  ,
+
+ 'SPIGDP' = SPI.INDEX ~  log10(NY.GDP.PCAP.PP.KD), 
+   
+ 'ODINPOV' = ODIN_score ~  SI.POV.DDAY  ,
+
+ 'SPIPOV' = SPI.INDEX ~  SI.POV.DDAY  ,
+ 
+  'ODINGINI' = ODIN_score ~  SI.POV.GINI  ,
+
+ 'SPIGINI' = SPI.INDEX ~  SI.POV.GINI   ,
+ 
+  'ODINHCI' = ODIN_score ~  HD.HCI.OVRL  ,
+
+ 'SPIHCI' = SPI.INDEX ~  HD.HCI.OVRL  , 
+   
+ 'ODINGE' = ODIN_score ~  GE.EST  ,
+
+ 'SPIGE' = SPI.INDEX ~  GE.EST     
+ 
+
+ )
+
+fitsur <- systemfit(systemmodels, data=(comparison_df %>% filter(date==2020)))
+summary(fitsur)
+```
+
+test identical coefficients between ODIN and SPI
+
+
+```{r}
+print("GDP per capita")
+gdp_test <- linearHypothesis(fitsur, "ODINGDP_(Intercept)- SPIGDP_(Intercept) + ODINGDP_log10(NY.GDP.PCAP.PP.KD)- SPIGDP_log10(NY.GDP.PCAP.PP.KD)", test = "Chisq")
+gdp_test
+  
+print("$1.90 Poverty Headcount Ratio"  )
+pov_test <- linearHypothesis(fitsur, "ODINPOV_(Intercept)- SPIPOV_(Intercept) +ODINPOV_SI.POV.DDAY- SPIPOV_SI.POV.DDAY", test = "Chisq")
+pov_test
+
+print("Gini Index"  )
+gini_test <- linearHypothesis(fitsur, "ODINGINI_(Intercept)- SPIGINI_(Intercept) +ODINGINI_SI.POV.GINI - SPIGINI_SI.POV.GINI", test = "Chisq")
+gini_test
+
+print("Human Capital Index"  )
+hci_test <- linearHypothesis(fitsur, "ODINHCI_(Intercept)- SPIHCI_(Intercept) +ODINHCI_HD.HCI.OVRL - SPIHCI_HD.HCI.OVRL", test = "Chisq")
+hci_test
+
+print("Government Effectiveness"  )
+ge_test <- linearHypothesis(fitsur, "ODINGE_(Intercept)- SPIGE_(Intercept) +ODINGE_GE.EST - SPIGE_GE.EST", test = "Chisq")
+ge_test
+```
+
 
 Below we show a selection of 30 countries, where we calculate the countries with the largest changes in country rankings between ODIN and the SPI overall score.  Differences in country rankings are compared, rather than scores, because even though the SPI and ODIN overall scores are both on a 0-100 scale, they measures are not directly comparable.  Data is for 2020, since this is the latest year available with both an ODIN and SPI overall score.  Countries shaded in green have a higher ranking in the SPI than in ODIN.  Taking Chile for an example, ODIN ranks Chile as the 116th best system among the 174 countries, while the SPI ranks Chile as the 36th best system.  ODIN penalizes Chile for not having metadata for the indicators on their NSO website and not having terms of use and data download options.  While it may be the case that the Chile NSO website struggles in this area, Chile scores very highly in data infrastructure, reporting on the SDGs, and on data dissemination standards for the IMF.  
 
@@ -1044,3 +1103,184 @@ ggplot(spi_odin_combined, aes(y=spi_overall_odin_score, x=NY.GDP.PCAP.PP.KD)) +
   ggtitle(str_wrap('Comparison of Hypothetical SPI Overall Score that uses ODIN coverage score in 2020 to GDP per capita, PPP',75)) +
   theme_bw()
 ```
+
+# Compare ODIN and SPI subscores on Data Availability
+
+In the analysis below, the ODIN categories are matched to SPI indicators.  Data from 2020 is compared.  The table below matches, to the best of our ability, the categories of indicators in ODIN to those in the SPI.  In cases where two or more ODIN categories map to an SPI/SDG goal, the average among the categories is used. 
+
+|ODIN|SPI|
+|:----|:----|
+|Population & vital statistics| |
+|Education facilities| |
+|Education outcomes|SPI 3.4|
+|Health facilities| |
+|Health outcomes|SPI 3.3|
+|Reproductive health|SPI 3.3|
+|Food security & nutrition|SPI 3.2|
+|Gender statistics|SPI 3.5|
+|Crime & justice|SPI 3.16|
+|Poverty & income|SPI 3.1|
+|National accounts|SPI 3.8|
+|Labor|SPI 3.8|
+|Price indexes| |
+|Government finance|SPI 3.17|
+|Money & banking| |
+|International trade| |
+|Balance of payments| |
+|Agriculture & Land Use|SPI 3.15|
+|Resource use|SPI 3.15|
+|Energy|SPI 3.7|
+|Pollution|SPI 3.11|
+|Built environment|SPI 3.6|
+
+
+```{r odnsubscore}
+
+#merge the data together
+odin_subscores_df <- readxl::read_excel(path = paste0(raw_dir, "/misc/ODIN_fullscores_2020.xlsx"), sheet="2020 Scores") %>%
+  transmute(date=Year,
+            iso3c=`Country Code`,
+            category=`Data categories`,
+            availability=`Data available last 5 years`) %>%
+  filter(!is.na(iso3c)) %>%
+  mutate(availability=as.numeric(availability)) %>%
+  pivot_wider(
+    names_from='category',
+    values_from='availability',
+    values_fill=as.numeric(NA)
+  ) 
+  
+odin_subscores2_df <- readxl::read_excel(path = paste0(raw_dir, "/misc/ODIN_fullscores_2020.xlsx"), sheet="2020 Scores") %>%
+  mutate(category=case_when(
+    `Data categories`=="Population & vital statistics" ~ "N/A",
+    `Data categories`=="Education facilities" ~ "N/A",
+    `Data categories`=="Education outcomes" ~ "social",
+    `Data categories`=="Health facilities" ~ "N/A",
+    `Data categories`=="Health outcomes" ~ "social",
+    `Data categories`=="Reproductive health" ~ "social",
+    `Data categories`=="Food security & nutrition" ~ "social",
+    `Data categories`=="Gender statistics" ~ "social",
+    `Data categories`=="Crime & justice" ~ "institutional",
+    `Data categories`=="Poverty & income" ~ "social",
+    `Data categories`=="National accounts" ~ "economic",
+    `Data categories`=="Labor" ~ "economic",
+    `Data categories`=="Price indexes" ~ "N/A",
+    `Data categories`=="Government finance" ~ "institutional",
+    `Data categories`=="Money & banking" ~ "N/A",
+    `Data categories`=="International trade" ~ "N/A",
+    `Data categories`=="Balance of payments" ~ "N/A",
+    `Data categories`=="Agriculture & Land Use" ~ "environmental",
+    `Data categories`=="Resource use" ~ "environmental",
+    `Data categories`=="Energy" ~ "economic",
+    `Data categories`=="Pollution	" ~ "economic",
+    `Data categories`=="Built environment" ~ "social"
+    
+  )) %>%
+  mutate(iso3c=`Country Code`) %>%
+  group_by(category, iso3c) %>%
+  summarise(availability=mean(`Data available last 5 years`, na.rm=T)) %>%
+  filter(!is.na(iso3c)) %>%
+  mutate(availability=as.numeric(availability),
+         date=2020) %>%
+  pivot_wider(
+    names_from='category',
+    values_from='availability',
+    values_fill=as.numeric(NA)
+  ) 
+
+
+#map the ODIN and SPI subscores.
+subscore_compare_df <- SPI_2020 %>%
+  select(iso3c, country, region, income, date, starts_with('SPI.INDEX'), starts_with('SPI.D3.')) %>%
+  left_join(odin_subscores_df)
+
+mat <- subscore_compare_df %>%
+  select(is.numeric) %>%
+  select(-date) %>%
+  as.matrix()
+  
+
+cor_df <- cor(mat, use='pairwise.complete.obs')
+
+cor1 <- as.numeric(NA)
+cor2 <- as.numeric(NA)
+cor3 <- cor(subscore_compare_df$`Education outcomes`, subscore_compare_df$SPI.D3.4.EDUC, use='pairwise.complete.obs')
+cor4 <- as.numeric(NA)
+cor5 <- cor(subscore_compare_df$`Health outcomes`, subscore_compare_df$SPI.D3.3.HLTH, use='pairwise.complete.obs')
+cor6 <- cor(subscore_compare_df$`Reproductive health`, subscore_compare_df$SPI.D3.3.HLTH, use='pairwise.complete.obs')
+
+cor7 <- cor(subscore_compare_df$`Food security & nutrition`, subscore_compare_df$SPI.D3.2.HNGR, use='pairwise.complete.obs')
+cor8 <- cor(subscore_compare_df$`Gender statistics`, subscore_compare_df$SPI.D3.5.GEND, use='pairwise.complete.obs')
+
+
+cor9 <- cor(subscore_compare_df$`Crime & justice`, subscore_compare_df$SPI.D3.16.INST, use='pairwise.complete.obs')
+cor10 <- cor(subscore_compare_df$`Poverty & income`, subscore_compare_df$SPI.D3.1.POV, use='pairwise.complete.obs')
+cor11 <- cor(subscore_compare_df$`National accounts`, subscore_compare_df$SPI.D3.8.WORK, use='pairwise.complete.obs')
+cor12 <- cor(subscore_compare_df$`Labor`, subscore_compare_df$SPI.D3.8.WORK, use='pairwise.complete.obs')
+
+
+cor13 <-  as.numeric(NA)
+
+cor14 <- cor(subscore_compare_df$`Government finance`, subscore_compare_df$SPI.D3.17.PTNS, use='pairwise.complete.obs')
+cor15 <-  as.numeric(NA)
+cor16 <-  as.numeric(NA)
+cor17 <-  as.numeric(NA)
+
+cor18 <- cor(subscore_compare_df$`Agriculture & Land Use`, subscore_compare_df$SPI.D3.15.LAND, use='pairwise.complete.obs')
+cor19 <- cor(subscore_compare_df$`Resource use`, subscore_compare_df$SPI.D3.15.LAND, use='pairwise.complete.obs')
+
+cor20 <- cor(subscore_compare_df$`Energy`, subscore_compare_df$SPI.D3.7.ENRG, use='pairwise.complete.obs')
+
+cor21 <- cor(subscore_compare_df$`Pollution`, subscore_compare_df$SPI.D3.11.CITY, use='pairwise.complete.obs')
+cor22 <- cor(subscore_compare_df$`Built environment`, subscore_compare_df$SPI.D3.6.WTRS, use='pairwise.complete.obs')
+
+```
+
+```{r}
+#second grouping based on economic, social, etc
+subscore_compare2_df <- SPI_2020 %>%
+  select(iso3c, country, region, income, date, starts_with('SPI.INDEX'), starts_with('SPI.DIM3.')) %>%
+  left_join(odin_subscores2_df)
+
+
+cor2_df <- subscore_compare2_df %>%
+  select(social, economic, environmental, institutional, SPI.DIM3.1.INDEX, SPI.DIM3.2.INDEX, SPI.DIM3.3.INDEX, SPI.DIM3.4.INDEX, SPI.INDEX.PIL3, SPI.INDEX) %>%
+  as.matrix()
+
+#social
+cor(subscore_compare2_df$social, subscore_compare2_df$SPI.DIM3.1.INDEX, use='pairwise.complete.obs')
+
+#economic
+cor(subscore_compare2_df$economic, subscore_compare2_df$SPI.DIM3.2.INDEX, use='pairwise.complete.obs')
+
+#environmental
+cor(subscore_compare2_df$environmental, subscore_compare2_df$SPI.DIM3.3.INDEX, use='pairwise.complete.obs')
+
+#instituational
+cor(subscore_compare2_df$institutional, subscore_compare2_df$SPI.DIM3.4.INDEX, use='pairwise.complete.obs')
+
+cor_matrix  <- cor(cor2_df, use='pairwise.complete.obs') %>%
+  round(2)
+
+
+
+col_palette <- c("#D73027", "#F46D43", "#FDAE61", "#FEE08B", 
+                   "#D9EF8B", "#A6D96A", "#66BD63", "#1A9850")
+mycut <- cut(
+  cor_matrix, 
+  breaks = c(-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1), 
+  include.lowest = TRUE, label = FALSE)
+
+mycolors <- col_palette[mycut]
+
+data.frame(rowname = row.names(cor_matrix), stringsAsFactors = FALSE) %>%
+  cbind(cor_matrix) %T>%
+  print() %>% 
+  flextable() %>%
+  bg(j = colnames(cor_matrix), bg = mycolors) %>%
+  align(align = "center", part = "all") %>%
+  compose(i = 1, j = 1, value = as_paragraph(""), part = "header")
+
+```
+
+

@@ -95,6 +95,44 @@ SPI <- SPI_2020 %>%
 #                                     what = "sp")
 ```
 
+## Data Description
+
+```{r}
+#add stata labels and save a stata version
+#read in the data labels
+metadata_info <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep="")) %>%
+    mutate(descript=paste(SPI_indicator_id,": ", spi_indicator_name," - ",source_name , sep="")) %>%
+    select(source_id,  descript, spi_indicator_description)
+
+metadata_info <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep="")) %>%
+  bind_rows(metadata_info)
+
+#create a copy of the data to save to stata
+spi_index <- SPI
+
+#get a list of the labels and apply them
+labels <- metadata_info[match(colnames(spi_index),metadata_info$source_id),2]
+labels <- labels$descript
+names(labels) <-colnames(spi_index)
+  
+label(spi_index) <- as.list(labels)
+```
+
+```{r}
+#describe data
+library(vtable)
+
+vtable((spi_index %>% select(-ISO_A3_EH)),
+       out='return') %>%
+  mutate(Class=if_else(Name %in% c("country", "iso3c", "income", "region"), "character", "numeric")) %>%
+  flextable() %>%
+  theme_vanilla() %>%
+  add_header_lines('Data Description of SPI_index.csv')
+  
+```
+
+
+
 ## SDG Indicator Weights Sensitivity Check
 
 In this sensitivity check, alternative weights to the SPI overall score will be considered, where SDGs are given alternative weights.

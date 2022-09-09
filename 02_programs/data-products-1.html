@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4 Data Products | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
   <meta name="description" content="4 Data Products | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4 Data Products | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
   <meta property="og:type" content="book" />
-  
   
   
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2022-02-16" />
+<meta name="date" content="2022-09-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +32,6 @@
   
 <link rel="prev" href="data-services-1.html"/>
 <link rel="next" href="data-sources-1.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -51,8 +49,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
 
 
@@ -233,8 +232,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="data-products-1" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Data Products</h1>
+<div id="data-products-1" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Data Products<a href="data-products-1.html#data-products-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Cleaning for Data Products Indicators. Data Products (16 Indicators):</p>
 <ul>
 <li>GOAL 1: No Poverty<br />
@@ -271,8 +270,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
 <li>GOAL 17: Partnerships to achieve the Goal</li>
 </ul>
-<div id="methodology" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Methodology</h2>
+<div id="methodology" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Methodology<a href="data-products-1.html#methodology" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
 <li><p>Download the latest SDG indicator data from UN Stats (<a href="https://unstats.un.org/sdgs/indicators/en/#" class="uri">https://unstats.un.org/sdgs/indicators/en/#</a>) using their API</p></li>
 <li><p>Transform the data so that for each indicator we can create a score documenting whether a value exists for the country in a year, whether the value is based on country data, country data adjusted, estimated, or modelled data according the UN Stats metadata. <strong>This will only include tier 1 indicators</strong>.</p></li>
@@ -299,8 +298,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>When we average over all indicators in a goal to get a score, we compute a 5 year moving average to avoid year to year variability in reporting for SDGs. The overall score for an SDG is then the 5 year average of the percentage of indicator values based on <strong>country</strong>, <strong>country data adjusted</strong>, or <strong>estimated or Global Monitoring</strong> data that were available for the SDG.</p>
 <p>Because of the large data files and runtime of the program to calculate these indicators, the code to produce these indicators is in a separate file. <a href="https://github.com/stacybri/UN_Stats_SDG_Indicators_SPI/blob/master/02_programs/un_stats_cleaning.Rmd" class="uri">https://github.com/stacybri/UN_Stats_SDG_Indicators_SPI/blob/master/02_programs/un_stats_cleaning.Rmd</a></p>
 </div>
-<div id="dimensions-3.1---3.17" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Dimensions 3.1 - 3.17</h2>
+<div id="dimensions-3.1---3.17" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Dimensions 3.1 - 3.17<a href="data-products-1.html#dimensions-3.1---3.17" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="data-products-1.html#cb17-1" aria-hidden="true" tabindex="-1"></a>un_sdg_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste</span>(raw_dir,<span class="st">&#39;/3_DP/SPI_D3_UNSD_data_&#39;</span>,window,<span class="st">&#39;yr.csv&#39;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb17-2"><a href="data-products-1.html#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">SPI.D3.1.POV   =</span> SPI.D3<span class="fl">.1</span>,</span>
 <span id="cb17-3"><a href="data-products-1.html#cb17-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">SPI.D3.2.HNGR  =</span> SPI.D3<span class="fl">.2</span>,</span>
