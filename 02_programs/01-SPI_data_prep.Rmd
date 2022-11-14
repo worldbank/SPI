@@ -3461,6 +3461,9 @@ Classification of status of employment refers to employment data that are
  
 ```{r empl}
 
+# can find some of this data from ILO at this link:
+#https://www.ilo.org/ilostat-files/Documents/sources_en.csv
+
 #read in csv file.
 D5.2.6.EMPL <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.csv", sep="/" )) %>%
   bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.2020.csv", sep="/" ))) %>% # add in 2020 data
