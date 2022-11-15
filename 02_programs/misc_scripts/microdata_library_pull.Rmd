@@ -64,6 +64,10 @@ download.file(ilo_base_url,temp)
 study_df_ilo <- read_csv(temp) #convert to dataframe
 write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv", sep="")) #write to csv
 
+ilo_base_url <- "https://microdata.ilo.org/index.php/api/catalog" #define url
+study_request_fao<-fromJSON(paste(fao_base_url,"/search","?ps=15000", sep="")) # pull from url
+study_df_fao <- study_request_fao$result$rows
+
 # second ILO source
 ilo_sources_catalog<-read_csv('https://www.ilo.org/ilostat-files/Documents/sources_en.csv')
 write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catalog.csv", sep="")) #write to csv
@@ -75,6 +79,10 @@ download.file(fao_base_url,temp)
 study_df_fao <- read_csv(temp) #convert to dataframe
 write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep="")) #write to csv
 
+
+fao_base_url <- "https://microdata.fao.org/index.php/api/catalog" #define url
+study_request_fao<-fromJSON(paste(fao_base_url,"/search","?ps=15000", sep="")) # pull from url
+study_df_fao <- study_request_fao$result$rows
 
 #internal use studies from World Bank microdata library
 wb_base_url <- "http://microdatalib.worldbank.org/index.php/api/catalog" #define url
@@ -146,8 +154,8 @@ write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_s
 
 
 #get list of survey ids
+study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep="")) #convert to dataframe
 fao_series <- study_df_fao$id
-
 
 
 
