@@ -8,11 +8,11 @@ library(httr)
 dir <- "C:/Users/wb469649/Documents/Github/SPI/01_raw_data/2.4_DSDS/"
 
 #read in NADA SPI microdata file 
-nada_raw_df <- read_csv(paste0(dir,"D2.4.NADA.csv")) 
+nada_raw_df <- read_csv(paste0(dir,"D2.4.NADA.2020.csv")) 
 
 #get list of NADA sites to check
 nada_sites <- nada_raw_df %>%
-  filter(date==2019) 
+  filter(date==2020) 
 
 if (exists('working_nada_df')) {
   rm('working_nada_df')
@@ -53,7 +53,7 @@ for (cntry in nada_sites$iso3c) {
   
 }
 
-nada_sites %>% left_join(working_nada_df) %>% write_excel_csv( 'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/Nada2020.csv')
+nada_sites %>% left_join(working_nada_df) %>% write_excel_csv( 'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/Nada2022.csv')
 
 
-write_excel_csv(working_nada_df, 'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/Nada2020.csv')
+#write_excel_csv(working_nada_df, 'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/Nada2020.csv')

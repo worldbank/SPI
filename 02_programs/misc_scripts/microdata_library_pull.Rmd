@@ -31,7 +31,7 @@ dir <- here()
 input_dir <- paste(dir, '01_raw_data', sep="/")
 output_dir <- paste(dir, '01_raw_data','4.1_SOCS/', sep="/")
 
-country_metadata <- wbstats::wbcountries()
+country_metadata <- wbstats::wb_countries()
 ```
 
 ## Introduction
@@ -59,7 +59,7 @@ gt(as_tibble(head(study_df_public[,1:5]))) #display top 5 rows of dataframe
 
 #pull from ILO
 temp <- tempfile()
-ilo_base_url <- 'https://www.ilo.org/surveyLib/index.php/catalog/export/csv?ps=5000&collection[]=LFS' 
+ilo_base_url <- 'https://www.ilo.org/surveyLib/index.php/catalog/export/csv?page=1&ps=100&collection[]=LFS' 
 download.file(ilo_base_url,temp)
 study_df_ilo <- read_csv(temp) #convert to dataframe
 write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv", sep="")) #write to csv
@@ -74,7 +74,7 @@ write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catal
 
 #pull from FAO
 temp <- tempfile()
-fao_base_url <- 'https://microdata.fao.org/index.php/catalog/export/csv?ps=5000&collection[]=agriculture-census-surveys' 
+fao_base_url <- 'https://microdata.fao.org/index.php/catalog/export/json?ps=5000&collection[]=agriculture-census-surveys' 
 download.file(fao_base_url,temp)
 study_df_fao <- read_csv(temp) #convert to dataframe
 write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep="")) #write to csv
@@ -270,7 +270,9 @@ survey_df <- get(data) %>%
 study_df_hh <- study_df_internal
 
 #saver('study_df_internal','lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
-
+study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep="")
+                         
+                         )
 saver('study_df_internal','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
 saver('study_df_fao','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA_FAO.csv')
 
@@ -286,7 +288,7 @@ ag_svys_df <- study_df_internal %>%
 saver('ag_svys_df','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
  
  # use ILO for source of labor force surveys
-survey_df_ilo <- study_df_ilo %>%
+survey_df_ilo <- read_csv(paste(output_dir, "ilo_library_public_studies.csv", sep="")) %>%
   rename(indicator_date=year_start) %>% 
   mutate(iso3c=str_sub(idno,1,3)) %>%
   mutate(iso3c=if_else(iso3c=='KOS','XKX',iso3c)) %>% #fix kosovo
@@ -295,6 +297,7 @@ survey_df_ilo <- study_df_ilo %>%
   select(country, indicator_date)
 
 #ILO country list
+study_df_ilo <- read_csv(paste(output_dir, "ilo_library_public_studies.csv", sep=""))
 countries_ilo <- study_df_ilo %>%
   mutate(iso3c=str_sub(idno,1,3),
          Country=nation) %>%
@@ -305,7 +308,7 @@ countries_ilo <- study_df_ilo %>%
   select(Country,iso3c)
 
 #read in data sources file from ILO as well
-ilo_sources_catalog_final <- ilo_sources_catalog %>%
+ilo_sources_catalog_final <- read_csv(paste(output_dir, "ilo_sources_catalog.csv", sep="")) %>%
   filter(Source=="Labour Force Survey") %>%
   mutate(indicator_date=str_sub(`Latest period available`,start=1,end=4),
          indicator_date=as.numeric(indicator_date),
