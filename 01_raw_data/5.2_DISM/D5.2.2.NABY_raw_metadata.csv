@@ -1,1304 +1,1520 @@
-﻿"iso3c","country","date","National.accounts.base.year","NABY","NABY_dates"
-"ABW","Aruba",2016,"2000","2000","2000"
-"ABW","Aruba",2017,"2000","2000","2000"
-"ABW","Aruba",2018,"2000","2000","2000"
-"ABW","Aruba",2019,"2000","2000","2000"
-"ABW","Aruba",2020,"2000","2000","2000"
-"ABW","Aruba",2021,"2000","2000","2000"
-"ADO","Andorra",2016,"2000","2000","2000"
-"AFG","Afghanistan",2016,"2002/03","2002/03","2003"
-"AFG","Afghanistan",2017,"2002/03","2002/03","2003"
-"AFG","Afghanistan",2018,"2002/03","2002/03","2003"
-"AFG","Afghanistan",2019,"2002/03","2002/03","2003"
-"AFG","Afghanistan",2020,"2016","2016","2016"
-"AFG","Afghanistan",2021,"2016","2016","2016"
-"AGO","Angola",2016,"2002","2002","2002"
-"AGO","Angola",2017,"2002","2002","2002"
-"AGO","Angola",2018,"2002","2002","2002"
-"AGO","Angola",2019,"2002","2002","2002"
-"AGO","Angola",2020,"2002","2002","2002"
-"AGO","Angola",2021,"2002","2002","2002"
-"ALB","Albania",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ALB","Albania",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ALB","Albania",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ALB","Albania",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ALB","Albania",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ALB","Albania",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AND","Andorra",2017,"2000","2000","2000"
-"AND","Andorra",2018,"2000","2000","2000"
-"AND","Andorra",2019,"2000","2000","2000"
-"AND","Andorra",2020,"2010","2010","2010"
-"AND","Andorra",2021,"2010","2010","2010"
-"ARE","United Arab Emirates",2016,"2007","2007","2007"
-"ARE","United Arab Emirates",2017,"2010","2010","2010"
-"ARE","United Arab Emirates",2018,"2010","2010","2010"
-"ARE","United Arab Emirates",2019,"2010","2010","2010"
-"ARE","United Arab Emirates",2020,"2010","2010","2010"
-"ARE","United Arab Emirates",2021,"2010","2010","2010"
-"ARG","Argentina",2016,"2004","2004","2004"
-"ARG","Argentina",2017,"2004","2004","2004"
-"ARG","Argentina",2018,"2004","2004","2004"
-"ARG","Argentina",2019,"2004","2004","2004"
-"ARG","Argentina",2020,"2004","2004","2004"
-"ARG","Argentina",2021,"2004","2004","2004"
-"ARM","Armenia",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ARM","Armenia",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ARM","Armenia",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ARM","Armenia",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ARM","Armenia",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ARM","Armenia",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ASM","American Samoa",2016,NA,NA,NA
-"ASM","American Samoa",2017,NA,NA,NA
-"ASM","American Samoa",2018,"2009","2009","2009"
-"ASM","American Samoa",2019,"2009","2009","2009"
-"ASM","American Samoa",2020,"2009","2009","2009"
-"ASM","American Samoa",2021,"2012","2012","2012"
-"ATG","Antigua and Barbuda",2016,"2006","2006","2006"
-"ATG","Antigua and Barbuda",2017,"2006","2006","2006"
-"ATG","Antigua and Barbuda",2018,"2006","2006","2006"
-"ATG","Antigua and Barbuda",2019,"2006","2006","2006"
-"ATG","Antigua and Barbuda",2020,"2006","2006","2006"
-"ATG","Antigua and Barbuda",2021,"2006","2006","2006"
-"AUS","Australia",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUS","Australia",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUS","Australia",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUS","Australia",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUS","Australia",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUS","Australia",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUT","Austria",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUT","Austria",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUT","Austria",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUT","Austria",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUT","Austria",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AUT","Austria",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AZE","Azerbaijan",2016,"2000","2000","2000"
-"AZE","Azerbaijan",2017,"2000","2000","2000"
-"AZE","Azerbaijan",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AZE","Azerbaijan",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AZE","Azerbaijan",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"AZE","Azerbaijan",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BDI","Burundi",2016,"2005","2005","2005"
-"BDI","Burundi",2017,"2005","2005","2005"
-"BDI","Burundi",2018,"2005","2005","2005"
-"BDI","Burundi",2019,"2005","2005","2005"
-"BDI","Burundi",2020,"2005","2005","2005"
-"BDI","Burundi",2021,"2005","2005","2005"
-"BEL","Belgium",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BEL","Belgium",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BEL","Belgium",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BEL","Belgium",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BEL","Belgium",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BEL","Belgium",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BEN","Benin",2016,"2007","2007","2007"
-"BEN","Benin",2017,"2007","2007","2007"
-"BEN","Benin",2018,"2007","2007","2007"
-"BEN","Benin",2019,"2007","2007","2007"
-"BEN","Benin",2020,"2015","2015","2015"
-"BEN","Benin",2021,"2015","2015","2015"
-"BFA","Burkina Faso",2016,"1999","1999","1999"
-"BFA","Burkina Faso",2017,"1999","1999","1999"
-"BFA","Burkina Faso",2018,"1999","1999","1999"
-"BFA","Burkina Faso",2019,"1999","1999","1999"
-"BFA","Burkina Faso",2020,"2015","2015","2015"
-"BFA","Burkina Faso",2021,"2015","2015","2015"
-"BGD","Bangladesh",2016,"2005/06","2005/06","2006"
-"BGD","Bangladesh",2017,"2005/06","2005/06","2006"
-"BGD","Bangladesh",2018,"2005/06","2005/06","2006"
-"BGD","Bangladesh",2019,"2005/06","2005/06","2006"
-"BGD","Bangladesh",2020,"2005/06","2005/06","2006"
-"BGD","Bangladesh",2021,"2005/06","2005/06","2006"
-"BGR","Bulgaria",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BGR","Bulgaria",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BGR","Bulgaria",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BGR","Bulgaria",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BGR","Bulgaria",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BGR","Bulgaria",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BHR","Bahrain",2016,"2010","2010","2010"
-"BHR","Bahrain",2017,"2010","2010","2010"
-"BHR","Bahrain",2018,"2010","2010","2010"
-"BHR","Bahrain",2019,"2010","2010","2010"
-"BHR","Bahrain",2020,"2010","2010","2010"
-"BHR","Bahrain",2021,"2010","2010","2010"
-"BHS","Bahamas, The",2016,"2006","2006","2006"
-"BHS","Bahamas, The",2017,"2006","2006","2006"
-"BHS","Bahamas, The",2018,"2012","2012","2012"
-"BHS","Bahamas, The",2019,"2012","2012","2012"
-"BHS","Bahamas, The",2020,"2012","2012","2012"
-"BHS","Bahamas, The",2021,"2012","2012","2012"
-"BIH","Bosnia and Herzegovina",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BIH","Bosnia and Herzegovina",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BIH","Bosnia and Herzegovina",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BIH","Bosnia and Herzegovina",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BIH","Bosnia and Herzegovina",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BIH","Bosnia and Herzegovina",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BLR","Belarus",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BLR","Belarus",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BLR","Belarus",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BLR","Belarus",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BLR","Belarus",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BLR","Belarus",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BLZ","Belize",2016,"2000","2000","2000"
-"BLZ","Belize",2017,"2000","2000","2000"
-"BLZ","Belize",2018,"2000","2000","2000"
-"BLZ","Belize",2019,"2000","2000","2000"
-"BLZ","Belize",2020,"2000","2000","2000"
-"BLZ","Belize",2021,"2000","2000","2000"
-"BMU","Bermuda",2016,"2006","2006","2006"
-"BMU","Bermuda",2017,"2006","2006","2006"
-"BMU","Bermuda",2018,"2006","2006","2006"
-"BMU","Bermuda",2019,"2006","2006","2006"
-"BMU","Bermuda",2020,"2006","2006","2006"
-"BMU","Bermuda",2021,"2006","2006","2006"
-"BOL","Bolivia",2016,"1990","1990","1990"
-"BOL","Bolivia",2017,"1990","1990","1990"
-"BOL","Bolivia",2018,"1990","1990","1990"
-"BOL","Bolivia",2019,"1990","1990","1990"
-"BOL","Bolivia",2020,"1990","1990","1990"
-"BOL","Bolivia",2021,"1990","1990","1990"
-"BRA","Brazil",2016,"1995","1995","1995"
-"BRA","Brazil",2017,"1995","1995","1995"
-"BRA","Brazil",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BRA","Brazil",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BRA","Brazil",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BRA","Brazil",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"BRB","Barbados",2016,"1974","1974","1974"
-"BRB","Barbados",2017,"1974","1974","1974"
-"BRB","Barbados",2018,"1974","1974","1974"
-"BRB","Barbados",2019,"2010","2010","2010"
-"BRB","Barbados",2020,"2010","2010","2010"
-"BRB","Barbados",2021,"2010","2010","2010"
-"BRN","Brunei Darussalam",2016,"2000","2000","2000"
-"BRN","Brunei Darussalam",2017,"2010","2010","2010"
-"BRN","Brunei Darussalam",2018,"2010","2010","2010"
-"BRN","Brunei Darussalam",2019,"2010","2010","2010"
-"BRN","Brunei Darussalam",2020,"2010","2010","2010"
-"BRN","Brunei Darussalam",2021,"2010","2010","2010"
-"BTN","Bhutan",2016,"2000","2000","2000"
-"BTN","Bhutan",2017,"2000","2000","2000"
-"BTN","Bhutan",2018,"2000","2000","2000"
-"BTN","Bhutan",2019,"2000","2000","2000"
-"BTN","Bhutan",2020,"2000","2000","2000"
-"BTN","Bhutan",2021,"2000","2000","2000"
-"BWA","Botswana",2016,"2006","2006","2006"
-"BWA","Botswana",2017,"2006","2006","2006"
-"BWA","Botswana",2018,"2006","2006","2006"
-"BWA","Botswana",2019,"2006","2006","2006"
-"BWA","Botswana",2020,"2006","2006","2006"
-"BWA","Botswana",2021,"2006","2006","2006"
-"CAF","Central African Republic",2016,"1985","1985","1985"
-"CAF","Central African Republic",2017,"1985","1985","1985"
-"CAF","Central African Republic",2018,"2005","2005","2005"
-"CAF","Central African Republic",2019,"2005","2005","2005"
-"CAF","Central African Republic",2020,"2005","2005","2005"
-"CAF","Central African Republic",2021,"2005","2005","2005"
-"CAN","Canada",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CAN","Canada",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CAN","Canada",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CAN","Canada",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CAN","Canada",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CAN","Canada",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHE","Switzerland",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHE","Switzerland",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHE","Switzerland",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHE","Switzerland",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHE","Switzerland",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHE","Switzerland",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHI","Channel Islands",2016,"2003","2003","2003"
-"CHI","Channel Islands",2017,"2003","2003","2003"
-"CHI","Channel Islands",2018,"2007","2007","2007"
-"CHI","Channel Islands",2019,"2007","2007","2007"
-"CHI","Channel Islands",2020,"2007","2007","2007"
-"CHI","Channel Islands",2021,"2007","2007","2007"
-"CHL","Chile",2016,"2008","2008","2008"
-"CHL","Chile",2017,"2013","2013","2013"
-"CHL","Chile",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHL","Chile",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHL","Chile",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHL","Chile",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CHN","China",2016,"2000","2000","2000"
-"CHN","China",2017,"2010","2010","2010"
-"CHN","China",2018,"2015","2015","2015"
-"CHN","China",2019,"2015","2015","2015"
-"CHN","China",2020,"2015","2015","2015"
-"CHN","China",2021,"2015","2015","2015"
-"CIV","Côte d'Ivoire",2016,"2009","2009","2009"
-"CIV","Côte d'Ivoire",2017,"2009","2009","2009"
-"CIV","Côte d'Ivoire",2018,"2009","2009","2009"
-"CIV","Côte d'Ivoire",2019,"2009","2009","2009"
-"CIV","Côte d'Ivoire",2020,"2015","2015","2015"
-"CIV","C�te d'Ivoire",2021,"2015","2015","2015"
-"CMR","Cameroon",2016,"2000","2000","2000"
-"CMR","Cameroon",2017,"2000","2000","2000"
-"CMR","Cameroon",2018,"2005","2005","2005"
-"CMR","Cameroon",2019,"2005","2005","2005"
-"CMR","Cameroon",2020,"2005","2005","2005"
-"CMR","Cameroon",2021,"2005","2005","2005"
-"COD","Congo, Dem. Rep.",2017,"2005","2005","2005"
-"COD","Congo, Dem. Rep.",2018,"2005","2005","2005"
-"COD","Congo, Dem. Rep.",2019,"2005","2005","2005"
-"COD","Congo, Dem. Rep.",2020,"2005","2005","2005"
-"COD","Congo, Dem. Rep.",2021,"2005","2005","2005"
-"COG","Congo, Rep.",2016,"1990","1990","1990"
-"COG","Congo, Rep.",2017,"1990","1990","1990"
-"COG","Congo, Rep.",2018,"1990","1990","1990"
-"COG","Congo, Rep.",2019,"1990","1990","1990"
-"COG","Congo, Rep.",2020,"2005","2005","2005"
-"COG","Congo, Rep.",2021,"2005","2005","2005"
-"COL","Colombia",2016,"2005","2005","2005"
-"COL","Colombia",2017,"2005","2005","2005"
-"COL","Colombia",2018,"2005","2005","2005"
-"COL","Colombia",2019,"2015","2015","2015"
-"COL","Colombia",2020,"2015","2015","2015"
-"COL","Colombia",2021,"2015","2015","2015"
-"COM","Comoros",2016,"1990","1990","1990"
-"COM","Comoros",2017,"1990","1990","1990"
-"COM","Comoros",2018,"1990","1990","1990"
-"COM","Comoros",2019,"2007","2007","2007"
-"COM","Comoros",2020,"2007","2007","2007"
-"COM","Comoros",2021,"2007","2007","2007"
-"CPV","Cabo Verde",2016,"2007","2007","2007"
-"CPV","Cabo Verde",2017,"2007","2007","2007"
-"CPV","Cabo Verde",2018,"2007","2007","2007"
-"CPV","Cabo Verde",2019,"2007","2007","2007"
-"CPV","Cabo Verde",2020,"2007","2007","2007"
-"CPV","Cabo Verde",2021,"2007","2007","2007"
-"CRI","Costa Rica",2016,"1991","1991","1991"
-"CRI","Costa Rica",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CRI","Costa Rica",2018,"1991","1991","1991"
-"CRI","Costa Rica",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CRI","Costa Rica",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CRI","Costa Rica",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CUB","Cuba",2016,"1997","1997","1997"
-"CUB","Cuba",2017,"1997","1997","1997"
-"CUB","Cuba",2018,"1997","1997","1997"
-"CUB","Cuba",2019,"1997","1997","1997"
-"CUB","Cuba",2020,"1997","1997","1997"
-"CUB","Cuba",2021,"1997","1997","1997"
-"CUW","Curaçao",2016,NA,NA,NA
-"CUW","Curaçao",2017,NA,NA,NA
-"CUW","Curaçao",2018,NA,NA,NA
-"CUW","Curaçao",2019,"2000","2000","2000"
-"CUW","Curaçao",2020,"2000","2000","2000"
-"CUW","Cura�ao",2021,"2000","2000","2000"
-"CYM","Cayman Islands",2016,"2007","2007","2007"
-"CYM","Cayman Islands",2017,"2007","2007","2007"
-"CYM","Cayman Islands",2018,"2007","2007","2007"
-"CYM","Cayman Islands",2019,"2015","2015","2015"
-"CYM","Cayman Islands",2020,"2015","2015","2015"
-"CYM","Cayman Islands",2021,"2015","2015","2015"
-"CYP","Cyprus",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CYP","Cyprus",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CYP","Cyprus",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CYP","Cyprus",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CYP","Cyprus",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CYP","Cyprus",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CZE","Czech Republic",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CZE","Czech Republic",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CZE","Czech Republic",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CZE","Czech Republic",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CZE","Czech Republic",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"CZE","Czech Republic",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DEU","Germany",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DEU","Germany",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DEU","Germany",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DEU","Germany",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DEU","Germany",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DEU","Germany",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DJI","Djibouti",2016,"1990","1990","1990"
-"DJI","Djibouti",2017,"1990","1990","1990"
-"DJI","Djibouti",2018,"1990","1990","1990"
-"DJI","Djibouti",2019,"2013","2013","2013"
-"DJI","Djibouti",2020,"2013","2013","2013"
-"DJI","Djibouti",2021,"2013","2013","2013"
-"DMA","Dominica",2016,"2006","2006","2006"
-"DMA","Dominica",2017,"2006","2006","2006"
-"DMA","Dominica",2018,"2006","2006","2006"
-"DMA","Dominica",2019,"2006","2006","2006"
-"DMA","Dominica",2020,"2006","2006","2006"
-"DMA","Dominica",2021,"2006","2006","2006"
-"DNK","Denmark",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DNK","Denmark",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DNK","Denmark",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DNK","Denmark",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DNK","Denmark",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DNK","Denmark",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DOM","Dominican Republic",2016,"2007","2007","2007"
-"DOM","Dominican Republic",2017,"2007","2007","2007"
-"DOM","Dominican Republic",2018,"2007","2007","2007"
-"DOM","Dominican Republic",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DOM","Dominican Republic",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DOM","Dominican Republic",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DZA","Algeria",2016,"1980","1980","1980"
-"DZA","Algeria",2017,"1999","1999","1999"
-"DZA","Algeria",2018,"1999","1999","1999"
-"DZA","Algeria",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DZA","Algeria",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"DZA","Algeria",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ECU","Ecuador",2016,"2007","2007","2007"
-"ECU","Ecuador",2017,"2007","2007","2007"
-"ECU","Ecuador",2018,"2007","2007","2007"
-"ECU","Ecuador",2019,"2007","2007","2007"
-"ECU","Ecuador",2020,"2007","2007","2007"
-"ECU","Ecuador",2021,"2007","2007","2007"
-"EGY","Egypt, Arab Rep.",2016,"2011/12","2011/12","2012"
-"EGY","Egypt, Arab Rep.",2017,"2011/12","2011/12","2012"
-"EGY","Egypt, Arab Rep.",2018,"2011/12","2011/12","2012"
-"EGY","Egypt, Arab Rep.",2019,"2016/17","2016/17","2017"
-"EGY","Egypt, Arab Rep.",2020,"2016/17","2016/17","2017"
-"EGY","Egypt, Arab Rep.",2021,"2016/17","2016/17","2017"
-"ERI","Eritrea",2016,"2000","2000","2000"
-"ERI","Eritrea",2017,"2000","2000","2000"
-"ERI","Eritrea",2018,"2000","2000","2000"
-"ERI","Eritrea",2019,"2000","2000","2000"
-"ERI","Eritrea",2020,"2011","2011","2011"
-"ERI","Eritrea",2021,"2011","2011","2011"
-"ESP","Spain",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ESP","Spain",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ESP","Spain",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ESP","Spain",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ESP","Spain",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ESP","Spain",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"EST","Estonia",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"EST","Estonia",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"EST","Estonia",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"EST","Estonia",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"EST","Estonia",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"EST","Estonia",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ETH","Ethiopia",2016,"2010/11","2010/11","2011"
-"ETH","Ethiopia",2017,"2010/11","2010/11","2011"
-"ETH","Ethiopia",2018,"20015/2016","20015/2016","2016"
-"ETH","Ethiopia",2019,"20015/2016","20015/2016","2016"
-"ETH","Ethiopia",2020,"2015/2016","2015/2016","2020"
-"ETH","Ethiopia",2021,"2015/2016","2015/2016","2020"
-"FIN","Finland",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FIN","Finland",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FIN","Finland",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FIN","Finland",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FIN","Finland",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FIN","Finland",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FJI","Fiji",2016,"2005","2005","2005"
-"FJI","Fiji",2017,"2011","2011","2011"
-"FJI","Fiji",2018,"2011","2011","2011"
-"FJI","Fiji",2019,"2014","2014","2014"
-"FJI","Fiji",2020,"2014","2014","2014"
-"FJI","Fiji",2021,"2014","2014","2014"
-"FRA","France",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FRA","France",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FRA","France",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FRA","France",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FRA","France",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FRA","France",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"FRO","Faroe Islands",2016,NA,NA,NA
-"FRO","Faroe Islands",2017,NA,NA,NA
-"FRO","Faroe Islands",2018,NA,NA,NA
-"FRO","Faroe Islands",2019,NA,NA,NA
-"FRO","Faroe Islands",2020,NA,NA,NA
-"FRO","Faroe Islands",2021,NA,NA,NA
-"FSM","Micronesia, Fed. Sts.",2016,"2003/04","2003/04","2004"
-"FSM","Micronesia, Fed. Sts.",2017,"2003/04","2003/04","2004"
-"FSM","Micronesia, Fed. Sts.",2018,"2004","2004","2004"
-"FSM","Micronesia, Fed. Sts.",2019,"2004","2004","2004"
-"FSM","Micronesia, Fed. Sts.",2020,"2004","2004","2004"
-"FSM","Micronesia, Fed. Sts.",2021,"2004","2004","2004"
-"GAB","Gabon",2016,"2001","2001","2001"
-"GAB","Gabon",2017,"2001","2001","2001"
-"GAB","Gabon",2018,"2001","2001","2001"
-"GAB","Gabon",2019,"2001","2001","2001"
-"GAB","Gabon",2020,"2001","2001","2001"
-"GAB","Gabon",2021,"2001","2001","2001"
-"GBR","United Kingdom",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GBR","United Kingdom",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GBR","United Kingdom",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GBR","United Kingdom",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GBR","United Kingdom",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GBR","United Kingdom",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GEO","Georgia",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GEO","Georgia",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GEO","Georgia",2018,"1996","1996","1996"
-"GEO","Georgia",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GEO","Georgia",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GEO","Georgia",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GHA","Ghana",2016,"2006","2006","2006"
-"GHA","Ghana",2017,"2006","2006","2006"
-"GHA","Ghana",2018,"2006","2006","2006"
-"GHA","Ghana",2019,"2013","2013","2013"
-"GHA","Ghana",2020,"2013","2013","2013"
-"GHA","Ghana",2021,"2013","2013","2013"
-"GIB","Gibraltar",2016,NA,NA,NA
-"GIB","Gibraltar",2017,NA,NA,NA
-"GIB","Gibraltar",2018,NA,NA,NA
-"GIB","Gibraltar",2019,NA,NA,NA
-"GIB","Gibraltar",2020,NA,NA,NA
-"GIB","Gibraltar",2021,NA,NA,NA
-"GIN","Guinea",2016,"2003","2003","2003"
-"GIN","Guinea",2017,"2003","2003","2003"
-"GIN","Guinea",2018,"2003","2003","2003"
-"GIN","Guinea",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GIN","Guinea",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GIN","Guinea",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GMB","Gambia, The",2016,"2004","2004","2004"
-"GMB","Gambia, The",2017,"2004","2004","2004"
-"GMB","Gambia, The",2018,"2004","2004","2004"
-"GMB","Gambia, The",2019,"2013","2013","2013"
-"GMB","Gambia, The",2020,"2013","2013","2013"
-"GMB","Gambia, The",2021,"2013","2013","2013"
-"GNB","Guinea-Bissau",2016,"2005","2005","2005"
-"GNB","Guinea-Bissau",2017,"2005","2005","2005"
-"GNB","Guinea-Bissau",2018,"2005","2005","2005"
-"GNB","Guinea-Bissau",2019,"2005","2005","2005"
-"GNB","Guinea-Bissau",2020,"2005","2005","2005"
-"GNB","Guinea-Bissau",2021,"2005","2005","2005"
-"GNQ","Equatorial Guinea",2016,"2006","2006","2006"
-"GNQ","Equatorial Guinea",2017,"2006","2006","2006"
-"GNQ","Equatorial Guinea",2018,"2006","2006","2006"
-"GNQ","Equatorial Guinea",2019,"2006","2006","2006"
-"GNQ","Equatorial Guinea",2020,"2006","2006","2006"
-"GNQ","Equatorial Guinea",2021,"2006","2006","2006"
-"GRC","Greece",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GRC","Greece",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GRC","Greece",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GRC","Greece",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GRC","Greece",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GRC","Greece",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GRD","Grenada",2016,"2006","2006","2006"
-"GRD","Grenada",2017,"2006","2006","2006"
-"GRD","Grenada",2018,"2006","2006","2006"
-"GRD","Grenada",2019,"2006","2006","2006"
-"GRD","Grenada",2020,"2006","2006","2006"
-"GRD","Grenada",2021,"2006","2006","2006"
-"GRL","Greenland",2016,"1990","1990","1990"
-"GRL","Greenland",2017,"2010","2010","2010"
-"GRL","Greenland",2018,"2010","2010","2010"
-"GRL","Greenland",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GRL","Greenland",2020,NA,NA,NA
-"GRL","Greenland",2021,NA,NA,NA
-"GTM","Guatemala",2016,"2001","2001","2001"
-"GTM","Guatemala",2017,"2001","2001","2001"
-"GTM","Guatemala",2018,"2001","2001","2001"
-"GTM","Guatemala",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GTM","Guatemala",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GTM","Guatemala",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"GUM","Guam",2016,NA,NA,NA
-"GUM","Guam",2017,NA,NA,NA
-"GUM","Guam",2018,"2009","2009","2009"
-"GUM","Guam",2019,"2009","2009","2009"
-"GUM","Guam",2020,"2009","2009","2009"
-"GUM","Guam",2021,"2012","2012","2012"
-"GUY","Guyana",2016,"2006","2006","2006"
-"GUY","Guyana",2017,"2006","2006","2006"
-"GUY","Guyana",2018,"2006","2006","2006"
-"GUY","Guyana",2019,"2006","2006","2006"
-"GUY","Guyana",2020,"2012","2012","2012"
-"GUY","Guyana",2021,"2012","2012","2012"
-"HKG","Hong Kong SAR, China",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HKG","Hong Kong SAR, China",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HKG","Hong Kong SAR, China",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HKG","Hong Kong SAR, China",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HKG","Hong Kong SAR, China",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HKG","Hong Kong SAR, China",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HND","Honduras",2016,"2000","2000","2000"
-"HND","Honduras",2017,"2000","2000","2000"
-"HND","Honduras",2018,"2000","2000","2000"
-"HND","Honduras",2019,"2000","2000","2000"
-"HND","Honduras",2020,"2000","2000","2000"
-"HND","Honduras",2021,"2000","2000","2000"
-"HRV","Croatia",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HRV","Croatia",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HRV","Croatia",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HRV","Croatia",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HRV","Croatia",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HRV","Croatia",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HTI","Haiti",2016,"1986/87","1986/87","1987"
-"HTI","Haiti",2017,"1986/87","1986/87","1987"
-"HTI","Haiti",2018,"1986/87","1986/87","1987"
-"HTI","Haiti",2019,"1986/87","1986/87","1987"
-"HTI","Haiti",2020,"2011/12","2011/12","2012"
-"HTI","Haiti",2021,"2011/12","2011/12","2012"
-"HUN","Hungary",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HUN","Hungary",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HUN","Hungary",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HUN","Hungary",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HUN","Hungary",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"HUN","Hungary",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"IDN","Indonesia",2016,"2010","2010","2010"
-"IDN","Indonesia",2017,"2010","2010","2010"
-"IDN","Indonesia",2018,"2010","2010","2010"
-"IDN","Indonesia",2019,"2010","2010","2010"
-"IDN","Indonesia",2020,"2010","2010","2010"
-"IDN","Indonesia",2021,"2010","2010","2010"
-"IMN","Isle of Man",2017,"2013","2013","2013"
-"IMN","Isle of Man",2018,"2013","2013","2013"
-"IMN","Isle of Man",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"IMN","Isle of Man",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"IMN","Isle of Man",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"IMY","Isle of Man",2016,"2013","2013","2013"
-"IND","India",2016,"2011/12","2011/12","2012"
-"IND","India",2017,"2011/12","2011/12","2012"
-"IND","India",2018,"2011/12","2011/12","2012"
-"IND","India",2019,"2011","2011","2011"
-"IND","India",2020,"2011","2011","2011"
-"IND","India",2021,"2011","2011","2011"
-"IRL","Ireland",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"IRL","Ireland",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"IRL","Ireland",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"IRL","Ireland",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"IRL","Ireland",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"IRL","Ireland",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"IRN","Iran, Islamic Rep.",2016,"2004/05","2004/05","2005"
-"IRN","Iran, Islamic Rep.",2017,"2004/05","2004/05","2005"
-"IRN","Iran, Islamic Rep.",2018,"2011","2011","2011"
-"IRN","Iran, Islamic Rep.",2019,"2011","2011","2011"
-"IRN","Iran, Islamic Rep.",2020,"2011/2012","2011/2012","2020"
-"IRN","Iran, Islamic Rep.",2021,"2011/2012","2011/2012","2020"
-"IRQ","Iraq",2016,"2007","2007","2007"
-"IRQ","Iraq",2017,"2007","2007","2007"
-"IRQ","Iraq",2018,"2007","2007","2007"
-"IRQ","Iraq",2019,"2007","2007","2007"
-"IRQ","Iraq",2020,"2007","2007","2007"
-"IRQ","Iraq",2021,"2007","2007","2007"
-"ISL","Iceland",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISL","Iceland",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISL","Iceland",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISL","Iceland",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISL","Iceland",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISL","Iceland",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISR","Israel",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISR","Israel",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISR","Israel",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISR","Israel",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISR","Israel",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ISR","Israel",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ITA","Italy",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ITA","Italy",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ITA","Italy",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ITA","Italy",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ITA","Italy",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ITA","Italy",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"JAM","Jamaica",2016,"2007","2007","2007"
-"JAM","Jamaica",2017,"2007","2007","2007"
-"JAM","Jamaica",2018,"2007","2007","2007"
-"JAM","Jamaica",2019,"2007","2007","2007"
-"JAM","Jamaica",2020,"2007","2007","2007"
-"JAM","Jamaica",2021,"2007","2007","2007"
-"JOR","Jordan",2016,"1994","1994","1994"
-"JOR","Jordan",2017,"1994","1994","1994"
-"JOR","Jordan",2018,"1994","1994","1994"
-"JOR","Jordan",2019,"2016","2016","2016"
-"JOR","Jordan",2020,"2016","2016","2016"
-"JOR","Jordan",2021,"2016","2016","2016"
-"JPN","Japan",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"JPN","Japan",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"JPN","Japan",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"JPN","Japan",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"JPN","Japan",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"JPN","Japan",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KAZ","Kazakhstan",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KAZ","Kazakhstan",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KAZ","Kazakhstan",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KAZ","Kazakhstan",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KAZ","Kazakhstan",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KAZ","Kazakhstan",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KEN","Kenya",2016,"2009","2009","2009"
-"KEN","Kenya",2017,"2009","2009","2009"
-"KEN","Kenya",2018,"2009","2009","2009"
-"KEN","Kenya",2019,"2009","2009","2009"
-"KEN","Kenya",2020,"2009","2009","2009"
-"KEN","Kenya",2021,"2009","2009","2009"
-"KGZ","Kyrgyz Republic",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KGZ","Kyrgyz Republic",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KGZ","Kyrgyz Republic",2018,"1995","1995","1995"
-"KGZ","Kyrgyz Republic",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KGZ","Kyrgyz Republic",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KGZ","Kyrgyz Republic",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KHM","Cambodia",2016,"2000","2000","2000"
-"KHM","Cambodia",2017,"2000","2000","2000"
-"KHM","Cambodia",2018,"2000","2000","2000"
-"KHM","Cambodia",2019,"2000","2000","2000"
-"KHM","Cambodia",2020,"2000","2000","2000"
-"KHM","Cambodia",2021,"2000","2000","2000"
-"KIR","Kiribati",2016,"2006","2006","2006"
-"KIR","Kiribati",2017,"2006","2006","2006"
-"KIR","Kiribati",2018,"2006","2006","2006"
-"KIR","Kiribati",2019,"2006","2006","2006"
-"KIR","Kiribati",2020,"2006","2006","2006"
-"KIR","Kiribati",2021,"2006","2006","2006"
-"KNA","St. Kitts and Nevis",2016,"2006","2006","2006"
-"KNA","St. Kitts and Nevis",2017,"2006","2006","2006"
-"KNA","St. Kitts and Nevis",2018,"2006","2006","2006"
-"KNA","St. Kitts and Nevis",2019,"2006","2006","2006"
-"KNA","St. Kitts and Nevis",2020,"2006","2006","2006"
-"KNA","St. Kitts and Nevis",2021,"2006","2006","2006"
-"KOR","Korea, Rep.",2016,"2010","2010","2010"
-"KOR","Korea, Rep.",2017,"2010","2010","2010"
-"KOR","Korea, Rep.",2018,"2010","2010","2010"
-"KOR","Korea, Rep.",2019,"2010","2010","2010"
-"KOR","Korea, Rep.",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KOR","Korea, Rep.",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"KSV","Kosovo",2016,"2008","2008","2008"
-"KWT","Kuwait",2016,"2010","2010","2010"
-"KWT","Kuwait",2017,"2010","2010","2010"
-"KWT","Kuwait",2018,"2010","2010","2010"
-"KWT","Kuwait",2019,"2010","2010","2010"
-"KWT","Kuwait",2020,"2010","2010","2010"
-"KWT","Kuwait",2021,"2010","2010","2010"
-"LAO","Lao PDR",2016,"2002","2002","2002"
-"LAO","Lao PDR",2017,"2012","2012","2012"
-"LAO","Lao PDR",2018,"2012","2012","2012"
-"LAO","Lao PDR",2019,"2012","2012","2012"
-"LAO","Lao PDR",2020,"2012","2012","2012"
-"LAO","Lao PDR",2021,"2012","2012","2012"
-"LBN","Lebanon",2016,"1997","1997","1997"
-"LBN","Lebanon",2017,NA,NA,NA
-"LBN","Lebanon",2018,"2010","2010","2010"
-"LBN","Lebanon",2019,"2010","2010","2010"
-"LBN","Lebanon",2020,"2010","2010","2010"
-"LBN","Lebanon",2021,"2010","2010","2010"
-"LBR","Liberia",2016,"2000","2000","2000"
-"LBR","Liberia",2017,"2000","2000","2000"
-"LBR","Liberia",2018,"2000","2000","2000"
-"LBR","Liberia",2019,"1992","1992","1992"
-"LBR","Liberia",2020,"1992","1992","1992"
-"LBR","Liberia",2021,"1992","1992","1992"
-"LBY","Libya",2016,"2003","2003","2003"
-"LBY","Libya",2017,"2003","2003","2003"
-"LBY","Libya",2018,"2003","2003","2003"
-"LBY","Libya",2019,"2003","2003","2003"
-"LBY","Libya",2020,"2007","2007","2007"
-"LBY","Libya",2021,"2003","2003","2003"
-"LCA","St. Lucia",2016,"2006","2006","2006"
-"LCA","St. Lucia",2017,"2006","2006","2006"
-"LCA","St. Lucia",2018,"2006","2006","2006"
-"LCA","St. Lucia",2019,"2006","2006","2006"
-"LCA","St. Lucia",2020,"2018","2018","2018"
-"LCA","St. Lucia",2021,"2018","2018","2018"
-"LIE","Liechtenstein",2016,"1990","1990","1990"
-"LIE","Liechtenstein",2017,"1990","1990","1990"
-"LIE","Liechtenstein",2018,"1990","1990","1990"
-"LIE","Liechtenstein",2019,"1998","1998","1998"
-"LIE","Liechtenstein",2020,"1998","1998","1998"
-"LIE","Liechtenstein",2021,"1998","1998","1998"
-"LKA","Sri Lanka",2016,"2010","2010","2010"
-"LKA","Sri Lanka",2017,"2010","2010","2010"
-"LKA","Sri Lanka",2018,"2010","2010","2010"
-"LKA","Sri Lanka",2019,"2010","2010","2010"
-"LKA","Sri Lanka",2020,"2010","2010","2010"
-"LKA","Sri Lanka",2021,"2010","2010","2010"
-"LSO","Lesotho",2016,"2004","2004","2004"
-"LSO","Lesotho",2017,"2012","2012","2012"
-"LSO","Lesotho",2018,"2012","2012","2012"
-"LSO","Lesotho",2019,"2012","2012","2012"
-"LSO","Lesotho",2020,"2012","2012","2012"
-"LSO","Lesotho",2021,"2012","2012","2012"
-"LTU","Lithuania",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LTU","Lithuania",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LTU","Lithuania",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LTU","Lithuania",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LTU","Lithuania",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LTU","Lithuania",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LUX","Luxembourg",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LUX","Luxembourg",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LUX","Luxembourg",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LUX","Luxembourg",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LUX","Luxembourg",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LUX","Luxembourg",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LVA","Latvia",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LVA","Latvia",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LVA","Latvia",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LVA","Latvia",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LVA","Latvia",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"LVA","Latvia",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MAC","Macao SAR, China",2016,"2013","2013","2013"
-"MAC","Macao SAR, China",2017,"2015","2015","2015"
-"MAC","Macao SAR, China",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MAC","Macao SAR, China",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MAC","Macao SAR, China",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MAC","Macao SAR, China",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MAF","St. Martin (French part)",2016,NA,NA,NA
-"MAF","St. Martin (French part)",2017,NA,NA,NA
-"MAF","St. Martin (French part)",2018,NA,NA,NA
-"MAF","St. Martin (French part)",2019,NA,NA,NA
-"MAF","St. Martin (French part)",2020,NA,NA,NA
-"MAF","St. Martin (French part)",2021,NA,NA,NA
-"MAR","Morocco",2016,"2007","2007","2007"
-"MAR","Morocco",2017,"2007","2007","2007"
-"MAR","Morocco",2018,"2007","2007","2007"
-"MAR","Morocco",2019,"2007","2007","2007"
-"MAR","Morocco",2020,"2007","2007","2007"
-"MAR","Morocco",2021,"2007","2007","2007"
-"MCO","Monaco",2016,"1990","1990","1990"
-"MCO","Monaco",2017,"1990","1990","1990"
-"MCO","Monaco",2018,"1990","1990","1990"
-"MCO","Monaco",2019,"2010","2010","2010"
-"MCO","Monaco",2020,"2010","2010","2010"
-"MCO","Monaco",2021,"2010","2010","2010"
-"MDA","Moldova",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MDA","Moldova",2017,"2000","2000","2000"
-"MDA","Moldova",2018,"2000","2000","2000"
-"MDA","Moldova",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MDA","Moldova",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MDA","Moldova",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MDG","Madagascar",2016,"1984","1984","1984"
-"MDG","Madagascar",2017,"1984","1984","1984"
-"MDG","Madagascar",2018,"1984","1984","1984"
-"MDG","Madagascar",2019,"2007","2007","2007"
-"MDG","Madagascar",2020,"2007","2007","2007"
-"MDG","Madagascar",2021,"2007","2007","2007"
-"MDV","Maldives",2016,"2003","2003","2003"
-"MDV","Maldives",2017,"2003","2003","2003"
-"MDV","Maldives",2018,"2014","2014","2014"
-"MDV","Maldives",2019,"2014","2014","2014"
-"MDV","Maldives",2020,"2014","2014","2014"
-"MDV","Maldives",2021,"2014","2014","2014"
-"MEX","Mexico",2016,"2008","2008","2008"
-"MEX","Mexico",2017,"2008","2008","2008"
-"MEX","Mexico",2018,"2013","2013","2013"
-"MEX","Mexico",2019,"2013","2013","2013"
-"MEX","Mexico",2020,"2013","2013","2013"
-"MEX","Mexico",2021,"2013","2013","2013"
-"MHL","Marshall Islands",2016,"2003/04","2003/04","2004"
-"MHL","Marshall Islands",2017,"2003/04","2003/04","2004"
-"MHL","Marshall Islands",2018,"2004","2004","2004"
-"MHL","Marshall Islands",2019,"2015","2015","2015"
-"MHL","Marshall Islands",2020,"2015","2015","2015"
-"MHL","Marshall Islands",2021,"2015","2015","2015"
-"MKD","Macedonia, FYR",2016,"2005","2005","2005"
-"MKD","Macedonia, FYR",2017,"2005","2005","2005"
-"MKD","Macedonia, FYR",2018,"2005","2005","2005"
-"MKD","North Macedonia",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MKD","North Macedonia",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MKD","North Macedonia",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MLI","Mali",2016,"1999","1999","1999"
-"MLI","Mali",2017,"1999","1999","1999"
-"MLI","Mali",2018,"1999","1999","1999"
-"MLI","Mali",2019,"1999","1999","1999"
-"MLI","Mali",2020,"1999","1999","1999"
-"MLI","Mali",2021,"1999","1999","1999"
-"MLT","Malta",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MLT","Malta",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MLT","Malta",2018,"2010","2010","2010"
-"MLT","Malta",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MLT","Malta",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MLT","Malta",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MMR","Myanmar",2016,"2005/06","2005/06","2006"
-"MMR","Myanmar",2017,"2010/11","2010/11","2011"
-"MMR","Myanmar",2018,"2010","2010","2010"
-"MMR","Myanmar",2019,"2010","2010","2010"
-"MMR","Myanmar",2020,"2015","2015","2015"
-"MMR","Myanmar",2021,"2015","2015","2015"
-"MNE","Montenegro",2016,"2000","2000","2000"
-"MNE","Montenegro",2017,"2000","2000","2000"
-"MNE","Montenegro",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MNE","Montenegro",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MNE","Montenegro",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MNE","Montenegro",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"MNG","Mongolia",2016,"2010","2010","2010"
-"MNG","Mongolia",2017,"2010","2010","2010"
-"MNG","Mongolia",2018,"2010","2010","2010"
-"MNG","Mongolia",2019,"2010","2010","2010"
-"MNG","Mongolia",2020,"2010","2010","2010"
-"MNG","Mongolia",2021,"2010","2010","2010"
-"MNP","Northern Mariana Islands",2016,NA,NA,NA
-"MNP","Northern Mariana Islands",2017,NA,NA,NA
-"MNP","Northern Mariana Islands",2018,NA,NA,NA
-"MNP","Northern Mariana Islands",2019,"2009","2009","2009"
-"MNP","Northern Mariana Islands",2020,NA,NA,NA
-"MNP","Northern Mariana Islands",2021,NA,NA,NA
-"MOZ","Mozambique",2016,"2009","2009","2009"
-"MOZ","Mozambique",2017,"2009","2009","2009"
-"MOZ","Mozambique",2018,"2009","2009","2009"
-"MOZ","Mozambique",2019,"2014","2014","2014"
-"MOZ","Mozambique",2020,"2014","2014","2014"
-"MOZ","Mozambique",2021,"2014","2014","2014"
-"MRT","Mauritania",2016,"2004","2004","2004"
-"MRT","Mauritania",2017,"2004","2004","2004"
-"MRT","Mauritania",2018,"2004","2004","2004"
-"MRT","Mauritania",2019,"2004","2004","2004"
-"MRT","Mauritania",2020,"2014","2014","2014"
-"MRT","Mauritania",2021,"2014","2014","2014"
-"MUS","Mauritius",2016,"2006","2006","2006"
-"MUS","Mauritius",2017,"2006","2006","2006"
-"MUS","Mauritius",2018,"2006","2006","2006"
-"MUS","Mauritius",2019,"2006","2006","2006"
-"MUS","Mauritius",2020,"2006","2006","2006"
-"MUS","Mauritius",2021,"2006","2006","2006"
-"MWI","Malawi",2016,"2010","2010","2010"
-"MWI","Malawi",2017,"2010","2010","2010"
-"MWI","Malawi",2018,"2010","2010","2010"
-"MWI","Malawi",2019,"2010","2010","2010"
-"MWI","Malawi",2020,"2010","2010","2010"
-"MWI","Malawi",2021,"2017","2017","2017"
-"MYS","Malaysia",2016,"2010","2010","2010"
-"MYS","Malaysia",2017,"2010","2010","2010"
-"MYS","Malaysia",2018,"2010","2010","2010"
-"MYS","Malaysia",2019,"2015","2015","2015"
-"MYS","Malaysia",2020,"2015","2015","2015"
-"MYS","Malaysia",2021,"2015","2015","2015"
-"NAM","Namibia",2016,"2010","2010","2010"
-"NAM","Namibia",2017,"2010","2010","2010"
-"NAM","Namibia",2018,"2010","2010","2010"
-"NAM","Namibia",2019,"2010","2010","2010"
-"NAM","Namibia",2020,"2015","2015","2015"
-"NAM","Namibia",2021,"2015","2015","2015"
-"NCL","New Caledonia",2016,"1990","1990","1990"
-"NCL","New Caledonia",2017,"1990","1990","1990"
-"NCL","New Caledonia",2018,NA,NA,NA
-"NCL","New Caledonia",2019,"1990","1990","1990"
-"NCL","New Caledonia",2020,"1990","1990","1990"
-"NCL","New Caledonia",2021,"1990","1990","1990"
-"NER","Niger",2016,"2006","2006","2006"
-"NER","Niger",2017,"2006","2006","2006"
-"NER","Niger",2018,"2006","2006","2006"
-"NER","Niger",2019,"2006","2006","2006"
-"NER","Niger",2020,"2015","2015","2015"
-"NER","Niger",2021,"2015","2015","2015"
-"NGA","Nigeria",2016,"2010","2010","2010"
-"NGA","Nigeria",2017,"2010","2010","2010"
-"NGA","Nigeria",2018,"2010","2010","2010"
-"NGA","Nigeria",2019,"2010","2010","2010"
-"NGA","Nigeria",2020,"2010","2010","2010"
-"NGA","Nigeria",2021,"2010","2010","2010"
-"NIC","Nicaragua",2016,"2006","2006","2006"
-"NIC","Nicaragua",2017,"2006","2006","2006"
-"NIC","Nicaragua",2018,"1994","1994","1994"
-"NIC","Nicaragua",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NIC","Nicaragua",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NIC","Nicaragua",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NLD","Netherlands",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NLD","Netherlands",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NLD","Netherlands",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NLD","Netherlands",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NLD","Netherlands",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NLD","Netherlands",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NOR","Norway",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NOR","Norway",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NOR","Norway",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NOR","Norway",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NOR","Norway",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NOR","Norway",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NPL","Nepal",2016,"2000/01","2000/01","2001"
-"NPL","Nepal",2017,"2000/01","2000/01","2001"
-"NPL","Nepal",2018,"2000/01","2000/01","2001"
-"NPL","Nepal",2019,"2000/01","2000/01","2001"
-"NPL","Nepal",2020,"2000/01","2000/01","2001"
-"NPL","Nepal",2021,"2011/12","2011/12","2012"
-"NRU","Nauru",2016,NA,NA,NA
-"NRU","Nauru",2017,"2007","2007","2007"
-"NRU","Nauru",2018,"2007","2007","2007"
-"NRU","Nauru",2019,"2007","2007","2007"
-"NRU","Nauru",2020,"2007","2007","2007"
-"NRU","Nauru",2021,"2007","2007","2007"
-"NZL","New Zealand",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NZL","New Zealand",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NZL","New Zealand",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NZL","New Zealand",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NZL","New Zealand",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"NZL","New Zealand",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"OMN","Oman",2016,"2010","2010","2010"
-"OMN","Oman",2017,"2010","2010","2010"
-"OMN","Oman",2018,"2010","2010","2010"
-"OMN","Oman",2019,"2010","2010","2010"
-"OMN","Oman",2020,"2010","2010","2010"
-"OMN","Oman",2021,"2010","2010","2010"
-"PAK","Pakistan",2016,"2005/06","2005/06","2006"
-"PAK","Pakistan",2017,"2005/06","2005/06","2006"
-"PAK","Pakistan",2018,"2005/06","2005/06","2006"
-"PAK","Pakistan",2019,"2005/06","2005/06","2006"
-"PAK","Pakistan",2020,"2005/06","2005/06","2006"
-"PAK","Pakistan",2021,"2005/06","2005/06","2006"
-"PAN","Panama",2016,"2007","2007","2007"
-"PAN","Panama",2017,"2007","2007","2007"
-"PAN","Panama",2018,"2007","2007","2007"
-"PAN","Panama",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"PAN","Panama",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"PAN","Panama",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"PER","Peru",2016,"2007","2007","2007"
-"PER","Peru",2017,"2007","2007","2007"
-"PER","Peru",2018,"2007","2007","2007"
-"PER","Peru",2019,"2007","2007","2007"
-"PER","Peru",2020,"2007","2007","2007"
-"PER","Peru",2021,"2007","2007","2007"
-"PHL","Philippines",2016,"2000","2000","2000"
-"PHL","Philippines",2017,"2000","2000","2000"
-"PHL","Philippines",2018,"2000","2000","2000"
-"PHL","Philippines",2019,"2000","2000","2000"
-"PHL","Philippines",2020,"2018","2018","2018"
-"PHL","Philippines",2021,"2018","2018","2018"
-"PLW","Palau",2016,"2004/05","2004/05","2005"
-"PLW","Palau",2017,"2004/05","2004/05","2005"
-"PLW","Palau",2018,"2015","2015","2015"
-"PLW","Palau",2019,"2015","2015","2015"
-"PLW","Palau",2020,"2015","2015","2015"
-"PLW","Palau",2021,"2015","2015","2015"
-"PNG","Papua New Guinea",2016,"1998","1998","1998"
-"PNG","Papua New Guinea",2017,"1998","1998","1998"
-"PNG","Papua New Guinea",2018,"2013","2013","2013"
-"PNG","Papua New Guinea",2019,"2013","2013","2013"
-"PNG","Papua New Guinea",2020,"2013","2013","2013"
-"PNG","Papua New Guinea",2021,"2013","2013","2013"
-"POL","Poland",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"POL","Poland",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"POL","Poland",2018,"2010","2010","2010"
-"POL","Poland",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"POL","Poland",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"POL","Poland",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"PRI","Puerto Rico",2016,"1953/54","1953/54","1954"
-"PRI","Puerto Rico",2017,"1953/54","1953/54","1954"
-"PRI","Puerto Rico",2018,"1954","1954","1954"
-"PRI","Puerto Rico",2019,"1954","1954","1954"
-"PRI","Puerto Rico",2020,"1954","1954","1954"
-"PRI","Puerto Rico",2021,"1954","1954","1954"
-"PRK","Korea, Dem. People's Rep.",2016,NA,NA,NA
-"PRK","Korea, Dem. People's Rep.",2017,NA,NA,NA
-"PRK","Korea, Dem. People's Rep.",2018,NA,NA,NA
-"PRK","Korea, Dem. People's Rep.",2019,NA,NA,NA
-"PRK","Korea, Dem. People's Rep.",2020,NA,NA,NA
-"PRK","Korea, Dem. People's Rep.",2021,NA,NA,NA
-"PRT","Portugal",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"PRT","Portugal",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"PRT","Portugal",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"PRT","Portugal",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"PRT","Portugal",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"PRT","Portugal",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"PRY","Paraguay",2016,"1994","1994","1994"
-"PRY","Paraguay",2017,"1994","1994","1994"
-"PRY","Paraguay",2018,"1994","1994","1994"
-"PRY","Paraguay",2019,"2014","2014","2014"
-"PRY","Paraguay",2020,"2014","2014","2014"
-"PRY","Paraguay",2021,"2014","2014","2014"
-"PSE","West Bank and Gaza",2017,"2004","2004","2004"
-"PSE","West Bank and Gaza",2018,"2015","2015","2015"
-"PSE","West Bank and Gaza",2019,"2015","2015","2015"
-"PSE","West Bank and Gaza",2020,"2015","2015","2015"
-"PSE","West Bank and Gaza",2021,"2015","2015","2015"
-"PYF","French Polynesia",2016,"1990","1990","1990"
-"PYF","French Polynesia",2017,"1990","1990","1990"
-"PYF","French Polynesia",2018,"2005","2005","2005"
-"PYF","French Polynesia",2019,"1990","1990","1990"
-"PYF","French Polynesia",2020,"1990","1990","1990"
-"PYF","French Polynesia",2021,"1990","1990","1990"
-"QAT","Qatar",2016,"2013","2013","2013"
-"QAT","Qatar",2017,"2013","2013","2013"
-"QAT","Qatar",2018,"2013","2013","2013"
-"QAT","Qatar",2019,"2013","2013","2013"
-"QAT","Qatar",2020,"2018","2018","2018"
-"QAT","Qatar",2021,"2018","2018","2018"
-"ROM","Romania",2016,"2005","2005","2005"
-"ROU","Romania",2017,"2005","2005","2005"
-"ROU","Romania",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ROU","Romania",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ROU","Romania",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"ROU","Romania",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"RUS","Russian Federation",2016,"2011","2011","2011"
-"RUS","Russian Federation",2017,"2011","2011","2011"
-"RUS","Russian Federation",2018,"2016","2016","2016"
-"RUS","Russian Federation",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"RUS","Russian Federation",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"RUS","Russian Federation",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"RWA","Rwanda",2016,"2011","2011","2011"
-"RWA","Rwanda",2017,"2014","2014","2014"
-"RWA","Rwanda",2018,"2014","2014","2014"
-"RWA","Rwanda",2019,"2014","2014","2014"
-"RWA","Rwanda",2020,"2017","2017","2017"
-"RWA","Rwanda",2021,"2017","2017","2017"
-"SAU","Saudi Arabia",2016,"2010","2010","2010"
-"SAU","Saudi Arabia",2017,"2010","2010","2010"
-"SAU","Saudi Arabia",2018,"2010","2010","2010"
-"SAU","Saudi Arabia",2019,"2010","2010","2010"
-"SAU","Saudi Arabia",2020,"2010","2010","2010"
-"SAU","Saudi Arabia",2021,"2010","2010","2010"
-"SDN","Sudan",2016,"1981/82. Reporting period switch from fiscal year to calendar year from 1996. Pre-1996 data converted to calendar year.","1981/82. Reporting period switch from fiscal year to calendar year from 1996. Pre-1996 data converted to calendar year.","1982"
-"SDN","Sudan",2017,"1981/82. Reporting period switch from fiscal year to calendar year from 1996. Pre-1996 data converted to calendar year.","1981/82. Reporting period switch from fiscal year to calendar year from 1996. Pre-1996 data converted to calendar year.","1982"
-"SDN","Sudan",2018,"1996","1996","1996"
-"SDN","Sudan",2019,"1996","1996","1996"
-"SDN","Sudan",2020,"1996","1996","1996"
-"SDN","Sudan",2021,"1996","1996","1996"
-"SEN","Senegal",2016,"1999","1999","1999"
-"SEN","Senegal",2017,"1999","1999","1999"
-"SEN","Senegal",2018,"1999","1999","1999"
-"SEN","Senegal",2019,"2014","2014","2014"
-"SEN","Senegal",2020,"2014","2014","2014"
-"SEN","Senegal",2021,"2014","2014","2014"
-"SGP","Singapore",2016,"2010","2010","2010"
-"SGP","Singapore",2017,"2010","2010","2010"
-"SGP","Singapore",2018,"2010","2010","2010"
-"SGP","Singapore",2019,"2015","2015","2015"
-"SGP","Singapore",2020,"2015","2015","2015"
-"SGP","Singapore",2021,"2015","2015","2015"
-"SLB","Solomon Islands",2016,"2004","2004","2004"
-"SLB","Solomon Islands",2017,"2004","2004","2004"
-"SLB","Solomon Islands",2018,"2004","2004","2004"
-"SLB","Solomon Islands",2019,"2004","2004","2004"
-"SLB","Solomon Islands",2020,"2012","2012","2012"
-"SLB","Solomon Islands",2021,"2012","2012","2012"
-"SLE","Sierra Leone",2016,"2006","2006","2006"
-"SLE","Sierra Leone",2017,"2006","2006","2006"
-"SLE","Sierra Leone",2018,"2006","2006","2006"
-"SLE","Sierra Leone",2019,"2006","2006","2006"
-"SLE","Sierra Leone",2020,"2006","2006","2006"
-"SLE","Sierra Leone",2021,"2006","2006","2006"
-"SLV","El Salvador",2016,"1990","1990","1990"
-"SLV","El Salvador",2017,"1990","1990","1990"
-"SLV","El Salvador",2018,"2005","2005","2005"
-"SLV","El Salvador",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SLV","El Salvador",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SLV","El Salvador",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SMR","San Marino",2016,"1990","1990","1990"
-"SMR","San Marino",2017,"1990","1990","1990"
-"SMR","San Marino",2018,"2007","2007","2007"
-"SMR","San Marino",2019,"2007","2007","2007"
-"SMR","San Marino",2020,"2007","2007","2007"
-"SMR","San Marino",2021,"2007","2007","2007"
-"SOM","Somalia",2016,"1985","1985","1985"
-"SOM","Somalia",2017,"1985","1985","1985"
-"SOM","Somalia",2018,"1985","1985","1985"
-"SOM","Somalia",2019,NA,NA,NA
-"SOM","Somalia",2020,"2013","2013","2013"
-"SOM","Somalia",2021,"2013","2013","2013"
-"SRB","Serbia",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SRB","Serbia",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SRB","Serbia",2018,"2010","2010","2010"
-"SRB","Serbia",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SRB","Serbia",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SRB","Serbia",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SSD","South Sudan",2016,"2009","2009","2009"
-"SSD","South Sudan",2017,"2009","2009","2009"
-"SSD","South Sudan",2018,"2009","2009","2009"
-"SSD","South Sudan",2019,"2009","2009","2009"
-"SSD","South Sudan",2020,"2009","2009","2009"
-"SSD","South Sudan",2021,"2009","2009","2009"
-"STP","São Tomé and Principe",2016,"2001","2001","2001"
-"STP","São Tomé and Principe",2017,"2008","2008","2008"
-"STP","São Tomé and Principe",2018,"2008","2008","2008"
-"STP","São Tomé and Principe",2019,"2008","2008","2008"
-"STP","São Tomé and Principe",2020,"2008","2008","2008"
-"STP","S�o Tom� and Principe",2021,"2008","2008","2008"
-"SUR","Suriname",2016,"2007","2007","2007"
-"SUR","Suriname",2017,"2007","2007","2007"
-"SUR","Suriname",2018,"2007","2007","2007"
-"SUR","Suriname",2019,"2007","2007","2007"
-"SUR","Suriname",2020,"2007","2007","2007"
-"SUR","Suriname",2021,"2015","2015","2015"
-"SVK","Slovak Republic",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVK","Slovak Republic",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVK","Slovak Republic",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVK","Slovak Republic",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVK","Slovak Republic",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVK","Slovak Republic",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVN","Slovenia",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVN","Slovenia",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVN","Slovenia",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVN","Slovenia",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVN","Slovenia",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SVN","Slovenia",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SWE","Sweden",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SWE","Sweden",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SWE","Sweden",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SWE","Sweden",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SWE","Sweden",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SWE","Sweden",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"SWZ","Swaziland",2016,"2011","2011","2011"
-"SWZ","Swaziland",2017,"2011","2011","2011"
-"SWZ","Eswatini",2018,"2011","2011","2011"
-"SWZ","Eswatini",2019,"2011","2011","2011"
-"SWZ","Eswatini",2020,"2011","2011","2011"
-"SWZ","Eswatini",2021,"2011","2011","2011"
-"SXM","Sint Maarten (Dutch part)",2016,NA,NA,NA
-"SXM","Sint Maarten (Dutch part)",2017,NA,NA,NA
-"SXM","Sint Maarten (Dutch part)",2018,NA,NA,NA
-"SXM","Sint Maarten (Dutch part)",2019,"2011","2011","2011"
-"SXM","Sint Maarten (Dutch part)",2020,"2011","2011","2011"
-"SXM","Sint Maarten (Dutch part)",2021,"2011","2011","2011"
-"SYC","Seychelles",2016,"2006","2006","2006"
-"SYC","Seychelles",2017,"2006","2006","2006"
-"SYC","Seychelles",2018,"2006","2006","2006"
-"SYC","Seychelles",2019,"2006","2006","2006"
-"SYC","Seychelles",2020,"2006","2006","2006"
-"SYC","Seychelles",2021,"2006","2006","2006"
-"SYR","Syrian Arab Republic",2016,"2000","2000","2000"
-"SYR","Syrian Arab Republic",2017,"2000","2000","2000"
-"SYR","Syrian Arab Republic",2018,"2000","2000","2000"
-"SYR","Syrian Arab Republic",2019,"2000","2000","2000"
-"SYR","Syrian Arab Republic",2020,"2000","2000","2000"
-"SYR","Syrian Arab Republic",2021,"2000","2000","2000"
-"TCA","Turks and Caicos Islands",2016,NA,NA,NA
-"TCA","Turks and Caicos Islands",2017,NA,NA,NA
-"TCA","Turks and Caicos Islands",2018,NA,NA,NA
-"TCA","Turks and Caicos Islands",2019,"2012","2012","2012"
-"TCA","Turks and Caicos Islands",2020,"2012","2012","2012"
-"TCA","Turks and Caicos Islands",2021,"2012","2012","2012"
-"TCD","Chad",2016,"2005","2005","2005"
-"TCD","Chad",2017,"2005","2005","2005"
-"TCD","Chad",2018,"2005","2005","2005"
-"TCD","Chad",2019,"2005","2005","2005"
-"TCD","Chad",2020,"2005","2005","2005"
-"TCD","Chad",2021,"2005","2005","2005"
-"TGO","Togo",2016,"2000","2000","2000"
-"TGO","Togo",2017,"2000","2000","2000"
-"TGO","Togo",2018,"2000","2000","2000"
-"TGO","Togo",2019,"2007","2007","2007"
-"TGO","Togo",2020,"2007","2007","2007"
-"TGO","Togo",2021,"2016","2016","2016"
-"THA","Thailand",2016,"2002","2002","2002"
-"THA","Thailand",2017,"2002","2002","2002"
-"THA","Thailand",2018,"2002","2002","2002"
-"THA","Thailand",2019,"2002","2002","2002"
-"THA","Thailand",2020,"2002","2002","2002"
-"THA","Thailand",2021,"2002","2002","2002"
-"TJK","Tajikistan",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TJK","Tajikistan",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TJK","Tajikistan",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TJK","Tajikistan",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TJK","Tajikistan",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TJK","Tajikistan",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TKM","Turkmenistan",2016,"2005","2005","2005"
-"TKM","Turkmenistan",2017,"2005","2005","2005"
-"TKM","Turkmenistan",2018,"2005","2005","2005"
-"TKM","Turkmenistan",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TKM","Turkmenistan",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TKM","Turkmenistan",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TLS","Timor-Leste",2017,"2010","2010","2010"
-"TLS","Timor-Leste",2018,"2015","2015","2015"
-"TLS","Timor-Leste",2019,"2015","2015","2015"
-"TLS","Timor-Leste",2020,"2015","2015","2015"
-"TLS","Timor-Leste",2021,"2015","2015","2015"
-"TMP","Timor-Leste",2016,"2010","2010","2010"
-"TON","Tonga",2016,"2010/11","2010/11","2011"
-"TON","Tonga",2017,"2010/11","2010/11","2011"
-"TON","Tonga",2018,"2011","2011","2011"
-"TON","Tonga",2019,"2011","2011","2011"
-"TON","Tonga",2020,"2017","2017","2017"
-"TON","Tonga",2021,"2017","2017","2017"
-"TTO","Trinidad and Tobago",2016,"2000","2000","2000"
-"TTO","Trinidad and Tobago",2017,"2000","2000","2000"
-"TTO","Trinidad and Tobago",2018,"2012","2012","2012"
-"TTO","Trinidad and Tobago",2019,"2012","2012","2012"
-"TTO","Trinidad and Tobago",2020,"2012","2012","2012"
-"TTO","Trinidad and Tobago",2021,"2012","2012","2012"
-"TUN","Tunisia",2016,"2010","2010","2010"
-"TUN","Tunisia",2017,"2010","2010","2010"
-"TUN","Tunisia",2018,"2010","2010","2010"
-"TUN","Tunisia",2019,"2010","2010","2010"
-"TUN","Tunisia",2020,"2010","2010","2010"
-"TUN","Tunisia",2021,"2010","2010","2010"
-"TUR","Turkey",2016,"1998","1998","1998"
-"TUR","Turkey",2017,"2010","2010","2010"
-"TUR","Turkey",2018,"2009","2009","2009"
-"TUR","Turkey",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TUR","Turkey",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TUR","Turkey",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TUV","Tuvalu",2016,"2005","2005","2005"
-"TUV","Tuvalu",2017,"2005","2005","2005"
-"TUV","Tuvalu",2018,"2005","2005","2005"
-"TUV","Tuvalu",2019,"2005","2005","2005"
-"TUV","Tuvalu",2020,"2005","2005","2005"
-"TUV","Tuvalu",2021,"2005","2005","2005"
-"TWN","Taiwan, China",2019,"2011","2011","2011"
-"TWN","Taiwan, China",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"TZA","Tanzania",2016,"2007","2007","2007"
-"TZA","Tanzania",2017,"2007","2007","2007"
-"TZA","Tanzania",2018,"2007","2007","2007"
-"TZA","Tanzania",2019,"2015","2015","2015"
-"TZA","Tanzania",2020,"2015","2015","2015"
-"TZA","Tanzania",2021,"2015","2015","2015"
-"UGA","Uganda",2016,"2009/10","2009/10","2010"
-"UGA","Uganda",2017,"2009/10","2009/10","2010"
-"UGA","Uganda",2018,"2009/10","2009/10","2010"
-"UGA","Uganda",2019,"2009/10","2009/10","2010"
-"UGA","Uganda",2020,"2016/2017","2016/2017","2020"
-"UGA","Uganda",2021,"2016/2017","2016/2017","2020"
-"UKR","Ukraine",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"UKR","Ukraine",2017,"2010","2010","2010"
-"UKR","Ukraine",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"UKR","Ukraine",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"UKR","Ukraine",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"UKR","Ukraine",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"URY","Uruguay",2016,"2005","2005","2005"
-"URY","Uruguay",2017,"2005","2005","2005"
-"URY","Uruguay",2018,"2005","2005","2005"
-"URY","Uruguay",2019,"2005","2005","2005"
-"URY","Uruguay",2020,"2005","2005","2005"
-"URY","Uruguay",2021,"2016","2016","2016"
-"USA","United States",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"USA","United States",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"USA","United States",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"USA","United States",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"USA","United States",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"USA","United States",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"UZB","Uzbekistan",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"UZB","Uzbekistan",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"UZB","Uzbekistan",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"UZB","Uzbekistan",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"UZB","Uzbekistan",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"UZB","Uzbekistan",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"VCT","St. Vincent and the Grenadines",2016,"2006","2006","2006"
-"VCT","St. Vincent and the Grenadines",2017,"2006","2006","2006"
-"VCT","St. Vincent and the Grenadines",2018,"2006","2006","2006"
-"VCT","St. Vincent and the Grenadines",2019,"2006","2006","2006"
-"VCT","St. Vincent and the Grenadines",2020,"2006","2006","2006"
-"VCT","St. Vincent and the Grenadines",2021,"2006","2006","2006"
-"VEN","Venezuela, RB",2016,"1997","1997","1997"
-"VEN","Venezuela, RB",2017,"1997","1997","1997"
-"VEN","Venezuela, RB",2018,"1997","1997","1997"
-"VEN","Venezuela, RB",2019,"1997","1997","1997"
-"VEN","Venezuela, RB",2020,"1997","1997","1997"
-"VGB","British Virgin Islands",2016,NA,NA,NA
-"VGB","British Virgin Islands",2017,NA,NA,NA
-"VGB","British Virgin Islands",2018,NA,NA,NA
-"VGB","British Virgin Islands",2019,NA,NA,NA
-"VGB","British Virgin Islands",2020,NA,NA,NA
-"VGB","British Virgin Islands",2021,NA,NA,NA
-"VIR","Virgin Islands (U.S.)",2016,"1982","1982","1982"
-"VIR","Virgin Islands (U.S.)",2017,"1982","1982","1982"
-"VIR","Virgin Islands (U.S.)",2018,"1982","1982","1982"
-"VIR","Virgin Islands (U.S.)",2019,"2002","2002","2002"
-"VIR","Virgin Islands (U.S.)",2020,"2002","2002","2002"
-"VIR","Virgin Islands (U.S.)",2021,NA,NA,NA
-"VNM","Vietnam",2016,"2010","2010","2010"
-"VNM","Vietnam",2017,"2010","2010","2010"
-"VNM","Vietnam",2018,"2010","2010","2010"
-"VNM","Vietnam",2019,"2010","2010","2010"
-"VNM","Vietnam",2020,"2010","2010","2010"
-"VNM","Vietnam",2021,"2010","2010","2010"
-"VUT","Vanuatu",2016,"2006","2006","2006"
-"VUT","Vanuatu",2017,"2006","2006","2006"
-"VUT","Vanuatu",2018,"2006","2006","2006"
-"VUT","Vanuatu",2019,"2006","2006","2006"
-"VUT","Vanuatu",2020,"2006","2006","2006"
-"VUT","Vanuatu",2021,"2006","2006","2006"
-"WBG","West Bank and Gaza",2016,"2004","2004","2004"
-"WSM","Samoa",2016,"2008/09","2008/09","2009"
-"WSM","Samoa",2017,"2008/09","2008/09","2009"
-"WSM","Samoa",2018,"2008/09","2008/09","2009"
-"WSM","Samoa",2019,"2009","2009","2009"
-"WSM","Samoa",2020,"2009","2009","2009"
-"WSM","Samoa",2021,"2009","2009","2009"
-"XKX","Kosovo",2017,"2008","2008","2008"
-"XKX","Kosovo",2018,"2008","2008","2008"
-"XKX","Kosovo",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"XKX","Kosovo",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"XKX","Kosovo",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
-"YEM","Yemen, Rep.",2016,"2007","2007","2007"
-"YEM","Yemen, Rep.",2017,"1990","1990","1990"
-"YEM","Yemen, Rep.",2018,"1990","1990","1990"
-"YEM","Yemen, Rep.",2019,"1990","1990","1990"
-"YEM","Yemen, Rep.",2020,"1990","1990","1990"
-"YEM","Yemen, Rep.",2021,"1990","1990","1990"
-"ZAF","South Africa",2016,"2010","2010","2010"
-"ZAF","South Africa",2017,"2010","2010","2010"
-"ZAF","South Africa",2018,"2010","2010","2010"
-"ZAF","South Africa",2019,"2010","2010","2010"
-"ZAF","South Africa",2020,"2010","2010","2010"
-"ZAF","South Africa",2021,"2010","2010","2010"
-"ZAR","Congo, Dem. Rep.",2016,"2005","2005","2005"
-"ZMB","Zambia",2016,"2010","2010","2010"
-"ZMB","Zambia",2017,"2010","2010","2010"
-"ZMB","Zambia",2018,"2010","2010","2010"
-"ZMB","Zambia",2019,"2010","2010","2010"
-"ZMB","Zambia",2020,"2010","2010","2010"
-"ZMB","Zambia",2021,"2010","2010","2010"
-"ZWE","Zimbabwe",2016,"2009","2009","2009"
-"ZWE","Zimbabwe",2017,"2009","2009","2009"
-"ZWE","Zimbabwe",2018,"2009","2009","2009"
-"ZWE","Zimbabwe",2019,"2012","2012","2012"
-"ZWE","Zimbabwe",2020,"2012","2012","2012"
-"ZWE","Zimbabwe",2021,"2012","2012","2012"
+﻿"iso3c","date","National.accounts.base.year","NABY","NABY_dates"
+"ABW",2016,"2000","2000","2000"
+"ABW",2017,"2000","2000","2000"
+"ABW",2018,"2000","2000","2000"
+"ABW",2019,"2000","2000","2000"
+"ABW",2020,"2000","2000","2000"
+"ABW",2021,"2000","2000","2000"
+"ABW",2022,"2013","2013","2013"
+"ADO",2016,"2000","2000","2000"
+"AFG",2016,"2002/03","2002/03","2003"
+"AFG",2017,"2002/03","2002/03","2003"
+"AFG",2018,"2002/03","2002/03","2003"
+"AFG",2019,"2002/03","2002/03","2003"
+"AFG",2020,"2016","2016","2016"
+"AFG",2021,"2016","2016","2016"
+"AFG",2022,"2016","2016","2016"
+"AGO",2016,"2002","2002","2002"
+"AGO",2017,"2002","2002","2002"
+"AGO",2018,"2002","2002","2002"
+"AGO",2019,"2002","2002","2002"
+"AGO",2020,"2002","2002","2002"
+"AGO",2021,"2002","2002","2002"
+"AGO",2022,"2002","2002","2002"
+"ALB",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ALB",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ALB",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ALB",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ALB",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ALB",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ALB",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AND",2017,"2000","2000","2000"
+"AND",2018,"2000","2000","2000"
+"AND",2019,"2000","2000","2000"
+"AND",2020,"2010","2010","2010"
+"AND",2021,"2010","2010","2010"
+"AND",2022,"2010","2010","2010"
+"ARE",2016,"2007","2007","2007"
+"ARE",2017,"2010","2010","2010"
+"ARE",2018,"2010","2010","2010"
+"ARE",2019,"2010","2010","2010"
+"ARE",2020,"2010","2010","2010"
+"ARE",2021,"2010","2010","2010"
+"ARE",2022,"2010","2010","2010"
+"ARG",2016,"2004","2004","2004"
+"ARG",2017,"2004","2004","2004"
+"ARG",2018,"2004","2004","2004"
+"ARG",2019,"2004","2004","2004"
+"ARG",2020,"2004","2004","2004"
+"ARG",2021,"2004","2004","2004"
+"ARG",2022,"2004","2004","2004"
+"ARM",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ARM",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ARM",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ARM",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ARM",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ARM",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ARM",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ASM",2016,NA,NA,NA
+"ASM",2017,NA,NA,NA
+"ASM",2018,"2009","2009","2009"
+"ASM",2019,"2009","2009","2009"
+"ASM",2020,"2009","2009","2009"
+"ASM",2021,"2012","2012","2012"
+"ASM",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ATG",2016,"2006","2006","2006"
+"ATG",2017,"2006","2006","2006"
+"ATG",2018,"2006","2006","2006"
+"ATG",2019,"2006","2006","2006"
+"ATG",2020,"2006","2006","2006"
+"ATG",2021,"2006","2006","2006"
+"ATG",2022,"2006","2006","2006"
+"AUS",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUS",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUS",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUS",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUS",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUS",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUS",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUT",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUT",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUT",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUT",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUT",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUT",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AUT",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AZE",2016,"2000","2000","2000"
+"AZE",2017,"2000","2000","2000"
+"AZE",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AZE",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AZE",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AZE",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"AZE",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BDI",2016,"2005","2005","2005"
+"BDI",2017,"2005","2005","2005"
+"BDI",2018,"2005","2005","2005"
+"BDI",2019,"2005","2005","2005"
+"BDI",2020,"2005","2005","2005"
+"BDI",2021,"2005","2005","2005"
+"BDI",2022,"2005","2005","2005"
+"BEL",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BEL",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BEL",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BEL",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BEL",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BEL",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BEL",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BEN",2016,"2007","2007","2007"
+"BEN",2017,"2007","2007","2007"
+"BEN",2018,"2007","2007","2007"
+"BEN",2019,"2007","2007","2007"
+"BEN",2020,"2015","2015","2015"
+"BEN",2021,"2015","2015","2015"
+"BEN",2022,"2015","2015","2015"
+"BFA",2016,"1999","1999","1999"
+"BFA",2017,"1999","1999","1999"
+"BFA",2018,"1999","1999","1999"
+"BFA",2019,"1999","1999","1999"
+"BFA",2020,"2015","2015","2015"
+"BFA",2021,"2015","2015","2015"
+"BFA",2022,"2015","2015","2015"
+"BGD",2016,"2005/06","2005/06","2006"
+"BGD",2017,"2005/06","2005/06","2006"
+"BGD",2018,"2005/06","2005/06","2006"
+"BGD",2019,"2005/06","2005/06","2006"
+"BGD",2020,"2005/06","2005/06","2006"
+"BGD",2021,"2005/06","2005/06","2006"
+"BGD",2022,"2016","2016","2016"
+"BGR",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BGR",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BGR",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BGR",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BGR",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BGR",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BGR",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BHR",2016,"2010","2010","2010"
+"BHR",2017,"2010","2010","2010"
+"BHR",2018,"2010","2010","2010"
+"BHR",2019,"2010","2010","2010"
+"BHR",2020,"2010","2010","2010"
+"BHR",2021,"2010","2010","2010"
+"BHR",2022,"2010","2010","2010"
+"BHS",2016,"2006","2006","2006"
+"BHS",2017,"2006","2006","2006"
+"BHS",2018,"2012","2012","2012"
+"BHS",2019,"2012","2012","2012"
+"BHS",2020,"2012","2012","2012"
+"BHS",2021,"2012","2012","2012"
+"BHS",2022,"2012","2012","2012"
+"BIH",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BIH",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BIH",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BIH",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BIH",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BIH",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BIH",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BLR",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BLR",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BLR",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BLR",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BLR",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BLR",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BLR",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BLZ",2016,"2000","2000","2000"
+"BLZ",2017,"2000","2000","2000"
+"BLZ",2018,"2000","2000","2000"
+"BLZ",2019,"2000","2000","2000"
+"BLZ",2020,"2000","2000","2000"
+"BLZ",2021,"2000","2000","2000"
+"BLZ",2022,"2000","2000","2000"
+"BMU",2016,"2006","2006","2006"
+"BMU",2017,"2006","2006","2006"
+"BMU",2018,"2006","2006","2006"
+"BMU",2019,"2006","2006","2006"
+"BMU",2020,"2006","2006","2006"
+"BMU",2021,"2006","2006","2006"
+"BMU",2022,"2013","2013","2013"
+"BOL",2016,"1990","1990","1990"
+"BOL",2017,"1990","1990","1990"
+"BOL",2018,"1990","1990","1990"
+"BOL",2019,"1990","1990","1990"
+"BOL",2020,"1990","1990","1990"
+"BOL",2021,"1990","1990","1990"
+"BOL",2022,"1990","1990","1990"
+"BRA",2016,"1995","1995","1995"
+"BRA",2017,"1995","1995","1995"
+"BRA",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BRA",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BRA",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BRA",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BRA",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"BRB",2016,"1974","1974","1974"
+"BRB",2017,"1974","1974","1974"
+"BRB",2018,"1974","1974","1974"
+"BRB",2019,"2010","2010","2010"
+"BRB",2020,"2010","2010","2010"
+"BRB",2021,"2010","2010","2010"
+"BRB",2022,"2010","2010","2010"
+"BRN",2016,"2000","2000","2000"
+"BRN",2017,"2010","2010","2010"
+"BRN",2018,"2010","2010","2010"
+"BRN",2019,"2010","2010","2010"
+"BRN",2020,"2010","2010","2010"
+"BRN",2021,"2010","2010","2010"
+"BRN",2022,"2010","2010","2010"
+"BTN",2016,"2000","2000","2000"
+"BTN",2017,"2000","2000","2000"
+"BTN",2018,"2000","2000","2000"
+"BTN",2019,"2000","2000","2000"
+"BTN",2020,"2000","2000","2000"
+"BTN",2021,"2000","2000","2000"
+"BTN",2022,"2000","2000","2000"
+"BWA",2016,"2006","2006","2006"
+"BWA",2017,"2006","2006","2006"
+"BWA",2018,"2006","2006","2006"
+"BWA",2019,"2006","2006","2006"
+"BWA",2020,"2006","2006","2006"
+"BWA",2021,"2006","2006","2006"
+"BWA",2022,"2016","2016","2016"
+"CAF",2016,"1985","1985","1985"
+"CAF",2017,"1985","1985","1985"
+"CAF",2018,"2005","2005","2005"
+"CAF",2019,"2005","2005","2005"
+"CAF",2020,"2005","2005","2005"
+"CAF",2021,"2005","2005","2005"
+"CAF",2022,"2005","2005","2005"
+"CAN",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CAN",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CAN",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CAN",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CAN",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CAN",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CAN",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHE",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHE",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHE",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHE",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHE",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHE",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHE",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHI",2016,"2003","2003","2003"
+"CHI",2017,"2003","2003","2003"
+"CHI",2018,"2007","2007","2007"
+"CHI",2019,"2007","2007","2007"
+"CHI",2020,"2007","2007","2007"
+"CHI",2021,"2007","2007","2007"
+"CHI",2022,NA,NA,NA
+"CHL",2016,"2008","2008","2008"
+"CHL",2017,"2013","2013","2013"
+"CHL",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHL",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHL",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHL",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHL",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CHN",2016,"2000","2000","2000"
+"CHN",2017,"2010","2010","2010"
+"CHN",2018,"2015","2015","2015"
+"CHN",2019,"2015","2015","2015"
+"CHN",2020,"2015","2015","2015"
+"CHN",2021,"2015","2015","2015"
+"CHN",2022,"2015","2015","2015"
+"CIV",2016,"2009","2009","2009"
+"CIV",2017,"2009","2009","2009"
+"CIV",2018,"2009","2009","2009"
+"CIV",2019,"2009","2009","2009"
+"CIV",2020,"2015","2015","2015"
+"CIV",2021,"2015","2015","2015"
+"CIV",2022,"2015","2015","2015"
+"CMR",2016,"2000","2000","2000"
+"CMR",2017,"2000","2000","2000"
+"CMR",2018,"2005","2005","2005"
+"CMR",2019,"2005","2005","2005"
+"CMR",2020,"2005","2005","2005"
+"CMR",2021,"2005","2005","2005"
+"CMR",2022,"2016","2016","2016"
+"COD",2017,"2005","2005","2005"
+"COD",2018,"2005","2005","2005"
+"COD",2019,"2005","2005","2005"
+"COD",2020,"2005","2005","2005"
+"COD",2021,"2005","2005","2005"
+"COD",2022,"2005","2005","2005"
+"COG",2016,"1990","1990","1990"
+"COG",2017,"1990","1990","1990"
+"COG",2018,"1990","1990","1990"
+"COG",2019,"1990","1990","1990"
+"COG",2020,"2005","2005","2005"
+"COG",2021,"2005","2005","2005"
+"COG",2022,"2005","2005","2005"
+"COL",2016,"2005","2005","2005"
+"COL",2017,"2005","2005","2005"
+"COL",2018,"2005","2005","2005"
+"COL",2019,"2015","2015","2015"
+"COL",2020,"2015","2015","2015"
+"COL",2021,"2015","2015","2015"
+"COL",2022,"2015","2015","2015"
+"COM",2016,"1990","1990","1990"
+"COM",2017,"1990","1990","1990"
+"COM",2018,"1990","1990","1990"
+"COM",2019,"2007","2007","2007"
+"COM",2020,"2007","2007","2007"
+"COM",2021,"2007","2007","2007"
+"COM",2022,"2007","2007","2007"
+"CPV",2016,"2007","2007","2007"
+"CPV",2017,"2007","2007","2007"
+"CPV",2018,"2007","2007","2007"
+"CPV",2019,"2007","2007","2007"
+"CPV",2020,"2007","2007","2007"
+"CPV",2021,"2007","2007","2007"
+"CPV",2022,"2007","2007","2007"
+"CRI",2016,"1991","1991","1991"
+"CRI",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CRI",2018,"1991","1991","1991"
+"CRI",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CRI",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CRI",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CRI",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CUB",2016,"1997","1997","1997"
+"CUB",2017,"1997","1997","1997"
+"CUB",2018,"1997","1997","1997"
+"CUB",2019,"1997","1997","1997"
+"CUB",2020,"1997","1997","1997"
+"CUB",2021,"1997","1997","1997"
+"CUB",2022,"1997","1997","1997"
+"CUW",2016,NA,NA,NA
+"CUW",2017,NA,NA,NA
+"CUW",2018,NA,NA,NA
+"CUW",2019,"2000","2000","2000"
+"CUW",2020,"2000","2000","2000"
+"CUW",2021,"2000","2000","2000"
+"CUW",2022,"2011","2011","2011"
+"CYM",2016,"2007","2007","2007"
+"CYM",2017,"2007","2007","2007"
+"CYM",2018,"2007","2007","2007"
+"CYM",2019,"2015","2015","2015"
+"CYM",2020,"2015","2015","2015"
+"CYM",2021,"2015","2015","2015"
+"CYM",2022,"2015","2015","2015"
+"CYP",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CYP",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CYP",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CYP",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CYP",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CYP",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CYP",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CZE",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CZE",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CZE",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CZE",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CZE",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CZE",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"CZE",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DEU",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DEU",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DEU",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DEU",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DEU",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DEU",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DEU",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DJI",2016,"1990","1990","1990"
+"DJI",2017,"1990","1990","1990"
+"DJI",2018,"1990","1990","1990"
+"DJI",2019,"2013","2013","2013"
+"DJI",2020,"2013","2013","2013"
+"DJI",2021,"2013","2013","2013"
+"DJI",2022,"2013","2013","2013"
+"DMA",2016,"2006","2006","2006"
+"DMA",2017,"2006","2006","2006"
+"DMA",2018,"2006","2006","2006"
+"DMA",2019,"2006","2006","2006"
+"DMA",2020,"2006","2006","2006"
+"DMA",2021,"2006","2006","2006"
+"DMA",2022,"2006","2006","2006"
+"DNK",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DNK",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DNK",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DNK",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DNK",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DNK",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DNK",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DOM",2016,"2007","2007","2007"
+"DOM",2017,"2007","2007","2007"
+"DOM",2018,"2007","2007","2007"
+"DOM",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DOM",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DOM",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DOM",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DZA",2016,"1980","1980","1980"
+"DZA",2017,"1999","1999","1999"
+"DZA",2018,"1999","1999","1999"
+"DZA",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DZA",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DZA",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"DZA",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ECU",2016,"2007","2007","2007"
+"ECU",2017,"2007","2007","2007"
+"ECU",2018,"2007","2007","2007"
+"ECU",2019,"2007","2007","2007"
+"ECU",2020,"2007","2007","2007"
+"ECU",2021,"2007","2007","2007"
+"ECU",2022,"2007","2007","2007"
+"EGY",2016,"2011/12","2011/12","2012"
+"EGY",2017,"2011/12","2011/12","2012"
+"EGY",2018,"2011/12","2011/12","2012"
+"EGY",2019,"2016/17","2016/17","2017"
+"EGY",2020,"2016/17","2016/17","2017"
+"EGY",2021,"2016/17","2016/17","2017"
+"EGY",2022,"2016/17","2016/17","2017"
+"ERI",2016,"2000","2000","2000"
+"ERI",2017,"2000","2000","2000"
+"ERI",2018,"2000","2000","2000"
+"ERI",2019,"2000","2000","2000"
+"ERI",2020,"2011","2011","2011"
+"ERI",2021,"2011","2011","2011"
+"ERI",2022,"2011","2011","2011"
+"ESP",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ESP",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ESP",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ESP",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ESP",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ESP",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ESP",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"EST",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"EST",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"EST",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"EST",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"EST",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"EST",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"EST",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ETH",2016,"2010/11","2010/11","2011"
+"ETH",2017,"2010/11","2010/11","2011"
+"ETH",2018,"20015/2016","20015/2016","2016"
+"ETH",2019,"20015/2016","20015/2016","2016"
+"ETH",2020,"2015/2016","2015/2016","2020"
+"ETH",2021,"2015/2016","2015/2016","2020"
+"ETH",2022,"2015/2016","2015/2016","2020"
+"FIN",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FIN",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FIN",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FIN",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FIN",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FIN",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FIN",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FJI",2016,"2005","2005","2005"
+"FJI",2017,"2011","2011","2011"
+"FJI",2018,"2011","2011","2011"
+"FJI",2019,"2014","2014","2014"
+"FJI",2020,"2014","2014","2014"
+"FJI",2021,"2014","2014","2014"
+"FJI",2022,"2014","2014","2014"
+"FRA",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FRA",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FRA",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FRA",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FRA",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FRA",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FRA",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"FRO",2016,NA,NA,NA
+"FRO",2017,NA,NA,NA
+"FRO",2018,NA,NA,NA
+"FRO",2019,NA,NA,NA
+"FRO",2020,NA,NA,NA
+"FRO",2021,NA,NA,NA
+"FRO",2022,NA,NA,NA
+"FSM",2016,"2003/04","2003/04","2004"
+"FSM",2017,"2003/04","2003/04","2004"
+"FSM",2018,"2004","2004","2004"
+"FSM",2019,"2004","2004","2004"
+"FSM",2020,"2004","2004","2004"
+"FSM",2021,"2004","2004","2004"
+"FSM",2022,"2003/04","2003/04","2004"
+"GAB",2016,"2001","2001","2001"
+"GAB",2017,"2001","2001","2001"
+"GAB",2018,"2001","2001","2001"
+"GAB",2019,"2001","2001","2001"
+"GAB",2020,"2001","2001","2001"
+"GAB",2021,"2001","2001","2001"
+"GAB",2022,"2001","2001","2001"
+"GBR",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GBR",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GBR",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GBR",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GBR",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GBR",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GBR",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GEO",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GEO",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GEO",2018,"1996","1996","1996"
+"GEO",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GEO",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GEO",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GEO",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GHA",2016,"2006","2006","2006"
+"GHA",2017,"2006","2006","2006"
+"GHA",2018,"2006","2006","2006"
+"GHA",2019,"2013","2013","2013"
+"GHA",2020,"2013","2013","2013"
+"GHA",2021,"2013","2013","2013"
+"GHA",2022,"2013","2013","2013"
+"GIB",2016,NA,NA,NA
+"GIB",2017,NA,NA,NA
+"GIB",2018,NA,NA,NA
+"GIB",2019,NA,NA,NA
+"GIB",2020,NA,NA,NA
+"GIB",2021,NA,NA,NA
+"GIB",2022,NA,NA,NA
+"GIN",2016,"2003","2003","2003"
+"GIN",2017,"2003","2003","2003"
+"GIN",2018,"2003","2003","2003"
+"GIN",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GIN",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GIN",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GIN",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GMB",2016,"2004","2004","2004"
+"GMB",2017,"2004","2004","2004"
+"GMB",2018,"2004","2004","2004"
+"GMB",2019,"2013","2013","2013"
+"GMB",2020,"2013","2013","2013"
+"GMB",2021,"2013","2013","2013"
+"GMB",2022,"2013","2013","2013"
+"GNB",2016,"2005","2005","2005"
+"GNB",2017,"2005","2005","2005"
+"GNB",2018,"2005","2005","2005"
+"GNB",2019,"2005","2005","2005"
+"GNB",2020,"2005","2005","2005"
+"GNB",2021,"2005","2005","2005"
+"GNB",2022,"2005","2005","2005"
+"GNQ",2016,"2006","2006","2006"
+"GNQ",2017,"2006","2006","2006"
+"GNQ",2018,"2006","2006","2006"
+"GNQ",2019,"2006","2006","2006"
+"GNQ",2020,"2006","2006","2006"
+"GNQ",2021,"2006","2006","2006"
+"GNQ",2022,"2006","2006","2006"
+"GRC",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GRC",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GRC",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GRC",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GRC",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GRC",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GRC",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GRD",2016,"2006","2006","2006"
+"GRD",2017,"2006","2006","2006"
+"GRD",2018,"2006","2006","2006"
+"GRD",2019,"2006","2006","2006"
+"GRD",2020,"2006","2006","2006"
+"GRD",2021,"2006","2006","2006"
+"GRD",2022,"2006","2006","2006"
+"GRL",2016,"1990","1990","1990"
+"GRL",2017,"2010","2010","2010"
+"GRL",2018,"2010","2010","2010"
+"GRL",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GRL",2020,NA,NA,NA
+"GRL",2021,NA,NA,NA
+"GRL",2022,NA,NA,NA
+"GTM",2016,"2001","2001","2001"
+"GTM",2017,"2001","2001","2001"
+"GTM",2018,"2001","2001","2001"
+"GTM",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GTM",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GTM",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GTM",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"GUM",2016,NA,NA,NA
+"GUM",2017,NA,NA,NA
+"GUM",2018,"2009","2009","2009"
+"GUM",2019,"2009","2009","2009"
+"GUM",2020,"2009","2009","2009"
+"GUM",2021,"2012","2012","2012"
+"GUM",2022,"2012","2012","2012"
+"GUY",2016,"2006","2006","2006"
+"GUY",2017,"2006","2006","2006"
+"GUY",2018,"2006","2006","2006"
+"GUY",2019,"2006","2006","2006"
+"GUY",2020,"2012","2012","2012"
+"GUY",2021,"2012","2012","2012"
+"GUY",2022,"2012","2012","2012"
+"HKG",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HKG",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HKG",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HKG",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HKG",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HKG",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HKG",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HND",2016,"2000","2000","2000"
+"HND",2017,"2000","2000","2000"
+"HND",2018,"2000","2000","2000"
+"HND",2019,"2000","2000","2000"
+"HND",2020,"2000","2000","2000"
+"HND",2021,"2000","2000","2000"
+"HND",2022,"2000","2000","2000"
+"HRV",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HRV",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HRV",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HRV",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HRV",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HRV",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HRV",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HTI",2016,"1986/87","1986/87","1987"
+"HTI",2017,"1986/87","1986/87","1987"
+"HTI",2018,"1986/87","1986/87","1987"
+"HTI",2019,"1986/87","1986/87","1987"
+"HTI",2020,"2011/12","2011/12","2012"
+"HTI",2021,"2011/12","2011/12","2012"
+"HTI",2022,"2011/12","2011/12","2012"
+"HUN",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HUN",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HUN",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HUN",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HUN",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HUN",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"HUN",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IDN",2016,"2010","2010","2010"
+"IDN",2017,"2010","2010","2010"
+"IDN",2018,"2010","2010","2010"
+"IDN",2019,"2010","2010","2010"
+"IDN",2020,"2010","2010","2010"
+"IDN",2021,"2010","2010","2010"
+"IDN",2022,"2010","2010","2010"
+"IMN",2017,"2013","2013","2013"
+"IMN",2018,"2013","2013","2013"
+"IMN",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IMN",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IMN",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IMN",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IMY",2016,"2013","2013","2013"
+"IND",2016,"2011/12","2011/12","2012"
+"IND",2017,"2011/12","2011/12","2012"
+"IND",2018,"2011/12","2011/12","2012"
+"IND",2019,"2011","2011","2011"
+"IND",2020,"2011","2011","2011"
+"IND",2021,"2011","2011","2011"
+"IND",2022,"2011/12","2011/12","2012"
+"IRL",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IRL",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IRL",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IRL",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IRL",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IRL",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IRL",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"IRN",2016,"2004/05","2004/05","2005"
+"IRN",2017,"2004/05","2004/05","2005"
+"IRN",2018,"2011","2011","2011"
+"IRN",2019,"2011","2011","2011"
+"IRN",2020,"2011/2012","2011/2012","2020"
+"IRN",2021,"2011/2012","2011/2012","2020"
+"IRN",2022,"2016/17","2016/17","2017"
+"IRQ",2016,"2007","2007","2007"
+"IRQ",2017,"2007","2007","2007"
+"IRQ",2018,"2007","2007","2007"
+"IRQ",2019,"2007","2007","2007"
+"IRQ",2020,"2007","2007","2007"
+"IRQ",2021,"2007","2007","2007"
+"IRQ",2022,"2007","2007","2007"
+"ISL",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISL",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISL",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISL",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISL",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISL",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISL",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISR",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISR",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISR",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISR",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISR",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISR",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ISR",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ITA",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ITA",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ITA",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ITA",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ITA",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ITA",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ITA",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"JAM",2016,"2007","2007","2007"
+"JAM",2017,"2007","2007","2007"
+"JAM",2018,"2007","2007","2007"
+"JAM",2019,"2007","2007","2007"
+"JAM",2020,"2007","2007","2007"
+"JAM",2021,"2007","2007","2007"
+"JAM",2022,"2007","2007","2007"
+"JOR",2016,"1994","1994","1994"
+"JOR",2017,"1994","1994","1994"
+"JOR",2018,"1994","1994","1994"
+"JOR",2019,"2016","2016","2016"
+"JOR",2020,"2016","2016","2016"
+"JOR",2021,"2016","2016","2016"
+"JOR",2022,"2016","2016","2016"
+"JPN",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"JPN",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"JPN",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"JPN",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"JPN",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"JPN",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"JPN",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KAZ",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KAZ",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KAZ",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KAZ",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KAZ",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KAZ",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KAZ",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KEN",2016,"2009","2009","2009"
+"KEN",2017,"2009","2009","2009"
+"KEN",2018,"2009","2009","2009"
+"KEN",2019,"2009","2009","2009"
+"KEN",2020,"2009","2009","2009"
+"KEN",2021,"2009","2009","2009"
+"KEN",2022,"2016","2016","2016"
+"KGZ",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KGZ",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KGZ",2018,"1995","1995","1995"
+"KGZ",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KGZ",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KGZ",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KGZ",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KHM",2016,"2000","2000","2000"
+"KHM",2017,"2000","2000","2000"
+"KHM",2018,"2000","2000","2000"
+"KHM",2019,"2000","2000","2000"
+"KHM",2020,"2000","2000","2000"
+"KHM",2021,"2000","2000","2000"
+"KHM",2022,"2000","2000","2000"
+"KIR",2016,"2006","2006","2006"
+"KIR",2017,"2006","2006","2006"
+"KIR",2018,"2006","2006","2006"
+"KIR",2019,"2006","2006","2006"
+"KIR",2020,"2006","2006","2006"
+"KIR",2021,"2006","2006","2006"
+"KIR",2022,"2006","2006","2006"
+"KNA",2016,"2006","2006","2006"
+"KNA",2017,"2006","2006","2006"
+"KNA",2018,"2006","2006","2006"
+"KNA",2019,"2006","2006","2006"
+"KNA",2020,"2006","2006","2006"
+"KNA",2021,"2006","2006","2006"
+"KNA",2022,"2006","2006","2006"
+"KOR",2016,"2010","2010","2010"
+"KOR",2017,"2010","2010","2010"
+"KOR",2018,"2010","2010","2010"
+"KOR",2019,"2010","2010","2010"
+"KOR",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KOR",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KOR",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"KSV",2016,"2008","2008","2008"
+"KWT",2016,"2010","2010","2010"
+"KWT",2017,"2010","2010","2010"
+"KWT",2018,"2010","2010","2010"
+"KWT",2019,"2010","2010","2010"
+"KWT",2020,"2010","2010","2010"
+"KWT",2021,"2010","2010","2010"
+"KWT",2022,"2010","2010","2010"
+"LAO",2016,"2002","2002","2002"
+"LAO",2017,"2012","2012","2012"
+"LAO",2018,"2012","2012","2012"
+"LAO",2019,"2012","2012","2012"
+"LAO",2020,"2012","2012","2012"
+"LAO",2021,"2012","2012","2012"
+"LAO",2022,"2012","2012","2012"
+"LBN",2016,"1997","1997","1997"
+"LBN",2017,NA,NA,NA
+"LBN",2018,"2010","2010","2010"
+"LBN",2019,"2010","2010","2010"
+"LBN",2020,"2010","2010","2010"
+"LBN",2021,"2010","2010","2010"
+"LBN",2022,"2010","2010","2010"
+"LBR",2016,"2000","2000","2000"
+"LBR",2017,"2000","2000","2000"
+"LBR",2018,"2000","2000","2000"
+"LBR",2019,"1992","1992","1992"
+"LBR",2020,"1992","1992","1992"
+"LBR",2021,"1992","1992","1992"
+"LBR",2022,"2016","2016","2016"
+"LBY",2016,"2003","2003","2003"
+"LBY",2017,"2003","2003","2003"
+"LBY",2018,"2003","2003","2003"
+"LBY",2019,"2003","2003","2003"
+"LBY",2020,"2007","2007","2007"
+"LBY",2021,"2003","2003","2003"
+"LBY",2022,"2013","2013","2013"
+"LCA",2016,"2006","2006","2006"
+"LCA",2017,"2006","2006","2006"
+"LCA",2018,"2006","2006","2006"
+"LCA",2019,"2006","2006","2006"
+"LCA",2020,"2018","2018","2018"
+"LCA",2021,"2018","2018","2018"
+"LCA",2022,"2018","2018","2018"
+"LIE",2016,"1990","1990","1990"
+"LIE",2017,"1990","1990","1990"
+"LIE",2018,"1990","1990","1990"
+"LIE",2019,"1998","1998","1998"
+"LIE",2020,"1998","1998","1998"
+"LIE",2021,"1998","1998","1998"
+"LIE",2022,"1998","1998","1998"
+"LKA",2016,"2010","2010","2010"
+"LKA",2017,"2010","2010","2010"
+"LKA",2018,"2010","2010","2010"
+"LKA",2019,"2010","2010","2010"
+"LKA",2020,"2010","2010","2010"
+"LKA",2021,"2010","2010","2010"
+"LKA",2022,"2010","2010","2010"
+"LSO",2016,"2004","2004","2004"
+"LSO",2017,"2012","2012","2012"
+"LSO",2018,"2012","2012","2012"
+"LSO",2019,"2012","2012","2012"
+"LSO",2020,"2012","2012","2012"
+"LSO",2021,"2012","2012","2012"
+"LSO",2022,"2012","2012","2012"
+"LTU",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LTU",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LTU",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LTU",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LTU",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LTU",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LTU",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LUX",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LUX",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LUX",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LUX",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LUX",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LUX",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LUX",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LVA",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LVA",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LVA",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LVA",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LVA",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LVA",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"LVA",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MAC",2016,"2013","2013","2013"
+"MAC",2017,"2015","2015","2015"
+"MAC",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MAC",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MAC",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MAC",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MAC",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MAF",2016,NA,NA,NA
+"MAF",2017,NA,NA,NA
+"MAF",2018,NA,NA,NA
+"MAF",2019,NA,NA,NA
+"MAF",2020,NA,NA,NA
+"MAF",2021,NA,NA,NA
+"MAF",2022,NA,NA,NA
+"MAR",2016,"2007","2007","2007"
+"MAR",2017,"2007","2007","2007"
+"MAR",2018,"2007","2007","2007"
+"MAR",2019,"2007","2007","2007"
+"MAR",2020,"2007","2007","2007"
+"MAR",2021,"2007","2007","2007"
+"MAR",2022,"2007","2007","2007"
+"MCO",2016,"1990","1990","1990"
+"MCO",2017,"1990","1990","1990"
+"MCO",2018,"1990","1990","1990"
+"MCO",2019,"2010","2010","2010"
+"MCO",2020,"2010","2010","2010"
+"MCO",2021,"2010","2010","2010"
+"MCO",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MDA",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MDA",2017,"2000","2000","2000"
+"MDA",2018,"2000","2000","2000"
+"MDA",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MDA",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MDA",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MDA",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MDG",2016,"1984","1984","1984"
+"MDG",2017,"1984","1984","1984"
+"MDG",2018,"1984","1984","1984"
+"MDG",2019,"2007","2007","2007"
+"MDG",2020,"2007","2007","2007"
+"MDG",2021,"2007","2007","2007"
+"MDG",2022,"2007","2007","2007"
+"MDV",2016,"2003","2003","2003"
+"MDV",2017,"2003","2003","2003"
+"MDV",2018,"2014","2014","2014"
+"MDV",2019,"2014","2014","2014"
+"MDV",2020,"2014","2014","2014"
+"MDV",2021,"2014","2014","2014"
+"MDV",2022,"2014","2014","2014"
+"MEX",2016,"2008","2008","2008"
+"MEX",2017,"2008","2008","2008"
+"MEX",2018,"2013","2013","2013"
+"MEX",2019,"2013","2013","2013"
+"MEX",2020,"2013","2013","2013"
+"MEX",2021,"2013","2013","2013"
+"MEX",2022,"2013","2013","2013"
+"MHL",2016,"2003/04","2003/04","2004"
+"MHL",2017,"2003/04","2003/04","2004"
+"MHL",2018,"2004","2004","2004"
+"MHL",2019,"2015","2015","2015"
+"MHL",2020,"2015","2015","2015"
+"MHL",2021,"2015","2015","2015"
+"MHL",2022,"2014/15","2014/15","2015"
+"MKD",2016,"2005","2005","2005"
+"MKD",2017,"2005","2005","2005"
+"MKD",2018,"2005","2005","2005"
+"MKD",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MKD",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MKD",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MKD",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MLI",2016,"1999","1999","1999"
+"MLI",2017,"1999","1999","1999"
+"MLI",2018,"1999","1999","1999"
+"MLI",2019,"1999","1999","1999"
+"MLI",2020,"1999","1999","1999"
+"MLI",2021,"1999","1999","1999"
+"MLI",2022,"1999","1999","1999"
+"MLT",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MLT",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MLT",2018,"2010","2010","2010"
+"MLT",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MLT",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MLT",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MLT",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MMR",2016,"2005/06","2005/06","2006"
+"MMR",2017,"2010/11","2010/11","2011"
+"MMR",2018,"2010","2010","2010"
+"MMR",2019,"2010","2010","2010"
+"MMR",2020,"2015","2015","2015"
+"MMR",2021,"2015","2015","2015"
+"MMR",2022,"2016","2016","2016"
+"MNE",2016,"2000","2000","2000"
+"MNE",2017,"2000","2000","2000"
+"MNE",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MNE",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MNE",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MNE",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MNE",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"MNG",2016,"2010","2010","2010"
+"MNG",2017,"2010","2010","2010"
+"MNG",2018,"2010","2010","2010"
+"MNG",2019,"2010","2010","2010"
+"MNG",2020,"2010","2010","2010"
+"MNG",2021,"2010","2010","2010"
+"MNG",2022,"2015","2015","2015"
+"MNP",2016,NA,NA,NA
+"MNP",2017,NA,NA,NA
+"MNP",2018,NA,NA,NA
+"MNP",2019,"2009","2009","2009"
+"MNP",2020,NA,NA,NA
+"MNP",2021,NA,NA,NA
+"MNP",2022,"2012","2012","2012"
+"MOZ",2016,"2009","2009","2009"
+"MOZ",2017,"2009","2009","2009"
+"MOZ",2018,"2009","2009","2009"
+"MOZ",2019,"2014","2014","2014"
+"MOZ",2020,"2014","2014","2014"
+"MOZ",2021,"2014","2014","2014"
+"MOZ",2022,"2014","2014","2014"
+"MRT",2016,"2004","2004","2004"
+"MRT",2017,"2004","2004","2004"
+"MRT",2018,"2004","2004","2004"
+"MRT",2019,"2004","2004","2004"
+"MRT",2020,"2014","2014","2014"
+"MRT",2021,"2014","2014","2014"
+"MRT",2022,"2014","2014","2014"
+"MUS",2016,"2006","2006","2006"
+"MUS",2017,"2006","2006","2006"
+"MUS",2018,"2006","2006","2006"
+"MUS",2019,"2006","2006","2006"
+"MUS",2020,"2006","2006","2006"
+"MUS",2021,"2006","2006","2006"
+"MUS",2022,"2006","2006","2006"
+"MWI",2016,"2010","2010","2010"
+"MWI",2017,"2010","2010","2010"
+"MWI",2018,"2010","2010","2010"
+"MWI",2019,"2010","2010","2010"
+"MWI",2020,"2010","2010","2010"
+"MWI",2021,"2017","2017","2017"
+"MWI",2022,"2017","2017","2017"
+"MYS",2016,"2010","2010","2010"
+"MYS",2017,"2010","2010","2010"
+"MYS",2018,"2010","2010","2010"
+"MYS",2019,"2015","2015","2015"
+"MYS",2020,"2015","2015","2015"
+"MYS",2021,"2015","2015","2015"
+"MYS",2022,"2015","2015","2015"
+"NAM",2016,"2010","2010","2010"
+"NAM",2017,"2010","2010","2010"
+"NAM",2018,"2010","2010","2010"
+"NAM",2019,"2010","2010","2010"
+"NAM",2020,"2015","2015","2015"
+"NAM",2021,"2015","2015","2015"
+"NAM",2022,"2015","2015","2015"
+"NCL",2016,"1990","1990","1990"
+"NCL",2017,"1990","1990","1990"
+"NCL",2018,NA,NA,NA
+"NCL",2019,"1990","1990","1990"
+"NCL",2020,"1990","1990","1990"
+"NCL",2021,"1990","1990","1990"
+"NCL",2022,"2017","2017","2017"
+"NER",2016,"2006","2006","2006"
+"NER",2017,"2006","2006","2006"
+"NER",2018,"2006","2006","2006"
+"NER",2019,"2006","2006","2006"
+"NER",2020,"2015","2015","2015"
+"NER",2021,"2015","2015","2015"
+"NER",2022,"2015","2015","2015"
+"NGA",2016,"2010","2010","2010"
+"NGA",2017,"2010","2010","2010"
+"NGA",2018,"2010","2010","2010"
+"NGA",2019,"2010","2010","2010"
+"NGA",2020,"2010","2010","2010"
+"NGA",2021,"2010","2010","2010"
+"NGA",2022,"2010","2010","2010"
+"NIC",2016,"2006","2006","2006"
+"NIC",2017,"2006","2006","2006"
+"NIC",2018,"1994","1994","1994"
+"NIC",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NIC",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NIC",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NIC",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NLD",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NLD",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NLD",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NLD",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NLD",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NLD",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NLD",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NOR",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NOR",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NOR",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NOR",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NOR",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NOR",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NOR",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NPL",2016,"2000/01","2000/01","2001"
+"NPL",2017,"2000/01","2000/01","2001"
+"NPL",2018,"2000/01","2000/01","2001"
+"NPL",2019,"2000/01","2000/01","2001"
+"NPL",2020,"2000/01","2000/01","2001"
+"NPL",2021,"2011/12","2011/12","2012"
+"NPL",2022,"2010/11","2010/11","2011"
+"NRU",2016,NA,NA,NA
+"NRU",2017,"2007","2007","2007"
+"NRU",2018,"2007","2007","2007"
+"NRU",2019,"2007","2007","2007"
+"NRU",2020,"2007","2007","2007"
+"NRU",2021,"2007","2007","2007"
+"NRU",2022,"2007","2007","2007"
+"NZL",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NZL",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NZL",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NZL",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NZL",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NZL",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"NZL",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"OMN",2016,"2010","2010","2010"
+"OMN",2017,"2010","2010","2010"
+"OMN",2018,"2010","2010","2010"
+"OMN",2019,"2010","2010","2010"
+"OMN",2020,"2010","2010","2010"
+"OMN",2021,"2010","2010","2010"
+"OMN",2022,"2018","2018","2018"
+"PAK",2016,"2005/06","2005/06","2006"
+"PAK",2017,"2005/06","2005/06","2006"
+"PAK",2018,"2005/06","2005/06","2006"
+"PAK",2019,"2005/06","2005/06","2006"
+"PAK",2020,"2005/06","2005/06","2006"
+"PAK",2021,"2005/06","2005/06","2006"
+"PAK",2022,"2015/16","2015/16","2016"
+"PAN",2016,"2007","2007","2007"
+"PAN",2017,"2007","2007","2007"
+"PAN",2018,"2007","2007","2007"
+"PAN",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PAN",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PAN",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PAN",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PER",2016,"2007","2007","2007"
+"PER",2017,"2007","2007","2007"
+"PER",2018,"2007","2007","2007"
+"PER",2019,"2007","2007","2007"
+"PER",2020,"2007","2007","2007"
+"PER",2021,"2007","2007","2007"
+"PER",2022,"2007","2007","2007"
+"PHL",2016,"2000","2000","2000"
+"PHL",2017,"2000","2000","2000"
+"PHL",2018,"2000","2000","2000"
+"PHL",2019,"2000","2000","2000"
+"PHL",2020,"2018","2018","2018"
+"PHL",2021,"2018","2018","2018"
+"PHL",2022,"2018","2018","2018"
+"PLW",2016,"2004/05","2004/05","2005"
+"PLW",2017,"2004/05","2004/05","2005"
+"PLW",2018,"2015","2015","2015"
+"PLW",2019,"2015","2015","2015"
+"PLW",2020,"2015","2015","2015"
+"PLW",2021,"2015","2015","2015"
+"PLW",2022,"2019","2019","2019"
+"PNG",2016,"1998","1998","1998"
+"PNG",2017,"1998","1998","1998"
+"PNG",2018,"2013","2013","2013"
+"PNG",2019,"2013","2013","2013"
+"PNG",2020,"2013","2013","2013"
+"PNG",2021,"2013","2013","2013"
+"PNG",2022,"2013","2013","2013"
+"POL",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"POL",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"POL",2018,"2010","2010","2010"
+"POL",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"POL",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"POL",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"POL",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PRI",2016,"1953/54","1953/54","1954"
+"PRI",2017,"1953/54","1953/54","1954"
+"PRI",2018,"1954","1954","1954"
+"PRI",2019,"1954","1954","1954"
+"PRI",2020,"1954","1954","1954"
+"PRI",2021,"1954","1954","1954"
+"PRI",2022,"1953/54","1953/54","1954"
+"PRK",2016,NA,NA,NA
+"PRK",2017,NA,NA,NA
+"PRK",2018,NA,NA,NA
+"PRK",2019,NA,NA,NA
+"PRK",2020,NA,NA,NA
+"PRK",2021,NA,NA,NA
+"PRK",2022,NA,NA,NA
+"PRT",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PRT",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PRT",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PRT",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PRT",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PRT",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PRT",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"PRY",2016,"1994","1994","1994"
+"PRY",2017,"1994","1994","1994"
+"PRY",2018,"1994","1994","1994"
+"PRY",2019,"2014","2014","2014"
+"PRY",2020,"2014","2014","2014"
+"PRY",2021,"2014","2014","2014"
+"PRY",2022,"2014","2014","2014"
+"PSE",2017,"2004","2004","2004"
+"PSE",2018,"2015","2015","2015"
+"PSE",2019,"2015","2015","2015"
+"PSE",2020,"2015","2015","2015"
+"PSE",2021,"2015","2015","2015"
+"PSE",2022,"2015","2015","2015"
+"PYF",2016,"1990","1990","1990"
+"PYF",2017,"1990","1990","1990"
+"PYF",2018,"2005","2005","2005"
+"PYF",2019,"1990","1990","1990"
+"PYF",2020,"1990","1990","1990"
+"PYF",2021,"1990","1990","1990"
+"PYF",2022,"2005","2005","2005"
+"QAT",2016,"2013","2013","2013"
+"QAT",2017,"2013","2013","2013"
+"QAT",2018,"2013","2013","2013"
+"QAT",2019,"2013","2013","2013"
+"QAT",2020,"2018","2018","2018"
+"QAT",2021,"2018","2018","2018"
+"QAT",2022,"2018","2018","2018"
+"ROM",2016,"2005","2005","2005"
+"ROU",2017,"2005","2005","2005"
+"ROU",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ROU",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ROU",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ROU",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"ROU",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"RUS",2016,"2011","2011","2011"
+"RUS",2017,"2011","2011","2011"
+"RUS",2018,"2016","2016","2016"
+"RUS",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"RUS",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"RUS",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"RUS",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"RWA",2016,"2011","2011","2011"
+"RWA",2017,"2014","2014","2014"
+"RWA",2018,"2014","2014","2014"
+"RWA",2019,"2014","2014","2014"
+"RWA",2020,"2017","2017","2017"
+"RWA",2021,"2017","2017","2017"
+"RWA",2022,"2017","2017","2017"
+"SAU",2016,"2010","2010","2010"
+"SAU",2017,"2010","2010","2010"
+"SAU",2018,"2010","2010","2010"
+"SAU",2019,"2010","2010","2010"
+"SAU",2020,"2010","2010","2010"
+"SAU",2021,"2010","2010","2010"
+"SAU",2022,"2010","2010","2010"
+"SDN",2016,"1981/82. Reporting period switch from fiscal year to calendar year from 1996. Pre-1996 data converted to calendar year.","1981/82. Reporting period switch from fiscal year to calendar year from 1996. Pre-1996 data converted to calendar year.","1982"
+"SDN",2017,"1981/82. Reporting period switch from fiscal year to calendar year from 1996. Pre-1996 data converted to calendar year.","1981/82. Reporting period switch from fiscal year to calendar year from 1996. Pre-1996 data converted to calendar year.","1982"
+"SDN",2018,"1996","1996","1996"
+"SDN",2019,"1996","1996","1996"
+"SDN",2020,"1996","1996","1996"
+"SDN",2021,"1996","1996","1996"
+"SDN",2022,"1996","1996","1996"
+"SEN",2016,"1999","1999","1999"
+"SEN",2017,"1999","1999","1999"
+"SEN",2018,"1999","1999","1999"
+"SEN",2019,"2014","2014","2014"
+"SEN",2020,"2014","2014","2014"
+"SEN",2021,"2014","2014","2014"
+"SEN",2022,"2014","2014","2014"
+"SGP",2016,"2010","2010","2010"
+"SGP",2017,"2010","2010","2010"
+"SGP",2018,"2010","2010","2010"
+"SGP",2019,"2015","2015","2015"
+"SGP",2020,"2015","2015","2015"
+"SGP",2021,"2015","2015","2015"
+"SGP",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SLB",2016,"2004","2004","2004"
+"SLB",2017,"2004","2004","2004"
+"SLB",2018,"2004","2004","2004"
+"SLB",2019,"2004","2004","2004"
+"SLB",2020,"2012","2012","2012"
+"SLB",2021,"2012","2012","2012"
+"SLB",2022,"2012","2012","2012"
+"SLE",2016,"2006","2006","2006"
+"SLE",2017,"2006","2006","2006"
+"SLE",2018,"2006","2006","2006"
+"SLE",2019,"2006","2006","2006"
+"SLE",2020,"2006","2006","2006"
+"SLE",2021,"2006","2006","2006"
+"SLE",2022,"2006","2006","2006"
+"SLV",2016,"1990","1990","1990"
+"SLV",2017,"1990","1990","1990"
+"SLV",2018,"2005","2005","2005"
+"SLV",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SLV",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SLV",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SLV",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SMR",2016,"1990","1990","1990"
+"SMR",2017,"1990","1990","1990"
+"SMR",2018,"2007","2007","2007"
+"SMR",2019,"2007","2007","2007"
+"SMR",2020,"2007","2007","2007"
+"SMR",2021,"2007","2007","2007"
+"SMR",2022,"2007","2007","2007"
+"SOM",2016,"1985","1985","1985"
+"SOM",2017,"1985","1985","1985"
+"SOM",2018,"1985","1985","1985"
+"SOM",2019,NA,NA,NA
+"SOM",2020,"2013","2013","2013"
+"SOM",2021,"2013","2013","2013"
+"SOM",2022,"2017","2017","2017"
+"SRB",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SRB",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SRB",2018,"2010","2010","2010"
+"SRB",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SRB",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SRB",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SRB",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SSD",2016,"2009","2009","2009"
+"SSD",2017,"2009","2009","2009"
+"SSD",2018,"2009","2009","2009"
+"SSD",2019,"2009","2009","2009"
+"SSD",2020,"2009","2009","2009"
+"SSD",2021,"2009","2009","2009"
+"SSD",2022,"2009","2009","2009"
+"STP",2016,"2001","2001","2001"
+"STP",2017,"2008","2008","2008"
+"STP",2018,"2008","2008","2008"
+"STP",2019,"2008","2008","2008"
+"STP",2020,"2008","2008","2008"
+"STP",2021,"2008","2008","2008"
+"STP",2022,"2008","2008","2008"
+"SUR",2016,"2007","2007","2007"
+"SUR",2017,"2007","2007","2007"
+"SUR",2018,"2007","2007","2007"
+"SUR",2019,"2007","2007","2007"
+"SUR",2020,"2007","2007","2007"
+"SUR",2021,"2015","2015","2015"
+"SUR",2022,"2015","2015","2015"
+"SVK",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVK",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVK",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVK",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVK",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVK",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVK",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVN",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVN",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVN",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVN",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVN",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVN",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SVN",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SWE",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SWE",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SWE",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SWE",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SWE",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SWE",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SWE",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"SWZ",2016,"2011","2011","2011"
+"SWZ",2017,"2011","2011","2011"
+"SWZ",2018,"2011","2011","2011"
+"SWZ",2019,"2011","2011","2011"
+"SWZ",2020,"2011","2011","2011"
+"SWZ",2021,"2011","2011","2011"
+"SWZ",2022,"2011","2011","2011"
+"SXM",2016,NA,NA,NA
+"SXM",2017,NA,NA,NA
+"SXM",2018,NA,NA,NA
+"SXM",2019,"2011","2011","2011"
+"SXM",2020,"2011","2011","2011"
+"SXM",2021,"2011","2011","2011"
+"SXM",2022,NA,NA,NA
+"SYC",2016,"2006","2006","2006"
+"SYC",2017,"2006","2006","2006"
+"SYC",2018,"2006","2006","2006"
+"SYC",2019,"2006","2006","2006"
+"SYC",2020,"2006","2006","2006"
+"SYC",2021,"2006","2006","2006"
+"SYC",2022,"2014","2014","2014"
+"SYR",2016,"2000","2000","2000"
+"SYR",2017,"2000","2000","2000"
+"SYR",2018,"2000","2000","2000"
+"SYR",2019,"2000","2000","2000"
+"SYR",2020,"2000","2000","2000"
+"SYR",2021,"2000","2000","2000"
+"SYR",2022,"2000","2000","2000"
+"TCA",2016,NA,NA,NA
+"TCA",2017,NA,NA,NA
+"TCA",2018,NA,NA,NA
+"TCA",2019,"2012","2012","2012"
+"TCA",2020,"2012","2012","2012"
+"TCA",2021,"2012","2012","2012"
+"TCA",2022,"2012","2012","2012"
+"TCD",2016,"2005","2005","2005"
+"TCD",2017,"2005","2005","2005"
+"TCD",2018,"2005","2005","2005"
+"TCD",2019,"2005","2005","2005"
+"TCD",2020,"2005","2005","2005"
+"TCD",2021,"2005","2005","2005"
+"TCD",2022,"2005","2005","2005"
+"TGO",2016,"2000","2000","2000"
+"TGO",2017,"2000","2000","2000"
+"TGO",2018,"2000","2000","2000"
+"TGO",2019,"2007","2007","2007"
+"TGO",2020,"2007","2007","2007"
+"TGO",2021,"2016","2016","2016"
+"TGO",2022,"2016","2016","2016"
+"THA",2016,"2002","2002","2002"
+"THA",2017,"2002","2002","2002"
+"THA",2018,"2002","2002","2002"
+"THA",2019,"2002","2002","2002"
+"THA",2020,"2002","2002","2002"
+"THA",2021,"2002","2002","2002"
+"THA",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TJK",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TJK",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TJK",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TJK",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TJK",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TJK",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TJK",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TKM",2016,"2005","2005","2005"
+"TKM",2017,"2005","2005","2005"
+"TKM",2018,"2005","2005","2005"
+"TKM",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TKM",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TKM",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TKM",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TLS",2017,"2010","2010","2010"
+"TLS",2018,"2015","2015","2015"
+"TLS",2019,"2015","2015","2015"
+"TLS",2020,"2015","2015","2015"
+"TLS",2021,"2015","2015","2015"
+"TLS",2022,"2015","2015","2015"
+"TMP",2016,"2010","2010","2010"
+"TON",2016,"2010/11","2010/11","2011"
+"TON",2017,"2010/11","2010/11","2011"
+"TON",2018,"2011","2011","2011"
+"TON",2019,"2011","2011","2011"
+"TON",2020,"2017","2017","2017"
+"TON",2021,"2017","2017","2017"
+"TON",2022,"2016/17","2016/17","2017"
+"TTO",2016,"2000","2000","2000"
+"TTO",2017,"2000","2000","2000"
+"TTO",2018,"2012","2012","2012"
+"TTO",2019,"2012","2012","2012"
+"TTO",2020,"2012","2012","2012"
+"TTO",2021,"2012","2012","2012"
+"TTO",2022,"2012","2012","2012"
+"TUN",2016,"2010","2010","2010"
+"TUN",2017,"2010","2010","2010"
+"TUN",2018,"2010","2010","2010"
+"TUN",2019,"2010","2010","2010"
+"TUN",2020,"2010","2010","2010"
+"TUN",2021,"2010","2010","2010"
+"TUN",2022,"2015","2015","2015"
+"TUR",2016,"1998","1998","1998"
+"TUR",2017,"2010","2010","2010"
+"TUR",2018,"2009","2009","2009"
+"TUR",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TUR",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TUR",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TUR",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TUV",2016,"2005","2005","2005"
+"TUV",2017,"2005","2005","2005"
+"TUV",2018,"2005","2005","2005"
+"TUV",2019,"2005","2005","2005"
+"TUV",2020,"2005","2005","2005"
+"TUV",2021,"2005","2005","2005"
+"TUV",2022,"2016","2016","2016"
+"TWN",2019,"2011","2011","2011"
+"TWN",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"TZA",2016,"2007","2007","2007"
+"TZA",2017,"2007","2007","2007"
+"TZA",2018,"2007","2007","2007"
+"TZA",2019,"2015","2015","2015"
+"TZA",2020,"2015","2015","2015"
+"TZA",2021,"2015","2015","2015"
+"TZA",2022,"2015","2015","2015"
+"UGA",2016,"2009/10","2009/10","2010"
+"UGA",2017,"2009/10","2009/10","2010"
+"UGA",2018,"2009/10","2009/10","2010"
+"UGA",2019,"2009/10","2009/10","2010"
+"UGA",2020,"2016/2017","2016/2017","2020"
+"UGA",2021,"2016/2017","2016/2017","2020"
+"UGA",2022,"2016/2017","2016/2017","2020"
+"UKR",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UKR",2017,"2010","2010","2010"
+"UKR",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UKR",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UKR",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UKR",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UKR",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"URY",2016,"2005","2005","2005"
+"URY",2017,"2005","2005","2005"
+"URY",2018,"2005","2005","2005"
+"URY",2019,"2005","2005","2005"
+"URY",2020,"2005","2005","2005"
+"URY",2021,"2016","2016","2016"
+"URY",2022,"2016","2016","2016"
+"USA",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"USA",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"USA",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"USA",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"USA",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"USA",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"USA",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UZB",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UZB",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UZB",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UZB",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UZB",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UZB",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"UZB",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"VCT",2016,"2006","2006","2006"
+"VCT",2017,"2006","2006","2006"
+"VCT",2018,"2006","2006","2006"
+"VCT",2019,"2006","2006","2006"
+"VCT",2020,"2006","2006","2006"
+"VCT",2021,"2006","2006","2006"
+"VCT",2022,"2018","2018","2018"
+"VEN",2016,"1997","1997","1997"
+"VEN",2017,"1997","1997","1997"
+"VEN",2018,"1997","1997","1997"
+"VEN",2019,"1997","1997","1997"
+"VEN",2020,"1997","1997","1997"
+"VGB",2016,NA,NA,NA
+"VGB",2017,NA,NA,NA
+"VGB",2018,NA,NA,NA
+"VGB",2019,NA,NA,NA
+"VGB",2020,NA,NA,NA
+"VGB",2021,NA,NA,NA
+"VGB",2022,NA,NA,NA
+"VIR",2016,"1982","1982","1982"
+"VIR",2017,"1982","1982","1982"
+"VIR",2018,"1982","1982","1982"
+"VIR",2019,"2002","2002","2002"
+"VIR",2020,"2002","2002","2002"
+"VIR",2021,NA,NA,NA
+"VIR",2022,NA,NA,NA
+"VNM",2016,"2010","2010","2010"
+"VNM",2017,"2010","2010","2010"
+"VNM",2018,"2010","2010","2010"
+"VNM",2019,"2010","2010","2010"
+"VNM",2020,"2010","2010","2010"
+"VNM",2021,"2010","2010","2010"
+"VNM",2022,"2010","2010","2010"
+"VUT",2016,"2006","2006","2006"
+"VUT",2017,"2006","2006","2006"
+"VUT",2018,"2006","2006","2006"
+"VUT",2019,"2006","2006","2006"
+"VUT",2020,"2006","2006","2006"
+"VUT",2021,"2006","2006","2006"
+"VUT",2022,"2006","2006","2006"
+"WBG",2016,"2004","2004","2004"
+"WSM",2016,"2008/09","2008/09","2009"
+"WSM",2017,"2008/09","2008/09","2009"
+"WSM",2018,"2008/09","2008/09","2009"
+"WSM",2019,"2009","2009","2009"
+"WSM",2020,"2009","2009","2009"
+"WSM",2021,"2009","2009","2009"
+"WSM",2022,"2013","2013","2013"
+"XKX",2017,"2008","2008","2008"
+"XKX",2018,"2008","2008","2008"
+"XKX",2019,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"XKX",2020,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"XKX",2021,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"XKX",2022,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
+"YEM",2016,"2007","2007","2007"
+"YEM",2017,"1990","1990","1990"
+"YEM",2018,"1990","1990","1990"
+"YEM",2019,"1990","1990","1990"
+"YEM",2020,"1990","1990","1990"
+"YEM",2021,"1990","1990","1990"
+"YEM",2022,"1990","1990","1990"
+"ZAF",2016,"2010","2010","2010"
+"ZAF",2017,"2010","2010","2010"
+"ZAF",2018,"2010","2010","2010"
+"ZAF",2019,"2010","2010","2010"
+"ZAF",2020,"2010","2010","2010"
+"ZAF",2021,"2010","2010","2010"
+"ZAF",2022,"2015","2015","2015"
+"ZAR",2016,"2005","2005","2005"
+"ZMB",2016,"2010","2010","2010"
+"ZMB",2017,"2010","2010","2010"
+"ZMB",2018,"2010","2010","2010"
+"ZMB",2019,"2010","2010","2010"
+"ZMB",2020,"2010","2010","2010"
+"ZMB",2021,"2010","2010","2010"
+"ZMB",2022,"2010","2010","2010"
+"ZWE",2016,"2009","2009","2009"
+"ZWE",2017,"2009","2009","2009"
+"ZWE",2018,"2009","2009","2009"
+"ZWE",2019,"2012","2012","2012"
+"ZWE",2020,"2012","2012","2012"
+"ZWE",2021,"2012","2012","2012"
+"ZWE",2022,"2012","2012","2012"
