@@ -942,9 +942,9 @@ df <- pcn %>%
 for (reference_year in 2004:end_date) {
   
     #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
-  if (reference_year>=2021) {
+  if (reference_year>=2022) {
     rec_window=7
-  } else if (reference_year==2020) {
+  } else if (reference_year==2021) {
     rec_window=6
   } else {
     rec_window=5
@@ -1801,7 +1801,8 @@ NADA is an open source microdata cataloging system, compliant with the Data Docu
 #read in csv file.
 D2.4_NADA <- read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.csv", sep="/" )) %>%
   bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.2020.csv", sep="/" ))) %>%
-  bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.2022.csv", sep="/" ))) %>%
+  bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.2022.csv", sep="/" )) %>% mutate(date=2021)) %>%
+  bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.2022.csv", sep="/" )) %>% mutate(date=2022)) %>%
   mutate(SPI.D2.4.NADA=case_when(
     NADA==1 ~ 1, 
     NADA==0 ~ 0, 
@@ -2160,7 +2161,7 @@ census_fun  <- function(data, input_var) {
   
     #append nada data on surveys
   cs_df <- cs_df %>%
-    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_NADA.csv", sep="" ))) %>%
+    bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_NADA.csv", sep="" )) %>% left_join(country_metadata)) %>%
     group_by(iso3c, indicator_date) %>%
     summarise(input_var=first(na.omit(input_var)  ),
             nada_dates=first(na.omit(nada_dates)  ) 
@@ -2174,17 +2175,20 @@ census_fun  <- function(data, input_var) {
    temp <- cs_df %>%
     mutate(date=i) %>%
     mutate(recency_indicator=((date>=indicator_date)) ) %>% #restrict to censuses that do not occur after reference date
-    mutate(indicator_date=if_else(recency_indicator==TRUE, indicator_date, as.numeric(NA))) %>%
+    mutate(indicator_date=if_else(recency_indicator==TRUE, indicator_date, as.numeric(NA)),
+         register=if_else(str_detect(input_var,"Register based census"),1,0)) %>%
     group_by(iso3c, date) %>%
     summarise(last_val=max(indicator_date, na.rm=T),
-      input_var=paste(unique(indicator_date), collapse=","),
-      nada_dates=first(nada_dates)) %>%
+            register=max(register, na.rm=T),
+            input_var=paste(unique(indicator_date), collapse=","),
+            nada_dates=first(nada_dates)) %>%
     mutate(indicator=case_when(
-      (date-last_val<=10) & (date-last_val>0) ~ 1,
-      (date-last_val<=20) & (date-last_val>0) ~ 0.5,
-      TRUE ~ 0 )
+    (date>=2021 & register==1) ~ 1, #score register based censuses
+    (date-last_val<=10) & (date-last_val>=0) ~ 1,
+    (date-last_val<=20) & (date-last_val>=0) ~ 0.5,
+    TRUE ~ 0 )
     )  %>%
-     ungroup() %>%
+    ungroup() %>%
     select(c( 'iso3c', 'date', 'input_var','nada_dates', 'indicator')  ) %>%
     arrange(date, iso3c)
 
@@ -2230,7 +2234,7 @@ survey_fun  <- function(data, input_var) {
   #append nada data on surveys
   cs_df <- cs_df %>%
     bind_rows(read_csv(file = paste(raw_dir, '/4.1_SOCS/', data, "_NADA.csv", sep="" ),
-                       col_types = list(col_character(),col_double(), col_character()))) %>%
+                       col_types = list(col_character(),col_double(), col_character())) %>% left_join(country_metadata)) %>%
     group_by(iso3c, indicator_date) %>%
     summarise(input_var=first(na.omit(input_var)  ),
             nada_dates=first(na.omit(nada_dates)  ) 
@@ -3057,7 +3061,7 @@ The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Dat
 ```{r legislation_governance}
 
 
-D5.1_DILG <- read_csv(file=paste(raw_dir, '5.1_DILG', 'SG_STT_FPOS.csv', sep="/")) %>% #Countries with birth registration data that are at least 90 percent complete (1 = YES; 0 = NO)
+D5.1_DILG <- read_csv(file=paste(raw_dir, '5.1_DILG', 'SG_STT_FPOS.csv', sep="/")) %>% 
   select(iso3c, date,ind_value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.1.DILG=if_else((is.na(ind_value) | ind_value=="NaN"),as.numeric(NA), as.numeric(ind_value)),
@@ -3529,7 +3533,8 @@ D5.2.7.CGOV <-  D5.2.7.CGOV %>%
   full_join(D5.2.7.CGOV.IMF) %>%
   mutate(SPI.D5.2.7.CGOV=if_else(is.na(SPI.D5.2.7.CGOV),SPI.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
   select(-country,-SPI.D5.2.7.CGOV.IMF) %>%
-  arrange(date, iso3c)
+  arrange(date, iso3c) %>%
+  filter(!is.na(SPI.D5.2.7.CGOV))
 
 ```
 
@@ -3550,7 +3555,10 @@ is harmonized with the SNA2008.
 
 #read in csv file.
 D5.2.8.FINA <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.2020.csv", sep="/" ))) %>% #add in 2020 data
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.2020.csv", sep="/" )) ) %>% #add in 2020 data
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.2022.csv", sep="/" )) %>% mutate(date=2021, iso3c=Code)) %>% #add in 2020 data
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.2022.csv", sep="/" )) %>% mutate(date=2022, iso3c=Code)) %>% #add in 2020 data
+  
   mutate(SPI.D5.2.8.FINA=case_when(
     FINA=="2014" | FINA=="ESA 2010"~ 1, 
     FINA=="2001" ~ 0.5,
@@ -3589,7 +3597,8 @@ D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep=
   ),
   RAW.D5.2.9.MONY=MONY)  %>%
   select(iso3c,  date, RAW.D5.2.9.MONY, SPI.D5.2.9.MONY  ) %>%
-  arrange(date, iso3c)
+  arrange(date, iso3c) %>%
+  right_join(spi_df_empty)
 
 #####
 # IMF Data
@@ -3616,12 +3625,35 @@ D5.2.9.MONY.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compi
   left_join(imf_codes) %>%
   select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) %>%
   mutate(date=2020)
-  
+
+
+#read in data from IMF
+D5.2.9.MONY.IMF.UPD <-   read_excel(path=paste(raw_dir, "5.2_DISM","2022.10_Compiled Data for World Bank.xlsx", sep="/" ),
+                               sheet ="7. MFS Compilation status",
+                               skip=0
+                               ) %>%
+  as_tibble(.name_repair='universal') %>%  
+  rename(
+    IMF_code=Code,
+    IMF_country=Country,
+  ) %>%
+  mutate(SPI.D5.2.9.MONY.IMF=case_when(
+    grepl('MFSM 2000',Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.October.2022) ~ 1, 
+    TRUE ~ 0 
+  ),
+  RAW.D5.2.9.MONY.IMF=Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.October.2022) %>%
+  mutate(IMF_code=as.numeric(IMF_code)) %>%
+  left_join(imf_codes) %>%
+  select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) 
+
+D5.2.9.MONY.IMF <- D5.2.9.MONY.IMF %>%
+  bind_rows(D5.2.9.MONY.IMF.UPD %>% mutate(date=2021)) %>%
+  bind_rows(D5.2.9.MONY.IMF.UPD %>% mutate(date=2022))  
   
 D5.2.9.MONY <-  D5.2.9.MONY %>%
   full_join(D5.2.9.MONY.IMF) %>%
-  mutate(SPI.D5.2.9.MONY=if_else(is.na(SPI.D5.2.9.MONY),SPI.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
-  select(-country,-SPI.D5.2.9.MONY.IMF) %>%
+  mutate(SPI.D5.2.9.MONY=if_else(is.na(SPI.D5.2.9.MONY),SPI.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY,0)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-SPI.D5.2.9.MONY.IMF) %>%
   arrange(date, iso3c)
 
 
@@ -3648,7 +3680,8 @@ related to "business statistics" but refers to the statistical office, simply ex
 #read in csv file.
 D5.2.10.GSBP <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.csv", sep="/" )) %>%
   bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.2020.csv", sep="/" ))) %>% #add in 2020 data
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.2022.csv", sep="/" ))) %>% #add in 2020 data
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.2022.csv", sep="/" )) %>% mutate(date=2021)) %>% #add in 2020 data
+  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.2022.csv", sep="/" ))%>% mutate(date=2022)) %>% #add in 2020 data
   mutate(SPI.D5.2.10.GSBP=case_when(
     str_to_lower(GSBP)=="yes" ~ 1, 
     TRUE ~ 0 
@@ -3805,12 +3838,13 @@ Source of this data is UNSD and Paris21.
 ```{r finance}
 
 #pull from unsd api
-D5.5_DIFI <- un_pull('SG_STT_NSDSFND', '2004', '2022') %>%
-  select(iso3c, date,value) %>%
+D5.5_DIFI <- read_csv(file=paste(raw_dir, '5.1_DILG', 'SG_STT_FPOS.csv', sep="/")) %>% 
+  select(iso3c, date,ind_value) %>%
   right_join(spi_df_empty) %>%
-  mutate(RAW.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
-         SPI.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value))) %>%
-  select(-value)
+  mutate(RAW.D5.5.DIFI=if_else((is.na(ind_value) | ind_value=="NaN"),as.numeric(NA), as.numeric(ind_value)),
+         SPI.D5.5.DIFI=if_else((is.na(ind_value) | ind_value=="NaN"),as.numeric(NA), as.numeric(ind_value))) %>%
+  select(-ind_value)
+
 
 # #read in csv file.
 # D5.5_DIFI <- read_csv(file = paste(raw_dir, "5.5_DIFI","D5.5_DIFI.csv", sep="/" )) %>%
@@ -3870,33 +3904,7 @@ spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Sou
 
 ```
 
-```{r financetest, eval=FALSE, include=FALSE}
 
-#examine other finance indicators
-#pull from unsd api
-D5.5_DIFI_test <- un_pull('SG_STT_NSDSFDGVT', '2004', '2022') %>%
-  select(iso3c, date,value) %>%
-  right_join(spi_df_empty) %>%
-  mutate(RAW.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value)),
-         SPI.D5.5.DIFI=if_else((is.na(value) | value=="NaN"),as.numeric(NA), as.numeric(value))) %>%
-  select(-value)
-
-
-
-
-
-
-
-
-D5.5_DIFI_map <- D5.5_DIFI_test %>%
-  filter(!is.na(SPI.D5.5.DIFI))
-
-spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
-
-```
-# Final Dataset
-
-Below we will append the data together and save the final files together.
 
 ```{r append}
 
@@ -3941,7 +3949,7 @@ spi_df_final <- spi_df_final %>%
                   "SPI.D5.2.3.CNIN", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL", "SPI.D5.2.8.FINA",
                   "SPI.D5.2.10.GSBP",
                   "SPI.D5.5.DIFI"),
-                ~if_else(( (income=='High income')  & (country %in% country_mod_list)),1,.)                )) 
+                ~if_else(( (income_level=='High income')  & (country %in% country_mod_list)),1,.)                )) 
 
 ```
 
@@ -3972,7 +3980,7 @@ label(spi_df_final) = as.list(spi_meta$source_name)
 spi_df_final %>%
   mutate(across(is.list, as.character)) %>%
   rename_with(~gsub(".","_",.x, fixed=TRUE)) %>%
-  select(-lat,-long) %>%
+  select(-latitude,-longitude) %>%
   write_dta( path = paste(output_dir, 'SPI_data.dta', sep="/"))
 
 ```

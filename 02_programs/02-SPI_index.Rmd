@@ -44,6 +44,8 @@ output_dir <- paste(dir, '03_output_data', sep="/")
 #weights (either unity (1) or population (2))
 wgt <- 1
 
+end_date <- 2022
+
 ```
 
 
@@ -89,7 +91,7 @@ The COVID-19 pandemic has added extra motivation and impetus for understanding a
 
 # Overview of the SPI Framework
 
-The new Statistical Performance Indicators (SPI) build on the Statistical Capacity Indicators The new Statistical Performance Indicators (SPI) build on the Statistical Capacity Index (SCI), which the World Bank regularly published between 2004 and 2021. The SPI framework covers several of the same attributes as the SCI, such as statistical methodology, data, and periodicity, but expands into new areas as well. The goals of introducing the SPI are: to offer a forward looking framework, to measure all statistical systems – from less mature to highly advanced, to cover the entire national statistical system -  not just the National Statistical Office (NSO), and to provide countries incentives to build modern statistical systems. To help build transparency and confidence in the work, as well as to improve understanding and encourage further experimentation, refinement, and improvement of the measures, the data and the code underlying the construction of the SPI are made open.^[The code and data are available on [github]{https://github.com/worldbank/SPI} licensed under the [Creative Commons Attribution 4.0 International License]{https://creativecommons.org/licenses/by/4.0/}, which allows users to freely share, copy, and redistribute any of the materials, as well as adapt, remix, transform, and build upon the material for any purpose, so long as appropriate credit is given the SPI team and the other teams described under the license.]
+The new Statistical Performance Indicators (SPI) build on the Statistical Capacity Indicators The new Statistical Performance Indicators (SPI) build on the Statistical Capacity Index (SCI), which the World Bank regularly published between 2004 and 2020. The SPI framework covers several of the same attributes as the SCI, such as statistical methodology, data, and periodicity, but expands into new areas as well. The goals of introducing the SPI are: to offer a forward looking framework, to measure all statistical systems – from less mature to highly advanced, to cover the entire national statistical system -  not just the National Statistical Office (NSO), and to provide countries incentives to build modern statistical systems. To help build transparency and confidence in the work, as well as to improve understanding and encourage further experimentation, refinement, and improvement of the measures, the data and the code underlying the construction of the SPI are made open.^[The code and data are available on [github]{https://github.com/worldbank/SPI} licensed under the [Creative Commons Attribution 4.0 International License]{https://creativecommons.org/licenses/by/4.0/}, which allows users to freely share, copy, and redistribute any of the materials, as well as adapt, remix, transform, and build upon the material for any purpose, so long as appropriate credit is given the SPI team and the other teams described under the license.]
 
 *Figure 2.1: Virtuous Data Cycle*
 ![](SPI_cycle.png)
@@ -125,7 +127,13 @@ pop_df <- wbstats::wb_data(country="all",
 
 #read in the SPI dataset
 spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
+  filter(date>=2021) %>%
+  bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2020.csv', sep="/")) %>% filter(date==2020)) %>%
+  bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2019.csv', sep="/")) %>% filter(date<2020)) %>%              
   left_join(pop_df) %>%
+  group_by(iso3c) %>%
+  arrange(desc(date)) %>%
+  fill(population, .direction = "downup") %>%
   mutate(wgt=wgt,
          weights=if_else(wgt==2,population,1))  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
 
@@ -268,7 +276,7 @@ spi_region_charts  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2021 or the latest year available'
+      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
       expand_limits(x=c(0,100)) +
       theme_spi() +
@@ -348,7 +356,7 @@ spi_income_charts  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2021 or the latest year available'
+      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
@@ -449,7 +457,7 @@ spi_country_charts  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Country', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2021 or the latest year available'
+      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
       xlab('Score') +
       expand_limits(x=c(0,100)) +
@@ -621,7 +629,7 @@ lending_charts <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2021 or the latest year available'
+      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
@@ -667,7 +675,7 @@ lending_chart_aggregate <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2021 or the latest year available'
+      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
@@ -739,7 +747,7 @@ fcs_charts <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2021 or the latest year available'
+      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
@@ -808,7 +816,7 @@ fcs_chart_aggregate <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
       caption = str_wrap('Source: World Bank. Statistical Performance Indicators. Non-FCS countries include all countries not classified as FCS.  This includes high income countries.',70),
-      subtitle= 'Based on data for 2021 or the latest year available'
+      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
@@ -1075,7 +1083,7 @@ The nested structure of our index and the summation methods used to build an ove
 # 2. An indicator with the raw (unscored) values of the indicators
 # The unit for this database will be country*year
 
-span <- c(2004:2021)
+span <- c(2004:end_date)
 
 spi_df_empty <- bind_rows(replicate(length(span), wbstats::wbcountries(), simplify = FALSE), .id='date') %>%
   mutate(date=as.numeric(date)+span[1]-1) %>%
@@ -1325,7 +1333,7 @@ spi_index_df <- spi_index_df %>%
 #display top 25
 index_disp <- spi_index_df %>%
   ungroup() %>%
-  filter(date==2021) %>%
+  filter(date==end_date) %>%
   arrange(-SPI.INDEX) %>%
   mutate(across(starts_with('SPI.INDEX'),~1*.),
          across(starts_with('SPI.INDEX'),round,1)) %>%
@@ -1385,12 +1393,12 @@ spi_index_df <- spi_index_df %>%
 
 #number of countries with data for SPI overall score
 n_countries <- spi_index_df %>%
-  filter(!is.na(SPI.INDEX) & date==2021) %>% #countries with value for SPI in 2021
+  filter(!is.na(SPI.INDEX) & date==end_date) %>% #countries with value for SPI in end_date
   nrow()
 
 # percentage of world population covered
 pop_covered <- spi_index_df %>%
-  filter(date==2021) %>%
+  filter(date==end_date) %>%
   mutate(covered=!is.na(SPI.INDEX)) %>%
   mutate(covered_pop=if_else(covered==TRUE, population, 0)) %>%
   ungroup() %>%
@@ -1417,7 +1425,7 @@ Countries are grouped into five categories as shown on the map in figure 6.1:
 * **Bottom 20%**: Countries in the bottom 20% (shading in <span style="color:#ff9f1c">dark orange </span>).  
 
 
-*Figure 6.1: SPI Overall Score by Quintile in 2021*
+*Figure 6.1: SPI Overall Score by Quintile in `r end_date`*
 ```{r map}
 #show map and summary stats by region and income group
 
@@ -1431,7 +1439,7 @@ spi_mapper('spi_index_df','SPI.INDEX','')
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
               "SPI.INDEX.PIL4","SPI.INDEX.PIL5")
 
-maturity_tab <- spi_maturity_table('spi_index_df',indicators,2021) 
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,end_date) 
 
 spi_top <- as.numeric(maturity_tab[1,2])
 spi_bottom <- as.numeric(maturity_tab[1,6])
@@ -1447,7 +1455,7 @@ pil3_bottom <- as.numeric(maturity_tab[4,6])
 
 The countries scoring in the top 20% have an average SPI overall score  of `r spi_top`.  A maximum score of 100 would indicate that a country has every single element in place that is measured through the SPI.   Meanwhile, countries in the bottom 20% score significantly worse, with average  scores  of `r spi_bottom`.  In Pillar 1, countries in the top quintile have a score of `r pil1_top`, while countries in the bottom quintile have scores of `r pil1_bottom`.  One area where even top quintile countries are not doing as well as possible is on our data products pillar.  Countries in the top quintile score only `r pil3_top` points out of 100 in this area.  Pillar 3 measures whether countries have a value in the past 5 years for each SDG indicator, meaning even the top quintile countries have only around `r pil3_top`% of indicators averaging over the SDGs.
 
-*Table 6.1: Table of SPI Overall and Pillar Scores by Quintile Group in 2021*
+*Table 6.1: Table of SPI Overall and Pillar Scores by Quintile Group in `r end_date`*
 ```{r maturitdisp0}
 
 maturity_tab <- maturity_tab %>%
@@ -1464,7 +1472,7 @@ FitFlextableToPage(maturity_tab) %>%
 indicators<-c("SPI.INDEX","SPI.D1.5.DT.TDS.DPPF.XP.ZS","SPI.D2.2.Openness.subscore","SPI.D3.1.POV",
              "SPI.D4.1.1.POPU","SPI.D5.2.4.CPIBY")
 
-maturity_tab <- spi_maturity_table('spi_index_df',indicators,2021) 
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,end_date) 
 
 
 
@@ -1481,7 +1489,7 @@ census_bottom <- as.numeric(maturity_tab[5,6])
 
 To highlight a few specific indicators, countries in the top 20% on average get nearly perfect scores in terms of the debt reporting to the World Bank.  The top 20% of countries in the SPI overall score have an average score on their debt reporting of `r debt_top`, with a maximum score of 1 and minimum score of 0, while those in the bottom 20% on the SPI overall score have an average score of `r debt_bottom`.  To take another  example, when looking at scores on whether a population census has been conducted recently, countries in the top 20% score on average `r census_top` on our population census indicator, with a max score of 1 and minimum score of 0, while those in the bottom 20% on our SPI overall score receive `r census_bottom` points on the population census indicator.  The table below shows differences across maturity groups for a select set of indicators.
 
-*Table 6.2: Table of SPI Overall and Select SPI Indicators by Quintile Group in 2021*
+*Table 6.2: Table of SPI Overall and Select SPI Indicators by Quintile Group in `r end_date`*
 ```{r maturitdisp}
 
 maturity_tab <- maturity_tab %>%
@@ -1499,7 +1507,7 @@ There are large differences in the SPI overall score across World Bank regions a
 
 Finally, when looking over time, since 2016 the SPI overall score values are relatively stable across regions.  There has been some modest increase in the SPI overall score scores for middle income and high income countries, with little progress for low income countries.
 
-*Figure 6.2.A: SPI Overall Score by Region in 2021*
+*Figure 6.2.A: SPI Overall Score by Region in `r end_date``*
 ```{r spiregcharts}
 #show map and summary stats by region and income group
 
@@ -1507,7 +1515,7 @@ spi_region_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
 
-*Figure 6.2.B: SPI Overall Score by Income Group in 2021*
+*Figure 6.2.B: SPI Overall Score by Income Group in `r end_date`*
 ```{r spiincomecharts}
 #show map and summary stats by region and income group
 
@@ -1515,7 +1523,7 @@ spi_income_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
 
-*Figure 6.2.C: SPI Overall Score by Lending Group in 2021*
+*Figure 6.2.C: SPI Overall Score by Lending Group in `r end_date`*
 ```{r spilendcharts}
 #show map and summary stats by region and income group
 
@@ -1523,7 +1531,7 @@ lending_chart_aggregate('spi_index_df','SPI.INDEX','SPI Overall Score')
 
 ```
 
-*Figure 6.2.D: SPI Overall Score by Fragile/Conflict Situation Status in 2021*
+*Figure 6.2.D: SPI Overall Score by Fragile/Conflict Situation Status in `r end_date`*
 ```{r spifcscharts}
 #show map and summary stats by region and income group
 
@@ -1543,7 +1551,7 @@ spi_time_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
 ```{r regionheterogeneity}
 #LAC
 lac_df <- spi_index_df %>%
-  filter(date==2021) %>%
+  filter(date==end_date) %>%
   filter(region=="Latin America & Caribbean") %>%
   select(country, SPI.INDEX) %>%
   filter(!is.na(SPI.INDEX))
@@ -1556,7 +1564,7 @@ bottom_lac_score <- round(as.numeric(lac_df[nrow(lac_df),2]),1)
 
 #SSA
 ssa_df <- spi_index_df %>%
-  filter(date==2021) %>%
+  filter(date==end_date) %>%
   filter(region=="Sub-Saharan Africa") %>%
   select(country, SPI.INDEX) %>%
   filter(!is.na(SPI.INDEX))
@@ -1569,7 +1577,7 @@ bottom_ssa_score <- round(as.numeric(ssa_df[nrow(ssa_df),2]),1)
 
 #EAP
 eap_df <- spi_index_df %>%
-  filter(date==2021) %>%
+  filter(date==end_date) %>%
   filter(region=="East Asia & Pacific") %>%
   select(country, SPI.INDEX) %>%
   filter(!is.na(SPI.INDEX))
@@ -1584,7 +1592,7 @@ bottom_eap_score <- round(as.numeric(eap_df[nrow(eap_df),2]),1)
 
 As well as large differences across regions, there is significant variation in the SPI overall scores within regions.   For instance, in the Latin America & Caribbean World Bank region, `r top_lac` is the highest scoring country with a score of `r top_lac_score`.  However, `r bottom_lac`, the lowest scoring country in the region, earns a substantially lower score of `r bottom_lac_score`.  In Sub-Saharan Africa, the highest scoring country is `r top_ssa` with a score of `r top_ssa_score`, while the lowest scoring country is `r bottom_ssa` with a score of `r bottom_ssa_score`.  In the East Asia and Pacific region, the top scoring country is `r top_eap` with a score of `r top_eap_score`, while the lowest scoring country is `r bottom_eap` with a score of `r bottom_eap_score`.
 
-*Figure 6.3: SPI Overall Scores by Country and Region in 2021* 
+*Figure 6.3: SPI Overall Scores by Country and Region in `r end_date`* 
 ```{r spicountrycharts}
 #show map and summary stats by region and income group
 
@@ -1601,7 +1609,7 @@ By presenting scores for each of the pillars – data use, data services, data p
 
 Figure 6.4 shows a world map displaying countries based on data use score quintiles Overall, the high income countries in North America and Europe tend to rate most highly along this dimension, whereas Sub Saharan African countries tend to lag.  
 
-*Figure 6.4: Pillar 1: Data Use Scores by Quintile in 2021* 
+*Figure 6.4: Pillar 1: Data Use Scores by Quintile in `r end_date`* 
 ```{r pillarsplot1}
 
 spi_mapper('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
@@ -1610,7 +1618,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
 
 Countries within region show significant dispersion in performance . It is worth noting that several countries such as  the United States, Mexico, Finland, and Costa Rica, among others, receive the maximum possible score in this dimension of 100. Several countries score the minimum score as well, including the Syrian Arab Republic, South Sudan, Namibia, and Nauru, among others.
 
-*Figure 6.5: Pillar 1: Data Use Scores by Country and Region in 2021* 
+*Figure 6.5: Pillar 1: Data Use Scores by Country and Region in `r end_date`* 
 ```{r countrypillarsplot1}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
@@ -1621,7 +1629,7 @@ spi_country_charts('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
 
 indicators<-c("SPI.INDEX.PIL1","SPI.D1.5.POV","SPI.D1.5.CHLD.MORT","SPI.D1.5.DT.TDS.DPPF.XP.ZS", "SPI.D1.5.SAFE.MAN.WATER", "SPI.D1.5.LFP")
 
-maturity_tab <- spi_maturity_table('spi_index_df',indicators,2021) 
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,end_date) 
 
 spi_top <- as.numeric(maturity_tab[1,2])
 spi_bottom <- as.numeric(maturity_tab[1,6])
@@ -1642,7 +1650,7 @@ debt_bottom <- as.numeric(maturity_tab[4,6])
 
 The table below shows the average score on each indicator in pillar 1.  Countries in the top 20% possess nearly all of the components in pillar 1, while countries in the bottom 20% are lacking in many areas.  Countries in the bottom 20%  have an average of `r poverty_bottom` on the comparable poverty estimate indicator, an average of `r mort_bottom` on the availability of under 5 mortality data, and an average of `r debt_bottom` on debt reporting.
 
-*Table 6.3: Select Pillar 1 Indicator Scores by SPI Overall Score Quintile Group in 2021*
+*Table 6.3: Select Pillar 1 Indicator Scores by SPI Overall Score Quintile Group in `r end_date`*
 ```{r maturitdisp1}
 
 maturity_tab <- maturity_tab %>%
@@ -1658,7 +1666,7 @@ FitFlextableToPage(maturity_tab) %>%
 
 For pillar 2 on data services, high income countries tend to score highest along this pillar  India, Morocco, and the Philippines scored highly as well in this pillar. This pillar contains four indicators on the quality of data releases, online accessibility, advisory and analytical services (not included due to lack of data), and the availability and use of data access services.   
 
-*Figure 6.6: Pillar 2: Data Services Scores by Quintile in 2021* 
+*Figure 6.6: Pillar 2: Data Services Scores by Quintile in `r end_date`* 
 ```{r pillarsplot2}
 spi_mapper('spi_index_df','SPI.INDEX.PIL2','')
 
@@ -1666,7 +1674,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL2','')
 
 
 
-*Figure 6.7: Pillar 2: Data Services Scores by Country and Region in 2021* 
+*Figure 6.7: Pillar 2: Data Services Scores by Country and Region in `r end_date`* 
 ```{r countrypillarsplot2}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL2','')
@@ -1683,7 +1691,7 @@ indicators<-c("SPI.INDEX.PIL2","SPI.D2.1.GDDS",
               "SPI.D2.2.Terms.of.use",
               "SPI.D2.4.NADA")
 
-maturity_tab <- spi_maturity_table('spi_index_df',indicators,2021) 
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,end_date) 
 
 spi_top <- as.numeric(maturity_tab[1,2])
 spi_bottom <- as.numeric(maturity_tab[1,6])
@@ -1704,7 +1712,7 @@ nada_bottom <- as.numeric(maturity_tab[9,6])
 In terms of specific indicators, the top 20% of countries receive an average score of `r sdds_top` on the indicator measuring country adoption of the IMF's data dissemination standards, while those in the bottom 20% receive an average score of `r sdds_bottom`.  Countries in the bottom 20% receive an average data openness score, produced by Open Data Watch, of `r open_bottom`.  This indicator is made up of several sub-indicators including whether data is available in machine readable format, a non-proprietary format, has download options, metadata available, and terms of use.  For instance, in the bottom 20% of countries the score on whether data is available in a machine readable format is only `r machine_bottom` out of a maximum of 1.  Additionally, countries in the bottom 20% only score an average of `r nada_bottom` on the measure of whether metadata meeting the standards of the Database Documentation Initiative (DDI) is available on surveys conducted.^[For more information, see https://ddialliance.org/]
 
 
-*Table 6.4: Select Pillar 2 Indicator Scores by SPI Overall Score Quintile Group in 2021*
+*Table 6.4: Select Pillar 2 Indicator Scores by SPI Overall Score Quintile Group in `r end_date`*
 ```{r maturitdisp2}
 
 maturity_tab <- maturity_tab %>%
@@ -1740,7 +1748,7 @@ Indicator values that are either country reported, country adjusted, estimated, 
 
   * Global monitoring data (G): Produced on a regular basis by the designated agency for global monitoring, based on country data. There is no corresponding figure at the country level.
 
-*Figure 6.8: Pillar 3: Data Products Scores by Quintile in 2021*
+*Figure 6.8: Pillar 3: Data Products Scores by Quintile in `r end_date`*
 ```{r pillarsplot3}
 spi_mapper('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
@@ -1756,7 +1764,7 @@ spi_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
 ```
 
-*Figure 6.9: Pillar 3: Data Products Scores by Country and Region in 2021* 
+*Figure 6.9: Pillar 3: Data Products Scores by Country and Region in `r end_date`* 
 ```{r countrypillarsplot3}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
@@ -1785,7 +1793,7 @@ indicators<-c("SPI.INDEX.PIL3","SPI.D3.1.POV",
               "SPI.D3.16.INST",
               "SPI.D3.17.PTNS")
 
-maturity_tab <- spi_maturity_table('spi_index_df',indicators,2021) 
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,end_date) 
 
 spi_top <- as.numeric(maturity_tab[1,2])
 spi_bottom <- as.numeric(maturity_tab[1,6])
@@ -1806,7 +1814,7 @@ nada_bottom <- as.numeric(maturity_tab[9,6])
 Even countries in the top quintile have significant room for improvement in reporting on the SDGs.  The average score for the top 20% of countries is `r spi_top`, while for the bottom 20% it is `r spi_bottom`.  For a specific goal, such as for SDG 1 on poverty, the top 20%  receives an average of `r goal1_top` out of a maximum of 1.  This means that the top performing countries are only reporting on `r 100*goal1_top` percent of the SDG indicators between 2015-19.  The bottom 20% receive an average score of `r goal1_bottom`.  The table below shows the full set of breakdowns by SDGs, suggesting reporting on SDG 5 on Gender lags other goals.
 
 
-*Table 6.5: Select Pillar 3 Indicator Scores by SPI Overall Score Quintile Group in 2021*
+*Table 6.5: Select Pillar 3 Indicator Scores by SPI Overall Score Quintile Group in `r end_date`*
 ```{r maturitdisp3}
 
 maturity_tab <- maturity_tab %>%
@@ -1950,7 +1958,7 @@ index_compare <- spi_index_df_dim3_alt %>%
     date=date,
     SPI.INDEX.ALT=SPI.INDEX.ALT
   ) %>%
-  filter(date==2021) %>%
+  filter(date==end_date) %>%
   filter(!is.na(SPI.INDEX.ALT)) %>%
   left_join(select(spi_index_df, country, date, SPI.INDEX) ) %>%
   left_join(spi_index_df_dim3_alt2) %>%
@@ -2014,7 +2022,7 @@ spi_charts('spi_index_df_dim3_alt2', 'SPI.INDEX.PIL3.ALT2','Pillar 3: Data Produ
 Pillar 4 examines whether countries have the data sources available that are necessary to produce statistics for public use. It includes three aspects of data sources: censuses and surveys, administrative data, and geospatial data. Private and citizen generated data is an important area that is at present not incorporated due to the lack of an established source. For censuses and surveys  the score reflects both whether a data source exists and how recently the source was produced, as both are needed for accurate reporting of current conditions. For administrative data and geospatial data,  proxies regarding the state of these data systems are used.
 
 
-*Figure 6.10: Pillar 4: Data Sources Scores by Quintile in 2021*
+*Figure 6.10: Pillar 4: Data Sources Scores by Quintile in `r end_date`*
 ```{r pillarsplot4}
 spi_mapper('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
 ```
@@ -2022,7 +2030,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
 
 When looking at the country chart, again there is significant variability across countries.  No country receives the maximum score of 100, with many countries falling short particularly on our geospatial indicator.  Somalia is the only country that receives a score of 0.
 
-*Figure 6.11: Pillar 4: Data Sources Scores by Country and Region in 2021*
+*Figure 6.11: Pillar 4: Data Sources Scores by Country and Region in `r end_date`*
 ```{r countrypillarsplot4}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL4','Pillar 4: Data Sources Scores')
@@ -2046,7 +2054,7 @@ indicators<-c("SPI.INDEX.PIL4",
               "SPI.D4.2.3.CRVS",
               "SPI.D4.3.GEO.first.admin.level")
 
-maturity_tab <- spi_maturity_table('spi_index_df',indicators,2021) 
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,end_date) 
 
 spi_top <- as.numeric(maturity_tab[1,2])
 spi_bottom <- as.numeric(maturity_tab[1,6])
@@ -2066,7 +2074,7 @@ geo_bottom <- as.numeric(maturity_tab[11,6])
 
 Countries in the top 20% have an average score of `r spi_top`, while countries in the bottom 20% have an average score of `r spi_bottom`.  The gap between the top 20% and bottom 20% for the population and housing census indicator is `r pop_gap` points on a scale from 0 to 1.  The gap for countries conducting a business/establishment survey is `r business_gap`.  The scores on the geospatial indicator are low.  The average score for the top 20%  is `r geo_top`, while it is `r geo_bottom` for the bottom 20%.
 
-*Table 6.6: Select Pillar 4 Indicator Scores by SPI Overall Score Quintile Group in 2021*
+*Table 6.6: Select Pillar 4 Indicator Scores by SPI Overall Score Quintile Group in `r end_date`*
 ```{r maturitdisp4}
 
 maturity_tab <- maturity_tab %>%
@@ -2099,7 +2107,7 @@ indicators<-c("SPI.INDEX.PIL5",
               "SPI.D5.2.10.GSBP")
               #"SPI.D5.5.DIFI")
 
-maturity_tab <- spi_maturity_table('spi_index_df',indicators,2021) 
+maturity_tab <- spi_maturity_table('spi_index_df',indicators,end_date) 
 
 spi_top <- as.numeric(maturity_tab[1,2])
 spi_bottom <- as.numeric(maturity_tab[1,6])
@@ -2110,7 +2118,7 @@ spi_bottom <- as.numeric(maturity_tab[1,6])
 
 Countries scoring in the top 20% tend to be concentrated among the high income countries.  These top scoring countries have an average score for pillar 5 of `r spi_top`, which is near the maximum score of 100.  Countries in the bottom 20% have an average score fo `r spi_bottom`.
 
-*Figure 6.12: Pillar 5: Data Infrastructure Scores by Quintile in 2021*
+*Figure 6.12: Pillar 5: Data Infrastructure Scores by Quintile in `r end_date`*
 ```{r pillarsplot5}
 spi_mapper('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores')
 
@@ -2118,7 +2126,7 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores
 
 Several countries score the maximum of 100 in the data infrastructure pillar  One country, Somalia, scores 0 points in this pillar.  
 
-*Figure 6.13: Pillar 5: Data Infrastructure Scores by Country and Region in 2021*
+*Figure 6.13: Pillar 5: Data Infrastructure Scores by Country and Region in `r end_date`*
 ```{r countrypillarsplot5}
 
 spi_country_charts('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructure Scores')
@@ -2131,7 +2139,7 @@ spi_country_charts('spi_index_df','SPI.INDEX.PIL5','Pillar 5: Data Infrastructur
 
 Among countries in the top 20%, the average score is near 100 across all the indicators of pillar 5. In the bottom 20%, countries on average score close to zero points for the CPI base year, classification of status of employment, central government accounting status, compilation of government finance statistics, and business process indicators. Bottom 20% countries, score above 0.5 points on the system of national accounts in use and compilation of monetary and financial statistics indicators.
 
-*Table 6.8: Select Pillar 5 Indicator Scores by SPI Overall Score Quintile Group in 2021*
+*Table 6.8: Select Pillar 5 Indicator Scores by SPI Overall Score Quintile Group in `r end_date`*
 ```{r maturitdisp5}
 
 maturity_tab <- maturity_tab %>%
@@ -2147,7 +2155,7 @@ FitFlextableToPage(maturity_tab) %>%
 
 In the following chart, correlations between the SPI overall score and the individual SPI pillar scores are shown. All pillars are positively correlated with one another. At the same time, no dimension is perfectly correlated with any of the other dimensions, which would indicate that a dimension was not providing any additional information on the statistical performance of countries. The pillar with the single highest correlation with the overall measure is pillar 1 on data use; pillar 3 on data products has the lowest overall correlation. 
 
-*Figure 6.14: Correlation Between SPI pillars in 2021*
+*Figure 6.14: Correlation Between SPI pillars in `r end_date`*
 ```{r dimcorr, echo=FALSE}
 
 corr_df <- spi_index_df %>%
@@ -2283,7 +2291,7 @@ leave_out_df <- metadata_full %>%
 
 ```
 
-*Figure 6.15: SPI Indicator Importance for Top 10 and Bottom 10 Indicators in 2021*
+*Figure 6.15: SPI Indicator Importance for Top 10 and Bottom 10 Indicators in `r end_date`*
 
 ```{r leaveoutplot, fig.height=9}
 
@@ -2351,7 +2359,7 @@ anova_pil_df <- spi_index_df %>%
   
 
 anova_pil_plot <- anova_pil_df %>%
-  filter(date==2021) %>%
+  filter(date==end_date) %>%
   ggplot(aes(x=source_name, y=std_dev))  +
   geom_segment( aes(x=source_name ,xend=source_name, y=0, yend=std_dev), color="black") +
   geom_point(size=3) +
@@ -2398,7 +2406,7 @@ anova_pillar_df <- spi_index_df %>%
   
     
 anova_pillar_plot <- anova_pillar_df %>%
-  filter(date==2021) %>%
+  filter(date==end_date) %>%
   ggplot(aes(x=Dimension, y=std_dev))  +
   geom_segment( aes(x=Dimension ,xend=Dimension, y=0, yend=std_dev), color="black") +
   geom_point(size=3) +
@@ -2428,23 +2436,23 @@ anova_pillar_plot
 ```{r unique_scores}
 
 #calculate the number of unique values in the SPI Index
-spi_index_2021 <- spi_index_df %>%
-  filter(date==2021) %>%
+spi_index_end_date <- spi_index_df %>%
+  filter(date==end_date) %>%
   filter(!is.na(SPI.INDEX))
 
-unique_scores <-  length(unique(spi_index_2021$SPI.INDEX))
+unique_scores <-  length(unique(spi_index_end_date$SPI.INDEX))
 
 #check unique values by pillar.
-unique_scores1 <-  length(unique(spi_index_2021$SPI.INDEX.PIL1))
-unique_scores2 <-  length(unique(spi_index_2021$SPI.INDEX.PIL2))
-unique_scores3 <-  length(unique(spi_index_2021$SPI.INDEX.PIL3))
-unique_scores4 <-  length(unique(spi_index_2021$SPI.INDEX.PIL4))
-unique_scores5 <-  length(unique(spi_index_2021$SPI.INDEX.PIL5))
+unique_scores1 <-  length(unique(spi_index_end_date$SPI.INDEX.PIL1))
+unique_scores2 <-  length(unique(spi_index_end_date$SPI.INDEX.PIL2))
+unique_scores3 <-  length(unique(spi_index_end_date$SPI.INDEX.PIL3))
+unique_scores4 <-  length(unique(spi_index_end_date$SPI.INDEX.PIL4))
+unique_scores5 <-  length(unique(spi_index_end_date$SPI.INDEX.PIL5))
 
 ```
 
 
-As a check of the data, the number of unique scores for the SPI overall score is calculated. If the SPI overall score produces a large number of tied scores, for instance, then the index will be less able to distinguish between the statistical performance of countries.  When calculating the number of unique values for 2021, it is found that there are `r unique_scores` unique scores for `r n_countries` countries.  This means there are `r n_countries-unique_scores` tied values.    
+As a check of the data, the number of unique scores for the SPI overall score is calculated. If the SPI overall score produces a large number of tied scores, for instance, then the index will be less able to distinguish between the statistical performance of countries.  When calculating the number of unique values for `r end_date`, it is found that there are `r unique_scores` unique scores for `r n_countries` countries.  This means there are `r n_countries-unique_scores` tied values.    
 
 When looking at each specific pillar, there are only `r unique_scores1` unique scores for pillar on data use.  The data use indicator is coming solely from dimension 1.5 on data use by international organizations.  For pillar, there are `r unique_scores2` unique scores.  For pillar 3, there are `r unique_scores3` unique scores.  There are `r unique_scores4` unique scores for pillar 4, and there are `r unique_scores5` unique scores for pillar 5.
 
@@ -2490,14 +2498,14 @@ hci_spi <- ggplot(data=hci_df_2018, aes(x=value, y=SPI.INDEX)) +
 gdp_df <- wbstats::wb_data(
   indicator='NY.GDP.PCAP.KD',
   start_date=2016,
-  end_date=2020,
+  end_date=2021,
   return_wide = F
     ) %>%
   left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
 
 #get the correlation for 2020
 gdp_df_2020 <- gdp_df %>%
-  filter(date==2020) 
+  filter(date==2021) 
 
 #text for plot
 eq <- lm_robust(SPI.INDEX ~ log(value), data=gdp_df_2020 , se_type='HC2')
@@ -2531,9 +2539,9 @@ corr_2020 <- cor(log(gdp_df_2020$value),gdp_df_2020$SPI.INDEX, use='pairwise.com
 corr_2020_nontrans <- cor(gdp_df_2020$value,gdp_df_2020$SPI.INDEX, use='pairwise.complete.obs')
 
 ```
-It would be expected that a strong positive relationship between GDP per capita of countries and their statistical system, as higher income countries would tend to have more resources available for statistical production.  In fact, there is a strong relationship between the two.  The correlation in 2020 between log GDP per capita and the SPI overall score is `r round(corr_2020,2)`.[^1]
+It would be expected that a strong positive relationship between GDP per capita of countries and their statistical system, as higher income countries would tend to have more resources available for statistical production.  In fact, there is a strong relationship between the two.  The correlation in 2021 between log GDP per capita and the SPI overall score is `r round(corr_2020,2)`.[^1]
 
-[^1]: To understand what effect taking the log has on this correlation, the correlation in 2020 between (non-logged) GDP per capita and the SPI overall score is `r round(corr_2020_nontrans,2)`. 
+[^1]: To understand what effect taking the log has on this correlation, the correlation in 2021 between (non-logged) GDP per capita and the SPI overall score is `r round(corr_2020_nontrans,2)`. 
 
 Another measure of a country's development is the Human Capital Index (HCI) developed by the World Bank ([@hci2019]).  The Human Capital Index is designed to capture the amount of human capital a child born today can expect to attain by age 18 in a country.  The index combines a country's child mortality, learning adjusted years of schooling, adult survival rates & stunting into one index.^[For more details, visit the [Human Capital Index website](https://www.worldbank.org/en/publication/human-capital)].  Again,  a strong positive relationship between a country's HCI value and their Statistical Performance Indicators index might  be expected, as countries with a more developed human capital stock are likely to have greater capacity to produce statistics.  Again, this is what is seen.  The correlation between the 2020 value of the HCI and the 2020 value of the SPI overall score is `r round(corr_hci_2018,2)`.
 
@@ -2559,7 +2567,7 @@ In order to produce this figure, an OLS regression of the SPI overall score in 2
 
 This figure identifies some countries that appear to have better performing statistical systems than might be expected (Rwanda, Uganda, Egypt, Mexico, Philippines, Armenia and Turkey appear in green on both charts). There are also countries that appear to have poorer performing statistical systems than expected: there are several small island states for example that appear red on both charts.
 
-*Figure 7.2: Top 15 Over/Under-Performers on SPI overall score compared to GDP per capita and Human Capital Index in 2020* 
+*Figure 7.2: Top 15 Over/Under-Performers on SPI overall score compared to GDP per capita in 2021 and Human Capital Index in 2020* 
 ```{r overperformers}
 
 #get top 10 and bottom 10 over performers compared to gdp and hci
@@ -2655,7 +2663,7 @@ hci_overperformers_plot <- hci_overperformers_plot %>%
 gdp_overperformers_plot + hci_overperformers_plot +
   plot_annotation(
     # title='Top 15 Over/Under-Performers on SPI overall score compared to GDP per capita and Human Capital Index',
-                  caption=str_wrap('Over and under performers calculated for GDP per capita by using OLS regression of SPI overall score in 2020 on Log GDP per capita and calculting residuals from this regression.  Over and Under performers for Human Capital Index calculated similarly.',100)
+                  caption=str_wrap('Over and under performers calculated for GDP per capita by using OLS regression of SPI overall score in 2021 on Log GDP per capita and calculting residuals from this regression.  Over and Under performers for Human Capital Index calculated similarly.',100)
                   )
 ```
 
@@ -2668,13 +2676,13 @@ gdp_overperformers_plot + hci_overperformers_plot +
 ge_df <- wbstats::wb_data(country="countries_only", 
               indicator=c('GE.EST','NY.GDP.PCAP.KD', 'GE.PER.RNK'),
               start_date=2016,
-              end_date=2020,
+              end_date=2021,
               return_wide = T) %>%
   left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
 
 #get the correlation for 2020
 ge_df_2020 <- ge_df %>%
-  filter(date==2019) 
+  filter(date==2021) 
 
 
 corr_ge <- cor(ge_df_2020$GE.EST,ge_df_2020$SPI.INDEX, use='pairwise.complete.obs')
@@ -2695,14 +2703,14 @@ spi_eff <- spi_eff$estimate
 
 A common justification for improving statistical systems is that doing so can lead to better governance. Without good statistics, countries may be flying blind on where to target resources to improve the public welfare.  Also, good statistics can help hold public officials accountable for progress toward reaching a country's goals. In this next section, it is shown that the relationship between our SPI overall score and an estimate of government effectiveness produced by the Worldwide Governance Indicators (WGI)  is analyzed.  A strong relationship between the SPI measure of statistical performance and the WGI measure of governmental effectiveness is found.
 
-[@kraay2010worldwide] produce a set of Worldwide Governance Indicators, including a measure of government effectiveness.  According to the WGI metadata, the government effectiveness indicator captures perceptions of the quality of public services, the quality of the civil service and the degree of its independence from political pressures, the quality of policy formulation and implementation, and the credibility of the government's commitment to such policies. The estimate gives the country's score on the aggregate indicator, in units of a standard normal distribution, i.e. ranging from approximately -2.5 to 2.5.^[Detailed documentation of the WGI, interactive tools for exploring the data, and full access to the underlying source data available at www.govindicators.org. The WGI are produced by Daniel Kaufmann (Natural Resource Governance Institute and Brookings Institution) and Aart Kraay (World Bank Development Research Group).].  The government effectiveness indicator is available from 1996 to 2020.
+[@kraay2010worldwide] produce a set of Worldwide Governance Indicators, including a measure of government effectiveness.  According to the WGI metadata, the government effectiveness indicator captures perceptions of the quality of public services, the quality of the civil service and the degree of its independence from political pressures, the quality of policy formulation and implementation, and the credibility of the government's commitment to such policies. The estimate gives the country's score on the aggregate indicator, in units of a standard normal distribution, i.e. ranging from approximately -2.5 to 2.5.^[Detailed documentation of the WGI, interactive tools for exploring the data, and full access to the underlying source data available at www.govindicators.org. The WGI are produced by Daniel Kaufmann (Natural Resource Governance Institute and Brookings Institution) and Aart Kraay (World Bank Development Research Group).].  The government effectiveness indicator is available from 1996 to 2021.
 
-There is a strong relationship between the SPI overall score and the government effectiveness indicator.  The correlation between the two in 2020 is `r round(corr_ge,2)`.  The scatterplot below shows the relationship between the SPI overall score and the government effectiveness indicator.
-
-
+There is a strong relationship between the SPI overall score and the government effectiveness indicator.  The correlation between the two in 2021 is `r round(corr_ge,2)`.  The scatterplot below shows the relationship between the SPI overall score and the government effectiveness indicator.
 
 
-*Figure 7.3: Plot of SPI overall score on Government Effectiveness in 2020*
+
+
+*Figure 7.3: Plot of SPI overall score on Government Effectiveness in 2021*
 ```{r geplot}
 
 ge_df_2020 <- ge_df_2020 %>%
@@ -2780,34 +2788,34 @@ spi_index_2016 <- spi_index_df %>%
   mutate(SPI.INDEX.2016=SPI.INDEX) %>%
   select(iso3c, country, region, SPI.INDEX.2016)
 
-spi_changes <- spi_index_2021 %>%
-  mutate(SPI.INDEX.2021=SPI.INDEX) %>%
-  select(iso3c, country,region, SPI.INDEX.2021) %>%
+spi_changes <- spi_index_end_date %>%
+  mutate(SPI.INDEX.end_date=SPI.INDEX) %>%
+  select(iso3c, country,region, SPI.INDEX.end_date) %>%
   left_join(spi_index_2016)
 
 
 #correlation
-corr_2021_2016 <- cor(spi_changes$SPI.INDEX.2021,spi_changes$SPI.INDEX.2016, use='pairwise.complete.obs')
+corr_end_date_2016 <- cor(spi_changes$SPI.INDEX.end_date,spi_changes$SPI.INDEX.2016, use='pairwise.complete.obs')
 
 
 ```
 
-In order to assess how stable the index values are over time, comparisons have been made between the index values in 2016 and the 2021 values. Overall, the SPI overall score is quite stable over time. The correlation between the 2016 value and the 2021 value is `r round(corr_2021_2016,2)`.
+In order to assess how stable the index values are over time, comparisons have been made between the index values in 2016 and the `r end_date` values. Overall, the SPI overall score is quite stable over time. The correlation between the 2016 value and the `r end_date` value is `r round(corr_end_date_2016,2)`.
 
-*Figure 7.4: Scatterplot of 2021 SPI overall score  & 2016 SPI overall score*
+*Figure 7.4: Scatterplot of `r end_date` SPI overall score  & 2016 SPI overall score*
 ```{r changesplot}
 
-ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2021, color=region)) +
+ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.end_date, color=region)) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm', color='blue') +
   geom_segment(aes(x=10,xend=100, y=10,yend=100), color='grey') +
   expand_limits(x=c(10,100),y=c(10,100)) +
   theme_spi() +
   labs(
-    title='Scatterplot of 2021 SPI overall score  & 2016 SPI overall score',
+    title=paste0('Scatterplot of ',end_date,' SPI overall score  & 2016 SPI overall score'),
     caption = 'Solid grey line represents the 45 degree line.  Blue line represents line of best fit (regression line) with a 95% confidence interval shown in a shaded line.'
   ) +
-  ylab('2021 SPI Overall Score') +
+  ylab(paste0(end_date,' SPI Overall Score')) +
   xlab('2016 SPI Overall Score') +
   theme(legend.position = 'bottom') +
     stat_poly_eq(aes(label = paste(stat(eq.label),
@@ -2826,26 +2834,26 @@ ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.2021, color=region)) +
 ```{r top_bottom_changes}
 
 top_changes <- spi_changes %>%
-  mutate(changes=SPI.INDEX.2021-SPI.INDEX.2016) %>%
+  mutate(changes=SPI.INDEX.end_date-SPI.INDEX.2016) %>%
   arrange(-abs(changes)) %>%
-  select(country,SPI.INDEX.2021,SPI.INDEX.2016, changes) %>%
-  mutate(across(c('SPI.INDEX.2021','SPI.INDEX.2016', 'changes'),round,1))
+  select(country,SPI.INDEX.end_date,SPI.INDEX.2016, changes) %>%
+  mutate(across(c('SPI.INDEX.end_date','SPI.INDEX.2016', 'changes'),round,1))
 
 top_mover <- as.character(top_changes[1,1])
 top_mover_change <- as.numeric(top_changes[1,4])
 ```
 
 
-While the scores were relatively stable over time, some countries did see large improvements in their score from 2016-2021. The country that improved most on the index from 2016 to 2021 was `r top_mover`. `r top_mover` improved by `r top_mover_change` points out of 100. The table below shows the changes in the SPI overall score for the top 10 largest improvers.
+While the scores were relatively stable over time, some countries did see large improvements in their score from 2016-`r end_date`. The country that improved most on the index from 2016 to `r end_date` was `r top_mover`. `r top_mover` improved by `r top_mover_change` points out of 100. The table below shows the changes in the SPI overall score for the top 10 largest improvers.
 
 
-*Table 7.2: Top 10 Countries with Largest Changes from 2016-2021.*
+*Table 7.2: Top 10 Countries with Largest Changes from 2016-`r end_date`.*
 ```{r topbottomchangestab}
 top_changes_tab <- flextable(head(top_changes,10)) %>%
-  # add_header_lines('Top 10 Countries with Largest Changes from 2016-2021.') %>%
+  # add_header_lines('Top 10 Countries with Largest Changes from 2016-end_date.') %>%
   set_header_labels(values=list(
                        country="Country",
-                       SPI.INDEX.2021="SPI Overall Score 2021",
+                       SPI.INDEX.end_date=paste0("SPI Overall Score", end_date),
                        SPI.INDEX.2016="SPI Overall Score 2016",
                        changes="Difference"
                                    )) 
@@ -2866,7 +2874,7 @@ As another check, the distribution of scores across countries for each year has 
 
 #pull SCI values
 
-Request_metadata <- GET(url = "http://api.worldbank.org/v2/country/all/indicator/IQ.SCI.OVRL?format=json&date=2004:2021&per_page=5000")
+Request_metadata <- GET(url = paste0("http://api.worldbank.org/v2/country/all/indicator/IQ.SCI.OVRL?format=json&date=2004:2020&per_page=5000"))
 Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
 
 # Parse the JSON content and convert it to a data frame.
@@ -2894,7 +2902,7 @@ unique_scores_sci <-length(unique(unique_scores_df$SCI))
 
 
 #read in ODIN data
-  for (i in c(2015,2016,2017,2018,2020)) {
+  for (i in c(2015,2016,2017,2018,2020,2021,2022)) {
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
@@ -2906,7 +2914,7 @@ unique_scores_sci <-length(unique(unique_scores_df$SCI))
   }
 
     #bind different years together
-odin_df <- bind_rows(odin_df_2015, odin_df_2016, odin_df_2017, odin_df_2018, odin_df_2020)
+odin_df <- bind_rows(odin_df_2015, odin_df_2016, odin_df_2017, odin_df_2018, odin_df_2020, odin_df_2021, odin_df_2022)
 
 
 odin_df <- odin_df %>%
@@ -2943,14 +2951,16 @@ SPI_v0_df <- readxl::read_excel(path='C:/Users/wb469649/OneDrive - WBG/DECIS/SPI
 #create one database
 comparison_df <- spi_index_df %>%
   ungroup() %>%
-  filter(date %in% c(2016:2020)) %>%
+  filter(date %in% c(2016:end_date)) %>%
   arrange(-SPI.INDEX) %>%
   mutate(across(starts_with('SPI.INDEX'),~1*.),
          across(starts_with('SPI.INDEX'),round,1)) %>%
   select(country, iso3c, date, income, region, SPI.INDEX) %>%
   left_join(sci_df) %>%
   left_join(odin_df) %>%
-  left_join(SPI_v0_df)
+  left_join(SPI_v0_df) %>%
+  group_by(iso3c) %>%
+  fill(SCI, SPI_V0, .direction='downup')
 
 
 
@@ -3068,7 +3078,7 @@ Countries shaded in dark orange are the lowest performing, countries in dark gre
 
 
 
-*Table A.1: SPI overall score in 2021 and Pillar Scores*
+*Table A.1: SPI overall score in `r end_date` and Pillar Scores*
 ```{r tab1, echo=FALSE}
 
 
@@ -3080,7 +3090,7 @@ col_palette2 <- c("#2ec4b6",  "#f1dc76", "#ff9f1c" )
 
 #make the table
 index_tab <- index_disp %>%
-  filter(date==2021) %>%
+  filter(date==end_date) %>%
   select(country, SPI.INDEX,SPI.INDEX.PIL1,SPI.INDEX.PIL2,SPI.INDEX.PIL3,SPI.INDEX.PIL4,SPI.INDEX.PIL5) 
 
  #calculate the breaks for the color coding
@@ -3112,7 +3122,7 @@ index_tab <- index_disp %>%
       #make nice looking
       index_tab <- index_tab %>%
         flextable() %>%
-        # add_header_lines('SPI overall score in 2021 and Pillar Scores.') %>%
+        # add_header_lines('SPI overall score in end_date and Pillar Scores.') %>%
         set_header_labels(values=list(
                              country="Country",
                              SPI.INDEX="SPI overall score",
@@ -3138,7 +3148,7 @@ index_tab <- index_disp %>%
 # #make nice looking
 # index_tab <- index_tab %>%
 #   flextable() %>%
-#   add_header_lines('SPI overall score in 2021 and pillar Scores.') %>%
+#   add_header_lines('SPI overall score in end_date and pillar Scores.') %>%
 #   set_header_labels(values=list(
 #                        country="Country", 
 #                        SPI.INDEX="SPI overall score",
@@ -3211,6 +3221,9 @@ index_tab_time <- spi_index_df %>%
         brks5 <- quantile(index_tab_time$SPI.INDEX.2016, probs=c(1,2,3,4)/5,na.rm=T)
         brks5 <- append(0,brks5)
         if (max(brks5)<100) brks5 <- append(brks5,100)
+        brks6 <- quantile(index_tab_time$SPI.INDEX.2022, probs=c(1,2,3,4)/5,na.rm=T)
+        brks6 <- append(0,brks6)
+        if (max(brks6)<100) brks6 <- append(brks6,100)
 
 #make nice looking
 index_tab_time <- index_tab_time %>%
@@ -3218,6 +3231,7 @@ index_tab_time <- index_tab_time %>%
   add_header_lines('SPI overall scores over time') %>%
   set_header_labels(values=list(
                        country="Country", 
+                       SPI.INDEX.2022="2022",
                        SPI.INDEX.2021="2021",
                        SPI.INDEX.2020="2020",
                        SPI.INDEX.2019="2019",
@@ -3225,6 +3239,8 @@ index_tab_time <- index_tab_time %>%
                        SPI.INDEX.2017="2017",
                        SPI.INDEX.2016="2016"
                                    )) %>%
+    bg(j = c('SPI.INDEX.2022'),
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks6, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.2021'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.2020'),
@@ -3292,7 +3308,7 @@ FitFlextableToPage(index_tab_recode)
 ```
 
 ##  SPI Overall and Pillar Scores by Region, Income, & Lending
-*Table A.3: Table of SPI Overall and Pillar Scores by Region in 2021*
+*Table A.3: Table of SPI Overall and Pillar Scores by Region in `r end_date`*
 ```{r maturitytabreg, fig.cap=''}
 
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
@@ -3308,13 +3324,13 @@ spi_group_table('spi_index_df',indicators,2021, 'region') %>%
 ```
 
 
-*Table A.4: Table of SPI Overall and Pillar Scores by Income Group in 2021*
+*Table A.4: Table of SPI Overall and Pillar Scores by Income Group in `r end_date`*
 ```{r maturitytabinc, fig.cap=''}
 
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
               "SPI.INDEX.PIL4","SPI.INDEX.PIL5")
 
-spi_group_table('spi_index_df',indicators,2021, 'income') %>%
+spi_group_table('spi_index_df',indicators,end_date, 'income') %>%
   flextable() %>%
   # add_header_lines('') %>%
   FitFlextableToPage() %>%
@@ -3323,13 +3339,13 @@ spi_group_table('spi_index_df',indicators,2021, 'income') %>%
 
 ```
 
-*Table A.5: Table of SPI Overall and Pillar Scores by Lending Group in 2021*
+*Table A.5: Table of SPI Overall and Pillar Scores by Lending Group in `r end_date`*
 ```{r maturitytablend, fig.cap=''}
 
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
               "SPI.INDEX.PIL4","SPI.INDEX.PIL5")
 
-spi_group_table('spi_index_df',indicators,2021, 'lending') %>%
+spi_group_table('spi_index_df',indicators,end_date, 'lending') %>%
   flextable() %>%
   # add_header_lines('') %>%
   FitFlextableToPage() %>%
@@ -3338,7 +3354,7 @@ spi_group_table('spi_index_df',indicators,2021, 'lending') %>%
 
 ```
 
-*Figure A.1: SPI Pillar 1 - Data Use Score - By Region in 2021*
+*Figure A.1: SPI Pillar 1 - Data Use Score - By Region in `r end_date`*
 ```{r spiregcharts1}
 #show map and summary stats by region and income group
 
@@ -3346,7 +3362,7 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL1','SPI Data Use Score')
 
 ```
 
-*Figure A.2: SPI Pillar 2 - Data Services Score - By Region in 2021*
+*Figure A.2: SPI Pillar 2 - Data Services Score - By Region in `r end_date`*
 ```{r spiregcharts2}
 #show map and summary stats by region and income group
 
@@ -3354,7 +3370,7 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL2','SPI Data Services Score')
 
 ```
 
-*Figure A.3: SPI Pillar 3 - Data Products Score - By Region in 2021*
+*Figure A.3: SPI Pillar 3 - Data Products Score - By Region in `r end_date`*
 ```{r spiregcharts3}
 #show map and summary stats by region and income group
 
@@ -3362,7 +3378,7 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL3','SPI Data Products Score')
 
 ```
 
-*Figure A.4: SPI Pillar 4 - Data Sources Score - By Region in 2021*
+*Figure A.4: SPI Pillar 4 - Data Sources Score - By Region in `r end_date`*
 ```{r spiregcharts4}
 #show map and summary stats by region and income group
 
@@ -3370,7 +3386,7 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL4','SPI Data Sources Score')
 
 ```
 
-*Figure A.5: SPI Pillar 5 - Data Infrastructure Score - By Region in 2021*
+*Figure A.5: SPI Pillar 5 - Data Infrastructure Score - By Region in `r end_date`*
 ```{r spiregcharts5}
 #show map and summary stats by region and income group
 
