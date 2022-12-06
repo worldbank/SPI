@@ -2853,7 +2853,7 @@ top_changes_tab <- flextable(head(top_changes,10)) %>%
   # add_header_lines('Top 10 Countries with Largest Changes from 2016-end_date.') %>%
   set_header_labels(values=list(
                        country="Country",
-                       SPI.INDEX.end_date=paste0("SPI Overall Score", end_date),
+                       SPI.INDEX.end_date=paste0("SPI Overall Score ", end_date),
                        SPI.INDEX.2016="SPI Overall Score 2016",
                        changes="Difference"
                                    )) 
@@ -2960,7 +2960,7 @@ comparison_df <- spi_index_df %>%
   left_join(odin_df) %>%
   left_join(SPI_v0_df) %>%
   group_by(iso3c) %>%
-  fill(SCI, SPI_V0, .direction='downup')
+  fill(SCI, SPI_v0, .direction='downup')
 
 
 
