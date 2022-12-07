@@ -3,7 +3,7 @@ title: 'Measuring the Statistical Performance of Countries: An Overview of Updat
 author: "SPI Team"
 date: "`r Sys.Date()`"
 output:
-  bookdown::gitbook: 
+  bookdown::word_document2: 
     fig_width: 9
     fig_height: 6
 abstract: 'National statistical systems are facing significant challenges. These challenges arise from increasing demands for high quality and trustworthy data to guide decision making, coupled with the rapidly changing landscape of the data revolution. To emphasize the urgent need for transformation and to help create a mechanism for learning amongst national statistical systems, the World Bank has developed new Statistical Performance Indicators (SPI) to monitor the statistical performance of countries. The SPI framework focuses on five key dimensions of a country’s statistical performance: (i) data use, (ii) data services, (iii) data products, (iv) data sources, and (v) data infrastructure.  The SPI will replace the Statistical Capacity Index (SCI) that the World Bank has regularly published since 2004. This note discusses the motivation behind the new SPI methodology, outlines some of its major features, and describes a new index based on the indicators.'
@@ -311,14 +311,17 @@ spi_region_charts  <- function(data, indicator, title) {
 spi_income_charts  <- function(data, indicator, title) {
   
     map_df <- get(data) %>%
-    filter(date==max(date, na.rm=T)) %>%
-    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
-    group_by( country) %>%
-    #summarise(across(!! indicator,last)) %>%
-    rename(data_available=!! indicator) %>%
-    select(iso3c, date, data_available, weights) %>%
-    right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))  
+      filter(date==max(date, na.rm=T)) %>%
+      filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+      group_by( country) %>%
+      #summarise(across(!! indicator,last)) %>%
+      rename(data_available=!! indicator) %>%
+      select(iso3c, date, data_available, weights) %>%
+      right_join(country_metadata) %>%
+      mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))  %>%
+      select(-starts_with('income')) %>%
+      left_join(country_metadata)
+    
     
     
     
@@ -1507,7 +1510,7 @@ There are large differences in the SPI overall score across World Bank regions a
 
 Finally, when looking over time, since 2016 the SPI overall score values are relatively stable across regions.  There has been some modest increase in the SPI overall score scores for middle income and high income countries, with little progress for low income countries.
 
-*Figure 6.2.A: SPI Overall Score by Region in `r end_date``*
+*Figure 6.2.A: SPI Overall Score by Region in `r end_date`*
 ```{r spiregcharts}
 #show map and summary stats by region and income group
 
@@ -2209,7 +2212,7 @@ Specifically, the approach is as follows:
 3. Sort indicators based on $E^{-j}$.
 
 
-```{r leave_out, include=FALSE}
+```{r leave_out, include=FALSE, cache=TRUE}
 
 leave_out_fun <-  function(variables) {
   
@@ -3426,7 +3429,7 @@ spi_sci_plot
 gdp_reg_df <- wbstats::wb_data(
   indicator='NY.GDP.PCAP.KD',
   start_date=2016,
-  end_date=2020
+  end_date=2021
     ) %>%
   mutate(log_gdp_pcap=log(NY.GDP.PCAP.KD)) %>%
   left_join(select(comparison_df,iso3c,date, region,SPI.INDEX,SCI,ODIN_score,SPI_v0)) #merge on SPI Index data
@@ -3502,7 +3505,7 @@ gdp_long <- gdp_reg_df %>%
       
     )
   ) %>%
-  filter(date==2020)
+  filter(date==2021)
 
 ggplot(gdp_long, aes(x=log_gdp_pcap,y=index_values, color=region)) +
   facet_wrap(~index_name) +

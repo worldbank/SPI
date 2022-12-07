@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Measuring the Statistical Performance of Countries: An Overview of Updates to the World Bank Statistical Capacity Index</title>
   <meta name="description" content="Measuring the Statistical Performance of Countries: An Overview of Updates to the World Bank Statistical Capacity Index" />
-  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Measuring the Statistical Performance of Countries: An Overview of Updates to the World Bank Statistical Capacity Index" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="SPI Team" />
 
 
-<meta name="date" content="2022-09-09" />
+<meta name="date" content="2022-12-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -62,7 +62,7 @@ div.abstract{
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/tabwid-1.0.0/tabwid.css" rel="stylesheet" />
+<link href="libs/tabwid-1.1.2/tabwid.css" rel="stylesheet" />
 
 
 
@@ -179,7 +179,7 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">Measuring the Statistical Performance of Countries: An Overview of Updates to the World Bank Statistical Capacity Index</h1>
 <p class="author"><em>SPI Team</em></p>
-<p class="date"><em>2022-09-09</em></p>
+<p class="date"><em>2022-12-06</em></p>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 National statistical systems are facing significant challenges. These challenges arise from increasing demands for high quality and trustworthy data to guide decision making, coupled with the rapidly changing landscape of the data revolution. To emphasize the urgent need for transformation and to help create a mechanism for learning amongst national statistical systems, the World Bank has developed new Statistical Performance Indicators (SPI) to monitor the statistical performance of countries. The SPI framework focuses on five key dimensions of a country’s statistical performance: (i) data use, (ii) data services, (iii) data products, (iv) data sources, and (v) data infrastructure. The SPI will replace the Statistical Capacity Index (SCI) that the World Bank has regularly published since 2004. This note discusses the motivation behind the new SPI methodology, outlines some of its major features, and describes a new index based on the indicators.
@@ -190,7 +190,7 @@ National statistical systems are facing significant challenges. These challenges
 <p>The work on the Statistical Performance Indicators (SPI) has benefited greatly from the advice, comments and input of many individuals outside the World Bank SPI Team. The work took place under the overall guidance of Haishan Fu, Director of the Development Data Group at the World Bank, who played a key role in helping shape the framework of statistical performance developed here. We are grateful to the SPI Technical Advisory Group consisting of former National Statistician of the Philippines and Director of the Philippine Statistics Authority Lisa Bersales, the Director General of the National Institute of Statistics of Rwanda Yusuf Murangwa, the Chief Statistician of Colombia Juan Oviedo, and the former Director General of Eurostat and Chief Statistician of the European Union Walter Radermacher, and chaired by former National Statistician of the UK, John Pullinger.</p>
 <p>Several World Bank colleagues provided valuable feedback to this project. They include Claudia P Rodriguez Alas, Rabah Arezki, Joao Pedro Wagner De Azevedo, Benu Bidani, Carlos Rodriguez Castelan, Ximena Del Carpio, Olivier Dupriez, Uche Ekhator, Tony Henri Mathias Jany Fujs, Nada Hamadeh, Craig Hammer, Tim Herzog, Kristen Himelein, Johannes Hoogeveen, Asif Mohammed Islam, Dean Jolliffe, Talip Kilic, Christoph Lakner, Maria Ana Lugo, Daniel Gerszon Mahler, Johan A. Mistiaen, Rinku Murgai, Ambar Narayan, Minh Nguyen, Utz Johann Pape, Martin Rama, Pierella Paci, Carolina Sanchez-Paramo, Ana Florina Pirlea, Emi Suzuki, Emil Daniel Tesliuc, Satoshi Tozaki, Tara Vishwanath, Divyanshi Wadhwa, Matthew Welch, Phillip Wollburg, Salman Zaidi, and Hassan Zaman. Elysee Kiti and Tigist Shibru provided superb administration support.</p>
 <p>Additionally, we benefited from discussions with the following: Louis Marc Ducharme, Jimmy McHugh, Brett Humburg, Francis Cicero de Leon Bobadilla, and Aubriana Wolferts (IMF)); Pietro Gennari (FAO); Francesca Perucci and Yongyi Min (UN Statistics Division); Ramesha Saligrama Krishnamurthy and Rifat Hossain (WHO); Viveka Palm (Eurostat); Rafael Diez de Medina, Ritash Sarna, Marie-Claire Sodergren, and Lara Badre (ILO); Silvia Montoya and Adolfo Imhof (UNESCO Institute of Statistics); Paul Schreyer (OECD); Emily Poskett (ONS, UK); Phil Cockerill (FCDO, UK); Johannes Jutting, Francois Fonteneau, Julia Schmidt, Yu Tian, and Archita Misra (PARIS21); Shaida Badiee, Eric Swanson and Jamison Crowell (Open Data Watch); Claire Melamed (GPSDD); Misha Belkindas (ODW Consulting); Mike Hughes (Full Fact); Peter Rosendorff (New York University); James Hollyer (University of Minnesota); and James Vreeland (Princeton University).</p>
-<p>We apologize for any omissions and express our sincere gratitude to everyone, whether or not they are named here, who graciously gave their time and expertise. We are grateful to the United Kingdom Foreign, Commonwealth and Development Office (FCDO, formerly named the Department for International Development) for funding assistance through Knowledge for Change (KCP) grants, including one for the World Development Report 2021 “Data for Better Lives.”</p>
+<p>We apologize for any omissions and express our sincere gratitude to everyone, whether or not they are named here, who graciously gave their time and expertise. We are grateful to the United Kingdom Foreign, Commonwealth and Development Office (FCDO, formerly named the Department for International Development) for funding assistance through Knowledge for Change (KCP) grants, including one for the World Development Report 2021 “Data for Better Lives”.</p>
 </div>
             </section>
 
@@ -255,7 +255,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');
