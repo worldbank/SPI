@@ -15,7 +15,7 @@ library(ggcorrplot)
 #set directories
 dir <- here()
 
-end_year<- 2020
+end_year<- 2022
 
 raw_dir <- paste(dir, '01_raw_data', sep="/")
 output_dir <- paste(dir, '03_output_data', sep="/")
@@ -37,9 +37,14 @@ First the latest vintage of the SPI data is read from the [SPI github repo](http
 ```{r compdf}
 
 
-SPI_df_v1 <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_data.csv')
+SPI_df_v1 <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/SPI_2020/03_output_data/SPI_data.csv')
 
-SPI_df_new <- read_csv(paste(output_dir, 'SPI_data.csv', sep="/"))
+SPI_df_new <-  read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
+  filter(date>=2021) %>%
+  bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2020.csv', sep="/")) %>% filter(date==2020)) %>%
+  bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2019.csv', sep="/")) %>% filter(date<2020))            
+  
+
 
 comp_SPI <- rCompare(SPI_df_v1, SPI_df_new, keys = c('iso3c','date'))
 

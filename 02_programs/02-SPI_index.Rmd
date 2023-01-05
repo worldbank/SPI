@@ -3,7 +3,7 @@ title: 'Measuring the Statistical Performance of Countries: An Overview of Updat
 author: "SPI Team"
 date: "`r Sys.Date()`"
 output:
-  bookdown::word_document2: 
+  bookdown::gitbook: 
     fig_width: 9
     fig_height: 6
 abstract: 'National statistical systems are facing significant challenges. These challenges arise from increasing demands for high quality and trustworthy data to guide decision making, coupled with the rapidly changing landscape of the data revolution. To emphasize the urgent need for transformation and to help create a mechanism for learning amongst national statistical systems, the World Bank has developed new Statistical Performance Indicators (SPI) to monitor the statistical performance of countries. The SPI framework focuses on five key dimensions of a country’s statistical performance: (i) data use, (ii) data services, (iii) data products, (iv) data sources, and (v) data infrastructure.  The SPI will replace the Statistical Capacity Index (SCI) that the World Bank has regularly published since 2004. This note discusses the motivation behind the new SPI methodology, outlines some of its major features, and describes a new index based on the indicators.'
@@ -129,7 +129,8 @@ pop_df <- wbstats::wb_data(country="all",
 spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
   filter(date>=2021) %>%
   bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2020.csv', sep="/")) %>% filter(date==2020)) %>%
-  bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2019.csv', sep="/")) %>% filter(date<2020)) %>%              
+  bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2019.csv', sep="/")) %>% filter(date<2020)) %>%           
+  mutate(income=if_else(is.na(income), income_level, income)) %>%
   left_join(pop_df) %>%
   group_by(iso3c) %>%
   arrange(desc(date)) %>%
@@ -171,7 +172,7 @@ standard_crop_wintri <- function() {
 }
 
 
-country_metadata <- wbstats::wbcountries()
+country_metadata <- wbstats::wb_countries()
 
 
 
@@ -349,11 +350,11 @@ spi_income_charts  <- function(data, indicator, title) {
     income <- c("Low income", "Lower middle income","Upper middle income","High income")
 
     p3 <- map_df %>%
-    group_by(income) %>%
+    group_by(income_level) %>%
     filter(region!='Aggregates') %>%
     mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(`SPI Score`,0))) %>%
-    ggplot(aes(x=`SPI Score`, y=income, fill=income)) +
+    ggplot(aes(x=`SPI Score`, y=income_level, fill=income_level)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
@@ -550,7 +551,7 @@ spi_group_table <- function(data, indicators, reference_year, group) {
       df_overall <- get(data) %>%
       filter(date==as.numeric(reference_year)) %>% 
       left_join(country_metadata) %>%
-      select(country, iso3c, date, income, region, lending, all_of(indicators), SPI.INDEX) %>%
+      select(country, iso3c, date, income, region, lending_type, all_of(indicators), SPI.INDEX) %>%
       rename(group=!! group)
     
     
@@ -626,7 +627,7 @@ lending_charts <- function(data, indicator, title) {
     filter(region!='Aggregates') %>%
     mutate(`SPI Score`=(data_available),
            Label = paste(round(`SPI Score`,0))) %>%
-    ggplot(aes(x=`SPI Score`, y=lending, color=lending)) +
+    ggplot(aes(x=`SPI Score`, y=lending_type, color=lending_type)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
@@ -668,11 +669,11 @@ lending_chart_aggregate <- function(data, indicator, title) {
   
 
   p2_alt3 <- map_df %>%
-    group_by(lending) %>%
+    group_by(lending_type) %>%
     filter(region!='Aggregates') %>%
     mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(`SPI Score`,0))) %>%
-    ggplot(aes(x=`SPI Score`, y=lending, fill=lending)) +
+    ggplot(aes(x=`SPI Score`, y=lending_type, fill=lending_type)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
@@ -3192,14 +3193,16 @@ col_palette2 <- c("#2ec4b6",  "#f1dc76", "#ff9f1c" )
 
 #make the table
 index_tab_time <- spi_index_df %>%
-  select(country, date, SPI.INDEX) %>%
+  select(iso3c, date, SPI.INDEX) %>%
   mutate(SPI.INDEX=round(SPI.INDEX,1)) %>%
   filter(!is.na(SPI.INDEX)) %>%
   pivot_wider(
     names_from=date,
     values_from=SPI.INDEX,
     names_prefix='SPI.INDEX.'
-  )
+  ) %>%
+  left_join(country_metadata) %>%
+  select(country, starts_with('SPI.INDEX'))
 
 
 #quintile groups

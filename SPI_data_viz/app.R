@@ -28,7 +28,9 @@ library(highcharter)
 library(officer)
 
 #read in data and metatdata
-SPI <- read_csv('SPI_index.csv')
+SPI <- read_csv('SPI_index.csv') 
+
+end_date <- 2022
 
 metadata_raw <- read_csv('SPI_dimensions_sources.csv')
 
@@ -218,8 +220,8 @@ ui <- navbarPage(id='container',
                                 column(3,offset=1,
                                        selectizeInput("year_overall",
                                              "Reference Year",
-                                             choices=c(2004:2019),
-                                             selected=2019)),
+                                             choices=c(2004:end_date),
+                                             selected=end_date)),
                                 column(2,offset=1,
                                        downloadButton("downloadDataMap", "Download"))
 
@@ -270,8 +272,8 @@ ui <- navbarPage(id='container',
                  #              h2('Overall Scores by Pillar'),
                  #              selectizeInput("dim_year",
                  #                             "Reference Year",
-                 #                             choices=c(2016:2019),
-                 #                             selected=2019
+                 #                             choices=c(2016:end_date),
+                 #                             selected=end_date
                  #                             
                  #              ),
                  #              selectizeInput("country", "Select Countries",
@@ -348,8 +350,8 @@ ui <- navbarPage(id='container',
                                 column(2,offset=1,
                                        selectizeInput("year_choice",
                                                       "Choose Year",
-                                                      choices=c(2004:2019),
-                                                      selected=2019)),  
+                                                      choices=c(2004:end_date),
+                                                      selected=end_date)),  
                                 column(2,offset=1,
                                        selectizeInput("comparison_choice",
                                                       "Add Countries to Compare",
@@ -431,8 +433,8 @@ ui <- navbarPage(id='container',
                                   column(2,
                                     selectizeInput("country_year_choice",
                                                  "Choose Year",
-                                                 choices=c(2016:2019),
-                                                 selected=2019)),
+                                                 choices=c(2016:end_date),
+                                                 selected=end_date)),
                                   column(2,offset=1,
                                     selectizeInput("country_tab", "Select Countries",
                                                    choices=NULL,
