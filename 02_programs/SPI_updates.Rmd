@@ -6,7 +6,7 @@ output:
   bookdown::word_document2: 
     fig_width: 9
     fig_height: 6
-abstract: 'In March 2023, the second vintage of the SPI data was released.  This document provides an overview of the major changes to the scores compared to the intial data release in March 2021.  In this new edition, SPI scores for the calendar year 2020, 2021, and 2022 have been released.  This document discusses major changes.'
+abstract: 'In March 2023, the second vintage of the SPI data was released.  This document provides an overview of the major changes to the scores compared to the intial data release in March 2021.  In this new edition, SPI scores for the calendar year 2020, 2021, and 2022 have been released.'
 bibliography: ./bibliography.bib
 ---
 ```{r setup, include=FALSE}
@@ -41,7 +41,7 @@ output_dir <- paste(dir, '03_output_data', sep="/")
 #weights (either unity (1) or population (2))
 wgt <- 1
 end_date <- 2022
-
+start_date <- 2019
 ```
 
 
@@ -785,7 +785,7 @@ eq_plot_txt <- function(data) {
 ```
 
 
-## Country Changes in the Index between 2019 and `r end_date`
+## Country Changes in the Index between `r start_date` and `r end_date`
 
 
 
@@ -796,41 +796,48 @@ spi_index_end_date <- spi_index_df %>%
   filter(date==end_date) %>%
   filter(!is.na(SPI.INDEX))
 
-spi_index_2019 <- spi_index_df %>%
-  filter(date==2019) %>%
+spi_index_start_date <- spi_index_df %>%
+  filter(date==start_date) %>%
   filter(!is.na(SPI.INDEX)) %>%
-  mutate(SPI.INDEX.2019=SPI.INDEX) %>%
-  select(iso3c, region, SPI.INDEX.2019)
+  mutate(SPI.INDEX.start_date=SPI.INDEX) %>%
+  select(iso3c, region, SPI.INDEX.start_date)
 
 spi_changes <- spi_index_end_date %>%
   mutate(SPI.INDEX.end_date=SPI.INDEX) %>%
   select(iso3c, country,region, SPI.INDEX.end_date) %>%
-  left_join(spi_index_2019)
+  left_join(spi_index_start_date)
 
 
 #correlation
-corr_end_date_2019 <- cor(spi_changes$SPI.INDEX.end_date,spi_changes$SPI.INDEX.2019, use='pairwise.complete.obs')
+corr_end_date_start_date <- cor(spi_changes$SPI.INDEX.end_date,spi_changes$SPI.INDEX.start_date, use='pairwise.complete.obs')
+spearman_end_date_start_date <- spearman(spi_changes$SPI.INDEX.end_date,spi_changes$SPI.INDEX.start_date)
+
+changes <- spi_changes$SPI.INDEX.end_date - spi_changes$SPI.INDEX.start_date
+avg_change <- mean(changes, na.rm=TRUE)
+deciles <- quantile(changes, probs = seq(from=0, to=1, by=.1), na.rm=TRUE)
 
 
 ```
 
-In order to assess how much change exists in the index values are over time, comparisons have been made between the index values in 2019 and the `r end_date` values. Overall, the SPI overall score is quite stable over time. The correlation between the 2019 value and the `r end_date` value is `r round(corr_end_date_2019,2)`.
+In order to assess how much change exists in the index values are over time, comparisons are made between the index values in `r start_date` and the `r end_date` values.  On average across countries, between `r start_date` and `r end_date` the SPI overall scores rose by `r round(avg_change, 1)` points on a scale from 0-100. The change between `r start_date` and `r end_date` for the 10th percentile was `r round(deciles[2], 1)` and the change for the 90th percentile was `r round(deciles[10], 1)`.  
 
-*Figure 7.4: Scatterplot of `r end_date` SPI overall score  & 2019 SPI overall score*
+The rankings of countries by the SPI overall score was quite stable over time.  The Spearman rank correlation between the `r start_date` value and the `r end_date` value is `r round(spearman_end_date_start_date,2)`.
+
+*Figure 7.4: Scatterplot of `r end_date` SPI overall score  & `r start_date` SPI overall score*
 ```{r changesplot}
 
-ggplot(spi_changes, aes(x=SPI.INDEX.2019, y=SPI.INDEX.end_date, color=region)) +
+ggplot(spi_changes, aes(x=SPI.INDEX.start_date, y=SPI.INDEX.end_date, color=region)) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm', color='blue') +
   geom_segment(aes(x=10,xend=100, y=10,yend=100), color='grey') +
   expand_limits(x=c(10,100),y=c(10,100)) +
   theme_spi() +
   labs(
-    title=paste0('Scatterplot of ',end_date,' SPI overall score  & 2019 SPI overall score'),
+    title=paste0('Scatterplot of ',end_date,' SPI overall score  & ',start_date,' SPI overall score'),
     caption = 'Solid grey line represents the 45 degree line.  Blue line represents line of best fit (regression line) with a 95% confidence interval shown in a shaded line.'
   ) +
   ylab(paste0(end_date,' SPI Overall Score')) +
-  xlab('2019 SPI Overall Score') +
+  xlab(paste0(start_date,' SPI Overall Score')) +
   theme(legend.position = 'bottom') +
     stat_poly_eq(aes(label = paste(stat(eq.label),
                                 stat(rr.label), sep = "*\", \"*")), 
@@ -848,27 +855,27 @@ ggplot(spi_changes, aes(x=SPI.INDEX.2019, y=SPI.INDEX.end_date, color=region)) +
 ```{r top_bottom_changes}
 
 top_changes <- spi_changes %>%
-  mutate(changes=SPI.INDEX.end_date-SPI.INDEX.2019) %>%
+  mutate(changes=SPI.INDEX.end_date-SPI.INDEX.start_date) %>%
   arrange(-abs(changes)) %>%
-  select(country,SPI.INDEX.end_date,SPI.INDEX.2019, changes) %>%
-  mutate(across(c('SPI.INDEX.end_date','SPI.INDEX.2019', 'changes'),round,1))
+  select(country,SPI.INDEX.end_date,SPI.INDEX.start_date, changes) %>%
+  mutate(across(c('SPI.INDEX.end_date','SPI.INDEX.start_date', 'changes'),round,1))
 
 top_mover <- as.character(top_changes[1,1])
 top_mover_change <- as.numeric(top_changes[1,4])
 ```
 
 
-While the scores were relatively stable over time, some countries did see large improvements in their score from 2019-`r end_date`. The country that improved most on the index from 2019 to `r end_date` was `r top_mover`. `r top_mover` improved by `r top_mover_change` points out of 100. The table below shows the changes in the SPI overall score for the top 10 largest improvers.
+While the rankings between countries were relatively stable over time, some countries did see large improvements in their score from `r start_date`-`r end_date`. The country that improved most on the index from `r start_date` to `r end_date` was `r top_mover`. `r top_mover` improved by `r top_mover_change` points out of 100. The table below shows the changes in the SPI overall score for the top 10 largest improvers.
 
 
-*Table 7.2: Top 10 Countries with Largest Changes from 2019-`r end_date`.*
+*Table 7.2: Top 10 Countries with Largest Changes from `r start_date`-`r end_date`.*
 ```{r topbottomchangestab}
 top_changes_tab <- flextable(head(top_changes,10)) %>%
-  # add_header_lines('Top 10 Countries with Largest Changes from 2019-2020.') %>%
+  # add_header_lines('Top 10 Countries with Largest Changes from start_date-2020.') %>%
   set_header_labels(values=list(
                        country="Country",
                        SPI.INDEX.end_date=paste0("SPI Overall Score ",end_date),
-                       SPI.INDEX.2019="SPI Overall Score 2019",
+                       SPI.INDEX.start_date="SPI Overall Score start_date",
                        changes="Difference"
                                    )) 
 
@@ -877,24 +884,53 @@ FitFlextableToPage(top_changes_tab) %>%
   align( align = "left", part = "body")
 ```
 
+
+```{r}
+bottom_changes <- top_changes %>%
+  filter(changes<0) %>%
+  arrange(changes)
+
+bottom_mover <- as.character(bottom_changes[1,1])
+bottom_mover_change <- as.numeric(bottom_changes[1,4])
+```
+
+A few countries saw their SPI overall score drop between `r start_date` and `r end_date`.  The country with the largest drop (decrease in scores) was `r bottom_mover` with a decrease in the SPI overall score of `r round(bottom_mover_change,1)`.
+
+
+*Table 7.2: Top Countries with Largest Drops from `r start_date`-`r end_date`.*
+```{r bottomchangestab}
+bottom_changes_tab <- flextable(head(bottom_changes,10)) %>%
+  # add_header_lines('Top 10 Countries with Largest Changes from start_date-2020.') %>%
+  set_header_labels(values=list(
+                       country="Country",
+                       SPI.INDEX.end_date=paste0("SPI Overall Score ",end_date),
+                       SPI.INDEX.start_date="SPI Overall Score start_date",
+                       changes="Difference"
+                                   )) 
+
+FitFlextableToPage(bottom_changes_tab) %>%
+  width(width=1.2) %>%
+  align( align = "left", part = "body")
+```
+
 In the following map, countries that improved by more than 5 points on the 0-100 scale are shown in dark green, countries that improved by between 2 and 5 points in light green, countries that saw decreases between 2 and 5 points in light red, and countries that say decreases of more than 5 points in dark red.  Countries with a change of less than 2 points in either direction are shaded in light blue.
 
 ```{r changes_map}
 
-title <- paste0("Changes in SPI Overall Scores between 2019 and ",end_date,".")
+title <- paste0("Changes in SPI Overall Scores between ",start_date," and ",end_date,".")
 
 #create dataset with changes between end_date and 2019
   map_df <- spi_changes %>%
-    select(iso3c, SPI.INDEX.end_date, SPI.INDEX.2019) %>%
+    select(iso3c, SPI.INDEX.end_date, SPI.INDEX.start_date) %>%
     right_join(country_metadata)
     
   SPI_map <- map_df %>%
     mutate(spi_groups=case_when(
-      SPI.INDEX.end_date-SPI.INDEX.2019 > 5 ~ "Improved >5 points",
-      between(SPI.INDEX.end_date-SPI.INDEX.2019, 2,5) ~ "Improved 2-5 points",
-      between(SPI.INDEX.end_date-SPI.INDEX.2019, -2,2) ~ "Little Change",
-      between(SPI.INDEX.end_date-SPI.INDEX.2019, -5,-2) ~ "Dropped 2-5 points",
-      SPI.INDEX.end_date-SPI.INDEX.2019 < -5 ~ "Dropped >5 points"
+      SPI.INDEX.end_date-SPI.INDEX.start_date > 5 ~ "Improved >5 points",
+      between(SPI.INDEX.end_date-SPI.INDEX.start_date, 2,5) ~ "Improved 2-5 points",
+      between(SPI.INDEX.end_date-SPI.INDEX.start_date, -2,2) ~ "Little Change",
+      between(SPI.INDEX.end_date-SPI.INDEX.start_date, -5,-2) ~ "Dropped 2-5 points",
+      SPI.INDEX.end_date-SPI.INDEX.start_date < -5 ~ "Dropped >5 points"
       
     )) %>%
     mutate(spi_groups=factor(spi_groups, 
@@ -949,11 +985,12 @@ growth_plot <- function(variables, name) {
     pivot_wider(names_from=date,
                 names_prefix='spi_data_',
                 values_from=c('spi_data')) %>%
-    rename(spi_data_end_date=!! paste0('spi_data_',end_date)) %>%
+    rename(spi_data_end_date=!! paste0('spi_data_',end_date),
+           spi_data_start_date=!! paste0('spi_data_',start_date)) %>%
     ungroup() %>%
-    mutate(growth=(spi_data_end_date-spi_data_2019)) %>%
-    filter(!(is.na(spi_data_end_date) | is.na(spi_data_2019))) %>%
-    mutate(spi_rank=100*rank(spi_data_2019)/length(spi_data_2019),
+    mutate(growth=(spi_data_end_date-spi_data_start_date)) %>%
+    filter(!(is.na(spi_data_end_date) | is.na(spi_data_start_date))) %>%
+    mutate(spi_rank=100*rank(spi_data_start_date)/length(spi_data_start_date),
            spi_bins=case_when( #calculate deciles
              between(spi_rank,0,10) ~ "1st Decile",
              between(spi_rank,10,20) ~ "2nd Decile",
@@ -981,11 +1018,11 @@ growth_plot <- function(variables, name) {
     ggrepel::geom_text_repel(nudge_y=0.1, size=4,segment.alpha =  0 ) +
     scale_x_discrete() +
     theme_bw() +
-    xlab(str_wrap('Decile in 2019',40)) +
-    ylab(str_wrap('Change in Score (2019-22)',20)) +
+    xlab(str_wrap(paste0('Decile in ',start_date),40)) +
+    ylab(str_wrap(paste0('Change in Score (',start_date,'-',end_date,')'),20)) +
     labs(
       #title=str_wrap("2nd & 3rd deciles have improved most since 2019.",70),
-      subtitle=str_wrap('Change in SPI Overall Score from 2019-22 by 2019 decile group',70),
+      subtitle=str_wrap(paste0('Change in SPI Overall Score from ',start_date,'-',end_date,' by 2019 decile group'),70),
       caption=paste0(name,' scale = 0 - 100 points.')
     ) +
     expand_limits(y=0) +
@@ -1035,17 +1072,23 @@ growth_plot('SPI.INDEX', 'SPI Overall Score')
            SPI.INDEX.PIL2_end_date=!! paste0('SPI.INDEX.PIL2_',end_date),
            SPI.INDEX.PIL3_end_date=!! paste0('SPI.INDEX.PIL3_',end_date),
            SPI.INDEX.PIL4_end_date=!! paste0('SPI.INDEX.PIL4_',end_date),
-           SPI.INDEX.PIL5_end_date=!! paste0('SPI.INDEX.PIL5_',end_date)) %>%
+           SPI.INDEX.PIL5_end_date=!! paste0('SPI.INDEX.PIL5_',end_date),
+           SPI.INDEX_start_date=!! paste0('SPI.INDEX_',start_date),
+           SPI.INDEX.PIL1_start_date=!! paste0('SPI.INDEX.PIL1_',start_date),
+           SPI.INDEX.PIL2_start_date=!! paste0('SPI.INDEX.PIL2_',start_date),
+           SPI.INDEX.PIL3_start_date=!! paste0('SPI.INDEX.PIL3_',start_date),
+           SPI.INDEX.PIL4_start_date=!! paste0('SPI.INDEX.PIL4_',start_date),
+           SPI.INDEX.PIL5_start_date=!! paste0('SPI.INDEX.PIL5_',start_date)) %>%
     ungroup() %>%
-    mutate(overall_growth=(SPI.INDEX_end_date-SPI.INDEX_2019),
-           dim1_growth=(SPI.INDEX.PIL1_end_date-SPI.INDEX.PIL1_2019),
-           dim2_growth=(SPI.INDEX.PIL2_end_date-SPI.INDEX.PIL2_2019),
-           dim3_growth=(SPI.INDEX.PIL3_end_date-SPI.INDEX.PIL3_2019),
-           dim4_growth=(SPI.INDEX.PIL4_end_date-SPI.INDEX.PIL4_2019),
-           dim5_growth=(SPI.INDEX.PIL5_end_date-SPI.INDEX.PIL5_2019)
+    mutate(overall_growth=(SPI.INDEX_end_date-SPI.INDEX_start_date),
+           dim1_growth=(SPI.INDEX.PIL1_end_date-SPI.INDEX.PIL1_start_date),
+           dim2_growth=(SPI.INDEX.PIL2_end_date-SPI.INDEX.PIL2_start_date),
+           dim3_growth=(SPI.INDEX.PIL3_end_date-SPI.INDEX.PIL3_start_date),
+           dim4_growth=(SPI.INDEX.PIL4_end_date-SPI.INDEX.PIL4_start_date),
+           dim5_growth=(SPI.INDEX.PIL5_end_date-SPI.INDEX.PIL5_start_date)
            ) %>%
-    filter(!(is.na(SPI.INDEX_end_date) | is.na(SPI.INDEX_2019))) %>%
-    mutate(spi_rank=100*rank(SPI.INDEX_2019)/length(SPI.INDEX_2019),
+    filter(!(is.na(SPI.INDEX_end_date) | is.na(SPI.INDEX_start_date))) %>%
+    mutate(spi_rank=100*rank(SPI.INDEX_start_date)/length(SPI.INDEX_start_date),
            spi_bins=case_when( #calculate deciles
              between(spi_rank,0,10) ~ "1st Decile",
              between(spi_rank,10,20) ~ "2nd Decile",
@@ -1100,11 +1143,11 @@ name <- 'SPI Overall Score'
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
     scale_x_discrete() +
     theme_bw() +
-    xlab(str_wrap('Decile in 2019',40)) +
-    ylab(str_wrap('Change in Score (2019-22)',20)) +
+    xlab(str_wrap(paste0('Decile in ',start_date),40)) +
+    ylab(str_wrap(paste0('Change in Score (',start_date,'-',end_date,')'),20)) +
     labs(
       #title=str_wrap("Countries in 2nd and 3rd deciles have grown most since 2019.",70),
-      subtitle=str_wrap('Change in SPI Overall Score from 2019-22 by 2019 decile group',70),
+      subtitle=str_wrap(paste0('Change in SPI Overall Score from ',start_date,'-',end_date,' by 2019 decile group'),70),
       caption=paste0(name,' scale = 0 - 100 points.')
     ) +
     expand_limits(y=c(-2,3)) +
