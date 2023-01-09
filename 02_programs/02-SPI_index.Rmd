@@ -3,9 +3,7 @@ title: 'Measuring the Statistical Performance of Countries: An Overview of Updat
 author: "SPI Team"
 date: "`r Sys.Date()`"
 output:
-  bookdown::word_document2: 
-    fig_width: 9
-    fig_height: 6
+  bookdown::word_document2
 abstract: 'National statistical systems are facing significant challenges. These challenges arise from increasing demands for high quality and trustworthy data to guide decision making, coupled with the rapidly changing landscape of the data revolution. To emphasize the urgent need for transformation and to help create a mechanism for learning amongst national statistical systems, the World Bank has developed new Statistical Performance Indicators (SPI) to monitor the statistical performance of countries. The SPI framework focuses on five key dimensions of a country’s statistical performance: (i) data use, (ii) data services, (iii) data products, (iv) data sources, and (v) data infrastructure.  The SPI will replace the Statistical Capacity Index (SCI) that the World Bank has regularly published since 2004. This note discusses the motivation behind the new SPI methodology, outlines some of its major features, and describes a new index based on the indicators.'
 bibliography: ./bibliography.bib
 ---
@@ -13,7 +11,7 @@ bibliography: ./bibliography.bib
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.path = "plots/", dev = c("png"), dpi=500)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.path = "plots/", dev = c("png", "tiff"), dpi=500)
 
 
 library(tidyverse)
@@ -53,8 +51,10 @@ wgt <- 1
 theme_spi <- function () { 
     theme_bw() %+replace%
     theme(
-      plot.caption = element_text(hjust = 0),
-      plot.title=element_blank() #remove all titles from plots (sometimes we may need to bring title outside plot)
+      plot.caption = element_blank(),
+      plot.title=element_blank(), #remove all titles from plots (sometimes we may need to bring title outside plot)
+      plot.subtitle=element_blank()
+      
     )
 }
 
@@ -221,8 +221,8 @@ spi_mapper  <- function(data, indicator, title) {
     coord_equal() +
     theme_map(base_size=12) +
     labs(
-      title=str_wrap(title,100),
-      caption = 'Source: World Bank. Statistical Performance Indicators'
+      #title=str_wrap(title,100),
+      #caption = 'Source: World Bank. Statistical Performance Indicators'
     )
  print(p1)
 }
@@ -1633,6 +1633,28 @@ Countries within region show significant dispersion in performance . It is worth
 spi_country_charts('spi_index_df','SPI.INDEX.PIL1','Pillar 1: Data Use Scores')
 
 ```
+
+```{r plt4, fig.height=14, fig.width=10}
+
+p1 <- spi_region_charts('spi_index_df','SPI.INDEX','SPI Overall Score') +
+  ggtitle('a.') +
+  theme_bw() +
+  theme(plot.title=element_text(size=18),
+        plot.subtitle = element_blank(),
+        plot.caption=element_blank())
+
+p2 <- spi_country_charts('spi_index_df','SPI.INDEX','SPI Overall Score') +
+  ggtitle('b.') +
+  theme_bw() +
+  theme(plot.title=element_text(size=18),
+        plot.subtitle = element_blank(),
+        plot.caption=element_blank())
+
+
+p1 / p2
+
+```
+
 
 ```{r maturitytable1}
 

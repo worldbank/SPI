@@ -5,8 +5,6 @@ date: "`r Sys.Date()`"
 output:
   bookdown::word_document2: 
     toc: yes
-    fig_width: 9
-    fig_height: 6
     number_sections: true
 
 abstract: Recognizing the new challenges for national statistical systems in monitoring  the
@@ -20,7 +18,7 @@ bibliography: ./bibliography.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.cap = "")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.cap = "", fig.path = "plots/", dev = c("png", "tiff"), dpi=500)
 library(tidyverse)
 library(flextable)
 library(here)
@@ -912,8 +910,9 @@ pov_spi + gini_spi   +
 ```{r decompstacked, echo=FALSE}
   decomp_stacked_df <- SPI %>%
     filter(date==2020) %>%
-    select(country, income, iso3c, date, starts_with('SPI.INDEX')) %>%
-    filter(!is.na(SPI.INDEX)) 
+    select(iso3c, date, starts_with('SPI.INDEX')) %>%
+    filter(!is.na(SPI.INDEX)) %>%
+    left_join(country_metadata)
     
   
   #summarise into decile bins
@@ -942,10 +941,10 @@ pov_spi + gini_spi   +
     name <- 'SPI Overall Score'
     income <- c("Low income", "Lower middle income","Upper middle income","High income")
 #absolute graph
-  ggplot(decomp_stacked_df, aes(x=income, y=level, fill=Pillar, label=paste0(round(level,1)))) +
+  p1 <- ggplot(decomp_stacked_df, aes(x=income, y=level, fill=Pillar, label=paste0(round(level,0)))) +
     geom_bar(stat = "identity", position='stack') +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
-    geom_text(aes(y=total,label=paste0('Total = ' ,round(total,1))), size=4, nudge_y=7 ) +
+    geom_text(aes(y=total,label=paste0('Total = ' ,round(total,0))), size=4, nudge_y=7 ) +
     scale_x_discrete() +
     theme_spi() +
     
@@ -966,7 +965,7 @@ pov_spi + gini_spi   +
     guides(fill=guide_legend(nrow=2,byrow=TRUE))
   
 #relative graph  
-  ggplot(decomp_stacked_df, aes(x=income, y=100*level/total, fill=Pillar, label=paste0(round(100*level/total,1),"%"))) +
+  p2 <- ggplot(decomp_stacked_df, aes(x=income, y=100*level/total, fill=Pillar, label=paste0(round(100*level/total,0),"%"))) +
     geom_bar(stat = "identity", position='stack') +
     geom_text(size = 4, position = position_stack(vjust = 0.5)) +
     #geom_text(aes(y=total,label=paste0('Total = ' ,round(total,1))), size=4, nudge_y=7 ) +
@@ -988,7 +987,41 @@ pov_spi + gini_spi   +
     legend.position = 'bottom'
   ) +
     guides(fill=guide_legend(nrow=2,byrow=TRUE))  
+  
+p1 
+
+p2
+
+
 ```
+
+```{r plt4, fig.height=14, fig.width=10}
+
+p1 <- p1 +
+  ggtitle('a.') +
+  theme_bw() +
+  theme(plot.title=element_text(size=18),
+        legend.position='right',
+        plot.subtitle = element_blank(),
+        plot.caption=element_blank()) +
+  guides(fill=guide_legend(nrow=5,byrow=TRUE))  
+
+p2 <- p2 +
+  ggtitle('b.') +
+  theme_bw() +
+  theme(plot.title=element_text(size=18),
+        legend.position='right',
+        plot.subtitle = element_blank(),
+        plot.caption=element_blank()) +
+  guides(fill=guide_legend(nrow=5,byrow=TRUE)
+         )  
+
+
+p1 / p2
+
+
+```
+
 
 ## Changes Over Time
 
