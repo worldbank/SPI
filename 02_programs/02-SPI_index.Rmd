@@ -259,11 +259,11 @@ spi_region_charts  <- function(data, indicator, title) {
            Label = paste(round(`SPI Score`,0))) %>%
     arrange(-`SPI Score`) 
   
-  region_order <- c("Sub-Saharan Africa " ,
+  region_order <- c("Sub-Saharan Africa" ,
                     "South Asia",
                     "North America",
                     "Middle East & North Africa",
-                    "Latin America & Caribbean ",
+                    "Latin America & Caribbean",
                     "Europe & Central Asia", 
                     "East Asia & Pacific"
                            )

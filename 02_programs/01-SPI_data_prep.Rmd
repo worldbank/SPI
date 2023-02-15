@@ -3,7 +3,7 @@ title: Technical Documentation on Data Sources and Methods for Statistical Perfo
   Indicators
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
-output: bookdown::gitbook
+output: bookdown::word_document2
 output_dir: "`r paste0(here::here(),'/docs')`"
 
 ---
