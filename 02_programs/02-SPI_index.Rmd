@@ -3351,7 +3351,7 @@ spi_group_table('spi_index_df',indicators,end_date, 'income') %>%
 indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
               "SPI.INDEX.PIL4","SPI.INDEX.PIL5")
 
-spi_group_table('spi_index_df',indicators,end_date, 'lending') %>%
+spi_group_table('spi_index_df',indicators,end_date, 'lending_type') %>%
   flextable() %>%
   # add_header_lines('') %>%
   FitFlextableToPage() %>%

@@ -1,11 +1,9 @@
 ---
-title: Technical Documentation on Data Sources and Methods for Statistical Performance
-  Indicators
+title: 'Technical Documentation on Data Sources and Methods for Statistical Performance Indicators'
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
 output: bookdown::gitbook
 output_dir: "`r paste0(here::here(),'/docs')`"
-
 ---
 
 ```{r setup, include=FALSE}

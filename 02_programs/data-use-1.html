@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2 Data Use | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
   <meta name="description" content="2 Data Use | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
-  <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2 Data Use | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2022-12-06" />
+<meta name="date" content="2023-02-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -284,109 +284,90 @@ Quality (1 points total):
 0.5 Point. Comparable data lasting at least two years within past 10 years<br />
 0 Points. No comparable data within past 10 years</p>
 <p>Note: Because poverty surveys are reported with a lag, we start measuring whether comparable poverty data is available two years prior. So for 2019, the window starts from 2017 to give countries time to prepare poverty estimates based on surveys.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="data-use-1.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(povcalnetR) </span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="data-use-1.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pipr) </span>
 <span id="cb2-2"><a href="data-use-1.html#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="data-use-1.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#the code below is based on public released code by povcalnet team:</span></span>
-<span id="cb2-4"><a href="data-use-1.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#https://github.com/worldbank/Global_Poverty_Blogs/blob/master/bg_povcalnet_comparability/R/comparability_breaks.R</span></span>
+<span id="cb2-3"><a href="data-use-1.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#new pipr package already includes survey coverage and comparability measures</span></span>
+<span id="cb2-4"><a href="data-use-1.html#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="data-use-1.html#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="data-use-1.html#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># some contants</span></span>
-<span id="cb2-7"><a href="data-use-1.html#cb2-7" aria-hidden="true" tabindex="-1"></a>year_range <span class="ot">&lt;-</span> <span class="dv">1990</span><span class="sc">:</span><span class="dv">2022</span></span>
-<span id="cb2-8"><a href="data-use-1.html#cb2-8" aria-hidden="true" tabindex="-1"></a>metadata_path <span class="ot">&lt;-</span> <span class="st">&quot;https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/506801/povcalnet_comparability.csv&quot;</span></span>
+<span id="cb2-6"><a href="data-use-1.html#cb2-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">get_stats</span>()</span>
+<span id="cb2-7"><a href="data-use-1.html#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="data-use-1.html#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-9"><a href="data-use-1.html#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="data-use-1.html#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data ---------------------------------------------------------------</span></span>
-<span id="cb2-11"><a href="data-use-1.html#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="data-use-1.html#cb2-12" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(metadata_path)</span>
-<span id="cb2-13"><a href="data-use-1.html#cb2-13" aria-hidden="true" tabindex="-1"></a>cov_lkup <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">4</span>)</span>
-<span id="cb2-14"><a href="data-use-1.html#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cov_lkup) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;N&quot;</span>, <span class="st">&quot;U&quot;</span>, <span class="st">&quot;R&quot;</span>, <span class="st">&quot;A&quot;</span>)</span>
-<span id="cb2-15"><a href="data-use-1.html#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="data-use-1.html#cb2-16" aria-hidden="true" tabindex="-1"></a>dat_lkup <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>)</span>
-<span id="cb2-17"><a href="data-use-1.html#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(dat_lkup) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;income&quot;</span>,<span class="st">&quot;consumption&quot;</span>)</span>
-<span id="cb2-18"><a href="data-use-1.html#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="data-use-1.html#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="data-use-1.html#cb2-20" aria-hidden="true" tabindex="-1"></a>pcn <span class="ot">&lt;-</span> <span class="fu">povcalnet</span>()</span>
-<span id="cb2-21"><a href="data-use-1.html#cb2-21" aria-hidden="true" tabindex="-1"></a>pcn<span class="sc">$</span>coveragetype <span class="ot">&lt;-</span> cov_lkup[pcn<span class="sc">$</span>coveragetype]</span>
-<span id="cb2-22"><a href="data-use-1.html#cb2-22" aria-hidden="true" tabindex="-1"></a>pcn<span class="sc">$</span>datatype <span class="ot">&lt;-</span> dat_lkup[pcn<span class="sc">$</span>datatype]</span>
-<span id="cb2-23"><a href="data-use-1.html#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="data-use-1.html#cb2-24" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> pcn <span class="sc">%&gt;%</span></span>
-<span id="cb2-25"><a href="data-use-1.html#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">countrycode=</span><span class="fu">as.character</span>(countrycode)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-26"><a href="data-use-1.html#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(metadata, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;countrycode&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;coveragetype&quot;</span>, <span class="st">&quot;datatype&quot;</span>))</span>
-<span id="cb2-27"><a href="data-use-1.html#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="data-use-1.html#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-29"><a href="data-use-1.html#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">#Now loop from 2016 and 2019, keeping just data inside last 5 years.</span></span>
-<span id="cb2-30"><a href="data-use-1.html#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (reference_year <span class="cf">in</span> <span class="dv">2004</span><span class="sc">:</span>end_date) {</span>
-<span id="cb2-31"><a href="data-use-1.html#cb2-31" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-32"><a href="data-use-1.html#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">#extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period</span></span>
-<span id="cb2-33"><a href="data-use-1.html#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (reference_year<span class="sc">&gt;=</span><span class="dv">2022</span>) {</span>
-<span id="cb2-34"><a href="data-use-1.html#cb2-34" aria-hidden="true" tabindex="-1"></a>    rec_window<span class="ot">=</span><span class="dv">7</span></span>
-<span id="cb2-35"><a href="data-use-1.html#cb2-35" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (reference_year<span class="sc">==</span><span class="dv">2021</span>) {</span>
-<span id="cb2-36"><a href="data-use-1.html#cb2-36" aria-hidden="true" tabindex="-1"></a>    rec_window<span class="ot">=</span><span class="dv">6</span></span>
-<span id="cb2-37"><a href="data-use-1.html#cb2-37" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb2-38"><a href="data-use-1.html#cb2-38" aria-hidden="true" tabindex="-1"></a>    rec_window<span class="ot">=</span><span class="dv">5</span></span>
-<span id="cb2-39"><a href="data-use-1.html#cb2-39" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-40"><a href="data-use-1.html#cb2-40" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb2-41"><a href="data-use-1.html#cb2-41" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-42"><a href="data-use-1.html#cb2-42" aria-hidden="true" tabindex="-1"></a>  temp_5<span class="ot">&lt;-</span>df <span class="sc">%&gt;%</span></span>
-<span id="cb2-43"><a href="data-use-1.html#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(coveragetype <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>)) <span class="sc">%&gt;%</span> <span class="co">#keep just nationally representative samples</span></span>
-<span id="cb2-44"><a href="data-use-1.html#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-45"><a href="data-use-1.html#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">frequency=</span>((reference_year<span class="sc">-</span><span class="fu">as.numeric</span>(year))<span class="sc">&lt;=</span>rec_window) <span class="sc">&amp;</span> (reference_year<span class="sc">&gt;=</span><span class="fu">as.numeric</span>(year))) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-46"><a href="data-use-1.html#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(frequency<span class="sc">==</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-47"><a href="data-use-1.html#cb2-47" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">group_by</span>(countrycode, comparability) <span class="sc">%&gt;%</span> <span class="co">#for each country and comparability type, get number of comparable estimates</span></span>
-<span id="cb2-48"><a href="data-use-1.html#cb2-48" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">SPI.D1.5.POV_5=</span><span class="fu">n</span>())  <span class="sc">%&gt;%</span></span>
-<span id="cb2-49"><a href="data-use-1.html#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-50"><a href="data-use-1.html#cb2-50" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(countrycode) <span class="sc">%&gt;%</span> <span class="co">#now get a total by country with the max number of comparable estimates</span></span>
-<span id="cb2-51"><a href="data-use-1.html#cb2-51" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarise</span>(<span class="at">SPI.D1.5.POV_5=</span><span class="fu">max</span>(SPI.D1.<span class="fl">5.</span>POV_5, <span class="at">na.rm=</span>T)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-52"><a href="data-use-1.html#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">SPI.D1.5.POV_5=</span><span class="fu">if_else</span>(SPI.D1.<span class="fl">5.</span>POV_5<span class="sc">&gt;=</span><span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span> <span class="co">#only give point if there is at least two observations that are comparable</span></span>
-<span id="cb2-53"><a href="data-use-1.html#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">date=</span>reference_year,</span>
-<span id="cb2-54"><a href="data-use-1.html#cb2-54" aria-hidden="true" tabindex="-1"></a>                 <span class="at">iso3c=</span>countrycode) <span class="sc">%&gt;%</span></span>
-<span id="cb2-55"><a href="data-use-1.html#cb2-55" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(country_metadata) <span class="sc">%&gt;%</span></span>
-<span id="cb2-56"><a href="data-use-1.html#cb2-56" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">select</span>( iso3c, date, <span class="fu">starts_with</span>(<span class="st">&#39;SPI.D1.5.POV&#39;</span>)) </span>
-<span id="cb2-57"><a href="data-use-1.html#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-58"><a href="data-use-1.html#cb2-58" aria-hidden="true" tabindex="-1"></a>  temp_10<span class="ot">&lt;-</span>df <span class="sc">%&gt;%</span></span>
-<span id="cb2-59"><a href="data-use-1.html#cb2-59" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(coveragetype <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>)) <span class="sc">%&gt;%</span> <span class="co">#keep just nationally representative samples</span></span>
-<span id="cb2-60"><a href="data-use-1.html#cb2-60" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">frequency=</span>((reference_year<span class="sc">-</span><span class="fu">as.numeric</span>(year))<span class="sc">&lt;=</span><span class="dv">12</span>) <span class="sc">&amp;</span> (reference_year<span class="sc">&gt;=</span><span class="fu">as.numeric</span>(year))) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-61"><a href="data-use-1.html#cb2-61" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(frequency<span class="sc">==</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-62"><a href="data-use-1.html#cb2-62" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">group_by</span>(countrycode, comparability) <span class="sc">%&gt;%</span> <span class="co">#for each country and comparability type, get number of comparable estimates</span></span>
-<span id="cb2-63"><a href="data-use-1.html#cb2-63" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">SPI.D1.5.POV_10=</span><span class="fu">n</span>())  <span class="sc">%&gt;%</span></span>
-<span id="cb2-64"><a href="data-use-1.html#cb2-64" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-65"><a href="data-use-1.html#cb2-65" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(countrycode) <span class="sc">%&gt;%</span> <span class="co">#now get a total by country with the max number of comparable estimates</span></span>
-<span id="cb2-66"><a href="data-use-1.html#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarise</span>(<span class="at">SPI.D1.5.POV_10=</span><span class="fu">max</span>(SPI.D1.<span class="fl">5.</span>POV_10, <span class="at">na.rm=</span>T)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-67"><a href="data-use-1.html#cb2-67" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">SPI.D1.5.POV_10=</span><span class="fu">if_else</span>(SPI.D1.<span class="fl">5.</span>POV_10<span class="sc">&gt;=</span><span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span> <span class="co">#only give point if there is at least two observations that are comparable</span></span>
-<span id="cb2-68"><a href="data-use-1.html#cb2-68" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">date=</span>reference_year,</span>
-<span id="cb2-69"><a href="data-use-1.html#cb2-69" aria-hidden="true" tabindex="-1"></a>                 <span class="at">iso3c=</span>countrycode) <span class="sc">%&gt;%</span></span>
-<span id="cb2-70"><a href="data-use-1.html#cb2-70" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(country_metadata) <span class="sc">%&gt;%</span></span>
-<span id="cb2-71"><a href="data-use-1.html#cb2-71" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">select</span>( iso3c, date, <span class="fu">starts_with</span>(<span class="st">&#39;SPI.D1.5.POV&#39;</span>)) </span>
-<span id="cb2-72"><a href="data-use-1.html#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-73"><a href="data-use-1.html#cb2-73" aria-hidden="true" tabindex="-1"></a>  temp <span class="ot">&lt;-</span> temp_5 <span class="sc">%&gt;%</span></span>
-<span id="cb2-74"><a href="data-use-1.html#cb2-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(temp_10) <span class="sc">%&gt;%</span></span>
-<span id="cb2-75"><a href="data-use-1.html#cb2-75" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SPI.D1.5.POV=</span><span class="fu">case_when</span>(</span>
-<span id="cb2-76"><a href="data-use-1.html#cb2-76" aria-hidden="true" tabindex="-1"></a>      SPI.D1.<span class="fl">5.</span>POV_5<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb2-77"><a href="data-use-1.html#cb2-77" aria-hidden="true" tabindex="-1"></a>      SPI.D1.<span class="fl">5.</span>POV_10<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="fl">0.5</span>,</span>
-<span id="cb2-78"><a href="data-use-1.html#cb2-78" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span></span>
-<span id="cb2-79"><a href="data-use-1.html#cb2-79" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span></span>
-<span id="cb2-80"><a href="data-use-1.html#cb2-80" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>SPI.D1.<span class="fl">5.</span>POV_5,<span class="sc">-</span>SPI.D1.<span class="fl">5.</span>POV_10)</span>
-<span id="cb2-81"><a href="data-use-1.html#cb2-81" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-82"><a href="data-use-1.html#cb2-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">paste</span>(<span class="st">&quot;D3.1.AKI&quot;</span>,reference_year,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
-<span id="cb2-83"><a href="data-use-1.html#cb2-83" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-84"><a href="data-use-1.html#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-85"><a href="data-use-1.html#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="co">#now append together and save</span></span>
-<span id="cb2-86"><a href="data-use-1.html#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2004</span><span class="sc">:</span>end_date)) {</span>
-<span id="cb2-87"><a href="data-use-1.html#cb2-87" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-88"><a href="data-use-1.html#cb2-88" aria-hidden="true" tabindex="-1"></a>  temp<span class="ot">&lt;-</span><span class="fu">get</span>(<span class="fu">paste</span>(<span class="st">&#39;D3.1.AKI_&#39;</span>,i, <span class="at">sep=</span><span class="st">&quot;&quot;</span>))</span>
-<span id="cb2-89"><a href="data-use-1.html#cb2-89" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-90"><a href="data-use-1.html#cb2-90" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">exists</span>(<span class="st">&#39;D3.1.AKI&#39;</span>)) {</span>
-<span id="cb2-91"><a href="data-use-1.html#cb2-91" aria-hidden="true" tabindex="-1"></a>    D3.<span class="fl">1.</span>AKI<span class="ot">&lt;-</span>temp</span>
-<span id="cb2-92"><a href="data-use-1.html#cb2-92" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb2-93"><a href="data-use-1.html#cb2-93" aria-hidden="true" tabindex="-1"></a>    D3.<span class="fl">1.</span>AKI<span class="ot">&lt;-</span>D3.<span class="fl">1.</span>AKI <span class="sc">%&gt;%</span></span>
-<span id="cb2-94"><a href="data-use-1.html#cb2-94" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bind_rows</span>(temp) <span class="sc">%&gt;%</span></span>
-<span id="cb2-95"><a href="data-use-1.html#cb2-95" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="sc">-</span>date, iso3c)</span>
-<span id="cb2-96"><a href="data-use-1.html#cb2-96" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-97"><a href="data-use-1.html#cb2-97" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-98"><a href="data-use-1.html#cb2-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-99"><a href="data-use-1.html#cb2-99" aria-hidden="true" tabindex="-1"></a><span class="co">#fix countries not included</span></span>
-<span id="cb2-100"><a href="data-use-1.html#cb2-100" aria-hidden="true" tabindex="-1"></a>D3.<span class="fl">1.</span>AKI<span class="ot">&lt;-</span>D3.<span class="fl">1.</span>AKI <span class="sc">%&gt;%</span></span>
-<span id="cb2-101"><a href="data-use-1.html#cb2-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(spi_df_empty) <span class="sc">%&gt;%</span></span>
-<span id="cb2-102"><a href="data-use-1.html#cb2-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D1.5.POV=</span><span class="fu">if_else</span>(lending_type_iso3c<span class="sc">==</span><span class="st">&quot;LNX&quot;</span>,<span class="dv">1</span>,SPI.D1.<span class="fl">5.</span>POV)) <span class="sc">%&gt;%</span><span class="co">#we give non-IDA/IBRD/blend countries credit for this, because they are not measured in database</span></span>
-<span id="cb2-103"><a href="data-use-1.html#cb2-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, date, SPI.D1.<span class="fl">5.</span>POV)</span></code></pre></div>
+<span id="cb2-10"><a href="data-use-1.html#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="data-use-1.html#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Now loop from 2016 and 2019, keeping just data inside last 5 years.</span></span>
+<span id="cb2-12"><a href="data-use-1.html#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (reference_year <span class="cf">in</span> <span class="dv">2004</span><span class="sc">:</span>end_date) {</span>
+<span id="cb2-13"><a href="data-use-1.html#cb2-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-14"><a href="data-use-1.html#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">#extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period</span></span>
+<span id="cb2-15"><a href="data-use-1.html#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (reference_year<span class="sc">&gt;=</span><span class="dv">2022</span>) {</span>
+<span id="cb2-16"><a href="data-use-1.html#cb2-16" aria-hidden="true" tabindex="-1"></a>    rec_window<span class="ot">=</span><span class="dv">7</span></span>
+<span id="cb2-17"><a href="data-use-1.html#cb2-17" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (reference_year<span class="sc">==</span><span class="dv">2021</span>) {</span>
+<span id="cb2-18"><a href="data-use-1.html#cb2-18" aria-hidden="true" tabindex="-1"></a>    rec_window<span class="ot">=</span><span class="dv">6</span></span>
+<span id="cb2-19"><a href="data-use-1.html#cb2-19" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb2-20"><a href="data-use-1.html#cb2-20" aria-hidden="true" tabindex="-1"></a>    rec_window<span class="ot">=</span><span class="dv">5</span></span>
+<span id="cb2-21"><a href="data-use-1.html#cb2-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-22"><a href="data-use-1.html#cb2-22" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb2-23"><a href="data-use-1.html#cb2-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-24"><a href="data-use-1.html#cb2-24" aria-hidden="true" tabindex="-1"></a>  temp_5<span class="ot">&lt;-</span>df <span class="sc">%&gt;%</span></span>
+<span id="cb2-25"><a href="data-use-1.html#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(survey_coverage <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&#39;national&#39;</span>)) <span class="sc">%&gt;%</span> <span class="co">#keep just nationally representative samples</span></span>
+<span id="cb2-26"><a href="data-use-1.html#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">frequency=</span>((reference_year<span class="sc">-</span><span class="fu">as.numeric</span>(year))<span class="sc">&lt;=</span>rec_window) <span class="sc">&amp;</span> (reference_year<span class="sc">&gt;=</span><span class="fu">as.numeric</span>(year))) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-27"><a href="data-use-1.html#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(frequency<span class="sc">==</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-28"><a href="data-use-1.html#cb2-28" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">group_by</span>(country_code, survey_comparability) <span class="sc">%&gt;%</span> <span class="co">#for each country and comparability type, get number of comparable estimates</span></span>
+<span id="cb2-29"><a href="data-use-1.html#cb2-29" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">SPI.D1.5.POV_5=</span><span class="fu">n</span>())  <span class="sc">%&gt;%</span></span>
+<span id="cb2-30"><a href="data-use-1.html#cb2-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-31"><a href="data-use-1.html#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(country_code) <span class="sc">%&gt;%</span> <span class="co">#now get a total by country with the max number of comparable estimates</span></span>
+<span id="cb2-32"><a href="data-use-1.html#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarise</span>(<span class="at">SPI.D1.5.POV_5=</span><span class="fu">max</span>(SPI.D1.<span class="fl">5.</span>POV_5, <span class="at">na.rm=</span>T)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-33"><a href="data-use-1.html#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">SPI.D1.5.POV_5=</span><span class="fu">if_else</span>(SPI.D1.<span class="fl">5.</span>POV_5<span class="sc">&gt;=</span><span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span> <span class="co">#only give point if there is at least two observations that are comparable</span></span>
+<span id="cb2-34"><a href="data-use-1.html#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">date=</span>reference_year,</span>
+<span id="cb2-35"><a href="data-use-1.html#cb2-35" aria-hidden="true" tabindex="-1"></a>                 <span class="at">iso3c=</span>country_code) <span class="sc">%&gt;%</span></span>
+<span id="cb2-36"><a href="data-use-1.html#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(country_metadata) <span class="sc">%&gt;%</span></span>
+<span id="cb2-37"><a href="data-use-1.html#cb2-37" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">select</span>( iso3c, date, <span class="fu">starts_with</span>(<span class="st">&#39;SPI.D1.5.POV&#39;</span>)) </span>
+<span id="cb2-38"><a href="data-use-1.html#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="data-use-1.html#cb2-39" aria-hidden="true" tabindex="-1"></a>  temp_10<span class="ot">&lt;-</span>df <span class="sc">%&gt;%</span></span>
+<span id="cb2-40"><a href="data-use-1.html#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(survey_coverage <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&#39;national&#39;</span>)) <span class="sc">%&gt;%</span> <span class="co">#keep just nationally representative samples</span></span>
+<span id="cb2-41"><a href="data-use-1.html#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">frequency=</span>((reference_year<span class="sc">-</span><span class="fu">as.numeric</span>(year))<span class="sc">&lt;=</span><span class="dv">12</span>) <span class="sc">&amp;</span> (reference_year<span class="sc">&gt;=</span><span class="fu">as.numeric</span>(year))) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-42"><a href="data-use-1.html#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(frequency<span class="sc">==</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-43"><a href="data-use-1.html#cb2-43" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">group_by</span>(country_code, survey_comparability) <span class="sc">%&gt;%</span> <span class="co">#for each country and comparability type, get number of comparable estimates</span></span>
+<span id="cb2-44"><a href="data-use-1.html#cb2-44" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">SPI.D1.5.POV_10=</span><span class="fu">n</span>())  <span class="sc">%&gt;%</span></span>
+<span id="cb2-45"><a href="data-use-1.html#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-46"><a href="data-use-1.html#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(country_code) <span class="sc">%&gt;%</span> <span class="co">#now get a total by country with the max number of comparable estimates</span></span>
+<span id="cb2-47"><a href="data-use-1.html#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summarise</span>(<span class="at">SPI.D1.5.POV_10=</span><span class="fu">max</span>(SPI.D1.<span class="fl">5.</span>POV_10, <span class="at">na.rm=</span>T)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-48"><a href="data-use-1.html#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">SPI.D1.5.POV_10=</span><span class="fu">if_else</span>(SPI.D1.<span class="fl">5.</span>POV_10<span class="sc">&gt;=</span><span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span> <span class="co">#only give point if there is at least two observations that are comparable</span></span>
+<span id="cb2-49"><a href="data-use-1.html#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">date=</span>reference_year,</span>
+<span id="cb2-50"><a href="data-use-1.html#cb2-50" aria-hidden="true" tabindex="-1"></a>                 <span class="at">iso3c=</span>country_code) <span class="sc">%&gt;%</span></span>
+<span id="cb2-51"><a href="data-use-1.html#cb2-51" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(country_metadata) <span class="sc">%&gt;%</span></span>
+<span id="cb2-52"><a href="data-use-1.html#cb2-52" aria-hidden="true" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">select</span>( iso3c, date, <span class="fu">starts_with</span>(<span class="st">&#39;SPI.D1.5.POV&#39;</span>)) </span>
+<span id="cb2-53"><a href="data-use-1.html#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-54"><a href="data-use-1.html#cb2-54" aria-hidden="true" tabindex="-1"></a>  temp <span class="ot">&lt;-</span> temp_5 <span class="sc">%&gt;%</span></span>
+<span id="cb2-55"><a href="data-use-1.html#cb2-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(temp_10) <span class="sc">%&gt;%</span></span>
+<span id="cb2-56"><a href="data-use-1.html#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SPI.D1.5.POV=</span><span class="fu">case_when</span>(</span>
+<span id="cb2-57"><a href="data-use-1.html#cb2-57" aria-hidden="true" tabindex="-1"></a>      SPI.D1.<span class="fl">5.</span>POV_5<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb2-58"><a href="data-use-1.html#cb2-58" aria-hidden="true" tabindex="-1"></a>      SPI.D1.<span class="fl">5.</span>POV_10<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="fl">0.5</span>,</span>
+<span id="cb2-59"><a href="data-use-1.html#cb2-59" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span></span>
+<span id="cb2-60"><a href="data-use-1.html#cb2-60" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span></span>
+<span id="cb2-61"><a href="data-use-1.html#cb2-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>SPI.D1.<span class="fl">5.</span>POV_5,<span class="sc">-</span>SPI.D1.<span class="fl">5.</span>POV_10)</span>
+<span id="cb2-62"><a href="data-use-1.html#cb2-62" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-63"><a href="data-use-1.html#cb2-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="fu">paste</span>(<span class="st">&quot;D3.1.AKI&quot;</span>,reference_year,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
+<span id="cb2-64"><a href="data-use-1.html#cb2-64" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-65"><a href="data-use-1.html#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-66"><a href="data-use-1.html#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="co">#now append together and save</span></span>
+<span id="cb2-67"><a href="data-use-1.html#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2004</span><span class="sc">:</span>end_date)) {</span>
+<span id="cb2-68"><a href="data-use-1.html#cb2-68" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-69"><a href="data-use-1.html#cb2-69" aria-hidden="true" tabindex="-1"></a>  temp<span class="ot">&lt;-</span><span class="fu">get</span>(<span class="fu">paste</span>(<span class="st">&#39;D3.1.AKI_&#39;</span>,i, <span class="at">sep=</span><span class="st">&quot;&quot;</span>))</span>
+<span id="cb2-70"><a href="data-use-1.html#cb2-70" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-71"><a href="data-use-1.html#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">exists</span>(<span class="st">&#39;D3.1.AKI&#39;</span>)) {</span>
+<span id="cb2-72"><a href="data-use-1.html#cb2-72" aria-hidden="true" tabindex="-1"></a>    D3.<span class="fl">1.</span>AKI<span class="ot">&lt;-</span>temp</span>
+<span id="cb2-73"><a href="data-use-1.html#cb2-73" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb2-74"><a href="data-use-1.html#cb2-74" aria-hidden="true" tabindex="-1"></a>    D3.<span class="fl">1.</span>AKI<span class="ot">&lt;-</span>D3.<span class="fl">1.</span>AKI <span class="sc">%&gt;%</span></span>
+<span id="cb2-75"><a href="data-use-1.html#cb2-75" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bind_rows</span>(temp) <span class="sc">%&gt;%</span></span>
+<span id="cb2-76"><a href="data-use-1.html#cb2-76" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(<span class="sc">-</span>date, iso3c)</span>
+<span id="cb2-77"><a href="data-use-1.html#cb2-77" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-78"><a href="data-use-1.html#cb2-78" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-79"><a href="data-use-1.html#cb2-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-80"><a href="data-use-1.html#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="co">#fix countries not included</span></span>
+<span id="cb2-81"><a href="data-use-1.html#cb2-81" aria-hidden="true" tabindex="-1"></a>D3.<span class="fl">1.</span>AKI<span class="ot">&lt;-</span>D3.<span class="fl">1.</span>AKI <span class="sc">%&gt;%</span></span>
+<span id="cb2-82"><a href="data-use-1.html#cb2-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(spi_df_empty) <span class="sc">%&gt;%</span></span>
+<span id="cb2-83"><a href="data-use-1.html#cb2-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D1.5.POV=</span><span class="fu">if_else</span>(lending_type_iso3c<span class="sc">==</span><span class="st">&quot;LNX&quot;</span>,<span class="dv">1</span>,SPI.D1.<span class="fl">5.</span>POV)) <span class="sc">%&gt;%</span><span class="co">#we give non-IDA/IBRD/blend countries credit for this, because they are not measured in database</span></span>
+<span id="cb2-84"><a href="data-use-1.html#cb2-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, date, SPI.D1.<span class="fl">5.</span>POV)</span></code></pre></div>
 </div>
 <div id="mortality-rate-under-5-per-1000-live-births" class="section level3 hasAnchor" number="2.5.2">
 <h3><span class="header-section-number">2.5.2</span> Mortality rate, under-5 (per 1,000 live births)<a href="data-use-1.html#mortality-rate-under-5-per-1000-live-births" class="anchor-section" aria-label="Anchor link to header"></a></h3>

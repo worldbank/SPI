@@ -825,7 +825,7 @@ eq_plot_txt <- function(data) {
 The next section discusses how the values of the indicators have changed since `r start_date` and `r end_date`.  First, a discussion will be given of countries that have shown particular large changes in the SPI overall score, and the pillars that have seen the most change.  Next, a discussion of regional patterns is given.
 
 
-The SPI Overall Score is available for 181 economies in 2022.  These 181 economies cover 99.2 percent of the world population.  There has been an increase in the number of economies with an SPI overall score since 2016, with a rise from 167 economies to 181.  This is largely driven by an increase in the number of economies with a data openness score from [Open Data Watch](https://odin.opendatawatch.com/). While an SPI overall score is not available for all 217 economies listed in the World Bank's World Development Indicators, there is at least partial data available for all 217 economies.  If an economy does not have data for one of the indicators used to generate the SPI overall score, no score is produced for this country, as the SPI does not rely on modelling or imputation to produce the scores.
+The SPI Overall Score is available for `r nrow(spi_index_df %>% filter(!is.na(SPI.INDEX)) %>% filter(date==2022))` economies in 2022.  These `r nrow(spi_index_df %>% filter(!is.na(SPI.INDEX)) %>% filter(date==2022))` economies cover 99.3 percent of the world population.  There has been an increase in the number of economies with an SPI overall score since 2016, with a rise from 167 economies to `r nrow(spi_index_df %>% filter(!is.na(SPI.INDEX)) %>% filter(date==2022))`.  This is largely driven by an increase in the number of economies with a data openness score from [Open Data Watch](https://odin.opendatawatch.com/). While an SPI overall score is not available for all 217 economies listed in the World Bank's World Development Indicators, there is at least partial data available for all 217 economies.  If an economy does not have data for one of the indicators used to generate the SPI overall score, no score is produced for this country, as the SPI does not rely on modelling or imputation to produce the scores.
 
 *Figure 2. Number of Economies with SPI Overall Score.*
 ```{r}
@@ -936,13 +936,13 @@ changers_text <- data.frame(
   country=changers,
   text = c("Somalia improved greatly in the Data Use and Data Infrastructure Pillar.",
            "Iraq improved greatly in Data Services, including data openness, and by improving the CRVS.",
-           'Congo, Dem. Rep. improved on data openness and on reporting on SDG Indicators.',
            'Kiribati improved on reporting on SDG indicators (Pillar 3) and data openness.',
            'The United Arab Emirates improved on data openness and  reporting on the SDGs',
-           'The Gambia improved on Data Services and Data infrastructure',
-           'St. Lucia improved on data openness, SDG reporting, data sources, and data infrastructure.',
            'Saudi Arabia made improvemens on data openness, SDG reporting, and data infrastructure.',
            'Seychelles improved on data use, reporting on the SDGs, and data infastructure.',
+           'Congo, Dem. Rep. improved on data openness and on reporting on SDG Indicators.',
+           'The Gambia improved on Data Services and Data infrastructure',
+           'Jordan has improved in data infrastructure, and also data sources, data products, and data services.',
            'Uzbekistan improved on data openness, SDG reporting, as well as data sources and infrastructure.'
            
            )
