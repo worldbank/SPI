@@ -3,7 +3,7 @@ title: Technical Documentation on Data Sources and Methods for Statistical Perfo
   Indicators
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
-output: bookdown::word_document2
+output: bookdown::gitbook
 output_dir: "`r paste0(here::here(),'/docs')`"
 
 ---
@@ -910,32 +910,14 @@ Note: Because poverty surveys are reported with a lag, we start measuring whethe
 
 
 ```{r 3.1}
-library(povcalnetR) 
+library(pipr) 
 
-#the code below is based on public released code by povcalnet team:
-#https://github.com/worldbank/Global_Poverty_Blogs/blob/master/bg_povcalnet_comparability/R/comparability_breaks.R
-
-# some contants
-year_range <- 1990:2022
-metadata_path <- "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/506801/povcalnet_comparability.csv"
-
-# Load data ---------------------------------------------------------------
-
-metadata <- read_csv(metadata_path)
-cov_lkup <- c(3, 2, 1, 4)
-names(cov_lkup) <- c("N", "U", "R", "A")
-
-dat_lkup <- c(2,1)
-names(dat_lkup) <- c("income","consumption")
+#new pipr package already includes survey coverage and comparability measures
 
 
-pcn <- povcalnet()
-pcn$coveragetype <- cov_lkup[pcn$coveragetype]
-pcn$datatype <- dat_lkup[pcn$datatype]
+df <- get_stats()
 
-df <- pcn %>%
-  mutate(countrycode=as.character(countrycode)) %>%
-  inner_join(metadata, by = c("countrycode", "year", "coveragetype", "datatype"))
+
 
 
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
@@ -952,33 +934,32 @@ for (reference_year in 2004:end_date) {
  
   
   temp_5<-df %>%
-        filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
-
+        filter(survey_coverage %in% c('national')) %>% #keep just nationally representative samples
         mutate(frequency=((reference_year-as.numeric(year))<=rec_window) & (reference_year>=as.numeric(year))) %>% 
         filter(frequency==TRUE) %>%
-        dplyr::group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
+        dplyr::group_by(country_code, survey_comparability) %>% #for each country and comparability type, get number of comparable estimates
         dplyr::summarise(SPI.D1.5.POV_5=n())  %>%
         ungroup() %>%
-        group_by(countrycode) %>% #now get a total by country with the max number of comparable estimates
+        group_by(country_code) %>% #now get a total by country with the max number of comparable estimates
         summarise(SPI.D1.5.POV_5=max(SPI.D1.5.POV_5, na.rm=T)) %>%
         mutate(SPI.D1.5.POV_5=if_else(SPI.D1.5.POV_5>=2,1,0)) %>% #only give point if there is at least two observations that are comparable
         mutate(date=reference_year,
-                 iso3c=countrycode) %>%
+                 iso3c=country_code) %>%
         left_join(country_metadata) %>%
         dplyr::select( iso3c, date, starts_with('SPI.D1.5.POV')) 
 
   temp_10<-df %>%
-        filter(coveragetype %in% c(3,4)) %>% #keep just nationally representative samples
+        filter(survey_coverage %in% c('national')) %>% #keep just nationally representative samples
         mutate(frequency=((reference_year-as.numeric(year))<=12) & (reference_year>=as.numeric(year))) %>% 
         filter(frequency==TRUE) %>%
-        dplyr::group_by(countrycode, comparability) %>% #for each country and comparability type, get number of comparable estimates
+        dplyr::group_by(country_code, survey_comparability) %>% #for each country and comparability type, get number of comparable estimates
         dplyr::summarise(SPI.D1.5.POV_10=n())  %>%
         ungroup() %>%
-        group_by(countrycode) %>% #now get a total by country with the max number of comparable estimates
+        group_by(country_code) %>% #now get a total by country with the max number of comparable estimates
         summarise(SPI.D1.5.POV_10=max(SPI.D1.5.POV_10, na.rm=T)) %>%
         mutate(SPI.D1.5.POV_10=if_else(SPI.D1.5.POV_10>=2,1,0)) %>% #only give point if there is at least two observations that are comparable
         mutate(date=reference_year,
-                 iso3c=countrycode) %>%
+                 iso3c=country_code) %>%
         left_join(country_metadata) %>%
         dplyr::select( iso3c, date, starts_with('SPI.D1.5.POV')) 
 
