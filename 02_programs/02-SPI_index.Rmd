@@ -697,14 +697,14 @@ p2_alt3
 
 
 fcs_charts <- function(data, indicator, title) { 
-  #FY21 Fragile and conflict-affected situations (http://pubdocs.worldbank.org/en/888211594267968803/FCSList-FY21.pdf)
-  high_intensity_conflict <- c('Afghanistan', 'Libya', 'Somalia', 'Syrian Arab Republic' )
+  #FY22 Fragile and conflict-affected situations (https://thedocs.worldbank.org/en/doc/9b8fbdb62f7183cef819729cc9073671-0090082022/original/FCSList-FY06toFY22.pdf)
+  high_intensity_conflict <- c('Afghanistan', 'Somalia', 'Syrian Arab Republic','Yemen, Rep.', "Armenia", "Azerbaijan" )
   
-  medium_intensity_conflict <- c('Burkina Faso', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.',
-                                 'Iraq','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan','Yemen, Rep.')
+  medium_intensity_conflict <- c('Burkina Faso','Burundi', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.','Ethiopia','Haiti',
+                                 'Iraq', 'Libya','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan')
   
-  high_institutional_social_fragility <- c('Burundi','Congo, Rep.','Eritrea','Gambia, The','Guinea-Bissau',
-                                           'Haiti','Kosovo','Lao PDR','Lebanon','Liberia','Papua New Guinea',
+  high_institutional_social_fragility <- c('Congo, Rep.','Eritrea','Guinea-Bissau',
+                                           'Kosovo','Lebanon','Papua New Guinea',
                                            'Sudan','Venezuela, RB','West Bank and Gaza','Zimbabwe')
   
   small_states <- c('Comoros','Kiribati','Marshall Islands','Micronesia, Fed. Sts.','Solomon Islands','Timor-Leste','Tuvalu')
@@ -2936,20 +2936,20 @@ odin_df <- odin_df %>%
 
 
 #read in the old SPI
-SPI_v0_df <- readxl::read_excel(path='C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/FinalCopy of SPI SCORE 2016-2018-DW.xlsx', skip=2) %>%
-  transmute(
-    iso3c=Country,
-    SPI_2016=as.numeric(Overall...7),
-    SPI_2017=as.numeric(Overall...12),
-    SPI_2018=as.numeric(Overall...17)
-  ) %>%
-  pivot_longer(
-    cols=c('SPI_2016','SPI_2017','SPI_2018'),
-    names_to="date",
-    values_to = 'SPI_v0'
-  ) %>%
-  mutate(date=gsub('SPI_','',date),
-         date=as.numeric(date))
+# SPI_v0_df <- readxl::read_excel(path='C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/FinalCopy of SPI SCORE 2016-2018-DW.xlsx', skip=2) %>%
+#   transmute(
+#     iso3c=Country,
+#     SPI_2016=as.numeric(Overall...7),
+#     SPI_2017=as.numeric(Overall...12),
+#     SPI_2018=as.numeric(Overall...17)
+#   ) %>%
+#   pivot_longer(
+#     cols=c('SPI_2016','SPI_2017','SPI_2018'),
+#     names_to="date",
+#     values_to = 'SPI_v0'
+#   ) %>%
+#   mutate(date=gsub('SPI_','',date),
+#          date=as.numeric(date))
 
 
 #create one database
@@ -2962,9 +2962,9 @@ comparison_df <- spi_index_df %>%
   select(country, iso3c, date, income, region, SPI.INDEX) %>%
   left_join(sci_df) %>%
   left_join(odin_df) %>%
-  left_join(SPI_v0_df) %>%
+  #left_join(SPI_v0_df) %>%
   group_by(iso3c) %>%
-  fill(SCI, SPI_v0, .direction='downup')
+  fill(SCI, .direction='downup')
 
 
 
@@ -2975,16 +2975,15 @@ comparison_df <- spi_index_df %>%
 ```{r density}
 
 density_df <- comparison_df %>%
-  select(iso3c, date, SPI.INDEX, SPI_v0, ODIN_score, SCI) %>%
+  select(iso3c, date, SPI.INDEX, ODIN_score, SCI) %>%
   pivot_longer(
-    cols = c('SPI.INDEX', 'SPI_v0', 'ODIN_score', 'SCI'),
+    cols = c('SPI.INDEX', 'ODIN_score', 'SCI'),
     names_to='index',
     values_to='index_values'
   ) %>%
   mutate(
     index_name=case_when(
       index=='SPI.INDEX' ~ "SPI overall score",
-      index=='SPI_v0' ~ "SPI Index Version 0",
       index=='ODIN_score' ~ "Open Data Watch",
       index=='SCI' ~ "SCI",
       
@@ -3435,7 +3434,7 @@ gdp_reg_df <- wbstats::wb_data(
   end_date=2021
     ) %>%
   mutate(log_gdp_pcap=log(NY.GDP.PCAP.KD)) %>%
-  left_join(select(comparison_df,iso3c,date, region,SPI.INDEX,SCI,ODIN_score,SPI_v0)) #merge on SPI Index data
+  left_join(select(comparison_df,iso3c,date, region,SPI.INDEX,SCI,ODIN_score)) #merge on SPI Index data
   
   
 #regress Log GDP SPI
@@ -3454,13 +3453,13 @@ m_odin <- lm_robust(ODIN_score ~ log_gdp_pcap + factor(date), data = gdp_reg_df,
 
 
 #regress Log GDP SPI_v0
-m_spi_v0 <- lm_robust(SPI_v0 ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
-
-m_spi_tidy <- broom::tidy(m_spi)
-m_spi_glance <- broom::glance(m_spi)
-
-spi_coef <- as.numeric(m_spi_tidy[2,2])
-spi_r2 <- as.numeric(m_spi_glance[1,1])
+# m_spi_v0 <- lm_robust(SPI_v0 ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
+# 
+# m_spi_tidy <- broom::tidy(m_spi)
+# m_spi_glance <- broom::glance(m_spi)
+# 
+# spi_coef <- as.numeric(m_spi_tidy[2,2])
+# spi_r2 <- as.numeric(m_spi_glance[1,1])
 
 ```
 
@@ -3481,7 +3480,7 @@ Overall, the new SPI overall score has the strongest relationship to GDP per cap
 date_names <- grep("factor", names(coef(m_spi)), value = TRUE)
 names(date_names) <- gsub(".*)(.)", "Year: \\1", date_names)
 
-huxtable::huxreg('SPI overall score'=m_spi, 'SCI'=m_sci, 'Open Data Watch'=m_odin, 'SPI Version 0'=m_spi_v0,
+huxtable::huxreg('SPI overall score'=m_spi, 'SCI'=m_sci, 'Open Data Watch'=m_odin, 
        coefs=c('Log GDP per Capita'='log_gdp_pcap', date_names, 'Intercept'='(Intercept)'),
        note='{stars}. Heteroskedasticity Robust Std Errors in Parenthesis',
        number_format=2,
@@ -3495,14 +3494,13 @@ huxtable::huxreg('SPI overall score'=m_spi, 'SCI'=m_sci, 'Open Data Watch'=m_odi
 
 gdp_long <- gdp_reg_df %>%
   pivot_longer(
-    cols = c('SPI.INDEX', 'SPI_v0', 'ODIN_score', 'SCI'),
+    cols = c('SPI.INDEX', 'ODIN_score', 'SCI'),
     names_to='index',
     values_to='index_values'
   ) %>%
   mutate(
     index_name=case_when(
       index=='SPI.INDEX' ~ "SPI overall score",
-      index=='SPI_v0' ~ "SPI Index Version 0",
       index=='ODIN_score' ~ "Open Data Watch",
       index=='SCI' ~ "SCI",
       
@@ -3557,43 +3555,6 @@ spi_odin_plot
 
 
 
-
-As a final comparison, the new SPI overall score in compared with thehe index developed by [@cameron2019measuring], which can be thought of as a version 0 of t SPI overall score. The authors use similar data sources for their index. However, there are some differences.
-
-First, the similarities. The methodology for constructing the index is the same. Also, the censuses and surveys (Indicator 4.1) and standards and methods (Indicator 5.2) are identical. The indicator for data releases (Indicator 2.1) and data services (Indicator 2.4) are pulled from the information collected in the fourth dimension on dissemination practices from version 0 of the SPI in Cameron et al. (2019). Finally, both indicators include an indicator for Complete Vital Registration Statistics (CRVS). The CRVS indicator is in the administrative data section of the new SPI overall score, while it was in the standards, methods, and classifications section of the SPI version 0.
-
-For the differences, SPI version 0 had four dimensions, namely: (i) Methodology, Standards and Classifications (MSC), which provides information on the technology being used by the NSS; (ii) Census and Surveys (CS), which describes the intermediate products of the NSS; (iii) Availability of Key Indicators (AKI), which focuses on key final products needed for policy; and (iv) Dissemination Practices and Openness (DPO), which evaluates the extent to which products are publicly disseminated.
-
-The indicator on AKI, from version 0, is conceptually similar to the Data Products dimension in the new SPI, but uses different sources of data and the DPO section is similar to the SPI data services section, but draws on some different sources in some cases.
-
-We compare the SPI overall score to the SPI version 0.  The correlation between the SPI overall score and the version 0 index is `r round(cor(comparison_df$SPI.INDEX,comparison_df$SPI_v0, use='pairwise.complete.obs'),3)`
-
-
-*Figure A.7: Scatterplot of new SPI overall score on SPI Version 0 Index*
-```{r spiv0, echo=FALSE}
-
-
-### Scatterplot SPI SPI_v0
-spi_spi_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=SPI_v0, color=region)) +
-  facet_wrap(~date) +
-  # geom_point() +
-  geom_text(aes(label=iso3c)) +
-  theme_spi() +
-  labs(
-    title='Scatterplot of new SPI overall score on SPI Version 0 Index'
-  ) +
-  ylab('SPI overall score') +
-  xlab('SPI Version 0 value') +
-  theme(legend.position = 'bottom')
-
-spi_spi_plot
-
-
-
-
-
-
-```
 
 ## Other Tables and Figures
 

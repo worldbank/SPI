@@ -1,13 +1,14 @@
 ---
-title: 'March 2023 SPI Update: What is New?'
-author: "SPI Team"
+title: '2023 SPI Update: What is New?'
+author: "Prepared by Umar Serajuddin & Brian Stacy"
 date: "`r Sys.Date()`"
+date-format: long
 output:
   bookdown::word_document2: 
     fig_width: 9
     fig_height: 6
     number_sections: false
-abstract: 'In March 2023, the second vintage of the Statistical Performance Indicator (SPI) data was released. In this new edition, SPI scores for the calendar year 2020, 2021, and 2022 have been released. There were no changes to the framework, methodology, or data sources for the SPI compared to previous releases.  This document provides an overview of the major changes to the scores compared to the intial data release in March 2021, which contained data up to 2019.  '
+abstract: 'In 2023, the second vintage of the Statistical Performance Indicator (SPI) data was released. In this new edition, SPI scores for the calendar year 2020, 2021, and 2022 have been released. There were no changes to the framework, methodology, or data sources for the SPI compared to previous releases.  This document provides an overview of the major changes to the scores compared to the intial data release in March 2021, which contained data up to 2019.'
 bibliography: ./bibliography.bib
 ---
 
@@ -69,9 +70,9 @@ Before discussing the changes to the indicator values in the new SPI release, it
 
 There have been no changes to the SPI framework.  The SPI framework contains a set of 5 pillars and a total of 22 dimensions mapped to the 5 pillars.  Data is available for 14 out of the 22 dimensions of the SPI. Eight of the 22 dimensions currently lack a methodology for creating globally comparable indicators.  While a research agenda is underway to produce globally comparable indicators in these areas, even where there are no good sources, the SPI framework can help provide for a structured conversation that covers all areas of missing data.  For instance, a discussion can be had on whether the statistical system providing useful data to the national government (legislature and executive branches), to civil society, and to academia.  Whether the NSO provide advisory and analytical services, such as data stewardship services?  Or does the country have the right skills and effective partnerships between entities in the national statistical system? 
 
-*Figure 1. Missing Elements in the SPI Framework*
+*Figure 1. The SPI Framework*
 
-![Notes: Green tiles show areas with internationally comparable indicators for nearly all countries.  Yellow tiles show areas with internationally comparable indicators for most, but not all, countries.  Red tiles show areas with no comparable data available.](SPI_Framework_filled.png)
+![](SPI_dashboard.png)
 
 
 There have been no changes to the methodology of scoring the indicators or producing the overall scores.  Each of the 51 indicators are scored in the same way as the previous release in 2019.  Thus all newly released data is comparable with that of the prior release.  For more details on the scoring methodology, please consult the [SPI technical note](ttps://documents.worldbank.org/en/publication/documents-reports/documentdetail/815721616086786412).
@@ -1248,7 +1249,7 @@ name <- 'SPI Overall Score'
     ylab(str_wrap(paste0('Change in Score (',start_date,'-',end_date,')'),20)) +
     labs(
       #title=str_wrap("Countries in 2nd and 3rd deciles have grown most since 2019.",70),
-      subtitle=str_wrap(paste0('Change in SPI Overall Score from ',start_date,'-',end_date,' by 2019 decile group'),70),
+      subtitle=str_wrap(paste0('Change in SPI Overall Score from ',start_date,'-',end_date,' by ',start_date,' decile group'),70),
       caption=paste0(name,' scale = 0 - 100 points.')
     ) +
     expand_limits(y=c(-2,3)) +
@@ -1271,10 +1272,10 @@ Figure 5. Comparison of SPI Overall Scores in 2019 and 2022 - Unweighted Regiona
 ```{r}
 
 reg_avg <- spi_index_df %>%
-  filter(date==2019 | date==2022) %>%
+  filter(date==2016 | date==2019 | date==2022) %>%
   group_by(date, region) %>%
   summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
-  mutate(date=factor(date, levels=c(2019,2022)),
+  mutate(date=factor(date, levels=c(2016, 2019,2022)),
          region=factor(region, levels=c("North America", "Europe & Central Asia", "East Asia & Pacific","South Asia", "Latin America & Caribbean", "Middle East & North Africa", "Sub-Saharan Africa")))
 
 ggplot(reg_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(SPI.INDEX,0))) +
@@ -1294,10 +1295,10 @@ Figure 6. Comparison of SPI Overall Scores in 2019 and 2022 - Population Weighte
 ```{r}
 
 reg_w_avg <- spi_index_df %>%
-  filter(date==2019 | date==2022) %>%
+  filter(date==2016 | date==2019 | date==2022) %>%
   group_by(date, region) %>%
   summarise(SPI.INDEX=wtd.mean(SPI.INDEX, na.rm=TRUE, w=population)) %>%
-  mutate(date=factor(date, levels=c(2019,2022)),
+  mutate(date=factor(date, levels=c(2016, 2019,2022)),
          region=factor(region, levels=c("North America", "Europe & Central Asia", "Latin America & Caribbean","South Asia", "East Asia & Pacific",  "Middle East & North Africa", "Sub-Saharan Africa")))
 
 ggplot(reg_w_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(SPI.INDEX,0))) +
@@ -1312,6 +1313,115 @@ ggplot(reg_w_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round
   scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
 
 ```
+
+```{r eval=FALSE, include=FALSE}
+#| label: SAR
+#| fig-cap: 
+#Comparison of SPI Overall Scores in 2016, 2019, and 2022 - SAR
+
+#SAR
+
+sar_avg <- spi_index_df %>%
+  filter(region=="South Asia") %>%
+  filter(date==2016 | date==2019 | date==2022) %>%
+  mutate(
+    date=factor(date, levels=c(2016, 2019,2022))
+  ) %>%
+  arrange(date)
+
+
+ggplot(sar_avg, aes(x=country,y=SPI.INDEX, fill=date,group = country,label=round(SPI.INDEX,0))) +
+  geom_col(position = 'dodge2') +
+  geom_text(position = position_dodge2(width = 1), size=4) +
+  ylab("SPI Overall Score") +
+  ggtitle('SPI Overall Score by Year') +
+  theme_minimal() +
+  theme(legend.position='top',
+        text = element_text(size = 14),
+        axis.text.x=element_text(size = 14)) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
+```
+
+
+## How Have Scores by Income Group Changed
+
+
+
+Finally, a comparison is given between the income group overall scores over time.  Scores again will be broken down in two ways.  First, an unweighted average of the scores across countries.  Second, an regional average weighted by the population size of the country.
+
+
+Figure 7. Comparison of SPI Overall Scores from 2016 to 2022 - Unweighted Income Group Averages
+```{r}
+
+inc_avg <- spi_index_df %>%
+  filter(date>=2016 ) %>%
+  filter(income!="Not classified") %>%
+  group_by(date, income) %>%
+  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
+  mutate(date=factor(date, levels=c(2016, 2017, 2018, 2019, 2020, 2021,2022)),
+         income=factor(income, levels=c("High income","Upper middle income", "Lower middle income", "Low income")))
+
+ggplot(inc_avg, aes(x=date,y=SPI.INDEX, color=income,group = income,label=round(SPI.INDEX,0))) +
+  geom_line() +
+  geom_point() +
+  ylab("SPI Overall Score") +
+  ggtitle('Unweighted Income Group Average of SPI Overall Score by Year') +
+  scale_color_manual(
+    values = c(
+      "Low income" = "#ffb703",
+      "Lower middle income" = "#8ecae6",
+      "Upper middle income" = "#219ebc",
+      "High income" = "#023047"
+    )
+  ) +
+  theme_minimal() +
+  theme(legend.position='top',
+        text = element_text(size = 14),
+        axis.text.x=element_text(size = 14)) +
+  expand_limits(y=c(0,100))
+
+```
+
+Figure 8. Comparison of SPI Overall Scores from 2016 to 2022 - Population Weighted Income Group Averages
+```{r}
+
+inc_w_avg <- spi_index_df %>%
+  filter(date>=2016 ) %>%
+  filter(income!="Not classified") %>%
+  group_by(date, income) %>%
+  summarise(SPI.INDEX=wtd.mean(SPI.INDEX, weights=population, na.rm=TRUE)) %>%
+  mutate(date=factor(date, levels=c(2016, 2017, 2018, 2019, 2020, 2021,2022)),
+         income=factor(income, levels=c("High income","Upper middle income", "Lower middle income", "Low income")))
+
+ggplot(inc_w_avg, aes(x=date,y=SPI.INDEX, color=income,group = income,label=round(SPI.INDEX,0))) +
+  geom_line() +
+  geom_point() +
+  ylab("SPI Overall Score") +
+  ggtitle('Population Weighted Income Group Average of SPI Overall Score by Year') +
+  scale_color_manual(
+    values = c(
+      "Low income" = "#ffb703",
+      "Lower middle income" = "#8ecae6",
+      "Upper middle income" = "#219ebc",
+      "High income" = "#023047"
+    )
+  ) +
+  theme_minimal() +
+  theme(legend.position='top',
+        text = element_text(size = 14),
+        axis.text.x=element_text(size = 14)) +
+  expand_limits(y=c(0,100))
+
+# inc_avg %>%
+#   rename(`Unweighted SPI Overall Score`=SPI.INDEX) %>%
+#   left_join(inc_w_avg) %>%
+#   rename(`Population Weighted SPI Overall Score`=SPI.INDEX) %>%
+#   write_excel_csv(file=paste0(output_dir, "/SPI_income_group_averaged.csv"))
+
+```
+
+
+
 
 # Appendix
 

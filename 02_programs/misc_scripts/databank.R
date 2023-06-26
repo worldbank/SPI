@@ -171,8 +171,12 @@ data_bank_df_wide <- databank_df %>%
 excel <- list('Indicators'=databank_df, 
             'Series_Metadata'=series_metadata)
 
-writexl::write_xlsx(excel,
+writexl::write_xlsx(databank_df,
                     path=paste(output_dir, "/SPI_databank.xlsx", sep=""))
+
+databank_df %>% filter(date==2022) %>% left_join(metadata) %>% filter(!is.na(pillar)) %>% writexl::write_xlsx(
+  path=paste(output_dir, "/SPI_databank_latest.xlsx", sep=""))
+
 
 xlsx::write.xlsx(databank_df, file=paste(output_dir, "/SPI_databank.xlsx", sep=""),
                  sheetName = 'Indicators')

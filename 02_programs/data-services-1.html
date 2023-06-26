@@ -23,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2023-02-15" />
+<meta name="date" content="2023-04-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -93,7 +93,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -106,7 +106,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -249,56 +249,57 @@ e-GDDS websites.</p>
 <p>1 Point. Subscribing to IMF SDDS+ or SDDS standards
 0.5 Points. Subscribing to IMF e-GDDS standards
 0 Points. Otherwise</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="data-services-1.html#cb12-1" aria-hidden="true" tabindex="-1"></a>Request_metadata <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="at">url =</span> <span class="st">&quot;http://api.worldbank.org/v2/country/all/indicator/5.21.01.01.sdds?format=json&amp;date=2004:2015&amp;per_page=5000&quot;</span>)</span>
-<span id="cb12-2"><a href="data-services-1.html#cb12-2" aria-hidden="true" tabindex="-1"></a>Response_metadata <span class="ot">&lt;-</span> <span class="fu">content</span>(Request_metadata, <span class="at">as =</span> <span class="st">&quot;text&quot;</span>, <span class="at">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>)</span>
-<span id="cb12-3"><a href="data-services-1.html#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="data-services-1.html#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse the JSON content and convert it to a data frame.</span></span>
-<span id="cb12-5"><a href="data-services-1.html#cb12-5" aria-hidden="true" tabindex="-1"></a>D2<span class="fl">.1</span>_DSDR_sci <span class="ot">&lt;-</span> jsonlite<span class="sc">::</span><span class="fu">fromJSON</span>(Response_metadata, <span class="at">flatten =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb12-6"><a href="data-services-1.html#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb12-7"><a href="data-services-1.html#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
-<span id="cb12-8"><a href="data-services-1.html#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">iso3c=</span>countryiso3code,</span>
-<span id="cb12-9"><a href="data-services-1.html#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">country=</span>country.value,</span>
-<span id="cb12-10"><a href="data-services-1.html#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">date=</span><span class="fu">as.numeric</span>(date),</span>
-<span id="cb12-11"><a href="data-services-1.html#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">SDDS=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(value),<span class="dv">0</span>,<span class="fu">as.numeric</span>(value))</span>
-<span id="cb12-12"><a href="data-services-1.html#cb12-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb12-13"><a href="data-services-1.html#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(spi_df_empty) <span class="sc">%&gt;%</span> <span class="co">#add on country metadata</span></span>
-<span id="cb12-14"><a href="data-services-1.html#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(income_level)) <span class="sc">%&gt;%</span></span>
-<span id="cb12-15"><a href="data-services-1.html#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c,  date, SDDS  ) </span>
-<span id="cb12-16"><a href="data-services-1.html#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="data-services-1.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse the JSON content and convert it to a data frame.</span></span>
+<span id="cb12-2"><a href="data-services-1.html#cb12-2" aria-hidden="true" tabindex="-1"></a>D2<span class="fl">.1</span>_DSDR_sci <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste0</span>(raw_dir, <span class="st">&quot;/2.1_DSDR/SCI_archived_data.csv&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="data-services-1.html#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb12-4"><a href="data-services-1.html#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span>YR2004<span class="sc">:</span>YR2015,</span>
+<span id="cb12-5"><a href="data-services-1.html#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">&#39;date&#39;</span>,</span>
+<span id="cb12-6"><a href="data-services-1.html#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">&#39;value&#39;</span></span>
+<span id="cb12-7"><a href="data-services-1.html#cb12-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-8"><a href="data-services-1.html#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Series Code</span><span class="st">`</span><span class="sc">==</span><span class="st">&#39;5.21.01.01.sdds&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-9"><a href="data-services-1.html#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb12-10"><a href="data-services-1.html#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">iso3c=</span><span class="st">`</span><span class="at">Country Code</span><span class="st">`</span>,</span>
+<span id="cb12-11"><a href="data-services-1.html#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">date=</span><span class="fu">as.numeric</span>(<span class="fu">str_remove_all</span>(date,<span class="st">&quot;YR&quot;</span>)),</span>
+<span id="cb12-12"><a href="data-services-1.html#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">SDDS=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(value),<span class="dv">0</span>,<span class="fu">as.numeric</span>(value))</span>
+<span id="cb12-13"><a href="data-services-1.html#cb12-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-14"><a href="data-services-1.html#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(spi_df_empty) <span class="sc">%&gt;%</span> <span class="co">#add on country metadata</span></span>
+<span id="cb12-15"><a href="data-services-1.html#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(income_level)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-16"><a href="data-services-1.html#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c,  date, SDDS  ) </span>
 <span id="cb12-17"><a href="data-services-1.html#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-18"><a href="data-services-1.html#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-19"><a href="data-services-1.html#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#read in metadata file.</span></span>
-<span id="cb12-20"><a href="data-services-1.html#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-21"><a href="data-services-1.html#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#pull data for several of the standards from WDI metadata</span></span>
-<span id="cb12-22"><a href="data-services-1.html#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-23"><a href="data-services-1.html#cb12-23" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> WDI_metadata</span>
-<span id="cb12-24"><a href="data-services-1.html#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-25"><a href="data-services-1.html#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Manipulate and clean final data</span></span>
-<span id="cb12-26"><a href="data-services-1.html#cb12-26" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb12-27"><a href="data-services-1.html#cb12-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Income.Group))  <span class="co">#keep just countries (drop aggregations)</span></span>
-<span id="cb12-28"><a href="data-services-1.html#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="data-services-1.html#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="data-services-1.html#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co">#read in metadata file.</span></span>
+<span id="cb12-21"><a href="data-services-1.html#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="data-services-1.html#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#pull data for several of the standards from WDI metadata</span></span>
+<span id="cb12-23"><a href="data-services-1.html#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="data-services-1.html#cb12-24" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> WDI_metadata</span>
+<span id="cb12-25"><a href="data-services-1.html#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="data-services-1.html#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Manipulate and clean final data</span></span>
+<span id="cb12-27"><a href="data-services-1.html#cb12-27" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb12-28"><a href="data-services-1.html#cb12-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Income.Group))  <span class="co">#keep just countries (drop aggregations)</span></span>
 <span id="cb12-29"><a href="data-services-1.html#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-30"><a href="data-services-1.html#cb12-30" aria-hidden="true" tabindex="-1"></a>D2<span class="fl">.1</span>_DSDR <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb12-31"><a href="data-services-1.html#cb12-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iso3c=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(Country.Code), Code, Country.Code),</span>
-<span id="cb12-32"><a href="data-services-1.html#cb12-32" aria-hidden="true" tabindex="-1"></a>         <span class="at">country=</span>Table.Name) <span class="sc">%&gt;%</span></span>
-<span id="cb12-33"><a href="data-services-1.html#cb12-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="st">&#39;iso3c&#39;</span>,  <span class="st">&#39;date&#39;</span>,  <span class="st">&#39;IMF.data.dissemination.standard&#39;</span>)  ) <span class="sc">%&gt;%</span></span>
-<span id="cb12-34"><a href="data-services-1.html#cb12-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IDDS=</span>IMF.data.dissemination.standard) <span class="sc">%&gt;%</span></span>
-<span id="cb12-35"><a href="data-services-1.html#cb12-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D2.1.GDDS=</span><span class="fu">case_when</span>(</span>
-<span id="cb12-36"><a href="data-services-1.html#cb12-36" aria-hidden="true" tabindex="-1"></a>    IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard Plus (SDDS+)&quot;</span> <span class="sc">|</span> IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard Plus (SDDS Plus)&quot;</span> <span class="sc">|</span> IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard (SDDS)&quot;</span><span class="sc">~</span> <span class="dv">1</span>, </span>
-<span id="cb12-37"><a href="data-services-1.html#cb12-37" aria-hidden="true" tabindex="-1"></a>    IDDS<span class="sc">==</span><span class="st">&quot;Enhanced General Data Dissemination System (e-GDDS)&quot;</span><span class="sc">~</span> <span class="fl">0.5</span>,</span>
-<span id="cb12-38"><a href="data-services-1.html#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> ),</span>
-<span id="cb12-39"><a href="data-services-1.html#cb12-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">SDDS=</span><span class="fu">case_when</span>(</span>
-<span id="cb12-40"><a href="data-services-1.html#cb12-40" aria-hidden="true" tabindex="-1"></a>     IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard (SDDS)&quot;</span><span class="sc">~</span> <span class="dv">1</span>, </span>
-<span id="cb12-41"><a href="data-services-1.html#cb12-41" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> ))  <span class="sc">%&gt;%</span></span>
-<span id="cb12-42"><a href="data-services-1.html#cb12-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(D2<span class="fl">.1</span>_DSDR_sci) <span class="sc">%&gt;%</span></span>
-<span id="cb12-43"><a href="data-services-1.html#cb12-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D2.1.GDDS=</span>IDDS) <span class="sc">%&gt;%</span></span>
-<span id="cb12-44"><a href="data-services-1.html#cb12-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c,  date, RAW.D2.<span class="fl">1.</span>GDDS, SPI.D2.<span class="fl">1.</span>GDDS  ) <span class="sc">%&gt;%</span></span>
-<span id="cb12-45"><a href="data-services-1.html#cb12-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(country_metadata)</span>
-<span id="cb12-46"><a href="data-services-1.html#cb12-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-47"><a href="data-services-1.html#cb12-47" aria-hidden="true" tabindex="-1"></a>D2<span class="fl">.1</span>_DSDR_map <span class="ot">&lt;-</span> D2<span class="fl">.1</span>_DSDR </span>
-<span id="cb12-48"><a href="data-services-1.html#cb12-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="data-services-1.html#cb12-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-31"><a href="data-services-1.html#cb12-31" aria-hidden="true" tabindex="-1"></a>D2<span class="fl">.1</span>_DSDR <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb12-32"><a href="data-services-1.html#cb12-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iso3c=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(Country.Code), Code, Country.Code),</span>
+<span id="cb12-33"><a href="data-services-1.html#cb12-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">country=</span>Table.Name) <span class="sc">%&gt;%</span></span>
+<span id="cb12-34"><a href="data-services-1.html#cb12-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="st">&#39;iso3c&#39;</span>,  <span class="st">&#39;date&#39;</span>,  <span class="st">&#39;IMF.data.dissemination.standard&#39;</span>)  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-35"><a href="data-services-1.html#cb12-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IDDS=</span>IMF.data.dissemination.standard) <span class="sc">%&gt;%</span></span>
+<span id="cb12-36"><a href="data-services-1.html#cb12-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D2.1.GDDS=</span><span class="fu">case_when</span>(</span>
+<span id="cb12-37"><a href="data-services-1.html#cb12-37" aria-hidden="true" tabindex="-1"></a>    IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard Plus (SDDS+)&quot;</span> <span class="sc">|</span> IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard Plus (SDDS Plus)&quot;</span> <span class="sc">|</span> IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard (SDDS)&quot;</span><span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb12-38"><a href="data-services-1.html#cb12-38" aria-hidden="true" tabindex="-1"></a>    IDDS<span class="sc">==</span><span class="st">&quot;Enhanced General Data Dissemination System (e-GDDS)&quot;</span><span class="sc">~</span> <span class="fl">0.5</span>,</span>
+<span id="cb12-39"><a href="data-services-1.html#cb12-39" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> ),</span>
+<span id="cb12-40"><a href="data-services-1.html#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">SDDS=</span><span class="fu">case_when</span>(</span>
+<span id="cb12-41"><a href="data-services-1.html#cb12-41" aria-hidden="true" tabindex="-1"></a>     IDDS<span class="sc">==</span><span class="st">&quot;Special Data Dissemination Standard (SDDS)&quot;</span><span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb12-42"><a href="data-services-1.html#cb12-42" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> ))  <span class="sc">%&gt;%</span></span>
+<span id="cb12-43"><a href="data-services-1.html#cb12-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(D2<span class="fl">.1</span>_DSDR_sci) <span class="sc">%&gt;%</span></span>
+<span id="cb12-44"><a href="data-services-1.html#cb12-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D2.1.GDDS=</span>IDDS) <span class="sc">%&gt;%</span></span>
+<span id="cb12-45"><a href="data-services-1.html#cb12-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c,  date, RAW.D2.<span class="fl">1.</span>GDDS, SPI.D2.<span class="fl">1.</span>GDDS  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-46"><a href="data-services-1.html#cb12-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(country_metadata)</span>
+<span id="cb12-47"><a href="data-services-1.html#cb12-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-48"><a href="data-services-1.html#cb12-48" aria-hidden="true" tabindex="-1"></a>D2<span class="fl">.1</span>_DSDR_map <span class="ot">&lt;-</span> D2<span class="fl">.1</span>_DSDR </span>
 <span id="cb12-49"><a href="data-services-1.html#cb12-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-50"><a href="data-services-1.html#cb12-50" aria-hidden="true" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;D2.1_DSDR_map&#39;</span>, <span class="st">&#39;SPI.D2.1.GDDS&#39;</span>, <span class="st">&#39;SDDS Data Standards in Place&#39;</span> )</span></code></pre></div>
+<span id="cb12-50"><a href="data-services-1.html#cb12-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-51"><a href="data-services-1.html#cb12-51" aria-hidden="true" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;D2.1_DSDR_map&#39;</span>, <span class="st">&#39;SPI.D2.1.GDDS&#39;</span>, <span class="st">&#39;SDDS Data Standards in Place&#39;</span> )</span></code></pre></div>
 <p><img src="01-SPI_data_prep_files/figure-html/idds-1.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/idds-2.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/idds-3.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/idds-4.png" width="960" /></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="data-services-1.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#add to spi databases</span></span>
 <span id="cb13-2"><a href="data-services-1.html#cb13-2" aria-hidden="true" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>

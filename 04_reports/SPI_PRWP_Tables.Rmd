@@ -55,7 +55,7 @@ wgt <- 1
 pop_df <- wbstats::wb_data(country="all",
              indicator='SP.POP.TOTL',
              start_date=2004,
-             end_date=2020) %>%
+             end_date=2022) %>%
   mutate(date=as.numeric(date)) %>%
   mutate(population=SP.POP.TOTL) %>%
   select(country, date, population) 
@@ -75,19 +75,11 @@ metadata <- data.frame(
 #get list of country info
 country_list <- wbstats::wb_countries()
 
-SPI_WDI <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_index.csv') %>%
-    left_join(pop_df) %>%
-  mutate(weights=wgt)  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
 
+SPI <- spi_index_df
 
-SPI_2020 <- spi_index_df %>%
-  filter(date==2020) %>%
-  filter(!is.na(SPI.INDEX) & !is.na(weights)) %>%
-  mutate(ISO_A3_EH=iso3c) 
-
-
-SPI <- SPI_2020 %>%
-  bind_rows(SPI_WDI)
+SPI_2022 <- spi_index_df %>%
+  filter(date==2022)
 #read in TopoJSON from World Bank
 #countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
 #                                     what = "sp")
@@ -117,7 +109,7 @@ standard_crop_wintri <- function() {
   l
 }
 country_metadata <- wbstats::wbcountries()
-data = SPI_2020
+data = SPI_2022
 spi_mapper <- function(data, indicator, title) {
   
  indicator<-indicator
@@ -201,7 +193,7 @@ spi_charts  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2020 or the latest year available'
+      subtitle= 'Based on data for 2022 or the latest year available'
       ) +
       expand_limits(x=c(0,100)) +
       theme_spi() +
@@ -222,7 +214,7 @@ spi_charts  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2020 or the latest year available'
+      subtitle= 'Based on data for 2022 or the latest year available'
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
@@ -298,7 +290,7 @@ spi_country_charts  <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Country', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2020 or the latest year available'
+      subtitle= 'Based on data for 2022 or the latest year available'
       ) +
       xlab('Score') +
       expand_limits(x=c(0,100)) +
@@ -337,7 +329,7 @@ income_charts <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2020 or the latest year available'
+      subtitle= 'Based on data for 2022 or the latest year available'
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
@@ -373,7 +365,7 @@ spi_income_aggregates <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Income', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2020 or the latest year available'
+      subtitle= 'Based on data for 2022 or the latest year available'
       ) +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
@@ -409,7 +401,7 @@ lending_charts <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2020 or the latest year available'
+      subtitle= 'Based on data for 2022 or the latest year available'
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
@@ -447,7 +439,7 @@ lending_chart_aggregate <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2020 or the latest year available'
+      subtitle= 'Based on data for 2022 or the latest year available'
       ) +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
@@ -510,7 +502,7 @@ fcs_charts <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2020 or the latest year available'
+      subtitle= 'Based on data for 2022 or the latest year available'
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
@@ -573,7 +565,7 @@ fcs_chart_aggregate <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= 'Based on data for 2020 or the latest year available'
+      subtitle= 'Based on data for 2022 or the latest year available'
       ) +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
@@ -612,13 +604,13 @@ eq_plot_txt <- function(data) {
 
 ![](SPI_dashboard.png)
 
-## SPI Overall Scores by Quintile in 2020
+## SPI Overall Scores by Quintile in 2022
 
 ![](plots/map-1.png)
 
 
 
-## SPI Overall Scores by Income Group in 2020
+## SPI Overall Scores by Income Group in 2022
 
 
 ```{r incomecharts, echo=FALSE, message=FALSE, warning=FALSE}
@@ -629,7 +621,7 @@ spi_income_aggregates('SPI','SPI.INDEX','Statistical Performance Indicators -  O
 income_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
 ```
 
-## SPI Overall Scores by Lending Type in 2020
+## SPI Overall Scores by Lending Type in 2022
 
 ```{r lendingcharts, echo=FALSE, message=FALSE, warning=FALSE}
 lending_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
@@ -645,7 +637,7 @@ lending_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall 
 
 ![](plots/spicountrycharts-1.png)
 
-## SPI Overall Scores by FCS Status in 2020
+## SPI Overall Scores by FCS Status in 2022
 
 ```{r fcscharts, echo=FALSE, message=FALSE, warning=FALSE}
 fcs_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
@@ -655,7 +647,7 @@ fcs_chart_aggregate('SPI','SPI.INDEX','Statistical Performance Indicators -  Ove
 fcs_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scores')
 ```
 
-## Correlation between the SPI Pillars in 2020
+## Correlation between the SPI Pillars in 2022
 
 ![](plots/dimcorr-1.png)
 
@@ -676,20 +668,20 @@ fcs_charts('SPI','SPI.INDEX','Statistical Performance Indicators -  Overall Scor
 pov_df <- wbstats::wb_data(country="countries_only", 
               indicator='SI.POV.DDAY',
               start_date=2010,
-              end_date=2020,
+              end_date=2022,
               mrv=10,
               gapfill=TRUE,
               return_wide = F) %>%
   left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
-#get the correlation for 2020
-pov_df_2020 <- pov_df %>%
-  filter(date==2020) 
-eq <- lm_robust(SPI.INDEX ~ value, data=pov_df_2020, se_type='HC2')
+#get the correlation for 2022
+pov_df_2022 <- pov_df %>%
+  filter(date==2021) 
+eq <- lm_robust(SPI.INDEX ~ value, data=pov_df_2022, se_type='HC2')
 coef <- coef(eq)
 std_err <- sqrt(diag(vcov(eq)))
 r_2<- summary(eq)$r.squared
 eq_txt <- sprintf("y = %.3f + %.3f x, R^2 = %.3f \n     (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
- # ggplot(data=pov_df_2020, aes(x=value, y=SPI.INDEX)) +
+ # ggplot(data=pov_df_2022, aes(x=value, y=SPI.INDEX)) +
  #  facet_wrap(~indicator) +
  #  geom_text(aes(label=iso3c)) +
  #  geom_smooth(method='lm') +
@@ -710,7 +702,7 @@ eq_txt <- sprintf("y = %.3f + %.3f x, R^2 = %.3f \n     (%.3f)   (%.3f)", coef[1
  #                                              stat(x_estimate),
  #                                              stat(x_p.value)))) +
  #    theme(legend.position = 'bottom')
-pov_spi <- ggplot(data=pov_df_2020, aes(x=value, y=SPI.INDEX)) +
+pov_spi <- ggplot(data=pov_df_2022, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
@@ -719,25 +711,25 @@ pov_spi <- ggplot(data=pov_df_2020, aes(x=value, y=SPI.INDEX)) +
   ylab('SPI Overall Score') +
   xlab('Poverty Headcount Ratio at $1.90 a day') +
   geom_richtext(
-    aes(x = 20, y = 5,label = eq_plot_txt(pov_df_2020), hjust=0.2)
+    aes(x = 20, y = 5,label = eq_plot_txt(pov_df_2022), hjust=0.2)
   ) +
-  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2020), hjust = 0) +
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2022), hjust = 0) +
   theme(legend.position = 'bottom'
         )
 #gini
 gini_df <- wbstats::wb_data(
   indicator='SI.POV.GINI',
   start_date=2010,
-  end_date=2020,
+  end_date=2022,
   mrv=10,
   gapfill=TRUE,
   return_wide = F
     ) %>%
   left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
-#get the correlation for 2020
-gini_df_2020 <- gini_df %>%
-  filter(date==2020) 
-  # gini_spi <- ggplot(data=gini_df_2020, aes(x=value, y=SPI.INDEX)) +
+#get the correlation for 2022
+gini_df_2022 <- gini_df %>%
+  filter(date==2021) 
+  # gini_spi <- ggplot(data=gini_df_2022, aes(x=value, y=SPI.INDEX)) +
   # facet_wrap(~indicator) +
   # geom_text(aes(label=iso3c)) +
   # geom_smooth(method='lm') +
@@ -758,7 +750,7 @@ gini_df_2020 <- gini_df %>%
   #                                             stat(x_estimate),
   #                                             stat(x_p.value))))
   
-gini_spi <- ggplot(data=gini_df_2020, aes(x=value, y=SPI.INDEX)) +
+gini_spi <- ggplot(data=gini_df_2022, aes(x=value, y=SPI.INDEX)) +
   facet_wrap(~indicator) +
   geom_text(aes(label=iso3c)) +
   geom_smooth(method='lm') +
@@ -767,7 +759,7 @@ gini_spi <- ggplot(data=gini_df_2020, aes(x=value, y=SPI.INDEX)) +
   ylab('SPI Overall Score') +
   xlab('Gini Index')  +
   geom_richtext(
-    aes(x = 40, y = 5,label = eq_plot_txt(gini_df_2020), hjust=0.2)
+    aes(x = 40, y = 5,label = eq_plot_txt(gini_df_2022), hjust=0.2)
   ) +
     theme(legend.position = 'bottom')
 ```
@@ -788,7 +780,7 @@ pov_spi + gini_spi   +
 ```{r zipper, fig.height=12}
  # create dataframe by income
       df_aggregated <- spi_index_df %>%
-        filter(date==2020) %>%
+        filter(date==2022) %>%
         select(country,income, starts_with('SPI.INDEX')) %>%
         ungroup() %>%
         filter(!is.na(SPI.INDEX)) %>%
@@ -842,7 +834,7 @@ pov_spi + gini_spi   +
 
 ```{r decompstacked, echo=FALSE}
   decomp_stacked_df <- SPI %>%
-    filter(date==2020) %>%
+    filter(date==2022) %>%
     select(country, income, iso3c, date, starts_with('SPI.INDEX')) %>%
     filter(!is.na(SPI.INDEX)) 
     
@@ -935,8 +927,8 @@ growth_plot <- function(variables, name) {
                 names_prefix='spi_data_',
                 values_from=c('spi_data')) %>%
     ungroup() %>%
-    mutate(growth=(spi_data_2020-spi_data_2016)) %>%
-    filter(!(is.na(spi_data_2020) | is.na(spi_data_2016))) %>%
+    mutate(growth=(spi_data_2022-spi_data_2016)) %>%
+    filter(!(is.na(spi_data_2022) | is.na(spi_data_2016))) %>%
     mutate(spi_rank=100*rank(spi_data_2016)/length(spi_data_2016),
            spi_bins=case_when( #calculate deciles
              between(spi_rank,0,10) ~ "1st Decile",
@@ -1004,8 +996,8 @@ overall_bottom_40 <- SPI %>%
                 names_prefix='spi_data_',
                 values_from=c('spi_data')) %>%
     ungroup() %>%
-    mutate(growth=(spi_data_2020-spi_data_2016)) %>%
-    filter(!(is.na(spi_data_2020) | is.na(spi_data_2016))) %>%
+    mutate(growth=(spi_data_2022-spi_data_2016)) %>%
+    filter(!(is.na(spi_data_2022) | is.na(spi_data_2016))) %>%
     mutate(spi_rank=100*rank(spi_data_2016)/length(spi_data_2016),
            spi_bins=case_when( #calculate deciles
              between(spi_rank,0,10) ~ "1st Decile",
@@ -1040,14 +1032,14 @@ overall_bottom_40 <- SPI %>%
     pivot_wider(names_from=date,
                 values_from=starts_with('SPI.INDEX')) %>%
     ungroup() %>%
-    mutate(overall_growth=(SPI.INDEX_2020-SPI.INDEX_2016),
-           dim1_growth=(SPI.INDEX.PIL1_2020-SPI.INDEX.PIL1_2016),
-           dim2_growth=(SPI.INDEX.PIL2_2020-SPI.INDEX.PIL2_2016),
-           dim3_growth=(SPI.INDEX.PIL3_2020-SPI.INDEX.PIL3_2016),
-           dim4_growth=(SPI.INDEX.PIL4_2020-SPI.INDEX.PIL4_2016),
-           dim5_growth=(SPI.INDEX.PIL5_2020-SPI.INDEX.PIL5_2016)
+    mutate(overall_growth=(SPI.INDEX_2022-SPI.INDEX_2016),
+           dim1_growth=(SPI.INDEX.PIL1_2022-SPI.INDEX.PIL1_2016),
+           dim2_growth=(SPI.INDEX.PIL2_2022-SPI.INDEX.PIL2_2016),
+           dim3_growth=(SPI.INDEX.PIL3_2022-SPI.INDEX.PIL3_2016),
+           dim4_growth=(SPI.INDEX.PIL4_2022-SPI.INDEX.PIL4_2016),
+           dim5_growth=(SPI.INDEX.PIL5_2022-SPI.INDEX.PIL5_2016)
            ) %>%
-    filter(!(is.na(SPI.INDEX_2020) | is.na(SPI.INDEX_2016))) %>%
+    filter(!(is.na(SPI.INDEX_2022) | is.na(SPI.INDEX_2016))) %>%
     mutate(spi_rank=100*rank(SPI.INDEX_2016)/length(SPI.INDEX_2016),
            spi_bins=case_when( #calculate deciles
              between(spi_rank,0,10) ~ "1st Decile",
@@ -1150,7 +1142,7 @@ changes_fun <- function(var, title, start_date, end_date) {
         ungroup() 
       
       #read in 2016 metadata for lending classficiations
-      WDI_metadata_2016 <- read_csv(paste0(raw_dir,"/metadata/WDI_metadata_2020.csv")) %>%
+      WDI_metadata_2016 <- read_csv(paste0(raw_dir,"/metadata/WDI_metadata_2022.csv")) %>%
         as_tibble(.name_repair='universal') %>%
         transmute(country=Table.Name,
                   lending=Lending.category,
@@ -1158,7 +1150,7 @@ changes_fun <- function(var, title, start_date, end_date) {
                   income=Income.Group)
       
       df_country_time <- changes_df_temp %>%
-        left_join(WDI_metadata_2016) %>% #get lending classifications for 2020
+        left_join(WDI_metadata_2016) %>% #get lending classifications for 2022
         filter(!is.na(region)) %>%
         #filter(lending %in% c('IBRD','IDA','Blend')) %>%
         group_by(lending) %>%
@@ -1182,7 +1174,7 @@ p <- ggplot(df_country_time, aes(x=Country)) +
         ylab('SPI Value') +
         labs(
           title=str_wrap(paste0('Change in ', title, ' from ',start_date,' to ', end_date,' by Lending Type'),70),
-          subtitle='Lending group based on 2020 classification'
+          subtitle='Lending group based on 2022 classification'
         )
       
 print(p)            
@@ -1191,44 +1183,44 @@ print(p)
 ```
 
 ```{r changesplot, fig.height=12}
-changes_fun('SPI.INDEX', 'SPI Overall Score', 2016, 2020)
+changes_fun('SPI.INDEX', 'SPI Overall Score', 2016, 2022)
 ```
 
 ```{r changesplotpov, fig.height=12}
-changes_fun('SPI.D1.5.POV', 'SPI Comparable Poverty Data Indicator', 2004, 2020)
+changes_fun('SPI.D1.5.POV', 'SPI Comparable Poverty Data Indicator', 2004, 2022)
 ```
 
 ```{r changesplot1, fig.height=12}
-changes_fun('SPI.INDEX.PIL1', 'SPI Pillar 1 (Data Use) Score', 2016, 2020)
+changes_fun('SPI.INDEX.PIL1', 'SPI Pillar 1 (Data Use) Score', 2016, 2022)
 ```
 
 ```{r changesplot2, fig.height=12}
-changes_fun('SPI.INDEX.PIL2', 'SPI Pillar 2 (Data Services) Score', 2016, 2020)
+changes_fun('SPI.INDEX.PIL2', 'SPI Pillar 2 (Data Services) Score', 2016, 2022)
 ```
 
 ```{r changesplot3, fig.height=12}
-changes_fun('SPI.INDEX.PIL3', 'SPI Pillar 3 (Data Products) Score', 2016, 2020)
+changes_fun('SPI.INDEX.PIL3', 'SPI Pillar 3 (Data Products) Score', 2016, 2022)
 ```
 
 ```{r changesplotpovind, fig.height=12}
-changes_fun('SPI.D3.1.POV', 'SPI Pillar 3 (Data Products) - SDG 1 Score', 2004, 2020)
+changes_fun('SPI.D3.1.POV', 'SPI Pillar 3 (Data Products) - SDG 1 Score', 2004, 2022)
 ```
 ```{r changesplot4, fig.height=12}
-changes_fun('SPI.INDEX.PIL4', 'SPI Pillar 4 (Data Sources) Score', 2016, 2020)
+changes_fun('SPI.INDEX.PIL4', 'SPI Pillar 4 (Data Sources) Score', 2016, 2022)
 ```
 
 ```{r changesplot4house, fig.height=12}
-changes_fun('SPI.D4.1.4.HOUS', 'SPI Pillar 4 - Household Survey Availability - Score', 2010, 2020)
+changes_fun('SPI.D4.1.4.HOUS', 'SPI Pillar 4 - Household Survey Availability - Score', 2010, 2022)
 ```
 
 ```{r changesplot5, fig.height=12}
-changes_fun('SPI.INDEX.PIL5', 'SPI Pillar 5 (Data Infrastructure) Score', 2016, 2020)
+changes_fun('SPI.INDEX.PIL5', 'SPI Pillar 5 (Data Infrastructure) Score', 2016, 2022)
 ```
 # Tables
 
 ## Country SPI overall scores
 
-Below, we present the full list of countries by their SPI overall score in 2020.  The first column is the country name and the following columns are the overall SPI overall score, and then the sub-scores for Pillar 1,2,3,4 and 5.  
+Below, we present the full list of countries by their SPI overall score in 2022.  The first column is the country name and the following columns are the overall SPI overall score, and then the sub-scores for Pillar 1,2,3,4 and 5.  
 
 The cells in the table are color coded based on the performance of countries on our index and the sub-scores of the pillars.  Given the imprecision inherent in the calculations we recommend that the color coding provides the most detailed subdivisions of maturity. Finer distinctions are unlikely to provide meaningful differentiation between countries. 
 
@@ -1250,7 +1242,7 @@ col_palette2 <- c("#2ec4b6",  "#f1dc76", "#ff9f1c" )
 #make the table
 index_tab <- spi_index_df %>%
   ungroup() %>%
-  filter(date==2020) %>%
+  filter(date==2022) %>%
   arrange(-SPI.INDEX) %>%
   mutate(across(starts_with('SPI.INDEX'),~1*.),
          across(starts_with('SPI.INDEX'),round,1)) %>%
@@ -1282,7 +1274,7 @@ index_tab <- spi_index_df %>%
       #make nice looking
       index_tab <- index_tab %>%
         flextable() %>%
-        add_header_lines('SPI overall score in 2020 and Pillar Scores.') %>%
+        add_header_lines('SPI overall score in 2022 and Pillar Scores.') %>%
         set_header_labels(values=list(
                              country="Country",
                              SPI.INDEX="SPI overall score",
@@ -1308,7 +1300,7 @@ index_tab <- spi_index_df %>%
 # #make nice looking
 # index_tab <- index_tab %>%
 #   flextable() %>%
-#   add_header_lines('SPI overall score in 2020 and Pillar Scores.') %>%
+#   add_header_lines('SPI overall score in 2022 and Pillar Scores.') %>%
 #   set_header_labels(values=list(
 #                        country="Country", 
 #                        SPI.INDEX="SPI overall score",
@@ -1341,37 +1333,46 @@ FitFlextableToPage(index_tab)
 #colors
 col_palette <- c("#2ec4b6", "#acece7", "#f1dc76",  "#ffbf69","#ff9f1c"   )
 col_palette2 <- c("#2ec4b6",  "#f1dc76", "#ff9f1c" )
+
+
 #make the table
-index_tab_time <- SPI %>%
-  select(country, date, SPI.INDEX) %>%
+index_tab_time <- spi_index_df %>%
+  select(iso3c, date, SPI.INDEX) %>%
   mutate(SPI.INDEX=round(SPI.INDEX,1)) %>%
   filter(!is.na(SPI.INDEX)) %>%
   pivot_wider(
     names_from=date,
     values_from=SPI.INDEX,
     names_prefix='SPI.INDEX.'
-  )
+  ) %>%
+  left_join(country_metadata) %>%
+  select(country, starts_with('SPI.INDEX')) 
 
 #quintile groups
-        brks <- quantile(index_tab_time$SPI.INDEX.2020, probs=c(1,2,3,4)/5,na.rm=T)
+        brks <- quantile(index_tab_time$SPI.INDEX.2021, probs=c(1,2,3,4)/5,na.rm=T)
         brks <- append(0,brks)
         brks <- append(brks,100)
-        brks1 <- quantile(index_tab_time$SPI.INDEX.2019, probs=c(1,2,3,4)/5,na.rm=T)
+        brks1 <- quantile(index_tab_time$SPI.INDEX.2020, probs=c(1,2,3,4)/5,na.rm=T)
         brks1 <- append(0,brks1)
         if (max(brks1)<100) brks1 <- append(brks1,100)
         
-        brks2 <- quantile(index_tab_time$SPI.INDEX.2018, probs=c(1,2,3,4)/5,na.rm=T)
+        brks2 <- quantile(index_tab_time$SPI.INDEX.2019, probs=c(1,2,3,4)/5,na.rm=T)
         brks2 <- append(0,brks2)
         if (max(brks2)<100) brks2 <- append(brks2,100)
         
-        brks3 <- quantile(index_tab_time$SPI.INDEX.2017, probs=c(1,2,3,4)/5,na.rm=T)
+        brks3 <- quantile(index_tab_time$SPI.INDEX.2018, probs=c(1,2,3,4)/5,na.rm=T)
         brks3 <- append(0,brks3)
         if (max(brks3)<100) brks3 <- append(brks3,100)
         
-        brks4 <- quantile(index_tab_time$SPI.INDEX.2016, probs=c(1,2,3,4)/5,na.rm=T)
+        brks4 <- quantile(index_tab_time$SPI.INDEX.2017, probs=c(1,2,3,4)/5,na.rm=T)
         brks4 <- append(0,brks4)
         if (max(brks4)<100) brks4 <- append(brks4,100)
-        
+        brks5 <- quantile(index_tab_time$SPI.INDEX.2016, probs=c(1,2,3,4)/5,na.rm=T)
+        brks5 <- append(0,brks5)
+        if (max(brks5)<100) brks5 <- append(brks5,100)
+        brks6 <- quantile(index_tab_time$SPI.INDEX.2022, probs=c(1,2,3,4)/5,na.rm=T)
+        brks6 <- append(0,brks6)
+        if (max(brks6)<100) brks6 <- append(brks6,100)
 
 #make nice looking
 index_tab_time <- index_tab_time %>%
@@ -1379,54 +1380,60 @@ index_tab_time <- index_tab_time %>%
   add_header_lines('SPI overall scores over time') %>%
   set_header_labels(values=list(
                        country="Country", 
+                       SPI.INDEX.2022="2022",
+                       SPI.INDEX.2021="2021",
                        SPI.INDEX.2020="2020",
                        SPI.INDEX.2019="2019",
                        SPI.INDEX.2018="2018",
                        SPI.INDEX.2017="2017",
                        SPI.INDEX.2016="2016"
                                    )) %>%
-    bg(j = c('SPI.INDEX.2020'),
+    bg(j = c('SPI.INDEX.2022'),
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks6, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.2021'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.2019'),
+    bg(j = c('SPI.INDEX.2020'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks1, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.2018'),
+    bg(j = c('SPI.INDEX.2019'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks2, reverse=TRUE)) %>%
-    bg(j = c('SPI.INDEX.2017'),
+    bg(j = c('SPI.INDEX.2018'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks3, reverse=TRUE)) %>%
+    bg(j = c('SPI.INDEX.2017'),
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks4, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.2016'),
-       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks4, reverse=TRUE))
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks5, reverse=TRUE))
   
 FitFlextableToPage(index_tab_time)
 ```
 
 
 
-## Figure A.1: Pillar 1 Scores in 2020
+## Figure A.1: Pillar 1 Scores in 2022
 
 ### Panel A: Global Map
  ![](plots/pillarsplot1-1.png)
 
 ### Panel B: By Country
   ![](plots/countrypillarsplot1-1.png)
-## Figure A.2: Pillar 2 Scores in 2020
+## Figure A.2: Pillar 2 Scores in 2022
 
 ### Panel A: Global Map
   ![](plots/pillarsplot2-1.png)
 ### Panel B: By Country
    ![](plots/countrypillarsplot2-1.png)
-## Figure A.3: Pillar 3 Scores in 2020
+## Figure A.3: Pillar 3 Scores in 2022
 
 ### Panel A: Global Map
   ![](plots/pillarsplot3-1.png)
 ### Panel B: By Country
    ![](plots/countrypillarsplot3-1.png)
-## Figure A.4: Pillar 4 Scores in 2020
+## Figure A.4: Pillar 4 Scores in 2022
 
 ### Panel A: Global Map
   ![](plots/pillarsplot4-1.png)
 ### Panel B: By Country
    ![](plots/countrypillarsplot4-1.png)
-## Figure A.5: Pillar 5 Scores in 2020
+## Figure A.5: Pillar 5 Scores in 2022
 
 ### Panel A: Global Map   
   ![](plots/pillarsplot5-1.png)
@@ -1460,7 +1467,7 @@ unique_scores_df <- sci_df %>% filter(date==2020) %>% filter(!is.na(SCI)) %>% mu
 unique_scores_sci <-length(unique(unique_scores_df$SCI))
 ```
 
-The SCI contains `r unique_scores_sci` unique scores for `r length(unique_scores_df$SCI)` countries in 2020.
+The SCI contains `r unique_scores_sci` unique scores for `r length(unique_scores_df$SCI)` countries in 2022.
 
 ## Volatility in SPI versus SCI
 
@@ -1736,7 +1743,7 @@ spi_index_simple <- spi_index_df %>%
          ) %>% #
   arrange(-date, -SPI.INDEX) %>%
   select(country, iso3c, date, starts_with('SPI.INDEX')) %>%
-  filter(date %in% c(2016:2020))
+  filter(date %in% c(2016:2022))
 
 #correlations
 cor_ovrl <- cor(spi_index_simple$SPI.INDEX, spi_index_simple$SPI.INDEX.SIMP, use='pairwise.complete' )
@@ -1757,7 +1764,7 @@ The correlation between the SPI overall score and the unweighted SPI overall sco
 ```{r simpleplot}
 
 simp_plot_df <- spi_index_simple %>%
-  filter(date==2020) %>%
+  filter(date==2022) %>%
   pivot_longer(
     cols=starts_with('SPI.INDEX'),
     names_to = 'index',
@@ -1777,7 +1784,7 @@ ggplot(simp_plot_df, aes(x=Original, y=Unweighted)) +
   geom_point() +
   theme_bw() +
   labs(
-    title="Comparison of SPI Overall Scores and unweighted SPI scores in 2020."
+    title="Comparison of SPI Overall Scores and unweighted SPI scores in 2022."
   )
 ```
 
@@ -1787,28 +1794,28 @@ ggplot(simp_plot_df, aes(x=Original, y=Unweighted)) +
 ```{r unique_scores}
 
 #calculate the number of unique values in the SPI Index
-SPI_2020_simple <- spi_index_simple %>%
-  filter(date==2020) %>%
+SPI_2022_simple <- spi_index_simple %>%
+  filter(date==2022) %>%
   filter(!is.na(SPI.INDEX))
 
-unique_scores <-  length(unique(SPI_2020_simple$SPI.INDEX))
+unique_scores <-  length(unique(SPI_2022_simple$SPI.INDEX))
 
 #check unique values by pillar.
-unique_scores1 <-  length(unique(SPI_2020_simple$SPI.INDEX.PIL1))
-unique_scores2 <-  length(unique(SPI_2020_simple$SPI.INDEX.PIL2))
-unique_scores3 <-  length(unique(SPI_2020_simple$SPI.INDEX.PIL3))
-unique_scores4 <-  length(unique(SPI_2020_simple$SPI.INDEX.PIL4))
-unique_scores5 <-  length(unique(SPI_2020_simple$SPI.INDEX.PIL5))
+unique_scores1 <-  length(unique(SPI_2022_simple$SPI.INDEX.PIL1))
+unique_scores2 <-  length(unique(SPI_2022_simple$SPI.INDEX.PIL2))
+unique_scores3 <-  length(unique(SPI_2022_simple$SPI.INDEX.PIL3))
+unique_scores4 <-  length(unique(SPI_2022_simple$SPI.INDEX.PIL4))
+unique_scores5 <-  length(unique(SPI_2022_simple$SPI.INDEX.PIL5))
 
 #simple index
-unique_scores_simp <-  length(unique(SPI_2020_simple$SPI.INDEX.SIMP))
+unique_scores_simp <-  length(unique(SPI_2022_simple$SPI.INDEX.SIMP))
 
 
-unique_scores1_simp <-  length(unique(SPI_2020_simple$SPI.INDEX.PIL1.SIMP))
-unique_scores2_simp <-  length(unique(SPI_2020_simple$SPI.INDEX.PIL2.SIMP))
-unique_scores3_simp <-  length(unique(SPI_2020_simple$SPI.INDEX.PIL3.SIMP))
-unique_scores4_simp <-  length(unique(SPI_2020_simple$SPI.INDEX.PIL4.SIMP))
-unique_scores5_simp <-  length(unique(SPI_2020_simple$SPI.INDEX.PIL5.SIMP))
+unique_scores1_simp <-  length(unique(SPI_2022_simple$SPI.INDEX.PIL1.SIMP))
+unique_scores2_simp <-  length(unique(SPI_2022_simple$SPI.INDEX.PIL2.SIMP))
+unique_scores3_simp <-  length(unique(SPI_2022_simple$SPI.INDEX.PIL3.SIMP))
+unique_scores4_simp <-  length(unique(SPI_2022_simple$SPI.INDEX.PIL4.SIMP))
+unique_scores5_simp <-  length(unique(SPI_2022_simple$SPI.INDEX.PIL5.SIMP))
 
 unique_tab <- data.frame(Score=c('Overall Score', "Pillar 1", "Pillar 2", "Pillar 3", "Pillar 4", "Pillar 5"),
                          SPI=c(unique_scores, unique_scores1, unique_scores2, unique_scores3, unique_scores4, unique_scores5),
@@ -1833,7 +1840,7 @@ unique_tab %>%
 ```{r volatilitypltsimp}
 volatility_scatter_df <- spi_index_simple %>%
   select(country, iso3c, date, SPI.INDEX, SPI.INDEX.SIMP) %>%
-  filter(date==2016 | date==2020) %>%
+  filter(date==2016 | date==2022) %>%
   as_tibble() %>%
   pivot_longer(
     cols=c('SPI.INDEX', 'SPI.INDEX.SIMP'),
@@ -1849,14 +1856,14 @@ volatility_scatter_df <- spi_index_simple %>%
     indicator=='SPI.INDEX.SIMP' ~ "Unweighted SPI Overall Score",
     indicator=="SPI.INDEX" ~ "SPI Overall Score"
   ))
-ggplot(volatility_scatter_df, aes(x=value_2016, y=value_2020, label=iso3c)) +
+ggplot(volatility_scatter_df, aes(x=value_2016, y=value_2022, label=iso3c)) +
   facet_wrap(~indicator) +
   geom_text(color='#459b9d') +
   # labs(
-  #   title='Volatility Between 2016 and 2020 for SCI and SPI Overall Scores'
+  #   title='Volatility Between 2016 and 2022 for SCI and SPI Overall Scores'
   # ) +
   xlab('2016 value') +
-  ylab('2020 value') +
+  ylab('2022 value') +
   expand_limits(x=c(0,100), y=c(0,100)) +
   theme_spi()
     
@@ -1905,11 +1912,11 @@ Below we show a measure of volatility over time in a countries Unweighted SPI or
 reg_df <- wbstats::wb_data(
   indicator='NY.GDP.PCAP.KD',
   start_date=2016,
-  end_date=2020, return_wide = FALSE
+  end_date=2022, return_wide = FALSE
     ) %>%
   mutate(value=log(value)) %>%
   left_join(select(spi_index_simple,iso3c,date, SPI.INDEX,SPI.INDEX.SIMP)) %>%
-  filter(date==2020)
+  filter(date==2022)
 
 
 reg_long <- reg_df %>%
@@ -1925,7 +1932,7 @@ reg_long <- reg_df %>%
       
     )
   ) %>%
-  filter(date==2020)
+  filter(date==2022)
 
 #add equations to plots
   eq <- lm_robust(SPI.INDEX ~ value, data=reg_df, se_type='HC2')
@@ -1951,7 +1958,7 @@ p1 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX)) +
   geom_richtext(
     aes(x = 8, y = 10,label = eq_plot_txt1, hjust=0.2)
   ) 
-  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2020), hjust = 0) +
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2022), hjust = 0) +
 
 p2 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX.SIMP)) +
   geom_text(aes(label=iso3c)) +
@@ -1963,7 +1970,7 @@ p2 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX.SIMP)) +
   geom_richtext(
     aes(x = 8, y = 10,label = eq_plot_txt2, hjust=0.2)
   ) 
-  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2020), hjust = 0) +
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2022), hjust = 0) +
 
 p1 + p2
 ```
@@ -2117,12 +2124,12 @@ p1 + p2
 reg_df <- wbstats::wb_data(
   indicator='SI.POV.DDAY',
               start_date=2010,
-              end_date=2020,
+              end_date=2022,
               mrv=10,
               gapfill=TRUE,
               return_wide = F)  %>%
   left_join(select(spi_index_simple,iso3c,date, SPI.INDEX,SPI.INDEX.SIMP)) %>%
-  filter(date==2020)
+  filter(date==2022)
   
 
 
@@ -2139,7 +2146,7 @@ reg_long <- reg_df %>%
       
     )
   ) %>%
-  filter(date==2020)
+  filter(date==2022)
 
 #add equations to plots
   eq <- lm_robust(SPI.INDEX ~ value, data=reg_df, se_type='HC2')
@@ -2165,7 +2172,7 @@ p1 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX)) +
   geom_richtext(
     aes(x = 20, y = 10,label = eq_plot_txt1, hjust=0.2)
   ) 
-  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2020), hjust = 0) +
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2022), hjust = 0) +
 
 p2 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX.SIMP)) +
   geom_text(aes(label=iso3c)) +
@@ -2177,7 +2184,7 @@ p2 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX.SIMP)) +
   geom_richtext(
     aes(x = 20, y = 10,label = eq_plot_txt2, hjust=0.2)
   ) 
-  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2020), hjust = 0) +
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2022), hjust = 0) +
 
 p1 + p2
 ```
@@ -2190,12 +2197,12 @@ p1 + p2
 reg_df <- wbstats::wb_data(
   indicator='SI.POV.GINI',
               start_date=2010,
-              end_date=2020,
+              end_date=2022,
               mrv=10,
               gapfill=TRUE,
               return_wide = F)  %>%
   left_join(select(spi_index_simple,iso3c,date, SPI.INDEX,SPI.INDEX.SIMP)) %>%
-  filter(date==2020)
+  filter(date==2022)
   
 
 
@@ -2212,7 +2219,7 @@ reg_long <- reg_df %>%
       
     )
   ) %>%
-  filter(date==2020)
+  filter(date==2022)
 
 #add equations to plots
   eq <- lm_robust(SPI.INDEX ~ value, data=reg_df, se_type='HC2')
@@ -2238,7 +2245,7 @@ p1 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX)) +
   geom_richtext(
     aes(x = 30, y = 10,label = eq_plot_txt1, hjust=0.2)
   ) 
-  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2020), hjust = 0) +
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2022), hjust = 0) +
 
 p2 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX.SIMP)) +
   geom_text(aes(label=iso3c)) +
@@ -2250,7 +2257,7 @@ p2 <- ggplot(reg_df, aes(x=value,y=SPI.INDEX.SIMP)) +
   geom_richtext(
     aes(x = 30, y = 10,label = eq_plot_txt2, hjust=0.2)
   ) 
-  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2020), hjust = 0) +
+  #annotate("label", x = 20, y = 5, label = eq_plot_txt(pov_df_2022), hjust = 0) +
 
 p1 + p2
 ```

@@ -1,7 +1,7 @@
 ---
 title: "SPI Data Validation"
 author: "Brian Stacy"
-date: "3/11/2022"
+date: "`r Sys.Date()`"
 output: html_document
 ---
 
@@ -37,12 +37,9 @@ First the latest vintage of the SPI data is read from the [SPI github repo](http
 ```{r compdf}
 
 
-SPI_df_v1 <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/SPI_2020/03_output_data/SPI_data.csv')
+SPI_df_v1 <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_data.csv')
 
-SPI_df_new <-  read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
-  filter(date>=2021) %>%
-  bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2020.csv', sep="/")) %>% filter(date==2020)) %>%
-  bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2019.csv', sep="/")) %>% filter(date<2020))            
+SPI_df_new <-  read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/"))          
   
 
 
