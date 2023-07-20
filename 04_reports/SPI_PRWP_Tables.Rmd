@@ -958,10 +958,10 @@ growth_plot <- function(variables, name) {
     scale_x_discrete() +
     theme_spi() +
     xlab(str_wrap('Decile in 2016',40)) +
-    ylab(str_wrap('Change in Score (2016-20)',20)) +
+    ylab(str_wrap('Change in Score (2016-22)',20)) +
     labs(
       title=str_wrap("Countries in 2nd and 3rd deciles have grown most since 2016.",70),
-      subtitle=str_wrap('Change in SPI Overall Score from 2016-20 by 2016 decile group',70),
+      subtitle=str_wrap('Change in SPI Overall Score from 2016-22 by 2016 decile group',70),
       caption=paste0(name,' scale = 0 - 100 points.')
     ) +
     expand_limits(y=c(-2,10)) +
@@ -1014,7 +1014,7 @@ overall_bottom_40 <- SPI %>%
     arrange(spi_rank)
   #summarise into decile bins
   bottom_40 <- overall_bottom_40 %>%
-    filter(spi_rank<=40) %>%
+    filter(spi_rank<=30) %>%
     ungroup() %>%
     summarise(growth=mean(growth))
     #summarise overall
@@ -1022,6 +1022,7 @@ overall_bottom_40 <- SPI %>%
     ungroup() %>%
     summarise(growth=mean(growth))
 ```
+
 
 
 ```{r elephantstacked, echo=FALSE}
@@ -1089,10 +1090,10 @@ name <- 'SPI Overall Score'
     scale_x_discrete() +
     theme_spi() +
     xlab(str_wrap('Decile in 2016',40)) +
-    ylab(str_wrap('Change in Score (2016-20)',20)) +
+    ylab(str_wrap('Change in Score (2016-22)',20)) +
     labs(
       #title=str_wrap("Decomposition of Changes Over Time",70),
-      subtitle=str_wrap('Change in SPI Overall Score from 2016-20 by 2016 decile group',70),
+      subtitle=str_wrap('Change in SPI Overall Score from 2016-22 by 2016 decile group',70),
       caption=paste0(name,' scale = 0 - 100 points.')
     ) +
     expand_limits(y=c(-2,10)) +
@@ -1586,7 +1587,7 @@ global_sd_sci <- variance_avg_df$SCI[1]
 global_sd_spi <- variance_avg_df$`SPI Overall Score`[1]
 ```
 
-Below we show a measure of volatility over time in a countries SCI or SPI Overall Score.  The volatility measure is the standard deviation of the measure from 2016-20.  The SCI has slightly greater volatility across time with a global average standard deviation of `r round(global_sd_sci,1)`.  The SPI Overall Score has a global average standard deviation across time of `r round(global_sd_spi,1)`
+Below we show a measure of volatility over time in a countries SCI or SPI Overall Score.  The volatility measure is the standard deviation of the measure from 2016-22.  The SCI has slightly greater volatility across time with a global average standard deviation of `r round(global_sd_sci,1)`.  The SPI Overall Score has a global average standard deviation across time of `r round(global_sd_spi,1)`
 
 ```{r varianceplot}
 std_border = officer::fp_border(color="black", width = 1)
@@ -1755,7 +1756,7 @@ cor_p5 <- cor(spi_index_simple$SPI.INDEX.PIL5, spi_index_simple$SPI.INDEX.PIL5.S
 
 ```
 
-In the analysis below, we compare results over the period 2016-20 for a version of the SPI where we use unweighted aggregation for the SPI indicators to our nested version of the SPI described above. A quick note on terminology.  We will refer to the SPI documented above as the SPI overall score or SPI pillar scores, and we refer to the unweighted index as the unweighted SPI overall score and unweighted SPI pillar scores.
+In the analysis below, we compare results over the period 2016-22 for a version of the SPI where we use unweighted aggregation for the SPI indicators to our nested version of the SPI described above. A quick note on terminology.  We will refer to the SPI documented above as the SPI overall score or SPI pillar scores, and we refer to the unweighted index as the unweighted SPI overall score and unweighted SPI pillar scores.
 
 The correlation between the SPI overall score and the unweighted SPI overall score is `r cor_ovrl`.  The correlation between the two for Pillar 1 on data use is `r cor_p1`.  Because only one dimension is included and the indicators in this dimension are given equal weight in the SPI Pillar 1 score, the Pillar 1 score and the unweighted Pillar 1 score are identical.  The correlation for Pillar 2 on data services is `r cor_p2`.  The correlation for Pillar 3 on data products is `r cor_p3`.  Again, because each SDG indicator in Pillar 3 are weighted equally in each index, these scores are identical.  The correlation for Pillar 4 on data sources is `r cor_p4`.  The correlation for Pillar 5 on data infrastructure is `r cor_p5`, because only the methods and standards dimension is included.
 
@@ -1902,7 +1903,7 @@ global_sd_spi_simp <- variance_avg_df$`Unweighted SPI`[1]
 global_sd_spi <- variance_avg_df$`SPI Overall Score`[1]
 ```
 
-Below we show a measure of volatility over time in a countries Unweighted SPI or SPI Overall Score.  The volatility measure is the standard deviation of the measure from 2016-20.  The Unweighted SPI has  a global average standard deviation of `r round(global_sd_spi_simp,1)`.  The SPI Overall Score has a global average standard deviation across time of `r round(global_sd_spi,1)`
+Below we show a measure of volatility over time in a countries Unweighted SPI or SPI Overall Score.  The volatility measure is the standard deviation of the measure from 2016-22.  The Unweighted SPI has  a global average standard deviation of `r round(global_sd_spi_simp,1)`.  The SPI Overall Score has a global average standard deviation across time of `r round(global_sd_spi,1)`
 
 ### Correlation with the other human capital, governance, poverty, and inequality indexes
 *Table : Scatterplot of Statistical Capacity Index (SCI) and SPI Overall Score on Log GDP*

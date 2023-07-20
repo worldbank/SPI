@@ -25,7 +25,7 @@ SPI_2020 <- read_csv(paste0(output_dir, "/SPI_index.csv")) %>%
   filter(date==2020)
 
 SPI_index <- SPI_index %>%
-  bind_rows(SPI_2020) %>%
+  #bind_rows(SPI_2020) %>%
   arrange(-date, country)
 
 #reshape to match databank format
@@ -58,21 +58,21 @@ databank_df <- databank_df %>%
 ###############
 
 #read in classifications
-# class_df <- read_excel(paste(raw_dir, '/misc/WB_Groups_FY21_CSCIDA.xlsx', sep="")) %>%
-#   rename(
-#     iso3c=WB_Country_Code,
-#     country=WB_Country_Name,
-#     WB_Group_Code=WB_Group_Code,
-#     WB_Group_Name=WB_Group_Name
-#   )
-
-class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xls', sep=""),sheet = "Groups") %>%
+class_df <- read_excel(paste(raw_dir, '/misc/FY23_group_list.xlsx', sep="")) %>%
   rename(
-    iso3c=CountryCode,
-    country=CountryName,
-    WB_Group_Code=GroupCode,
-    WB_Group_Name=GroupName
+    iso3c=WB_Country_Code,
+    country=WB_Country_Name,
+    WB_Group_Code=WB_Group_Code,
+    WB_Group_Name=WB_Group_Name
   )
+
+# class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xls', sep=""),sheet = "Groups") %>%
+#   rename(
+#     iso3c=CountryCode,
+#     country=CountryName,
+#     WB_Group_Code=GroupCode,
+#     WB_Group_Name=GroupName
+#   )
 
 weight<-'none'
   
@@ -103,7 +103,7 @@ weight<-'none'
     
     #produce weighted aggregate
     agg_df <- databank_df %>%
-      left_join(class_df) %>%
+      left_join(class_df, relationship = 'many-to-many') %>%
       group_by(WB_Group_Code,WB_Group_Name, date, source_id, source_name) %>%
       summarise(
         value=round(mean(value, na.rm=TRUE),2)
@@ -114,4 +114,11 @@ weight<-'none'
   }
     
 write_excel_csv(agg_df, paste(output_dir, '/misc/WB_aggregates_SPI.csv', sep=""))
-  
+
+agg_df <- agg_df 
+
+#compare
+orig_df <- read_csv('C:\\Users\\wb469649\\Downloads\\SPI_aggregates.csv') 
+
+compare <- dataCompareR::rCompare(orig_df, agg_df)
+summary(compare)
