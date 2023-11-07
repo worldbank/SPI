@@ -1,28 +1,388 @@
 ﻿"WB_Group_Code","WB_Group_Name","date","source_id","source_name","value"
-"DFS","IDA countries classified as fragile situations",2016,"IQ.SPI.OVRL","SPI Overall Score",39.51
-"DFS","IDA countries classified as fragile situations",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",54.39
-"DFS","IDA countries classified as fragile situations",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",24.28
-"DFS","IDA countries classified as fragile situations",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",53.35
-"DFS","IDA countries classified as fragile situations",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",27.84
-"DFS","IDA countries classified as fragile situations",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",21.25
-"DFS","IDA countries classified as fragile situations",2017,"IQ.SPI.OVRL","SPI Overall Score",40.52
-"DFS","IDA countries classified as fragile situations",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",55.48
-"DFS","IDA countries classified as fragile situations",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",35.13
-"DFS","IDA countries classified as fragile situations",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.79
-"DFS","IDA countries classified as fragile situations",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",24.2
-"DFS","IDA countries classified as fragile situations",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",24.03
-"DFS","IDA countries classified as fragile situations",2018,"IQ.SPI.OVRL","SPI Overall Score",43.61
-"DFS","IDA countries classified as fragile situations",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",56.01
-"DFS","IDA countries classified as fragile situations",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.5
-"DFS","IDA countries classified as fragile situations",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.19
-"DFS","IDA countries classified as fragile situations",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",24.78
-"DFS","IDA countries classified as fragile situations",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",25.32
-"DFS","IDA countries classified as fragile situations",2019,"IQ.SPI.OVRL","SPI Overall Score",42.93
-"DFS","IDA countries classified as fragile situations",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",56.66
-"DFS","IDA countries classified as fragile situations",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",48.27
-"DFS","IDA countries classified as fragile situations",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",53.38
-"DFS","IDA countries classified as fragile situations",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",23.78
-"DFS","IDA countries classified as fragile situations",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",25.97
+"AFE","Africa Eastern and Southern",2016,"IQ.SPI.OVRL","SPI Overall Score",51.59
+"AFE","Africa Eastern and Southern",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.86
+"AFE","Africa Eastern and Southern",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",39.03
+"AFE","Africa Eastern and Southern",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.67
+"AFE","Africa Eastern and Southern",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",37.4
+"AFE","Africa Eastern and Southern",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",35.21
+"AFE","Africa Eastern and Southern",2017,"IQ.SPI.OVRL","SPI Overall Score",51.78
+"AFE","Africa Eastern and Southern",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",71.34
+"AFE","Africa Eastern and Southern",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",47.82
+"AFE","Africa Eastern and Southern",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",64.05
+"AFE","Africa Eastern and Southern",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",34.82
+"AFE","Africa Eastern and Southern",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",34.4
+"AFE","Africa Eastern and Southern",2018,"IQ.SPI.OVRL","SPI Overall Score",53.77
+"AFE","Africa Eastern and Southern",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",70.8
+"AFE","Africa Eastern and Southern",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",59.07
+"AFE","Africa Eastern and Southern",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",63.3
+"AFE","Africa Eastern and Southern",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",34.62
+"AFE","Africa Eastern and Southern",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",34.8
+"AFE","Africa Eastern and Southern",2019,"IQ.SPI.OVRL","SPI Overall Score",53.28
+"AFE","Africa Eastern and Southern",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",70.39
+"AFE","Africa Eastern and Southern",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",57.62
+"AFE","Africa Eastern and Southern",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.41
+"AFE","Africa Eastern and Southern",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",34.51
+"AFE","Africa Eastern and Southern",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",36.4
+"AFW","Africa Western and Central",2016,"IQ.SPI.OVRL","SPI Overall Score",44.84
+"AFW","Africa Western and Central",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.99
+"AFW","Africa Western and Central",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",34.96
+"AFW","Africa Western and Central",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",57.1
+"AFW","Africa Western and Central",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",30.99
+"AFW","Africa Western and Central",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",24.05
+"AFW","Africa Western and Central",2017,"IQ.SPI.OVRL","SPI Overall Score",47.99
+"AFW","Africa Western and Central",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",66.98
+"AFW","Africa Western and Central",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",51.17
+"AFW","Africa Western and Central",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.26
+"AFW","Africa Western and Central",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.16
+"AFW","Africa Western and Central",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.19
+"AFW","Africa Western and Central",2018,"IQ.SPI.OVRL","SPI Overall Score",49.1
+"AFW","Africa Western and Central",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.13
+"AFW","Africa Western and Central",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",54.66
+"AFW","Africa Western and Central",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.32
+"AFW","Africa Western and Central",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",30.81
+"AFW","Africa Western and Central",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.67
+"AFW","Africa Western and Central",2019,"IQ.SPI.OVRL","SPI Overall Score",49.24
+"AFW","Africa Western and Central",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.25
+"AFW","Africa Western and Central",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",52.91
+"AFW","Africa Western and Central",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.68
+"AFW","Africa Western and Central",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.89
+"AFW","Africa Western and Central",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30.48
+"ARB","Arab World",2016,"IQ.SPI.OVRL","SPI Overall Score",45.46
+"ARB","Arab World",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.78
+"ARB","Arab World",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",25.06
+"ARB","Arab World",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",51.58
+"ARB","Arab World",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",43.32
+"ARB","Arab World",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",27.14
+"ARB","Arab World",2017,"IQ.SPI.OVRL","SPI Overall Score",45.51
+"ARB","Arab World",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.03
+"ARB","Arab World",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",37.05
+"ARB","Arab World",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",51.49
+"ARB","Arab World",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.3
+"ARB","Arab World",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30
+"ARB","Arab World",2018,"IQ.SPI.OVRL","SPI Overall Score",49.46
+"ARB","Arab World",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.48
+"ARB","Arab World",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55
+"ARB","Arab World",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",52.26
+"ARB","Arab World",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.28
+"ARB","Arab World",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.77
+"ARB","Arab World",2019,"IQ.SPI.OVRL","SPI Overall Score",50.61
+"ARB","Arab World",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.48
+"ARB","Arab World",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",56.59
+"ARB","Arab World",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",51.74
+"ARB","Arab World",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.64
+"ARB","Arab World",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",35
+"CEB","Central Europe and the Baltics",2016,"IQ.SPI.OVRL","SPI Overall Score",79.7
+"CEB","Central Europe and the Baltics",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",94.55
+"CEB","Central Europe and the Baltics",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",69.32
+"CEB","Central Europe and the Baltics",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.35
+"CEB","Central Europe and the Baltics",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",75.44
+"CEB","Central Europe and the Baltics",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",95
+"CEB","Central Europe and the Baltics",2017,"IQ.SPI.OVRL","SPI Overall Score",79.18
+"CEB","Central Europe and the Baltics",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",93.64
+"CEB","Central Europe and the Baltics",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",71.41
+"CEB","Central Europe and the Baltics",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",67.6
+"CEB","Central Europe and the Baltics",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",70.98
+"CEB","Central Europe and the Baltics",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",92.27
+"CEB","Central Europe and the Baltics",2018,"IQ.SPI.OVRL","SPI Overall Score",83.21
+"CEB","Central Europe and the Baltics",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",95.45
+"CEB","Central Europe and the Baltics",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",87.9
+"CEB","Central Europe and the Baltics",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",67.2
+"CEB","Central Europe and the Baltics",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",71.39
+"CEB","Central Europe and the Baltics",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",94.09
+"CEB","Central Europe and the Baltics",2019,"IQ.SPI.OVRL","SPI Overall Score",83.31
+"CEB","Central Europe and the Baltics",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",95.45
+"CEB","Central Europe and the Baltics",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",87.9
+"CEB","Central Europe and the Baltics",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",65.9
+"CEB","Central Europe and the Baltics",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",71.39
+"CEB","Central Europe and the Baltics",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",95.91
+"CSS","Caribbean small states",2016,"IQ.SPI.OVRL","SPI Overall Score",41.72
+"CSS","Caribbean small states",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",55.38
+"CSS","Caribbean small states",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",12.43
+"CSS","Caribbean small states",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",48.66
+"CSS","Caribbean small states",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",44.43
+"CSS","Caribbean small states",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",32.69
+"CSS","Caribbean small states",2017,"IQ.SPI.OVRL","SPI Overall Score",43.16
+"CSS","Caribbean small states",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",51.54
+"CSS","Caribbean small states",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",31.62
+"CSS","Caribbean small states",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",48.43
+"CSS","Caribbean small states",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",43.64
+"CSS","Caribbean small states",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",28.08
+"CSS","Caribbean small states",2018,"IQ.SPI.OVRL","SPI Overall Score",50.73
+"CSS","Caribbean small states",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",56.15
+"CSS","Caribbean small states",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",61.96
+"CSS","Caribbean small states",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",46.69
+"CSS","Caribbean small states",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",43.96
+"CSS","Caribbean small states",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.62
+"CSS","Caribbean small states",2019,"IQ.SPI.OVRL","SPI Overall Score",49.09
+"CSS","Caribbean small states",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",56.15
+"CSS","Caribbean small states",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",53.63
+"CSS","Caribbean small states",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",44.15
+"CSS","Caribbean small states",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",43.64
+"CSS","Caribbean small states",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",32.31
+"EAP","East Asia & Pacific (excluding high income)",2016,"IQ.SPI.OVRL","SPI Overall Score",48.35
+"EAP","East Asia & Pacific (excluding high income)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",62.6
+"EAP","East Asia & Pacific (excluding high income)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",38.02
+"EAP","East Asia & Pacific (excluding high income)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.87
+"EAP","East Asia & Pacific (excluding high income)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.59
+"EAP","East Asia & Pacific (excluding high income)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.29
+"EAP","East Asia & Pacific (excluding high income)",2017,"IQ.SPI.OVRL","SPI Overall Score",51.55
+"EAP","East Asia & Pacific (excluding high income)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",65.36
+"EAP","East Asia & Pacific (excluding high income)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.98
+"EAP","East Asia & Pacific (excluding high income)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.27
+"EAP","East Asia & Pacific (excluding high income)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.8
+"EAP","East Asia & Pacific (excluding high income)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",32.05
+"EAP","East Asia & Pacific (excluding high income)",2018,"IQ.SPI.OVRL","SPI Overall Score",53.84
+"EAP","East Asia & Pacific (excluding high income)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",65.94
+"EAP","East Asia & Pacific (excluding high income)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",59.17
+"EAP","East Asia & Pacific (excluding high income)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.17
+"EAP","East Asia & Pacific (excluding high income)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.54
+"EAP","East Asia & Pacific (excluding high income)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",34.32
+"EAP","East Asia & Pacific (excluding high income)",2019,"IQ.SPI.OVRL","SPI Overall Score",54.09
+"EAP","East Asia & Pacific (excluding high income)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.1
+"EAP","East Asia & Pacific (excluding high income)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",60.05
+"EAP","East Asia & Pacific (excluding high income)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",54.26
+"EAP","East Asia & Pacific (excluding high income)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.15
+"EAP","East Asia & Pacific (excluding high income)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",36.36
+"EAR","Early-demographic dividend",2016,"IQ.SPI.OVRL","SPI Overall Score",49.71
+"EAR","Early-demographic dividend",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",72.62
+"EAR","Early-demographic dividend",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",37.14
+"EAR","Early-demographic dividend",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.84
+"EAR","Early-demographic dividend",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",42.58
+"EAR","Early-demographic dividend",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",32.83
+"EAR","Early-demographic dividend",2017,"IQ.SPI.OVRL","SPI Overall Score",52.67
+"EAR","Early-demographic dividend",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",75.41
+"EAR","Early-demographic dividend",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.97
+"EAR","Early-demographic dividend",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.18
+"EAR","Early-demographic dividend",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.82
+"EAR","Early-demographic dividend",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.69
+"EAR","Early-demographic dividend",2018,"IQ.SPI.OVRL","SPI Overall Score",54.91
+"EAR","Early-demographic dividend",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",76.23
+"EAR","Early-demographic dividend",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",60.15
+"EAR","Early-demographic dividend",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.62
+"EAR","Early-demographic dividend",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",42.1
+"EAR","Early-demographic dividend",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",34.34
+"EAR","Early-demographic dividend",2019,"IQ.SPI.OVRL","SPI Overall Score",55.17
+"EAR","Early-demographic dividend",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",76.5
+"EAR","Early-demographic dividend",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",59.59
+"EAR","Early-demographic dividend",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.58
+"EAR","Early-demographic dividend",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",42.18
+"EAR","Early-demographic dividend",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",37.05
+"EAS","East Asia & Pacific",2016,"IQ.SPI.OVRL","SPI Overall Score",54.38
+"EAS","East Asia & Pacific",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.91
+"EAS","East Asia & Pacific",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",44.32
+"EAS","East Asia & Pacific",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",49.24
+"EAS","East Asia & Pacific",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",47.54
+"EAS","East Asia & Pacific",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",38.04
+"EAS","East Asia & Pacific",2017,"IQ.SPI.OVRL","SPI Overall Score",57.19
+"EAS","East Asia & Pacific",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.28
+"EAS","East Asia & Pacific",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",54.36
+"EAS","East Asia & Pacific",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",50.62
+"EAS","East Asia & Pacific",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",46.49
+"EAS","East Asia & Pacific",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",40.86
+"EAS","East Asia & Pacific",2018,"IQ.SPI.OVRL","SPI Overall Score",59.96
+"EAS","East Asia & Pacific",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.64
+"EAS","East Asia & Pacific",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",66.36
+"EAS","East Asia & Pacific",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",50.29
+"EAS","East Asia & Pacific",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",46.4
+"EAS","East Asia & Pacific",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",42.76
+"EAS","East Asia & Pacific",2019,"IQ.SPI.OVRL","SPI Overall Score",60.43
+"EAS","East Asia & Pacific",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",70.9
+"EAS","East Asia & Pacific",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",67.05
+"EAS","East Asia & Pacific",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",49.16
+"EAS","East Asia & Pacific",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",47.3
+"EAS","East Asia & Pacific",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",45.34
+"ECA","Europe & Central Asia (excluding high income)",2016,"IQ.SPI.OVRL","SPI Overall Score",62.32
+"ECA","Europe & Central Asia (excluding high income)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",85.61
+"ECA","Europe & Central Asia (excluding high income)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",44.14
+"ECA","Europe & Central Asia (excluding high income)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.54
+"ECA","Europe & Central Asia (excluding high income)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",53.32
+"ECA","Europe & Central Asia (excluding high income)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",63.33
+"ECA","Europe & Central Asia (excluding high income)",2017,"IQ.SPI.OVRL","SPI Overall Score",64.73
+"ECA","Europe & Central Asia (excluding high income)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",88.42
+"ECA","Europe & Central Asia (excluding high income)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.62
+"ECA","Europe & Central Asia (excluding high income)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",63.64
+"ECA","Europe & Central Asia (excluding high income)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",51.61
+"ECA","Europe & Central Asia (excluding high income)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",66.05
+"ECA","Europe & Central Asia (excluding high income)",2018,"IQ.SPI.OVRL","SPI Overall Score",68.69
+"ECA","Europe & Central Asia (excluding high income)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",88.95
+"ECA","Europe & Central Asia (excluding high income)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",67.39
+"ECA","Europe & Central Asia (excluding high income)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",64.48
+"ECA","Europe & Central Asia (excluding high income)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",52.36
+"ECA","Europe & Central Asia (excluding high income)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",66.84
+"ECA","Europe & Central Asia (excluding high income)",2019,"IQ.SPI.OVRL","SPI Overall Score",70.15
+"ECA","Europe & Central Asia (excluding high income)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",88.95
+"ECA","Europe & Central Asia (excluding high income)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",68.27
+"ECA","Europe & Central Asia (excluding high income)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",63.93
+"ECA","Europe & Central Asia (excluding high income)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",53.42
+"ECA","Europe & Central Asia (excluding high income)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",72.63
+"ECS","Europe & Central Asia",2016,"IQ.SPI.OVRL","SPI Overall Score",73.71
+"ECS","Europe & Central Asia",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",86.43
+"ECS","Europe & Central Asia",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",62.99
+"ECS","Europe & Central Asia",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.11
+"ECS","Europe & Central Asia",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",65.18
+"ECS","Europe & Central Asia",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",82.45
+"ECS","Europe & Central Asia",2017,"IQ.SPI.OVRL","SPI Overall Score",75.12
+"ECS","Europe & Central Asia",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",87.54
+"ECS","Europe & Central Asia",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",65.53
+"ECS","Europe & Central Asia",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.28
+"ECS","Europe & Central Asia",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",63.35
+"ECS","Europe & Central Asia",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",83.16
+"ECS","Europe & Central Asia",2018,"IQ.SPI.OVRL","SPI Overall Score",78.72
+"ECS","Europe & Central Asia",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",88.07
+"ECS","Europe & Central Asia",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",81.24
+"ECS","Europe & Central Asia",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.75
+"ECS","Europe & Central Asia",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",64.19
+"ECS","Europe & Central Asia",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",83.88
+"ECS","Europe & Central Asia",2019,"IQ.SPI.OVRL","SPI Overall Score",79.3
+"ECS","Europe & Central Asia",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",88.07
+"ECS","Europe & Central Asia",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",81.59
+"ECS","Europe & Central Asia",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.03
+"ECS","Europe & Central Asia",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",64.58
+"ECS","Europe & Central Asia",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",87.04
+"EMU","Euro area",2016,"IQ.SPI.OVRL","SPI Overall Score",81.61
+"EMU","Euro area",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",98.42
+"EMU","Euro area",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",77.98
+"EMU","Euro area",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",62.92
+"EMU","Euro area",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",72.67
+"EMU","Euro area",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",96.05
+"EMU","Euro area",2017,"IQ.SPI.OVRL","SPI Overall Score",82.62
+"EMU","Euro area",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",98.42
+"EMU","Euro area",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",79.35
+"EMU","Euro area",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",68.93
+"EMU","Euro area",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",70.35
+"EMU","Euro area",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",96.05
+"EMU","Euro area",2018,"IQ.SPI.OVRL","SPI Overall Score",85.28
+"EMU","Euro area",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",98.42
+"EMU","Euro area",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",91.85
+"EMU","Euro area",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",69.14
+"EMU","Euro area",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",70.7
+"EMU","Euro area",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",96.32
+"EMU","Euro area",2019,"IQ.SPI.OVRL","SPI Overall Score",85.33
+"EMU","Euro area",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",98.42
+"EMU","Euro area",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",91.85
+"EMU","Euro area",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",67.87
+"EMU","Euro area",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",70.87
+"EMU","Euro area",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",97.63
+"EUU","European Union",2016,"IQ.SPI.OVRL","SPI Overall Score",80.81
+"EUU","European Union",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",96.67
+"EUU","European Union",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",75.1
+"EUU","European Union",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",62.87
+"EUU","European Union",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",72.97
+"EUU","European Union",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",95.19
+"EUU","European Union",2017,"IQ.SPI.OVRL","SPI Overall Score",81.16
+"EUU","European Union",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",96.3
+"EUU","European Union",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",76.22
+"EUU","European Union",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",68.54
+"EUU","European Union",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",70.68
+"EUU","European Union",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",94.07
+"EUU","European Union",2018,"IQ.SPI.OVRL","SPI Overall Score",84.44
+"EUU","European Union",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",97.04
+"EUU","European Union",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",90.33
+"EUU","European Union",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",68.66
+"EUU","European Union",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",71.17
+"EUU","European Union",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",95
+"EUU","European Union",2019,"IQ.SPI.OVRL","SPI Overall Score",84.56
+"EUU","European Union",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",97.04
+"EUU","European Union",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",90.33
+"EUU","European Union",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",67.47
+"EUU","European Union",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",71.29
+"EUU","European Union",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",96.67
+"FCS","Fragile and conflict affected situations",2016,"IQ.SPI.OVRL","SPI Overall Score",39.9
+"FCS","Fragile and conflict affected situations",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",55.3
+"FCS","Fragile and conflict affected situations",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",23.6
+"FCS","Fragile and conflict affected situations",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",53.61
+"FCS","Fragile and conflict affected situations",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.97
+"FCS","Fragile and conflict affected situations",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",23.18
+"FCS","Fragile and conflict affected situations",2017,"IQ.SPI.OVRL","SPI Overall Score",41.5
+"FCS","Fragile and conflict affected situations",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",55.67
+"FCS","Fragile and conflict affected situations",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",35.57
+"FCS","Fragile and conflict affected situations",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.61
+"FCS","Fragile and conflict affected situations",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",27.43
+"FCS","Fragile and conflict affected situations",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.35
+"FCS","Fragile and conflict affected situations",2018,"IQ.SPI.OVRL","SPI Overall Score",44.47
+"FCS","Fragile and conflict affected situations",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",55.76
+"FCS","Fragile and conflict affected situations",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.62
+"FCS","Fragile and conflict affected situations",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.29
+"FCS","Fragile and conflict affected situations",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",27.74
+"FCS","Fragile and conflict affected situations",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",27.7
+"FCS","Fragile and conflict affected situations",2019,"IQ.SPI.OVRL","SPI Overall Score",44.09
+"FCS","Fragile and conflict affected situations",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",56.57
+"FCS","Fragile and conflict affected situations",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",48.61
+"FCS","Fragile and conflict affected situations",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",53.65
+"FCS","Fragile and conflict affected situations",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",26.73
+"FCS","Fragile and conflict affected situations",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.05
+"HIC","High income",2016,"IQ.SPI.OVRL","SPI Overall Score",73.69
+"HIC","High income",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",81.01
+"HIC","High income",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",63.37
+"HIC","High income",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",46.02
+"HIC","High income",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",68.14
+"HIC","High income",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",74.27
+"HIC","High income",2017,"IQ.SPI.OVRL","SPI Overall Score",74.72
+"HIC","High income",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",80.51
+"HIC","High income",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",67.84
+"HIC","High income",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",49.55
+"HIC","High income",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",66.33
+"HIC","High income",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",74.64
+"HIC","High income",2018,"IQ.SPI.OVRL","SPI Overall Score",78.08
+"HIC","High income",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",80.76
+"HIC","High income",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",82.74
+"HIC","High income",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",49.3
+"HIC","High income",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",67.48
+"HIC","High income",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",75.27
+"HIC","High income",2019,"IQ.SPI.OVRL","SPI Overall Score",78.58
+"HIC","High income",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",81.01
+"HIC","High income",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",82.07
+"HIC","High income",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",48.83
+"HIC","High income",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",67.78
+"HIC","High income",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",78.93
+"HPC","Heavily indebted poor countries (HIPC)",2016,"IQ.SPI.OVRL","SPI Overall Score",47.34
+"HPC","Heavily indebted poor countries (HIPC)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",74.59
+"HPC","Heavily indebted poor countries (HIPC)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",33
+"HPC","Heavily indebted poor countries (HIPC)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.13
+"HPC","Heavily indebted poor countries (HIPC)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",31.71
+"HPC","Heavily indebted poor countries (HIPC)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.53
+"HPC","Heavily indebted poor countries (HIPC)",2017,"IQ.SPI.OVRL","SPI Overall Score",48.91
+"HPC","Heavily indebted poor countries (HIPC)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",72.97
+"HPC","Heavily indebted poor countries (HIPC)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",47.4
+"HPC","Heavily indebted poor countries (HIPC)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",62.06
+"HPC","Heavily indebted poor countries (HIPC)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",28.68
+"HPC","Heavily indebted poor countries (HIPC)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",27.16
+"HPC","Heavily indebted poor countries (HIPC)",2018,"IQ.SPI.OVRL","SPI Overall Score",51.01
+"HPC","Heavily indebted poor countries (HIPC)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",73.24
+"HPC","Heavily indebted poor countries (HIPC)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",57.65
+"HPC","Heavily indebted poor countries (HIPC)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.48
+"HPC","Heavily indebted poor countries (HIPC)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.66
+"HPC","Heavily indebted poor countries (HIPC)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.89
+"HPC","Heavily indebted poor countries (HIPC)",2019,"IQ.SPI.OVRL","SPI Overall Score",50.51
+"HPC","Heavily indebted poor countries (HIPC)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",73.15
+"HPC","Heavily indebted poor countries (HIPC)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",54.7
+"HPC","Heavily indebted poor countries (HIPC)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.3
+"HPC","Heavily indebted poor countries (HIPC)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.02
+"HPC","Heavily indebted poor countries (HIPC)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30.41
+"IBD","IBRD only",2016,"IQ.SPI.OVRL","SPI Overall Score",59.66
+"IBD","IBRD only",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",78.6
+"IBD","IBRD only",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.77
+"IBD","IBRD only",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",62.72
+"IBD","IBRD only",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",53.65
+"IBD","IBRD only",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",44.71
+"IBD","IBRD only",2017,"IQ.SPI.OVRL","SPI Overall Score",61.68
+"IBD","IBRD only",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",77.88
+"IBD","IBRD only",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",58.99
+"IBD","IBRD only",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",63.98
+"IBD","IBRD only",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",52.55
+"IBD","IBRD only",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",46.38
+"IBD","IBRD only",2018,"IQ.SPI.OVRL","SPI Overall Score",64.66
+"IBD","IBRD only",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",78.84
+"IBD","IBRD only",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",70.58
+"IBD","IBRD only",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",64.15
+"IBD","IBRD only",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",53.08
+"IBD","IBRD only",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",47.68
+"IBD","IBRD only",2019,"IQ.SPI.OVRL","SPI Overall Score",65.07
+"IBD","IBRD only",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",78.5
+"IBD","IBRD only",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",69.54
+"IBD","IBRD only",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",63.06
+"IBD","IBRD only",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",53.24
+"IBD","IBRD only",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",52.1
 "IBT","IDA & IBRD total",2016,"IQ.SPI.OVRL","SPI Overall Score",52.65
 "IBT","IDA & IBRD total",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",72.48
 "IBT","IDA & IBRD total",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",40.71
@@ -47,51 +407,747 @@
 "IBT","IDA & IBRD total",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.6
 "IBT","IDA & IBRD total",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",42.13
 "IBT","IDA & IBRD total",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",41.84
-"IDA","IDA total",2016,"IQ.SPI.OVRL","SPI Overall Score",45.83
-"IDA","IDA total",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.07
-"IDA","IDA total",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",32.17
-"IDA","IDA total",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",57.37
-"IDA","IDA total",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",33.96
-"IDA","IDA total",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",28.14
-"IDA","IDA total",2017,"IQ.SPI.OVRL","SPI Overall Score",47.64
-"IDA","IDA total",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.21
-"IDA","IDA total",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",44.6
-"IDA","IDA total",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.93
-"IDA","IDA total",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",31.49
-"IDA","IDA total",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.52
-"IDA","IDA total",2018,"IQ.SPI.OVRL","SPI Overall Score",49.66
-"IDA","IDA total",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.8
-"IDA","IDA total",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",54.62
-"IDA","IDA total",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.21
-"IDA","IDA total",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",31.91
-"IDA","IDA total",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.93
-"IDA","IDA total",2019,"IQ.SPI.OVRL","SPI Overall Score",49.7
-"IDA","IDA total",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.53
-"IDA","IDA total",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",54.11
-"IDA","IDA total",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.43
-"IDA","IDA total",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",31.58
-"IDA","IDA total",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",32.19
-"IFS","IDA & IBRD countries classified as fragile situations",2016,"IQ.SPI.OVRL","SPI Overall Score",39.9
-"IFS","IDA & IBRD countries classified as fragile situations",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",55.17
-"IFS","IDA & IBRD countries classified as fragile situations",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",23.6
-"IFS","IDA & IBRD countries classified as fragile situations",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",53.46
-"IFS","IDA & IBRD countries classified as fragile situations",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.97
-"IFS","IDA & IBRD countries classified as fragile situations",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",23.18
-"IFS","IDA & IBRD countries classified as fragile situations",2017,"IQ.SPI.OVRL","SPI Overall Score",40.88
-"IFS","IDA & IBRD countries classified as fragile situations",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",54.99
-"IFS","IDA & IBRD countries classified as fragile situations",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",35.22
-"IFS","IDA & IBRD countries classified as fragile situations",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.48
-"IFS","IDA & IBRD countries classified as fragile situations",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",26.31
-"IFS","IDA & IBRD countries classified as fragile situations",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",25.56
-"IFS","IDA & IBRD countries classified as fragile situations",2018,"IQ.SPI.OVRL","SPI Overall Score",43.64
-"IFS","IDA & IBRD countries classified as fragile situations",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",55.08
-"IFS","IDA & IBRD countries classified as fragile situations",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",48.46
-"IFS","IDA & IBRD countries classified as fragile situations",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.2
-"IFS","IDA & IBRD countries classified as fragile situations",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",26.52
-"IFS","IDA & IBRD countries classified as fragile situations",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.81
-"IFS","IDA & IBRD countries classified as fragile situations",2019,"IQ.SPI.OVRL","SPI Overall Score",43.24
-"IFS","IDA & IBRD countries classified as fragile situations",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",55.92
-"IFS","IDA & IBRD countries classified as fragile situations",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",47.42
-"IFS","IDA & IBRD countries classified as fragile situations",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",53.59
-"IFS","IDA & IBRD countries classified as fragile situations",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",25.33
-"IFS","IDA & IBRD countries classified as fragile situations",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",28.19
+"IDA","IDA total",2016,"IQ.SPI.OVRL","SPI Overall Score",45.41
+"IDA","IDA total",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",66.61
+"IDA","IDA total",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",31.35
+"IDA","IDA total",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",57.18
+"IDA","IDA total",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",33.4
+"IDA","IDA total",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",28.04
+"IDA","IDA total",2017,"IQ.SPI.OVRL","SPI Overall Score",47.25
+"IDA","IDA total",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",66.76
+"IDA","IDA total",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",44.05
+"IDA","IDA total",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.77
+"IDA","IDA total",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",30.95
+"IDA","IDA total",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.31
+"IDA","IDA total",2018,"IQ.SPI.OVRL","SPI Overall Score",49.3
+"IDA","IDA total",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.36
+"IDA","IDA total",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",54.21
+"IDA","IDA total",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.06
+"IDA","IDA total",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",31.37
+"IDA","IDA total",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.72
+"IDA","IDA total",2019,"IQ.SPI.OVRL","SPI Overall Score",49.34
+"IDA","IDA total",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.1
+"IDA","IDA total",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",53.7
+"IDA","IDA total",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.23
+"IDA","IDA total",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",31.03
+"IDA","IDA total",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",32.01
+"IDB","IDA blend",2016,"IQ.SPI.OVRL","SPI Overall Score",46.89
+"IDB","IDA blend",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.33
+"IDB","IDA blend",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",28.58
+"IDB","IDA blend",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.61
+"IDB","IDA blend",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",39.48
+"IDB","IDA blend",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",32.86
+"IDB","IDA blend",2017,"IQ.SPI.OVRL","SPI Overall Score",48.66
+"IDB","IDA blend",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",65.11
+"IDB","IDA blend",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",42.06
+"IDB","IDA blend",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.85
+"IDB","IDA blend",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",37.46
+"IDB","IDA blend",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",34.33
+"IDB","IDA blend",2018,"IQ.SPI.OVRL","SPI Overall Score",51.63
+"IDB","IDA blend",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",65.77
+"IDB","IDA blend",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55.66
+"IDB","IDA blend",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.15
+"IDB","IDA blend",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",36.8
+"IDB","IDA blend",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",36.33
+"IDB","IDA blend",2019,"IQ.SPI.OVRL","SPI Overall Score",51.88
+"IDB","IDA blend",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.33
+"IDB","IDA blend",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",56.94
+"IDB","IDA blend",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",54.37
+"IDB","IDA blend",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",36.86
+"IDB","IDA blend",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",36
+"IDX","IDA only",2016,"IQ.SPI.OVRL","SPI Overall Score",45.05
+"IDX","IDA only",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",65.9
+"IDX","IDA only",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",32.04
+"IDX","IDA only",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",57.6
+"IDX","IDA only",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",31.88
+"IDX","IDA only",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.82
+"IDX","IDA only",2017,"IQ.SPI.OVRL","SPI Overall Score",46.89
+"IDX","IDA only",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.19
+"IDX","IDA only",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",44.54
+"IDX","IDA only",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.28
+"IDX","IDA only",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.29
+"IDX","IDA only",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",27.98
+"IDX","IDA only",2018,"IQ.SPI.OVRL","SPI Overall Score",48.71
+"IDX","IDA only",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.77
+"IDX","IDA only",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",53.85
+"IDX","IDA only",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.57
+"IDX","IDA only",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.99
+"IDX","IDA only",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",27.98
+"IDX","IDA only",2019,"IQ.SPI.OVRL","SPI Overall Score",48.7
+"IDX","IDA only",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.3
+"IDX","IDA only",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",52.89
+"IDX","IDA only",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.73
+"IDX","IDA only",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.55
+"IDX","IDA only",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30.96
+"LAC","Latin America & Caribbean (excluding high income)",2016,"IQ.SPI.OVRL","SPI Overall Score",56.53
+"LAC","Latin America & Caribbean (excluding high income)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",77.5
+"LAC","Latin America & Caribbean (excluding high income)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",45.61
+"LAC","Latin America & Caribbean (excluding high income)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",64.47
+"LAC","Latin America & Caribbean (excluding high income)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",49.3
+"LAC","Latin America & Caribbean (excluding high income)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",38.26
+"LAC","Latin America & Caribbean (excluding high income)",2017,"IQ.SPI.OVRL","SPI Overall Score",58.64
+"LAC","Latin America & Caribbean (excluding high income)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",75.83
+"LAC","Latin America & Caribbean (excluding high income)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",58.92
+"LAC","Latin America & Caribbean (excluding high income)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",64.99
+"LAC","Latin America & Caribbean (excluding high income)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",47.84
+"LAC","Latin America & Caribbean (excluding high income)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",37.83
+"LAC","Latin America & Caribbean (excluding high income)",2018,"IQ.SPI.OVRL","SPI Overall Score",61.5
+"LAC","Latin America & Caribbean (excluding high income)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",78.33
+"LAC","Latin America & Caribbean (excluding high income)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",70.91
+"LAC","Latin America & Caribbean (excluding high income)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",64.1
+"LAC","Latin America & Caribbean (excluding high income)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",48.8
+"LAC","Latin America & Caribbean (excluding high income)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",37.61
+"LAC","Latin America & Caribbean (excluding high income)",2019,"IQ.SPI.OVRL","SPI Overall Score",61.55
+"LAC","Latin America & Caribbean (excluding high income)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",77.92
+"LAC","Latin America & Caribbean (excluding high income)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",69.32
+"LAC","Latin America & Caribbean (excluding high income)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.97
+"LAC","Latin America & Caribbean (excluding high income)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",48.56
+"LAC","Latin America & Caribbean (excluding high income)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",41.74
+"LCN","Latin America & Caribbean",2016,"IQ.SPI.OVRL","SPI Overall Score",55.74
+"LCN","Latin America & Caribbean",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",70
+"LCN","Latin America & Caribbean",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",43.78
+"LCN","Latin America & Caribbean",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",51.15
+"LCN","Latin America & Caribbean",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",49.86
+"LCN","Latin America & Caribbean",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",36.56
+"LCN","Latin America & Caribbean",2017,"IQ.SPI.OVRL","SPI Overall Score",57.91
+"LCN","Latin America & Caribbean",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.05
+"LCN","Latin America & Caribbean",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",57.02
+"LCN","Latin America & Caribbean",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",51.94
+"LCN","Latin America & Caribbean",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",48.23
+"LCN","Latin America & Caribbean",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",35.62
+"LCN","Latin America & Caribbean",2018,"IQ.SPI.OVRL","SPI Overall Score",60.91
+"LCN","Latin America & Caribbean",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",70.16
+"LCN","Latin America & Caribbean",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",70.14
+"LCN","Latin America & Caribbean",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",51.18
+"LCN","Latin America & Caribbean",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",48.99
+"LCN","Latin America & Caribbean",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",36.25
+"LCN","Latin America & Caribbean",2019,"IQ.SPI.OVRL","SPI Overall Score",60.65
+"LCN","Latin America & Caribbean",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.92
+"LCN","Latin America & Caribbean",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",66.44
+"LCN","Latin America & Caribbean",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",49.66
+"LCN","Latin America & Caribbean",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",48.49
+"LCN","Latin America & Caribbean",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",40.94
+"LDC","Least developed countries: UN classification",2016,"IQ.SPI.OVRL","SPI Overall Score",44.9
+"LDC","Least developed countries: UN classification",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",66.96
+"LDC","Least developed countries: UN classification",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",31.65
+"LDC","Least developed countries: UN classification",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.63
+"LDC","Least developed countries: UN classification",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",31.7
+"LDC","Least developed countries: UN classification",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",24.88
+"LDC","Least developed countries: UN classification",2017,"IQ.SPI.OVRL","SPI Overall Score",47.25
+"LDC","Least developed countries: UN classification",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.37
+"LDC","Least developed countries: UN classification",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",44.47
+"LDC","Least developed countries: UN classification",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.34
+"LDC","Least developed countries: UN classification",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.07
+"LDC","Least developed countries: UN classification",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.67
+"LDC","Least developed countries: UN classification",2018,"IQ.SPI.OVRL","SPI Overall Score",49.42
+"LDC","Least developed countries: UN classification",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.14
+"LDC","Least developed countries: UN classification",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55.33
+"LDC","Least developed countries: UN classification",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.9
+"LDC","Least developed countries: UN classification",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.69
+"LDC","Least developed countries: UN classification",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.89
+"LDC","Least developed countries: UN classification",2019,"IQ.SPI.OVRL","SPI Overall Score",49.2
+"LDC","Least developed countries: UN classification",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",68.36
+"LDC","Least developed countries: UN classification",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",54.11
+"LDC","Least developed countries: UN classification",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.16
+"LDC","Least developed countries: UN classification",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.06
+"LDC","Least developed countries: UN classification",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.33
+"LIC","Low income",2016,"IQ.SPI.OVRL","SPI Overall Score",45.47
+"LIC","Low income",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",65.67
+"LIC","Low income",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",34.52
+"LIC","Low income",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",57.56
+"LIC","Low income",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",29.85
+"LIC","Low income",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",24.04
+"LIC","Low income",2017,"IQ.SPI.OVRL","SPI Overall Score",45.81
+"LIC","Low income",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",66.91
+"LIC","Low income",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",44.39
+"LIC","Low income",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.22
+"LIC","Low income",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",25.43
+"LIC","Low income",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",25.37
+"LIC","Low income",2018,"IQ.SPI.OVRL","SPI Overall Score",47.73
+"LIC","Low income",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.4
+"LIC","Low income",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",52.17
+"LIC","Low income",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.79
+"LIC","Low income",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",26.61
+"LIC","Low income",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",25.93
+"LIC","Low income",2019,"IQ.SPI.OVRL","SPI Overall Score",47.46
+"LIC","Low income",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.27
+"LIC","Low income",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",50.83
+"LIC","Low income",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",57.97
+"LIC","Low income",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",26.17
+"LIC","Low income",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",28.52
+"LMC","Lower middle income",2016,"IQ.SPI.OVRL","SPI Overall Score",50.72
+"LMC","Lower middle income",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",78.14
+"LMC","Lower middle income",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",37.32
+"LMC","Lower middle income",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.55
+"LMC","Lower middle income",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.31
+"LMC","Lower middle income",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.5
+"LMC","Lower middle income",2017,"IQ.SPI.OVRL","SPI Overall Score",53.43
+"LMC","Lower middle income",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",77.69
+"LMC","Lower middle income",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",50.51
+"LMC","Lower middle income",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",62.18
+"LMC","Lower middle income",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.58
+"LMC","Lower middle income",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",35.38
+"LMC","Lower middle income",2018,"IQ.SPI.OVRL","SPI Overall Score",56.06
+"LMC","Lower middle income",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",77.95
+"LMC","Lower middle income",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",62.35
+"LMC","Lower middle income",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",62.09
+"LMC","Lower middle income",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.76
+"LMC","Lower middle income",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",36.44
+"LMC","Lower middle income",2019,"IQ.SPI.OVRL","SPI Overall Score",56.36
+"LMC","Lower middle income",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",78.97
+"LMC","Lower middle income",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",61.7
+"LMC","Lower middle income",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.61
+"LMC","Lower middle income",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.66
+"LMC","Lower middle income",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",39.13
+"LMY","Low & middle income",2016,"IQ.SPI.OVRL","SPI Overall Score",52.16
+"LMY","Low & middle income",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",72.57
+"LMY","Low & middle income",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",40.34
+"LMY","Low & middle income",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.96
+"LMY","Low & middle income",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",42.56
+"LMY","Low & middle income",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",35.83
+"LMY","Low & middle income",2017,"IQ.SPI.OVRL","SPI Overall Score",54
+"LMY","Low & middle income",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",72.8
+"LMY","Low & middle income",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",51.06
+"LMY","Low & middle income",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.23
+"LMY","Low & middle income",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.59
+"LMY","Low & middle income",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",37.31
+"LMY","Low & middle income",2018,"IQ.SPI.OVRL","SPI Overall Score",56.53
+"LMY","Low & middle income",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",73.58
+"LMY","Low & middle income",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",62.01
+"LMY","Low & middle income",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.14
+"LMY","Low & middle income",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.08
+"LMY","Low & middle income",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",38.12
+"LMY","Low & middle income",2019,"IQ.SPI.OVRL","SPI Overall Score",56.79
+"LMY","Low & middle income",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",73.81
+"LMY","Low & middle income",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",61.46
+"LMY","Low & middle income",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.66
+"LMY","Low & middle income",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.08
+"LMY","Low & middle income",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",41.35
+"LTE","Late-demographic dividend",2016,"IQ.SPI.OVRL","SPI Overall Score",63.42
+"LTE","Late-demographic dividend",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",86.79
+"LTE","Late-demographic dividend",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",51.36
+"LTE","Late-demographic dividend",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.26
+"LTE","Late-demographic dividend",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",57.92
+"LTE","Late-demographic dividend",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",55.43
+"LTE","Late-demographic dividend",2017,"IQ.SPI.OVRL","SPI Overall Score",65.18
+"LTE","Late-demographic dividend",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",85.91
+"LTE","Late-demographic dividend",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",60.38
+"LTE","Late-demographic dividend",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",57.29
+"LTE","Late-demographic dividend",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",56.26
+"LTE","Late-demographic dividend",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",57.34
+"LTE","Late-demographic dividend",2018,"IQ.SPI.OVRL","SPI Overall Score",68.61
+"LTE","Late-demographic dividend",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",86.67
+"LTE","Late-demographic dividend",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",74.46
+"LTE","Late-demographic dividend",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",57.23
+"LTE","Late-demographic dividend",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",57.17
+"LTE","Late-demographic dividend",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",58.83
+"LTE","Late-demographic dividend",2019,"IQ.SPI.OVRL","SPI Overall Score",69.31
+"LTE","Late-demographic dividend",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",86.73
+"LTE","Late-demographic dividend",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",73.73
+"LTE","Late-demographic dividend",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.23
+"LTE","Late-demographic dividend",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",57.8
+"LTE","Late-demographic dividend",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",63.51
+"MEA","Middle East & North Africa",2016,"IQ.SPI.OVRL","SPI Overall Score",49.45
+"MEA","Middle East & North Africa",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",76.34
+"MEA","Middle East & North Africa",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",31.46
+"MEA","Middle East & North Africa",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",51.49
+"MEA","Middle East & North Africa",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",47.29
+"MEA","Middle East & North Africa",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",35
+"MEA","Middle East & North Africa",2017,"IQ.SPI.OVRL","SPI Overall Score",50.81
+"MEA","Middle East & North Africa",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",75.08
+"MEA","Middle East & North Africa",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",43.78
+"MEA","Middle East & North Africa",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",51.61
+"MEA","Middle East & North Africa",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",45.99
+"MEA","Middle East & North Africa",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",37.62
+"MEA","Middle East & North Africa",2018,"IQ.SPI.OVRL","SPI Overall Score",54.11
+"MEA","Middle East & North Africa",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",75.55
+"MEA","Middle East & North Africa",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",58.48
+"MEA","Middle East & North Africa",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",52.13
+"MEA","Middle East & North Africa",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",46.79
+"MEA","Middle East & North Africa",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",37.62
+"MEA","Middle East & North Africa",2019,"IQ.SPI.OVRL","SPI Overall Score",55.49
+"MEA","Middle East & North Africa",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",75.55
+"MEA","Middle East & North Africa",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",60.07
+"MEA","Middle East & North Africa",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",52.01
+"MEA","Middle East & North Africa",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",46.74
+"MEA","Middle East & North Africa",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",43.1
+"MIC","Middle income",2016,"IQ.SPI.OVRL","SPI Overall Score",53.74
+"MIC","Middle income",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",74.35
+"MIC","Middle income",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",41.71
+"MIC","Middle income",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.58
+"MIC","Middle income",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",45.57
+"MIC","Middle income",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",38.9
+"MIC","Middle income",2017,"IQ.SPI.OVRL","SPI Overall Score",56.16
+"MIC","Middle income",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",74.32
+"MIC","Middle income",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",52.8
+"MIC","Middle income",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.49
+"MIC","Middle income",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",44.58
+"MIC","Middle income",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",40.44
+"MIC","Middle income",2018,"IQ.SPI.OVRL","SPI Overall Score",58.85
+"MIC","Middle income",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",75.17
+"MIC","Middle income",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",64.58
+"MIC","Middle income",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.49
+"MIC","Middle income",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",44.88
+"MIC","Middle income",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",41.31
+"MIC","Middle income",2019,"IQ.SPI.OVRL","SPI Overall Score",59.24
+"MIC","Middle income",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",75.49
+"MIC","Middle income",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",64.23
+"MIC","Middle income",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.1
+"MIC","Middle income",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",45.01
+"MIC","Middle income",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",44.71
+"MNA","Middle East & North Africa (excluding high income)",2016,"IQ.SPI.OVRL","SPI Overall Score",45.5
+"MNA","Middle East & North Africa (excluding high income)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",64.09
+"MNA","Middle East & North Africa (excluding high income)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",33.07
+"MNA","Middle East & North Africa (excluding high income)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.47
+"MNA","Middle East & North Africa (excluding high income)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.15
+"MNA","Middle East & North Africa (excluding high income)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.25
+"MNA","Middle East & North Africa (excluding high income)",2017,"IQ.SPI.OVRL","SPI Overall Score",45.82
+"MNA","Middle East & North Africa (excluding high income)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",62.05
+"MNA","Middle East & North Africa (excluding high income)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",42.9
+"MNA","Middle East & North Africa (excluding high income)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",54.35
+"MNA","Middle East & North Africa (excluding high income)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",39.05
+"MNA","Middle East & North Africa (excluding high income)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30.77
+"MNA","Middle East & North Africa (excluding high income)",2018,"IQ.SPI.OVRL","SPI Overall Score",49.48
+"MNA","Middle East & North Africa (excluding high income)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",62.82
+"MNA","Middle East & North Africa (excluding high income)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",58.24
+"MNA","Middle East & North Africa (excluding high income)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.2
+"MNA","Middle East & North Africa (excluding high income)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",39.2
+"MNA","Middle East & North Africa (excluding high income)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",31.92
+"MNA","Middle East & North Africa (excluding high income)",2019,"IQ.SPI.OVRL","SPI Overall Score",49.95
+"MNA","Middle East & North Africa (excluding high income)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",62.82
+"MNA","Middle East & North Africa (excluding high income)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",58.24
+"MNA","Middle East & North Africa (excluding high income)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",54.94
+"MNA","Middle East & North Africa (excluding high income)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",38.37
+"MNA","Middle East & North Africa (excluding high income)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",35.38
+"NAC","North America",2016,"IQ.SPI.OVRL","SPI Overall Score",87.96
+"NAC","North America",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",86.67
+"NAC","North America",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",93.32
+"NAC","North America",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",47.39
+"NAC","North America",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",87.35
+"NAC","North America",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",97.5
+"NAC","North America",2017,"IQ.SPI.OVRL","SPI Overall Score",86.78
+"NAC","North America",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",86.67
+"NAC","North America",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",92.9
+"NAC","North America",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",49.06
+"NAC","North America",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",79
+"NAC","North America",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",97.5
+"NAC","North America",2018,"IQ.SPI.OVRL","SPI Overall Score",87.74
+"NAC","North America",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",86.67
+"NAC","North America",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",93.6
+"NAC","North America",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",46.61
+"NAC","North America",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",85.81
+"NAC","North America",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",97.5
+"NAC","North America",2019,"IQ.SPI.OVRL","SPI Overall Score",88.19
+"NAC","North America",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",86.67
+"NAC","North America",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",93.6
+"NAC","North America",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",46.62
+"NAC","North America",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",85.81
+"NAC","North America",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",100
+"OED","OECD members",2016,"IQ.SPI.OVRL","SPI Overall Score",81.29
+"OED","OECD members",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",97.81
+"OED","OECD members",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",78.02
+"OED","OECD members",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",66.18
+"OED","OECD members",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",72.13
+"OED","OECD members",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",92.33
+"OED","OECD members",2017,"IQ.SPI.OVRL","SPI Overall Score",82.73
+"OED","OECD members",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",97.81
+"OED","OECD members",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",79.16
+"OED","OECD members",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",72.6
+"OED","OECD members",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",70.02
+"OED","OECD members",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",94.04
+"OED","OECD members",2018,"IQ.SPI.OVRL","SPI Overall Score",85.26
+"OED","OECD members",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",97.81
+"OED","OECD members",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",91.17
+"OED","OECD members",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",72.35
+"OED","OECD members",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",70.92
+"OED","OECD members",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",94.04
+"OED","OECD members",2019,"IQ.SPI.OVRL","SPI Overall Score",85.57
+"OED","OECD members",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",97.81
+"OED","OECD members",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",91.17
+"OED","OECD members",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",71.32
+"OED","OECD members",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",71.24
+"OED","OECD members",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",96.3
+"OSS","Other small states",2016,"IQ.SPI.OVRL","SPI Overall Score",51.66
+"OSS","Other small states",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",70.39
+"OSS","Other small states",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",40
+"OSS","Other small states",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",53.06
+"OSS","Other small states",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",46.07
+"OSS","Other small states",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",40
+"OSS","Other small states",2017,"IQ.SPI.OVRL","SPI Overall Score",54.17
+"OSS","Other small states",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",72
+"OSS","Other small states",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",50.14
+"OSS","Other small states",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",54.96
+"OSS","Other small states",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",44.32
+"OSS","Other small states",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",41.6
+"OSS","Other small states",2018,"IQ.SPI.OVRL","SPI Overall Score",56.99
+"OSS","Other small states",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",72
+"OSS","Other small states",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",62.37
+"OSS","Other small states",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",54.68
+"OSS","Other small states",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",45.17
+"OSS","Other small states",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",43.4
+"OSS","Other small states",2019,"IQ.SPI.OVRL","SPI Overall Score",56.81
+"OSS","Other small states",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",72
+"OSS","Other small states",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",59.19
+"OSS","Other small states",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",53.67
+"OSS","Other small states",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",45.72
+"OSS","Other small states",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",46.4
+"PRE","Pre-demographic dividend",2016,"IQ.SPI.OVRL","SPI Overall Score",46.02
+"PRE","Pre-demographic dividend",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",67.49
+"PRE","Pre-demographic dividend",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",33.15
+"PRE","Pre-demographic dividend",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.45
+"PRE","Pre-demographic dividend",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",30.57
+"PRE","Pre-demographic dividend",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",27.21
+"PRE","Pre-demographic dividend",2017,"IQ.SPI.OVRL","SPI Overall Score",46.86
+"PRE","Pre-demographic dividend",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",64.63
+"PRE","Pre-demographic dividend",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",44.53
+"PRE","Pre-demographic dividend",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.31
+"PRE","Pre-demographic dividend",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",27.43
+"PRE","Pre-demographic dividend",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",28.75
+"PRE","Pre-demographic dividend",2018,"IQ.SPI.OVRL","SPI Overall Score",48.91
+"PRE","Pre-demographic dividend",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",64.34
+"PRE","Pre-demographic dividend",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",54.27
+"PRE","Pre-demographic dividend",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.56
+"PRE","Pre-demographic dividend",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",28.26
+"PRE","Pre-demographic dividend",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",28.75
+"PRE","Pre-demographic dividend",2019,"IQ.SPI.OVRL","SPI Overall Score",48.72
+"PRE","Pre-demographic dividend",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",64.62
+"PRE","Pre-demographic dividend",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",53.23
+"PRE","Pre-demographic dividend",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",58.47
+"PRE","Pre-demographic dividend",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",27.27
+"PRE","Pre-demographic dividend",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",31.81
+"PSS","Pacific island small states",2016,"IQ.SPI.OVRL","SPI Overall Score",33.65
+"PSS","Pacific island small states",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",43.93
+"PSS","Pacific island small states",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",22.22
+"PSS","Pacific island small states",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",46.79
+"PSS","Pacific island small states",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",25.77
+"PSS","Pacific island small states",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",18.18
+"PSS","Pacific island small states",2017,"IQ.SPI.OVRL","SPI Overall Score",37.6
+"PSS","Pacific island small states",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",42.42
+"PSS","Pacific island small states",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",40.64
+"PSS","Pacific island small states",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",47.12
+"PSS","Pacific island small states",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",24.86
+"PSS","Pacific island small states",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",20
+"PSS","Pacific island small states",2018,"IQ.SPI.OVRL","SPI Overall Score",38.36
+"PSS","Pacific island small states",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",43.64
+"PSS","Pacific island small states",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",45.44
+"PSS","Pacific island small states",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",45.38
+"PSS","Pacific island small states",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",23.89
+"PSS","Pacific island small states",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",20.91
+"PSS","Pacific island small states",2019,"IQ.SPI.OVRL","SPI Overall Score",38.03
+"PSS","Pacific island small states",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",45.45
+"PSS","Pacific island small states",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",45.44
+"PSS","Pacific island small states",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",43.08
+"PSS","Pacific island small states",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",24.96
+"PSS","Pacific island small states",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",22.73
+"PST","Post-demographic dividend",2016,"IQ.SPI.OVRL","SPI Overall Score",79.04
+"PST","Post-demographic dividend",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",93.42
+"PST","Post-demographic dividend",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",72.03
+"PST","Post-demographic dividend",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.84
+"PST","Post-demographic dividend",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",70.78
+"PST","Post-demographic dividend",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",87.14
+"PST","Post-demographic dividend",2017,"IQ.SPI.OVRL","SPI Overall Score",79.97
+"PST","Post-demographic dividend",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",92.37
+"PST","Post-demographic dividend",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",73.44
+"PST","Post-demographic dividend",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",65.25
+"PST","Post-demographic dividend",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",69.18
+"PST","Post-demographic dividend",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",87.86
+"PST","Post-demographic dividend",2018,"IQ.SPI.OVRL","SPI Overall Score",83.36
+"PST","Post-demographic dividend",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",93.16
+"PST","Post-demographic dividend",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",87.87
+"PST","Post-demographic dividend",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",65.23
+"PST","Post-demographic dividend",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",70.12
+"PST","Post-demographic dividend",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",88.57
+"PST","Post-demographic dividend",2019,"IQ.SPI.OVRL","SPI Overall Score",83.74
+"PST","Post-demographic dividend",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",93.16
+"PST","Post-demographic dividend",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",87.87
+"PST","Post-demographic dividend",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",64.38
+"PST","Post-demographic dividend",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",70.4
+"PST","Post-demographic dividend",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",91.14
+"SAS","South Asia",2016,"IQ.SPI.OVRL","SPI Overall Score",54.36
+"SAS","South Asia",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",80.42
+"SAS","South Asia",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.15
+"SAS","South Asia",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",63.23
+"SAS","South Asia",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",45.24
+"SAS","South Asia",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.75
+"SAS","South Asia",2017,"IQ.SPI.OVRL","SPI Overall Score",56.75
+"SAS","South Asia",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",81.25
+"SAS","South Asia",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",57.98
+"SAS","South Asia",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",67.86
+"SAS","South Asia",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",44.15
+"SAS","South Asia",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",32.5
+"SAS","South Asia",2018,"IQ.SPI.OVRL","SPI Overall Score",58.52
+"SAS","South Asia",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",83.75
+"SAS","South Asia",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",62.74
+"SAS","South Asia",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",68.05
+"SAS","South Asia",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",44.31
+"SAS","South Asia",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.75
+"SAS","South Asia",2019,"IQ.SPI.OVRL","SPI Overall Score",58.74
+"SAS","South Asia",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",83.75
+"SAS","South Asia",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",62.74
+"SAS","South Asia",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",67.79
+"SAS","South Asia",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",45.04
+"SAS","South Asia",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",34.38
+"SSA","Sub-Saharan Africa (excluding high income)",2016,"IQ.SPI.OVRL","SPI Overall Score",48.3
+"SSA","Sub-Saharan Africa (excluding high income)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",70.59
+"SSA","Sub-Saharan Africa (excluding high income)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",37.05
+"SSA","Sub-Saharan Africa (excluding high income)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.72
+"SSA","Sub-Saharan Africa (excluding high income)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",34.28
+"SSA","Sub-Saharan Africa (excluding high income)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.43
+"SSA","Sub-Saharan Africa (excluding high income)",2017,"IQ.SPI.OVRL","SPI Overall Score",50.11
+"SSA","Sub-Saharan Africa (excluding high income)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",70
+"SSA","Sub-Saharan Africa (excluding high income)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.44
+"SSA","Sub-Saharan Africa (excluding high income)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.6
+"SSA","Sub-Saharan Africa (excluding high income)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",31.74
+"SSA","Sub-Saharan Africa (excluding high income)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30.22
+"SSA","Sub-Saharan Africa (excluding high income)",2018,"IQ.SPI.OVRL","SPI Overall Score",51.74
+"SSA","Sub-Saharan Africa (excluding high income)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.77
+"SSA","Sub-Saharan Africa (excluding high income)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",57.33
+"SSA","Sub-Saharan Africa (excluding high income)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.24
+"SSA","Sub-Saharan Africa (excluding high income)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",32.38
+"SSA","Sub-Saharan Africa (excluding high income)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30.67
+"SSA","Sub-Saharan Africa (excluding high income)",2019,"IQ.SPI.OVRL","SPI Overall Score",51.52
+"SSA","Sub-Saharan Africa (excluding high income)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",70.07
+"SSA","Sub-Saharan Africa (excluding high income)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55.71
+"SSA","Sub-Saharan Africa (excluding high income)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.39
+"SSA","Sub-Saharan Africa (excluding high income)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",31.9
+"SSA","Sub-Saharan Africa (excluding high income)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.33
+"SSF","Sub-Saharan Africa",2016,"IQ.SPI.OVRL","SPI Overall Score",48.3
+"SSF","Sub-Saharan Africa",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.92
+"SSF","Sub-Saharan Africa",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",37.05
+"SSF","Sub-Saharan Africa",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.59
+"SSF","Sub-Saharan Africa",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",34.28
+"SSF","Sub-Saharan Africa",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30
+"SSF","Sub-Saharan Africa",2017,"IQ.SPI.OVRL","SPI Overall Score",50.06
+"SSF","Sub-Saharan Africa",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.35
+"SSF","Sub-Saharan Africa",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.34
+"SSF","Sub-Saharan Africa",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.4
+"SSF","Sub-Saharan Africa",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",32.26
+"SSF","Sub-Saharan Africa",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30.65
+"SSF","Sub-Saharan Africa",2018,"IQ.SPI.OVRL","SPI Overall Score",51.66
+"SSF","Sub-Saharan Africa",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.13
+"SSF","Sub-Saharan Africa",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",57.07
+"SSF","Sub-Saharan Africa",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.02
+"SSF","Sub-Saharan Africa",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",32.89
+"SSF","Sub-Saharan Africa",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",31.09
+"SSF","Sub-Saharan Africa",2019,"IQ.SPI.OVRL","SPI Overall Score",51.45
+"SSF","Sub-Saharan Africa",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.41
+"SSF","Sub-Saharan Africa",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55.49
+"SSF","Sub-Saharan Africa",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.25
+"SSF","Sub-Saharan Africa",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",32.42
+"SSF","Sub-Saharan Africa",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.7
+"SST","Small states",2016,"IQ.SPI.OVRL","SPI Overall Score",45.62
+"SST","Small states",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",60.47
+"SST","Small states",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",29.85
+"SST","Small states",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",50.48
+"SST","Small states",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.51
+"SST","Small states",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.02
+"SST","Small states",2017,"IQ.SPI.OVRL","SPI Overall Score",48.5
+"SST","Small states",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",59.93
+"SST","Small states",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",44.18
+"SST","Small states",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",51.47
+"SST","Small states",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.39
+"SST","Small states",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.16
+"SST","Small states",2018,"IQ.SPI.OVRL","SPI Overall Score",51.98
+"SST","Small states",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",61.43
+"SST","Small states",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",58.99
+"SST","Small states",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",50.47
+"SST","Small states",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.76
+"SST","Small states",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",34.69
+"SST","Small states",2019,"IQ.SPI.OVRL","SPI Overall Score",51.44
+"SST","Small states",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",61.84
+"SST","Small states",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55.28
+"SST","Small states",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",48.77
+"SST","Small states",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.22
+"SST","Small states",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",37.35
+"TEA","East Asia & Pacific (IDA & IBRD)",2016,"IQ.SPI.OVRL","SPI Overall Score",48.35
+"TEA","East Asia & Pacific (IDA & IBRD)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",63.9
+"TEA","East Asia & Pacific (IDA & IBRD)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",38.02
+"TEA","East Asia & Pacific (IDA & IBRD)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.61
+"TEA","East Asia & Pacific (IDA & IBRD)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.59
+"TEA","East Asia & Pacific (IDA & IBRD)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",27.95
+"TEA","East Asia & Pacific (IDA & IBRD)",2017,"IQ.SPI.OVRL","SPI Overall Score",51.55
+"TEA","East Asia & Pacific (IDA & IBRD)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",64.92
+"TEA","East Asia & Pacific (IDA & IBRD)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.98
+"TEA","East Asia & Pacific (IDA & IBRD)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",57.04
+"TEA","East Asia & Pacific (IDA & IBRD)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.8
+"TEA","East Asia & Pacific (IDA & IBRD)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",31.09
+"TEA","East Asia & Pacific (IDA & IBRD)",2018,"IQ.SPI.OVRL","SPI Overall Score",53.84
+"TEA","East Asia & Pacific (IDA & IBRD)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",65.5
+"TEA","East Asia & Pacific (IDA & IBRD)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",59.17
+"TEA","East Asia & Pacific (IDA & IBRD)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.75
+"TEA","East Asia & Pacific (IDA & IBRD)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",40.54
+"TEA","East Asia & Pacific (IDA & IBRD)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.04
+"TEA","East Asia & Pacific (IDA & IBRD)",2019,"IQ.SPI.OVRL","SPI Overall Score",54.09
+"TEA","East Asia & Pacific (IDA & IBRD)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",66.67
+"TEA","East Asia & Pacific (IDA & IBRD)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",60.05
+"TEA","East Asia & Pacific (IDA & IBRD)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",54.91
+"TEA","East Asia & Pacific (IDA & IBRD)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.15
+"TEA","East Asia & Pacific (IDA & IBRD)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",35
+"TEC","Europe & Central Asia (IDA & IBRD)",2016,"IQ.SPI.OVRL","SPI Overall Score",63.49
+"TEC","Europe & Central Asia (IDA & IBRD)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",85.75
+"TEC","Europe & Central Asia (IDA & IBRD)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",45.3
+"TEC","Europe & Central Asia (IDA & IBRD)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.96
+"TEC","Europe & Central Asia (IDA & IBRD)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",55.44
+"TEC","Europe & Central Asia (IDA & IBRD)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",65.75
+"TEC","Europe & Central Asia (IDA & IBRD)",2017,"IQ.SPI.OVRL","SPI Overall Score",65.68
+"TEC","Europe & Central Asia (IDA & IBRD)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",87.73
+"TEC","Europe & Central Asia (IDA & IBRD)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",51.33
+"TEC","Europe & Central Asia (IDA & IBRD)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",63.56
+"TEC","Europe & Central Asia (IDA & IBRD)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",54.22
+"TEC","Europe & Central Asia (IDA & IBRD)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",67.73
+"TEC","Europe & Central Asia (IDA & IBRD)",2018,"IQ.SPI.OVRL","SPI Overall Score",69.9
+"TEC","Europe & Central Asia (IDA & IBRD)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",89.09
+"TEC","Europe & Central Asia (IDA & IBRD)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",68.79
+"TEC","Europe & Central Asia (IDA & IBRD)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",64.19
+"TEC","Europe & Central Asia (IDA & IBRD)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",55.22
+"TEC","Europe & Central Asia (IDA & IBRD)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",69.09
+"TEC","Europe & Central Asia (IDA & IBRD)",2019,"IQ.SPI.OVRL","SPI Overall Score",71.32
+"TEC","Europe & Central Asia (IDA & IBRD)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",89.09
+"TEC","Europe & Central Asia (IDA & IBRD)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",69.55
+"TEC","Europe & Central Asia (IDA & IBRD)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",63.59
+"TEC","Europe & Central Asia (IDA & IBRD)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",56.13
+"TEC","Europe & Central Asia (IDA & IBRD)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",75
+"TLA","Latin America & Caribbean (IDA & IBRD)",2016,"IQ.SPI.OVRL","SPI Overall Score",56.33
+"TLA","Latin America & Caribbean (IDA & IBRD)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",74.33
+"TLA","Latin America & Caribbean (IDA & IBRD)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",45.15
+"TLA","Latin America & Caribbean (IDA & IBRD)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",63.22
+"TLA","Latin America & Caribbean (IDA & IBRD)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",50.82
+"TLA","Latin America & Caribbean (IDA & IBRD)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",37
+"TLA","Latin America & Caribbean (IDA & IBRD)",2017,"IQ.SPI.OVRL","SPI Overall Score",58.51
+"TLA","Latin America & Caribbean (IDA & IBRD)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",73
+"TLA","Latin America & Caribbean (IDA & IBRD)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",58.2
+"TLA","Latin America & Caribbean (IDA & IBRD)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",64.23
+"TLA","Latin America & Caribbean (IDA & IBRD)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",49.09
+"TLA","Latin America & Caribbean (IDA & IBRD)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",36.33
+"TLA","Latin America & Caribbean (IDA & IBRD)",2018,"IQ.SPI.OVRL","SPI Overall Score",61.23
+"TLA","Latin America & Caribbean (IDA & IBRD)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",74.55
+"TLA","Latin America & Caribbean (IDA & IBRD)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",70.51
+"TLA","Latin America & Caribbean (IDA & IBRD)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",62.82
+"TLA","Latin America & Caribbean (IDA & IBRD)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",49.82
+"TLA","Latin America & Caribbean (IDA & IBRD)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",36.5
+"TLA","Latin America & Caribbean (IDA & IBRD)",2019,"IQ.SPI.OVRL","SPI Overall Score",61.05
+"TLA","Latin America & Caribbean (IDA & IBRD)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",74.22
+"TLA","Latin America & Caribbean (IDA & IBRD)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",67.94
+"TLA","Latin America & Caribbean (IDA & IBRD)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.65
+"TLA","Latin America & Caribbean (IDA & IBRD)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",49.3
+"TLA","Latin America & Caribbean (IDA & IBRD)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",40.67
+"TMN","Middle East & North Africa (IDA & IBRD)",2016,"IQ.SPI.OVRL","SPI Overall Score",45.5
+"TMN","Middle East & North Africa (IDA & IBRD)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",64.43
+"TMN","Middle East & North Africa (IDA & IBRD)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",33.07
+"TMN","Middle East & North Africa (IDA & IBRD)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.16
+"TMN","Middle East & North Africa (IDA & IBRD)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",41.15
+"TMN","Middle East & North Africa (IDA & IBRD)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",26.25
+"TMN","Middle East & North Africa (IDA & IBRD)",2017,"IQ.SPI.OVRL","SPI Overall Score",44.57
+"TMN","Middle East & North Africa (IDA & IBRD)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",60.55
+"TMN","Middle East & North Africa (IDA & IBRD)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",42.57
+"TMN","Middle East & North Africa (IDA & IBRD)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",53.87
+"TMN","Middle East & North Africa (IDA & IBRD)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",37.12
+"TMN","Middle East & North Africa (IDA & IBRD)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",28.75
+"TMN","Middle East & North Africa (IDA & IBRD)",2018,"IQ.SPI.OVRL","SPI Overall Score",47.75
+"TMN","Middle East & North Africa (IDA & IBRD)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",61.38
+"TMN","Middle East & North Africa (IDA & IBRD)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55.88
+"TMN","Middle East & North Africa (IDA & IBRD)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",54.91
+"TMN","Middle East & North Africa (IDA & IBRD)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",36.99
+"TMN","Middle East & North Africa (IDA & IBRD)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",29.58
+"TMN","Middle East & North Africa (IDA & IBRD)",2019,"IQ.SPI.OVRL","SPI Overall Score",48.24
+"TMN","Middle East & North Africa (IDA & IBRD)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",61.38
+"TMN","Middle East & North Africa (IDA & IBRD)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55.88
+"TMN","Middle East & North Africa (IDA & IBRD)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",54.88
+"TMN","Middle East & North Africa (IDA & IBRD)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",35.74
+"TMN","Middle East & North Africa (IDA & IBRD)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.33
+"TSA","South Asia (IDA & IBRD)",2016,"IQ.SPI.OVRL","SPI Overall Score",54.36
+"TSA","South Asia (IDA & IBRD)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",80.42
+"TSA","South Asia (IDA & IBRD)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.15
+"TSA","South Asia (IDA & IBRD)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",63.23
+"TSA","South Asia (IDA & IBRD)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",45.24
+"TSA","South Asia (IDA & IBRD)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.75
+"TSA","South Asia (IDA & IBRD)",2017,"IQ.SPI.OVRL","SPI Overall Score",56.75
+"TSA","South Asia (IDA & IBRD)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",81.25
+"TSA","South Asia (IDA & IBRD)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",57.98
+"TSA","South Asia (IDA & IBRD)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",67.86
+"TSA","South Asia (IDA & IBRD)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",44.15
+"TSA","South Asia (IDA & IBRD)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",32.5
+"TSA","South Asia (IDA & IBRD)",2018,"IQ.SPI.OVRL","SPI Overall Score",58.52
+"TSA","South Asia (IDA & IBRD)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",83.75
+"TSA","South Asia (IDA & IBRD)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",62.74
+"TSA","South Asia (IDA & IBRD)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",68.05
+"TSA","South Asia (IDA & IBRD)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",44.31
+"TSA","South Asia (IDA & IBRD)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.75
+"TSA","South Asia (IDA & IBRD)",2019,"IQ.SPI.OVRL","SPI Overall Score",58.74
+"TSA","South Asia (IDA & IBRD)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",83.75
+"TSA","South Asia (IDA & IBRD)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",62.74
+"TSA","South Asia (IDA & IBRD)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",67.79
+"TSA","South Asia (IDA & IBRD)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",45.04
+"TSA","South Asia (IDA & IBRD)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",34.38
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2016,"IQ.SPI.OVRL","SPI Overall Score",48.3
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.92
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",37.05
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.59
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",34.28
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2017,"IQ.SPI.OVRL","SPI Overall Score",50.06
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.35
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",49.34
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.4
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",32.26
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",30.65
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2018,"IQ.SPI.OVRL","SPI Overall Score",51.66
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.13
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",57.07
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",61.02
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",32.89
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",31.09
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2019,"IQ.SPI.OVRL","SPI Overall Score",51.45
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",69.41
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55.49
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.25
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",32.42
+"TSS","Sub-Saharan Africa (IDA & IBRD)",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",33.7
+"UMC","Upper middle income",2016,"IQ.SPI.OVRL","SPI Overall Score",57.1
+"UMC","Upper middle income",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",70.63
+"UMC","Upper middle income",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",46.6
+"UMC","Upper middle income",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.61
+"UMC","Upper middle income",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",50.32
+"UMC","Upper middle income",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",44.3
+"UMC","Upper middle income",2017,"IQ.SPI.OVRL","SPI Overall Score",59.33
+"UMC","Upper middle income",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",71.01
+"UMC","Upper middle income",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55.39
+"UMC","Upper middle income",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.8
+"UMC","Upper middle income",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",49.22
+"UMC","Upper middle income",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",45.59
+"UMC","Upper middle income",2018,"IQ.SPI.OVRL","SPI Overall Score",62.07
+"UMC","Upper middle income",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",72.45
+"UMC","Upper middle income",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",67.09
+"UMC","Upper middle income",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",60.88
+"UMC","Upper middle income",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",49.66
+"UMC","Upper middle income",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",46.27
+"UMC","Upper middle income",2019,"IQ.SPI.OVRL","SPI Overall Score",62.58
+"UMC","Upper middle income",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",72.08
+"UMC","Upper middle income",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",67.09
+"UMC","Upper middle income",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",59.58
+"UMC","Upper middle income",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",50.04
+"UMC","Upper middle income",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",50.39
+"WLD","World",2016,"IQ.SPI.OVRL","SPI Overall Score",58.42
+"WLD","World",2016,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",75.42
+"WLD","World",2016,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",47.08
+"WLD","World",2016,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",54.39
+"WLD","World",2016,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",50.06
+"WLD","World",2016,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",47.39
+"WLD","World",2017,"IQ.SPI.OVRL","SPI Overall Score",60.03
+"WLD","World",2017,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",75.37
+"WLD","World",2017,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",55.99
+"WLD","World",2017,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.48
+"WLD","World",2017,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",48.11
+"WLD","World",2017,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",48.42
+"WLD","World",2018,"IQ.SPI.OVRL","SPI Overall Score",62.77
+"WLD","World",2018,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",75.89
+"WLD","World",2018,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",68.03
+"WLD","World",2018,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",56.34
+"WLD","World",2018,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",48.79
+"WLD","World",2018,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",49.17
+"WLD","World",2019,"IQ.SPI.OVRL","SPI Overall Score",63.08
+"WLD","World",2019,"IQ.SPI.PIL1","Pillar 1  - Data Use - Score",76.12
+"WLD","World",2019,"IQ.SPI.PIL2","Pillar 2 - Data Services - Score",67.44
+"WLD","World",2019,"IQ.SPI.PIL3","Pillar 3 - Data Products - Score",55.25
+"WLD","World",2019,"IQ.SPI.PIL4","Pillar 4 - Data Sources - Score",48.86
+"WLD","World",2019,"IQ.SPI.PIL5","Pillar 5 - Data Infrastructure - Score",52.51

@@ -178,9 +178,10 @@ databank_df %>% filter(date==2022) %>% left_join(metadata) %>% filter(!is.na(pil
   path=paste(output_dir, "/SPI_databank_latest.xlsx", sep=""))
 
 
-xlsx::write.xlsx(databank_df, file=paste(output_dir, "/SPI_databank.xlsx", sep=""),
-                 sheetName = 'Indicators')
-                 
-xlsx::write.xlsx(series_metadata, file=paste(output_dir, "/SPI_databank.xlsx", sep=""),
-                 sheetName = 'Series_Metadata',
-                 append=TRUE)
+xlsx::write.xlsx(databank_df, file=paste(output_dir, "/SPI_data.xlsx", sep=""),
+                 sheetName = 'Data')
+
+xlsx::write.xlsx(series_metadata, file=paste(output_dir, "/SPI_data.xlsx", sep=""),
+                 sheetName = 'Series')
+           
+

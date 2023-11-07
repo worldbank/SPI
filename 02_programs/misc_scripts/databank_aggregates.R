@@ -58,12 +58,12 @@ databank_df <- databank_df %>%
 ###############
 
 #read in classifications
-class_df <- read_excel(paste(raw_dir, '/misc/FY23_group_list.xlsx', sep="")) %>%
+class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xlsx', sep=""), sheet="Groups") %>%
   rename(
-    iso3c=WB_Country_Code,
-    country=WB_Country_Name,
-    WB_Group_Code=WB_Group_Code,
-    WB_Group_Name=WB_Group_Name
+    iso3c=CountryCode,
+    country=CountryName,
+    WB_Group_Code=GroupCode,
+    WB_Group_Name=GroupName
   )
 
 # class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xls', sep=""),sheet = "Groups") %>%
