@@ -53,10 +53,11 @@ end_date <- 2022
 
 #ggplot theme
 theme_spi <- function () { 
-    theme_bw() %+replace%
+    theme_minimal() %+replace%
     theme(
       plot.caption = element_text(hjust = 0),
-      plot.title=element_blank() #remove all titles from plots (sometimes we may need to bring title outside plot)
+      plot.title=element_blank(), #remove all titles from plots (sometimes we may need to bring title outside plot)
+      text = element_text(family="Andes")
     )
 }
 
@@ -273,12 +274,13 @@ spi_region_charts  <- function(data, indicator, title) {
   
    p2 <-  ggplot(region_SPI_df, aes(x=`SPI Score`, y=region, fill=region)) +
       geom_bar(stat="identity",position='dodge') +
-      geom_text(aes(label=Label)) +
+      geom_text(aes(label=Label), hjust=-0.5) +
       labs(
       title=str_wrap(paste(title, 'By Region', sep=" - "),100),
       caption = 'Source: World Bank. Statistical Performance Indicators.',
       subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
+      scale_fill_brewer(palette = 'Dark2') +
       expand_limits(x=c(0,100)) +
       theme_spi() +
       theme(legend.position = 'top')
@@ -362,6 +364,7 @@ spi_income_charts  <- function(data, indicator, title) {
       caption = 'Source: World Bank. Statistical Performance Indicators.',
       subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
+      scale_fill_brewer(palette = 'Paired') +
       scale_y_discrete(limits = income) +
       expand_limits(x=c(0,100)) +
       theme_spi() +
@@ -681,6 +684,7 @@ lending_chart_aggregate <- function(data, indicator, title) {
       caption = 'Source: World Bank. Statistical Performance Indicators.',
       subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
+      scale_fill_brewer(palette = 'Set1') +
       scale_y_discrete(limits = lending_list) +
       expand_limits(x=c(0,100)) +
       theme_spi() +
@@ -822,6 +826,7 @@ fcs_chart_aggregate <- function(data, indicator, title) {
       caption = str_wrap('Source: World Bank. Statistical Performance Indicators. Non-FCS countries include all countries not classified as FCS.  This includes high income countries.',70),
       subtitle= paste0('Based on data for ',end_date,' or the latest year available')
       ) +
+      scale_fill_brewer(palette = 'Set2') +
       scale_y_discrete(limits = fcs_list) +
       expand_limits(x=c(0,100)) +
       theme_spi() +
