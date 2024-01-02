@@ -1,4 +1,5 @@
 # Written by Brian Stacy on Aug 14, 2020
+# Updated by Brian Stacy on January 2, 2024
 # A data visualization of the Statistical Performance Indicators
 # The viz will contain an overview page showing a map with the indicator values and aggregate statistics
 # The viz will also contain country report page that shows details on the indicators by country
@@ -15,8 +16,6 @@ library(httr)
 library(jsonlite)
 library(leaflet)
 library(shinycssloaders)
-library(rgdal)
-library(geojsonio)
 library(DT)
 library(skimr)
 library(ggcorrplot)
@@ -79,11 +78,6 @@ var.labels <- metadata$descript
 names(var.labels) <- metadata$source_id
 
 #read in TopoJSON from World Bank
-# countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
-#                                      what = "sp")
-# countries <- geojsonio::geojson_read("WB_boundaries_lowres.geojson",
-#                                      what = "sp") %>%
-#   geojsonio::geojson_json()
 
 load('WB_geojson.Rdata')
 
@@ -711,17 +705,23 @@ server <- function(input, output,session) {
         col_palette2 <- c("#FFBE0B",  "#E7BB25",  "#1A9850")
         
         #calculate the breaks for the color coding
-        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
         
-        brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)
+        brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)-.001
+
         
-        brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)
+        brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)-.001
+
         
-        brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)
+        brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)-.001
+
         
-        brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)
+        brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)-.001
+
         
-        brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)
+        brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)-.001
+
         
         # select countries for table
         
@@ -1519,17 +1519,22 @@ server <- function(input, output,session) {
         col_palette2 <- c("#FFBE0B",  "#E7BB25",  "#1A9850")
         
         #calculate the breaks for the color coding
-        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
         
-        brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)
+        brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
         
-        brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)
+        brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
         
-        brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)
+        brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
+        brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+ 
         
-        brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)
-        
-        brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)
+        brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
   
         # select countries for table
         

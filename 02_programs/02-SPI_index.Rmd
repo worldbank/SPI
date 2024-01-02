@@ -129,8 +129,8 @@ pop_df <- wbstats::wb_data(country="all",
 #read in the SPI dataset
 spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
   filter(date>=2021) %>%
-  bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2020.csv', sep="/")) %>% filter(date==2020)) %>%
-  bind_rows(read_csv( file = paste(output_dir, 'SPI_data_2019.csv', sep="/")) %>% filter(date<2020)) %>%           
+  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2020.csv', sep="/")) %>% filter(date==2020)) %>%
+  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2019.csv', sep="/")) %>% filter(date<2020)) %>%           
   mutate(income=if_else(is.na(income), income_level, income)) %>%
   left_join(pop_df) %>%
   group_by(iso3c) %>%
