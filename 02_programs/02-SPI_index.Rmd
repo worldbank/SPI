@@ -2831,7 +2831,7 @@ ggplot(spi_changes, aes(x=SPI.INDEX.2016, y=SPI.INDEX.end_date, color=region)) +
                                 stat(rr.label), sep = "*\", \"*")), 
                      color='blue',
                      label.x.npc = "right", label.y.npc = 0.1,
-                     formula = 'y~x', parse = TRUE, size = 4) +
+                     formula = y~x, parse = TRUE, size = 4) +
   guides(
     size="none"
   )

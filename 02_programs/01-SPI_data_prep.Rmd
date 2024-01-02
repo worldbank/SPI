@@ -915,7 +915,14 @@ library(pipr)
 
 df <- get_stats()
 
+#save as csv
+write_excel_csv(df, file=paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/"))
 
+df <- read_csv(paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/")) %>%
+  #exclude certain surveys that were produced not by statistical system but produced and financed from private firm (non-official source).  Change applies to India in particular.
+  filter(
+    !(survey_acronym=="CPHS" & country_code=="IND")
+  )
 
 
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
