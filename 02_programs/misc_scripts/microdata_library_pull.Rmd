@@ -20,8 +20,7 @@ library(tidytext)
 library(rsdmx)
 library(here)
 library(purrr)
-# library(wbggeo)
-# library(wbgmaps)
+
 library(ggthemes)
 
 
@@ -433,84 +432,5 @@ popcen_df <- study_df_internal %>%
   write_excel_csv(popcen_df, path = paste(output_dir, 'D4.1.1.CEN.POPU_NADA.csv', sep="")) #write to csv
 
   
-
-```
-
-
-```{r ihsn_map, echo=FALSE, fig.height=14, fig.width=14}
-
-
-#Now map the result
-quality = "high"
-maps <- wbgmaps::wbgmaps[[quality]]
-
-country_list <- wbstats::wbcountries()
-
-
-
-
-ihsn_mapper <- function(indicator,title_text) {
-  
-  indicator<-indicator
-
-  
-  ihsn_map <- study_df_internal %>%
-    rename(country=nation) %>% 
-    filter(year_start>=2000) %>% #surveys after 2010
-    filter(grepl(indicator, series_info)) %>%
-    group_by(country) %>%
-    summarise(freq=n()) %>%
-    mutate(ihsn_groups=case_when( #create groupings
-      freq == 0 ~ "0",
-      freq == 1 ~ "1",
-      freq == 2 ~ "2",      
-      freq == 3 ~ "3", 
-      freq == 4 ~ "4", 
-      freq >= 5 ~ "5+"
-           )) %>%
-    mutate(ihsn_groups=factor(ihsn_groups, levels=c("0", "1","2","3","4","5+" ))) %>%
-    right_join(country_list)
-  
-  
-  
-   ggplot() +
-    geom_map(data = ihsn_map, aes(map_id = iso3c, fill = ihsn_groups), map = maps$countries) + 
-    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
-    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
-     geom_path(data = maps$boundaries,
-               aes(long, lat, group = group),
-               color = "white",
-               size = 0.1,
-               lineend = maps$boundaries$lineend,
-              linetype = maps$boundaries$linetype) +
-    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
-    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
-    scale_fill_brewer(
-      name='Number of Surveys or Censuses',
-      palette='Greens',
-      na.value='grey'
-    ) +
-    coord_equal() +
-    theme_map(base_size=12) +
-    labs(
-      title=str_wrap(title_text,100),
-      caption = 'Source: IHSN Microdata Library'
-    )
-
-
-}
-
-
-
-ihsn_mapper('[hh/ies]|Income/Expenditure/Household Survey' , 'Income/Expenditure/Household Survey')
-
-ihsn_mapper('[ag/oth]|Agricultural Survey' , 'Agricultural Survey')
-
-ihsn_mapper('lfs' , 'Labor Force Survey')
-
-ihsn_mapper('dhs|mics|whs|hea' , 'Health Survey')
-
-ihsn_mapper('[en/oth]|Enterprise Survey' , 'Business Survey')
-
 
 ```
