@@ -4,7 +4,7 @@
 # The viz will contain an overview page showing a map with the indicator values and aggregate statistics
 # The viz will also contain country report page that shows details on the indicators by country
 
-
+library(markdown)
 library(shiny)
 library(shinyjs)
 library(tidyverse)
@@ -27,7 +27,7 @@ library(officer)
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv') 
 
-end_date <- 2022
+end_date <- 2019
 
 metadata_raw <- read_csv('SPI_dimensions_sources.csv')
 
