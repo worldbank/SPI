@@ -59,6 +59,7 @@
 !/**/**/*.R
 !/**/**/*.Rproj
 !/**/**/*.Rmd
+!/**/**/*.qmd
 !renv*
 !renv.lock
 !/**/**/*.Rdata
@@ -66,6 +67,7 @@
 
 # HTML files
 !/**/**/*.html
+!/**/**/*.css
 
 
 # LaTeX
