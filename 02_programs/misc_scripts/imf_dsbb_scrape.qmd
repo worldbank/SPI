@@ -1,0 +1,93 @@
+---
+title: "IMF DSBB Table Scraper"
+format: html
+---
+
+
+```{python}
+# Import libraries
+# Python program to scrape table from website
+  
+# import libraries selenium and time
+from selenium import webdriver
+from time import sleep
+import pandas as pd
+from bs4 import BeautifulSoup
+import re
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize 
+```
+
+```{python}
+#read in data for Employment
+
+```
+
+
+
+```{python}
+
+#function to check if string is in text
+def text_checker(text,data):
+    flag=data.Text.apply(lambda x: bool(re.search(text,x)))
+    return flag[0]
+
+def imf_get_contents(iso):
+
+    url = "https://dsbb.imf.org/egdds/dqaf-base/country/%s/category/EMP00" % (iso)
+    ## Create webdriver object
+    driver = webdriver.Chrome(
+        executable_path="C:/Users/wb469649/Documents/chromedriver.exe")
+    # Get the website
+    driver.get(
+        url)
+    
+    # Make Python sleep for some time
+    sleep(3)
+
+    html=driver.page_source
+    table = pd.read_html(html)
+
+    df = table[0]
+    df.rename(columns={'0. Prerequisites':'Type', '0. Prerequisites.1':'Text'}, inplace=True)
+
+    #keep just the section on classifications
+    df = df[df.Type=='2.3 Classification/sectorization']
+    df=df.reset_index(drop=True)
+    if len(df)<1:
+        return "No Data"
+    elif text_checker("NAICS", df):
+        return "NAICS"
+    elif text_checker("ISCE",df):
+        return "ICSE-93"    
+    elif text_checker("International Standard Classification of Status in Employment",df):
+        return "ICSE-93"          
+    else:
+      return "Not Found"
+
+```
+
+```{python}
+
+imf_get_contents('USA')
+```
+
+```{python}
+
+imf_get_contents('GBR')
+```
+
+```{python}
+
+imf_get_contents('FRA')
+```
+
+```{python}
+
+imf_get_contents('RWA')
+```
+
+
+
+
+
