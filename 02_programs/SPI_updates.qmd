@@ -1318,10 +1318,17 @@ reg_size_fig_df <- spi_index_df %>%
   filter(!is.na(SPI.INDEX)) %>%
   mutate(small_pop=if_else(population<=500000, "Population <= 500k", "Population > 500k"))
 
-reg_size_fig_df %>%
+reg_fig_df <- reg_size_fig_df %>%
   group_by(region, small_pop) %>%
-  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
-  ggplot( aes(x=region, y=SPI.INDEX, fill=small_pop,label=round(SPI.INDEX,0))) +
+  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE),
+            n=n()) %>%
+  ungroup() %>%
+  group_by(region) %>%
+  mutate(
+    small_share=100*round(n/sum(n),3)
+  )
+
+  ggplot(reg_fig_df,  aes(x=region, y=SPI.INDEX, fill=small_pop,label=round(SPI.INDEX,0))) +
     geom_col(position = 'dodge2') +
     geom_text(position = position_dodge2(width = 1), size=4) +
     ylab("SPI Overall Score") +
