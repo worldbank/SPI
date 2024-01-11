@@ -1024,7 +1024,7 @@ Note: N=167 economies.
 ```{r}
 #| label: phantstacked
 
-  elephant_stacked_df <- spi_index_df %>%
+  elephant_stacked_country_df <- spi_index_df %>%
     select( iso3c, date, starts_with('SPI.INDEX')) %>%
     group_by(iso3c, date) %>%
     mutate(row = row_number()) %>%
@@ -1067,8 +1067,8 @@ Note: N=167 economies.
     arrange(spi_rank)
   
   #summarise into decile bins
-  elephant_stacked_df <- elephant_stacked_df %>%
-    mutate(spi_bins=factor(spi_bins, levels=unique(elephant_stacked_df$spi_bins))) %>%
+  elephant_stacked_df <- elephant_stacked_country_df %>%
+    mutate(spi_bins=factor(spi_bins, levels=unique(elephant_stacked_country_df$spi_bins))) %>%
     group_by(spi_bins) %>%
     summarise(
               D1=mean(dim1_growth),
@@ -1200,7 +1200,7 @@ The regional rankings have remained largely unchanged over this period. The two 
 **Figure 6**. Comparison of SPI Overall Scores in 2016 and 2022 - Unweighted Regional Averages
 ```{r}
 #| label: regchng
-#| fig-width: 12
+#| fig-width: 16
 #| fig-height: 8
 
 
@@ -1216,6 +1216,34 @@ ggplot(reg_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(S
   geom_text(position = position_dodge2(width = 1), size=4) +
   ylab("SPI Overall Score") +
   ggtitle('Unweighted Regional Average of SPI Overall Score by Year') +
+  theme_minimal() +
+  theme(legend.position='top',
+        text = element_text(size = 14),
+        axis.text.x=element_text(size = 14)) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
+
+```
+
+```{r}
+#| label: regchng2
+#| fig-width: 116
+#| fig-height: 8
+
+
+reg_avg <- spi_index_df %>%
+  mutate(small_pop=if_else(population<=500000, "Population <= 500k", "Population > 500k")) %>%  
+  filter(small_pop=="Population > 500k") %>%
+  filter(date==2016 | date==2019 | date==2022) %>%
+  group_by(date, region) %>%
+  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
+  mutate(date=factor(date, levels=c(2016, 2019,2022)),
+         region=factor(region, levels=c("North America", "Europe & Central Asia", "East Asia & Pacific","South Asia", "Latin America & Caribbean", "Middle East & North Africa", "Sub-Saharan Africa")))
+
+ggplot(reg_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(SPI.INDEX,0))) +
+  geom_col(position = 'dodge2') +
+  geom_text(position = position_dodge2(width = 1), size=4) +
+  ylab("SPI Overall Score") +
+  ggtitle(str_wrap('Unweighted Regional Average of SPI Overall Score Omitting Countries with Populations Smaller than Half a Million by Year',100)) +
   theme_minimal() +
   theme(legend.position='top',
         text = element_text(size = 14),
@@ -1332,7 +1360,7 @@ reg_fig_df <- reg_size_fig_df %>%
     geom_col(position = 'dodge2') +
     geom_text(position = position_dodge2(width = 1), size=4) +
     ylab("SPI Overall Score") +
-    ggtitle('Average SPI Overall Score by Income level and Population Size') +
+    ggtitle('Average SPI Overall Score by Region and Population Size') +
     labs(fill="Population") +
     theme_minimal() +
     theme(legend.position='top',
