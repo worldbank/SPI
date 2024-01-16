@@ -1693,8 +1693,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 
 #bind different years together
 openness_df <- bind_rows(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018,openness_df_2020,openness_df_2021,
-                  openness_df_2022,
-                  openness_df_2023 )
+                  openness_df_2022 %>% rename(Non.proprietary=Nonproprietary))
 
 
 openness_df <- openness_df %>%
