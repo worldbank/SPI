@@ -23,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2024-10-31" />
+<meta name="date" content="2024-01-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -249,67 +249,67 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The legislation and governance indicator will be drawn from SDG indicator 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Also include some other legislative aspects that foster good use of statistics eg freedom of information, privacy/transparency, good governance (eg free and fair elections).</p>
 <p>This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)</p>
 <p>Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics. Scores of 0 given a score of zero.</p>
-<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-10-31</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="data-infrastructure-1.html#cb43-1" tabindex="-1"></a>D5<span class="fl">.1</span>_DILG <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file=</span><span class="fu">paste</span>(raw_dir, <span class="st">&#39;5.1_DILG&#39;</span>, <span class="st">&#39;SG_STT_FPOS.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-2"><a href="data-infrastructure-1.html#cb43-2" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, date,ind_value) <span class="sc">%&gt;%</span></span>
-<span id="cb43-3"><a href="data-infrastructure-1.html#cb43-3" tabindex="-1"></a>  <span class="fu">right_join</span>(spi_df_empty) <span class="sc">%&gt;%</span></span>
-<span id="cb43-4"><a href="data-infrastructure-1.html#cb43-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RAW.D5.1.DILG=</span><span class="fu">if_else</span>((<span class="fu">is.na</span>(ind_value) <span class="sc">|</span> ind_value<span class="sc">==</span><span class="st">&quot;NaN&quot;</span>),<span class="fu">as.numeric</span>(<span class="cn">NA</span>), <span class="fu">as.numeric</span>(ind_value)),</span>
-<span id="cb43-5"><a href="data-infrastructure-1.html#cb43-5" tabindex="-1"></a>         <span class="at">SPI.D5.1.DILG=</span><span class="fu">if_else</span>((<span class="fu">is.na</span>(ind_value) <span class="sc">|</span> ind_value<span class="sc">==</span><span class="st">&quot;NaN&quot;</span>),<span class="fu">as.numeric</span>(<span class="cn">NA</span>), <span class="fu">as.numeric</span>(ind_value))) <span class="sc">%&gt;%</span></span>
-<span id="cb43-6"><a href="data-infrastructure-1.html#cb43-6" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ind_value, <span class="sc">-</span>country)</span>
-<span id="cb43-7"><a href="data-infrastructure-1.html#cb43-7" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb43-8"><a href="data-infrastructure-1.html#cb43-8" tabindex="-1"></a><span class="co"># #read in csv file.</span></span>
-<span id="cb43-9"><a href="data-infrastructure-1.html#cb43-9" tabindex="-1"></a><span class="co"># D5.1_DILG2 &lt;- read_csv(file = paste(raw_dir, &quot;5.1_DILG&quot;,&quot;5.1_DILG.csv&quot;, sep=&quot;/&quot; )) %&gt;%</span></span>
-<span id="cb43-10"><a href="data-infrastructure-1.html#cb43-10" tabindex="-1"></a><span class="co">#   as_tibble(.name_repair = &#39;universal&#39;) %&gt;%</span></span>
-<span id="cb43-11"><a href="data-infrastructure-1.html#cb43-11" tabindex="-1"></a><span class="co">#   transmute(</span></span>
-<span id="cb43-12"><a href="data-infrastructure-1.html#cb43-12" tabindex="-1"></a><span class="co">#     country=Country,</span></span>
-<span id="cb43-13"><a href="data-infrastructure-1.html#cb43-13" tabindex="-1"></a><span class="co">#     date=Year,</span></span>
-<span id="cb43-14"><a href="data-infrastructure-1.html#cb43-14" tabindex="-1"></a><span class="co">#     SPI.5.1.DILG=Data.Value</span></span>
-<span id="cb43-15"><a href="data-infrastructure-1.html#cb43-15" tabindex="-1"></a><span class="co">#   ) %&gt;%</span></span>
-<span id="cb43-16"><a href="data-infrastructure-1.html#cb43-16" tabindex="-1"></a><span class="co">#     mutate(country=case_when(</span></span>
-<span id="cb43-17"><a href="data-infrastructure-1.html#cb43-17" tabindex="-1"></a><span class="co">#     country==&quot;Bahamas&quot; ~ &quot;Bahamas, The&quot;,                  </span></span>
-<span id="cb43-18"><a href="data-infrastructure-1.html#cb43-18" tabindex="-1"></a><span class="co">#     country==&quot;Bolivia (Plurinational State of)&quot;   ~  &quot;Bolivia&quot;   ,                  </span></span>
-<span id="cb43-19"><a href="data-infrastructure-1.html#cb43-19" tabindex="-1"></a><span class="co">#     country==&quot;Côte d&#39;Ivoire&quot;  ~  &quot;Cote d&#39;Ivoire&quot;                ,</span></span>
-<span id="cb43-20"><a href="data-infrastructure-1.html#cb43-20" tabindex="-1"></a><span class="co">#     country==&quot;Democratic Republic of the Congo&quot;  ~ &quot;Congo, Dem. Rep.&quot;  ,           </span></span>
-<span id="cb43-21"><a href="data-infrastructure-1.html#cb43-21" tabindex="-1"></a><span class="co">#     country==&quot;Congo&quot;  ~ &quot;Congo, Rep.&quot;        ,           </span></span>
-<span id="cb43-22"><a href="data-infrastructure-1.html#cb43-22" tabindex="-1"></a><span class="co">#     country==&quot;Curacao&quot;  ~  &quot;Curacao&quot;       ,                </span></span>
-<span id="cb43-23"><a href="data-infrastructure-1.html#cb43-23" tabindex="-1"></a><span class="co">#     country==&quot;Czechia&quot;   ~  &quot;Czech Republic&quot;     ,        </span></span>
-<span id="cb43-24"><a href="data-infrastructure-1.html#cb43-24" tabindex="-1"></a><span class="co">#     country==&quot;Egypt&quot;  ~ &quot;Egypt, Arab Rep.&quot;        ,      </span></span>
-<span id="cb43-25"><a href="data-infrastructure-1.html#cb43-25" tabindex="-1"></a><span class="co">#     country==&quot;Micronesia (Federated States of)&quot;  ~ &quot;Micronesia, Fed. Sts.&quot;  ,       </span></span>
-<span id="cb43-26"><a href="data-infrastructure-1.html#cb43-26" tabindex="-1"></a><span class="co">#     country==&quot;United Kingdom&quot;   ~  &quot;United Kingdom&quot;    ,         </span></span>
-<span id="cb43-27"><a href="data-infrastructure-1.html#cb43-27" tabindex="-1"></a><span class="co">#     country==&quot;Gambia&quot;    ~  &quot;Gambia, The&quot;     ,           </span></span>
-<span id="cb43-28"><a href="data-infrastructure-1.html#cb43-28" tabindex="-1"></a><span class="co">#     country==&quot;Iran (Islamic Republic of)&quot;  ~ &quot;Iran, Islamic Rep.&quot; ,           </span></span>
-<span id="cb43-29"><a href="data-infrastructure-1.html#cb43-29" tabindex="-1"></a><span class="co">#     country==&quot;Kyrgyzstan&quot;   ~  &quot;Kyrgyz Republic&quot;   ,          </span></span>
-<span id="cb43-30"><a href="data-infrastructure-1.html#cb43-30" tabindex="-1"></a><span class="co">#     country==&quot;Republic of Korea&quot;   ~ &quot;Korea, Rep.&quot;   ,               </span></span>
-<span id="cb43-31"><a href="data-infrastructure-1.html#cb43-31" tabindex="-1"></a><span class="co">#     country==&quot;Lao People&#39;s Democratic Republic&quot;    ~  &quot;Lao PDR&quot; ,                    </span></span>
-<span id="cb43-32"><a href="data-infrastructure-1.html#cb43-32" tabindex="-1"></a><span class="co">#     country==&quot;Saint Kitts and Nevis   &quot;   ~ &quot;St. Kitts and Nevis&quot;,</span></span>
-<span id="cb43-33"><a href="data-infrastructure-1.html#cb43-33" tabindex="-1"></a><span class="co">#     country==&quot;Saint Lucia&quot;   ~ &quot;St. Lucia&quot;,</span></span>
-<span id="cb43-34"><a href="data-infrastructure-1.html#cb43-34" tabindex="-1"></a><span class="co">#     country==&quot;Republic of Moldova&quot;   ~  &quot;Moldova&quot;   ,                  </span></span>
-<span id="cb43-35"><a href="data-infrastructure-1.html#cb43-35" tabindex="-1"></a><span class="co">#     country==&quot;Democratic People&#39;s Republic of Korea&quot;  ~  &quot;Korea, Dem. People’s Rep.&quot; ,  </span></span>
-<span id="cb43-36"><a href="data-infrastructure-1.html#cb43-36" tabindex="-1"></a><span class="co">#     country==&quot;Slovakia&quot;   ~  &quot;Slovak Republic&quot;             ,</span></span>
-<span id="cb43-37"><a href="data-infrastructure-1.html#cb43-37" tabindex="-1"></a><span class="co">#     country==&quot;United Republic of Tanzania&quot;   ~  &quot;Tanzania&quot; ,                    </span></span>
-<span id="cb43-38"><a href="data-infrastructure-1.html#cb43-38" tabindex="-1"></a><span class="co">#     country==&quot;United States of America&quot;  ~ &quot;United States&quot;  ,                </span></span>
-<span id="cb43-39"><a href="data-infrastructure-1.html#cb43-39" tabindex="-1"></a><span class="co">#     country==&quot;Saint Vincent and the Grenadines&quot; ~ &quot;St. Vincent and the Grenadines&quot; ,</span></span>
-<span id="cb43-40"><a href="data-infrastructure-1.html#cb43-40" tabindex="-1"></a><span class="co">#     country==&quot;Venezuela (Bolivarian Republic of)&quot;  ~  &quot;Venezuela, RB&quot;   ,              </span></span>
-<span id="cb43-41"><a href="data-infrastructure-1.html#cb43-41" tabindex="-1"></a><span class="co">#     country==&quot;British Virgin Islands&quot;  ~  &quot;British Virgin Islands&quot; ,       </span></span>
-<span id="cb43-42"><a href="data-infrastructure-1.html#cb43-42" tabindex="-1"></a><span class="co">#     country==&quot;Viet Nam&quot;  ~ &quot;Vietnam&quot;        ,              </span></span>
-<span id="cb43-43"><a href="data-infrastructure-1.html#cb43-43" tabindex="-1"></a><span class="co">#     country==&quot;Yemen&quot;  ~ &quot;Yemen, Rep.&quot;,</span></span>
-<span id="cb43-44"><a href="data-infrastructure-1.html#cb43-44" tabindex="-1"></a><span class="co">#     country==&quot;United Kingdom of Great Britain and Northern Ireland&quot; ~ &quot;United Kingdom&quot;,</span></span>
-<span id="cb43-45"><a href="data-infrastructure-1.html#cb43-45" tabindex="-1"></a><span class="co">#     TRUE ~ country</span></span>
-<span id="cb43-46"><a href="data-infrastructure-1.html#cb43-46" tabindex="-1"></a><span class="co">#   )) %&gt;%</span></span>
-<span id="cb43-47"><a href="data-infrastructure-1.html#cb43-47" tabindex="-1"></a><span class="co">#   mutate(RAW.5.1.DILG=if_else(SPI.5.1.DILG==&#39;no data&#39;,as.character(NA), SPI.5.1.DILG),</span></span>
-<span id="cb43-48"><a href="data-infrastructure-1.html#cb43-48" tabindex="-1"></a><span class="co">#          SPI.5.1.DILG=if_else(SPI.5.1.DILG==&#39;no data&#39;,as.numeric(NA), as.numeric(SPI.5.1.DILG))) %&gt;%</span></span>
-<span id="cb43-49"><a href="data-infrastructure-1.html#cb43-49" tabindex="-1"></a><span class="co">#   right_join(spi_df_empty)</span></span>
-<span id="cb43-50"><a href="data-infrastructure-1.html#cb43-50" tabindex="-1"></a></span>
-<span id="cb43-51"><a href="data-infrastructure-1.html#cb43-51" tabindex="-1"></a><span class="co">#add to spi databases</span></span>
-<span id="cb43-52"><a href="data-infrastructure-1.html#cb43-52" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
-<span id="cb43-53"><a href="data-infrastructure-1.html#cb43-53" tabindex="-1"></a>  <span class="fu">left_join</span>(D5<span class="fl">.1</span>_DILG)</span>
-<span id="cb43-54"><a href="data-infrastructure-1.html#cb43-54" tabindex="-1"></a></span>
-<span id="cb43-55"><a href="data-infrastructure-1.html#cb43-55" tabindex="-1"></a></span>
-<span id="cb43-56"><a href="data-infrastructure-1.html#cb43-56" tabindex="-1"></a>D5<span class="fl">.1</span>_DILG_map <span class="ot">&lt;-</span> D5<span class="fl">.1</span>_DILG <span class="sc">%&gt;%</span></span>
-<span id="cb43-57"><a href="data-infrastructure-1.html#cb43-57" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SPI.D5.<span class="fl">1.</span>DILG)) <span class="sc">%&gt;%</span></span>
-<span id="cb43-58"><a href="data-infrastructure-1.html#cb43-58" tabindex="-1"></a>  <span class="fu">left_join</span>(country_metadata)</span>
-<span id="cb43-59"><a href="data-infrastructure-1.html#cb43-59" tabindex="-1"></a></span>
-<span id="cb43-60"><a href="data-infrastructure-1.html#cb43-60" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;D5.1_DILG_map&#39;</span>, <span class="st">&#39;RAW.D5.1.DILG&#39;</span>, <span class="st">&#39;National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21&#39;</span>)</span></code></pre></div>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-01-16</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="data-infrastructure-1.html#cb44-1" aria-hidden="true" tabindex="-1"></a>D5<span class="fl">.1</span>_DILG <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file=</span><span class="fu">paste</span>(raw_dir, <span class="st">&#39;5.1_DILG&#39;</span>, <span class="st">&#39;SG_STT_FPOS.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-2"><a href="data-infrastructure-1.html#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, date,ind_value) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="data-infrastructure-1.html#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(spi_df_empty) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="data-infrastructure-1.html#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RAW.D5.1.DILG=</span><span class="fu">if_else</span>((<span class="fu">is.na</span>(ind_value) <span class="sc">|</span> ind_value<span class="sc">==</span><span class="st">&quot;NaN&quot;</span>),<span class="fu">as.numeric</span>(<span class="cn">NA</span>), <span class="fu">as.numeric</span>(ind_value)),</span>
+<span id="cb44-5"><a href="data-infrastructure-1.html#cb44-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">SPI.D5.1.DILG=</span><span class="fu">if_else</span>((<span class="fu">is.na</span>(ind_value) <span class="sc">|</span> ind_value<span class="sc">==</span><span class="st">&quot;NaN&quot;</span>),<span class="fu">as.numeric</span>(<span class="cn">NA</span>), <span class="fu">as.numeric</span>(ind_value))) <span class="sc">%&gt;%</span></span>
+<span id="cb44-6"><a href="data-infrastructure-1.html#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ind_value, <span class="sc">-</span>country)</span>
+<span id="cb44-7"><a href="data-infrastructure-1.html#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb44-8"><a href="data-infrastructure-1.html#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="co"># #read in csv file.</span></span>
+<span id="cb44-9"><a href="data-infrastructure-1.html#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="co"># D5.1_DILG2 &lt;- read_csv(file = paste(raw_dir, &quot;5.1_DILG&quot;,&quot;5.1_DILG.csv&quot;, sep=&quot;/&quot; )) %&gt;%</span></span>
+<span id="cb44-10"><a href="data-infrastructure-1.html#cb44-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   as_tibble(.name_repair = &#39;universal&#39;) %&gt;%</span></span>
+<span id="cb44-11"><a href="data-infrastructure-1.html#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   transmute(</span></span>
+<span id="cb44-12"><a href="data-infrastructure-1.html#cb44-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     country=Country,</span></span>
+<span id="cb44-13"><a href="data-infrastructure-1.html#cb44-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     date=Year,</span></span>
+<span id="cb44-14"><a href="data-infrastructure-1.html#cb44-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     SPI.5.1.DILG=Data.Value</span></span>
+<span id="cb44-15"><a href="data-infrastructure-1.html#cb44-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   ) %&gt;%</span></span>
+<span id="cb44-16"><a href="data-infrastructure-1.html#cb44-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     mutate(country=case_when(</span></span>
+<span id="cb44-17"><a href="data-infrastructure-1.html#cb44-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Bahamas&quot; ~ &quot;Bahamas, The&quot;,                  </span></span>
+<span id="cb44-18"><a href="data-infrastructure-1.html#cb44-18" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Bolivia (Plurinational State of)&quot;   ~  &quot;Bolivia&quot;   ,                  </span></span>
+<span id="cb44-19"><a href="data-infrastructure-1.html#cb44-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Côte d&#39;Ivoire&quot;  ~  &quot;Cote d&#39;Ivoire&quot;                ,</span></span>
+<span id="cb44-20"><a href="data-infrastructure-1.html#cb44-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Democratic Republic of the Congo&quot;  ~ &quot;Congo, Dem. Rep.&quot;  ,           </span></span>
+<span id="cb44-21"><a href="data-infrastructure-1.html#cb44-21" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Congo&quot;  ~ &quot;Congo, Rep.&quot;        ,           </span></span>
+<span id="cb44-22"><a href="data-infrastructure-1.html#cb44-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Curacao&quot;  ~  &quot;Curacao&quot;       ,                </span></span>
+<span id="cb44-23"><a href="data-infrastructure-1.html#cb44-23" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Czechia&quot;   ~  &quot;Czech Republic&quot;     ,        </span></span>
+<span id="cb44-24"><a href="data-infrastructure-1.html#cb44-24" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Egypt&quot;  ~ &quot;Egypt, Arab Rep.&quot;        ,      </span></span>
+<span id="cb44-25"><a href="data-infrastructure-1.html#cb44-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Micronesia (Federated States of)&quot;  ~ &quot;Micronesia, Fed. Sts.&quot;  ,       </span></span>
+<span id="cb44-26"><a href="data-infrastructure-1.html#cb44-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;United Kingdom&quot;   ~  &quot;United Kingdom&quot;    ,         </span></span>
+<span id="cb44-27"><a href="data-infrastructure-1.html#cb44-27" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Gambia&quot;    ~  &quot;Gambia, The&quot;     ,           </span></span>
+<span id="cb44-28"><a href="data-infrastructure-1.html#cb44-28" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Iran (Islamic Republic of)&quot;  ~ &quot;Iran, Islamic Rep.&quot; ,           </span></span>
+<span id="cb44-29"><a href="data-infrastructure-1.html#cb44-29" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Kyrgyzstan&quot;   ~  &quot;Kyrgyz Republic&quot;   ,          </span></span>
+<span id="cb44-30"><a href="data-infrastructure-1.html#cb44-30" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Republic of Korea&quot;   ~ &quot;Korea, Rep.&quot;   ,               </span></span>
+<span id="cb44-31"><a href="data-infrastructure-1.html#cb44-31" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Lao People&#39;s Democratic Republic&quot;    ~  &quot;Lao PDR&quot; ,                    </span></span>
+<span id="cb44-32"><a href="data-infrastructure-1.html#cb44-32" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Saint Kitts and Nevis   &quot;   ~ &quot;St. Kitts and Nevis&quot;,</span></span>
+<span id="cb44-33"><a href="data-infrastructure-1.html#cb44-33" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Saint Lucia&quot;   ~ &quot;St. Lucia&quot;,</span></span>
+<span id="cb44-34"><a href="data-infrastructure-1.html#cb44-34" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Republic of Moldova&quot;   ~  &quot;Moldova&quot;   ,                  </span></span>
+<span id="cb44-35"><a href="data-infrastructure-1.html#cb44-35" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Democratic People&#39;s Republic of Korea&quot;  ~  &quot;Korea, Dem. People’s Rep.&quot; ,  </span></span>
+<span id="cb44-36"><a href="data-infrastructure-1.html#cb44-36" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Slovakia&quot;   ~  &quot;Slovak Republic&quot;             ,</span></span>
+<span id="cb44-37"><a href="data-infrastructure-1.html#cb44-37" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;United Republic of Tanzania&quot;   ~  &quot;Tanzania&quot; ,                    </span></span>
+<span id="cb44-38"><a href="data-infrastructure-1.html#cb44-38" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;United States of America&quot;  ~ &quot;United States&quot;  ,                </span></span>
+<span id="cb44-39"><a href="data-infrastructure-1.html#cb44-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Saint Vincent and the Grenadines&quot; ~ &quot;St. Vincent and the Grenadines&quot; ,</span></span>
+<span id="cb44-40"><a href="data-infrastructure-1.html#cb44-40" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Venezuela (Bolivarian Republic of)&quot;  ~  &quot;Venezuela, RB&quot;   ,              </span></span>
+<span id="cb44-41"><a href="data-infrastructure-1.html#cb44-41" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;British Virgin Islands&quot;  ~  &quot;British Virgin Islands&quot; ,       </span></span>
+<span id="cb44-42"><a href="data-infrastructure-1.html#cb44-42" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Viet Nam&quot;  ~ &quot;Vietnam&quot;        ,              </span></span>
+<span id="cb44-43"><a href="data-infrastructure-1.html#cb44-43" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;Yemen&quot;  ~ &quot;Yemen, Rep.&quot;,</span></span>
+<span id="cb44-44"><a href="data-infrastructure-1.html#cb44-44" aria-hidden="true" tabindex="-1"></a><span class="co">#     country==&quot;United Kingdom of Great Britain and Northern Ireland&quot; ~ &quot;United Kingdom&quot;,</span></span>
+<span id="cb44-45"><a href="data-infrastructure-1.html#cb44-45" aria-hidden="true" tabindex="-1"></a><span class="co">#     TRUE ~ country</span></span>
+<span id="cb44-46"><a href="data-infrastructure-1.html#cb44-46" aria-hidden="true" tabindex="-1"></a><span class="co">#   )) %&gt;%</span></span>
+<span id="cb44-47"><a href="data-infrastructure-1.html#cb44-47" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(RAW.5.1.DILG=if_else(SPI.5.1.DILG==&#39;no data&#39;,as.character(NA), SPI.5.1.DILG),</span></span>
+<span id="cb44-48"><a href="data-infrastructure-1.html#cb44-48" aria-hidden="true" tabindex="-1"></a><span class="co">#          SPI.5.1.DILG=if_else(SPI.5.1.DILG==&#39;no data&#39;,as.numeric(NA), as.numeric(SPI.5.1.DILG))) %&gt;%</span></span>
+<span id="cb44-49"><a href="data-infrastructure-1.html#cb44-49" aria-hidden="true" tabindex="-1"></a><span class="co">#   right_join(spi_df_empty)</span></span>
+<span id="cb44-50"><a href="data-infrastructure-1.html#cb44-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-51"><a href="data-infrastructure-1.html#cb44-51" aria-hidden="true" tabindex="-1"></a><span class="co">#add to spi databases</span></span>
+<span id="cb44-52"><a href="data-infrastructure-1.html#cb44-52" aria-hidden="true" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
+<span id="cb44-53"><a href="data-infrastructure-1.html#cb44-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(D5<span class="fl">.1</span>_DILG)</span>
+<span id="cb44-54"><a href="data-infrastructure-1.html#cb44-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-55"><a href="data-infrastructure-1.html#cb44-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-56"><a href="data-infrastructure-1.html#cb44-56" aria-hidden="true" tabindex="-1"></a>D5<span class="fl">.1</span>_DILG_map <span class="ot">&lt;-</span> D5<span class="fl">.1</span>_DILG <span class="sc">%&gt;%</span></span>
+<span id="cb44-57"><a href="data-infrastructure-1.html#cb44-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SPI.D5.<span class="fl">1.</span>DILG)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-58"><a href="data-infrastructure-1.html#cb44-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(country_metadata)</span>
+<span id="cb44-59"><a href="data-infrastructure-1.html#cb44-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-60"><a href="data-infrastructure-1.html#cb44-60" aria-hidden="true" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;D5.1_DILG_map&#39;</span>, <span class="st">&#39;RAW.D5.1.DILG&#39;</span>, <span class="st">&#39;National statistical legislation complies with United Nations Fundamental Principles of Statistics. Source: Paris21&#39;</span>)</span></code></pre></div>
 <p><img src="01-SPI_data_prep_files/figure-html/legislation_governance-1.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/legislation_governance-2.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/legislation_governance-3.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/legislation_governance-4.png" width="960" /></p>
 </div>
 <div id="dimension-5.2-standards" class="section level2 hasAnchor" number="6.2">
@@ -922,7 +922,7 @@ related to “business statistics” but refers to the statistical office, simpl
 <h2><span class="header-section-number">6.5</span> Dimension 5.5: finance<a href="data-infrastructure-1.html#dimension-5.5-finance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Indicator based on SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). This indicator measures whether the national statistical plan under implementation is fully funded. It relates to SDG 17.18.3 and is based on the annual Status Report on National Strategies for the Development of Statistics (NSDS).</p>
 <p>Scores is 1 if the country has a national statistical plan that is fully funded and under implementation. Scores of 0 given a score of zero.</p>
-<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-10-31</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-01-16</p>
 <p>Source of this data is UNSD and Paris21.</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="data-infrastructure-1.html#cb57-1" tabindex="-1"></a><span class="co">#pull from unsd api</span></span>
 <span id="cb57-2"><a href="data-infrastructure-1.html#cb57-2" tabindex="-1"></a>D5<span class="fl">.5</span>_DIFI <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file=</span><span class="fu">paste</span>(raw_dir, <span class="st">&#39;5.5_DIFI&#39;</span>, <span class="st">&#39;SG_STT_NSDSFND.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="sc">%&gt;%</span> </span>

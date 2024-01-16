@@ -23,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2024-10-31" />
+<meta name="date" content="2024-01-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -369,56 +369,47 @@ If the TOU contains one or more restrictive clauses, it receives 0 points and is
 </blockquote>
 <p>For more details, consult the ODIN technical documentation:
 <a href="https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit#" class="uri">https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit#</a></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="data-services-1.html#cb14-1" tabindex="-1"></a>  <span class="co">#read in ODIN data</span></span>
-<span id="cb14-2"><a href="data-services-1.html#cb14-2" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2015</span>,<span class="dv">2016</span>,<span class="dv">2017</span>,<span class="dv">2018</span>,<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>)) {</span>
-<span id="cb14-3"><a href="data-services-1.html#cb14-3" tabindex="-1"></a>   temp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste</span>(raw_dir, <span class="st">&#39;/2.2_DSOA/&#39;</span>,<span class="st">&#39;ODIN_&#39;</span>,i,<span class="st">&#39;.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>),)  <span class="sc">%&gt;%</span></span>
-<span id="cb14-4"><a href="data-services-1.html#cb14-4" tabindex="-1"></a>        <span class="fu">as_tibble</span>(<span class="at">.name_repair =</span> <span class="st">&#39;universal&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-5"><a href="data-services-1.html#cb14-5" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">date=</span>i) <span class="sc">%&gt;%</span></span>
-<span id="cb14-6"><a href="data-services-1.html#cb14-6" tabindex="-1"></a>        <span class="fu">filter</span>(Data.categories<span class="sc">==</span><span class="st">&#39;All Categories&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-7"><a href="data-services-1.html#cb14-7" tabindex="-1"></a>        <span class="co">#convert all columns in &quot;Indicator.coverage.and.disaggregation&quot; &quot;Data.available.last.5.years&quot;           &quot;Data.available.last.10.years&quot;          &quot;First.administrative.level&quot;     &quot;Second.administrative.level&quot;           &quot;Coverage.subscore&quot;                     &quot;Machine.readable&quot;                      &quot;Non.proprietary&quot;                       &quot;Download.options&quot;                      &quot;Metadata.available&quot;                    &quot;Terms.of.use&quot;                          &quot;Openness.subscore&quot;                     &quot;Overall.score&quot;  to numeric</span></span>
-<span id="cb14-8"><a href="data-services-1.html#cb14-8" tabindex="-1"></a>        <span class="fu">mutate</span>(</span>
-<span id="cb14-9"><a href="data-services-1.html#cb14-9" tabindex="-1"></a>          <span class="fu">across</span>(</span>
-<span id="cb14-10"><a href="data-services-1.html#cb14-10" tabindex="-1"></a>            <span class="fu">c</span>(<span class="st">&#39;Indicator.coverage.and.disaggregation&#39;</span>, <span class="st">&#39;Data.available.last.5.years&#39;</span>, <span class="st">&#39;Data.available.last.10.years&#39;</span>, <span class="st">&#39;First.administrative.level&#39;</span>, <span class="st">&#39;Second.administrative.level&#39;</span>, <span class="st">&#39;Coverage.subscore&#39;</span>, <span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>, <span class="st">&#39;Overall.score&#39;</span>),</span>
-<span id="cb14-11"><a href="data-services-1.html#cb14-11" tabindex="-1"></a>            as.numeric</span>
-<span id="cb14-12"><a href="data-services-1.html#cb14-12" tabindex="-1"></a>          )</span>
-<span id="cb14-13"><a href="data-services-1.html#cb14-13" tabindex="-1"></a>          ) <span class="sc">%&gt;%</span></span>
-<span id="cb14-14"><a href="data-services-1.html#cb14-14" tabindex="-1"></a></span>
-<span id="cb14-15"><a href="data-services-1.html#cb14-15" tabindex="-1"></a>        <span class="fu">select</span>(<span class="sc">-</span>Year)</span>
-<span id="cb14-16"><a href="data-services-1.html#cb14-16" tabindex="-1"></a></span>
-<span id="cb14-17"><a href="data-services-1.html#cb14-17" tabindex="-1"></a>    <span class="fu">assign</span>(<span class="fu">paste</span>(<span class="st">&#39;openness_df&#39;</span>,i,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
-<span id="cb14-18"><a href="data-services-1.html#cb14-18" tabindex="-1"></a>  }</span>
-<span id="cb14-19"><a href="data-services-1.html#cb14-19" tabindex="-1"></a></span>
-<span id="cb14-20"><a href="data-services-1.html#cb14-20" tabindex="-1"></a><span class="co">#bind different years together</span></span>
-<span id="cb14-21"><a href="data-services-1.html#cb14-21" tabindex="-1"></a>openness_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018,openness_df_2020,openness_df_2021,</span>
-<span id="cb14-22"><a href="data-services-1.html#cb14-22" tabindex="-1"></a>                  openness_df_2022,</span>
-<span id="cb14-23"><a href="data-services-1.html#cb14-23" tabindex="-1"></a>                  openness_df_2023 )</span>
-<span id="cb14-24"><a href="data-services-1.html#cb14-24" tabindex="-1"></a></span>
-<span id="cb14-25"><a href="data-services-1.html#cb14-25" tabindex="-1"></a></span>
-<span id="cb14-26"><a href="data-services-1.html#cb14-26" tabindex="-1"></a>openness_df <span class="ot">&lt;-</span> openness_df <span class="sc">%&gt;%</span></span>
-<span id="cb14-27"><a href="data-services-1.html#cb14-27" tabindex="-1"></a>    <span class="fu">select</span>(Country.Code, date, Machine.readable, Non.proprietary, Download.options, Metadata.available, Terms.of.use, Openness.subscore) <span class="sc">%&gt;%</span></span>
-<span id="cb14-28"><a href="data-services-1.html#cb14-28" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">iso3c=</span>Country.Code) <span class="sc">%&gt;%</span></span>
-<span id="cb14-29"><a href="data-services-1.html#cb14-29" tabindex="-1"></a>    <span class="fu">group_by</span>( iso3c) <span class="sc">%&gt;%</span></span>
-<span id="cb14-30"><a href="data-services-1.html#cb14-30" tabindex="-1"></a>    <span class="fu">right_join</span>(country_metadata) <span class="sc">%&gt;%</span></span>
-<span id="cb14-31"><a href="data-services-1.html#cb14-31" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb14-32"><a href="data-services-1.html#cb14-32" tabindex="-1"></a>      <span class="fu">across</span>(<span class="fu">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>),<span class="sc">~</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(.), <span class="dv">0</span>, .)           )</span>
-<span id="cb14-33"><a href="data-services-1.html#cb14-33" tabindex="-1"></a>      </span>
-<span id="cb14-34"><a href="data-services-1.html#cb14-34" tabindex="-1"></a>           )  </span>
-<span id="cb14-35"><a href="data-services-1.html#cb14-35" tabindex="-1"></a></span>
-<span id="cb14-36"><a href="data-services-1.html#cb14-36" tabindex="-1"></a><span class="co">#do some quick renaming and formatting</span></span>
-<span id="cb14-37"><a href="data-services-1.html#cb14-37" tabindex="-1"></a>openness_df_temp1 <span class="ot">&lt;-</span> openness_df <span class="sc">%&gt;%</span> </span>
-<span id="cb14-38"><a href="data-services-1.html#cb14-38" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">paste</span>(<span class="st">&#39;RAW.D2.2&#39;</span>,., <span class="at">sep=</span><span class="st">&quot;.&quot;</span>), <span class="at">.cols=</span><span class="fu">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>) ) </span>
-<span id="cb14-39"><a href="data-services-1.html#cb14-39" tabindex="-1"></a></span>
-<span id="cb14-40"><a href="data-services-1.html#cb14-40" tabindex="-1"></a></span>
-<span id="cb14-41"><a href="data-services-1.html#cb14-41" tabindex="-1"></a>openness_df_temp2 <span class="ot">&lt;-</span> openness_df <span class="sc">%&gt;%</span> </span>
-<span id="cb14-42"><a href="data-services-1.html#cb14-42" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>), <span class="sc">~</span>.<span class="sc">/</span><span class="dv">100</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb14-43"><a href="data-services-1.html#cb14-43" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">paste</span>(<span class="st">&#39;SPI.D2.2&#39;</span>,., <span class="at">sep=</span><span class="st">&quot;.&quot;</span>), <span class="at">.cols=</span><span class="fu">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>) ) </span>
-<span id="cb14-44"><a href="data-services-1.html#cb14-44" tabindex="-1"></a></span>
-<span id="cb14-45"><a href="data-services-1.html#cb14-45" tabindex="-1"></a>openness_df <span class="ot">&lt;-</span> openness_df_temp1 <span class="sc">%&gt;%</span></span>
-<span id="cb14-46"><a href="data-services-1.html#cb14-46" tabindex="-1"></a>  <span class="fu">left_join</span>(openness_df_temp2)</span>
-<span id="cb14-47"><a href="data-services-1.html#cb14-47" tabindex="-1"></a></span>
-<span id="cb14-48"><a href="data-services-1.html#cb14-48" tabindex="-1"></a><span class="co">#add to spi dataframe</span></span>
-<span id="cb14-49"><a href="data-services-1.html#cb14-49" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
-<span id="cb14-50"><a href="data-services-1.html#cb14-50" tabindex="-1"></a>  <span class="fu">left_join</span>(openness_df)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="data-services-1.html#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#read in ODIN data</span></span>
+<span id="cb14-2"><a href="data-services-1.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">2015</span>,<span class="dv">2016</span>,<span class="dv">2017</span>,<span class="dv">2018</span>,<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>)) {</span>
+<span id="cb14-3"><a href="data-services-1.html#cb14-3" aria-hidden="true" tabindex="-1"></a>   temp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste</span>(raw_dir, <span class="st">&#39;/2.2_DSOA/&#39;</span>,<span class="st">&#39;ODIN_&#39;</span>,i,<span class="st">&#39;.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>),)  <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="data-services-1.html#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as_tibble</span>(<span class="at">.name_repair =</span> <span class="st">&#39;universal&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="data-services-1.html#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">date=</span>i) <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="data-services-1.html#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(Data.categories<span class="sc">==</span><span class="st">&#39;All Categories&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-7"><a href="data-services-1.html#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="sc">-</span>Year)</span>
+<span id="cb14-8"><a href="data-services-1.html#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="data-services-1.html#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">assign</span>(<span class="fu">paste</span>(<span class="st">&#39;openness_df&#39;</span>,i,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
+<span id="cb14-10"><a href="data-services-1.html#cb14-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-11"><a href="data-services-1.html#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="data-services-1.html#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#bind different years together</span></span>
+<span id="cb14-13"><a href="data-services-1.html#cb14-13" aria-hidden="true" tabindex="-1"></a>openness_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018,openness_df_2020,openness_df_2021,</span>
+<span id="cb14-14"><a href="data-services-1.html#cb14-14" aria-hidden="true" tabindex="-1"></a>                  openness_df_2022 <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">Non.proprietary=</span>Nonproprietary))</span>
+<span id="cb14-15"><a href="data-services-1.html#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="data-services-1.html#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="data-services-1.html#cb14-17" aria-hidden="true" tabindex="-1"></a>openness_df <span class="ot">&lt;-</span> openness_df <span class="sc">%&gt;%</span></span>
+<span id="cb14-18"><a href="data-services-1.html#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Country.Code, date, Machine.readable, Non.proprietary, Download.options, Metadata.available, Terms.of.use, Openness.subscore) <span class="sc">%&gt;%</span></span>
+<span id="cb14-19"><a href="data-services-1.html#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">iso3c=</span>Country.Code) <span class="sc">%&gt;%</span></span>
+<span id="cb14-20"><a href="data-services-1.html#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>( iso3c) <span class="sc">%&gt;%</span></span>
+<span id="cb14-21"><a href="data-services-1.html#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">right_join</span>(country_metadata) <span class="sc">%&gt;%</span></span>
+<span id="cb14-22"><a href="data-services-1.html#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb14-23"><a href="data-services-1.html#cb14-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">across</span>(<span class="fu">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>),<span class="sc">~</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(.), <span class="dv">0</span>, .)           )</span>
+<span id="cb14-24"><a href="data-services-1.html#cb14-24" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb14-25"><a href="data-services-1.html#cb14-25" aria-hidden="true" tabindex="-1"></a>           )  </span>
+<span id="cb14-26"><a href="data-services-1.html#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="data-services-1.html#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co">#do some quick renaming and formatting</span></span>
+<span id="cb14-28"><a href="data-services-1.html#cb14-28" aria-hidden="true" tabindex="-1"></a>openness_df_temp1 <span class="ot">&lt;-</span> openness_df <span class="sc">%&gt;%</span> </span>
+<span id="cb14-29"><a href="data-services-1.html#cb14-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">paste</span>(<span class="st">&#39;RAW.D2.2&#39;</span>,., <span class="at">sep=</span><span class="st">&quot;.&quot;</span>), <span class="at">.cols=</span><span class="fu">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>) ) </span>
+<span id="cb14-30"><a href="data-services-1.html#cb14-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-31"><a href="data-services-1.html#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-32"><a href="data-services-1.html#cb14-32" aria-hidden="true" tabindex="-1"></a>openness_df_temp2 <span class="ot">&lt;-</span> openness_df <span class="sc">%&gt;%</span> </span>
+<span id="cb14-33"><a href="data-services-1.html#cb14-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>), <span class="sc">~</span>.<span class="sc">/</span><span class="dv">100</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-34"><a href="data-services-1.html#cb14-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span><span class="fu">paste</span>(<span class="st">&#39;SPI.D2.2&#39;</span>,., <span class="at">sep=</span><span class="st">&quot;.&quot;</span>), <span class="at">.cols=</span><span class="fu">c</span>(<span class="st">&#39;Machine.readable&#39;</span>, <span class="st">&#39;Non.proprietary&#39;</span>, <span class="st">&#39;Download.options&#39;</span>, <span class="st">&#39;Metadata.available&#39;</span>, <span class="st">&#39;Terms.of.use&#39;</span>, <span class="st">&#39;Openness.subscore&#39;</span>) ) </span>
+<span id="cb14-35"><a href="data-services-1.html#cb14-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-36"><a href="data-services-1.html#cb14-36" aria-hidden="true" tabindex="-1"></a>openness_df <span class="ot">&lt;-</span> openness_df_temp1 <span class="sc">%&gt;%</span></span>
+<span id="cb14-37"><a href="data-services-1.html#cb14-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(openness_df_temp2)</span>
+<span id="cb14-38"><a href="data-services-1.html#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-39"><a href="data-services-1.html#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="co">#add to spi dataframe</span></span>
+<span id="cb14-40"><a href="data-services-1.html#cb14-40" aria-hidden="true" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
+<span id="cb14-41"><a href="data-services-1.html#cb14-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(openness_df)</span></code></pre></div>
 <p><img src="01-SPI_data_prep_files/figure-html/open_plots-1.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/open_plots-2.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/open_plots-3.png" width="960" /></p>
 </div>
 </div>
