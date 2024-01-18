@@ -27,7 +27,7 @@ library(officer)
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv') 
 
-end_date <- 2019
+end_date <- 2022
 
 metadata_raw <- read_csv('SPI_dimensions_sources.csv')
 
@@ -84,7 +84,8 @@ country_info <- wb_countries() %>%
     mutate(income=income_level,
            lending=lending_type) %>%
     filter(region!="Aggregates") %>%
-    select(iso3c, country, region, income, lending)
+    select(iso3c, country, region, income, lending) %>%
+  arrange(country)
 
 #sketch for DT tables
 sketch = htmltools::withTags(table(
