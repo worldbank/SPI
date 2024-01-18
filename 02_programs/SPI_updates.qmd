@@ -661,11 +661,50 @@ fcs_charts <- function(data, indicator, title) {
   map_df <- get(data) %>%
     filter(date==max(date, na.rm=T)) %>%
     filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
-    mutate(fcs=case_when( #create indicators for Fragile and Conflict-affected Situations
-      country %in% high_intensity_conflict ~ "FCS country",
-      country %in% medium_intensity_conflict ~ "FCS country",
-      country %in% high_institutional_social_fragility ~ "FCS country",
-      country %in% small_states ~ "FCS country",
+    mutate(    fragile_conflict = case_when(
+      country %in% c(
+        'Afghanistan',
+        'Burkina Faso',
+        'Cameroon',
+        'Central African Republic',
+        'Congo, Dem. Rep.',
+        'Ethiopia',
+        'Iraq',
+        'Mali',
+        'Mozambique',
+        'Myanmar',
+        'Niger',
+        'Nigeria',
+        'Somalia',
+        'South Sudan',
+        'Sudan',
+        'Syrian Arab Republic',
+        'Ukraine',
+        'West Bank and Gaza',
+        'Yemen, Rep.'
+      ) ~ "Conflict",
+      country %in% c(
+        'Burundi',
+        'Chad',
+        'Comoros',
+        'Congo, Rep.',
+        'Eritrea',
+        'Guinea-Bissau',
+        'Haiti',
+        'Kiribati',
+        'Kosovo',
+        'Lebanon',
+        'Libya',
+        'Marshall Islands',
+        'Micronesia, Fed. Sts.',
+        'Papua New Guinea',
+        'Sao Tome and Principe',
+        'Solomon Islands',
+        'Timor-Leste',
+        'Tuvalu',
+        'Venezuela, RB',
+        'Zimbabwe'
+      ) ~ "Institutional and Social Fragility",
       TRUE ~ "Non-FCS country"
     )) %>%
     mutate(fcs_detail=case_when( #create indicators for Fragile and Conflict-affected Situations
@@ -1136,6 +1175,9 @@ name <- 'SPI Overall Score'
 ```
 Note: N=167 economies.
 
+
+
+
 ```{r}
 
 #get list of economies with score in 2016 to keep countries fixed.
@@ -1183,6 +1225,30 @@ tile_chart <- function(indicators) {
 
 ```
 
+```{r}
+#county how many indicators showed improvement since 2016
+    tile_df <- spi_agg_df %>%
+      relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
+      filter(between(date,start_date,end_date)) %>%
+      select(date, c('SPI.D1.5.POV':'SPI.D5.5.DIFI')) %>%
+      pivot_longer(
+        cols=c('SPI.D1.5.POV':'SPI.D5.5.DIFI'),
+        names_to = 'source_id',
+        values_to = 'Score'
+      ) %>%
+  group_by(source_id) %>%
+  summarise(Change=mean(Score[date==2022], na.rm=TRUE)-mean(Score[date==2016], na.rm=TRUE)) %>%
+        left_join(metadata) %>%
+  mutate(pos_change=Change>0)
+
+tile_df %>%
+  group_by(pos_change) %>%
+  summarise(n=n())
+
+
+```
+
+
 ```{r D2tile, fig.width = 9, fig.height = 9}
 tile_chart(c('SPI.D2.1.GDDS','SPI.D2.2.Openness.subscore', 'SPI.D3.1.POV','SPI.D3.8.WORK', 'SPI.D3.13.CLMT', 'SPI.D3.16.INST',"SPI.D5.2.1.SNAU",
              "SPI.D5.2.5.HOUS",
@@ -1200,7 +1266,7 @@ The regional rankings have remained largely unchanged over this period. The two 
 **Figure 6**. Comparison of SPI Overall Scores in 2016 and 2022 - Unweighted Regional Averages
 ```{r}
 #| label: regchng
-#| fig-width: 16
+#| fig-width: 14
 #| fig-height: 8
 
 
@@ -1209,11 +1275,11 @@ reg_avg <- spi_index_df %>%
   group_by(date, region) %>%
   summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
   mutate(date=factor(date, levels=c(2016, 2019,2022)),
-         region=factor(region, levels=c("North America", "Europe & Central Asia", "East Asia & Pacific","South Asia", "Latin America & Caribbean", "Middle East & North Africa", "Sub-Saharan Africa")))
+         region=factor(region, levels=c("North America", "Europe & Central Asia","South Asia", "Latin America & Caribbean", "East Asia & Pacific", "Middle East & North Africa", "Sub-Saharan Africa")))
 
 ggplot(reg_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(SPI.INDEX,0))) +
   geom_col(position = 'dodge2') +
-  geom_text(position = position_dodge2(width = 1), size=4) +
+  geom_text(position = position_dodge2(width = 1), size=5) +
   ylab("SPI Overall Score") +
   ggtitle('Unweighted Regional Average of SPI Overall Score by Year') +
   theme_minimal() +
@@ -1226,7 +1292,7 @@ ggplot(reg_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(S
 
 ```{r}
 #| label: regchng2
-#| fig-width: 116
+#| fig-width: 14
 #| fig-height: 8
 
 
@@ -1237,13 +1303,13 @@ reg_avg <- spi_index_df %>%
   group_by(date, region) %>%
   summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
   mutate(date=factor(date, levels=c(2016, 2019,2022)),
-         region=factor(region, levels=c("North America", "Europe & Central Asia", "East Asia & Pacific","South Asia", "Latin America & Caribbean", "Middle East & North Africa", "Sub-Saharan Africa")))
+         region=factor(region, levels=c("North America", "Europe & Central Asia", "East Asia & Pacific", "Latin America & Caribbean","South Asia", "Middle East & North Africa", "Sub-Saharan Africa")))
 
 ggplot(reg_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(SPI.INDEX,0))) +
   geom_col(position = 'dodge2') +
-  geom_text(position = position_dodge2(width = 1), size=4) +
+  geom_text(position = position_dodge2(width = 1), size=5) +
   ylab("SPI Overall Score") +
-  ggtitle(str_wrap('Unweighted Regional Average of SPI Overall Score Omitting Countries with Populations Smaller than Half a Million by Year',100)) +
+  ggtitle(str_wrap('Unweighted Regional Average of SPI Overall Score Omitting Countries with Populations Smaller than Half a Million by Year',85)) +
   theme_minimal() +
   theme(legend.position='top',
         text = element_text(size = 14),
@@ -1306,6 +1372,144 @@ ggplot(inc_avg, aes(x=income,y=SPI.INDEX, fill=date,group = income,label=round(S
 Note: N=187 economies.
 
 Finally, as shown in Figure 8, countries with smaller population sizes face specific challenges.  Even for high income countries, those countries with populations of less than 500,000 individuals have a lower average score than the average for lower middle income countries with populations greater than 500,000.  The average SPI overall score for high income countries with populations less than 500K is similar in magnitude (58 points) to those of low income countries (55 points).
+
+Table. Comparison of SPI Overall Score Over Time by Income, Lending, and FCS Group
+
+```{r}
+#| label: grouptab
+
+income_tab <- spi_index_df %>%
+  filter(between(date,2016,2022)) %>%
+  group_by(date, income) %>%
+  filter(income %in% c("Low income", "Lower middle income", "Upper middle income", "High income")) %>%
+  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
+  mutate(date=factor(date, levels=c(2016,2017,2018, 2019,2020,2021,2022)),
+         income=factor(income, levels=c("Low income", "Lower middle income", "Upper middle income", "High income")),
+         SPI.INDEX=round(SPI.INDEX,1)) %>%
+  pivot_wider(
+    names_from = date,
+    values_from = "SPI.INDEX"
+  ) %>%
+  arrange(income)
+
+lending_tab <- spi_index_df %>%
+  left_join(country_metadata) %>%
+  filter(between(date,2016,2022)) %>%
+  group_by(date, lending) %>%
+  filter(lending %in% c("Not classified", "IDA", "IBRD", "Blend")) %>%
+  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
+  mutate(date=factor(date, levels=c(2016,2017,2018, 2019,2020,2021,2022)),
+         lending=factor(lending, levels=c("IDA", "IBRD", "Blend", "Not classified")),
+         SPI.INDEX=round(SPI.INDEX,1)) %>%
+  pivot_wider(
+    names_from = date,
+    values_from = "SPI.INDEX"
+  ) %>%
+  arrange(lending)
+
+fcs_tab <- spi_index_df %>%
+    mutate(    fragile_conflict = case_when(
+      country %in% c(
+        'Afghanistan',
+        'Burkina Faso',
+        'Cameroon',
+        'Central African Republic',
+        'Congo, Dem. Rep.',
+        'Ethiopia',
+        'Iraq',
+        'Mali',
+        'Mozambique',
+        'Myanmar',
+        'Niger',
+        'Nigeria',
+        'Somalia',
+        'South Sudan',
+        'Sudan',
+        'Syrian Arab Republic',
+        'Ukraine',
+        'West Bank and Gaza',
+        'Yemen, Rep.'
+      ) ~ "Conflict",
+      country %in% c(
+        'Burundi',
+        'Chad',
+        'Comoros',
+        'Congo, Rep.',
+        'Eritrea',
+        'Guinea-Bissau',
+        'Haiti',
+        'Kiribati',
+        'Kosovo',
+        'Lebanon',
+        'Libya',
+        'Marshall Islands',
+        'Micronesia, Fed. Sts.',
+        'Papua New Guinea',
+        'Sao Tome and Principe',
+        'Solomon Islands',
+        'Timor-Leste',
+        'Tuvalu',
+        'Venezuela, RB',
+        'Zimbabwe'
+      ) ~ "Institutional and Social Fragility",
+      TRUE ~ "Non-FCS country"
+    )
+  ) %>% filter(between(date,2016,2022)) %>%
+  group_by(date, fragile_conflict) %>%
+  filter(fragile_conflict %in% c( "Conflict", "Institutional and Social Fragility", "Non-FCS country")) %>%
+  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
+  mutate(date=factor(date, levels=c(2016,2017,2018, 2019,2020,2021,2022)),
+         fragile_conflict=factor(fragile_conflict, levels=c("Conflict", "Institutional and Social Fragility", "Non-FCS country")),
+         SPI.INDEX=round(SPI.INDEX,1)) %>%
+  pivot_wider(
+    names_from = date,
+    values_from = "SPI.INDEX"
+  ) %>%
+  arrange(fragile_conflict)
+
+# small islands
+small_tab <- spi_index_df %>%
+  left_join(country_metadata) %>%
+  filter(between(date,2016,2022)) %>%
+  mutate(small_pop=if_else(population<=500000, "Population <= 500k", "Population > 500k")) %>%
+  filter(!is.na(small_pop)) %>%
+  group_by(date, small_pop) %>%
+  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
+  mutate(date=factor(date, levels=c(2016,2017,2018, 2019,2020,2021,2022)),
+         small_pop=factor(small_pop, levels=c("Population <= 500k", "Population > 500k")),
+         SPI.INDEX=round(SPI.INDEX,1)) %>%
+  pivot_wider(
+    names_from = date,
+    values_from = "SPI.INDEX"
+  ) %>%
+  arrange(small_pop)
+
+group_tab <-
+  bind_rows(
+    income_tab %>% rename(group=income),
+    lending_tab %>% rename(group=lending),
+    fcs_tab %>% rename(group=fragile_conflict),
+    small_tab %>% rename(group=small_pop)
+  )
+
+
+```
+
+```{r}
+#| label: tab-group
+#| tbl-cap: "Changes in SPI Overall Scores by Income Group, Lending Group, and FCS."
+
+
+
+flextable(group_tab) %>%
+  theme_zebra() %>%
+  hline(i=4) %>%
+  hline(i=8) %>%
+  hline(i=11)
+  
+```
+
+
 
 **Figure 8**. Comparison of SPI Overall Scores by Population Level
 
