@@ -1,4 +1,4 @@
-﻿unite,iso2c,country,capital,long,lat,regionID,region_iso2c,region,adminID,admin_iso2c,admin,incomeID,income_iso2c,income,lendingID,lending_iso2c,lending,date,GSBP
+﻿iso3c,iso2c,country,capital,long,lat,regionID,region_iso2c,region,adminID,admin_iso2c,admin,incomeID,income_iso2c,income,lendingID,lending_iso2c,lending,date,GSBP
 AFG,AF,Afghanistan,Kabul,69.1761,34.5228,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2022,NA
 AGO,AO,Angola,Luanda,13.242,-8.81155,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2022,NA
 ALB,AL,Albania,Tirane,19.8172,41.3317,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2022,Yes

@@ -1,9 +1,9 @@
 iso3c,iso2c,country,capital,long,lat,regionID,region_iso2c,region,adminID,admin_iso2c,admin,incomeID,income_iso2c,income,lendingID,lending_iso2c,lending,date,NADA,NADA_text,info
 AFG,AF,Afghanistan,Kabul,69.1761,34.5228,SAS,8S,South Asia,SAS,8S,South Asia,LIC,XM,Low income,IDX,XI,IDA,2020,1,https://nsia.gov.af/info/surveys-projects,"Very limited info available, only in Arabic"
-AGO,AO,Angola,Luanda,13.242,-8.81155,SSF,ZG,Sub-Saharan Africa,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2020,1,https://www.ine.gov.ao/publicacoes,
+AGO,AO,Angola,Luanda,13.242,-8.81155,SSF,ZG,Sub-Saharan Africa,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2020,1,https://www.ine.gov.ao/projectos/todos,
 ALB,AL,Albania,Tirane,19.8172,41.3317,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2020,1,http://databaza.instat.gov.al/pxweb/sq/DST/?rxid=e65fcbe6-b47b-4ca2-bf23-798157a1ad87,
-ARG,AR,Argentina,Buenos Aires,-58.4173,-34.6118,LCN,ZJ,Latin America & Caribbean,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2022,1,https://www.indec.gob.ar/indec/web/Calendario-Fecha-0,
-ARM,AM,Armenia,Yerevan,44.509,40.1596,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2022,1,https://www.armstat.am/en/?nid=12,
+ARG,AR,Argentina,Buenos Aires,-58.4173,-34.6118,LCN,ZJ,Latin America & Caribbean,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2022,1,https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos,
+ARM,AM,Armenia,Yerevan,44.509,40.1596,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2022,1,https://www.armstat.am/en/?nid=15,
 ATG,AG,Antigua and Barbuda,Saint John's,-61.8456,17.1175,LCN,ZJ,Latin America & Caribbean,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2022,0,NA,"basic description is available, but not enough metadata"
 AZE,AZ,Azerbaijan,Baku,49.8932,40.3834,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2022,1,https://www.stat.gov.az/source/budget_households/?lang=en,
 BDI,BI,Burundi,Bujumbura,29.3639,-3.3784,SSF,ZG,Sub-Saharan Africa,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2022,1,https://isteebu.bi/nada/index.php/accueil,

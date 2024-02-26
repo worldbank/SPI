@@ -44,7 +44,7 @@ output_dir <- paste(dir, '03_output_data', sep="/")
 #weights (either unity (1) or population (2))
 wgt <- 1
 
-end_date <- 2022
+end_date <- 2023
 
 ```
 
