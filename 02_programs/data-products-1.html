@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4 Data Products | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
   <meta name="description" content="4 Data Products | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
-  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.38 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4 Data Products | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2024-01-16" />
+<meta name="date" content="2024-03-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -304,47 +304,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="dimensions-3.1---3.17" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Dimensions 3.1 - 3.17<a href="data-products-1.html#dimensions-3.1---3.17" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="data-products-1.html#cb17-1" tabindex="-1"></a><span class="co">#function to read in data</span></span>
-<span id="cb17-2"><a href="data-products-1.html#cb17-2" tabindex="-1"></a>un_sdg_data_read  <span class="ot">&lt;-</span> <span class="cf">function</span>(year) {</span>
-<span id="cb17-3"><a href="data-products-1.html#cb17-3" tabindex="-1"></a>  <span class="fu">read_csv</span>(<span class="fu">paste</span>(raw_dir,<span class="st">&#39;/3_DP/&#39;</span>,year,<span class="st">&#39;/SPI_D3_UNSD_data_5yr.csv&#39;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb17-4"><a href="data-products-1.html#cb17-4" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">SPI.D3.1.POV   =</span> SPI.D3<span class="fl">.1</span>,</span>
-<span id="cb17-5"><a href="data-products-1.html#cb17-5" tabindex="-1"></a>           <span class="at">SPI.D3.2.HNGR  =</span> SPI.D3<span class="fl">.2</span>,</span>
-<span id="cb17-6"><a href="data-products-1.html#cb17-6" tabindex="-1"></a>           <span class="at">SPI.D3.3.HLTH  =</span> SPI.D3<span class="fl">.3</span>,</span>
-<span id="cb17-7"><a href="data-products-1.html#cb17-7" tabindex="-1"></a>           <span class="at">SPI.D3.4.EDUC  =</span> SPI.D3<span class="fl">.4</span>,</span>
-<span id="cb17-8"><a href="data-products-1.html#cb17-8" tabindex="-1"></a>           <span class="at">SPI.D3.5.GEND  =</span> SPI.D3<span class="fl">.5</span>,</span>
-<span id="cb17-9"><a href="data-products-1.html#cb17-9" tabindex="-1"></a>           <span class="at">SPI.D3.6.WTRS  =</span> SPI.D3<span class="fl">.6</span>,</span>
-<span id="cb17-10"><a href="data-products-1.html#cb17-10" tabindex="-1"></a>           <span class="at">SPI.D3.7.ENRG  =</span> SPI.D3<span class="fl">.7</span>,</span>
-<span id="cb17-11"><a href="data-products-1.html#cb17-11" tabindex="-1"></a>           <span class="at">SPI.D3.8.WORK  =</span> SPI.D3<span class="fl">.8</span>,</span>
-<span id="cb17-12"><a href="data-products-1.html#cb17-12" tabindex="-1"></a>           <span class="at">SPI.D3.9.INDY  =</span> SPI.D3<span class="fl">.9</span>,</span>
-<span id="cb17-13"><a href="data-products-1.html#cb17-13" tabindex="-1"></a>           <span class="at">SPI.D3.10.NEQL =</span> SPI.D3<span class="fl">.10</span>,</span>
-<span id="cb17-14"><a href="data-products-1.html#cb17-14" tabindex="-1"></a>           <span class="at">SPI.D3.11.CITY =</span> SPI.D3<span class="fl">.11</span>,</span>
-<span id="cb17-15"><a href="data-products-1.html#cb17-15" tabindex="-1"></a>           <span class="at">SPI.D3.12.CNSP =</span> SPI.D3<span class="fl">.12</span>,</span>
-<span id="cb17-16"><a href="data-products-1.html#cb17-16" tabindex="-1"></a>           <span class="at">SPI.D3.13.CLMT =</span> SPI.D3<span class="fl">.13</span>,</span>
-<span id="cb17-17"><a href="data-products-1.html#cb17-17" tabindex="-1"></a>           <span class="at">SPI.D3.14.LFWT =</span> SPI.D3<span class="fl">.14</span>,</span>
-<span id="cb17-18"><a href="data-products-1.html#cb17-18" tabindex="-1"></a>           <span class="at">SPI.D3.15.LAND =</span> SPI.D3<span class="fl">.15</span>,</span>
-<span id="cb17-19"><a href="data-products-1.html#cb17-19" tabindex="-1"></a>           <span class="at">SPI.D3.16.INST =</span> SPI.D3<span class="fl">.16</span>,</span>
-<span id="cb17-20"><a href="data-products-1.html#cb17-20" tabindex="-1"></a>           <span class="at">SPI.D3.17.PTNS =</span> SPI.D3<span class="fl">.17</span></span>
-<span id="cb17-21"><a href="data-products-1.html#cb17-21" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb17-22"><a href="data-products-1.html#cb17-22" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb17-23"><a href="data-products-1.html#cb17-23" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>SPI.D3.<span class="fl">14.</span>LFWT) <span class="sc">%&gt;%</span></span>
-<span id="cb17-24"><a href="data-products-1.html#cb17-24" tabindex="-1"></a>    <span class="fu">filter</span>(date<span class="sc">==</span>year)</span>
-<span id="cb17-25"><a href="data-products-1.html#cb17-25" tabindex="-1"></a>}</span>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="data-products-1.html#cb17-1" tabindex="-1"></a>un_sdg_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste</span>(raw_dir,<span class="st">&#39;/3_DP/SPI_D3_UNSD_data_&#39;</span>,window,<span class="st">&#39;yr.csv&#39;</span>,<span class="at">sep=</span><span class="st">&quot;&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="data-products-1.html#cb17-2" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">SPI.D3.1.POV   =</span> SPI.D3<span class="fl">.1</span>,</span>
+<span id="cb17-3"><a href="data-products-1.html#cb17-3" tabindex="-1"></a>         <span class="at">SPI.D3.2.HNGR  =</span> SPI.D3<span class="fl">.2</span>,</span>
+<span id="cb17-4"><a href="data-products-1.html#cb17-4" tabindex="-1"></a>         <span class="at">SPI.D3.3.HLTH  =</span> SPI.D3<span class="fl">.3</span>,</span>
+<span id="cb17-5"><a href="data-products-1.html#cb17-5" tabindex="-1"></a>         <span class="at">SPI.D3.4.EDUC  =</span> SPI.D3<span class="fl">.4</span>,</span>
+<span id="cb17-6"><a href="data-products-1.html#cb17-6" tabindex="-1"></a>         <span class="at">SPI.D3.5.GEND  =</span> SPI.D3<span class="fl">.5</span>,</span>
+<span id="cb17-7"><a href="data-products-1.html#cb17-7" tabindex="-1"></a>         <span class="at">SPI.D3.6.WTRS  =</span> SPI.D3<span class="fl">.6</span>,</span>
+<span id="cb17-8"><a href="data-products-1.html#cb17-8" tabindex="-1"></a>         <span class="at">SPI.D3.7.ENRG  =</span> SPI.D3<span class="fl">.7</span>,</span>
+<span id="cb17-9"><a href="data-products-1.html#cb17-9" tabindex="-1"></a>         <span class="at">SPI.D3.8.WORK  =</span> SPI.D3<span class="fl">.8</span>,</span>
+<span id="cb17-10"><a href="data-products-1.html#cb17-10" tabindex="-1"></a>         <span class="at">SPI.D3.9.INDY  =</span> SPI.D3<span class="fl">.9</span>,</span>
+<span id="cb17-11"><a href="data-products-1.html#cb17-11" tabindex="-1"></a>         <span class="at">SPI.D3.10.NEQL =</span> SPI.D3<span class="fl">.10</span>,</span>
+<span id="cb17-12"><a href="data-products-1.html#cb17-12" tabindex="-1"></a>         <span class="at">SPI.D3.11.CITY =</span> SPI.D3<span class="fl">.11</span>,</span>
+<span id="cb17-13"><a href="data-products-1.html#cb17-13" tabindex="-1"></a>         <span class="at">SPI.D3.12.CNSP =</span> SPI.D3<span class="fl">.12</span>,</span>
+<span id="cb17-14"><a href="data-products-1.html#cb17-14" tabindex="-1"></a>         <span class="at">SPI.D3.13.CLMT =</span> SPI.D3<span class="fl">.13</span>,</span>
+<span id="cb17-15"><a href="data-products-1.html#cb17-15" tabindex="-1"></a>         <span class="at">SPI.D3.14.LFWT =</span> SPI.D3<span class="fl">.14</span>,</span>
+<span id="cb17-16"><a href="data-products-1.html#cb17-16" tabindex="-1"></a>         <span class="at">SPI.D3.15.LAND =</span> SPI.D3<span class="fl">.15</span>,</span>
+<span id="cb17-17"><a href="data-products-1.html#cb17-17" tabindex="-1"></a>         <span class="at">SPI.D3.16.INST =</span> SPI.D3<span class="fl">.16</span>,</span>
+<span id="cb17-18"><a href="data-products-1.html#cb17-18" tabindex="-1"></a>         <span class="at">SPI.D3.17.PTNS =</span> SPI.D3<span class="fl">.17</span></span>
+<span id="cb17-19"><a href="data-products-1.html#cb17-19" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-20"><a href="data-products-1.html#cb17-20" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-21"><a href="data-products-1.html#cb17-21" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>SPI.D3.<span class="fl">14.</span>LFWT)</span>
+<span id="cb17-22"><a href="data-products-1.html#cb17-22" tabindex="-1"></a></span>
+<span id="cb17-23"><a href="data-products-1.html#cb17-23" tabindex="-1"></a><span class="co">#add to spi databases</span></span>
+<span id="cb17-24"><a href="data-products-1.html#cb17-24" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
+<span id="cb17-25"><a href="data-products-1.html#cb17-25" tabindex="-1"></a>  <span class="fu">left_join</span>(un_sdg_df) </span>
 <span id="cb17-26"><a href="data-products-1.html#cb17-26" tabindex="-1"></a></span>
-<span id="cb17-27"><a href="data-products-1.html#cb17-27" tabindex="-1"></a></span>
-<span id="cb17-28"><a href="data-products-1.html#cb17-28" tabindex="-1"></a><span class="co">#read in versions</span></span>
-<span id="cb17-29"><a href="data-products-1.html#cb17-29" tabindex="-1"></a><span class="co">#apply function from 2004 to 2023 and bind together</span></span>
-<span id="cb17-30"><a href="data-products-1.html#cb17-30" tabindex="-1"></a>un_sdg_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="fu">lapply</span>(<span class="dv">2004</span><span class="sc">:</span><span class="dv">2023</span>, un_sdg_data_read)) </span>
+<span id="cb17-27"><a href="data-products-1.html#cb17-27" tabindex="-1"></a><span class="co">#map the values</span></span>
+<span id="cb17-28"><a href="data-products-1.html#cb17-28" tabindex="-1"></a>un_sdg_map <span class="ot">&lt;-</span> un_sdg_df <span class="sc">%&gt;%</span></span>
+<span id="cb17-29"><a href="data-products-1.html#cb17-29" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>))  <span class="sc">%&gt;%</span></span>
+<span id="cb17-30"><a href="data-products-1.html#cb17-30" tabindex="-1"></a>  <span class="fu">left_join</span>(country_metadata)</span>
 <span id="cb17-31"><a href="data-products-1.html#cb17-31" tabindex="-1"></a></span>
-<span id="cb17-32"><a href="data-products-1.html#cb17-32" tabindex="-1"></a><span class="co">#add to spi databases</span></span>
-<span id="cb17-33"><a href="data-products-1.html#cb17-33" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
-<span id="cb17-34"><a href="data-products-1.html#cb17-34" tabindex="-1"></a>  <span class="fu">left_join</span>(un_sdg_df) </span>
-<span id="cb17-35"><a href="data-products-1.html#cb17-35" tabindex="-1"></a></span>
-<span id="cb17-36"><a href="data-products-1.html#cb17-36" tabindex="-1"></a><span class="co">#map the values</span></span>
-<span id="cb17-37"><a href="data-products-1.html#cb17-37" tabindex="-1"></a>un_sdg_map <span class="ot">&lt;-</span> un_sdg_df <span class="sc">%&gt;%</span></span>
-<span id="cb17-38"><a href="data-products-1.html#cb17-38" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>))  <span class="sc">%&gt;%</span></span>
-<span id="cb17-39"><a href="data-products-1.html#cb17-39" tabindex="-1"></a>  <span class="fu">left_join</span>(country_metadata)</span>
-<span id="cb17-40"><a href="data-products-1.html#cb17-40" tabindex="-1"></a></span>
-<span id="cb17-41"><a href="data-products-1.html#cb17-41" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.1.POV&#39;</span>,<span class="st">&#39;Goal 1: No Poverty&#39;</span>)</span></code></pre></div>
+<span id="cb17-32"><a href="data-products-1.html#cb17-32" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.1.POV&#39;</span>,<span class="st">&#39;Goal 1: No Poverty&#39;</span>)</span></code></pre></div>
 <p><img src="01-SPI_data_prep_files/figure-html/unstats-1.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-2.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-3.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-4.png" width="960" /></p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="data-products-1.html#cb18-1" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;un_sdg_map&#39;</span>,<span class="st">&#39;SPI.D3.2.HNGR&#39;</span>,<span class="st">&#39;Goal 2: No Hunger&#39;</span>)</span></code></pre></div>
 <p><img src="01-SPI_data_prep_files/figure-html/unstats-5.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-6.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-7.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/unstats-8.png" width="960" /></p>
