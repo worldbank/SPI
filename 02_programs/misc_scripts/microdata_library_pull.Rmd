@@ -64,8 +64,8 @@ study_df_ilo <- read_csv(temp) #convert to dataframe
 write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv", sep="")) #write to csv
 
 ilo_base_url <- "https://microdata.ilo.org/index.php/api/catalog" #define url
-study_request_fao<-fromJSON(paste(fao_base_url,"/search","?ps=15000", sep="")) # pull from url
-study_df_fao <- study_request_fao$result$rows
+study_request_ilo<-fromJSON(paste(ilo_base_url,"/search","?ps=15000", sep="")) # pull from url
+study_df_ilo <- study_request_ilo$result$rows
 
 # second ILO source
 ilo_sources_catalog<-read_csv('https://www.ilo.org/ilostat-files/Documents/sources_en.csv')
@@ -80,12 +80,12 @@ write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studi
 
 
 fao_base_url <- "https://microdata.fao.org/index.php/api/catalog" #define url
-study_request_fao<-fromJSON(paste(fao_base_url,"/search","?ps=15000", sep="")) # pull from url
+study_request_fao<-fromJSON(paste(fao_base_url,"/search","?ps=20000", sep="")) # pull from url
 study_df_fao <- study_request_fao$result$rows
 
 #internal use studies from World Bank microdata library
 wb_base_url <- "http://microdatalib.worldbank.org/index.php/api/catalog" #define url
-study_request_wb<-fromJSON(paste(wb_base_url,"/search","?ps=15000", sep="")) # pull from url
+study_request_wb<-fromJSON(paste(wb_base_url,"/search","?ps=20000", sep="")) # pull from url
 study_df_internal <- study_request_wb$result$rows
 write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_internal_studies.csv", sep="")) #write to csv
 
@@ -377,7 +377,7 @@ survey_df <- study_df_internal %>%
 
  # saver('lfs' , 'D4.1.6.SVY.LABR_NADA.csv')
 
-saver('study_df_internal','dhs|mics|whs|hea' , 'D4.1.7.SVY.HLTH_NADA.csv')
+saver('study_df_internal','dhs|mics|whs|hea|DHS|MICS|WHS|Demographic and Health' , 'D4.1.7.SVY.HLTH_NADA.csv')
 
 saver('study_df_internal','Business Survey' , 'D4.1.8.SVY.BIZZ_NADA.csv')
 

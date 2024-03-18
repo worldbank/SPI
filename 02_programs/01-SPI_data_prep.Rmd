@@ -1032,7 +1032,7 @@ Note: Because surveys are reported with a lag, we start measuring whether compar
 
 D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '1.5_DUIO/UN IGME Child Mortality and Stillbirth Estimates_2022.csv', sep="/")) %>%
   as_tibble(.name_repair = 'universal') %>%
-  filter(Indicator=='Under-five mortality rate' & Sex=='Total') %>% #keep just observations for under 5 child mortality and for both sexes
+  filter(Indicator=='Under-five mortality rate' & Sex=='Total' ) %>% #keep just observations for under 5 child mortality and for both sexes and overall wealth quintile
   filter(Observation.Status=='Included in IGME') %>% # Also keep only surveys that met IGME criteria for inclusion as a nationally representative statistic
   mutate(date=as.numeric(str_extract(Series.Year, "^.{4}")),
          ind_date=as.numeric(str_extract(TIME_PERIOD, "^.{4}")),
@@ -1674,6 +1674,14 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
         filter(Data.categories=='All Categories') %>%
+        #convert all columns in "Indicator.coverage.and.disaggregation" "Data.available.last.5.years"           "Data.available.last.10.years"          "First.administrative.level"     "Second.administrative.level"           "Coverage.subscore"                     "Machine.readable"                      "Non.proprietary"                       "Download.options"                      "Metadata.available"                    "Terms.of.use"                          "Openness.subscore"                     "Overall.score"  to numeric
+        mutate(
+          across(
+            c('Indicator.coverage.and.disaggregation', 'Data.available.last.5.years', 'Data.available.last.10.years', 'First.administrative.level', 'Second.administrative.level', 'Coverage.subscore', 'Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore', 'Overall.score'),
+            as.numeric
+          )
+          ) %>%
+
         select(-Year)
 
 
@@ -1682,8 +1690,8 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 
 #bind different years together
 openness_df <- bind_rows(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018,openness_df_2020,openness_df_2021,
-                  openness_df_2022 %>% rename(Non.proprietary=Nonproprietary),
-                  openness_df_2023 %>% rename(Non.proprietary=Nonproprietary))
+                  openness_df_2022,
+                  openness_df_2023 )
 
 
 openness_df <- openness_df %>%
@@ -2747,17 +2755,25 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 ```{r geo}
 
   #read in ODIN data
-  for (i in c(2015,2016,2017, 2018, 2020, 2021,2022, 2023)) {
-   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
+  #read in ODIN data
+  for (i in c(2015,2016,2017,2018,2020, 2021, 2022, 2023)) {
+   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""),)  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
         filter(Data.categories=='All Categories') %>%
+        #convert all columns in "Indicator.coverage.and.disaggregation" "Data.available.last.5.years"           "Data.available.last.10.years"          "First.administrative.level"     "Second.administrative.level"           "Coverage.subscore"                     "Machine.readable"                      "Non.proprietary"                       "Download.options"                      "Metadata.available"                    "Terms.of.use"                          "Openness.subscore"                     "Overall.score"  to numeric
+        mutate(
+          across(
+            c('Indicator.coverage.and.disaggregation', 'Data.available.last.5.years', 'Data.available.last.10.years', 'First.administrative.level', 'Second.administrative.level', 'Coverage.subscore', 'Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore', 'Overall.score'),
+            as.numeric
+          )
+          ) %>%
+
         select(-Year)
 
 
     assign(paste('geo_df',i,sep="_"), temp)
   }
-
 #bind different years together
 geo_df <- bind_rows(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018, geo_df_2020, geo_df_2021, geo_df_2022, geo_df_2023)
 

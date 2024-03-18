@@ -120,17 +120,21 @@ To complete the virtuous data cycle, the capability of the statistical system ne
 pop_df <- wbstats::wb_data(country="all",
              indicator='SP.POP.TOTL',
              start_date=2004,
-             end_date=2022) %>%
+             end_date=end_date) %>%
   mutate(date=as.numeric(date)) %>%
   mutate(population=SP.POP.TOTL) %>%
   select(country, date, population) 
 
 
 #read in the SPI dataset
-spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
-  filter(date>=2021) %>%
-  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2020.csv', sep="/")) %>% filter(date==2020)) %>%
-  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2019.csv', sep="/")) %>% filter(date<2020)) %>%           
+spi_df_final_raw <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) 
+
+
+spi_df_final <- spi_df_final_raw %>%
+  filter(date>=end_date) %>%
+  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2022.csv', sep="/")) %>% filter(date>=2021)) %>%
+  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2020.csv', sep="/")) %>% filter(date==2020) %>% filter(iso3c %in% unique(spi_df_final_raw$iso3c))) %>%
+  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2019.csv', sep="/")) %>% filter(date<2020) %>% filter(iso3c %in% unique(spi_df_final_raw$iso3c))) %>%           
   mutate(income=if_else(is.na(income), income_level, income)) %>%
   left_join(pop_df) %>%
   group_by(iso3c) %>%
@@ -2916,6 +2920,13 @@ unique_scores_sci <-length(unique(unique_scores_df$SCI))
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
         filter(Data.categories=='All Categories') %>%
+        #convert all columns in "Indicator.coverage.and.disaggregation" "Data.available.last.5.years"           "Data.available.last.10.years"          "First.administrative.level"     "Second.administrative.level"           "Coverage.subscore"                     "Machine.readable"                      "Non.proprietary"                       "Download.options"                      "Metadata.available"                    "Terms.of.use"                          "Openness.subscore"                     "Overall.score"  to numeric
+        mutate(
+          across(
+            c('Indicator.coverage.and.disaggregation', 'Data.available.last.5.years', 'Data.available.last.10.years', 'First.administrative.level', 'Second.administrative.level', 'Coverage.subscore', 'Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore', 'Overall.score'),
+            as.numeric
+          )
+          ) %>%     
         select(-Year)
 
 

@@ -23,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2024-02-21" />
+<meta name="date" content="2024-03-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -399,7 +399,7 @@ Quality (1 points total):
 <span id="cb3-4"><a href="data-use-1.html#cb3-4" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="data-use-1.html#cb3-5" tabindex="-1"></a>D3.<span class="fl">3.</span>AKI.MORT <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file=</span><span class="fu">paste</span>(raw_dir, <span class="st">&#39;1.5_DUIO/UN IGME Child Mortality and Stillbirth Estimates_2022.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb3-6"><a href="data-use-1.html#cb3-6" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">.name_repair =</span> <span class="st">&#39;universal&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-7"><a href="data-use-1.html#cb3-7" tabindex="-1"></a>  <span class="fu">filter</span>(Indicator<span class="sc">==</span><span class="st">&#39;Under-five mortality rate&#39;</span> <span class="sc">&amp;</span> Sex<span class="sc">==</span><span class="st">&#39;Total&#39;</span>) <span class="sc">%&gt;%</span> <span class="co">#keep just observations for under 5 child mortality and for both sexes</span></span>
+<span id="cb3-7"><a href="data-use-1.html#cb3-7" tabindex="-1"></a>  <span class="fu">filter</span>(Indicator<span class="sc">==</span><span class="st">&#39;Under-five mortality rate&#39;</span> <span class="sc">&amp;</span> Sex<span class="sc">==</span><span class="st">&#39;Total&#39;</span> ) <span class="sc">%&gt;%</span> <span class="co">#keep just observations for under 5 child mortality and for both sexes and overall wealth quintile</span></span>
 <span id="cb3-8"><a href="data-use-1.html#cb3-8" tabindex="-1"></a>  <span class="fu">filter</span>(Observation.Status<span class="sc">==</span><span class="st">&#39;Included in IGME&#39;</span>) <span class="sc">%&gt;%</span> <span class="co"># Also keep only surveys that met IGME criteria for inclusion as a nationally representative statistic</span></span>
 <span id="cb3-9"><a href="data-use-1.html#cb3-9" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(Series.Year, <span class="st">&quot;^.{4}&quot;</span>)),</span>
 <span id="cb3-10"><a href="data-use-1.html#cb3-10" tabindex="-1"></a>         <span class="at">ind_date=</span><span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(TIME_PERIOD, <span class="st">&quot;^.{4}&quot;</span>)),</span>
