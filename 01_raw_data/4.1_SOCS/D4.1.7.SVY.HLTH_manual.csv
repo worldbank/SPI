@@ -29,7 +29,7 @@
 "BWA","BW","Botswana","Gaborone",25.9201,-24.6544,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2022,"1988, 2000, 2007"
 "CAF","CF","Central African Republic","Bangui",21.6407,5.63056,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2022,"1995, 1996, 2000, 2006, 2010, 2018"
 "CAN","CA","Canada","Ottawa",-75.6919,45.4215,"NAC","XU","North America",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2022,"1994, 1996, 1998, 2000, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021"
-"CHE","CH","Switzerland","Bern",7.44821,46.948,"ECS","Z7","Europe & Central Asia",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2022,"1992, 1997, 2002, 2007, 2012, 2017"
+"CHE","CH","Switzerland","Bern",7.44821,46.948,"ECS","Z7","Europe & Central Asia",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2022,"1992, 1997, 2002, 2007, 2012, 2017, 2019"
 "CHL","CL","Chile","Santiago",-70.6475,-33.475,"LCN","ZJ","Latin America & Caribbean",NA,NA,NA,"HIC","XD","High income","IBD","XF","IBRD",2022,NA
 "CHN","CN","China","Beijing",116.286,40.0495,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2022,"1995"
 "CIV","CI","Cote d'Ivoire","Yamoussoukro",-4.0305,5.332,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2022,"1994, 1996, 1999, 2000, 2003, 2006, 2012, 2016"
@@ -56,7 +56,7 @@
 "ETH","ET","Ethiopia","Addis Ababa",38.7468,9.02274,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2022,"1995, 2000, 2003, 2005, 2011, 2016"
 "FIN","FI","Finland","Helsinki",24.9525,60.1608,"ECS","Z7","Europe & Central Asia",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2022,"2014, 2019"
 "FJI","FJ","Fiji","Suva",178.399,-18.1149,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","UMC","XT","Upper middle income","IDB","XH","Blend",2022,NA
-"FRA","FR","France","Paris",2.35097,48.8566,"ECS","Z7","Europe & Central Asia",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2022,"2003, 2008, 2014"
+"FRA","FR","France","Paris",2.35097,48.8566,"ECS","Z7","Europe & Central Asia",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2022,"2003, 2008, 2014, 2019"
 "FSM","FM","Micronesia, Fed. Sts.","Palikir",158.185,6.91771,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2022,NA
 "GAB","GA","Gabon","Libreville",9.45162,0.38832,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2022,"1996, 2000, 2012, 2019"
 "GBR","GB","United Kingdom","London",-0.126236,51.5002,"ECS","Z7","Europe & Central Asia",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2022,"2013"
@@ -141,7 +141,7 @@
 "PRY","PY","Paraguay","Asuncion",-57.6362,-25.3005,"LCN","ZJ","Latin America & Caribbean","LAC","XJ","Latin America & Caribbean (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2022,"1990, 2016"
 "PSE","PS","West Bank and Gaza",NA,NA,NA,"MEA","ZQ","Middle East & North Africa","MNA","XQ","Middle East & North Africa (excluding high income)","UMC","XT","Upper middle income","LNX","XX","Not classified",2022,"2004, 2006, 2010, 2014, 2019"
 "QAT","QA","Qatar","Doha",51.5082,25.2948,"MEA","ZQ","Middle East & North Africa",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2022,"2012"
-"ROU","RO","Romania","Bucharest",26.0979,44.4479,"ECS","Z7","Europe & Central Asia",NA,NA,NA,"HIC","XD","High income","IBD","XF","IBRD",2022,"2008, 2014"
+"ROU","RO","Romania","Bucharest",26.0979,44.4479,"ECS","Z7","Europe & Central Asia",NA,NA,NA,"HIC","XD","High income","IBD","XF","IBRD",2022,"2008, 2014, 2019"
 "RUS","RU","Russian Federation","Moscow",37.6176,55.7558,"ECS","Z7","Europe & Central Asia","ECA","7E","Europe & Central Asia (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2022,NA
 "RWA","RW","Rwanda","Kigali",30.0587,-1.95325,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2022,"1992, 2005, 2010, 2014, 2019"
 "SAU","SA","Saudi Arabia","Riyadh",46.6977,24.6748,"MEA","ZQ","Middle East & North Africa",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2022,"2017, 2018"
