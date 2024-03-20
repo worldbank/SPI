@@ -180,6 +180,16 @@ excel <- list('Indicators'=databank_df,
 writexl::write_xlsx(databank_df,
                     path=paste(output_dir, "/SPI_databank.xlsx", sep=""))
 
+writexl::write_xlsx(databank_df %>%
+                      transmute(
+                        Time=paste0("YR",date),
+                        Country=iso3c,
+                        Series=source_id,
+                        SCALE=0,
+                        Data=value
+                      ),
+                    path=paste(output_dir, "/SPI_databank_formatted.xlsx", sep=""))
+
 databank_df %>% filter(date==2022) %>% left_join(metadata) %>% filter(!is.na(pillar)) %>% writexl::write_xlsx(
   path=paste(output_dir, "/SPI_databank_latest.xlsx", sep=""))
 
