@@ -913,10 +913,10 @@ library(pipr)
 #new pipr package already includes survey coverage and comparability measures
 
 
-#df <- get_stats()
+df <- get_stats()
 
 #save as csv
-#write_excel_csv(df, file=paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/"))
+write_excel_csv(df, file=paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/"))
 
 df <- read_csv(paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/")) %>%
   #exclude certain surveys that were produced not by statistical system but produced and financed from private firm (non-official source).  Change applies to India in particular.
@@ -1869,7 +1869,7 @@ Cleaning for Data Products Indicators.  Data Products (16 Indicators):
 
   1. Download the latest SDG indicator data from UN Stats (https://unstats.un.org/sdgs/indicators/en/#) using their API   
   
-  2. Transform the data so that for each indicator we can create a score documenting whether a value exists for the country in a year, whether the value is based on country data, country data adjusted, estimated, or modelled data according the UN Stats metadata. **This will only include tier 1 indicators**.    
+  2. Transform the data so that for each indicator we can create a score documenting whether a value exists for the country in a year, whether the value is based on country data, country data adjusted, estimated, or modelled data according the UN Stats metadata. **This will only include tier 1 indicators, as of November 2020.**.    
   
   3. Combine the resulting data into a single set of indicators for use in the Statistical Performance Indicators dashboard and index by calculating the average across SDGs.  This results in 17 total indicators.  One for each SDG, which is the share of indicators with a value meeting quality criteria defined below.
 

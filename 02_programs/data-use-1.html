@@ -23,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2024-03-18" />
+<meta name="date" content="2024-04-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -294,10 +294,10 @@ Quality (1 points total):
 <span id="cb2-3"><a href="data-use-1.html#cb2-3" tabindex="-1"></a><span class="co">#new pipr package already includes survey coverage and comparability measures</span></span>
 <span id="cb2-4"><a href="data-use-1.html#cb2-4" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="data-use-1.html#cb2-5" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="data-use-1.html#cb2-6" tabindex="-1"></a><span class="co">#df &lt;- get_stats()</span></span>
+<span id="cb2-6"><a href="data-use-1.html#cb2-6" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">get_stats</span>()</span>
 <span id="cb2-7"><a href="data-use-1.html#cb2-7" tabindex="-1"></a></span>
 <span id="cb2-8"><a href="data-use-1.html#cb2-8" tabindex="-1"></a><span class="co">#save as csv</span></span>
-<span id="cb2-9"><a href="data-use-1.html#cb2-9" tabindex="-1"></a><span class="co">#write_excel_csv(df, file=paste(raw_dir, &#39;1.5_DUIO/PIP_comparability_latest.csv&#39;, sep=&quot;/&quot;))</span></span>
+<span id="cb2-9"><a href="data-use-1.html#cb2-9" tabindex="-1"></a><span class="fu">write_excel_csv</span>(df, <span class="at">file=</span><span class="fu">paste</span>(raw_dir, <span class="st">&#39;1.5_DUIO/PIP_comparability_latest.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>))</span>
 <span id="cb2-10"><a href="data-use-1.html#cb2-10" tabindex="-1"></a></span>
 <span id="cb2-11"><a href="data-use-1.html#cb2-11" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">paste</span>(raw_dir, <span class="st">&#39;1.5_DUIO/PIP_comparability_latest.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb2-12"><a href="data-use-1.html#cb2-12" tabindex="-1"></a>  <span class="co">#exclude certain surveys that were produced not by statistical system but produced and financed from private firm (non-official source).  Change applies to India in particular.</span></span>
