@@ -1196,6 +1196,7 @@ We take therefore useable data if it appears within an 8 year window of the refe
 ```{r safely_managed, eval=FALSE, include=FALSE}
 span <- c(2000:end_date)
 
+
 smw_template_df <- data.frame(
   geo=c("National","Rural","Urban")
 )
