@@ -2133,6 +2133,8 @@ census_fun  <- function(data, input_var) {
              ) %>%
     mutate(indicator_date=if_else(is.na(indicator_date),-99,indicator_date))
 
+    #save this intermediate dataset as csv
+    write_excel_csv(cs_df, path = paste(raw_dir, '/4.1_SOCS/', data, "_annual.csv", sep="" ))
     
   
   #Now calculate our SPI score for this indicator
@@ -2205,7 +2207,9 @@ survey_fun  <- function(data, input_var) {
             nada_dates=first(na.omit(nada_dates)  ) 
              ) %>%
   mutate(indicator_date=if_else(is.na(indicator_date),-99,indicator_date))
-    
+ 
+    #save this intermediate dataset as csv
+    write_excel_csv(cs_df, path = paste(raw_dir, '/4.1_SOCS/', data, "_annual.csv", sep="" ))   
   
   #Now calculate our SPI score for this indicator
   for (i in 2004:end_date) {
