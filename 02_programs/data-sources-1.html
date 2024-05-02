@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5 Data Sources | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
   <meta name="description" content="5 Data Sources | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
-  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.38 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5 Data Sources | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2024-04-04" />
+<meta name="date" content="2024-05-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -398,194 +398,198 @@ and demographics.</p>
 <span id="cb33-32"><a href="data-sources-1.html#cb33-32" tabindex="-1"></a>             ) <span class="sc">%&gt;%</span></span>
 <span id="cb33-33"><a href="data-sources-1.html#cb33-33" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">indicator_date=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(indicator_date),<span class="sc">-</span><span class="dv">99</span>,indicator_date))</span>
 <span id="cb33-34"><a href="data-sources-1.html#cb33-34" tabindex="-1"></a></span>
-<span id="cb33-35"><a href="data-sources-1.html#cb33-35" tabindex="-1"></a>    </span>
-<span id="cb33-36"><a href="data-sources-1.html#cb33-36" tabindex="-1"></a>  </span>
-<span id="cb33-37"><a href="data-sources-1.html#cb33-37" tabindex="-1"></a>  <span class="co">#Now calculate our SPI score for this indicator</span></span>
-<span id="cb33-38"><a href="data-sources-1.html#cb33-38" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="sc">:</span>end_date) {</span>
-<span id="cb33-39"><a href="data-sources-1.html#cb33-39" tabindex="-1"></a>   temp <span class="ot">&lt;-</span> cs_df <span class="sc">%&gt;%</span></span>
-<span id="cb33-40"><a href="data-sources-1.html#cb33-40" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">date=</span>i) <span class="sc">%&gt;%</span></span>
-<span id="cb33-41"><a href="data-sources-1.html#cb33-41" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">recency_indicator=</span>((date<span class="sc">&gt;=</span>indicator_date)) ) <span class="sc">%&gt;%</span> <span class="co">#restrict to censuses that do not occur after reference date</span></span>
-<span id="cb33-42"><a href="data-sources-1.html#cb33-42" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">indicator_date=</span><span class="fu">if_else</span>(recency_indicator<span class="sc">==</span><span class="cn">TRUE</span>, indicator_date, <span class="fu">as.numeric</span>(<span class="cn">NA</span>)),</span>
-<span id="cb33-43"><a href="data-sources-1.html#cb33-43" tabindex="-1"></a>         <span class="at">register=</span><span class="fu">if_else</span>(<span class="fu">str_detect</span>(input_var,<span class="st">&quot;Register based census&quot;</span>),<span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb33-44"><a href="data-sources-1.html#cb33-44" tabindex="-1"></a>    <span class="fu">group_by</span>(iso3c, date) <span class="sc">%&gt;%</span></span>
-<span id="cb33-45"><a href="data-sources-1.html#cb33-45" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">last_val=</span><span class="fu">max</span>(indicator_date, <span class="at">na.rm=</span>T),</span>
-<span id="cb33-46"><a href="data-sources-1.html#cb33-46" tabindex="-1"></a>            <span class="at">register=</span><span class="fu">max</span>(register, <span class="at">na.rm=</span>T),</span>
-<span id="cb33-47"><a href="data-sources-1.html#cb33-47" tabindex="-1"></a>            <span class="at">input_var=</span><span class="fu">paste</span>(<span class="fu">unique</span>(indicator_date), <span class="at">collapse=</span><span class="st">&quot;,&quot;</span>),</span>
-<span id="cb33-48"><a href="data-sources-1.html#cb33-48" tabindex="-1"></a>            <span class="at">nada_dates=</span><span class="fu">first</span>(nada_dates)) <span class="sc">%&gt;%</span></span>
-<span id="cb33-49"><a href="data-sources-1.html#cb33-49" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">indicator=</span><span class="fu">case_when</span>(</span>
-<span id="cb33-50"><a href="data-sources-1.html#cb33-50" tabindex="-1"></a>    (date<span class="sc">&gt;=</span><span class="dv">2021</span> <span class="sc">&amp;</span> register<span class="sc">==</span><span class="dv">1</span>) <span class="sc">~</span> <span class="dv">1</span>, <span class="co">#score register based censuses</span></span>
-<span id="cb33-51"><a href="data-sources-1.html#cb33-51" tabindex="-1"></a>    (date<span class="sc">-</span>last_val<span class="sc">&lt;=</span><span class="dv">10</span>) <span class="sc">&amp;</span> (date<span class="sc">-</span>last_val<span class="sc">&gt;=</span><span class="dv">0</span>) <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb33-52"><a href="data-sources-1.html#cb33-52" tabindex="-1"></a>    (date<span class="sc">-</span>last_val<span class="sc">&lt;=</span><span class="dv">20</span>) <span class="sc">&amp;</span> (date<span class="sc">-</span>last_val<span class="sc">&gt;=</span><span class="dv">0</span>) <span class="sc">~</span> <span class="fl">0.5</span>,</span>
-<span id="cb33-53"><a href="data-sources-1.html#cb33-53" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> )</span>
-<span id="cb33-54"><a href="data-sources-1.html#cb33-54" tabindex="-1"></a>    )  <span class="sc">%&gt;%</span></span>
-<span id="cb33-55"><a href="data-sources-1.html#cb33-55" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb33-56"><a href="data-sources-1.html#cb33-56" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">c</span>( <span class="st">&#39;iso3c&#39;</span>, <span class="st">&#39;date&#39;</span>, <span class="st">&#39;input_var&#39;</span>,<span class="st">&#39;nada_dates&#39;</span>, <span class="st">&#39;indicator&#39;</span>)  ) <span class="sc">%&gt;%</span></span>
-<span id="cb33-57"><a href="data-sources-1.html#cb33-57" tabindex="-1"></a>    <span class="fu">arrange</span>(date, iso3c)</span>
-<span id="cb33-58"><a href="data-sources-1.html#cb33-58" tabindex="-1"></a></span>
-<span id="cb33-59"><a href="data-sources-1.html#cb33-59" tabindex="-1"></a>    <span class="fu">assign</span>(<span class="fu">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
-<span id="cb33-60"><a href="data-sources-1.html#cb33-60" tabindex="-1"></a>  }</span>
-<span id="cb33-61"><a href="data-sources-1.html#cb33-61" tabindex="-1"></a></span>
-<span id="cb33-62"><a href="data-sources-1.html#cb33-62" tabindex="-1"></a>  temp <span class="ot">&lt;-</span> temp_2023</span>
-<span id="cb33-63"><a href="data-sources-1.html#cb33-63" tabindex="-1"></a>  </span>
-<span id="cb33-64"><a href="data-sources-1.html#cb33-64" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="sc">:</span><span class="dv">2022</span>) {</span>
-<span id="cb33-65"><a href="data-sources-1.html#cb33-65" tabindex="-1"></a>    temp <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(temp, <span class="fu">get</span>(<span class="fu">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>)))</span>
-<span id="cb33-66"><a href="data-sources-1.html#cb33-66" tabindex="-1"></a>  }</span>
-<span id="cb33-67"><a href="data-sources-1.html#cb33-67" tabindex="-1"></a>  temp</span>
-<span id="cb33-68"><a href="data-sources-1.html#cb33-68" tabindex="-1"></a>}</span>
-<span id="cb33-69"><a href="data-sources-1.html#cb33-69" tabindex="-1"></a></span>
-<span id="cb33-70"><a href="data-sources-1.html#cb33-70" tabindex="-1"></a></span>
+<span id="cb33-35"><a href="data-sources-1.html#cb33-35" tabindex="-1"></a>    <span class="co">#save this intermediate dataset as csv</span></span>
+<span id="cb33-36"><a href="data-sources-1.html#cb33-36" tabindex="-1"></a>    <span class="fu">write_excel_csv</span>(cs_df, <span class="at">path =</span> <span class="fu">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/&#39;</span>, data, <span class="st">&quot;_annual.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span> ))</span>
+<span id="cb33-37"><a href="data-sources-1.html#cb33-37" tabindex="-1"></a>    </span>
+<span id="cb33-38"><a href="data-sources-1.html#cb33-38" tabindex="-1"></a>  </span>
+<span id="cb33-39"><a href="data-sources-1.html#cb33-39" tabindex="-1"></a>  <span class="co">#Now calculate our SPI score for this indicator</span></span>
+<span id="cb33-40"><a href="data-sources-1.html#cb33-40" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="sc">:</span>end_date) {</span>
+<span id="cb33-41"><a href="data-sources-1.html#cb33-41" tabindex="-1"></a>   temp <span class="ot">&lt;-</span> cs_df <span class="sc">%&gt;%</span></span>
+<span id="cb33-42"><a href="data-sources-1.html#cb33-42" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">date=</span>i) <span class="sc">%&gt;%</span></span>
+<span id="cb33-43"><a href="data-sources-1.html#cb33-43" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">recency_indicator=</span>((date<span class="sc">&gt;=</span>indicator_date)) ) <span class="sc">%&gt;%</span> <span class="co">#restrict to censuses that do not occur after reference date</span></span>
+<span id="cb33-44"><a href="data-sources-1.html#cb33-44" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">indicator_date=</span><span class="fu">if_else</span>(recency_indicator<span class="sc">==</span><span class="cn">TRUE</span>, indicator_date, <span class="fu">as.numeric</span>(<span class="cn">NA</span>)),</span>
+<span id="cb33-45"><a href="data-sources-1.html#cb33-45" tabindex="-1"></a>         <span class="at">register=</span><span class="fu">if_else</span>(<span class="fu">str_detect</span>(input_var,<span class="st">&quot;Register based census&quot;</span>),<span class="dv">1</span>,<span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb33-46"><a href="data-sources-1.html#cb33-46" tabindex="-1"></a>    <span class="fu">group_by</span>(iso3c, date) <span class="sc">%&gt;%</span></span>
+<span id="cb33-47"><a href="data-sources-1.html#cb33-47" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">last_val=</span><span class="fu">max</span>(indicator_date, <span class="at">na.rm=</span>T),</span>
+<span id="cb33-48"><a href="data-sources-1.html#cb33-48" tabindex="-1"></a>            <span class="at">register=</span><span class="fu">max</span>(register, <span class="at">na.rm=</span>T),</span>
+<span id="cb33-49"><a href="data-sources-1.html#cb33-49" tabindex="-1"></a>            <span class="at">input_var=</span><span class="fu">paste</span>(<span class="fu">unique</span>(indicator_date), <span class="at">collapse=</span><span class="st">&quot;,&quot;</span>),</span>
+<span id="cb33-50"><a href="data-sources-1.html#cb33-50" tabindex="-1"></a>            <span class="at">nada_dates=</span><span class="fu">first</span>(nada_dates)) <span class="sc">%&gt;%</span></span>
+<span id="cb33-51"><a href="data-sources-1.html#cb33-51" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">indicator=</span><span class="fu">case_when</span>(</span>
+<span id="cb33-52"><a href="data-sources-1.html#cb33-52" tabindex="-1"></a>    (date<span class="sc">&gt;=</span><span class="dv">2021</span> <span class="sc">&amp;</span> register<span class="sc">==</span><span class="dv">1</span>) <span class="sc">~</span> <span class="dv">1</span>, <span class="co">#score register based censuses</span></span>
+<span id="cb33-53"><a href="data-sources-1.html#cb33-53" tabindex="-1"></a>    (date<span class="sc">-</span>last_val<span class="sc">&lt;=</span><span class="dv">10</span>) <span class="sc">&amp;</span> (date<span class="sc">-</span>last_val<span class="sc">&gt;=</span><span class="dv">0</span>) <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb33-54"><a href="data-sources-1.html#cb33-54" tabindex="-1"></a>    (date<span class="sc">-</span>last_val<span class="sc">&lt;=</span><span class="dv">20</span>) <span class="sc">&amp;</span> (date<span class="sc">-</span>last_val<span class="sc">&gt;=</span><span class="dv">0</span>) <span class="sc">~</span> <span class="fl">0.5</span>,</span>
+<span id="cb33-55"><a href="data-sources-1.html#cb33-55" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> )</span>
+<span id="cb33-56"><a href="data-sources-1.html#cb33-56" tabindex="-1"></a>    )  <span class="sc">%&gt;%</span></span>
+<span id="cb33-57"><a href="data-sources-1.html#cb33-57" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb33-58"><a href="data-sources-1.html#cb33-58" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">c</span>( <span class="st">&#39;iso3c&#39;</span>, <span class="st">&#39;date&#39;</span>, <span class="st">&#39;input_var&#39;</span>,<span class="st">&#39;nada_dates&#39;</span>, <span class="st">&#39;indicator&#39;</span>)  ) <span class="sc">%&gt;%</span></span>
+<span id="cb33-59"><a href="data-sources-1.html#cb33-59" tabindex="-1"></a>    <span class="fu">arrange</span>(date, iso3c)</span>
+<span id="cb33-60"><a href="data-sources-1.html#cb33-60" tabindex="-1"></a></span>
+<span id="cb33-61"><a href="data-sources-1.html#cb33-61" tabindex="-1"></a>    <span class="fu">assign</span>(<span class="fu">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
+<span id="cb33-62"><a href="data-sources-1.html#cb33-62" tabindex="-1"></a>  }</span>
+<span id="cb33-63"><a href="data-sources-1.html#cb33-63" tabindex="-1"></a></span>
+<span id="cb33-64"><a href="data-sources-1.html#cb33-64" tabindex="-1"></a>  temp <span class="ot">&lt;-</span> temp_2023</span>
+<span id="cb33-65"><a href="data-sources-1.html#cb33-65" tabindex="-1"></a>  </span>
+<span id="cb33-66"><a href="data-sources-1.html#cb33-66" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="sc">:</span><span class="dv">2022</span>) {</span>
+<span id="cb33-67"><a href="data-sources-1.html#cb33-67" tabindex="-1"></a>    temp <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(temp, <span class="fu">get</span>(<span class="fu">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>)))</span>
+<span id="cb33-68"><a href="data-sources-1.html#cb33-68" tabindex="-1"></a>  }</span>
+<span id="cb33-69"><a href="data-sources-1.html#cb33-69" tabindex="-1"></a>  temp</span>
+<span id="cb33-70"><a href="data-sources-1.html#cb33-70" tabindex="-1"></a>}</span>
 <span id="cb33-71"><a href="data-sources-1.html#cb33-71" tabindex="-1"></a></span>
-<span id="cb33-72"><a href="data-sources-1.html#cb33-72" tabindex="-1"></a>survey_fun  <span class="ot">&lt;-</span> <span class="cf">function</span>(data, input_var) {</span>
-<span id="cb33-73"><a href="data-sources-1.html#cb33-73" tabindex="-1"></a>  </span>
-<span id="cb33-74"><a href="data-sources-1.html#cb33-74" tabindex="-1"></a>  data <span class="ot">&lt;-</span> data</span>
-<span id="cb33-75"><a href="data-sources-1.html#cb33-75" tabindex="-1"></a>  input_var <span class="ot">&lt;-</span> input_var</span>
-<span id="cb33-76"><a href="data-sources-1.html#cb33-76" tabindex="-1"></a></span>
-<span id="cb33-77"><a href="data-sources-1.html#cb33-77" tabindex="-1"></a>  <span class="co">#read in csv file that was manually collected.</span></span>
-<span id="cb33-78"><a href="data-sources-1.html#cb33-78" tabindex="-1"></a>  cs_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="fu">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/raw/&#39;</span>, data, <span class="st">&quot;.2023.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span> )) <span class="sc">%&gt;%</span>        <span class="co">#add in 2020 manual data    </span></span>
-<span id="cb33-79"><a href="data-sources-1.html#cb33-79" tabindex="-1"></a>    <span class="fu">write_excel_csv</span>(<span class="at">path =</span> <span class="fu">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/&#39;</span>, data, <span class="st">&quot;_manual.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span> )) <span class="sc">%&gt;%</span></span>
-<span id="cb33-80"><a href="data-sources-1.html#cb33-80" tabindex="-1"></a>    <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb33-81"><a href="data-sources-1.html#cb33-81" tabindex="-1"></a>    <span class="fu">group_by</span>( iso3c) <span class="sc">%&gt;%</span> </span>
-<span id="cb33-82"><a href="data-sources-1.html#cb33-82" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">input_var =</span> <span class="sc">!!</span> input_var) <span class="sc">%&gt;%</span></span>
-<span id="cb33-83"><a href="data-sources-1.html#cb33-83" tabindex="-1"></a>    <span class="fu">nest</span>() <span class="sc">%&gt;%</span> <span class="co"># The next chunk of code will split our string with the years of the census (i.e. &quot;2000, 2010&quot;) in to separate rows.  We will then aggregate up.</span></span>
-<span id="cb33-84"><a href="data-sources-1.html#cb33-84" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb33-85"><a href="data-sources-1.html#cb33-85" tabindex="-1"></a>      <span class="at">temp_col =</span> <span class="fu">map</span>(</span>
-<span id="cb33-86"><a href="data-sources-1.html#cb33-86" tabindex="-1"></a>        data, </span>
-<span id="cb33-87"><a href="data-sources-1.html#cb33-87" tabindex="-1"></a>        <span class="sc">~</span> <span class="fu">str_extract_all</span>(.x<span class="sc">$</span>input_var, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">d{4}&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb33-88"><a href="data-sources-1.html#cb33-88" tabindex="-1"></a>          <span class="fu">flatten_chr</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb33-89"><a href="data-sources-1.html#cb33-89" tabindex="-1"></a>          <span class="fu">map_chr</span>(<span class="sc">~</span><span class="fu">return</span>(.x)) <span class="sc">%&gt;%</span> </span>
-<span id="cb33-90"><a href="data-sources-1.html#cb33-90" tabindex="-1"></a>          <span class="fu">as_tibble</span>()</span>
-<span id="cb33-91"><a href="data-sources-1.html#cb33-91" tabindex="-1"></a>      )</span>
-<span id="cb33-92"><a href="data-sources-1.html#cb33-92" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
-<span id="cb33-93"><a href="data-sources-1.html#cb33-93" tabindex="-1"></a>    <span class="fu">unnest</span>(<span class="at">keep_empty =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="co"># Now we have a database with the observations equal to Country*Census observations.  From here we can calculate latest census, etc.</span></span>
-<span id="cb33-94"><a href="data-sources-1.html#cb33-94" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">indicator_date=</span><span class="fu">as.numeric</span>(value)) <span class="sc">%&gt;%</span></span>
-<span id="cb33-95"><a href="data-sources-1.html#cb33-95" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">&#39;iso3c&#39;</span>,<span class="st">&#39;indicator_date&#39;</span>,<span class="st">&#39;input_var&#39;</span>)</span>
-<span id="cb33-96"><a href="data-sources-1.html#cb33-96" tabindex="-1"></a>  </span>
-<span id="cb33-97"><a href="data-sources-1.html#cb33-97" tabindex="-1"></a>  <span class="co">#append nada data on surveys</span></span>
-<span id="cb33-98"><a href="data-sources-1.html#cb33-98" tabindex="-1"></a>  cs_df <span class="ot">&lt;-</span> cs_df <span class="sc">%&gt;%</span></span>
-<span id="cb33-99"><a href="data-sources-1.html#cb33-99" tabindex="-1"></a>    <span class="fu">bind_rows</span>(<span class="fu">read_csv</span>(<span class="at">file =</span> <span class="fu">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/&#39;</span>, data, <span class="st">&quot;_NADA.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span> ),</span>
-<span id="cb33-100"><a href="data-sources-1.html#cb33-100" tabindex="-1"></a>                       <span class="at">col_types =</span> <span class="fu">list</span>(<span class="fu">col_character</span>(),<span class="fu">col_double</span>(), <span class="fu">col_character</span>())) <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(country_metadata)) <span class="sc">%&gt;%</span></span>
-<span id="cb33-101"><a href="data-sources-1.html#cb33-101" tabindex="-1"></a>    <span class="fu">group_by</span>(iso3c, indicator_date) <span class="sc">%&gt;%</span></span>
-<span id="cb33-102"><a href="data-sources-1.html#cb33-102" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">input_var=</span><span class="fu">first</span>(<span class="fu">na.omit</span>(input_var)  ),</span>
-<span id="cb33-103"><a href="data-sources-1.html#cb33-103" tabindex="-1"></a>            <span class="at">nada_dates=</span><span class="fu">first</span>(<span class="fu">na.omit</span>(nada_dates)  ) </span>
-<span id="cb33-104"><a href="data-sources-1.html#cb33-104" tabindex="-1"></a>             ) <span class="sc">%&gt;%</span></span>
-<span id="cb33-105"><a href="data-sources-1.html#cb33-105" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">indicator_date=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(indicator_date),<span class="sc">-</span><span class="dv">99</span>,indicator_date))</span>
-<span id="cb33-106"><a href="data-sources-1.html#cb33-106" tabindex="-1"></a>    </span>
-<span id="cb33-107"><a href="data-sources-1.html#cb33-107" tabindex="-1"></a>  </span>
-<span id="cb33-108"><a href="data-sources-1.html#cb33-108" tabindex="-1"></a>  <span class="co">#Now calculate our SPI score for this indicator</span></span>
-<span id="cb33-109"><a href="data-sources-1.html#cb33-109" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="sc">:</span>end_date) {</span>
-<span id="cb33-110"><a href="data-sources-1.html#cb33-110" tabindex="-1"></a>   temp <span class="ot">&lt;-</span> cs_df <span class="sc">%&gt;%</span></span>
-<span id="cb33-111"><a href="data-sources-1.html#cb33-111" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">date=</span>i) <span class="sc">%&gt;%</span></span>
-<span id="cb33-112"><a href="data-sources-1.html#cb33-112" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">window=</span><span class="fu">case_when</span>( <span class="co">#extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period</span></span>
-<span id="cb33-113"><a href="data-sources-1.html#cb33-113" tabindex="-1"></a>      date<span class="sc">==</span>end_date <span class="sc">~</span> <span class="dv">12</span>,</span>
-<span id="cb33-114"><a href="data-sources-1.html#cb33-114" tabindex="-1"></a>      date<span class="sc">==</span>(end_date<span class="dv">-1</span>) <span class="sc">~</span> <span class="dv">11</span>,</span>
-<span id="cb33-115"><a href="data-sources-1.html#cb33-115" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">10</span></span>
-<span id="cb33-116"><a href="data-sources-1.html#cb33-116" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span></span>
-<span id="cb33-117"><a href="data-sources-1.html#cb33-117" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">recency_indicator=</span>((date<span class="sc">-</span>indicator_date<span class="sc">&lt;=</span>window) <span class="sc">&amp;</span> (date<span class="sc">-</span>indicator_date<span class="sc">&gt;=</span><span class="dv">0</span>)) ) <span class="sc">%&gt;%</span> <span class="co">#restrict to surveys inside 10 year period </span></span>
-<span id="cb33-118"><a href="data-sources-1.html#cb33-118" tabindex="-1"></a>    <span class="fu">group_by</span>( iso3c, date) <span class="sc">%&gt;%</span> <span class="co">#group by country and create indicator for how many surveys over 10 year period</span></span>
-<span id="cb33-119"><a href="data-sources-1.html#cb33-119" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">indicator=</span><span class="fu">case_when</span>(</span>
-<span id="cb33-120"><a href="data-sources-1.html#cb33-120" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">&gt;=</span><span class="dv">3</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
-<span id="cb33-121"><a href="data-sources-1.html#cb33-121" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">==</span><span class="dv">2</span> <span class="sc">~</span> <span class="fl">0.67</span>, </span>
-<span id="cb33-122"><a href="data-sources-1.html#cb33-122" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="fl">0.33</span>, </span>
-<span id="cb33-123"><a href="data-sources-1.html#cb33-123" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> ),</span>
-<span id="cb33-124"><a href="data-sources-1.html#cb33-124" tabindex="-1"></a>      <span class="at">input_var=</span><span class="fu">paste</span>(<span class="fu">unique</span>(indicator_date), <span class="at">collapse=</span><span class="st">&quot;, &quot;</span>),</span>
-<span id="cb33-125"><a href="data-sources-1.html#cb33-125" tabindex="-1"></a>      <span class="at">nada_dates=</span><span class="fu">first</span>(nada_dates)) <span class="sc">%&gt;%</span></span>
-<span id="cb33-126"><a href="data-sources-1.html#cb33-126" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb33-127"><a href="data-sources-1.html#cb33-127" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>( <span class="st">&#39;iso3c&#39;</span>, <span class="st">&#39;date&#39;</span>, <span class="st">&#39;input_var&#39;</span>,<span class="st">&#39;nada_dates&#39;</span>, <span class="st">&#39;indicator&#39;</span>)  ) <span class="sc">%&gt;%</span></span>
-<span id="cb33-128"><a href="data-sources-1.html#cb33-128" tabindex="-1"></a>  <span class="fu">arrange</span>(date, iso3c)</span>
-<span id="cb33-129"><a href="data-sources-1.html#cb33-129" tabindex="-1"></a></span>
-<span id="cb33-130"><a href="data-sources-1.html#cb33-130" tabindex="-1"></a>    <span class="fu">assign</span>(<span class="fu">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
-<span id="cb33-131"><a href="data-sources-1.html#cb33-131" tabindex="-1"></a>  }</span>
-<span id="cb33-132"><a href="data-sources-1.html#cb33-132" tabindex="-1"></a></span>
-<span id="cb33-133"><a href="data-sources-1.html#cb33-133" tabindex="-1"></a>  temp <span class="ot">&lt;-</span> temp_2023</span>
-<span id="cb33-134"><a href="data-sources-1.html#cb33-134" tabindex="-1"></a>  </span>
-<span id="cb33-135"><a href="data-sources-1.html#cb33-135" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="sc">:</span><span class="dv">2022</span>) {</span>
-<span id="cb33-136"><a href="data-sources-1.html#cb33-136" tabindex="-1"></a>    temp <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(temp, <span class="fu">get</span>(<span class="fu">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>)))</span>
-<span id="cb33-137"><a href="data-sources-1.html#cb33-137" tabindex="-1"></a>  }</span>
-<span id="cb33-138"><a href="data-sources-1.html#cb33-138" tabindex="-1"></a>  temp</span>
-<span id="cb33-139"><a href="data-sources-1.html#cb33-139" tabindex="-1"></a>}</span>
-<span id="cb33-140"><a href="data-sources-1.html#cb33-140" tabindex="-1"></a></span>
-<span id="cb33-141"><a href="data-sources-1.html#cb33-141" tabindex="-1"></a></span>
-<span id="cb33-142"><a href="data-sources-1.html#cb33-142" tabindex="-1"></a><span class="co">#Population Censuses</span></span>
-<span id="cb33-143"><a href="data-sources-1.html#cb33-143" tabindex="-1"></a>cs1_df <span class="ot">&lt;-</span><span class="fu">census_fun</span>(<span class="st">&#39;D4.1.1.CEN.POPU&#39;</span>, <span class="st">&#39;POP.CENSUS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-144"><a href="data-sources-1.html#cb33-144" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.1.POPU=</span>input_var,</span>
-<span id="cb33-145"><a href="data-sources-1.html#cb33-145" tabindex="-1"></a>         <span class="at">SPI.D4.1.1.POPU=</span>indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb33-146"><a href="data-sources-1.html#cb33-146" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
-<span id="cb33-147"><a href="data-sources-1.html#cb33-147" tabindex="-1"></a></span>
-<span id="cb33-148"><a href="data-sources-1.html#cb33-148" tabindex="-1"></a><span class="co">#Agriculture census  </span></span>
-<span id="cb33-149"><a href="data-sources-1.html#cb33-149" tabindex="-1"></a>cs2_df <span class="ot">&lt;-</span><span class="fu">census_fun</span>(<span class="st">&#39;D4.1.2.CEN.AGRI&#39;</span>, <span class="st">&#39;AGRI.CENSUS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-150"><a href="data-sources-1.html#cb33-150" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.2.AGRI=</span>input_var,</span>
-<span id="cb33-151"><a href="data-sources-1.html#cb33-151" tabindex="-1"></a>         <span class="at">SPI.D4.1.2.AGRI=</span>indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb33-152"><a href="data-sources-1.html#cb33-152" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
-<span id="cb33-153"><a href="data-sources-1.html#cb33-153" tabindex="-1"></a></span>
-<span id="cb33-154"><a href="data-sources-1.html#cb33-154" tabindex="-1"></a></span>
-<span id="cb33-155"><a href="data-sources-1.html#cb33-155" tabindex="-1"></a></span>
-<span id="cb33-156"><a href="data-sources-1.html#cb33-156" tabindex="-1"></a><span class="co">#Business/establishment census </span></span>
-<span id="cb33-157"><a href="data-sources-1.html#cb33-157" tabindex="-1"></a>cs3_df <span class="ot">&lt;-</span><span class="fu">census_fun</span>(<span class="st">&#39;D4.1.3.CEN.BIZZ&#39;</span>, <span class="st">&#39;BIZZ.CENSUS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-158"><a href="data-sources-1.html#cb33-158" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.3.BIZZ=</span>input_var,</span>
-<span id="cb33-159"><a href="data-sources-1.html#cb33-159" tabindex="-1"></a>         <span class="at">RAW.D4.1.3.BIZZ.CENSUS_nada=</span>nada_dates,</span>
-<span id="cb33-160"><a href="data-sources-1.html#cb33-160" tabindex="-1"></a>         <span class="at">SPI.D4.1.3.BIZZ=</span>indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb33-161"><a href="data-sources-1.html#cb33-161" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>)) </span>
-<span id="cb33-162"><a href="data-sources-1.html#cb33-162" tabindex="-1"></a></span>
-<span id="cb33-163"><a href="data-sources-1.html#cb33-163" tabindex="-1"></a><span class="co">#Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey</span></span>
-<span id="cb33-164"><a href="data-sources-1.html#cb33-164" tabindex="-1"></a>cs4_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.4.SVY.HOUS&#39;</span>, <span class="st">&#39;HOUS.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-165"><a href="data-sources-1.html#cb33-165" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.4.HOUS=</span>input_var,</span>
-<span id="cb33-166"><a href="data-sources-1.html#cb33-166" tabindex="-1"></a>         <span class="at">RAW.D4.1.4.HOUS.SURVEYS_nada=</span>nada_dates,</span>
-<span id="cb33-167"><a href="data-sources-1.html#cb33-167" tabindex="-1"></a>         <span class="at">SPI.D4.1.4.HOUS=</span>indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb33-168"><a href="data-sources-1.html#cb33-168" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb33-169"><a href="data-sources-1.html#cb33-169" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb33-170"><a href="data-sources-1.html#cb33-170" tabindex="-1"></a>    <span class="co">#adjust score for India. India has a poverty survey that is not produced by the national statistical office that is included in PIP.  Because it is produced by a private company that charges money for the survey, rather than produced by the NSO, it does not count</span></span>
-<span id="cb33-171"><a href="data-sources-1.html#cb33-171" tabindex="-1"></a>    <span class="at">SPI.D4.1.4.HOUS=</span><span class="fu">if_else</span>((iso3c<span class="sc">==</span><span class="st">&quot;IND&quot;</span> <span class="sc">&amp;</span> date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2015</span><span class="sc">:</span><span class="dv">2023</span>)),<span class="dv">0</span>,SPI.D4.<span class="dv">1</span>.<span class="fl">4.</span>HOUS),</span>
-<span id="cb33-172"><a href="data-sources-1.html#cb33-172" tabindex="-1"></a>    <span class="at">RAW.D4.1.4.HOUS.SURVEYS_nada=</span><span class="fu">if_else</span>((iso3c<span class="sc">==</span><span class="st">&quot;IND&quot;</span> <span class="sc">&amp;</span> date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2015</span><span class="sc">:</span><span class="dv">2023</span>)), <span class="st">&quot;1977, 1983, 1987, 1993, 2004, 2009, 2011&quot;</span>,RAW.D4.<span class="dv">1</span>.<span class="fl">4.</span>HOUS.SURVEYS_nada),</span>
-<span id="cb33-173"><a href="data-sources-1.html#cb33-173" tabindex="-1"></a>    <span class="at">RAW.D4.1.4.HOUS=</span><span class="fu">if_else</span>((iso3c<span class="sc">==</span><span class="st">&quot;IND&quot;</span> <span class="sc">&amp;</span> date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2015</span><span class="sc">:</span><span class="dv">2023</span>)), <span class="st">&quot;1977, 1983, 1987, 1993, 2004, 2009, 2011&quot;</span>,RAW.D4.<span class="dv">1</span>.<span class="fl">4.</span>HOUS)</span>
-<span id="cb33-174"><a href="data-sources-1.html#cb33-174" tabindex="-1"></a>  )</span>
-<span id="cb33-175"><a href="data-sources-1.html#cb33-175" tabindex="-1"></a></span>
-<span id="cb33-176"><a href="data-sources-1.html#cb33-176" tabindex="-1"></a><span class="co">#Agriculture survey </span></span>
-<span id="cb33-177"><a href="data-sources-1.html#cb33-177" tabindex="-1"></a>cs5_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.5.SVY.AGRI&#39;</span>, <span class="st">&#39;AGRI.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-178"><a href="data-sources-1.html#cb33-178" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.5.AGSVY=</span>input_var,</span>
-<span id="cb33-179"><a href="data-sources-1.html#cb33-179" tabindex="-1"></a>         <span class="at">RAW.D4.1.5.AGRI.SURVEYS_nada=</span>nada_dates,</span>
-<span id="cb33-180"><a href="data-sources-1.html#cb33-180" tabindex="-1"></a>         <span class="at">SPI.D4.1.5.AGSVY=</span>indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb33-181"><a href="data-sources-1.html#cb33-181" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
-<span id="cb33-182"><a href="data-sources-1.html#cb33-182" tabindex="-1"></a></span>
-<span id="cb33-183"><a href="data-sources-1.html#cb33-183" tabindex="-1"></a><span class="co">#Labor Force Survey </span></span>
-<span id="cb33-184"><a href="data-sources-1.html#cb33-184" tabindex="-1"></a>cs6_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.6.SVY.LABR&#39;</span>, <span class="st">&#39;LABR.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-185"><a href="data-sources-1.html#cb33-185" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.6.LABR=</span>input_var,</span>
-<span id="cb33-186"><a href="data-sources-1.html#cb33-186" tabindex="-1"></a>         <span class="at">RAW.D4.1.6.LABR.SURVEYS_nada=</span>nada_dates,</span>
-<span id="cb33-187"><a href="data-sources-1.html#cb33-187" tabindex="-1"></a>         <span class="at">SPI.D4.1.6.LABR=</span>indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb33-188"><a href="data-sources-1.html#cb33-188" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
-<span id="cb33-189"><a href="data-sources-1.html#cb33-189" tabindex="-1"></a></span>
-<span id="cb33-190"><a href="data-sources-1.html#cb33-190" tabindex="-1"></a><span class="co">#Health/Demographic survey</span></span>
-<span id="cb33-191"><a href="data-sources-1.html#cb33-191" tabindex="-1"></a>cs7_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.7.SVY.HLTH&#39;</span>, <span class="st">&#39;HLTH.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-192"><a href="data-sources-1.html#cb33-192" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.7.HLTH=</span>input_var,</span>
-<span id="cb33-193"><a href="data-sources-1.html#cb33-193" tabindex="-1"></a>         <span class="at">RAW.D4.1.7.HLTH.SURVEYS_nada=</span>nada_dates,</span>
-<span id="cb33-194"><a href="data-sources-1.html#cb33-194" tabindex="-1"></a>         <span class="at">SPI.D4.1.7.HLTH=</span>indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb33-195"><a href="data-sources-1.html#cb33-195" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
-<span id="cb33-196"><a href="data-sources-1.html#cb33-196" tabindex="-1"></a></span>
-<span id="cb33-197"><a href="data-sources-1.html#cb33-197" tabindex="-1"></a><span class="co">#Business/establishment survey  </span></span>
-<span id="cb33-198"><a href="data-sources-1.html#cb33-198" tabindex="-1"></a>cs8_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.8.SVY.BIZZ&#39;</span>, <span class="st">&#39;BIZZ.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-199"><a href="data-sources-1.html#cb33-199" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.8.BZSVY=</span>input_var,</span>
-<span id="cb33-200"><a href="data-sources-1.html#cb33-200" tabindex="-1"></a>         <span class="at">RAW.D4.1.8.BIZZ.SURVEYS_nada=</span>nada_dates,</span>
-<span id="cb33-201"><a href="data-sources-1.html#cb33-201" tabindex="-1"></a>         <span class="at">SPI.D4.1.8.BZSVY=</span>indicator) <span class="sc">%&gt;%</span></span>
-<span id="cb33-202"><a href="data-sources-1.html#cb33-202" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
-<span id="cb33-203"><a href="data-sources-1.html#cb33-203" tabindex="-1"></a></span>
-<span id="cb33-204"><a href="data-sources-1.html#cb33-204" tabindex="-1"></a></span>
-<span id="cb33-205"><a href="data-sources-1.html#cb33-205" tabindex="-1"></a><span class="co">#brind all censuses and surveys together</span></span>
-<span id="cb33-206"><a href="data-sources-1.html#cb33-206" tabindex="-1"></a>cs_df <span class="ot">&lt;-</span> spi_df_empty <span class="sc">%&gt;%</span></span>
-<span id="cb33-207"><a href="data-sources-1.html#cb33-207" tabindex="-1"></a>  <span class="fu">left_join</span>(cs1_df) <span class="sc">%&gt;%</span></span>
-<span id="cb33-208"><a href="data-sources-1.html#cb33-208" tabindex="-1"></a>  <span class="fu">left_join</span>(cs2_df) <span class="sc">%&gt;%</span></span>
-<span id="cb33-209"><a href="data-sources-1.html#cb33-209" tabindex="-1"></a>  <span class="fu">left_join</span>(cs3_df) <span class="sc">%&gt;%</span></span>
-<span id="cb33-210"><a href="data-sources-1.html#cb33-210" tabindex="-1"></a>  <span class="fu">left_join</span>(cs4_df) <span class="sc">%&gt;%</span></span>
-<span id="cb33-211"><a href="data-sources-1.html#cb33-211" tabindex="-1"></a>  <span class="fu">left_join</span>(cs5_df) <span class="sc">%&gt;%</span></span>
-<span id="cb33-212"><a href="data-sources-1.html#cb33-212" tabindex="-1"></a>  <span class="fu">left_join</span>(cs6_df) <span class="sc">%&gt;%</span></span>
-<span id="cb33-213"><a href="data-sources-1.html#cb33-213" tabindex="-1"></a>  <span class="fu">left_join</span>(cs7_df) <span class="sc">%&gt;%</span></span>
-<span id="cb33-214"><a href="data-sources-1.html#cb33-214" tabindex="-1"></a>  <span class="fu">left_join</span>(cs8_df) </span>
-<span id="cb33-215"><a href="data-sources-1.html#cb33-215" tabindex="-1"></a></span>
-<span id="cb33-216"><a href="data-sources-1.html#cb33-216" tabindex="-1"></a><span class="co">#add to spi databases</span></span>
-<span id="cb33-217"><a href="data-sources-1.html#cb33-217" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
-<span id="cb33-218"><a href="data-sources-1.html#cb33-218" tabindex="-1"></a>  <span class="fu">left_join</span>(cs_df)</span>
+<span id="cb33-72"><a href="data-sources-1.html#cb33-72" tabindex="-1"></a></span>
+<span id="cb33-73"><a href="data-sources-1.html#cb33-73" tabindex="-1"></a></span>
+<span id="cb33-74"><a href="data-sources-1.html#cb33-74" tabindex="-1"></a>survey_fun  <span class="ot">&lt;-</span> <span class="cf">function</span>(data, input_var) {</span>
+<span id="cb33-75"><a href="data-sources-1.html#cb33-75" tabindex="-1"></a>  </span>
+<span id="cb33-76"><a href="data-sources-1.html#cb33-76" tabindex="-1"></a>  data <span class="ot">&lt;-</span> data</span>
+<span id="cb33-77"><a href="data-sources-1.html#cb33-77" tabindex="-1"></a>  input_var <span class="ot">&lt;-</span> input_var</span>
+<span id="cb33-78"><a href="data-sources-1.html#cb33-78" tabindex="-1"></a></span>
+<span id="cb33-79"><a href="data-sources-1.html#cb33-79" tabindex="-1"></a>  <span class="co">#read in csv file that was manually collected.</span></span>
+<span id="cb33-80"><a href="data-sources-1.html#cb33-80" tabindex="-1"></a>  cs_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="fu">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/raw/&#39;</span>, data, <span class="st">&quot;.2023.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span> )) <span class="sc">%&gt;%</span>        <span class="co">#add in 2020 manual data    </span></span>
+<span id="cb33-81"><a href="data-sources-1.html#cb33-81" tabindex="-1"></a>    <span class="fu">write_excel_csv</span>(<span class="at">path =</span> <span class="fu">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/&#39;</span>, data, <span class="st">&quot;_manual.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span> )) <span class="sc">%&gt;%</span></span>
+<span id="cb33-82"><a href="data-sources-1.html#cb33-82" tabindex="-1"></a>    <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb33-83"><a href="data-sources-1.html#cb33-83" tabindex="-1"></a>    <span class="fu">group_by</span>( iso3c) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-84"><a href="data-sources-1.html#cb33-84" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">input_var =</span> <span class="sc">!!</span> input_var) <span class="sc">%&gt;%</span></span>
+<span id="cb33-85"><a href="data-sources-1.html#cb33-85" tabindex="-1"></a>    <span class="fu">nest</span>() <span class="sc">%&gt;%</span> <span class="co"># The next chunk of code will split our string with the years of the census (i.e. &quot;2000, 2010&quot;) in to separate rows.  We will then aggregate up.</span></span>
+<span id="cb33-86"><a href="data-sources-1.html#cb33-86" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb33-87"><a href="data-sources-1.html#cb33-87" tabindex="-1"></a>      <span class="at">temp_col =</span> <span class="fu">map</span>(</span>
+<span id="cb33-88"><a href="data-sources-1.html#cb33-88" tabindex="-1"></a>        data, </span>
+<span id="cb33-89"><a href="data-sources-1.html#cb33-89" tabindex="-1"></a>        <span class="sc">~</span> <span class="fu">str_extract_all</span>(.x<span class="sc">$</span>input_var, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">d{4}&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-90"><a href="data-sources-1.html#cb33-90" tabindex="-1"></a>          <span class="fu">flatten_chr</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb33-91"><a href="data-sources-1.html#cb33-91" tabindex="-1"></a>          <span class="fu">map_chr</span>(<span class="sc">~</span><span class="fu">return</span>(.x)) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-92"><a href="data-sources-1.html#cb33-92" tabindex="-1"></a>          <span class="fu">as_tibble</span>()</span>
+<span id="cb33-93"><a href="data-sources-1.html#cb33-93" tabindex="-1"></a>      )</span>
+<span id="cb33-94"><a href="data-sources-1.html#cb33-94" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-95"><a href="data-sources-1.html#cb33-95" tabindex="-1"></a>    <span class="fu">unnest</span>(<span class="at">keep_empty =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="co"># Now we have a database with the observations equal to Country*Census observations.  From here we can calculate latest census, etc.</span></span>
+<span id="cb33-96"><a href="data-sources-1.html#cb33-96" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">indicator_date=</span><span class="fu">as.numeric</span>(value)) <span class="sc">%&gt;%</span></span>
+<span id="cb33-97"><a href="data-sources-1.html#cb33-97" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">&#39;iso3c&#39;</span>,<span class="st">&#39;indicator_date&#39;</span>,<span class="st">&#39;input_var&#39;</span>)</span>
+<span id="cb33-98"><a href="data-sources-1.html#cb33-98" tabindex="-1"></a>  </span>
+<span id="cb33-99"><a href="data-sources-1.html#cb33-99" tabindex="-1"></a>  <span class="co">#append nada data on surveys</span></span>
+<span id="cb33-100"><a href="data-sources-1.html#cb33-100" tabindex="-1"></a>  cs_df <span class="ot">&lt;-</span> cs_df <span class="sc">%&gt;%</span></span>
+<span id="cb33-101"><a href="data-sources-1.html#cb33-101" tabindex="-1"></a>    <span class="fu">bind_rows</span>(<span class="fu">read_csv</span>(<span class="at">file =</span> <span class="fu">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/&#39;</span>, data, <span class="st">&quot;_NADA.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span> ),</span>
+<span id="cb33-102"><a href="data-sources-1.html#cb33-102" tabindex="-1"></a>                       <span class="at">col_types =</span> <span class="fu">list</span>(<span class="fu">col_character</span>(),<span class="fu">col_double</span>(), <span class="fu">col_character</span>())) <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(country_metadata)) <span class="sc">%&gt;%</span></span>
+<span id="cb33-103"><a href="data-sources-1.html#cb33-103" tabindex="-1"></a>    <span class="fu">group_by</span>(iso3c, indicator_date) <span class="sc">%&gt;%</span></span>
+<span id="cb33-104"><a href="data-sources-1.html#cb33-104" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">input_var=</span><span class="fu">first</span>(<span class="fu">na.omit</span>(input_var)  ),</span>
+<span id="cb33-105"><a href="data-sources-1.html#cb33-105" tabindex="-1"></a>            <span class="at">nada_dates=</span><span class="fu">first</span>(<span class="fu">na.omit</span>(nada_dates)  ) </span>
+<span id="cb33-106"><a href="data-sources-1.html#cb33-106" tabindex="-1"></a>             ) <span class="sc">%&gt;%</span></span>
+<span id="cb33-107"><a href="data-sources-1.html#cb33-107" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">indicator_date=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(indicator_date),<span class="sc">-</span><span class="dv">99</span>,indicator_date))</span>
+<span id="cb33-108"><a href="data-sources-1.html#cb33-108" tabindex="-1"></a> </span>
+<span id="cb33-109"><a href="data-sources-1.html#cb33-109" tabindex="-1"></a>    <span class="co">#save this intermediate dataset as csv</span></span>
+<span id="cb33-110"><a href="data-sources-1.html#cb33-110" tabindex="-1"></a>    <span class="fu">write_excel_csv</span>(cs_df, <span class="at">path =</span> <span class="fu">paste</span>(raw_dir, <span class="st">&#39;/4.1_SOCS/&#39;</span>, data, <span class="st">&quot;_annual.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span> ))   </span>
+<span id="cb33-111"><a href="data-sources-1.html#cb33-111" tabindex="-1"></a>  </span>
+<span id="cb33-112"><a href="data-sources-1.html#cb33-112" tabindex="-1"></a>  <span class="co">#Now calculate our SPI score for this indicator</span></span>
+<span id="cb33-113"><a href="data-sources-1.html#cb33-113" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="sc">:</span>end_date) {</span>
+<span id="cb33-114"><a href="data-sources-1.html#cb33-114" tabindex="-1"></a>   temp <span class="ot">&lt;-</span> cs_df <span class="sc">%&gt;%</span></span>
+<span id="cb33-115"><a href="data-sources-1.html#cb33-115" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">date=</span>i) <span class="sc">%&gt;%</span></span>
+<span id="cb33-116"><a href="data-sources-1.html#cb33-116" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">window=</span><span class="fu">case_when</span>( <span class="co">#extend the window for more recent years.  For instance, 2019 surveys are reported with a lag, so give them two year grace period</span></span>
+<span id="cb33-117"><a href="data-sources-1.html#cb33-117" tabindex="-1"></a>      date<span class="sc">==</span>end_date <span class="sc">~</span> <span class="dv">12</span>,</span>
+<span id="cb33-118"><a href="data-sources-1.html#cb33-118" tabindex="-1"></a>      date<span class="sc">==</span>(end_date<span class="dv">-1</span>) <span class="sc">~</span> <span class="dv">11</span>,</span>
+<span id="cb33-119"><a href="data-sources-1.html#cb33-119" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">10</span></span>
+<span id="cb33-120"><a href="data-sources-1.html#cb33-120" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span></span>
+<span id="cb33-121"><a href="data-sources-1.html#cb33-121" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">recency_indicator=</span>((date<span class="sc">-</span>indicator_date<span class="sc">&lt;=</span>window) <span class="sc">&amp;</span> (date<span class="sc">-</span>indicator_date<span class="sc">&gt;=</span><span class="dv">0</span>)) ) <span class="sc">%&gt;%</span> <span class="co">#restrict to surveys inside 10 year period </span></span>
+<span id="cb33-122"><a href="data-sources-1.html#cb33-122" tabindex="-1"></a>    <span class="fu">group_by</span>( iso3c, date) <span class="sc">%&gt;%</span> <span class="co">#group by country and create indicator for how many surveys over 10 year period</span></span>
+<span id="cb33-123"><a href="data-sources-1.html#cb33-123" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">indicator=</span><span class="fu">case_when</span>(</span>
+<span id="cb33-124"><a href="data-sources-1.html#cb33-124" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">&gt;=</span><span class="dv">3</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb33-125"><a href="data-sources-1.html#cb33-125" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">==</span><span class="dv">2</span> <span class="sc">~</span> <span class="fl">0.67</span>, </span>
+<span id="cb33-126"><a href="data-sources-1.html#cb33-126" tabindex="-1"></a>      <span class="fu">sum</span>(recency_indicator)<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="fl">0.33</span>, </span>
+<span id="cb33-127"><a href="data-sources-1.html#cb33-127" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> ),</span>
+<span id="cb33-128"><a href="data-sources-1.html#cb33-128" tabindex="-1"></a>      <span class="at">input_var=</span><span class="fu">paste</span>(<span class="fu">unique</span>(indicator_date), <span class="at">collapse=</span><span class="st">&quot;, &quot;</span>),</span>
+<span id="cb33-129"><a href="data-sources-1.html#cb33-129" tabindex="-1"></a>      <span class="at">nada_dates=</span><span class="fu">first</span>(nada_dates)) <span class="sc">%&gt;%</span></span>
+<span id="cb33-130"><a href="data-sources-1.html#cb33-130" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb33-131"><a href="data-sources-1.html#cb33-131" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>( <span class="st">&#39;iso3c&#39;</span>, <span class="st">&#39;date&#39;</span>, <span class="st">&#39;input_var&#39;</span>,<span class="st">&#39;nada_dates&#39;</span>, <span class="st">&#39;indicator&#39;</span>)  ) <span class="sc">%&gt;%</span></span>
+<span id="cb33-132"><a href="data-sources-1.html#cb33-132" tabindex="-1"></a>  <span class="fu">arrange</span>(date, iso3c)</span>
+<span id="cb33-133"><a href="data-sources-1.html#cb33-133" tabindex="-1"></a></span>
+<span id="cb33-134"><a href="data-sources-1.html#cb33-134" tabindex="-1"></a>    <span class="fu">assign</span>(<span class="fu">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>), temp)</span>
+<span id="cb33-135"><a href="data-sources-1.html#cb33-135" tabindex="-1"></a>  }</span>
+<span id="cb33-136"><a href="data-sources-1.html#cb33-136" tabindex="-1"></a></span>
+<span id="cb33-137"><a href="data-sources-1.html#cb33-137" tabindex="-1"></a>  temp <span class="ot">&lt;-</span> temp_2023</span>
+<span id="cb33-138"><a href="data-sources-1.html#cb33-138" tabindex="-1"></a>  </span>
+<span id="cb33-139"><a href="data-sources-1.html#cb33-139" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2004</span><span class="sc">:</span><span class="dv">2022</span>) {</span>
+<span id="cb33-140"><a href="data-sources-1.html#cb33-140" tabindex="-1"></a>    temp <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(temp, <span class="fu">get</span>(<span class="fu">paste</span>(<span class="st">&#39;temp&#39;</span>,i,<span class="at">sep=</span><span class="st">&quot;_&quot;</span>)))</span>
+<span id="cb33-141"><a href="data-sources-1.html#cb33-141" tabindex="-1"></a>  }</span>
+<span id="cb33-142"><a href="data-sources-1.html#cb33-142" tabindex="-1"></a>  temp</span>
+<span id="cb33-143"><a href="data-sources-1.html#cb33-143" tabindex="-1"></a>}</span>
+<span id="cb33-144"><a href="data-sources-1.html#cb33-144" tabindex="-1"></a></span>
+<span id="cb33-145"><a href="data-sources-1.html#cb33-145" tabindex="-1"></a></span>
+<span id="cb33-146"><a href="data-sources-1.html#cb33-146" tabindex="-1"></a><span class="co">#Population Censuses</span></span>
+<span id="cb33-147"><a href="data-sources-1.html#cb33-147" tabindex="-1"></a>cs1_df <span class="ot">&lt;-</span><span class="fu">census_fun</span>(<span class="st">&#39;D4.1.1.CEN.POPU&#39;</span>, <span class="st">&#39;POP.CENSUS&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-148"><a href="data-sources-1.html#cb33-148" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.1.POPU=</span>input_var,</span>
+<span id="cb33-149"><a href="data-sources-1.html#cb33-149" tabindex="-1"></a>         <span class="at">SPI.D4.1.1.POPU=</span>indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb33-150"><a href="data-sources-1.html#cb33-150" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb33-151"><a href="data-sources-1.html#cb33-151" tabindex="-1"></a></span>
+<span id="cb33-152"><a href="data-sources-1.html#cb33-152" tabindex="-1"></a><span class="co">#Agriculture census  </span></span>
+<span id="cb33-153"><a href="data-sources-1.html#cb33-153" tabindex="-1"></a>cs2_df <span class="ot">&lt;-</span><span class="fu">census_fun</span>(<span class="st">&#39;D4.1.2.CEN.AGRI&#39;</span>, <span class="st">&#39;AGRI.CENSUS&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-154"><a href="data-sources-1.html#cb33-154" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.2.AGRI=</span>input_var,</span>
+<span id="cb33-155"><a href="data-sources-1.html#cb33-155" tabindex="-1"></a>         <span class="at">SPI.D4.1.2.AGRI=</span>indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb33-156"><a href="data-sources-1.html#cb33-156" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb33-157"><a href="data-sources-1.html#cb33-157" tabindex="-1"></a></span>
+<span id="cb33-158"><a href="data-sources-1.html#cb33-158" tabindex="-1"></a></span>
+<span id="cb33-159"><a href="data-sources-1.html#cb33-159" tabindex="-1"></a></span>
+<span id="cb33-160"><a href="data-sources-1.html#cb33-160" tabindex="-1"></a><span class="co">#Business/establishment census </span></span>
+<span id="cb33-161"><a href="data-sources-1.html#cb33-161" tabindex="-1"></a>cs3_df <span class="ot">&lt;-</span><span class="fu">census_fun</span>(<span class="st">&#39;D4.1.3.CEN.BIZZ&#39;</span>, <span class="st">&#39;BIZZ.CENSUS&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-162"><a href="data-sources-1.html#cb33-162" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.3.BIZZ=</span>input_var,</span>
+<span id="cb33-163"><a href="data-sources-1.html#cb33-163" tabindex="-1"></a>         <span class="at">RAW.D4.1.3.BIZZ.CENSUS_nada=</span>nada_dates,</span>
+<span id="cb33-164"><a href="data-sources-1.html#cb33-164" tabindex="-1"></a>         <span class="at">SPI.D4.1.3.BIZZ=</span>indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb33-165"><a href="data-sources-1.html#cb33-165" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>)) </span>
+<span id="cb33-166"><a href="data-sources-1.html#cb33-166" tabindex="-1"></a></span>
+<span id="cb33-167"><a href="data-sources-1.html#cb33-167" tabindex="-1"></a><span class="co">#Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey</span></span>
+<span id="cb33-168"><a href="data-sources-1.html#cb33-168" tabindex="-1"></a>cs4_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.4.SVY.HOUS&#39;</span>, <span class="st">&#39;HOUS.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-169"><a href="data-sources-1.html#cb33-169" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.4.HOUS=</span>input_var,</span>
+<span id="cb33-170"><a href="data-sources-1.html#cb33-170" tabindex="-1"></a>         <span class="at">RAW.D4.1.4.HOUS.SURVEYS_nada=</span>nada_dates,</span>
+<span id="cb33-171"><a href="data-sources-1.html#cb33-171" tabindex="-1"></a>         <span class="at">SPI.D4.1.4.HOUS=</span>indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb33-172"><a href="data-sources-1.html#cb33-172" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb33-173"><a href="data-sources-1.html#cb33-173" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-174"><a href="data-sources-1.html#cb33-174" tabindex="-1"></a>    <span class="co">#adjust score for India. India has a poverty survey that is not produced by the national statistical office that is included in PIP.  Because it is produced by a private company that charges money for the survey, rather than produced by the NSO, it does not count</span></span>
+<span id="cb33-175"><a href="data-sources-1.html#cb33-175" tabindex="-1"></a>    <span class="at">SPI.D4.1.4.HOUS=</span><span class="fu">if_else</span>((iso3c<span class="sc">==</span><span class="st">&quot;IND&quot;</span> <span class="sc">&amp;</span> date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2015</span><span class="sc">:</span><span class="dv">2023</span>)),<span class="dv">0</span>,SPI.D4.<span class="dv">1</span>.<span class="fl">4.</span>HOUS),</span>
+<span id="cb33-176"><a href="data-sources-1.html#cb33-176" tabindex="-1"></a>    <span class="at">RAW.D4.1.4.HOUS.SURVEYS_nada=</span><span class="fu">if_else</span>((iso3c<span class="sc">==</span><span class="st">&quot;IND&quot;</span> <span class="sc">&amp;</span> date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2015</span><span class="sc">:</span><span class="dv">2023</span>)), <span class="st">&quot;1977, 1983, 1987, 1993, 2004, 2009, 2011&quot;</span>,RAW.D4.<span class="dv">1</span>.<span class="fl">4.</span>HOUS.SURVEYS_nada),</span>
+<span id="cb33-177"><a href="data-sources-1.html#cb33-177" tabindex="-1"></a>    <span class="at">RAW.D4.1.4.HOUS=</span><span class="fu">if_else</span>((iso3c<span class="sc">==</span><span class="st">&quot;IND&quot;</span> <span class="sc">&amp;</span> date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">2015</span><span class="sc">:</span><span class="dv">2023</span>)), <span class="st">&quot;1977, 1983, 1987, 1993, 2004, 2009, 2011&quot;</span>,RAW.D4.<span class="dv">1</span>.<span class="fl">4.</span>HOUS)</span>
+<span id="cb33-178"><a href="data-sources-1.html#cb33-178" tabindex="-1"></a>  )</span>
+<span id="cb33-179"><a href="data-sources-1.html#cb33-179" tabindex="-1"></a></span>
+<span id="cb33-180"><a href="data-sources-1.html#cb33-180" tabindex="-1"></a><span class="co">#Agriculture survey </span></span>
+<span id="cb33-181"><a href="data-sources-1.html#cb33-181" tabindex="-1"></a>cs5_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.5.SVY.AGRI&#39;</span>, <span class="st">&#39;AGRI.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-182"><a href="data-sources-1.html#cb33-182" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.5.AGSVY=</span>input_var,</span>
+<span id="cb33-183"><a href="data-sources-1.html#cb33-183" tabindex="-1"></a>         <span class="at">RAW.D4.1.5.AGRI.SURVEYS_nada=</span>nada_dates,</span>
+<span id="cb33-184"><a href="data-sources-1.html#cb33-184" tabindex="-1"></a>         <span class="at">SPI.D4.1.5.AGSVY=</span>indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb33-185"><a href="data-sources-1.html#cb33-185" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb33-186"><a href="data-sources-1.html#cb33-186" tabindex="-1"></a></span>
+<span id="cb33-187"><a href="data-sources-1.html#cb33-187" tabindex="-1"></a><span class="co">#Labor Force Survey </span></span>
+<span id="cb33-188"><a href="data-sources-1.html#cb33-188" tabindex="-1"></a>cs6_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.6.SVY.LABR&#39;</span>, <span class="st">&#39;LABR.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-189"><a href="data-sources-1.html#cb33-189" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.6.LABR=</span>input_var,</span>
+<span id="cb33-190"><a href="data-sources-1.html#cb33-190" tabindex="-1"></a>         <span class="at">RAW.D4.1.6.LABR.SURVEYS_nada=</span>nada_dates,</span>
+<span id="cb33-191"><a href="data-sources-1.html#cb33-191" tabindex="-1"></a>         <span class="at">SPI.D4.1.6.LABR=</span>indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb33-192"><a href="data-sources-1.html#cb33-192" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb33-193"><a href="data-sources-1.html#cb33-193" tabindex="-1"></a></span>
+<span id="cb33-194"><a href="data-sources-1.html#cb33-194" tabindex="-1"></a><span class="co">#Health/Demographic survey</span></span>
+<span id="cb33-195"><a href="data-sources-1.html#cb33-195" tabindex="-1"></a>cs7_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.7.SVY.HLTH&#39;</span>, <span class="st">&#39;HLTH.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-196"><a href="data-sources-1.html#cb33-196" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.7.HLTH=</span>input_var,</span>
+<span id="cb33-197"><a href="data-sources-1.html#cb33-197" tabindex="-1"></a>         <span class="at">RAW.D4.1.7.HLTH.SURVEYS_nada=</span>nada_dates,</span>
+<span id="cb33-198"><a href="data-sources-1.html#cb33-198" tabindex="-1"></a>         <span class="at">SPI.D4.1.7.HLTH=</span>indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb33-199"><a href="data-sources-1.html#cb33-199" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb33-200"><a href="data-sources-1.html#cb33-200" tabindex="-1"></a></span>
+<span id="cb33-201"><a href="data-sources-1.html#cb33-201" tabindex="-1"></a><span class="co">#Business/establishment survey  </span></span>
+<span id="cb33-202"><a href="data-sources-1.html#cb33-202" tabindex="-1"></a>cs8_df <span class="ot">&lt;-</span><span class="fu">survey_fun</span>(<span class="st">&#39;D4.1.8.SVY.BIZZ&#39;</span>, <span class="st">&#39;BIZZ.SURVEYS&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-203"><a href="data-sources-1.html#cb33-203" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">RAW.D4.1.8.BZSVY=</span>input_var,</span>
+<span id="cb33-204"><a href="data-sources-1.html#cb33-204" tabindex="-1"></a>         <span class="at">RAW.D4.1.8.BIZZ.SURVEYS_nada=</span>nada_dates,</span>
+<span id="cb33-205"><a href="data-sources-1.html#cb33-205" tabindex="-1"></a>         <span class="at">SPI.D4.1.8.BZSVY=</span>indicator) <span class="sc">%&gt;%</span></span>
+<span id="cb33-206"><a href="data-sources-1.html#cb33-206" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(iso3c, date, <span class="fu">starts_with</span>(<span class="st">&quot;SPI&quot;</span>), <span class="fu">starts_with</span>(<span class="st">&quot;RAW&quot;</span>))</span>
+<span id="cb33-207"><a href="data-sources-1.html#cb33-207" tabindex="-1"></a></span>
+<span id="cb33-208"><a href="data-sources-1.html#cb33-208" tabindex="-1"></a></span>
+<span id="cb33-209"><a href="data-sources-1.html#cb33-209" tabindex="-1"></a><span class="co">#brind all censuses and surveys together</span></span>
+<span id="cb33-210"><a href="data-sources-1.html#cb33-210" tabindex="-1"></a>cs_df <span class="ot">&lt;-</span> spi_df_empty <span class="sc">%&gt;%</span></span>
+<span id="cb33-211"><a href="data-sources-1.html#cb33-211" tabindex="-1"></a>  <span class="fu">left_join</span>(cs1_df) <span class="sc">%&gt;%</span></span>
+<span id="cb33-212"><a href="data-sources-1.html#cb33-212" tabindex="-1"></a>  <span class="fu">left_join</span>(cs2_df) <span class="sc">%&gt;%</span></span>
+<span id="cb33-213"><a href="data-sources-1.html#cb33-213" tabindex="-1"></a>  <span class="fu">left_join</span>(cs3_df) <span class="sc">%&gt;%</span></span>
+<span id="cb33-214"><a href="data-sources-1.html#cb33-214" tabindex="-1"></a>  <span class="fu">left_join</span>(cs4_df) <span class="sc">%&gt;%</span></span>
+<span id="cb33-215"><a href="data-sources-1.html#cb33-215" tabindex="-1"></a>  <span class="fu">left_join</span>(cs5_df) <span class="sc">%&gt;%</span></span>
+<span id="cb33-216"><a href="data-sources-1.html#cb33-216" tabindex="-1"></a>  <span class="fu">left_join</span>(cs6_df) <span class="sc">%&gt;%</span></span>
+<span id="cb33-217"><a href="data-sources-1.html#cb33-217" tabindex="-1"></a>  <span class="fu">left_join</span>(cs7_df) <span class="sc">%&gt;%</span></span>
+<span id="cb33-218"><a href="data-sources-1.html#cb33-218" tabindex="-1"></a>  <span class="fu">left_join</span>(cs8_df) </span>
 <span id="cb33-219"><a href="data-sources-1.html#cb33-219" tabindex="-1"></a></span>
-<span id="cb33-220"><a href="data-sources-1.html#cb33-220" tabindex="-1"></a><span class="co">#now do the figures </span></span>
-<span id="cb33-221"><a href="data-sources-1.html#cb33-221" tabindex="-1"></a>cs_df_map <span class="ot">&lt;-</span> cs_df <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">1.</span>POPU))</span>
-<span id="cb33-222"><a href="data-sources-1.html#cb33-222" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.1.POPU&#39;</span>, <span class="st">&#39;Population Census Available in Past 20 Years in 2023&#39;</span> )</span></code></pre></div>
+<span id="cb33-220"><a href="data-sources-1.html#cb33-220" tabindex="-1"></a><span class="co">#add to spi databases</span></span>
+<span id="cb33-221"><a href="data-sources-1.html#cb33-221" tabindex="-1"></a>spi_df <span class="ot">&lt;-</span> spi_df <span class="sc">%&gt;%</span></span>
+<span id="cb33-222"><a href="data-sources-1.html#cb33-222" tabindex="-1"></a>  <span class="fu">left_join</span>(cs_df)</span>
+<span id="cb33-223"><a href="data-sources-1.html#cb33-223" tabindex="-1"></a></span>
+<span id="cb33-224"><a href="data-sources-1.html#cb33-224" tabindex="-1"></a><span class="co">#now do the figures </span></span>
+<span id="cb33-225"><a href="data-sources-1.html#cb33-225" tabindex="-1"></a>cs_df_map <span class="ot">&lt;-</span> cs_df <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">1.</span>POPU))</span>
+<span id="cb33-226"><a href="data-sources-1.html#cb33-226" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.1.POPU&#39;</span>, <span class="st">&#39;Population Census Available in Past 20 Years in 2023&#39;</span> )</span></code></pre></div>
 <p><img src="01-SPI_data_prep_files/figure-html/cs-1.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/cs-2.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/cs-3.png" width="960" /><img src="01-SPI_data_prep_files/figure-html/cs-4.png" width="960" /></p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="data-sources-1.html#cb34-1" tabindex="-1"></a>cs_df_map <span class="ot">&lt;-</span> cs_df <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SPI.D4.<span class="dv">1</span>.<span class="fl">2.</span>AGRI))</span>
 <span id="cb34-2"><a href="data-sources-1.html#cb34-2" tabindex="-1"></a><span class="fu">spi_mapper</span>(<span class="st">&#39;cs_df_map&#39;</span>, <span class="st">&#39;SPI.D4.1.2.AGRI&#39;</span>, <span class="st">&#39;Agriculture Census Available in Past 20 Years in 2023&#39;</span> )</span></code></pre></div>

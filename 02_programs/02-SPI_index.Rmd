@@ -123,7 +123,7 @@ pop_df <- wbstats::wb_data(country="all",
              end_date=end_date) %>%
   mutate(date=as.numeric(date)) %>%
   mutate(population=SP.POP.TOTL) %>%
-  select(country, date, population) 
+  select(iso3c, date, population) 
 
 
 #read in the SPI dataset
@@ -132,16 +132,21 @@ spi_df_final_raw <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/"))
 
 spi_df_final <- spi_df_final_raw %>%
   filter(date>=end_date) %>%
-  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2022.csv', sep="/")) %>% filter(date>=2021)) %>%
-  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2020.csv', sep="/")) %>% filter(date==2020) %>% filter(iso3c %in% unique(spi_df_final_raw$iso3c))) %>%
-  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2019.csv', sep="/")) %>% filter(date<2020) %>% filter(iso3c %in% unique(spi_df_final_raw$iso3c))) %>%           
-  mutate(income=if_else(is.na(income), income_level, income)) %>%
+  select(iso3c, date, starts_with("SPI.")) %>%
+  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2022.csv', sep="/")) %>%
+  select(iso3c, date, starts_with("SPI.")) %>% filter(date>=2021)) %>%
+  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2020.csv', sep="/")) %>%
+  select(iso3c, date, starts_with("SPI.")) %>% filter(date==2020) %>% filter(iso3c %in% unique(spi_df_final_raw$iso3c))) %>%
+  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2019.csv', sep="/")) %>%
+  select(iso3c, date, starts_with("SPI.")) %>% filter(date<2020) %>% filter(iso3c %in% unique(spi_df_final_raw$iso3c))) %>%           
   left_join(pop_df) %>%
   group_by(iso3c) %>%
   arrange(desc(date)) %>%
   fill(population, .direction = "downup") %>%
   mutate(wgt=wgt,
-         weights=if_else(wgt==2,population,1))  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+         weights=if_else(wgt==2,population,1)) %>%  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+  left_join(wbstats::wb_countries()) %>%
+    mutate(income= income_level) 
 
 
 
