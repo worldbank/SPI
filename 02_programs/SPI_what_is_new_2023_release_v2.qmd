@@ -47,24 +47,24 @@ end_date <- 2023
 start_date <- 2016
 ```
 
-# Introduction 
-Overview: The 2024 Statistical Performance Indicators (SPI) release includes data from 2023 without any changes to the framework methodology or data sources. The SPI continues to assess national statistical systems across five pillars with 22 dimensions, with data currently available for 14 dimensions.
+**Overview**: The 2024 Statistical Performance Indicators (SPI) release includes data from 2023 without any changes to the framework methodology or data sources. The SPI continues to assess national statistical systems across five pillars with 22 dimensions, with data currently available for 14 dimensions.
 
-Methodology Consistency: No changes have been made to the scoring methodology or data sources since the 2019 release. This ensures that the newly released data remains consistent and comparable with prior releases, drawing primarily from organizations like the World Bank, IMF, and UNESCO.
+**Methodology Consistency**: No changes have been made to the scoring methodology or data sources since the 2019 release. This ensures that the newly released data remains consistent and comparable with prior releases, drawing primarily from organizations like the World Bank, IMF, and UNESCO.
 
-Data Coverage: The SPI now includes 187 economies, an increase from 167 in 2016, covering over 99% of the global population. This expansion is largely driven by an increase in economies with data openness scores.
+**Data Coverage**: The SPI now includes 187 economies, an increase from 167 in 2016, covering over 99% of the global population. This expansion is largely driven by an increase in economies with data openness scores.
 
-Score Improvements: On average, global SPI scores have risen by 12.5 points from 2016 to 2023. North America and Europe & Central Asia remain the top-performing regions, while lower middle-income countries experienced the fastest improvement, increasing by 12.9 points. Country rankings have remained stable over time with a Spearman rank correlation of 0.92.
+**Score Improvements**: On average, global SPI scores have risen by 12.5 points from 2016 to 2023. North America and Europe & Central Asia remain the top-performing regions, while lower middle-income countries experienced the fastest improvement, increasing by 12.9 points. Country rankings have remained stable over time with a Spearman rank correlation of 0.92.
 
-Performance by Decile: The largest improvements were observed in countries that were in the bottom 20% of the 2016 rankings. In contrast, countries in the top decile showed minimal growth due to their already high scores.
+**Performance by Decile**: The largest improvements were observed in countries that were in the bottom 20% of the 2016 rankings. In contrast, countries in the top decile showed minimal growth due to their already high scores.
 
-Pillar Contributions: Improvements in data services and infrastructure have been the major contributors to the overall score increases, especially in the bottom deciles. Specifically, 43% of the improvements in the bottom decile are attributed to better data services, and 22% to better data infrastructure.
+**Pillar Contributions**: Improvements in data services and infrastructure have been the major contributors to the overall score increases, especially in the bottom deciles. Specifically, 43% of the improvements in the bottom decile are attributed to better data services, and 22% to better data infrastructure.
 
-Regional and Income Group Analysis: North America and Europe & Central Asia are the top-performing regions, while Sub-Saharan Africa ranks the lowest. Notably, the Middle East and North Africa have caught up to East Asia and Pacific, and South Asia has overtaken Latin America and the Caribbean. Statistical performance improves with income, with lower middle-income countries seeing the fastest growth, followed by low-income, upper middle-income, and high-income countries.
+**Regional and Income Group Analysis**: North America and Europe & Central Asia are the top-performing regions, while Sub-Saharan Africa ranks the lowest. Notably, the Middle East and North Africa have caught up to East Asia and Pacific, and South Asia has overtaken Latin America and the Caribbean. Statistical performance improves with income, with lower middle-income countries seeing the fastest growth, followed by low-income, upper middle-income, and high-income countries.
 
-Population Size Impact: High-income countries with populations under 500,000 face specific challenges, scoring lower on average (58 points) compared to larger lower middle-income countries (55 points).
+**Population Size Impact**: High-income countries with populations under 500,000 face specific challenges, scoring lower on average (58 points) compared to larger lower middle-income countries (55 points).
 
-Conclusion: The 2024 SPI release highlights significant progress in global statistical performance, driven by improvements in data services and infrastructure. While top-performing regions and countries maintain their ranks, lower middle-income and smaller economies show promising advancements. This trend indicates a positive development in global data and statistical capacity building. For further details, the SPI technical note and the SPI GitHub repository provide comprehensive methodologies and data sources.
+**Conclusion**: The 2024 SPI release highlights significant progress in global statistical performance, driven by improvements in data services and infrastructure. While top-performing regions and countries maintain their ranks, lower middle-income and smaller economies show promising advancements. This trend indicates a positive development in global data and statistical capacity building. For further details, the SPI technical note and the SPI GitHub repository provide comprehensive methodologies and data sources.
+
 
 ```{r themes}
 
@@ -99,6 +99,14 @@ income_colors <- c(
   "Lower middle income" = "#ffb703", 
   "Upper middle income" = "#219ebc", 
   "High income" = "#023047")
+
+pillar_colors <- c(
+  "Pillar 1: Data Use" = "#fee440",
+  "Pillar 2: Data Services" = "#9b5de5",
+  "Pillar 3: Data Products" = "#00bbf9",
+  "Pillar 4: Data Sources" = "#00f5d4",
+  "Pillar 5: Data Infrastructure" = "#f15bb5"
+)
 
 ```
 
@@ -900,13 +908,14 @@ spi_index_df %>%
   mutate(date=factor(date,levels=c(start_date:end_date))) %>%
   ggplot(aes(x=date, y=n, label=n)) +
     geom_col(fill='#8ecae6') +
-    geom_text(nudge_y = -5, size=5 ) +
+    geom_text(nudge_y = -5, size=7, color='white' ) +
     theme_minimal() +
     xlab("Year") +
     ylab('Number of Economies') +
     expand_limits(y=c(0,217))
 ```
- 
+
+
 
 ## How Have Country Scores Changed Between `r start_date` and `r end_date`
 
@@ -927,7 +936,7 @@ spi_index_start_date <- spi_index_df %>%
 
 spi_changes <- spi_index_end_date %>%
   mutate(SPI.INDEX.end_date=SPI.INDEX) %>%
-  select(iso3c, country,region, SPI.INDEX.end_date) %>%
+  select(iso3c, country,region,income, SPI.INDEX.end_date) %>%
   left_join(spi_index_start_date)
 
 
@@ -951,33 +960,43 @@ There has been some catch-up in statistical performance. Between `r start_date` 
 ```{r }
 #| label: changesplot
 
-ggplot(spi_changes, aes(x=SPI.INDEX.start_date, y=SPI.INDEX.end_date, color=region)) +
-  geom_text(aes(label=iso3c)) +
-  geom_smooth(method='lm', color='blue') +
-  geom_segment(aes(x=10,xend=100, y=10,yend=100), color='grey') +
-  scale_color_manual(
-    #use region_colors
-    values=region_colors
-  ) +
-  expand_limits(x=c(10,100),y=c(10,100)) +
-  theme_spi() +
-  labs(
-    title=paste0('Scatterplot of ',end_date,' SPI overall score  & ',start_date,' SPI overall score'),
-  ) +
-  ylab(paste0(end_date,' SPI Overall Score')) +
-  xlab(paste0(start_date,' SPI Overall Score')) +
-  theme(legend.position = 'bottom') +
-    stat_poly_eq(aes(label = paste(stat(eq.label),
-                                stat(rr.label), sep = "*\", \"*")), 
-                     color='blue',
-                     label.x.npc = "right", label.y.npc = 0.1,
-                     formula = y~x, parse = TRUE, size = 4) +
-  guides(
-    size="none"
-  )
+spi_changes %>%
+  mutate(change=SPI.INDEX.end_date-SPI.INDEX.start_date,
+         #income to factor
+         income=factor(income,
+           levels=c('Low income','Lower middle income','Upper middle income','High income'),
+         )) %>%
+  arrange(desc(change)) %>%
+  mutate(order=row_number()) %>%
+  ggplot( aes(y=change, x=order, color=income)) +
+    geom_point() +
+    geom_text(aes(label=iso3c), nudge_y=2, angle=90, size=3, check_overlap=T) +
+    scale_color_manual(
+      #use region_colors
+      values=income_colors
+    ) +
+    theme_spi() +
+    labs(
+      title=paste0('Change in SPI Overall Score between ',start_date, ' and ', end_date),
+    ) +
+    geom_hline(yintercept=0)+
+    geom_hline(yintercept = avg_change, color='red', linetype='dashed') +
+    #add annotation for avg_change
+    annotate("text", x = 25, y = avg_change+1, label = paste0('Average Change = ',round(avg_change,1)), color='red') +
+    ylab(paste0('Change in SPI Overall Score')) +
+    xlab(paste0(start_date,'')) +
+    theme(legend.position = 'bottom',
+          #remove x axis lines and values
+          axis.title.x=element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()) +
+    guides(
+      size="none"
+    )
 
 
 ```
+
 Note: Solid grey line represents the 45 degree line.  Blue line represents line of best fit (regression line) with a 95% confidence interval shown in a shaded line.  N=187 economies.
 
 
@@ -1027,13 +1046,12 @@ growth_plot <- function(variables, name) {
     group_by(spi_bins) %>%
     summarise(growth=mean(growth))
   
-  ggplot(elephant_df, aes(x=spi_bins, y=growth, label=paste0(spi_bins,": ",round(growth,1),""))) +
+  ggplot(elephant_df, aes(x=spi_bins, y=growth, label=round(growth,1))) +
     geom_segment(aes(xend=as.numeric(spi_bins)-0.5,x=as.numeric(spi_bins)+0.5, y=growth, yend=growth)) +
-    geom_point() +
-    geom_bar(aes(alpha=growth), stat = "identity", fill='#007f5f') +
-    ggrepel::geom_text_repel(nudge_y=0.1, size=4,segment.alpha =  0 ) +
+    geom_bar(, stat = "identity", fill='#ca6702') +
+    ggrepel::geom_text_repel(nudge_y=-.5, size=6,segment.alpha =  0, color='white' ) +
     scale_x_discrete() +
-    theme_bw() +
+    theme_spi() +
     xlab(str_wrap(paste0('Decile in ',start_date),40)) +
     ylab(str_wrap(paste0('Change in Score (',start_date,'-',end_date,')'),20)) +
     labs(
@@ -1076,6 +1094,7 @@ growth_plot <- function(variables, name) {
 growth_plot('SPI.INDEX', 'SPI Overall Score')
 
 ```
+
 Note: N=167 economies.
 
 
@@ -1175,9 +1194,12 @@ name <- 'SPI Overall Score'
 
   ggplot(elephant_stacked_df, aes(x=spi_bins, y=growth, fill=pillar, label=paste0(round(growth,1)))) +
     geom_bar(stat = "identity", position='stack') +
-    geom_text(size = 4, position = position_stack(vjust = 0.5)) +
+    geom_text(size = 6, position = position_stack(vjust = 0.5), color='black') +
     scale_x_discrete() +
-    theme_bw() +
+    scale_fill_manual(
+      values=pillar_colors
+    ) +
+    theme_spi() +
     xlab(str_wrap(paste0('Decile in ',start_date),40)) +
     ylab(str_wrap(paste0('Change in Score (',start_date,'-',end_date,')'),20)) +
     labs(
@@ -1195,6 +1217,7 @@ name <- 'SPI Overall Score'
     guides(fill=guide_legend(nrow=2,byrow=TRUE))
 
 ```
+
 Note: N=167 economies.
 
 
@@ -1230,9 +1253,9 @@ tile_chart <- function(indicators) {
     # tileplot 
     ggplot(tile_df, aes(x=date, y=source_name, fill= Score)) + 
       geom_tile(color = "white") +
-      geom_text(aes(label=Score), color='white') +
+      geom_text(aes(label=Score), color='white', size=5) +
       ylab('Indicator') +
-      theme_bw() +
+      theme_spi() +
       #scale_fill_binned(guide = guide_coloursteps(show.limits = TRUE)) +
       scale_y_discrete(limits = rev(levels(tile_df$source_name))) +
         theme(
@@ -1268,6 +1291,7 @@ tile_chart <- function(indicators) {
 ```
 
 
+
 ```{r D2tile, fig.width = 9, fig.height = 9}
 tile_chart(c('SPI.D2.1.GDDS','SPI.D2.2.Openness.subscore', 'SPI.D3.1.POV','SPI.D3.8.WORK', 'SPI.D3.13.CLMT', 'SPI.D3.16.INST',"SPI.D5.2.1.SNAU",
              "SPI.D5.2.5.HOUS",
@@ -1276,6 +1300,7 @@ tile_chart(c('SPI.D2.1.GDDS','SPI.D2.2.Openness.subscore', 'SPI.D3.1.POV','SPI.D
   ggtitle(paste0("Indicator Improvement over time"))
 
 ```
+
 
 ## How Have Scores Changed by Region and Income Group?
 
@@ -1290,15 +1315,20 @@ The regional rankings have remained largely unchanged over this period. The two 
 
 
 reg_avg <- spi_index_df %>%
-  filter(date==start_date | date==2020 | date==end_date) %>%
+  mutate(small_pop=if_else(population<=500000, "Population <= 500k", "Population > 500k")) %>%  
+  filter(small_pop=="Population > 500k") %>%
+  filter(date==start_date | date==end_date) %>%
   group_by(date, region) %>%
   summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
   mutate(date=factor(date, levels=c(start_date, 2020,end_date)),
-         region=factor(region, levels=c("North America", "Europe & Central Asia","South Asia", "Latin America & Caribbean", "East Asia & Pacific", "Middle East & North Africa", "Sub-Saharan Africa")))
+         region=factor(region, levels=c("North America", "Europe & Central Asia","East Asia & Pacific","Latin America & Caribbean", "South Asia",  "Middle East & North Africa", "Sub-Saharan Africa")))
 
 ggplot(reg_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(SPI.INDEX,0))) +
   geom_col(position = 'dodge2') +
-  geom_text(position = position_dodge2(width = 1), size=5) +
+  geom_text(position = position_dodge2(width = 1), size=8, color='white', vjust=1.5) +
+    scale_fill_manual(
+    values=c("#006e90", "#f18f01")
+  ) +
   ylab("SPI Overall Score") +
   ggtitle('Unweighted Regional Average of SPI Overall Score by Year') +
   theme_minimal() +
@@ -1308,39 +1338,15 @@ ggplot(reg_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(S
   scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
 
 ```
-
-```{r}
-#| label: regchng2
-#| fig-width: 14
-#| fig-height: 8
+Note: N=172 economies.Economies with less than 500K population are excluded from this analysis.
 
 
-reg_avg <- spi_index_df %>%
-  mutate(small_pop=if_else(population<=500000, "Population <= 500k", "Population > 500k")) %>%  
-  filter(small_pop=="Population > 500k") %>%
-  filter(date==start_date | date==2020 | date==end_date) %>%
-  group_by(date, region) %>%
-  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
-  mutate(date=factor(date, levels=c(start_date, 2020,end_date)),
-         region=factor(region, levels=c("North America", "Europe & Central Asia", "East Asia & Pacific", "Latin America & Caribbean","South Asia", "Middle East & North Africa", "Sub-Saharan Africa")))
-
-ggplot(reg_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(SPI.INDEX,0))) +
-  geom_col(position = 'dodge2') +
-  geom_text(position = position_dodge2(width = 1), size=5) +
-  ylab("SPI Overall Score") +
-  ggtitle(str_wrap('Unweighted Regional Average of SPI Overall Score Omitting Countries with Populations Smaller than Half a Million by Year',85)) +
-  theme_minimal() +
-  theme(legend.position='top',
-        text = element_text(size = 14),
-        axis.text.x=element_text(size = 14)) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
-
-```
-Note: N=187 economies.
 
 ```{r}
 inc_avg <- spi_index_df %>%
-  filter(date==start_date | date==2020 | date==end_date) %>%
+  mutate(small_pop=if_else(population<=500000, "Population <= 500k", "Population > 500k")) %>%  
+  filter(small_pop=="Population > 500k") %>%  
+  filter(date==start_date |  date==end_date) %>%
   group_by(date, income) %>%
   filter(income %in% c("Low income", "Lower middle income", "Upper middle income", "High income")) %>%
   summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
@@ -1378,17 +1384,21 @@ From comparing average scores by income group (Figure 7), it is clear that on av
 
 ggplot(inc_avg, aes(x=income,y=SPI.INDEX, fill=date,group = income,label=round(SPI.INDEX,0))) +
   geom_col(position = 'dodge2') +
-  geom_text(position = position_dodge2(width = 1), size=4) +
+  geom_text(position = position_dodge2(width = 1), size=8, color='white', vjust=1.5) +
   ylab("SPI Overall Score") +
   ggtitle('Unweighted Income Group Average of SPI Overall Score by Year') +
+  scale_fill_manual(
+    values=c("#006e90", "#f18f01")
+  ) +
+  
   theme_minimal() +
   theme(legend.position='top',
-        text = element_text(size = 14),
+        text = element_text(size = 18),
         axis.text.x=element_text(size = 14)) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
 
 ```
-Note: N=187 economies.
+Note: N=172 economies.Economies with less than 500K population are excluded from this analysis.
 
 Finally, as shown in Figure 8, countries with smaller population sizes face specific challenges.  Even for high income countries, those countries with populations of less than 500,000 individuals have a lower average score than the average for lower middle income countries with populations greater than 500,000.  The average SPI overall score for high income countries with populations less than 500K is similar in magnitude (58 points) to those of low income countries (55 points).
 
@@ -1529,71 +1539,6 @@ flextable(group_tab) %>%
 ```
 
 
-
-**Figure 8**. Comparison of SPI Overall Scores by Population Level
-
-(a) Income Group Estimates
-```{r}
-#| label: popsize
-
-pop_size_fig_df <- spi_index_df %>%
-  filter(date==end_date) %>%
-  filter(!is.na(SPI.INDEX)) %>%
-  filter(income!="Not classified") %>%
-  mutate(small_pop=if_else(population<=500000, "Population <= 500k", "Population > 500k"))
-
-pop_size_fig_df %>%
-  group_by(income, small_pop) %>%
-  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
-  ggplot( aes(x=income, y=SPI.INDEX, fill=small_pop,label=round(SPI.INDEX,0))) +
-    geom_col(position = 'dodge2') +
-    geom_text(position = position_dodge2(width = 1), size=4) +
-    ylab("SPI Overall Score") +
-    ggtitle('Average SPI Overall Score by Income level and Population Size') +
-    labs(fill="Population") +
-    theme_minimal() +
-    theme(legend.position='top',
-          text = element_text(size = 14),
-          axis.text.x=element_text(size = 14)) +
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
-
-
-
-```
-(b) Regional Estimates
-```{r}
-#| label: popsizereg
-
-reg_size_fig_df <- spi_index_df %>%
-  filter(date==end_date) %>%
-  filter(!is.na(SPI.INDEX)) %>%
-  mutate(small_pop=if_else(population<=500000, "Population <= 500k", "Population > 500k"))
-
-reg_fig_df <- reg_size_fig_df %>%
-  group_by(region, small_pop) %>%
-  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE),
-            n=n()) %>%
-  ungroup() %>%
-  group_by(region) %>%
-  mutate(
-    small_share=100*round(n/sum(n),3)
-  )
-
-  ggplot(reg_fig_df,  aes(x=region, y=SPI.INDEX, fill=small_pop,label=round(SPI.INDEX,0))) +
-    geom_col(position = 'dodge2') +
-    geom_text(position = position_dodge2(width = 1), size=4) +
-    ylab("SPI Overall Score") +
-    ggtitle('Average SPI Overall Score by Region and Population Size') +
-    labs(fill="Population") +
-    theme_minimal() +
-    theme(legend.position='top',
-          text = element_text(size = 14),
-          axis.text.x=element_text(size = 14)) +
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
-
-
-
-```
 Note: N=187 economies.
 
 

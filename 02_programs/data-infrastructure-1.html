@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6 Data Infrastructure | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
   <meta name="description" content="6 Data Infrastructure | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
-  <meta name="generator" content="bookdown 0.38 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6 Data Infrastructure | Technical Documentation on Data Sources and Methods for Statistical Performance Indicators" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2024-05-01" />
+<meta name="date" content="2024-06-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -249,7 +249,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The legislation and governance indicator will be drawn from SDG indicator 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Also include some other legislative aspects that foster good use of statistics eg freedom of information, privacy/transparency, good governance (eg free and fair elections).</p>
 <p>This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)</p>
 <p>Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics. Scores of 0 given a score of zero.</p>
-<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-05-01</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-06-03</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="data-infrastructure-1.html#cb43-1" tabindex="-1"></a>D5<span class="fl">.1</span>_DILG <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file=</span><span class="fu">paste</span>(raw_dir, <span class="st">&#39;5.1_DILG&#39;</span>, <span class="st">&#39;SG_STT_FPOS.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb43-2"><a href="data-infrastructure-1.html#cb43-2" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, date,ind_value) <span class="sc">%&gt;%</span></span>
 <span id="cb43-3"><a href="data-infrastructure-1.html#cb43-3" tabindex="-1"></a>  <span class="fu">right_join</span>(spi_df_empty) <span class="sc">%&gt;%</span></span>
@@ -923,7 +923,7 @@ related to “business statistics” but refers to the statistical office, simpl
 <h2><span class="header-section-number">6.5</span> Dimension 5.5: finance<a href="data-infrastructure-1.html#dimension-5.5-finance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Indicator based on SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). This indicator measures whether the national statistical plan under implementation is fully funded. It relates to SDG 17.18.3 and is based on the annual Status Report on National Strategies for the Development of Statistics (NSDS).</p>
 <p>Scores is 1 if the country has a national statistical plan that is fully funded and under implementation. Scores of 0 given a score of zero.</p>
-<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-05-01</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-06-03</p>
 <p>Source of this data is UNSD and Paris21.</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="data-infrastructure-1.html#cb57-1" tabindex="-1"></a><span class="co">#pull from unsd api</span></span>
 <span id="cb57-2"><a href="data-infrastructure-1.html#cb57-2" tabindex="-1"></a>D5<span class="fl">.5</span>_DIFI <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file=</span><span class="fu">paste</span>(raw_dir, <span class="st">&#39;5.1_DILG&#39;</span>, <span class="st">&#39;SG_STT_FPOS.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="sc">%&gt;%</span> </span>
