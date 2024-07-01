@@ -1,23 +1,20 @@
 # Written by Brian Stacy on Aug 14, 2020
+# Updated by Brian Stacy on January 2, 2024
 # A data visualization of the Statistical Performance Indicators
 # The viz will contain an overview page showing a map with the indicator values and aggregate statistics
 # The viz will also contain country report page that shows details on the indicators by country
 
-
+library(markdown)
 library(shiny)
 library(shinydashboard)
 library(shinyjs)
 library(tidyverse)
 library(plotly)
-library(leaflet)
 library(wbstats)
 library(shinythemes)
 library(httr)
 library(jsonlite)
-library(leaflet)
 library(shinycssloaders)
-library(rgdal)
-library(geojsonio)
 library(DT)
 library(skimr)
 library(ggcorrplot)
@@ -29,7 +26,9 @@ library(highcharter)
 library(officer)
 
 #read in data and metatdata
-SPI <- read_csv('SPI_index.csv')
+SPI <- read_csv('SPI_index.csv') 
+
+end_date <- 2022
 
 metadata_raw <- read_csv('SPI_dimensions_sources.csv')
 
@@ -78,11 +77,6 @@ var.labels <- metadata$descript
 names(var.labels) <- metadata$source_id
 
 #read in TopoJSON from World Bank
-# countries <- geojsonio::geojson_read("WB_countries_Admin0_lowres.geojson",
-#                                      what = "sp")
-# countries <- geojsonio::geojson_read("WB_boundaries_lowres.geojson",
-#                                      what = "sp") %>%
-#   geojsonio::geojson_json()
 
 load('WB_geojson.Rdata')
 
@@ -91,7 +85,8 @@ country_info <- wb_countries() %>%
     mutate(income=income_level,
            lending=lending_type) %>%
     filter(region!="Aggregates") %>%
-    select(iso3c, country, region, income, lending)
+    select(iso3c, country, region, income, lending) %>%
+  arrange(country)
 
 #sketch for DT tables
 sketch = htmltools::withTags(table(
@@ -221,8 +216,8 @@ ui <- navbarPage(id='container',
                                 column(3,offset=1,
                                        selectizeInput("year_overall",
                                              "Reference Year",
-                                             choices=c(2004:2019),
-                                             selected=2019)),
+                                             choices=c(2004:end_date),
+                                             selected=end_date)),
                                 column(2,offset=1,
                                        downloadButton("downloadDataMap", "Download"))
 
@@ -276,8 +271,8 @@ ui <- navbarPage(id='container',
                  #              h2('Overall Scores by Pillar'),
                  #              selectizeInput("dim_year",
                  #                             "Reference Year",
-                 #                             choices=c(2016:2019),
-                 #                             selected=2019
+                 #                             choices=c(2016:end_date),
+                 #                             selected=end_date
                  #                             
                  #              ),
                  #              selectizeInput("country", "Select Countries",
@@ -354,8 +349,8 @@ ui <- navbarPage(id='container',
                                 column(2,offset=1,
                                        selectizeInput("year_choice",
                                                       "Choose Year",
-                                                      choices=c(2004:2019),
-                                                      selected=2019)),  
+                                                      choices=c(2004:end_date),
+                                                      selected=end_date)),  
                                 column(2,offset=1,
                                        selectizeInput("comparison_choice",
                                                       "Add Countries to Compare",
@@ -437,8 +432,8 @@ ui <- navbarPage(id='container',
                                   column(2,
                                     selectizeInput("country_year_choice",
                                                  "Choose Year",
-                                                 choices=c(2016:2019),
-                                                 selected=2019)),
+                                                 choices=c(2016:end_date),
+                                                 selected=end_date)),
                                   column(2,offset=1,
                                     selectizeInput("country_tab", "Select Countries",
                                                    choices=NULL,
@@ -731,17 +726,23 @@ server <- function(input, output,session) {
         col_palette2 <- c("#FFBE0B",  "#E7BB25",  "#1A9850")
         
         #calculate the breaks for the color coding
-        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
         
-        brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)
+        brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)-.001
+
         
-        brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)
+        brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)-.001
+
         
-        brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)
+        brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)-.001
+
         
-        brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)
+        brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)-.001
+
         
-        brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)
+        brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)-.001
+
         
         # select countries for table
         
@@ -1591,17 +1592,22 @@ server <- function(input, output,session) {
         col_palette2 <- c("#FFBE0B",  "#E7BB25",  "#1A9850")
         
         #calculate the breaks for the color coding
-        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+        brks <- quantile(index_tab$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
         
-        brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)
+        brks1 <- quantile(index_tab$SPI.INDEX.PIL1, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
         
-        brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)
+        brks2 <- quantile(index_tab$SPI.INDEX.PIL2, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
         
-        brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)
+        brks3 <- quantile(index_tab$SPI.INDEX.PIL3, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
+        brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+ 
         
-        brks4 <- quantile(index_tab$SPI.INDEX.PIL4, probs=c(1,2,3,4)/5,na.rm=T)
-        
-        brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)
+        brks5 <- quantile(index_tab$SPI.INDEX.PIL5, probs=c(1,2,3,4)/5,na.rm=T)-.001 #add tiny adjustment of 0.001 to break ties
+
   
         # select countries for table
         

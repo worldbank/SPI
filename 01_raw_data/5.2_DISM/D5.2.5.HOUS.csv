@@ -65,6 +65,7 @@ BHR,BH,Bahrain,Manama,50.5354,26.1921,MEA,ZQ,Middle East & North Africa,NA,NA,NA
 BHS,BS,"Bahamas, The",Nassau,-77.339,25.0661,LCN,ZJ,Latin America & Caribbean ,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2016,na,
 BHS,BS,"Bahamas, The",Nassau,-77.339,25.0661,LCN,ZJ,Latin America & Caribbean ,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2017,NA,
 BHS,BS,"Bahamas, The",Nassau,-77.339,25.0661,LCN,ZJ,Latin America & Caribbean ,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2018,NA,
+BHS,BS,"Bahamas, The",Nassau,-77.339,25.0661,LCN,ZJ,Latin America & Caribbean ,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,
 BIH,BA,Bosnia and Herzegovina,Sarajevo,18.4214,43.8607,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2016,COICOP,
 BIH,BA,Bosnia and Herzegovina,Sarajevo,18.4214,43.8607,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2017,COICOP,
 BIH,BA,Bosnia and Herzegovina,Sarajevo,18.4214,43.8607,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2018,COICOP,
@@ -713,14 +714,14 @@ ZMB,ZM,Zambia,Lusaka,28.2937,-15.3982,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saha
 ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2016,COICOP,
 ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2017,COICOP,
 ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2018,COICOP,
-ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2019,COICOP,
-BHR,BH,Bahrain,Manama,50.5354,26.1921,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/egdds/dqaf-base/country/BHR/category/CPI00
-BRB,BB,Barbados,Bridgetown,-59.6105,13.0935,LCN,ZJ,Latin America & Caribbean ,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,https://dsbb.imf.org/egdds/dqaf-base/country/BRB/category/CPI00
-CZE,CZ,Czech Republic,Prague,14.4205,50.0878,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sddsplus/dqaf-base/country/CZE/category/CPI00
-GRC,GR,Greece,Athens,23.7166,37.9792,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sdds/dqaf-base/country/GRC/category/CPI00
-HUN,HU,Hungary,Budapest,19.0408,47.4984,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sdds/dqaf-base/country/HUN/category/CPI00
-LTU,LT,Lithuania,Vilnius,25.2799,54.6896,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sddsplus/dqaf-base/country/LTU/category/CPI00
-LVA,LV,Latvia,Riga,24.1048,56.9465,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sddsplus/dqaf-base/country/LVA/category/CPI00
-OMN,OM,Oman,Muscat,58.5874,23.6105,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/egdds/dqaf-base/country/OMN/category/CPI00
-SAU,SA,Saudi Arabia,Riyadh,46.6977,24.6748,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sdds/dqaf-base/country/SAU/category/CPI00
-SVK,SK,Slovak Republic,Bratislava,17.1073,48.1484,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sddsplus/dqaf-base/country/SVK/category/CPI00
+ZWE,ZW,Zimbabwe,Harare,31.0672,-17.8312,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2019,COICOP,https://dsbb.imf.org/egdds/dqaf-base/country/BHR/category/CPI00
+BHR,BH,Bahrain,Manama,50.5354,26.1921,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/egdds/dqaf-base/country/BRB/category/CPI00
+BRB,BB,Barbados,Bridgetown,-59.6105,13.0935,LCN,ZJ,Latin America & Caribbean ,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,NA,https://dsbb.imf.org/sddsplus/dqaf-base/country/CZE/category/CPI00
+CZE,CZ,Czech Republic,Prague,14.4205,50.0878,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sdds/dqaf-base/country/GRC/category/CPI00
+GRC,GR,Greece,Athens,23.7166,37.9792,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sdds/dqaf-base/country/HUN/category/CPI00
+HUN,HU,Hungary,Budapest,19.0408,47.4984,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sddsplus/dqaf-base/country/LTU/category/CPI00
+LTU,LT,Lithuania,Vilnius,25.2799,54.6896,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sddsplus/dqaf-base/country/LVA/category/CPI00
+LVA,LV,Latvia,Riga,24.1048,56.9465,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/egdds/dqaf-base/country/OMN/category/CPI00
+OMN,OM,Oman,Muscat,58.5874,23.6105,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sdds/dqaf-base/country/SAU/category/CPI00
+SAU,SA,Saudi Arabia,Riyadh,46.6977,24.6748,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,https://dsbb.imf.org/sddsplus/dqaf-base/country/SVK/category/CPI00
+SVK,SK,Slovak Republic,Bratislava,17.1073,48.1484,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2019,COICOP,

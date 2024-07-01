@@ -59,6 +59,7 @@
 !/**/**/*.R
 !/**/**/*.Rproj
 !/**/**/*.Rmd
+!/**/**/*.qmd
 !renv*
 !renv.lock
 !/**/**/*.Rdata
@@ -66,6 +67,7 @@
 
 # HTML files
 !/**/**/*.html
+!/**/**/*.css
 
 
 # LaTeX
@@ -104,6 +106,9 @@
 #PNG files in the reports folder
 !/04_reports/*.png
 !/04_reports/*.PNG
+
+#Country reports
+!/country_reports/*.docx
 
 #######################
 # Include all the files with passwords or tokens here. All files named
