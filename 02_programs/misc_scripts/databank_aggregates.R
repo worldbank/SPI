@@ -58,12 +58,12 @@ databank_df <- databank_df %>%
 ###############
 
 #read in classifications
-class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xlsx', sep=""), sheet="Groups") %>%
+class_df <- read_excel(paste(raw_dir, '/misc/FY24_series_list.xlsx', sep=""), sheet="F24 classification") %>%
   rename(
-    iso3c=CountryCode,
-    country=CountryName,
-    WB_Group_Code=GroupCode,
-    WB_Group_Name=GroupName
+    iso3c=WB_Country_Code,
+    country=WB_Country_Name,
+    WB_Group_Code=WB_Group_Code,
+    WB_Group_Name=WB_Group_Name
   )
 
 # class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xls', sep=""),sheet = "Groups") %>%
@@ -81,7 +81,7 @@ weight<-'none'
     weights_df <- wbstats::wb_data(
       indicator=c(weight),
       start_date = 2016,
-      end_date=2020,
+      end_date=2022,
       gapfill = TRUE,
       mrv=5,
       return_wide = FALSE
@@ -115,10 +115,19 @@ weight<-'none'
     
 write_excel_csv(agg_df, paste(output_dir, '/misc/WB_aggregates_SPI.csv', sep=""))
 
-agg_df <- agg_df 
+#get country level data
+#get list of countries in class_df
+cntry_list <- unique(class_df$iso3c)
+
+#return databank_df with just countries in class_df
+country_df <- databank_df %>%
+  filter(iso3c %in% cntry_list)
+
+#save
+write_excel_csv(country_df, paste(output_dir, '/misc/WB_IDA_country_data_SPI.csv', sep=""))
 
 #compare
-orig_df <- read_csv('C:\\Users\\wb469649\\Downloads\\SPI_aggregates.csv') 
-
-compare <- dataCompareR::rCompare(orig_df, agg_df)
-summary(compare)
+# orig_df <- read_csv('C:\\Users\\wb469649\\Downloads\\SPI_aggregates.csv') 
+# 
+# compare <- dataCompareR::rCompare(orig_df, agg_df)
+# summary(compare)
