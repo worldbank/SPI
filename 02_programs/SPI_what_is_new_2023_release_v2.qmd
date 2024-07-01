@@ -119,8 +119,27 @@ spi_index_df<-read_csv( file = paste(output_dir, 'SPI_index.csv', sep="/"))
 #   filter(date>=2021) %>%
 #   bind_rows(read_csv( file = paste(output_dir, 'SPI_index_2020.csv', sep="/")) %>% filter(date==2020)) %>%
 #   bind_rows(read_csv( file = paste(output_dir, 'SPI_index_2019.csv', sep="/")) %>% filter(date<2020))            
-  
-metadata <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep=""))
+#metadata 
+
+#metadata 
+metadata2 <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep=""))
+
+metadata_full <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep="")) %>%
+  rename(source_name=descript) %>%
+  bind_rows(metadata2)
+
+```
+
+```{r}
+
+#get list of economies with score in 2016 to keep countries fixed.
+list_2016 <- spi_index_df %>% filter(date==start_date) %>% filter(!is.na(SPI.INDEX))
+list_2016 <- list_2016$iso3c
+#aggregate to global level
+spi_agg_df <- spi_index_df %>%
+  filter(iso3c %in% list_2016) %>% #keep countries fixed.
+  group_by(date) %>%
+  summarise(across(starts_with("SPI."),mean, na.rm=T)) 
 
 ```
 
@@ -878,6 +897,42 @@ eq_plot_txt <- function(data) {
 
 }
 
+
+tile_chart <- function(indicators) {
+    tile_df <- spi_agg_df %>%
+      relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
+      filter(between(date,start_date,end_date)) %>%
+      select(date, indicators) %>%
+      pivot_longer(
+        cols=indicators,
+        names_to = 'source_id',
+        values_to = 'Score'
+      ) %>%
+      left_join(metadata_full) %>%
+      filter(!is.na(source_name)) %>%
+      mutate(source_name=str_wrap(source_name, 30),
+             Score=round(Score,2)) %>%
+      mutate(source_name=factor(source_name, levels=unique(source_name))) 
+      
+    # tileplot 
+    ggplot(tile_df, aes(x=date, y=source_name, fill= Score)) + 
+      geom_tile(color = "white") +
+      geom_text(aes(label=Score), color='white', size=5) +
+      ylab('Indicator') +
+      theme_spi() +
+      #scale_fill_binned(guide = guide_coloursteps(show.limits = TRUE)) +
+      scale_y_discrete(limits = rev(levels(tile_df$source_name))) +
+        theme(
+          panel.grid.minor.y = element_blank(),
+          panel.grid.major.y = element_blank(),
+          axis.text.y=element_text(size=12),
+          #legend.text = element_text(size=14),
+          plot.title = element_text(size=16)
+          
+        )
+}
+
+
 ```
 
 
@@ -913,6 +968,74 @@ spi_index_df %>%
     xlab("Year") +
     ylab('Number of Economies') +
     expand_limits(y=c(0,217))
+```
+
+## Global Trends
+
+
+```{r tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+tile_chart(c( 'SPI.INDEX' ,'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5'                 )) +
+  ggtitle(paste0("Improvement in SPI Overall Scores over time"))
+
+
+
+```
+
+
+### Data Use
+
+
+```{r D1tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+tile_chart(c('SPI.D1.5.POV', 'SPI.D1.5.CHLD.MORT', 'SPI.D1.5.DT.TDS.DPPF.XP.ZS', 'SPI.D1.5.SAFE.MAN.WATER', 'SPI.D1.5.LFP')) +
+  ggtitle(paste0("Pillar 1 - Data Use - Indicators over time"))
+
+```
+
+
+### Data Services
+
+
+```{r D2tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+tile_chart(c('SPI.D2.1.GDDS', 'SPI.D2.2.Machine.readable', 'SPI.D2.2.Non.proprietary', 'SPI.D2.2.Download.options', 'SPI.D2.2.Metadata.available', 'SPI.D2.2.Terms.of.use', 'SPI.D2.2.Openness.subscore', 'SPI.D2.4.NADA')) +
+  ggtitle(paste0("Pillar 3 - Data Services - Indicators over time"))
+
+```
+
+
+
+
+### Data Products
+
+
+
+```{r D3tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+tile_chart(c('SPI.D3.1.POV', 'SPI.D3.2.HNGR', 'SPI.D3.3.HLTH', 'SPI.D3.4.EDUC', 'SPI.D3.5.GEND', 'SPI.D3.6.WTRS', 'SPI.D3.7.ENRG', 'SPI.D3.8.WORK', 'SPI.D3.9.INDY', 'SPI.D3.10.NEQL', 'SPI.D3.11.CITY', 'SPI.D3.12.CNSP', 'SPI.D3.13.CLMT', 'SPI.D3.15.LAND', 'SPI.D3.16.INST', 'SPI.D3.17.PTNS')) +
+  ggtitle(paste0("Pillar 3 - Data Products - Indicators over time"))
+
+```
+
+
+
+### Data Sources
+
+
+
+```{r D4tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+tile_chart(c('SPI.D4.1.1.POPU', 'SPI.D4.1.2.AGRI', 'SPI.D4.1.3.BIZZ', 'SPI.D4.1.4.HOUS', 'SPI.D4.1.5.AGSVY', 'SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH', 'SPI.D4.1.8.BZSVY', 'SPI.D4.2.3.CRVS', 'SPI.D4.3.GEO.first.admin.level')) +
+  ggtitle(paste0("Pillar 4 - Data Sources - Indicators over time"))
+
+```
+
+
+### Data Infrastructure
+
+
+
+
+```{r D5tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
+tile_chart(c('SPI.D5.1.DILG', 'SPI.D5.2.1.SNAU', 'SPI.D5.2.2.NABY', 'SPI.D5.2.3.CNIN', 'SPI.D5.2.4.CPIBY', 'SPI.D5.2.5.HOUS', 'SPI.D5.2.6.EMPL', 'SPI.D5.2.7.CGOV', 'SPI.D5.2.8.FINA', 'SPI.D5.2.9.MONY', 'SPI.D5.2.10.GSBP', 'SPI.D5.5.DIFI')) +
+  ggtitle(paste0("Pillar 5 - Data Infrastructure - Indicators over time"))
+
 ```
 
 
@@ -1223,72 +1346,9 @@ Note: N=167 economies.
 
 
 
-```{r}
-
-#get list of economies with score in 2016 to keep countries fixed.
-list_2016 <- spi_index_df %>% filter(date==start_date) %>% filter(!is.na(SPI.INDEX))
-list_2016 <- list_2016$iso3c
-#aggregate to global level
-spi_agg_df <- spi_index_df %>%
-  filter(iso3c %in% list_2016) %>% #keep countries fixed.
-  group_by(date) %>%
-  summarise(across(starts_with("SPI."),mean, na.rm=T)) 
-
-tile_chart <- function(indicators) {
-    tile_df <- spi_agg_df %>%
-      relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
-      filter(between(date,start_date,end_date)) %>%
-      select(date, indicators) %>%
-      pivot_longer(
-        cols=indicators,
-        names_to = 'source_id',
-        values_to = 'Score'
-      ) %>%
-      left_join(metadata) %>%
-      filter(!is.na(source_name)) %>%
-      mutate(source_name=str_wrap(source_name, 30),
-             Score=round(Score,2)) %>%
-      mutate(source_name=factor(source_name, levels=unique(source_name))) 
-      
-    # tileplot 
-    ggplot(tile_df, aes(x=date, y=source_name, fill= Score)) + 
-      geom_tile(color = "white") +
-      geom_text(aes(label=Score), color='white', size=5) +
-      ylab('Indicator') +
-      theme_spi() +
-      #scale_fill_binned(guide = guide_coloursteps(show.limits = TRUE)) +
-      scale_y_discrete(limits = rev(levels(tile_df$source_name))) +
-        theme(
-          panel.grid.minor.y = element_blank(),
-          panel.grid.major.y = element_blank(),
-          axis.text.y=element_text(size=12),
-          #legend.text = element_text(size=14),
-          plot.title = element_text(size=16)
-          
-        )
-}
-
-```
-
-```{r}
-#county how many indicators showed improvement since 2016
-    tile_df <- spi_agg_df %>%
-      relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
-      filter(between(date,start_date,end_date)) %>%
-      select(date, c('SPI.D1.5.POV':'SPI.D5.5.DIFI')) %>%
-      pivot_longer(
-        cols=c('SPI.D1.5.POV':'SPI.D5.5.DIFI'),
-        names_to = 'source_id',
-        values_to = 'Score'
-      ) %>%
-  group_by(source_id) %>%
-  summarise(Change=mean(Score[date==end_date], na.rm=TRUE)-mean(Score[date==start_date], na.rm=TRUE)) %>%
-        left_join(metadata) %>%
-  mutate(pos_change=Change>0)
 
 
 
-```
 
 
 

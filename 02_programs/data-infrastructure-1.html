@@ -23,7 +23,7 @@
 <meta name="author" content="Brian Stacy" />
 
 
-<meta name="date" content="2024-06-11" />
+<meta name="date" content="2024-06-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -249,7 +249,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The legislation and governance indicator will be drawn from SDG indicator 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Also include some other legislative aspects that foster good use of statistics eg freedom of information, privacy/transparency, good governance (eg free and fair elections).</p>
 <p>This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)</p>
 <p>Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics. Scores of 0 given a score of zero.</p>
-<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-06-11</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-06-12</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="data-infrastructure-1.html#cb43-1" tabindex="-1"></a>D5<span class="fl">.1</span>_DILG <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file=</span><span class="fu">paste</span>(raw_dir, <span class="st">&#39;5.1_DILG&#39;</span>, <span class="st">&#39;SG_STT_FPOS.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb43-2"><a href="data-infrastructure-1.html#cb43-2" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, date,ind_value) <span class="sc">%&gt;%</span></span>
 <span id="cb43-3"><a href="data-infrastructure-1.html#cb43-3" tabindex="-1"></a>  <span class="fu">right_join</span>(spi_df_empty) <span class="sc">%&gt;%</span></span>
@@ -663,76 +663,85 @@ units, the picture they provide of central government activities is usually inco
 <span id="cb51-31"><a href="data-infrastructure-1.html#cb51-31" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D5.2.7.CGOV.IMF=</span><span class="fu">case_when</span>(</span>
 <span id="cb51-32"><a href="data-infrastructure-1.html#cb51-32" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;AC&quot;</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
 <span id="cb51-33"><a href="data-infrastructure-1.html#cb51-33" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;CA&quot;</span> <span class="sc">~</span> <span class="fl">0.5</span>,</span>
-<span id="cb51-34"><a href="data-infrastructure-1.html#cb51-34" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> </span>
-<span id="cb51-35"><a href="data-infrastructure-1.html#cb51-35" tabindex="-1"></a>  ),</span>
-<span id="cb51-36"><a href="data-infrastructure-1.html#cb51-36" tabindex="-1"></a>  <span class="at">RAW.D5.2.7.CGOV.IMF=</span>General.Government..consolidated.) <span class="sc">%&gt;%</span></span>
-<span id="cb51-37"><a href="data-infrastructure-1.html#cb51-37" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMF_code=</span><span class="fu">as.numeric</span>(IMF_code)) <span class="sc">%&gt;%</span></span>
-<span id="cb51-38"><a href="data-infrastructure-1.html#cb51-38" tabindex="-1"></a>  <span class="fu">left_join</span>(imf_codes) <span class="sc">%&gt;%</span></span>
-<span id="cb51-39"><a href="data-infrastructure-1.html#cb51-39" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb51-40"><a href="data-infrastructure-1.html#cb51-40" tabindex="-1"></a>        <span class="at">iso3c=</span><span class="fu">if_else</span>(iso3c<span class="sc">==</span><span class="st">&quot;KOS&quot;</span>, <span class="st">&#39;XKX&#39;</span>,iso3c) ) <span class="sc">%&gt;%</span> <span class="co">#fix kosovo</span></span>
-<span id="cb51-41"><a href="data-infrastructure-1.html#cb51-41" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, RAW.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF ) <span class="sc">%&gt;%</span></span>
-<span id="cb51-42"><a href="data-infrastructure-1.html#cb51-42" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="dv">2021</span>)</span>
-<span id="cb51-43"><a href="data-infrastructure-1.html#cb51-43" tabindex="-1"></a></span>
-<span id="cb51-44"><a href="data-infrastructure-1.html#cb51-44" tabindex="-1"></a><span class="co">#2022</span></span>
-<span id="cb51-45"><a href="data-infrastructure-1.html#cb51-45" tabindex="-1"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF<span class="fl">.2022</span> <span class="ot">&lt;-</span>   <span class="fu">read_excel</span>(<span class="at">path=</span><span class="fu">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;2022.10_Compiled Data for World Bank.xlsx&quot;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span> ),</span>
-<span id="cb51-46"><a href="data-infrastructure-1.html#cb51-46" tabindex="-1"></a>                               <span class="at">sheet =</span> <span class="st">&quot;5. Cntrl Gct Acct Status&quot;</span>,</span>
-<span id="cb51-47"><a href="data-infrastructure-1.html#cb51-47" tabindex="-1"></a>                               <span class="at">skip=</span><span class="dv">9</span></span>
-<span id="cb51-48"><a href="data-infrastructure-1.html#cb51-48" tabindex="-1"></a>                               ) <span class="sc">%&gt;%</span></span>
-<span id="cb51-49"><a href="data-infrastructure-1.html#cb51-49" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">.name_repair=</span><span class="st">&#39;universal&#39;</span>) <span class="sc">%&gt;%</span>  </span>
-<span id="cb51-50"><a href="data-infrastructure-1.html#cb51-50" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb51-51"><a href="data-infrastructure-1.html#cb51-51" tabindex="-1"></a>    <span class="at">IMF_code=</span>Code,</span>
-<span id="cb51-52"><a href="data-infrastructure-1.html#cb51-52" tabindex="-1"></a>    <span class="at">IMF_country=</span>Country,</span>
-<span id="cb51-53"><a href="data-infrastructure-1.html#cb51-53" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb51-54"><a href="data-infrastructure-1.html#cb51-54" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D5.2.7.CGOV.IMF=</span><span class="fu">case_when</span>(</span>
-<span id="cb51-55"><a href="data-infrastructure-1.html#cb51-55" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;AC&quot;</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
-<span id="cb51-56"><a href="data-infrastructure-1.html#cb51-56" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;CA&quot;</span> <span class="sc">~</span> <span class="fl">0.5</span>,</span>
-<span id="cb51-57"><a href="data-infrastructure-1.html#cb51-57" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> </span>
-<span id="cb51-58"><a href="data-infrastructure-1.html#cb51-58" tabindex="-1"></a>  ),</span>
-<span id="cb51-59"><a href="data-infrastructure-1.html#cb51-59" tabindex="-1"></a>  <span class="at">RAW.D5.2.7.CGOV.IMF=</span>General.Government..consolidated.) <span class="sc">%&gt;%</span></span>
-<span id="cb51-60"><a href="data-infrastructure-1.html#cb51-60" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMF_code=</span><span class="fu">as.numeric</span>(IMF_code)) <span class="sc">%&gt;%</span></span>
-<span id="cb51-61"><a href="data-infrastructure-1.html#cb51-61" tabindex="-1"></a>  <span class="fu">left_join</span>(imf_codes) <span class="sc">%&gt;%</span></span>
-<span id="cb51-62"><a href="data-infrastructure-1.html#cb51-62" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb51-63"><a href="data-infrastructure-1.html#cb51-63" tabindex="-1"></a>        <span class="at">iso3c=</span><span class="fu">if_else</span>(iso3c<span class="sc">==</span><span class="st">&quot;KOS&quot;</span>, <span class="st">&#39;XKX&#39;</span>,iso3c) ) <span class="sc">%&gt;%</span> <span class="co">#fix kosovo</span></span>
-<span id="cb51-64"><a href="data-infrastructure-1.html#cb51-64" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, RAW.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF ) <span class="sc">%&gt;%</span></span>
-<span id="cb51-65"><a href="data-infrastructure-1.html#cb51-65" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="dv">2022</span>)</span>
-<span id="cb51-66"><a href="data-infrastructure-1.html#cb51-66" tabindex="-1"></a></span>
-<span id="cb51-67"><a href="data-infrastructure-1.html#cb51-67" tabindex="-1"></a></span>
-<span id="cb51-68"><a href="data-infrastructure-1.html#cb51-68" tabindex="-1"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF<span class="fl">.2023</span> <span class="ot">&lt;-</span>   <span class="fu">read_excel</span>(<span class="at">path=</span><span class="fu">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;2024.02_Compiled Data for World Bank.xlsx&quot;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span> ),</span>
-<span id="cb51-69"><a href="data-infrastructure-1.html#cb51-69" tabindex="-1"></a>                               <span class="at">sheet =</span> <span class="st">&quot;5. Cntrl Gct Acct Status&quot;</span>,</span>
-<span id="cb51-70"><a href="data-infrastructure-1.html#cb51-70" tabindex="-1"></a>                               <span class="at">skip=</span><span class="dv">9</span></span>
-<span id="cb51-71"><a href="data-infrastructure-1.html#cb51-71" tabindex="-1"></a>                               ) <span class="sc">%&gt;%</span></span>
-<span id="cb51-72"><a href="data-infrastructure-1.html#cb51-72" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">.name_repair=</span><span class="st">&#39;universal&#39;</span>) <span class="sc">%&gt;%</span>  </span>
-<span id="cb51-73"><a href="data-infrastructure-1.html#cb51-73" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb51-74"><a href="data-infrastructure-1.html#cb51-74" tabindex="-1"></a>    <span class="at">IMF_code=</span>Code,</span>
-<span id="cb51-75"><a href="data-infrastructure-1.html#cb51-75" tabindex="-1"></a>    <span class="at">IMF_country=</span>Country,</span>
-<span id="cb51-76"><a href="data-infrastructure-1.html#cb51-76" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb51-77"><a href="data-infrastructure-1.html#cb51-77" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D5.2.7.CGOV.IMF=</span><span class="fu">case_when</span>(</span>
-<span id="cb51-78"><a href="data-infrastructure-1.html#cb51-78" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;AC&quot;</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
-<span id="cb51-79"><a href="data-infrastructure-1.html#cb51-79" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;CA&quot;</span> <span class="sc">~</span> <span class="fl">0.5</span>,</span>
-<span id="cb51-80"><a href="data-infrastructure-1.html#cb51-80" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> </span>
-<span id="cb51-81"><a href="data-infrastructure-1.html#cb51-81" tabindex="-1"></a>  ),</span>
-<span id="cb51-82"><a href="data-infrastructure-1.html#cb51-82" tabindex="-1"></a>  <span class="at">RAW.D5.2.7.CGOV.IMF=</span>General.Government..consolidated.) <span class="sc">%&gt;%</span></span>
-<span id="cb51-83"><a href="data-infrastructure-1.html#cb51-83" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMF_code=</span><span class="fu">as.numeric</span>(IMF_code)) <span class="sc">%&gt;%</span></span>
-<span id="cb51-84"><a href="data-infrastructure-1.html#cb51-84" tabindex="-1"></a>  <span class="fu">left_join</span>(imf_codes) <span class="sc">%&gt;%</span></span>
-<span id="cb51-85"><a href="data-infrastructure-1.html#cb51-85" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb51-86"><a href="data-infrastructure-1.html#cb51-86" tabindex="-1"></a>        <span class="at">iso3c=</span><span class="fu">if_else</span>(iso3c<span class="sc">==</span><span class="st">&quot;KOS&quot;</span>, <span class="st">&#39;XKX&#39;</span>,iso3c) ) <span class="sc">%&gt;%</span> <span class="co">#fix kosovo</span></span>
-<span id="cb51-87"><a href="data-infrastructure-1.html#cb51-87" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, RAW.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF ) <span class="sc">%&gt;%</span></span>
-<span id="cb51-88"><a href="data-infrastructure-1.html#cb51-88" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="dv">2023</span>)</span>
-<span id="cb51-89"><a href="data-infrastructure-1.html#cb51-89" tabindex="-1"></a>  </span>
-<span id="cb51-90"><a href="data-infrastructure-1.html#cb51-90" tabindex="-1"></a></span>
-<span id="cb51-91"><a href="data-infrastructure-1.html#cb51-91" tabindex="-1"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb51-92"><a href="data-infrastructure-1.html#cb51-92" tabindex="-1"></a>  D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF<span class="fl">.2021</span>,</span>
-<span id="cb51-93"><a href="data-infrastructure-1.html#cb51-93" tabindex="-1"></a>  D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF<span class="fl">.2022</span>,</span>
-<span id="cb51-94"><a href="data-infrastructure-1.html#cb51-94" tabindex="-1"></a>  D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF<span class="fl">.2023</span></span>
-<span id="cb51-95"><a href="data-infrastructure-1.html#cb51-95" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb51-96"><a href="data-infrastructure-1.html#cb51-96" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(iso3c))</span>
-<span id="cb51-97"><a href="data-infrastructure-1.html#cb51-97" tabindex="-1"></a></span>
-<span id="cb51-98"><a href="data-infrastructure-1.html#cb51-98" tabindex="-1"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV <span class="ot">&lt;-</span>  D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV <span class="sc">%&gt;%</span></span>
-<span id="cb51-99"><a href="data-infrastructure-1.html#cb51-99" tabindex="-1"></a>  <span class="fu">full_join</span>(D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF) <span class="sc">%&gt;%</span></span>
-<span id="cb51-100"><a href="data-infrastructure-1.html#cb51-100" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D5.2.7.CGOV=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV),SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV)) <span class="sc">%&gt;%</span> <span class="co">#fill in with IMF data if missing.  This applies mostly to high income countries</span></span>
-<span id="cb51-101"><a href="data-infrastructure-1.html#cb51-101" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>country,<span class="sc">-</span>SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF) <span class="sc">%&gt;%</span></span>
-<span id="cb51-102"><a href="data-infrastructure-1.html#cb51-102" tabindex="-1"></a>  <span class="fu">arrange</span>(date, iso3c) <span class="sc">%&gt;%</span></span>
-<span id="cb51-103"><a href="data-infrastructure-1.html#cb51-103" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV))</span></code></pre></div>
+<span id="cb51-34"><a href="data-infrastructure-1.html#cb51-34" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;NA&quot;</span> <span class="sc">~</span> <span class="fu">as.numeric</span>(<span class="cn">NA</span>),</span>
+<span id="cb51-35"><a href="data-infrastructure-1.html#cb51-35" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> </span>
+<span id="cb51-36"><a href="data-infrastructure-1.html#cb51-36" tabindex="-1"></a>  ),</span>
+<span id="cb51-37"><a href="data-infrastructure-1.html#cb51-37" tabindex="-1"></a>  <span class="at">RAW.D5.2.7.CGOV.IMF=</span>General.Government..consolidated.) <span class="sc">%&gt;%</span></span>
+<span id="cb51-38"><a href="data-infrastructure-1.html#cb51-38" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMF_code=</span><span class="fu">as.numeric</span>(IMF_code)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-39"><a href="data-infrastructure-1.html#cb51-39" tabindex="-1"></a>  <span class="fu">left_join</span>(imf_codes) <span class="sc">%&gt;%</span></span>
+<span id="cb51-40"><a href="data-infrastructure-1.html#cb51-40" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb51-41"><a href="data-infrastructure-1.html#cb51-41" tabindex="-1"></a>        <span class="at">iso3c=</span><span class="fu">if_else</span>(iso3c<span class="sc">==</span><span class="st">&quot;KOS&quot;</span>, <span class="st">&#39;XKX&#39;</span>,iso3c) ) <span class="sc">%&gt;%</span> <span class="co">#fix kosovo</span></span>
+<span id="cb51-42"><a href="data-infrastructure-1.html#cb51-42" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, RAW.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-43"><a href="data-infrastructure-1.html#cb51-43" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="dv">2021</span>)</span>
+<span id="cb51-44"><a href="data-infrastructure-1.html#cb51-44" tabindex="-1"></a></span>
+<span id="cb51-45"><a href="data-infrastructure-1.html#cb51-45" tabindex="-1"></a><span class="co">#2022</span></span>
+<span id="cb51-46"><a href="data-infrastructure-1.html#cb51-46" tabindex="-1"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF<span class="fl">.2022</span> <span class="ot">&lt;-</span>   <span class="fu">read_excel</span>(<span class="at">path=</span><span class="fu">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;2022.10_Compiled Data for World Bank.xlsx&quot;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span> ),</span>
+<span id="cb51-47"><a href="data-infrastructure-1.html#cb51-47" tabindex="-1"></a>                               <span class="at">sheet =</span> <span class="st">&quot;5. Cntrl Gct Acct Status&quot;</span>,</span>
+<span id="cb51-48"><a href="data-infrastructure-1.html#cb51-48" tabindex="-1"></a>                               <span class="at">skip=</span><span class="dv">9</span></span>
+<span id="cb51-49"><a href="data-infrastructure-1.html#cb51-49" tabindex="-1"></a>                               ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-50"><a href="data-infrastructure-1.html#cb51-50" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">.name_repair=</span><span class="st">&#39;universal&#39;</span>) <span class="sc">%&gt;%</span>  </span>
+<span id="cb51-51"><a href="data-infrastructure-1.html#cb51-51" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb51-52"><a href="data-infrastructure-1.html#cb51-52" tabindex="-1"></a>    <span class="at">IMF_code=</span>Code,</span>
+<span id="cb51-53"><a href="data-infrastructure-1.html#cb51-53" tabindex="-1"></a>    <span class="at">IMF_country=</span>Country,</span>
+<span id="cb51-54"><a href="data-infrastructure-1.html#cb51-54" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-55"><a href="data-infrastructure-1.html#cb51-55" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D5.2.7.CGOV.IMF=</span><span class="fu">case_when</span>(</span>
+<span id="cb51-56"><a href="data-infrastructure-1.html#cb51-56" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;AC&quot;</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb51-57"><a href="data-infrastructure-1.html#cb51-57" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;CA&quot;</span> <span class="sc">~</span> <span class="fl">0.5</span>,</span>
+<span id="cb51-58"><a href="data-infrastructure-1.html#cb51-58" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;NA&quot;</span> <span class="sc">~</span> <span class="fu">as.numeric</span>(<span class="cn">NA</span>),</span>
+<span id="cb51-59"><a href="data-infrastructure-1.html#cb51-59" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> </span>
+<span id="cb51-60"><a href="data-infrastructure-1.html#cb51-60" tabindex="-1"></a>  ),</span>
+<span id="cb51-61"><a href="data-infrastructure-1.html#cb51-61" tabindex="-1"></a>  <span class="at">RAW.D5.2.7.CGOV.IMF=</span>General.Government..consolidated.) <span class="sc">%&gt;%</span></span>
+<span id="cb51-62"><a href="data-infrastructure-1.html#cb51-62" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMF_code=</span><span class="fu">as.numeric</span>(IMF_code)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-63"><a href="data-infrastructure-1.html#cb51-63" tabindex="-1"></a>  <span class="fu">left_join</span>(imf_codes) <span class="sc">%&gt;%</span></span>
+<span id="cb51-64"><a href="data-infrastructure-1.html#cb51-64" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb51-65"><a href="data-infrastructure-1.html#cb51-65" tabindex="-1"></a>        <span class="at">iso3c=</span><span class="fu">if_else</span>(iso3c<span class="sc">==</span><span class="st">&quot;KOS&quot;</span>, <span class="st">&#39;XKX&#39;</span>,iso3c) ) <span class="sc">%&gt;%</span> <span class="co">#fix kosovo</span></span>
+<span id="cb51-66"><a href="data-infrastructure-1.html#cb51-66" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, RAW.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-67"><a href="data-infrastructure-1.html#cb51-67" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="dv">2022</span>)</span>
+<span id="cb51-68"><a href="data-infrastructure-1.html#cb51-68" tabindex="-1"></a></span>
+<span id="cb51-69"><a href="data-infrastructure-1.html#cb51-69" tabindex="-1"></a></span>
+<span id="cb51-70"><a href="data-infrastructure-1.html#cb51-70" tabindex="-1"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF<span class="fl">.2023</span> <span class="ot">&lt;-</span>   <span class="fu">read_excel</span>(<span class="at">path=</span><span class="fu">paste</span>(raw_dir, <span class="st">&quot;5.2_DISM&quot;</span>,<span class="st">&quot;2024.02_Compiled Data for World Bank.xlsx&quot;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span> ),</span>
+<span id="cb51-71"><a href="data-infrastructure-1.html#cb51-71" tabindex="-1"></a>                               <span class="at">sheet =</span> <span class="st">&quot;5. Cntrl Gct Acct Status&quot;</span>,</span>
+<span id="cb51-72"><a href="data-infrastructure-1.html#cb51-72" tabindex="-1"></a>                               <span class="at">skip=</span><span class="dv">9</span></span>
+<span id="cb51-73"><a href="data-infrastructure-1.html#cb51-73" tabindex="-1"></a>                               ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-74"><a href="data-infrastructure-1.html#cb51-74" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">.name_repair=</span><span class="st">&#39;universal&#39;</span>) <span class="sc">%&gt;%</span>  </span>
+<span id="cb51-75"><a href="data-infrastructure-1.html#cb51-75" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb51-76"><a href="data-infrastructure-1.html#cb51-76" tabindex="-1"></a>    <span class="at">IMF_code=</span>Code,</span>
+<span id="cb51-77"><a href="data-infrastructure-1.html#cb51-77" tabindex="-1"></a>    <span class="at">IMF_country=</span>Country,</span>
+<span id="cb51-78"><a href="data-infrastructure-1.html#cb51-78" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-79"><a href="data-infrastructure-1.html#cb51-79" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D5.2.7.CGOV.IMF=</span><span class="fu">case_when</span>(</span>
+<span id="cb51-80"><a href="data-infrastructure-1.html#cb51-80" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;AC&quot;</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb51-81"><a href="data-infrastructure-1.html#cb51-81" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;CA&quot;</span> <span class="sc">~</span> <span class="fl">0.5</span>,</span>
+<span id="cb51-82"><a href="data-infrastructure-1.html#cb51-82" tabindex="-1"></a>    General.Government..consolidated.<span class="sc">==</span><span class="st">&quot;NA&quot;</span> <span class="sc">~</span> <span class="fu">as.numeric</span>(<span class="cn">NA</span>),</span>
+<span id="cb51-83"><a href="data-infrastructure-1.html#cb51-83" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span> </span>
+<span id="cb51-84"><a href="data-infrastructure-1.html#cb51-84" tabindex="-1"></a>  ),</span>
+<span id="cb51-85"><a href="data-infrastructure-1.html#cb51-85" tabindex="-1"></a>  <span class="at">RAW.D5.2.7.CGOV.IMF=</span>General.Government..consolidated.) <span class="sc">%&gt;%</span></span>
+<span id="cb51-86"><a href="data-infrastructure-1.html#cb51-86" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IMF_code=</span><span class="fu">as.numeric</span>(IMF_code)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-87"><a href="data-infrastructure-1.html#cb51-87" tabindex="-1"></a>  <span class="fu">left_join</span>(imf_codes) <span class="sc">%&gt;%</span></span>
+<span id="cb51-88"><a href="data-infrastructure-1.html#cb51-88" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb51-89"><a href="data-infrastructure-1.html#cb51-89" tabindex="-1"></a>        <span class="at">iso3c=</span><span class="fu">if_else</span>(iso3c<span class="sc">==</span><span class="st">&quot;KOS&quot;</span>, <span class="st">&#39;XKX&#39;</span>,iso3c) ) <span class="sc">%&gt;%</span> <span class="co">#fix kosovo</span></span>
+<span id="cb51-90"><a href="data-infrastructure-1.html#cb51-90" tabindex="-1"></a>  <span class="fu">select</span>(iso3c, RAW.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-91"><a href="data-infrastructure-1.html#cb51-91" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date=</span><span class="dv">2023</span>)</span>
+<span id="cb51-92"><a href="data-infrastructure-1.html#cb51-92" tabindex="-1"></a>  </span>
+<span id="cb51-93"><a href="data-infrastructure-1.html#cb51-93" tabindex="-1"></a></span>
+<span id="cb51-94"><a href="data-infrastructure-1.html#cb51-94" tabindex="-1"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb51-95"><a href="data-infrastructure-1.html#cb51-95" tabindex="-1"></a>  D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF<span class="fl">.2021</span>,</span>
+<span id="cb51-96"><a href="data-infrastructure-1.html#cb51-96" tabindex="-1"></a>  D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF<span class="fl">.2022</span>,</span>
+<span id="cb51-97"><a href="data-infrastructure-1.html#cb51-97" tabindex="-1"></a>  D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF<span class="fl">.2023</span></span>
+<span id="cb51-98"><a href="data-infrastructure-1.html#cb51-98" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-99"><a href="data-infrastructure-1.html#cb51-99" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(iso3c))</span>
+<span id="cb51-100"><a href="data-infrastructure-1.html#cb51-100" tabindex="-1"></a></span>
+<span id="cb51-101"><a href="data-infrastructure-1.html#cb51-101" tabindex="-1"></a>D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV <span class="ot">&lt;-</span>  D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV <span class="sc">%&gt;%</span></span>
+<span id="cb51-102"><a href="data-infrastructure-1.html#cb51-102" tabindex="-1"></a>  <span class="fu">full_join</span>(D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF) <span class="sc">%&gt;%</span></span>
+<span id="cb51-103"><a href="data-infrastructure-1.html#cb51-103" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SPI.D5.2.7.CGOV=</span><span class="fu">if_else</span>(<span class="fu">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV),SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF,SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV)) <span class="sc">%&gt;%</span> <span class="co">#fill in with IMF data if missing.  This applies mostly to high income countries</span></span>
+<span id="cb51-104"><a href="data-infrastructure-1.html#cb51-104" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>country,<span class="sc">-</span>SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV.IMF) <span class="sc">%&gt;%</span></span>
+<span id="cb51-105"><a href="data-infrastructure-1.html#cb51-105" tabindex="-1"></a>  <span class="co">#use na.locf for some that are not updated by IMF</span></span>
+<span id="cb51-106"><a href="data-infrastructure-1.html#cb51-106" tabindex="-1"></a>  <span class="fu">arrange</span>(date, iso3c) <span class="sc">%&gt;%</span></span>
+<span id="cb51-107"><a href="data-infrastructure-1.html#cb51-107" tabindex="-1"></a>  <span class="fu">group_by</span>(iso3c) <span class="sc">%&gt;%</span></span>
+<span id="cb51-108"><a href="data-infrastructure-1.html#cb51-108" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb51-109"><a href="data-infrastructure-1.html#cb51-109" tabindex="-1"></a>    <span class="at">SPI.D5.2.7.CGOV=</span><span class="fu">na.locf</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV, <span class="at">na.rm=</span><span class="cn">FALSE</span>)</span>
+<span id="cb51-110"><a href="data-infrastructure-1.html#cb51-110" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb51-111"><a href="data-infrastructure-1.html#cb51-111" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb51-112"><a href="data-infrastructure-1.html#cb51-112" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(SPI.D5.<span class="dv">2</span>.<span class="fl">7.</span>CGOV))</span></code></pre></div>
 </div>
 <div id="compilation-of-government-finance-statistics" class="section level3 hasAnchor" number="6.2.8">
 <h3><span class="header-section-number">6.2.8</span> 5.2.8 Compilation of government finance statistics<a href="data-infrastructure-1.html#compilation-of-government-finance-statistics" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -923,7 +932,7 @@ related to “business statistics” but refers to the statistical office, simpl
 <h2><span class="header-section-number">6.5</span> Dimension 5.5: finance<a href="data-infrastructure-1.html#dimension-5.5-finance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Indicator based on SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). This indicator measures whether the national statistical plan under implementation is fully funded. It relates to SDG 17.18.3 and is based on the annual Status Report on National Strategies for the Development of Statistics (NSDS).</p>
 <p>Scores is 1 if the country has a national statistical plan that is fully funded and under implementation. Scores of 0 given a score of zero.</p>
-<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-06-11</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2024-06-12</p>
 <p>Source of this data is UNSD and Paris21.</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="data-infrastructure-1.html#cb57-1" tabindex="-1"></a><span class="co">#pull from unsd api</span></span>
 <span id="cb57-2"><a href="data-infrastructure-1.html#cb57-2" tabindex="-1"></a>D5<span class="fl">.5</span>_DIFI <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file=</span><span class="fu">paste</span>(raw_dir, <span class="st">&#39;5.1_DILG&#39;</span>, <span class="st">&#39;SG_STT_FPOS.csv&#39;</span>, <span class="at">sep=</span><span class="st">&quot;/&quot;</span>)) <span class="sc">%&gt;%</span> </span>

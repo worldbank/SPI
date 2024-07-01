@@ -3545,6 +3545,7 @@ D5.2.7.CGOV.IMF.2021 <-   read_excel(path=paste(raw_dir, "5.2_DISM","2022.10_Com
   mutate(SPI.D5.2.7.CGOV.IMF=case_when(
     General.Government..consolidated.=="AC" ~ 1, 
     General.Government..consolidated.=="CA" ~ 0.5,
+    General.Government..consolidated.=="NA" ~ as.numeric(NA),
     TRUE ~ 0 
   ),
   RAW.D5.2.7.CGOV.IMF=General.Government..consolidated.) %>%
@@ -3568,6 +3569,7 @@ D5.2.7.CGOV.IMF.2022 <-   read_excel(path=paste(raw_dir, "5.2_DISM","2022.10_Com
   mutate(SPI.D5.2.7.CGOV.IMF=case_when(
     General.Government..consolidated.=="AC" ~ 1, 
     General.Government..consolidated.=="CA" ~ 0.5,
+    General.Government..consolidated.=="NA" ~ as.numeric(NA),
     TRUE ~ 0 
   ),
   RAW.D5.2.7.CGOV.IMF=General.Government..consolidated.) %>%
@@ -3591,6 +3593,7 @@ D5.2.7.CGOV.IMF.2023 <-   read_excel(path=paste(raw_dir, "5.2_DISM","2024.02_Com
   mutate(SPI.D5.2.7.CGOV.IMF=case_when(
     General.Government..consolidated.=="AC" ~ 1, 
     General.Government..consolidated.=="CA" ~ 0.5,
+    General.Government..consolidated.=="NA" ~ as.numeric(NA),
     TRUE ~ 0 
   ),
   RAW.D5.2.7.CGOV.IMF=General.Government..consolidated.) %>%
@@ -3613,7 +3616,13 @@ D5.2.7.CGOV <-  D5.2.7.CGOV %>%
   full_join(D5.2.7.CGOV.IMF) %>%
   mutate(SPI.D5.2.7.CGOV=if_else(is.na(SPI.D5.2.7.CGOV),SPI.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
   select(-country,-SPI.D5.2.7.CGOV.IMF) %>%
+  #use na.locf for some that are not updated by IMF
   arrange(date, iso3c) %>%
+  group_by(iso3c) %>%
+  mutate(
+    SPI.D5.2.7.CGOV=na.locf(SPI.D5.2.7.CGOV, na.rm=FALSE)
+  ) %>%
+  ungroup() %>%
   filter(!is.na(SPI.D5.2.7.CGOV))
 
 ```
