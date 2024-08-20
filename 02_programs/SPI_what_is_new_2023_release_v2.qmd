@@ -932,6 +932,32 @@ tile_chart <- function(indicators) {
         )
 }
 
+tile_table <- function(indicators) {
+    tile_df <- spi_agg_df %>%
+      relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
+      filter(between(date,start_date,end_date)) %>%
+      select(date, indicators) %>%
+      #make date the columns and indicators the rows. Pivot data
+      pivot_longer(cols = indicators, names_to = 'source_id', values_to = 'value') %>%
+      mutate(value=round(value,2)) %>%
+      pivot_wider(names_from = date, values_from = value) %>%
+      left_join(metadata_full) %>%
+      filter(!is.na(source_name)) %>%
+      mutate(source_name=str_wrap(source_name, 30)) %>%
+      mutate(source_name=factor(source_name, levels=unique(source_name))) %>%
+      #keep just source_name and the date columns
+      select(source_name, all_of(as.character(seq(start_date, end_date, by=1)))) %>%
+      rename(' '='source_name') 
+    
+    flextable(tile_df) %>%
+      theme_alafoli() %>%
+      bg(j=2:ncol(tile_df), 
+         bg=scales::col_numeric(palette='Blues', domain=c(0,1))) %>%
+      color(j=2:ncol(tile_df), color='white') %>%
+      #center text
+      align(j=2:ncol(tile_df), align='center', part='all')  %>%
+      autofit() 
+}
 
 ```
 
@@ -972,10 +998,15 @@ spi_index_df %>%
 
 ## Global Trends
 
+The table below
 
-```{r tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-tile_chart(c( 'SPI.INDEX' ,'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5'                 )) +
-  ggtitle(paste0("Improvement in SPI Overall Scores over time"))
+```{r}
+#| label: tbl-tile1
+#| tbl-cap: Improvement in SPI Overall Scores over time
+tile_table(c( 'SPI.INDEX' ,'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5'                 ))  %>%
+  colformat_double( digits = 1) %>%
+      bg(j=2:(end_date-start_date+2), 
+         bg=scales::col_numeric(palette='Blues', domain=c(0,100)))
 
 
 
@@ -984,20 +1015,27 @@ tile_chart(c( 'SPI.INDEX' ,'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3',
 
 ### Data Use
 
+lorem ipsum
 
-```{r D1tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-tile_chart(c('SPI.D1.5.POV', 'SPI.D1.5.CHLD.MORT', 'SPI.D1.5.DT.TDS.DPPF.XP.ZS', 'SPI.D1.5.SAFE.MAN.WATER', 'SPI.D1.5.LFP')) +
-  ggtitle(paste0("Pillar 1 - Data Use - Indicators over time"))
+```{r}
+#| label: tbl-d1tile1
+#| tbl-cap: Pillar 1 - Data Use - Indicators over time
+
+
+tile_table(c('SPI.D1.5.POV', 'SPI.D1.5.CHLD.MORT', 'SPI.D1.5.DT.TDS.DPPF.XP.ZS', 'SPI.D1.5.SAFE.MAN.WATER', 'SPI.D1.5.LFP')) 
 
 ```
 
 
 ### Data Services
 
+lorem ipsum
 
-```{r D2tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-tile_chart(c('SPI.D2.1.GDDS', 'SPI.D2.2.Machine.readable', 'SPI.D2.2.Non.proprietary', 'SPI.D2.2.Download.options', 'SPI.D2.2.Metadata.available', 'SPI.D2.2.Terms.of.use', 'SPI.D2.2.Openness.subscore', 'SPI.D2.4.NADA')) +
-  ggtitle(paste0("Pillar 3 - Data Services - Indicators over time"))
+```{r}
+#| label: tbl-D2tile1
+#| tbl-cap: Pillar 2 - Data Services - Indicators over time
+#| 
+tile_table(c('SPI.D2.1.GDDS', 'SPI.D2.2.Machine.readable', 'SPI.D2.2.Non.proprietary', 'SPI.D2.2.Download.options', 'SPI.D2.2.Metadata.available', 'SPI.D2.2.Terms.of.use', 'SPI.D2.2.Openness.subscore', 'SPI.D2.4.NADA')) 
 
 ```
 
@@ -1006,11 +1044,13 @@ tile_chart(c('SPI.D2.1.GDDS', 'SPI.D2.2.Machine.readable', 'SPI.D2.2.Non.proprie
 
 ### Data Products
 
+lorem ipsum
 
 
-```{r D3tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-tile_chart(c('SPI.D3.1.POV', 'SPI.D3.2.HNGR', 'SPI.D3.3.HLTH', 'SPI.D3.4.EDUC', 'SPI.D3.5.GEND', 'SPI.D3.6.WTRS', 'SPI.D3.7.ENRG', 'SPI.D3.8.WORK', 'SPI.D3.9.INDY', 'SPI.D3.10.NEQL', 'SPI.D3.11.CITY', 'SPI.D3.12.CNSP', 'SPI.D3.13.CLMT', 'SPI.D3.15.LAND', 'SPI.D3.16.INST', 'SPI.D3.17.PTNS')) +
-  ggtitle(paste0("Pillar 3 - Data Products - Indicators over time"))
+```{r }
+#| label: tbl-D3tile1
+#| tbl-cap: Pillar 3 - Data Products - Indicators over time
+tile_table(c('SPI.D3.1.POV', 'SPI.D3.2.HNGR', 'SPI.D3.3.HLTH', 'SPI.D3.4.EDUC', 'SPI.D3.5.GEND', 'SPI.D3.6.WTRS', 'SPI.D3.7.ENRG', 'SPI.D3.8.WORK', 'SPI.D3.9.INDY', 'SPI.D3.10.NEQL', 'SPI.D3.11.CITY', 'SPI.D3.12.CNSP', 'SPI.D3.13.CLMT', 'SPI.D3.15.LAND', 'SPI.D3.16.INST', 'SPI.D3.17.PTNS')) 
 
 ```
 
@@ -1018,23 +1058,28 @@ tile_chart(c('SPI.D3.1.POV', 'SPI.D3.2.HNGR', 'SPI.D3.3.HLTH', 'SPI.D3.4.EDUC', 
 
 ### Data Sources
 
+lorem ipsum
 
 
-```{r D4tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-tile_chart(c('SPI.D4.1.1.POPU', 'SPI.D4.1.2.AGRI', 'SPI.D4.1.3.BIZZ', 'SPI.D4.1.4.HOUS', 'SPI.D4.1.5.AGSVY', 'SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH', 'SPI.D4.1.8.BZSVY', 'SPI.D4.2.3.CRVS', 'SPI.D4.3.GEO.first.admin.level')) +
-  ggtitle(paste0("Pillar 4 - Data Sources - Indicators over time"))
+```{r}
+#| label: tbl-D4tile1
+#| tbl-cap: Pillar 4 - Data Sources - Indicators over time
+
+tile_table(c('SPI.D4.1.1.POPU', 'SPI.D4.1.2.AGRI', 'SPI.D4.1.3.BIZZ', 'SPI.D4.1.4.HOUS', 'SPI.D4.1.5.AGSVY', 'SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH', 'SPI.D4.1.8.BZSVY', 'SPI.D4.2.3.CRVS', 'SPI.D4.3.GEO.first.admin.level')) 
 
 ```
 
 
 ### Data Infrastructure
 
+lorem ipsum
 
 
+```{r D5tile1}
+#| label: tbl-D5tile1
+#| tbl-cap: Pillar 5 - Data Infrastructure - Indicators over time
 
-```{r D5tile1, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=12}
-tile_chart(c('SPI.D5.1.DILG', 'SPI.D5.2.1.SNAU', 'SPI.D5.2.2.NABY', 'SPI.D5.2.3.CNIN', 'SPI.D5.2.4.CPIBY', 'SPI.D5.2.5.HOUS', 'SPI.D5.2.6.EMPL', 'SPI.D5.2.7.CGOV', 'SPI.D5.2.8.FINA', 'SPI.D5.2.9.MONY', 'SPI.D5.2.10.GSBP', 'SPI.D5.5.DIFI')) +
-  ggtitle(paste0("Pillar 5 - Data Infrastructure - Indicators over time"))
+tile_table(c('SPI.D5.1.DILG', 'SPI.D5.2.1.SNAU', 'SPI.D5.2.2.NABY', 'SPI.D5.2.3.CNIN', 'SPI.D5.2.4.CPIBY', 'SPI.D5.2.5.HOUS', 'SPI.D5.2.6.EMPL', 'SPI.D5.2.7.CGOV', 'SPI.D5.2.8.FINA', 'SPI.D5.2.9.MONY', 'SPI.D5.2.10.GSBP', 'SPI.D5.5.DIFI')) 
 
 ```
 
@@ -1074,7 +1119,7 @@ deciles <- quantile(changes, probs = seq(from=0, to=1, by=.1), na.rm=TRUE)
 
 ```
 
-On average across countries, between `r start_date` and `r end_date` the SPI overall scores rose by `r round(avg_change, 1)` points on a scale from 0-100. Figure 3 plots countries’ scores in `r end_date` against their score in `r start_date`. The rankings of countries by the SPI overall score has been quite stable over time with a Spearman rank correlation of `r round(spearman_end_date_start_date,2)`.
+On average across countries, between `r start_date` and `r end_date` the SPI overall scores rose by `r round(avg_change, 1)` points on a scale from 0-100. Figure 3 plots the change in countries’ scores between `r end_date` and `r start_date`. The average country saw a `r round(avg_change)` point increase in their SPI overall score. However, country rankings have been steady. The correlation between the SPI overall score in `r start_date` and `r end_date` is `r round(corr_end_date_start_date,2)`, and the Spearman rank correlation is `r round(spearman_end_date_start_date,2)`.
 
 There has been some catch-up in statistical performance. Between `r start_date` and `r end_date` the largest improvements in the SPI overall score have come from countries that were in the bottom two deciles as of 2016 (Figure 4). Countries that were in the bottom 10% (first decile) in `r start_date` grew on average around 16 points from `r start_date`-`r end_date`. Countries in the top 10% (top decile) grew the least in that time. This pattern is not entirely unexpected, since many of the countries in the top decile score around the maximum number of points in several areas.
 

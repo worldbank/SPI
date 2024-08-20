@@ -3991,12 +3991,12 @@ spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Sou
 ```{r append}
 
 #add in population
-pop_df <- wbstats::wb(country="all",
+pop_df <- wbstats::wb_data(country="all",
              indicator='SP.POP.TOTL',
-             startdate=2004,
-             enddate=end_date) %>%
+             start_date=2004,
+             end_date=end_date) %>%
   mutate(date=as.numeric(date)) %>%
-  mutate(population=value) %>%
+  mutate(population=SP.POP.TOTL) %>%
   select(iso3c, date, population)
 
 # create final dataset
@@ -4025,7 +4025,7 @@ spi_df_final <- spi_df_final %>%
   arrange(country, date) %>%
   group_by(iso3c) %>%
   mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
-  mutate(across(c("SPI.D1.5.POV",
+  mutate(across(c(#"SPI.D1.5.POV",
                   "SPI.D2.1.GDDS",
                   "SPI.D5.1.DILG",
                   "SPI.D5.2.3.CNIN", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL", "SPI.D5.2.8.FINA",

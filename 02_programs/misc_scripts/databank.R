@@ -7,6 +7,8 @@ library(tidyverse)
 library(here)
 library(readxl)
 
+latest_date=2023
+
 #set paths
 dir <- here()
 raw_dir <- paste(dir, '01_raw_data', sep="/")
@@ -180,7 +182,7 @@ excel <- list('Indicators'=databank_df,
 writexl::write_xlsx(databank_df,
                     path=paste(output_dir, "/SPI_databank.xlsx", sep=""))
 
-databank_df %>% filter(date==2022) %>% left_join(metadata) %>% filter(!is.na(pillar)) %>% writexl::write_xlsx(
+databank_df %>% filter(date==latest_date) %>% left_join(metadata) %>% filter(!is.na(pillar)) %>% writexl::write_xlsx(
   path=paste(output_dir, "/SPI_databank_latest.xlsx", sep=""))
 
 

@@ -27,8 +27,8 @@ library(ggthemes)
 # Directory for SPI csv files  to be created
 dir <- here()
 
-input_dir <- paste(dir, '01_raw_data', sep="/")
-output_dir <- paste(dir, '01_raw_data','4.1_SOCS/', sep="/")
+input_dir <- paste(dir, "01_raw_data", sep = "/")
+output_dir <- paste(dir, "01_raw_data", "4.1_SOCS/", sep = "/")
 
 country_metadata <- wbstats::wb_countries()
 ```
@@ -40,13 +40,12 @@ This file will pull metadata from the microdata library programmatically using t
 Below we pull data from both the public, non-public (World Bank use only) microdata, and IHSN libraries using a restful API.  We will produce a dataframe for each of these sources containing the basic metadata for each survey included.
 
 ```{r data_pulls}
-
-#public studies from World Bank microdata library
-public_base_url <- "http://microdata.worldbank.org/index.php/api/catalog" #define url
-study_request_public<-fromJSON(paste(public_base_url,"/search","?ps=10000", sep="")) # pull from url
-study_df_public <- study_request_public$result$rows #convert to dataframe
-write_excel_csv(study_df_public, path = paste(output_dir, "microdata_library_public_studies.csv", sep="")) #write to csv
-gt(as_tibble(head(study_df_public[,1:5]))) #display top 5 rows of dataframe
+# public studies from World Bank microdata library
+public_base_url <- "http://microdata.worldbank.org/index.php/api/catalog" # define url
+study_request_public <- fromJSON(paste(public_base_url, "/search", "?ps=10000", sep = "")) # pull from url
+study_df_public <- study_request_public$result$rows # convert to dataframe
+write_excel_csv(study_df_public, path = paste(output_dir, "microdata_library_public_studies.csv", sep = "")) # write to csv
+gt(as_tibble(head(study_df_public[, 1:5]))) # display top 5 rows of dataframe
 
 
 # pull all surveys from IHSN
@@ -54,383 +53,418 @@ gt(as_tibble(head(study_df_public[,1:5]))) #display top 5 rows of dataframe
 # study_request_ihsn<-fromJSON(paste(ihsn_base_url,"/search","?ps=10000", sep="")) # pull from url
 # study_df_ihsn <- study_request_ihsn$result$rows #convert to dataframe
 # write_excel_csv(study_df_ihsn, path = paste(output_dir, "ihsn_library_public_studies.csv", sep="")) #write to csv
-# 
+#
 
-#pull from ILO
+# pull from ILO
 temp <- tempfile()
-ilo_base_url <- 'https://www.ilo.org/surveyLib/index.php/catalog/export/csv?page=1&ps=100&collection[]=LFS' 
-download.file(ilo_base_url,temp)
-study_df_ilo <- read_csv(temp) #convert to dataframe
-write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv", sep="")) #write to csv
+ilo_base_url <- "https://www.ilo.org/surveyLib/index.php/catalog/export/csv?page=1&ps=100&collection[]=LFS"
+download.file(ilo_base_url, temp)
+study_df_ilo <- read_csv(temp) # convert to dataframe
 
-ilo_base_url <- "https://microdata.ilo.org/index.php/api/catalog" #define url
-study_request_ilo<-fromJSON(paste(ilo_base_url,"/search","?ps=15000", sep="")) # pull from url
-study_df_ilo <- study_request_ilo$result$rows
+# convert to a function with the page number as an argument
+ilo_survey_pull <- function(page) {
+  ilo_base_url <- paste("https://www.ilo.org/surveyLib/index.php/catalog/export/csv?page=", page, "&ps=100&collection[]=LFS", sep = "")
+  temp <- tempfile()
+  download.file(ilo_base_url, temp)
+  study_df_ilo <- read_csv(temp) # convert to dataframe
+  return(study_df_ilo)
+}
+
+# loop over pages and pull data
+nrow <- 100
+# while loop that checks if the number of rows is 100
+i <- 1
+while (nrow == 100) {
+  temp_df <- ilo_survey_pull(i)
+  nrow <- nrow(temp_df)
+  if (i == 1) {
+    study_df_ilo <- temp_df
+  } else {
+    study_df_ilo <- bind_rows(study_df_ilo, temp_df)
+  }
+  i <- i + 1
+}
+write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv", sep = "")) # write to csv
+
+
 
 # second ILO source
-ilo_sources_catalog<-read_csv('https://www.ilo.org/ilostat-files/Documents/sources_en.csv')
-write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catalog.csv", sep="")) #write to csv
+ilo_sources_catalog <- read_csv("https://www.ilo.org/ilostat-files/Documents/sources_en.csv")
+write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catalog.csv", sep = "")) # write to csv
 
-#pull from FAO
+# pull from FAO
 temp <- tempfile()
-fao_base_url <- 'https://microdata.fao.org/index.php/catalog/export/json?ps=5000&collection[]=agriculture-census-surveys' 
-download.file(fao_base_url,temp)
-study_df_fao <- read_csv(temp) #convert to dataframe
-write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep="")) #write to csv
+fao_base_url <- "https://microdata.fao.org/index.php/catalog/export/json?ps=5000&collection[]=agriculture-census-surveys"
+download.file(fao_base_url, temp)
+study_df_fao <- read_csv(temp) # convert to dataframe
+write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep = "")) # write to csv
 
 
-fao_base_url <- "https://microdata.fao.org/index.php/api/catalog" #define url
-study_request_fao<-fromJSON(paste(fao_base_url,"/search","?ps=20000", sep="")) # pull from url
+fao_base_url <- "https://microdata.fao.org/index.php/api/catalog" # define url
+study_request_fao <- fromJSON(paste(fao_base_url, "/search", "?ps=20000", sep = "")) # pull from url
 study_df_fao <- study_request_fao$result$rows
 
-#internal use studies from World Bank microdata library
-wb_base_url <- "http://microdatalib.worldbank.org/index.php/api/catalog" #define url
-study_request_wb<-fromJSON(paste(wb_base_url,"/search","?ps=20000", sep="")) # pull from url
+# internal use studies from World Bank microdata library
+wb_base_url <- "http://microdatalib.worldbank.org/index.php/api/catalog" # define url
+study_request_wb <- fromJSON(paste(wb_base_url, "/search", "?ps=20000", sep = "")) # pull from url
 study_df_internal <- study_request_wb$result$rows
-write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_internal_studies.csv", sep="")) #write to csv
+write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_internal_studies.csv", sep = "")) # write to csv
 
 
-gt(as_tibble(head(study_df_internal[,1:5])))
+gt(as_tibble(head(study_df_internal[, 1:5])))
 
 
 
-#check for matches
+# check for matches
 matches_wb_public <- study_df_internal %>%
-  inner_join(study_df_public, by=c('title', 'nation','year_start','year_end'))
+  inner_join(study_df_public, by = c("title", "nation", "year_start", "year_end"))
 
 # matches_wb_ihsn <- study_df_internal %>%
 #   inner_join(study_df_ihsn, by=c('title', 'nation','year_start','year_end'))
-
 ```
 
 # Microdatalib
 
+
+
 ```{r micro_series_info}
-
-
-#get list of survey ids
+# get list of survey ids
 internal_series <- study_df_internal$idno
 
 
 
 
 
-#use purr to loop over list of surveys and return some extra info
+# use purr to loop over list of surveys and return some extra info
 series_info_fn <- function(series) {
-      
-    info <- fromJSON(paste('http://microdatalib.worldbank.org/index.php/api/catalog/',series, sep=""))    
-    series_info <- as.character(info$dataset$metadata$study_desc$series_statement$series_name)
-    geog_coverage <- as.character(info$dataset$metadata$study_desc$study_info$geog_coverage)
-    tibble::tibble(series_info, geog_coverage)
+  info <- fromJSON(paste("http://microdatalib.worldbank.org/index.php/api/catalog/", series, sep = ""))
+  series_info <- as.character(info$dataset$metadata$study_desc$series_statement$series_name)
+  sampling_info <- as.character(info$dataset$metadata$study_desc$method$analysis_info$response_rate)
+  geog_coverage <- as.character(info$dataset$metadata$study_desc$study_info$geog_coverage)
+  tibble::tibble(series_info, sampling_info, geog_coverage)
 }
 
 
-#now produce a dataframe with the more info on survey
+# now produce a dataframe with the more info on survey
 study_df_internal <- study_df_internal %>%
-  mutate(series_info_dat=map(internal_series, possibly(series_info_fn, 
-                                           otherwise = 'Something Wrong'
-                                           )
-                     )
-  ) %>%
+  mutate(series_info_dat = map(internal_series, possibly(series_info_fn,
+    otherwise = "Something Wrong"
+  ))) %>%
   unnest(series_info_dat,
-         keep_empty=TRUE)
+    keep_empty = TRUE
+  )
 
 study_df_internal <- study_df_internal %>%
   mutate(across(is.list, as.character))
 
 
-write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_surveys.csv",sep="")) #write to csv
-#gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
-
-
-
-
+write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_surveys.csv", sep = "")) # write to csv
+# gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
 ```
 
 # FAO Library
 
 ```{r micro_series_info_FAO}
-
-
-#get list of survey ids
-study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep="")) #convert to dataframe
+# get list of survey ids
+study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep = "")) # convert to dataframe
 fao_series <- study_df_fao$id
 
 
 
 
-#use purr to loop over list of surveys and return some extra info
+# use purr to loop over list of surveys and return some extra info
 series_info_fn_fao <- function(series) {
-      
-  info <- fromJSON(paste('https://microdata.fao.org/index.php/metadata/export/',series,'/json', sep=""))    
+  info <- fromJSON(paste("https://microdata.fao.org/index.php/metadata/export/", series, "/json", sep = ""))
   series_info <- as.character(info$study_desc$series_statement$series_name)
   geog_coverage <- as.character(info$study_desc$study_info$geog_coverage)
   tibble::tibble(series_info, geog_coverage)
 }
 
 
-#now produce a dataframe with the more info on survey
+# now produce a dataframe with the more info on survey
 study_df_fao <- study_df_fao %>%
-  mutate(series_info_dat=map(fao_series, possibly(series_info_fn_fao, 
-                                           otherwise = 'Something Wrong'
-                                           )
-                     )
-  ) %>%
+  mutate(series_info_dat = map(fao_series, possibly(series_info_fn_fao,
+    otherwise = "Something Wrong"
+  ))) %>%
   unnest(series_info_dat,
-         keep_empty=TRUE)
+    keep_empty = TRUE
+  )
 
 study_df_fao <- study_df_fao %>%
   mutate(across(where(is.list), as.character))
 
 
-write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv",sep="")) #write to csv
-#gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
-
-
-
-
+write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep = "")) # write to csv
+# gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
 ```
 
 
 ```{r householdsurveys}
-#access household surveys in PIP (povcalnet)
+# access household surveys in PIP (povcalnet)
 url <- "https://api.worldbank.org/pip/v1/survey-metadata"
 pip_df <- fromJSON(url,
-                        simplifyDataFrame = TRUE
-                         ) %>%
-  filter(survey_coverage=="national") %>%
-  rename(indicator_date=reporting_year,
-         iso3c=country_code) %>% 
+  simplifyDataFrame = TRUE
+) %>%
+  filter(survey_coverage == "national") %>%
+  rename(
+    indicator_date = reporting_year,
+    iso3c = country_code
+  ) %>%
   select(iso3c, indicator_date) %>%
   left_join(country_metadata) %>%
   select(country, indicator_date)
 
 
 survey_df <- study_df_internal %>%
-  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
-  rename(country=nation,
-         indicator_date=year_start) %>% 
-  mutate(country=case_when(
-    country=="Gambia" ~ "Gambia, The",
+  filter(grepl("national|nacional", str_to_lower(geog_coverage))) %>% # keep just nationally representative surveys based on metadata
+  rename(
+    country = nation,
+    indicator_date = year_start
+  ) %>%
+  mutate(country = case_when(
+    country == "Gambia" ~ "Gambia, The",
     TRUE ~ country
   )) %>%
-  filter(grepl('lsms|hh/is|hh/ies|Income/Expenditure/Household Survey', series_info)) %>%
+  filter(grepl("lsms|hh/is|hh/ies|Income/Expenditure/Household Survey", series_info)) %>%
   bind_rows(pip_df) %>%
   group_by(country, indicator_date) %>%
-  summarise(freq=n(),
-            title=first(title)) %>%
+  summarise(
+    freq = n(),
+    title = first(title)
+  ) %>%
   group_by(country) %>%
-  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
-         nada_title = paste0(title, collapse = "; ")) %>%
-  select(country,indicator_date, nada_dates, nada_title)
+  mutate(
+    nada_dates = paste0(indicator_date, collapse = ", "),
+    nada_title = paste0(title, collapse = "; ")
+  ) %>%
+  select(country, indicator_date, nada_dates, nada_title)
 
-write_excel_csv(survey_df, path = paste(output_dir, 'D4.1.4.SVY.HOUS_NADA.csv', sep="")) #write to csv
+write_excel_csv(survey_df, path = paste(output_dir, "D4.1.4.SVY.HOUS_NADA.csv", sep = "")) # write to csv
 ```
 
 
 ```{r save, echo=TRUE}
-
-study_df_internal <- read_csv(paste(output_dir, "microdata_library_surveys.csv", sep="/"))
+study_df_internal <- read_csv(paste(output_dir, "microdata_library_surveys.csv", sep = "/"))
 
 series_types_wb <- study_df_internal %>%
   group_by(series_info) %>%
-  summarise(n=n()
-            )
+  summarise(n = n())
 
-saver <- function(data, indicator,filename) {
-  
-  indicator<-indicator
+saver <- function(data, indicator, filename) {
+  indicator <- indicator
 
-  
-survey_df <- get(data) %>%
-  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
-  rename(country=nation,
-         indicator_date=year_start) %>% 
-  mutate(country=case_when(
-    country=="Gambia" ~ "Gambia, The",
-    TRUE ~ country
-  )) %>%
-  filter(grepl(indicator, series_info)) %>%
-  group_by(country, indicator_date) %>%
-  summarise(freq=n(),
-            title=first(title)) %>%
-  group_by(country) %>%
-  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
-         nada_title = paste0(title, collapse = "; ")) %>%
-  select(country,indicator_date, nada_dates, nada_title)
-  
-    
-    
-  
-  write_excel_csv(survey_df, path = paste(output_dir, filename, sep="")) #write to csv
+
+  survey_df <- get(data) %>%
+    filter(grepl("national|nacional", str_to_lower(geog_coverage))) %>% # keep just nationally representative surveys based on metadata
+    rename(
+      country = nation,
+      indicator_date = year_start
+    ) %>%
+    mutate(country = case_when(
+      country == "Gambia" ~ "Gambia, The",
+      TRUE ~ country
+    )) %>%
+    filter(grepl(indicator, series_info)) %>%
+    group_by(country, indicator_date) %>%
+    summarise(
+      freq = n(),
+      title = first(title)
+    ) %>%
+    group_by(country) %>%
+    mutate(
+      nada_dates = paste0(indicator_date, collapse = ", "),
+      nada_title = paste0(title, collapse = "; ")
+    ) %>%
+    select(country, indicator_date, nada_dates, nada_title)
+
+
+
+
+  write_excel_csv(survey_df, path = paste(output_dir, filename, sep = "")) # write to csv
 }
 
-#houshold surveys with pip surveys included
+# houshold surveys with pip surveys included
 study_df_hh <- study_df_internal
 
-#saver('study_df_internal','lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
-study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep="")
-                         
-                         )
-saver('study_df_internal','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
-saver('study_df_fao','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA_FAO.csv')
+# saver('study_df_internal','lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
+study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep = ""))
+saver("study_df_internal", "ag/oth|Agricultural Survey", "D4.1.5.SVY.AGRI_NADA.csv")
+saver("study_df_fao", "ag/oth|Agricultural Survey", "D4.1.5.SVY.AGRI_NADA_FAO.csv")
 
-saver('study_df_fao','ag/census|Agricultural Census' , 'D4.1.2.CEN.AGRI_NADA_FAO.csv')
+saver("study_df_fao", "ag/census|Agricultural Census", "D4.1.2.CEN.AGRI_NADA_FAO.csv")
 
 
 
 # save FAO and Microdatalib datasets
 ag_svys_df <- study_df_internal %>%
-  select(-c('created','changed')) %>%
-  bind_rows(study_df_fao) 
+  select(-c("created", "changed")) %>%
+  bind_rows(study_df_fao)
 
-saver('ag_svys_df','ag/oth|Agricultural Survey' , 'D4.1.5.SVY.AGRI_NADA.csv')
- 
- # use ILO for source of labor force surveys
-survey_df_ilo <- read_csv(paste(output_dir, "ilo_library_public_studies.csv", sep="")) %>%
-  rename(indicator_date=year_start) %>% 
-  mutate(iso3c=str_sub(idno,1,3)) %>%
-  mutate(iso3c=if_else(iso3c=='KOS','XKX',iso3c)) %>% #fix kosovo
+saver("ag_svys_df", "ag/oth|Agricultural Survey", "D4.1.5.SVY.AGRI_NADA.csv")
+
+# use ILO for source of labor force surveys
+survey_df_ilo <- read_csv(paste(output_dir, "ilo_library_public_studies.csv", sep = "")) %>%
+  rename(indicator_date = year_start) %>%
+  mutate(iso3c = str_sub(idno, 1, 3)) %>%
+  mutate(iso3c = if_else(iso3c == "KOS", "XKX", iso3c)) %>% # fix kosovo
   select(iso3c, indicator_date) %>%
   left_join(country_metadata) %>%
   select(country, indicator_date)
 
-#ILO country list
-study_df_ilo <- read_csv(paste(output_dir, "ilo_library_public_studies.csv", sep=""))
+# ILO country list
+study_df_ilo <- read_csv(paste(output_dir, "ilo_library_public_studies.csv", sep = ""))
 countries_ilo <- study_df_ilo %>%
-  mutate(iso3c=str_sub(idno,1,3),
-         Country=nation) %>%
-  mutate(iso3c=if_else(iso3c=='KOS','XKX',iso3c)) %>% #fix kosovo
-  group_by(iso3c, Country ) %>%
-  filter(row_number()==1) %>%
+  mutate(
+    iso3c = str_sub(idno, 1, 3),
+    Country = nation
+  ) %>%
+  mutate(iso3c = if_else(iso3c == "KOS", "XKX", iso3c)) %>% # fix kosovo
+  group_by(iso3c, Country) %>%
+  filter(row_number() == 1) %>%
   ungroup() %>%
-  select(Country,iso3c)
+  select(Country, iso3c)
 
-#read in data sources file from ILO as well
-ilo_sources_catalog_final <- read_csv(paste(output_dir, "ilo_sources_catalog.csv", sep="")) %>%
-  filter(Source=="Labour Force Survey") %>%
-  mutate(indicator_date=str_sub(`Latest period available`,start=1,end=4),
-         indicator_date=as.numeric(indicator_date),
-         country=Country
-         ) %>%
-    mutate(country=case_when(
-    country=="Bahamas" ~ "Bahamas, The",                  
-    country=="Bolivia (Plurinational State of)"   ~  "Bolivia"   ,                  
-    country=="Côte d'Ivoire"  ~  "Cote d'Ivoire"                ,
-    country=="Democratic Republic of the Congo"  ~ "Congo, Dem. Rep."  ,           
-    country=="Congo"  ~ "Congo, Rep."        ,           
-    country=="Curacao"  ~  "Curacao"       ,                
-    country=="Czechia"   ~  "Czech Republic"     ,        
-    country=="Egypt"  ~ "Egypt, Arab Rep."        ,      
-    country=="Micronesia (Federated States of)"  ~ "Micronesia, Fed. Sts."  ,       
-    country=="United Kingdom"   ~  "United Kingdom"    ,         
-    country=="Gambia"    ~  "Gambia, The"     ,           
-    country=="Iran, Islamic Republic of"  ~ "Iran, Islamic Rep." ,
-    country=="Moldova, Republic of" ~ "Moldova",
-    country=="Kyrgyzstan"   ~  "Kyrgyz Republic"   ,          
-    country=="Republic of Korea"   ~ "Korea, Rep."   ,               
-    country=="Lao People's Democratic Republic"    ~  "Lao PDR" ,                    
-    country=="Saint Kitts and Nevis	"   ~ "St. Kitts and Nevis",
-    country=="Saint Lucia"   ~ "St. Lucia",
-    country=="Republic of Moldova"   ~  "Moldova"   ,                  
-    country=="Democratic People's Republic of Korea"  ~  "Korea, Dem. People’s Rep." ,  
-    country=="Slovakia"   ~  "Slovak Republic"             ,
-    country=="United Republic of Tanzania"   ~  "Tanzania" ,                    
-    country=="United States of America"  ~ "United States"  ,                
-    country=="Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines" ,
-    country=="Occupied Palestinian Territory" ~ "Palestine",
-    country=="Tanzania, United Republic of" ~ "Tanzania",
-    country=="Venezuela (Bolivarian Republic of)"  ~  "Venezuela, RB"   ,              
-    country=="British Virgin Islands"  ~  "British Virgin Islands" ,       
-    country=="Viet Nam"  ~ "Vietnam"        ,              
-    country=="Yemen"  ~ "Yemen, Rep.",
-    country=="United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
+# read in data sources file from ILO as well
+ilo_sources_catalog_final <- read_csv(paste(output_dir, "ilo_sources_catalog.csv", sep = "")) %>%
+  filter(Source == "Labour Force Survey") %>%
+  mutate(
+    indicator_date = str_sub(`Latest period available`, start = 1, end = 4),
+    indicator_date = as.numeric(indicator_date),
+    country = Country
+  ) %>%
+  mutate(country = case_when(
+    country == "Bahamas" ~ "Bahamas, The",
+    country == "Bolivia (Plurinational State of)" ~ "Bolivia",
+    country == "Côte d'Ivoire" ~ "Cote d'Ivoire",
+    country == "Democratic Republic of the Congo" ~ "Congo, Dem. Rep.",
+    country == "Congo" ~ "Congo, Rep.",
+    country == "Curacao" ~ "Curacao",
+    country == "Czechia" ~ "Czech Republic",
+    country == "Egypt" ~ "Egypt, Arab Rep.",
+    country == "Micronesia (Federated States of)" ~ "Micronesia, Fed. Sts.",
+    country == "United Kingdom" ~ "United Kingdom",
+    country == "Gambia" ~ "Gambia, The",
+    country == "Iran, Islamic Republic of" ~ "Iran, Islamic Rep.",
+    country == "Moldova, Republic of" ~ "Moldova",
+    country == "Kyrgyzstan" ~ "Kyrgyz Republic",
+    country == "Republic of Korea" ~ "Korea, Rep.",
+    country == "Lao People's Democratic Republic" ~ "Lao PDR",
+    country == "Saint Kitts and Nevis	" ~ "St. Kitts and Nevis",
+    country == "Saint Lucia" ~ "St. Lucia",
+    country == "Republic of Moldova" ~ "Moldova",
+    country == "Democratic People's Republic of Korea" ~ "Korea, Dem. People’s Rep.",
+    country == "Slovakia" ~ "Slovak Republic",
+    country == "United Republic of Tanzania" ~ "Tanzania",
+    country == "United States of America" ~ "United States",
+    country == "Saint Vincent and the Grenadines" ~ "St. Vincent and the Grenadines",
+    country == "Occupied Palestinian Territory" ~ "Palestine",
+    country == "Tanzania, United Republic of" ~ "Tanzania",
+    country == "Venezuela (Bolivarian Republic of)" ~ "Venezuela, RB",
+    country == "British Virgin Islands" ~ "British Virgin Islands",
+    country == "Viet Nam" ~ "Vietnam",
+    country == "Yemen" ~ "Yemen, Rep.",
+    country == "United Kingdom of Great Britain and Northern Ireland" ~ "United Kingdom",
     TRUE ~ country
   )) %>%
   left_join(country_metadata) %>%
-  select(country,iso3c, indicator_date ) %>%
+  select(country, iso3c, indicator_date) %>%
   filter(!is.na(iso3c))
 
 
-#add Microdatalib
-indicator<-'lfs'
+# add Microdatalib
+indicator <- "lfs"
 survey_df <- study_df_internal %>%
-  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
-  rename(country=nation,
-         indicator_date=year_start) %>% 
-  mutate(country=case_when(
-    country=="Gambia" ~ "Gambia, The",
+  filter(grepl("national|nacional", str_to_lower(geog_coverage))) %>% # keep just nationally representative surveys based on metadata
+  rename(
+    country = nation,
+    indicator_date = year_start
+  ) %>%
+  mutate(country = case_when(
+    country == "Gambia" ~ "Gambia, The",
     TRUE ~ country
   )) %>%
   filter(grepl(indicator, series_info)) %>%
   bind_rows(survey_df_ilo) %>%
   bind_rows(ilo_sources_catalog_final) %>%
   group_by(country, indicator_date) %>%
-  summarise(freq=n(),
-            title=first(title)) %>%
+  summarise(
+    freq = n(),
+    title = first(title)
+  ) %>%
   group_by(country) %>%
-  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
-         nada_title = paste0(title, collapse = "; ")) %>%
-  select(country,indicator_date, nada_dates, nada_title)
+  mutate(
+    nada_dates = paste0(indicator_date, collapse = ", "),
+    nada_title = paste0(title, collapse = "; ")
+  ) %>%
+  select(country, indicator_date, nada_dates, nada_title)
 
-  write_excel_csv(survey_df, path = paste(output_dir, 'D4.1.6.SVY.LABR_NADA.csv', sep="")) #write to csv
+write_excel_csv(survey_df, path = paste(output_dir, "D4.1.6.SVY.LABR_NADA.csv", sep = "")) # write to csv
 
- # saver('lfs' , 'D4.1.6.SVY.LABR_NADA.csv')
+# saver('lfs' , 'D4.1.6.SVY.LABR_NADA.csv')
 
-saver('study_df_internal','dhs|mics|whs|hea|DHS|MICS|WHS|Demographic and Health' , 'D4.1.7.SVY.HLTH_NADA.csv')
+saver("study_df_internal", "dhs|mics|whs|hea|DHS|MICS|WHS|Demographic and Health", "D4.1.7.SVY.HLTH_NADA.csv")
 
-saver('study_df_internal','Business Survey' , 'D4.1.8.SVY.BIZZ_NADA.csv')
+saver("study_df_internal", "Business Survey", "D4.1.8.SVY.BIZZ_NADA.csv")
 
 
-#slightly modified code for estabilishment census
+# slightly modified code for estabilishment census
 survey_df <- study_df_internal %>%
-  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
-  rename(country=nation,
-         indicator_date=year_start) %>% 
-  mutate(country=case_when(
-    country=="Gambia" ~ "Gambia, The",
+  filter(grepl("national|nacional", str_to_lower(geog_coverage))) %>% # keep just nationally representative surveys based on metadata
+  rename(
+    country = nation,
+    indicator_date = year_start
+  ) %>%
+  mutate(country = case_when(
+    country == "Gambia" ~ "Gambia, The",
     TRUE ~ country
   )) %>%
-  filter(grepl('en/census|Enterprise Census', series_info)) %>%
-  filter(!grepl('Survey|Encuesta', title)) %>% #drop some cases where establishment surveys were categorized as censuses
+  filter(grepl("en/census|Enterprise Census", series_info)) %>%
+  filter(!grepl("Survey|Encuesta", title)) %>% # drop some cases where establishment surveys were categorized as censuses
   group_by(country, indicator_date) %>%
-  summarise(freq=n(),
-            title=first(title)) %>%
+  summarise(
+    freq = n(),
+    title = first(title)
+  ) %>%
   group_by(country) %>%
-  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
-         nada_title = paste0(title, collapse = "; ")) %>%
-  select(country,indicator_date, nada_dates, nada_title)
-  
-    
-    
-  
-  write_excel_csv(survey_df, path = paste(output_dir, 'D4.1.3.CEN.BIZZ_NADA.csv', sep="")) #write to csv
-  
-  
-  #slightly modified code for estabilishment census
+  mutate(
+    nada_dates = paste0(indicator_date, collapse = ", "),
+    nada_title = paste0(title, collapse = "; ")
+  ) %>%
+  select(country, indicator_date, nada_dates, nada_title)
+
+
+
+
+write_excel_csv(survey_df, path = paste(output_dir, "D4.1.3.CEN.BIZZ_NADA.csv", sep = "")) # write to csv
+
+
+# slightly modified code for estabilishment census
 popcen_df <- study_df_internal %>%
-  filter(grepl('national|nacional', str_to_lower(geog_coverage))) %>% #keep just nationally representative surveys based on metadata
-  rename(country=nation,
-         indicator_date=year_start) %>% 
-  mutate(country=case_when(
-    country=="Gambia" ~ "Gambia, The",
+  filter(grepl("national|nacional", str_to_lower(geog_coverage))) %>% # keep just nationally representative surveys based on metadata
+  rename(
+    country = nation,
+    indicator_date = year_start
+  ) %>%
+  mutate(country = case_when(
+    country == "Gambia" ~ "Gambia, The",
     TRUE ~ country
   )) %>%
-  filter(grepl('hh/popcen|Population and Housing Census', series_info)) %>%
-  filter(!grepl('Survey|Encuesta', title)) %>% #drop some cases where establishment surveys were categorized as censuses
+  filter(grepl("hh/popcen|Population and Housing Census", series_info)) %>%
+  filter(!grepl("Survey|Encuesta", title)) %>% # drop some cases where establishment surveys were categorized as censuses
   group_by(country, indicator_date) %>%
-  summarise(freq=n(),
-            title=first(title)) %>%
+  summarise(
+    freq = n(),
+    title = first(title)
+  ) %>%
   group_by(country) %>%
-  mutate(nada_dates = paste0(indicator_date, collapse = ", "),
-         nada_title = paste0(title, collapse = "; ")) %>%
-  select(country,indicator_date, nada_dates, nada_title)
-  
-    
-    
-  
-  write_excel_csv(popcen_df, path = paste(output_dir, 'D4.1.1.CEN.POPU_NADA.csv', sep="")) #write to csv
+  mutate(
+    nada_dates = paste0(indicator_date, collapse = ", "),
+    nada_title = paste0(title, collapse = "; ")
+  ) %>%
+  select(country, indicator_date, nada_dates, nada_title)
 
-  
 
+
+
+write_excel_csv(popcen_df, path = paste(output_dir, "D4.1.1.CEN.POPU_NADA.csv", sep = "")) # write to csv
 ```
