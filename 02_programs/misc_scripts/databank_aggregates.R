@@ -18,7 +18,7 @@ metadata_full <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep=
   bind_rows(metadata) %>%
   mutate(short_desc=str_extract(spi_indicator_description,boundary('sentence')))
 
-SPI_index <- read_csv('https://github.com/worldbank/SPI/raw/master/03_output_data/SPI_index.csv') %>%
+SPI_index <- read_csv(paste0(output_dir, "/SPI_index.csv")) %>%
   filter(date>=2016)
   
 SPI_2020 <- read_csv(paste0(output_dir, "/SPI_index.csv")) %>%
@@ -113,7 +113,7 @@ weight<-'none'
     
   }
     
-write_excel_csv(agg_df, paste(output_dir, '/misc/WB_aggregates_SPI.csv', sep=""))
+write_excel_csv(agg_df, paste('WB_aggregates_SPI.csv', sep=""))
 
 agg_df <- agg_df 
 

@@ -244,7 +244,14 @@ write_excel_csv(survey_df, path = paste(output_dir, "D4.1.4.SVY.HOUS_NADA.csv", 
 
 
 ```{r save, echo=TRUE}
-study_df_internal <- read_csv(paste(output_dir, "microdata_library_surveys.csv", sep = "/"))
+#excluded surveys
+svy_exclusions<-c(
+  "COVID19 Refugee Household Monitoring 2020" #excluded due to focus only on refugees
+)
+
+study_df_internal <- read_csv(paste(output_dir, "microdata_library_surveys.csv", sep = "/")) %>%
+  #add exclusions based on country feedback
+  filter(!title %in% svy_exclusions)
 
 series_types_wb <- study_df_internal %>%
   group_by(series_info) %>%

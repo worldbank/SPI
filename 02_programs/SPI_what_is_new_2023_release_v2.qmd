@@ -163,7 +163,7 @@ standard_crop_wintri <- function() {
 }
 
 
-country_metadata <- wbstats::wbcountries()
+country_metadata <- wbstats::wb_countries()
 
 
 
