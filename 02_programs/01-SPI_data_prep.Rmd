@@ -916,7 +916,7 @@ library(pipr)
 df <- get_stats()
 
 #save as csv
-write_excel_csv(df, file=paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/"))
+#write_excel_csv(df, file=paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/"))
 
 df <- read_csv(paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/")) %>%
   #exclude certain surveys that were produced not by statistical system but produced and financed from private firm (non-official source).  Change applies to India in particular.
@@ -939,7 +939,7 @@ for (reference_year in 2004:end_date) {
  
   
   temp_5<-df %>%
-        filter(survey_coverage %in% c('national')) %>% #keep just nationally representative samples
+        #filter(survey_coverage %in% c('national')) %>% #keep just nationally representative samples
         mutate(frequency=((reference_year-as.numeric(year))<=rec_window) & (reference_year>=as.numeric(year))) %>% 
         filter(frequency==TRUE) %>%
         dplyr::group_by(country_code, survey_comparability) %>% #for each country and comparability type, get number of comparable estimates
@@ -997,7 +997,9 @@ for (i in c(2004:end_date)) {
 #fix countries not included
 D3.1.AKI<-D3.1.AKI %>%
   right_join(spi_df_empty) %>%
-  mutate(SPI.D1.5.POV=if_else(lending_type_iso3c=="LNX",1,SPI.D1.5.POV)) %>%#we give non-IDA/IBRD/blend countries credit for this, because they are not measured in database
+  #add a few manual changes for countries that are not updated in PIP, but have reviewed methodology and have consistent approach to measuring poverty comparably
+  #countries: JPN, AUS, NZL, SGP
+  mutate(SPI.D1.5.POV=if_else(iso3c %in% c('JPN','AUS','NZL', 'SGP'),1,SPI.D1.5.POV)) %>%
   select(iso3c, date, SPI.D1.5.POV)
 ```
 
@@ -1909,27 +1911,36 @@ Because of the large data files and runtime of the program to calculate these in
 
 ```{r unstats}
 
-un_sdg_df <- read_csv(paste(raw_dir,'/3_DP/SPI_D3_UNSD_data_',window,'yr.csv',sep="")) %>%
-  rename(SPI.D3.1.POV   = SPI.D3.1,
-         SPI.D3.2.HNGR  = SPI.D3.2,
-         SPI.D3.3.HLTH  = SPI.D3.3,
-         SPI.D3.4.EDUC  = SPI.D3.4,
-         SPI.D3.5.GEND  = SPI.D3.5,
-         SPI.D3.6.WTRS  = SPI.D3.6,
-         SPI.D3.7.ENRG  = SPI.D3.7,
-         SPI.D3.8.WORK  = SPI.D3.8,
-         SPI.D3.9.INDY  = SPI.D3.9,
-         SPI.D3.10.NEQL = SPI.D3.10,
-         SPI.D3.11.CITY = SPI.D3.11,
-         SPI.D3.12.CNSP = SPI.D3.12,
-         SPI.D3.13.CLMT = SPI.D3.13,
-         SPI.D3.14.LFWT = SPI.D3.14,
-         SPI.D3.15.LAND = SPI.D3.15,
-         SPI.D3.16.INST = SPI.D3.16,
-         SPI.D3.17.PTNS = SPI.D3.17
-) %>%
-  dplyr::select(iso3c, date, starts_with("SPI")) %>%
-  select(-SPI.D3.14.LFWT)
+#function to read in data
+un_sdg_data_read  <- function(year) {
+  read_csv(paste(raw_dir,'/3_DP/',year,'/SPI_D3_UNSD_data_5yr.csv',sep="")) %>%
+    rename(SPI.D3.1.POV   = SPI.D3.1,
+           SPI.D3.2.HNGR  = SPI.D3.2,
+           SPI.D3.3.HLTH  = SPI.D3.3,
+           SPI.D3.4.EDUC  = SPI.D3.4,
+           SPI.D3.5.GEND  = SPI.D3.5,
+           SPI.D3.6.WTRS  = SPI.D3.6,
+           SPI.D3.7.ENRG  = SPI.D3.7,
+           SPI.D3.8.WORK  = SPI.D3.8,
+           SPI.D3.9.INDY  = SPI.D3.9,
+           SPI.D3.10.NEQL = SPI.D3.10,
+           SPI.D3.11.CITY = SPI.D3.11,
+           SPI.D3.12.CNSP = SPI.D3.12,
+           SPI.D3.13.CLMT = SPI.D3.13,
+           SPI.D3.14.LFWT = SPI.D3.14,
+           SPI.D3.15.LAND = SPI.D3.15,
+           SPI.D3.16.INST = SPI.D3.16,
+           SPI.D3.17.PTNS = SPI.D3.17
+    ) %>%
+    dplyr::select(iso3c, date, starts_with("SPI")) %>%
+    select(-SPI.D3.14.LFWT) %>%
+    filter(date==year)
+}
+
+
+#read in versions
+#apply function from 2004 to 2023 and bind together
+un_sdg_df <- bind_rows(lapply(2004:2023, un_sdg_data_read)) 
 
 #add to spi databases
 spi_df <- spi_df %>%
@@ -3139,6 +3150,12 @@ df <- df %>%
 #pull IMF country codes for merging
 imf_codes <- read_csv(file=paste(raw_dir, "metadata","IMF_country_codes.csv", sep="/" ))
 
+#read in previous vintage of SPI as starting point for previous years
+vintage_year <- end_date-1
+spi_previous_vintage_d5 <- read_csv(file=paste(raw_dir, "/previous_vintages/","SPI_data_",vintage_year,".csv", sep="" )) %>%
+  select(iso3c, date, starts_with('RAW.D5'),starts_with('SPI.D5.')) %>%
+  filter(date>=2016)
+
 ```
 
 
@@ -3268,19 +3285,14 @@ Consumer Price Index serves as indicators of inflation and reflects changes in t
  
 ```{r cpiby}
 
+
+
 #read in csv file.
-D5.2.4.CPIBY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.4.CPIBY.2020.csv", sep="/" ))) %>% # add in 2020 data
-  mutate(SPI.D5.2.4.CPIBY=case_when(
-    str_to_lower(CPIBY)=="annual chained" ~ 1, 
-    str_to_lower(CPIBY)=="annually chained" ~ 1, 
-    (date-as.numeric(CPIBY))<=10 ~ 0.5, #within 10 years of reference period
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.4.CPIBY=CPIBY)  %>%
+D5.2.4.CPIBY <- spi_previous_vintage_d5 %>%
   select(iso3c,  date, RAW.D5.2.4.CPIBY, SPI.D5.2.4.CPIBY  ) %>%
   arrange(date, iso3c) %>%
   right_join(spi_df_empty)
+  
 
 #####
 # IMF Data
@@ -3379,16 +3391,13 @@ statistics in these different areas.
 ```{r hous}
 
 #read in csv file.
-D5.2.5.HOUS <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.5.HOUS.2020.csv", sep="/" ))) %>% #add 2020 data
-  mutate(SPI.D5.2.5.HOUS=case_when(
-    HOUS=="COICOP" ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.5.HOUS=HOUS)  %>%
+D5.2.5.HOUS <- spi_previous_vintage_d5 %>%
   select(iso3c,  date, RAW.D5.2.5.HOUS, SPI.D5.2.5.HOUS  ) %>%
   arrange(date, iso3c) %>%
   right_join(spi_df_empty)
+  
+
+
 
 #####
 # IMF Data
@@ -3512,18 +3521,16 @@ units, the picture they provide of central government activities is usually inco
 
 ```{r cgov}
 
+
+
 #read in csv file.
-D5.2.7.CGOV <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.7.CGOV.2020.csv", sep="/" ))) %>% #add in 2020 data
-  mutate(SPI.D5.2.7.CGOV=case_when(
-    CGOV=="AC" ~ 1, 
-    CGOV=="CA" ~ 0.5,
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.7.CGOV=CGOV)  %>%
+D5.2.7.CGOV <- spi_previous_vintage_d5 %>%
   select(iso3c,  date, RAW.D5.2.7.CGOV, SPI.D5.2.7.CGOV  ) %>%
   arrange(date, iso3c) %>%
   right_join(spi_df_empty)
+
+
+
 
 #####
 # IMF Data
@@ -3678,17 +3685,17 @@ the compilation of monetary and financial statistics in addition to MFSM.
 
 ```{r mony}
 
+
+
 #read in csv file.
-D5.2.9.MONY <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.9.MONY.2020.csv", sep="/" ))) %>% #add in 2020 data
-  mutate(SPI.D5.2.9.MONY=case_when(
-    MONY=="MFSM 2000" | MONY=="MFSMCG 2016"~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.9.MONY=MONY)  %>%
+D5.2.9.MONY <- spi_previous_vintage_d5 %>%
   select(iso3c,  date, RAW.D5.2.9.MONY, SPI.D5.2.9.MONY  ) %>%
   arrange(date, iso3c) %>%
   right_join(spi_df_empty)
+
+
+
+
 
 #####
 # IMF Data

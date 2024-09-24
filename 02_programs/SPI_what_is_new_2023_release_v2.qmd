@@ -542,7 +542,7 @@ spi_group_table <- function(data, indicators, reference_year, group) {
       df_overall <- get(data) %>%
       filter(date==as.numeric(reference_year)) %>% 
       left_join(country_metadata) %>%
-      select(iso3c, date, income, region, lending, all_of(indicators), SPI.INDEX) %>%
+      select(iso3c, date, income, region, lending_type, all_of(indicators), SPI.INDEX) %>%
       rename(group=!! group)
     
     
@@ -618,7 +618,7 @@ lending_charts <- function(data, indicator, title) {
     filter(region!='Aggregates') %>%
     mutate(`SPI Score`=(data_available),
            Label = paste(round(`SPI Score`,0))) %>%
-    ggplot(aes(x=`SPI Score`, y=lending, color=lending)) +
+    ggplot(aes(x=`SPI Score`, y=lending_type, color=lending_type)) +
       geom_point() +
       geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
       labs(
@@ -660,11 +660,11 @@ lending_chart_aggregate <- function(data, indicator, title) {
   
 
   p2_alt3 <- map_df %>%
-    group_by(lending) %>%
+    group_by(lending_type) %>%
     filter(region!='Aggregates') %>%
     mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(`SPI Score`,0))) %>%
-    ggplot(aes(x=`SPI Score`, y=lending, fill=lending)) +
+    ggplot(aes(x=`SPI Score`, y=lending_type, fill=lending_type)) +
       geom_bar(stat="identity",position='dodge') +
       geom_text(aes(label=Label)) +
       labs(
@@ -998,7 +998,7 @@ spi_index_df %>%
 
 ## Global Trends
 
-The table below
+This table shows the progression of Statistical Performance Indicator (SPI) scores from 2016 to 2023. The overall score and individual scores for each of the five pillars—Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure—are listed for each year. The table highlights the steady improvement in overall SPI scores, with significant gains in pillars like Data Services and Data Infrastructure, reflecting improvements in countries’ statistical capacity and the availability of modern data systems.
 
 ```{r}
 #| label: tbl-tile1
@@ -1015,7 +1015,8 @@ tile_table(c( 'SPI.INDEX' ,'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3',
 
 ### Data Use
 
-lorem ipsum
+This table outlines key data use indicators between 2016 and 2023, such as the availability of poverty headcount ratios, under-5 mortality rates, debt service data, and safely managed drinking water. It tracks the quality and consistency of these data across years, noting stable or slightly fluctuating scores for each indicator. Overall, the data use pillar has seen little change over time, with most indicators remaining consistent.
+
 
 ```{r}
 #| label: tbl-d1tile1
@@ -1029,7 +1030,7 @@ tile_table(c('SPI.D1.5.POV', 'SPI.D1.5.CHLD.MORT', 'SPI.D1.5.DT.TDS.DPPF.XP.ZS',
 
 ### Data Services
 
-lorem ipsum
+This table focuses on the development of data services, covering indicators like e-GDDS subscription, machine readability, and download options. It reflects how countries have advanced in providing accessible, standardized, and open data, with noticeable improvements in machine-readable formats, non-proprietary formats of data, and microdata catalogues, particularly after 2017.
 
 ```{r}
 #| label: tbl-D2tile1
@@ -1044,8 +1045,7 @@ tile_table(c('SPI.D2.1.GDDS', 'SPI.D2.2.Machine.readable', 'SPI.D2.2.Non.proprie
 
 ### Data Products
 
-lorem ipsum
-
+The data products pillar tracks the availability of indicators for the Sustainable Development Goals (SDGs), such as no poverty, zero hunger, clean water, and good health. Scores, measuring the availability of indicators over the previous five years, for each SDG indicator from 2016 to 2023 are shown, with improvements in availability in many areas like education, inequality and sustainable cities. Some areas such as climate statistics have shown little improvement since 2016.
 
 ```{r }
 #| label: tbl-D3tile1
@@ -1058,8 +1058,7 @@ tile_table(c('SPI.D3.1.POV', 'SPI.D3.2.HNGR', 'SPI.D3.3.HLTH', 'SPI.D3.4.EDUC', 
 
 ### Data Sources
 
-lorem ipsum
-
+This table provides a summary of key data source indicators over time, including censuses (population, agriculture, and business), surveys (household, labor force, and health), and civil registration data. The scores reflect the extent to which countries are keeping up with critical data collection exercises. There have been increases in some areas, such as business censuses/registries and agricultural surveys, though certain domains like poverty and health surveys have seen declines in recent years.
 
 ```{r}
 #| label: tbl-D4tile1
@@ -1072,8 +1071,7 @@ tile_table(c('SPI.D4.1.1.POPU', 'SPI.D4.1.2.AGRI', 'SPI.D4.1.3.BIZZ', 'SPI.D4.1.
 
 ### Data Infrastructure
 
-lorem ipsum
-
+This table presents indicators of data infrastructure, including legislation on data, national accounts systems, and classification of industries. It shows how countries have progressed in adopting international standards and improving their data frameworks, with notable gains in areas like classification of household consumption and employment status. 
 
 ```{r D5tile1}
 #| label: tbl-D5tile1
@@ -1119,7 +1117,7 @@ deciles <- quantile(changes, probs = seq(from=0, to=1, by=.1), na.rm=TRUE)
 
 ```
 
-On average across countries, between `r start_date` and `r end_date` the SPI overall scores rose by `r round(avg_change, 1)` points on a scale from 0-100. Figure 3 plots the change in countries’ scores between `r end_date` and `r start_date`. The average country saw a `r round(avg_change)` point increase in their SPI overall score. However, country rankings have been steady. The correlation between the SPI overall score in `r start_date` and `r end_date` is `r round(corr_end_date_start_date,2)`, and the Spearman rank correlation is `r round(spearman_end_date_start_date,2)`.
+The SPI overall score combines the 51 indicators into a single score ranging between 0 and 100. On average across countries, between `r start_date` and `r end_date` the SPI overall scores rose by `r round(avg_change, 1)` points on a scale from 0-100. Figure 3 plots the change in countries’ scores between `r end_date` and `r start_date`. The average country saw a `r round(avg_change)` point increase in their SPI overall score. However, country rankings have been steady. The correlation between the SPI overall score in `r start_date` and `r end_date` is `r round(corr_end_date_start_date,2)`, and the Spearman rank correlation is `r round(spearman_end_date_start_date,2)`.
 
 There has been some catch-up in statistical performance. Between `r start_date` and `r end_date` the largest improvements in the SPI overall score have come from countries that were in the bottom two deciles as of 2016 (Figure 4). Countries that were in the bottom 10% (first decile) in `r start_date` grew on average around 16 points from `r start_date`-`r end_date`. Countries in the top 10% (top decile) grew the least in that time. This pattern is not entirely unexpected, since many of the countries in the top decile score around the maximum number of points in several areas.
 
@@ -1397,14 +1395,6 @@ Note: N=167 economies.
 
 
 
-```{r D2tile, fig.width = 9, fig.height = 9}
-tile_chart(c('SPI.D2.1.GDDS','SPI.D2.2.Openness.subscore', 'SPI.D3.1.POV','SPI.D3.8.WORK', 'SPI.D3.13.CLMT', 'SPI.D3.16.INST',"SPI.D5.2.1.SNAU",
-             "SPI.D5.2.5.HOUS",
-             "SPI.D5.2.8.FINA",
-             "SPI.D5.2.10.GSBP"  )) +
-  ggtitle(paste0("Indicator Improvement over time"))
-
-```
 
 
 ## How Have Scores Changed by Region and Income Group?
@@ -1529,17 +1519,17 @@ income_tab <- spi_index_df %>%
 lending_tab <- spi_index_df %>%
   left_join(country_metadata) %>%
   filter(between(date,start_date,end_date)) %>%
-  group_by(date, lending) %>%
-  filter(lending %in% c("Not classified", "IDA", "IBRD", "Blend")) %>%
+  group_by(date, lending_type) %>%
+  filter(lending_type %in% c("Not classified", "IDA", "IBRD", "Blend")) %>%
   summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
   mutate(date=factor(date, levels=c(2016,2017,2018, 2019,2020,2021,2022, 2023)),
-         lending=factor(lending, levels=c("IDA", "IBRD", "Blend", "Not classified")),
+         lending_type=factor(lending_type, levels=c("IDA", "IBRD", "Blend", "Not classified")),
          SPI.INDEX=round(SPI.INDEX,1)) %>%
   pivot_wider(
     names_from = date,
     values_from = "SPI.INDEX"
   ) %>%
-  arrange(lending)
+  arrange(lending_type)
 
 fcs_tab <- spi_index_df %>%
     mutate(    fragile_conflict = case_when(
@@ -1621,7 +1611,7 @@ small_tab <- spi_index_df %>%
 group_tab <-
   bind_rows(
     income_tab %>% rename(group=income),
-    lending_tab %>% rename(group=lending),
+    lending_tab %>% rename(group=lending_type),
     fcs_tab %>% rename(group=fragile_conflict),
     small_tab %>% rename(group=small_pop)
   )
