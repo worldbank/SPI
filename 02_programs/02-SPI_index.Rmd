@@ -130,14 +130,7 @@ spi_df_final_raw <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/"))
 
 
 spi_df_final <- spi_df_final_raw %>%
-  filter(date>=end_date) %>%
-  select(iso3c, date, starts_with("SPI.")) %>%
-  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2022.csv', sep="/")) %>%
-  select(iso3c, date, starts_with("SPI.")) %>% filter(date>=2021)) %>%
-  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2020.csv', sep="/")) %>%
-  select(iso3c, date, starts_with("SPI.")) %>% filter(date==2020) %>% filter(iso3c %in% unique(spi_df_final_raw$iso3c))) %>%
-  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2019.csv', sep="/")) %>%
-  select(iso3c, date, starts_with("SPI.")) %>% filter(date<2020) %>% filter(iso3c %in% unique(spi_df_final_raw$iso3c))) %>%           
+   
   left_join(pop_df) %>%
   group_by(iso3c) %>%
   arrange(desc(date)) %>%
@@ -1206,7 +1199,7 @@ spi_index_df_temp <- spi_df_final %>%
 #Drop certain indicators that don't make cut because of imcomplete coverage usually
 spi_index_df_temp <- spi_index_df_temp %>%
   mutate(SPI.D4.3.GEO.first.admin.level=if_else(SPI.D4.3.GEO.first.admin.level<SPI.D4.3.GEO.second.admin.level,SPI.D4.3.GEO.second.admin.level, SPI.D4.3.GEO.first.admin.level )) %>% # some countries report data at 2nd admin level but not first.  This change addresses this fact, so that countries are given credit is they report at geographic level lower than 1st admin level.
-  select( -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level) 
+  select( -SPI.D4.3.GEO.second.admin.level) 
 
 
 
@@ -3088,6 +3081,9 @@ index_tab_time <- spi_index_df %>%
         brks6 <- quantile(index_tab_time$SPI.INDEX.2022, probs=c(1,2,3,4)/5,na.rm=T)
         brks6 <- append(0,brks6)
         if (max(brks6)<100) brks6 <- append(brks6,100)
+        brks7 <- quantile(index_tab_time$SPI.INDEX.2023, probs=c(1,2,3,4)/5,na.rm=T)
+        brks7 <- append(0,brks7)
+        if (max(brks7)<100) brks7 <- append(brks7,100)        
 
 #make nice looking
 index_tab_time <- index_tab_time %>%
@@ -3095,6 +3091,7 @@ index_tab_time <- index_tab_time %>%
   add_header_lines('SPI overall scores over time') %>%
   set_header_labels(values=list(
                        country="Country", 
+                       SPI.INDEX.2023="2023",
                        SPI.INDEX.2022="2022",
                        SPI.INDEX.2021="2021",
                        SPI.INDEX.2020="2020",
@@ -3103,6 +3100,8 @@ index_tab_time <- index_tab_time %>%
                        SPI.INDEX.2017="2017",
                        SPI.INDEX.2016="2016"
                                    )) %>%
+    bg(j = c('SPI.INDEX.2023'),
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks7, reverse=TRUE)) %>%    
     bg(j = c('SPI.INDEX.2022'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks6, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.2021'),

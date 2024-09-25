@@ -6,7 +6,7 @@ date-format: long
 format:
   docx:
     reference-doc: custom-reference-doc.docx
-abstract: 'The 2024 release of the Statistical Performance Indicator (SPI) includes new data for the calendar year 2023. There were no changes to the framework, methodology, or data sources for the SPI compared to previous releases. This document provides an overview of the major changes to the scores compared to the first year of data available in 2016.'
+
 bibliography: ./bibliography.bib
 ---
 
@@ -47,23 +47,25 @@ end_date <- 2023
 start_date <- 2016
 ```
 
-**Overview**: The 2024 Statistical Performance Indicators (SPI) release includes data from 2023 without any changes to the framework methodology or data sources. The SPI continues to assess national statistical systems across five pillars with 22 dimensions, with data currently available for 14 dimensions.
+**Overview**: The 2024 Statistical Performance Indicators (SPI) release includes data from 2023 with updates to previous years, incorporating the latest information from organizations such as the World Bank, IMF, and UN Agencies. The SPI continues to assess national statistical systems across five pillars with 22 dimensions, though data is currently available for 14 of these dimensions.
 
-**Methodology Consistency**: No changes have been made to the scoring methodology or data sources since the 2019 release. This ensures that the newly released data remains consistent and comparable with prior releases, drawing primarily from organizations like the World Bank, IMF, and UNESCO.
+**Methodology Consistency**: Since the 2019 release, the scoring methodology and data sources have remained largely unchanged, ensuring consistency and comparability with prior releases. The only exception is the indicator for comparable poverty measures in the data use pillar. Previously, high-income countries not covered by PovcalNet were assigned a score of 1 due to the lack of data. However, with expanded coverage in the Poverty and Inequality Platform (PIP) since 2021, all countries are now assessed based on the availability of comparable poverty data.
 
-**Data Coverage**: The SPI now includes 187 economies, an increase from 167 in 2016, covering over 99% of the global population. This expansion is largely driven by an increase in economies with data openness scores.
+**Data Updates**: Revisions to previous SPI scores were made to reflect updated data, particularly in Pillars 1, 3, and 4, with minimal impact on overall scores. The correlation between the previous and revised scores remains high, with a 0.99 correlation in 2022.
 
-**Score Improvements**: On average, global SPI scores have risen by 12.5 points from 2016 to 2023. North America and Europe & Central Asia remain the top-performing regions, while lower middle-income countries experienced the fastest improvement, increasing by 12.9 points. Country rankings have remained stable over time with a Spearman rank correlation of 0.92.
+**Data Coverage**: The SPI now includes 187 economies, up from 167 in 2016, covering over 99% of the global population. This expansion is largely driven by an increase in economies with data openness scores.
 
-**Performance by Decile**: The largest improvements were observed in countries that were in the bottom 20% of the 2016 rankings. In contrast, countries in the top decile showed minimal growth due to their already high scores.
+**Score Improvements**: Global SPI scores have risen by an average of 12.9 points from 2016 to 2023. Country rankings have remained stable, with a Spearman rank correlation of 0.92.
 
-**Pillar Contributions**: Improvements in data services and infrastructure have been the major contributors to the overall score increases, especially in the bottom deciles. Specifically, 43% of the improvements in the bottom decile are attributed to better data services, and 22% to better data infrastructure.
+**Performance by Decile**: The largest improvements were observed in countries that ranked in the bottom 20% in 2016. In contrast, countries in the top decile showed minimal growth due to their already high scores.
 
-**Regional and Income Group Analysis**: North America and Europe & Central Asia are the top-performing regions, while Sub-Saharan Africa ranks the lowest. Notably, the Middle East and North Africa have caught up to East Asia and Pacific, and South Asia has overtaken Latin America and the Caribbean. Statistical performance improves with income, with lower middle-income countries seeing the fastest growth, followed by low-income, upper middle-income, and high-income countries.
+**Pillar Contributions**: Improvements in data services and infrastructure have been the major contributors to overall score increases, especially in the bottom deciles. Specifically, 43% of the improvements in the bottom decile are attributed to better data services, and 22% to better data infrastructure.
 
-**Population Size Impact**: High-income countries with populations under 500,000 face specific challenges, scoring lower on average (58 points) compared to larger lower middle-income countries (55 points).
+**Regional and Income Group Analysis**: North America and Europe & Central Asia are the top-performing regions. The next highest scoring regions on average, after excluding countries with small populations, are East Asia & the Pacific region, Latin America & the Caribbean, South Asia, the Middle East and North Africa, and Sub-Saharan Africa, in that order. Statistical performance improves with income, with lower-middle-income countries showing the fastest growth, followed by low-income, upper-middle-income, and high-income countries.
 
-**Conclusion**: The 2024 SPI release highlights significant progress in global statistical performance, driven by improvements in data services and infrastructure. While top-performing regions and countries maintain their ranks, lower middle-income and smaller economies show promising advancements. This trend indicates a positive development in global data and statistical capacity building. For further details, the SPI technical note and the SPI GitHub repository provide comprehensive methodologies and data sources.
+**Population Size Impact**: High-income countries with populations under 500,000 face specific challenges, scoring the same on average (56 points) as the average for all low-income countries. This suggests that small economies may face unique challenges in building statistical capacity.
+
+**Conclusion**: The 2024 SPI release highlights significant progress in global statistical performance, driven by improvements in data services and infrastructure. While top-performing regions and countries maintain their ranks, lower middle-income and smaller economies show promising advancements. This trend indicates a positive development in global data and statistical capacity building. For further details, the [SPI research paper](https://www.nature.com/articles/s41597-023-01971-0) and the [SPI GitHub repository](https://github.com/worldbank/SPI) provide additional information on how the SPI is put together, as well as the raw data and code.
 
 
 ```{r themes}
@@ -85,6 +87,8 @@ theme_spi <- function () {
 }
 
 
+
+
 region_colors <- c(
   "North America" = "#1f77b4", 
   "Europe & Central Asia" = "#ff7f0e", 
@@ -99,6 +103,13 @@ income_colors <- c(
   "Lower middle income" = "#ffb703", 
   "Upper middle income" = "#219ebc", 
   "High income" = "#023047")
+
+lending_colors <- c(
+  "Blend" = "#fcab10", 
+  "IDA" = "#2b9eb3", 
+  "IBRD" = "#f8333c", 
+  "Not classified" = "#44af69"
+)
 
 pillar_colors <- c(
   "Pillar 1: Data Use" = "#fee440",
@@ -887,14 +898,13 @@ FitFlextableToPage <- function(ft, pgwidth = 6){
   return(ft_out)
 }
 
-#add equations to plots
-eq_plot_txt <- function(data) {
-  eq <- lm_robust(SPI.INDEX ~ value, data=data, se_type='HC2')
-  coef <- coef(eq)
-  std_err <- sqrt(diag(vcov(eq)))
-  r_2<- summary(eq)$r.squared
-  sprintf("y = %.3f + %.3f x, R<sup>2</sup> = %.3f <br>    (%.3f)   (%.3f)", coef[1], coef[2], r_2[1], std_err[1], std_err[2])
-
+# add equations to plots
+eq_plot_txt <- function(data, inp, var) {
+    eq <- lm_robust(data[[var]] ~ data[[inp]], data = data, se_type = "HC2")
+    coef <- round(coef(eq), 2)
+    std_err <- round(sqrt(diag(vcov(eq))), 2)
+    r_2 <- round(summary(eq)$r.squared, 2)
+    sprintf(" y = %.2f + %.2f x, R<sup>2</sup> = %.2f <br> (%.2f) <span style='color:white'> %s</span> (%.2f) ", coef[1], coef[2], r_2[1], std_err[1], "s", std_err[2])
 }
 
 
@@ -976,7 +986,7 @@ missing_list <- paste(missing_list, collapse=", ")
 ```
 
 
-In `r end_date`, the SPI Overall Score is available for `r nrow(spi_index_df %>% filter(!is.na(SPI.INDEX)) %>% filter(date==end_date))` economies, representing more than 99 percent of the world population.^[The countries without an SPI Overall Score are `r missing_list`.] There has been an increase in the number of economies with an SPI overall score since 2016, with a rise from 167 economies to `r nrow(spi_index_df %>% filter(!is.na(SPI.INDEX)) %>% filter(date==end_date))`.^[  The World Bank’s World Development Indicators includes 217 economies. If an economy does not have data for one of the indicators used to generate the SPI overall score, no score is produced for this country, as the SPI does not rely on modelling or imputation to produce the scores.]  This is largely driven by an increase in the number of economies with a data openness score from Open Data Watch. 
+In `r end_date`, the SPI Overall Score is available for `r nrow(spi_index_df %>% filter(!is.na(SPI.INDEX)) %>% filter(date==end_date))` economies, representing more than 99 percent of the world population.^[The countries without an SPI Overall Score are `r missing_list`.] There has been an increase in the number of economies with an SPI overall score since 2016, with a rise from 167 economies to `r nrow(spi_index_df %>% filter(!is.na(SPI.INDEX)) %>% filter(date==end_date))`.^[  The World Bank’s World Development Indicators includes 217 economies. If an economy does not have data for one of the indicators used to generate the SPI overall score, no score is produced for this country, as the SPI does not rely on modelling or imputation to produce the scores.]  This growth is largely due to the inclusion of more economies with a data openness score from Open Data Watch.
 
 
 
@@ -996,9 +1006,150 @@ spi_index_df %>%
     expand_limits(y=c(0,217))
 ```
 
+## Data Updates
+
+
+```{r}
+#| label: comparison
+
+#read in previous vintage of data
+spi_previous_vintage <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/refs/heads/master/03_output_data/SPI_index.csv') %>%
+  select(country, iso3c, date, starts_with('SPI.D1.'), starts_with('SPI.D2.'),
+         starts_with("SPI.D3."), starts_with('SPI.D4.'), starts_with('SPI.D5.'))
+
+spi_current_vintage <- spi_index_df %>%
+  select(country, iso3c, date, starts_with('SPI.D1.'), starts_with('SPI.D2.'), starts_with("SPI.D3."), starts_with('SPI.D4.'), starts_with('SPI.D5.'))
+
+#pivot data longer
+spi_previous_vintage_long <- spi_previous_vintage %>%
+  pivot_longer(
+    cols=starts_with('SPI.'),
+    names_to='source_id',
+    values_to='value_previous'
+  )
+
+spi_current_vintage_long <- spi_current_vintage %>%
+  pivot_longer(
+    cols=starts_with('SPI.'),
+    names_to='source_id',
+    values_to='value_current'
+  ) 
+
+#join the data
+comparison_df <- spi_previous_vintage_long %>%
+  left_join(spi_current_vintage_long, by=c('country', 'iso3c', 'date', 'source_id')) %>%
+  left_join(metadata_full) %>%
+  filter(!is.na(value_previous) & !is.na(value_current)) %>%
+  mutate(change=value_current-value_previous) 
+
+#get correlation between current and previous value
+correlation_df <- comparison_df %>%
+  group_by(source_id) %>%
+  summarise(correlation=cor(value_previous, value_current),
+            avg_change=mean(change, na.rm=TRUE),
+            avg_abs_change=mean(abs(change), na.rm=TRUE)) 
+
+
+comparison_df <- comparison_df%>%
+  filter(abs(change)>0) %>% #drop small changes
+  filter(date>=2016)
+
+#create a table grouped by country and date, with the collapsed list of updated indicators
+comparison_table <- comparison_df %>%
+  group_by(country, date) %>%
+  summarise(
+    updated_indicators=paste0(source_name, collapse=', ')
+  ) %>%
+  arrange(country, date)
+
+#create a summary of the number of countries with updated indicators by indicaor
+indicator_summary <- comparison_df %>%
+  group_by(source_id) %>%
+  summarise(
+    n_countries=n_distinct(country)
+  ) %>%
+  left_join(metadata_full) %>%
+  arrange(pillar, SPI_indicator_id) %>%
+  transmute(
+    Pillar=pillar,
+    Indicator=source_name,
+    `Number of Countries with Updated Data`=n_countries
+  )
+
+#correlation SPI scores
+spi_index_previous_vintage <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/refs/heads/master/03_output_data/SPI_index.csv') %>%
+  select(country, iso3c, date, SPI.INDEX) %>%
+  filter(date==2022) %>%
+  rename(SPI.INDEX.previous=SPI.INDEX)
+
+spi_index_current_vintage <- spi_index_df %>%
+  filter(date==2022) %>%
+  select(country, iso3c, date, SPI.INDEX)
+
+spi_index_compare <- spi_index_previous_vintage %>%
+  left_join(spi_index_current_vintage, by=c('country', 'iso3c')) %>%
+  filter(!is.na(SPI.INDEX) & !is.na(SPI.INDEX.previous)) 
+
+spi_index_correlation <- spi_index_compare %>%
+  summarise(correlation=cor(SPI.INDEX, SPI.INDEX.previous)) %>%
+  pull()
+
+
+```
+
+
+Previous SPI scores have been revised to incorporate updated data, ensuring that they reflect the most recent and accurate information available. These revisions have led to changes in SPI scores for some countries in past years.
+
+The table below lists the countries with updated data since 2016, categorized by indicator. Pillar 3, which covers the availability of SDG indicators, has seen the most updates due to ongoing changes in the UN SDG Indicators database, the primary source for these indicators. Due to delays in data availability, many updates have also occurred in Pillar 4 (data sources) and Pillar 1 (data usage by international agencies). Changes in Pillar 2, covering data services, primarily based on the Open Data Watch Open Data Inventory, are smaller adjustments to scores. A few countries have seen updates in Pillar 5 (data infrastructure), reflecting the latest available information.
+
+```{r}
+#| label: tbl-indicatorschanged
+#| tbl-cap: Countries with updated data since 2016 by Indicator
+#| 
+flextable(indicator_summary) %>%
+  merge_v(j=1) %>%
+  theme_box() %>%
+  #set column width to 1.5, 3, and 1.5
+  width(j=1:3, width=c(1.5,3,1.5)) 
+```
+
+
+These revisions have had a generally minimal impact on overall SPI scores. In 2022, the correlation between previous and revised SPI scores was `r round(spi_index_correlation,2)`, demonstrating a high level of consistency. 
+
+**Figure 3**. Correlation between Previous and Current SPI scores in 2022 Following Data Update
+```{r}
+#| label: fig-correlationupdate
+
+
+eq_location <- data.frame(
+    x = 30,
+    y = 75
+)
+
+spi_index_compare %>%
+  ggplot(aes(x=SPI.INDEX.previous, y=SPI.INDEX)) +
+    geom_point() +
+    geom_text(aes(label=iso3c), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+    geom_smooth(method='lm', se=FALSE) +
+    geom_richtext(
+        data = eq_location, aes(x = x, y = y, label = eq_plot_txt(spi_index_compare, "SPI.INDEX", "SPI.INDEX.previous")), hjust = 0.2
+    ) +
+    labs(
+      #title='Correlation Between Previous and current SPI scores in 2022 Following Data Update',
+      x='SPI Score (Previous)',
+      y='SPI Score (Current)'
+    ) +
+    theme_spi()
+```
+
+
+
+
+
+
 ## Global Trends
 
-This table shows the progression of Statistical Performance Indicator (SPI) scores from 2016 to 2023. The overall score and individual scores for each of the five pillars—Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure—are listed for each year. The table highlights the steady improvement in overall SPI scores, with significant gains in pillars like Data Services and Data Infrastructure, reflecting improvements in countries’ statistical capacity and the availability of modern data systems.
+The table below shows the progression of SPI scores from 2016 to 2023. Each year’s overall score and individual scores for the five pillars—Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure—are listed. The table highlights steady improvements in SPI scores, with significant gains in pillars such as Data Services and Data Infrastructure.
 
 ```{r}
 #| label: tbl-tile1
@@ -1006,7 +1157,10 @@ This table shows the progression of Statistical Performance Indicator (SPI) scor
 tile_table(c( 'SPI.INDEX' ,'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5'                 ))  %>%
   colformat_double( digits = 1) %>%
       bg(j=2:(end_date-start_date+2), 
-         bg=scales::col_numeric(palette='Blues', domain=c(0,100)))
+         bg=scales::col_numeric(palette='Blues', domain=c(0,100))) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
 
 
 
@@ -1023,20 +1177,26 @@ This table outlines key data use indicators between 2016 and 2023, such as the a
 #| tbl-cap: Pillar 1 - Data Use - Indicators over time
 
 
-tile_table(c('SPI.D1.5.POV', 'SPI.D1.5.CHLD.MORT', 'SPI.D1.5.DT.TDS.DPPF.XP.ZS', 'SPI.D1.5.SAFE.MAN.WATER', 'SPI.D1.5.LFP')) 
+tile_table(c('SPI.D1.5.POV', 'SPI.D1.5.CHLD.MORT', 'SPI.D1.5.DT.TDS.DPPF.XP.ZS', 'SPI.D1.5.SAFE.MAN.WATER', 'SPI.D1.5.LFP')) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
 
 ```
 
 
 ### Data Services
 
-This table focuses on the development of data services, covering indicators like e-GDDS subscription, machine readability, and download options. It reflects how countries have advanced in providing accessible, standardized, and open data, with noticeable improvements in machine-readable formats, non-proprietary formats of data, and microdata catalogues, particularly after 2017.
+This table focuses on the development of data services, covering indicators such as e-GDDS subscription, machine readability, and download options. It reflects how countries have advanced in providing accessible, standardized, and open data, with noticeable improvements in machine-readable formats, non-proprietary formats of data, and microdata catalogs, particularly after 2017.
 
 ```{r}
 #| label: tbl-D2tile1
 #| tbl-cap: Pillar 2 - Data Services - Indicators over time
 #| 
-tile_table(c('SPI.D2.1.GDDS', 'SPI.D2.2.Machine.readable', 'SPI.D2.2.Non.proprietary', 'SPI.D2.2.Download.options', 'SPI.D2.2.Metadata.available', 'SPI.D2.2.Terms.of.use', 'SPI.D2.2.Openness.subscore', 'SPI.D2.4.NADA')) 
+tile_table(c('SPI.D2.1.GDDS', 'SPI.D2.2.Machine.readable', 'SPI.D2.2.Non.proprietary', 'SPI.D2.2.Download.options', 'SPI.D2.2.Metadata.available', 'SPI.D2.2.Terms.of.use', 'SPI.D2.2.Openness.subscore', 'SPI.D2.4.NADA')) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
 
 ```
 
@@ -1050,7 +1210,10 @@ The data products pillar tracks the availability of indicators for the Sustainab
 ```{r }
 #| label: tbl-D3tile1
 #| tbl-cap: Pillar 3 - Data Products - Indicators over time
-tile_table(c('SPI.D3.1.POV', 'SPI.D3.2.HNGR', 'SPI.D3.3.HLTH', 'SPI.D3.4.EDUC', 'SPI.D3.5.GEND', 'SPI.D3.6.WTRS', 'SPI.D3.7.ENRG', 'SPI.D3.8.WORK', 'SPI.D3.9.INDY', 'SPI.D3.10.NEQL', 'SPI.D3.11.CITY', 'SPI.D3.12.CNSP', 'SPI.D3.13.CLMT', 'SPI.D3.15.LAND', 'SPI.D3.16.INST', 'SPI.D3.17.PTNS')) 
+tile_table(c('SPI.D3.1.POV', 'SPI.D3.2.HNGR', 'SPI.D3.3.HLTH', 'SPI.D3.4.EDUC', 'SPI.D3.5.GEND', 'SPI.D3.6.WTRS', 'SPI.D3.7.ENRG', 'SPI.D3.8.WORK', 'SPI.D3.9.INDY', 'SPI.D3.10.NEQL', 'SPI.D3.11.CITY', 'SPI.D3.12.CNSP', 'SPI.D3.13.CLMT', 'SPI.D3.15.LAND', 'SPI.D3.16.INST', 'SPI.D3.17.PTNS')) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
 
 ```
 
@@ -1058,13 +1221,16 @@ tile_table(c('SPI.D3.1.POV', 'SPI.D3.2.HNGR', 'SPI.D3.3.HLTH', 'SPI.D3.4.EDUC', 
 
 ### Data Sources
 
-This table provides a summary of key data source indicators over time, including censuses (population, agriculture, and business), surveys (household, labor force, and health), and civil registration data. The scores reflect the extent to which countries are keeping up with critical data collection exercises. There have been increases in some areas, such as business censuses/registries and agricultural surveys, though certain domains like poverty and health surveys have seen declines in recent years.
+This table provides a summary of key data source indicators over time, including censuses (population, agriculture, and business), surveys (household, labor force, and health), and civil registration data. The scores reflect the extent to which countries are keeping up with critical data collection exercises. There have been increases in some areas, such as business censuses/registries and agricultural surveys, though certain survey types such as poverty and health surveys have seen slight declines in recent years.
 
 ```{r}
 #| label: tbl-D4tile1
 #| tbl-cap: Pillar 4 - Data Sources - Indicators over time
 
-tile_table(c('SPI.D4.1.1.POPU', 'SPI.D4.1.2.AGRI', 'SPI.D4.1.3.BIZZ', 'SPI.D4.1.4.HOUS', 'SPI.D4.1.5.AGSVY', 'SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH', 'SPI.D4.1.8.BZSVY', 'SPI.D4.2.3.CRVS', 'SPI.D4.3.GEO.first.admin.level')) 
+tile_table(c('SPI.D4.1.1.POPU', 'SPI.D4.1.2.AGRI', 'SPI.D4.1.3.BIZZ', 'SPI.D4.1.4.HOUS', 'SPI.D4.1.5.AGSVY', 'SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH', 'SPI.D4.1.8.BZSVY', 'SPI.D4.2.3.CRVS', 'SPI.D4.3.GEO.first.admin.level')) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
 
 ```
 
@@ -1077,7 +1243,10 @@ This table presents indicators of data infrastructure, including legislation on 
 #| label: tbl-D5tile1
 #| tbl-cap: Pillar 5 - Data Infrastructure - Indicators over time
 
-tile_table(c('SPI.D5.1.DILG', 'SPI.D5.2.1.SNAU', 'SPI.D5.2.2.NABY', 'SPI.D5.2.3.CNIN', 'SPI.D5.2.4.CPIBY', 'SPI.D5.2.5.HOUS', 'SPI.D5.2.6.EMPL', 'SPI.D5.2.7.CGOV', 'SPI.D5.2.8.FINA', 'SPI.D5.2.9.MONY', 'SPI.D5.2.10.GSBP', 'SPI.D5.5.DIFI')) 
+tile_table(c('SPI.D5.1.DILG', 'SPI.D5.2.1.SNAU', 'SPI.D5.2.2.NABY', 'SPI.D5.2.3.CNIN', 'SPI.D5.2.4.CPIBY', 'SPI.D5.2.5.HOUS', 'SPI.D5.2.6.EMPL', 'SPI.D5.2.7.CGOV', 'SPI.D5.2.8.FINA', 'SPI.D5.2.9.MONY', 'SPI.D5.2.10.GSBP', 'SPI.D5.5.DIFI')) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
 
 ```
 
@@ -1117,12 +1286,16 @@ deciles <- quantile(changes, probs = seq(from=0, to=1, by=.1), na.rm=TRUE)
 
 ```
 
-The SPI overall score combines the 51 indicators into a single score ranging between 0 and 100. On average across countries, between `r start_date` and `r end_date` the SPI overall scores rose by `r round(avg_change, 1)` points on a scale from 0-100. Figure 3 plots the change in countries’ scores between `r end_date` and `r start_date`. The average country saw a `r round(avg_change)` point increase in their SPI overall score. However, country rankings have been steady. The correlation between the SPI overall score in `r start_date` and `r end_date` is `r round(corr_end_date_start_date,2)`, and the Spearman rank correlation is `r round(spearman_end_date_start_date,2)`.
+The SPI overall score combines 51 indicators into a single score, ranging from 0 to 100. On average, countries' SPI overall scores rose by `r round(avg_change)` points between `r start_date` and `r end_date`. However, country rankings have remained steady, with a correlation of `r round(corr_end_date_start_date,2)` between the SPI overall scores in `r start_date` and `r end_date`, and a Spearman rank correlation of `r round(spearman_end_date_start_date,2)`.
 
-There has been some catch-up in statistical performance. Between `r start_date` and `r end_date` the largest improvements in the SPI overall score have come from countries that were in the bottom two deciles as of 2016 (Figure 4). Countries that were in the bottom 10% (first decile) in `r start_date` grew on average around 16 points from `r start_date`-`r end_date`. Countries in the top 10% (top decile) grew the least in that time. This pattern is not entirely unexpected, since many of the countries in the top decile score around the maximum number of points in several areas.
+The most significant improvements in SPI overall scores occurred in countries that ranked in the bottom two deciles in `r start_date` Countries in the bottom 10% saw an average increase of 16 points between `r start_date` and `r end_date`, while those in the top 10% grew the least, as they were already close to the maximum score in several areas.
 
 
-**Figure 3**. Scatterplot of `r end_date` SPI overall score  & `r start_date` SPI overall score
+
+
+
+
+**Figure 4**. Scatterplot of `r end_date` SPI overall score  & `r start_date` SPI overall score
 ```{r }
 #| label: changesplot
 
@@ -1163,7 +1336,7 @@ spi_changes %>%
 
 ```
 
-Note: Solid grey line represents the 45 degree line.  Blue line represents line of best fit (regression line) with a 95% confidence interval shown in a shaded line.  N=187 economies.
+Note: Solid grey line represents zero change in the SPI overall score since 2016.  Red dotted line represents the average change across countries since 2016.  N=187 economies.
 
 
 
@@ -1250,7 +1423,7 @@ growth_plot <- function(variables, name) {
 ```
 
 
-**Figure 4**. Bottom Two Deciles Have Improved Most from `r start_date`-`r end_date`
+**Figure 5**. Bottom Two Deciles Have Improved Most from `r start_date`-`r end_date`
 
 ```{r}
 #| label: elephant
@@ -1345,11 +1518,12 @@ decile1_p5 <- elephant_stacked_df %>% filter(spi_bins=="1st Decile") %>% filter(
 decile_total <- decile1_p1 + decile1_p2 + decile1_p3 + decile1_p4 + decile1_p5
 ```
 
-Most of the improvement in the SPI overall score is driven by improvements in the Data Services and Data Infrastructure pillar. The Data Services pillar covers whether data is openly available online, the country's data dissemination standard, and whether metadata is available to describe data sources.  The Data Infrastructure pillar mainly covers the extent to which countries are applying modern standards and methods, as well as other aspects of infrastructure. Figure 5 takes the total change reported in Figure 4 and decomposes it into the five pillars. Countries in the bottom 10% saw a contribution of `r 100*round(decile1_p2/decile_total,2)`% (`r round(decile1_p2,1)` out of the total of `r round(decile_total,1)` points) from better data services. `r 100*round(decile1_p3/decile_total,2)`% of the improvement came from better data products with better SDG reporting. `r 100*round(decile1_p5/decile_total,2)`% came from better data infrastructure, such as adoption of better standards and methodologies for producing data. In some cases, the scores for decile groups dropped for certain pillars, such as data use or SDG reporting, which can happen if data that is available becomes outdated for that country (falls outside the window dictated by the indicator scoring).
+
+Most of the improvement in the SPI overall score is driven by improvements in the Data Services and Data Infrastructure pillar. The Data Services pillar covers whether data is openly available online, the country's data dissemination standard, and whether metadata is available to describe data sources.  The Data Infrastructure pillar mainly covers the extent to which countries are applying modern standards and methods, as well as other aspects of infrastructure. Figure 6 takes the total change reported in Figure 5 and decomposes it into the five pillars. Countries in the bottom 10% saw a contribution of `r 100*round(decile1_p2/decile_total,2)`% (`r round(decile1_p2,1)` out of the total of `r round(decile_total,1)` points) from better data services. `r 100*round(decile1_p3/decile_total,2)`% of the improvement came from better data products with better SDG reporting. `r 100*round(decile1_p5/decile_total,2)`% came from better data infrastructure, such as adoption of better standards and methodologies for producing data. In some cases, the scores for decile groups dropped for certain pillars, such as data use or SDG reporting, which can happen if data that is available becomes outdated for that country (falls outside the window dictated by the indicator scoring).
 
 In some cases, the scores for decile groups dropped for certain pillars, such as data use, which can happen if available data becomes outdated for that country (falls outside the window dictated by the indicator scoring).
 
-**Figure 5**. Data Products and Data Infrastructure Saw Major Improvements from `r start_date`-`r end_date`.
+**Figure 6**. Data Products and Data Infrastructure Saw Major Improvements from `r start_date`-`r end_date`.
 
 ```{r}
 #| label: elephantstacked
@@ -1397,12 +1571,12 @@ Note: N=167 economies.
 
 
 
-## How Have Scores Changed by Region and Income Group?
+## How Have Scores Changed by Country Groupings?
 
-The regional rankings have remained largely unchanged over this period. The two top performing regions are North America, and Europe and Central Asia, while Sub-Saharan Africa shows the worst statistical performance. The remaining regions are in-between with small differences. Although differences are small and need to be interpreted carefully, two changes stand out in this middle group: the Middle East and North Africa has caught up to East Asia and Pacific; South Asia has overtaken Latin America and the Caribbean.^[ In the cases of the East Asia and Pacific and Latin America and the Caribbean regions in particular, which both contain large numbers of smaller island economies, the non-population regional average score significantly differs from the population weighted average.  A population weighted average shows North America with the highest average score, followed by Europe and Central Asia, Latin America & Caribbean, South Asia, East Asia & Pacific, the Middle East & North Africa, and Sub-Saharan Africa.]
+The regional rankings have remained largely unchanged over this period. The two top performing regions are North America, and Europe and Central Asia, while Sub-Saharan Africa shows the worst statistical performance. East Asia and the Pacific and Latin America and the Carribbean are the next best scoring region, each with an average SPI overall score greater than 70.^[ In the cases of the East Asia and Pacific and Latin America and the Caribbean regions in particular, which both contain large numbers of smaller island economies, the non-population regional average score significantly differs from the population weighted average.  A population weighted average shows North America with the highest average score, followed by Europe and Central Asia, Latin America & Caribbean, South Asia, East Asia & Pacific, the Middle East & North Africa, and Sub-Saharan Africa.] South Asia, the Middle East and North Africa, and Sub-Saharan Africa are the three lowest scoring regions, in that order. Sub-Saharan Africa lags the highest scoring region by more than 30 points on the SPI overall score (0-100). 
 
 
-**Figure 6**. Comparison of SPI Overall Scores in `r start_date` and `r end_date` - Unweighted Regional Averages
+**Figure 7**. Comparison of SPI Overall Scores in `r start_date` and `r end_date` - Unweighted Regional Averages
 ```{r}
 #| label: regchng
 #| fig-width: 14
@@ -1466,10 +1640,10 @@ hic_chg <- round(hic_avg_end-hic_avg_start,1)
 ```
 
 
-From comparing average scores by income group (Figure 7), it is clear that on average statistical performance improves with income. Additionally, scores have improved in each region between `r start_date` and `r end_date`.  Lower middle income countries have seen the fastest growth since `r start_date`, rising `r lmic_chg` points by `r end_date`.  Low income countries improved their SPI score on average by `r lic_chg` points, while upper middle income countries improved their score by `r umic_chg` points on average.  High income countries gained `r hic_chg` points.  
+From comparing average scores by income group (Figure 8), it is clear that on average statistical performance improves with income. Additionally, scores have improved in each region between `r start_date` and `r end_date`.  Lower middle income countries have seen the fastest growth since `r start_date`, rising `r lmic_chg` points by `r end_date`.  Low income countries improved their SPI score on average by `r lic_chg` points, while upper middle income countries improved their score by `r umic_chg` points on average.  High income countries gained `r hic_chg` points.  
 
 
-**Figure 7**. Comparison of SPI Overall Scores in `r start_date` and `r end_date` - Unweighted Income Group Averages
+**Figure 8**. Comparison of SPI Overall Scores in `r start_date` and `r end_date` - Unweighted Income Group Averages
 ```{r}
 #| label: incchange
 #| fig-width: 12
@@ -1494,10 +1668,6 @@ ggplot(inc_avg, aes(x=income,y=SPI.INDEX, fill=date,group = income,label=round(S
 
 ```
 Note: N=172 economies.Economies with less than 500K population are excluded from this analysis.
-
-Finally, as shown in Figure 8, countries with smaller population sizes face specific challenges.  Even for high income countries, those countries with populations of less than 500,000 individuals have a lower average score than the average for lower middle income countries with populations greater than 500,000.  The average SPI overall score for high income countries with populations less than 500K is similar in magnitude (58 points) to those of low income countries (55 points).
-
-Table. Comparison of SPI Overall Score Over Time by Income, Lending, and FCS Group
 
 ```{r}
 #| label: grouptab
@@ -1608,32 +1778,125 @@ small_tab <- spi_index_df %>%
   ) %>%
   arrange(small_pop)
 
+
+small_tab2 <- spi_index_df %>%
+  left_join(country_metadata) %>%
+  filter(between(date,start_date,end_date)) %>%
+  mutate(small_pop=if_else(population<=500000, "Population <= 500k", "Population > 500k")) %>%
+  filter(!is.na(small_pop)) %>%
+  group_by(date, income_level, small_pop) %>%
+  summarise(SPI.INDEX=mean(SPI.INDEX, na.rm=TRUE)) %>%
+  mutate(date=factor(date, levels=c(2016,2017,2018, 2019,2020,2021,2022, 2023)),
+         small_pop=factor(small_pop, levels=c("Population <= 500k", "Population > 500k")),
+         SPI.INDEX=round(SPI.INDEX,1)) %>%
+  pivot_wider(
+    names_from = date,
+    values_from = "SPI.INDEX"
+  ) %>%
+  arrange(small_pop)
+
 group_tab <-
   bind_rows(
-    income_tab %>% rename(group=income),
+    #income_tab %>% rename(group=income),
     lending_tab %>% rename(group=lending_type),
     fcs_tab %>% rename(group=fragile_conflict),
     small_tab %>% rename(group=small_pop)
-  )
+  ) %>%
+  rename(` `=group)
 
+ida <- round(lending_tab$`2023`[1]-lending_tab$`2016`[1],1)
+ibrd <- round(lending_tab$`2023`[2]-lending_tab$`2016`[2],1)
+blend <- round(lending_tab$`2023`[3]-lending_tab$`2016`[3],1)
+not_classified <- round(lending_tab$`2023`[4]-lending_tab$`2016`[4],1)
 
 ```
 
+Finally, as shown in Table 8, countries receiving grants and low-interest loans from the International Development Association (IDA) have seen  their SPI overall score rise by `r ida` points on average since 2016. Countries receiving loans from the International Bank for Reconstruction and Development (IBRD) have seen an average increase of `r ibrd` points. Countries receiving a blend of both IDA and IBRD financing have seen an average increase of `r blend` points. Countries not classified as either IDA or IBRD have seen an average increase of `r not_classified` points.
+
+Countries with smaller population sizes face specific challenges.  Even for high income countries, those countries with populations of less than 500,000 individuals have a lower average score than the average for lower middle income countries with populations greater than 500,000.  The average SPI overall score for high income countries with populations less than 500K is similar in magnitude (56 points) to those of low income countries (56). Countries in conflict (57 points on the SPI overall score) or facing institutional and social fragility (47 points) score significantly below non-FCS economies (74 points). 
+
+
+
+
+
 ```{r}
-#| label: tab-group
-#| tbl-cap: "Changes in SPI Overall Scores by Income Group, Lending Group, and FCS."
+#| label: tbl-group
+#| tbl-cap: "Changes in SPI Overall Scores by Lending Group, Fragility, and Population Size."
 
 
 
 flextable(group_tab) %>%
-  theme_zebra() %>%
+  theme_alafoli() %>%
   hline(i=4) %>%
-  hline(i=8) %>%
-  hline(i=11)
+  hline(i=7) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
   
 ```
 
 
 Note: N=187 economies.
 
+
+
+
+
+
+# ANNEX: Information on Scoring of Indicators
+ 
+More information can be found at the following resource:
+
+https://worldbank.github.io/SPI/technical-documentation-of-spi-indicators.html
+
+| **Indicator Name**                                                                                | **Brief Description**                                                                                                                             | **Scoring**                                                                                                                                                              |
+|---------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Availability of Comparable Poverty headcount ratio at $2.15 a day          | Comparability data from World Bank's PIP                                                                                                       | 1 Point. Comparable data lasting at least two years within past 5 years. 0.5 Point. Comparable data lasting at least two years within past 10 years. 0 Points. No comparable data within past 5 years |
+| Availability of Mortality rate under-5 (per 1000 live births) data meeting quality standards       | Child Mortality Metadata from UN IGME                                                                                                                | 1 Point. Two indicators that met UN IGME standards within past 5 years. 0.5 Point. Two indicators that met UN IGME standards within past 10 years. 0 Points. No data that met UN IGME standards within past 10 years |
+| Quality of Debt service data according to World Bank                                               | Debt Reporting Metadata from World Bank                                                                                                              | 1 Points. Actual value. 0.67 Points. Preliminary value. 0.33 Points. Estimated value. 0 Points. No value                                                                      |
+| Safely Managed Drinking Water                                                                      | Availability of Safely Managed Drinking Water data for use by JMP                                                                                     | 1 Point. At least two estimates with breakdowns for urban/rural areas within an 8 year window. 0.5 Points. At least two estimates but not an urban/rural breakdown within an 8 year window. 0 Points. Otherwise |
+| Labor force participation rate by sex and age (%)                                                  | Labor force participation data for use by ILO                                                                                                        | 1 Point. Country has a labor force survey based estimate in past 5 years of labor force participation broken down by total male and female & estimated value from ILO is within 10 percentage points of value reported by national government. 0.5 Point. Country has labor force survey or is within 10 points of ILO but not both. 0 Points. Otherwise |
+| SDDS/e-GDDS subscription                                                                           | The Special Data Dissemination Standard (SDDS) and electronic General Data Dissemination Standard (e-GDDS) were established by the International Monetary Fund (IMF) for member countries that have or that might seek access to international capital markets to guide them in providing their economic and financial data to the public. Although subscription is voluntary the subscribing member needs to be committed to observing the standard and provide information about its data and data dissemination practices (metadata). The metadata are posted on the IMF’s SDDS and e-GDDS websites. | Point. Subscribing to IMF SDDS+ or SDDS standards. 0.5 Points. Subscribing to IMF e-GDDS standards. 0 Points. Otherwise |
+| ODIN Open Data Openness score                                                                      | ODW Openness score                                                                                                                                   | Our source for this indicator is Open Data Watch. Scores range from 0-100. For more details consult the ODIN technical documentation.                                       |
+| NADA metadata                                                                                      | NADA/NSO websites. Statistical systems must be open and transparent about their methods and procedures and provide access to adequate metadata – detailed descriptions of the methods and procedures used to produce  microddata. | 1 Point. Yes available. 0 Points. No.                                                                                                                                     |
+| GOAL 1: No Poverty                                                                                 | SDG Goal 1 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 1 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 2: Zero Hunger                                                                                | SDG Goal 2 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 2 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 3: Good Health and Well-being                                                                 | SDG Goal 3 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 3 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 4: Quality Education                                                                          | SDG Goal 4 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 4 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 5: Gender Equality                                                                            | SDG Goal 5 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 5 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 6: Clean Water and Sanitation                                                                 | SDG Goal 6 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 6 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 7: Affordable and Clean Energy                                                                | SDG Goal 7 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 7 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 8: Decent Work and Economic Growth                                                            | SDG Goal 8 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 8 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 9: Industry Innovation and Infrastructure                                                     | SDG Goal 9 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 9 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 10: Reduced Inequality                                                                        | SDG Goal 10 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 10 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 11: Sustainable Cities and Communities                                                        | SDG Goal 11 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 11 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 12: Responsible Consumption and Production                                                    | SDG Goal 12 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 12 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 13: Climate Action                                                                            | SDG Goal 13 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 13 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 14: Life Below Water                                                                          | SDG Goal 14 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 14 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 15: Life on Land                                                                              | SDG Goal 15 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 15 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 16: Peace and Justice Strong Institutions                                                     | SDG Goal 16 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 16 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 17: Partnerships to achieve the Goal                                                          | SDG Goal 17 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 17 with value produced by country's statistical system within a 5-year window.                                                             |
+| Population & Housing census (Availability score over 20 years)                                     | Population censuses collect data on the size, distribution, and composition of population and provide sampling frames for household and other surveys.  | 1 Point. Population census done within last 10 years. 0.5 Points. Population census done within last 20 years. 0 Points. Otherwise.                                       |
+| Agriculture census (Availability score over 20 years)                                              | Agriculture censuses collect information on agricultural activities such as size of holding, land tenure, land use, employment, and production.       | 1 Point. Census done within last 10 years. 0.5 Points. Census done within last 20 years. 0 Points. Otherwise.                                                             |
+| Business/establishment census (Availability score over 20 years)                                   | Business/establishment censuses provide valuable information on all economic activities, number of employed, and size of establishments.               | 1 Point. Census done within last 10 years. 0.5 Points. Census done within last 20 years. 0 Points. Otherwise.                                                             |
+| Household Survey on income etc. (Availability score over 10 years)                                 | These surveys collect data on household income (including income in kind), consumption, and expenditure. It is recommended that surveys be conducted at least every 3 to 5 years. | 1 Point. 3 or more surveys done within past 10 years. 0.67 Points. 2 surveys done within past 10 years. 0.33 Points. 1 survey done within past 10 years. 0 Points. None within past 10 years. |
+| Agriculture survey (Availability score over 10 years)                                              | Agricultural surveys refer to surveys of agricultural holdings based on the sampling frames established by the agricultural census.                   | 1 Point. 3 or more surveys done within past 10 years. 0.67 Points. 2 surveys done within past 10 years. 0.33 Points. 1 survey done within past 10 years. 0 Points. None within past 10 years. |
+| Labor Force Survey (Availability score over 10 years)                                              | Labor force survey is a standard household-based survey of work-related statistics at the national and sub-national level.                            | 1 Point. 3 or more surveys done within past 10 years. 0.67 Points. 2 surveys done within past 10 years. 0.33 Points. 1 survey done within past 10 years. 0 Points. None within past 10 years. |
+| Health/Demographic survey (Availability score over 10 years)                                       | Health surveys collect information on various aspects of health of populations. It is recommended that health surveys be conducted at least every 3 to 5 years. | 1 Point. 3 or more surveys done within past 10 years. 0.67 Points. 2 surveys done within past 10 years. 0.33 Points. 1 survey done within past 10 years. 0 Points. None within past 10 years. |
+| Business/establishment survey (Availability score over 10 years)                                   | The business/establishment survey provides information on employment, hours, and earnings of employees from a sample of business establishments.       | 1 Point. 3 or more surveys done within past 10 years. 0.67 Points. 2 surveys done within past 10 years. 0.33 Points. 1 survey done within past 10 years. 0 Points. None within past 10 years. |
+| Social Protection Admin (ASPIRE)                                           | Administrative data available on social protection programs from ASPIRE (World Bank) databases                                                        | Scoring is 1 if administrative data is available to produce beneficiary counts or expenditures for any social protection and labor program. 0 otherwise.                  |
+| Civil Registration and Vital Statistics (CRVS) system                                              | Birth registrations 90% complete and death registration 75% complete according to UNSD.                                                               | Score is 1 if both complete. 0.5 if one of two is complete. 0 if neither complete.                                                                                       |
+| Geospatial data available at 1st Admin Level                                                       | Indicator data availability at sub-national levels                                                                                                     | Our source for this indicator is Open Data Watch. Indicator is whether data is available at the first administrative level. Scores range from 0-100.                     |
+| Legislation Indicator based on PARIS21 indicators on SDG 17.18.2                                   | Existence of National Statistical Council, national statistical strategy, and plan. Also includes legislative aspects such as freedom of information, privacy, and good governance. | Score is 1 if the country has a national statistical legislation compliant with UN Fundamental Principles of Statistics. 0 otherwise.                                    |
+| System of national accounts in use                                                                 | The national accounts data are compiled using the System of National Account 2008 (SNA2008) or European System of National and Regional Accounts (ESA 2010). | 1 point for using SNA2008 or ESA 2010. 0.5 points for using SNA 1993 or ESA 1995. 0 points otherwise.                                                                   |
+| National Accounts base year                                                                        | National accounts base year is the year used for constant price calculations.                                                                          | 1 point for chained price. 0.5 for reference period within past 10 years. 0 points otherwise.                                                                             |
+| Classification of national industry                                                                | The industrial production data are compiled using International Standard Industrial Classification (ISIC) Rev.4 or Statistical Classification of Economic Activities in the European Community (NACE) Rev.2. | 1 Point. Latest version adopted. 0.5 Points. Previous version. 0 Points otherwise.                                                                                        |
+| CPI base year                                                                                      | Consumer Price Index reflects changes in the cost of acquiring a fixed basket of goods and services by the average consumer.                           | 1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 Points otherwise.                                                                               |
+| Classification of household consumption                                                            | Classification of Individual Consumption According to Purpose (COICOP) used in household budget surveys and international GDP comparisons.            | 1 Point. Follow COICOP. 0 Points otherwise.                                                                                                                              |
+| Classification of status of employment                                                             | Classification of status of employment data using the International Classification of Status in Employment (ISCE-93).                                   | 1 Point. Follow ISCE-93 or 2012 North American Industry Classification System (NAICS). 0 Points otherwise.                                                               |
+| Central government accounting status                                                               | Government finance accounting status follows noncash recording basis.                                                                                   | 1 Point. Follows noncash recording basis. 0.5 Points. Follows cash recording basis. 0 Points otherwise.                                                                  |
+| Compilation of government finance statistics                                                       | Compilation of government finance statistics follows the Government Finance Statistics Manual (GFSM).                                                   | 1 Point. Follows GFSM 2014. 0.5 Points. Follows GFSM 2001. 0 Points otherwise.                                                                                           |
+| Compilation of monetary and financial statistics                                                   | Compilation of monetary and financial statistics follows the Monetary and Financial Statistics Manual (MFSM).                                           | 1 Point. Follows MFSM 2000 or the Compilation Guide (2008/2016). 0 Points otherwise.                                                                                     |
+| Business process                                                                                   | The Generic Statistical Business Process Model (GSBPM) describes statistics production in a general and process-oriented way.                           | 1 Point. GSBPM is in use. 0 Points otherwise.                                                                                                                             |
+| Finance Indicator based on PARIS21 indicators on SDG 17.18.3 & SDG 17.19.1                         | Indicator based on PARIS21 SDG indicators (national statistical plan that is fully funded and under implementation).                                     | Score is 1 if the country has a national statistical plan that is fully funded and under implementation. 0 otherwise.                                                    |
 

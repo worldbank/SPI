@@ -141,6 +141,7 @@ rules <- validator(
 
 out  <- confront(SPI_df_new, rules)
 summary(out)
+plot(out)
 
 ```
 

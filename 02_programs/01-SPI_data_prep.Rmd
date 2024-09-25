@@ -3927,7 +3927,7 @@ Source of this data is UNSD and Paris21.
 ```{r finance}
 
 #pull from unsd api
-D5.5_DIFI <- read_csv(file=paste(raw_dir, '5.1_DILG', 'SG_STT_FPOS.csv', sep="/")) %>% 
+D5.5_DIFI <- read_csv(file=paste(raw_dir, '5.5_DIFI', 'SG_STT_NSDSFND.csv', sep="/")) %>% 
   select(iso3c, date,ind_value) %>%
   right_join(spi_df_empty) %>%
   mutate(RAW.D5.5.DIFI=if_else((is.na(ind_value) | ind_value=="NaN"),as.numeric(NA), as.numeric(ind_value)),
