@@ -26,20 +26,12 @@ metadata_full <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep=
 # create program to produce aggregates
 ###############
 
-#read in classifications
-# class_df <- read_excel(paste(raw_dir, '/misc/WB_Groups_FY21_CSCIDA.xlsx', sep="")) %>%
-#   rename(
-#     iso3c=WB_Country_Code,
-#     country=WB_Country_Name,
-#     WB_Group_Code=WB_Group_Code,
-#     WB_Group_Name=WB_Group_Name
-#   )
-class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xlsx', sep=""), sheet="Groups") %>%
+#read in classifications (MUST UPDATE PERIODICALLY)
+
+class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xlsx', sep=""), sheet="compositions") %>%
   rename(
-    iso3c=CountryCode,
-    country=CountryName,
-    WB_Group_Code=GroupCode,
-    WB_Group_Name=GroupName
+    iso3c=WB_Country_Code,
+    country=WB_Country_Name
   )
 
 
@@ -52,7 +44,7 @@ SPI_agg_fun  <- function(group, weight) {
     weights_df <- wbstats::wb_data(
       indicator=c(weight),
       start_date = 2016,
-      end_date=2020,
+      end_date=latest_date,
       gapfill = TRUE,
       mrv=5,
       return_wide = FALSE
@@ -186,10 +178,80 @@ databank_df %>% filter(date==latest_date) %>% left_join(metadata) %>% filter(!is
   path=paste(output_dir, "/SPI_databank_latest.xlsx", sep=""))
 
 
-xlsx::write.xlsx(databank_df, file=paste(output_dir, "/SPI_data.xlsx", sep=""),
-                 sheetName = 'Data')
 
-xlsx::write.xlsx(series_metadata, file=paste(output_dir, "/SPI_data.xlsx", sep=""),
-                 sheetName = 'Series')
-           
+###########################  
+#produce aggregates
+###########################  
+
+weight<-'none'
+
+#pull weights from WDI (either population or gni)
+if (weight!='none') {
+  weights_df <- wbstats::wb_data(
+    indicator=c(weight),
+    start_date = 2016,
+    end_date=latest_date,
+    gapfill = TRUE,
+    mrv=5,
+    return_wide = FALSE
+  ) %>%
+    rename(weight=value)
+  
+  
+#produce weighted aggregate
+  agg_df <- databank_df %>%
+    left_join(class_df) %>%
+    left_join(weights_df) %>%
+    group_by(WB_Group_Code, source_id,source_name, date) %>%
+    summarise(
+      value=Hmisc::wtd.mean(value,weights = weight, na.rm=TRUE)
+    )
+  
+} else {
+  
+  #produce weighted aggregate
+  agg_df <- databank_df %>%
+    left_join(class_df, relationship = 'many-to-many') %>%
+    group_by(WB_Group_Code,WB_Group_Name, date, source_id, source_name) %>%
+    summarise(
+      value=round(mean(value, na.rm=TRUE),2)
+    ) %>%
+    ungroup() %>%
+    filter(!is.na(WB_Group_Name))
+  
+}
+
+  
+#append aggregates to country data and save
+data_bank_df_w_aggregates <- agg_df %>%
+  #rename columns
+  rename(iso3c=WB_Group_Code,
+         country=WB_Group_Name) %>%
+  #bind to country data
+  bind_rows(databank_df) %>%
+  #keep just after 2016
+  filter(date>=2016) 
+
+#save to csv
+write_excel_csv(data_bank_df_w_aggregates, paste(output_dir, 'SPI_databank_country_and_aggregates.csv', sep="/"))
+
+data_bank_df_w_aggregates %>%
+  transmute(
+    Time=paste0("YR", date),
+    Country=iso3c,
+    Series=source_id,
+    SCALE=0,
+    Data=value
+  ) %>%
+  write_excel_csv(paste(output_dir, 'SPI_databank_country_and_aggregates_DCS.csv', sep="/"))
+
+#footnotes
+data_bank_df_w_aggregates %>%
+  transmute(
+    Country=iso3c,
+    Series=source_id,
+    Time=paste0("YR", date),
+    FootNote=footnote,
+    `Series Survey Source`= as.character(NA)
+  write_excel_csv(paste(output_dir, 'SPI_databank_footnotes.csv', sep="/"))
 

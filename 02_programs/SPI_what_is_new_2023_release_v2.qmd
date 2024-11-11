@@ -6,7 +6,6 @@ date-format: long
 format:
   docx:
     reference-doc: custom-reference-doc.docx
-
 bibliography: ./bibliography.bib
 ---
 

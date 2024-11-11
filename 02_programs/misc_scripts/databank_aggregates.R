@@ -57,7 +57,7 @@ databank_df <- databank_df %>%
 # create program to produce aggregates
 ###############
 
-#read in classifications
+#read in classifications (MUST UPDATE PERIODICALLY)
 class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xlsx', sep=""), sheet="Groups") %>%
   rename(
     iso3c=CountryCode,
