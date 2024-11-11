@@ -1,0 +1,131 @@
+
+@font-face {
+  font-family: 'Andes';
+  src: url("www/304244_1_0.woff2") format("woff2");
+  src: url("www/304244_1_0.woff") format("woff");
+  src: url("www/304244_1_0.ttf") format("truetype");
+}
+
+.navbar-brand {
+  display: block;
+  padding: 16px;
+  height: auto;
+}
+
+div.breadcrumb {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(100%, rgba(0, 0, 0, 0.05)), to(rgba(0, 0, 0, 0.05)));
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 100%, rgba(0, 0, 0, 0.05) 100%);
+  min-height: 40px;
+  border-top: 1px solid #ddd;
+  white-space: nowrap;
+}
+
+div.breadcrumb .page-title {
+  padding: 4px;
+}
+
+div.breadcrumb a {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 28px;
+  color: #0071bc;
+  text-decoration: none;
+}
+
+div.subnavigation a:hover,
+div.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+div.title h1 {
+    font-family: "Andes", sans-serif;
+    font-size: 44px;
+    line-height: 48px;
+    margin: 0px 0px 16px 0px;
+    padding: 32px 0;
+    color: black;
+}
+
+div.subnav-wrapper {
+  background: #0071bc;
+}
+
+div.subnavigation {
+  line-height: 26px;
+}
+
+div.subnavigation ul {
+  list-style: none;
+  padding: 1px 0;
+  margin: 0;
+}
+
+div.subnavigation li {
+  display: inline-block;
+  padding: 8px 19px 7px;
+  margin: 0 6px;
+}
+
+div.subnavigation li a,
+div.subnavigation li.active {
+  font-family: "Andes", sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+  text-transform: uppercase;
+}
+
+div.subnavigation li.active {
+  background: #004c92;
+}
+
+div.subnavigation li a {
+  text-decoration: none;
+}
+
+/* override cerulean theam for Shiny tabs */
+nav.navbar-default {
+  background: none;
+  border-bottom: 1px solid #333;
+}
+
+nav.navbar-default .navbar-brand {
+  color: #777;
+}
+
+nav.navbar-default .navbar-brand:hover,
+nav.navbar-default .navbar-brand:focus {
+  color: inherit;
+}
+
+nav.navbar-default .navbar-nav>li>a {
+  color: #333;
+}
+
+nav.navbar-default .navbar-nav>li>a:hover,
+nav.navbar-default .navbar-nav>li.active>a{
+  color: #0071bc;
+  background: #ddd;
+}
+
+@media(min-width: 768px) {
+  ul.navbar-nav>li>a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+@media(min-width: 1200px) {
+  ul.navbar-nav {
+    margin-top: 6px;
+  }
+}
+
+.text {
+  font-size: 16px;
+}
+
+.highcharts-container {
+	font-size: 1.5em;
+}
