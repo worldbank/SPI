@@ -61,7 +61,7 @@
 "FJI",-99,NA,NA
 "FRA",-99,"Register based census",NA
 "FSM",-99,NA,NA
-"GAB",-99,NA,NA
+"GAB",2021,"2021",NA
 "GBR",-99,"Register based census",NA
 "GEO",-99,"Register based census",NA
 "GHA",2003,"2003, 2013","2003"
@@ -135,7 +135,7 @@
 "MWI",2016,"2016",NA
 "MYS",-99,"Register based census",NA
 "NAM",2019,"2019",NA
-"NER",-99,NA,NA
+"NER",2022,"2022",NA
 "NGA",-99,NA,NA
 "NIC",2010,"2010",NA
 "NLD",-99,"Register based census",NA
