@@ -204,17 +204,20 @@ if (weight!='none') {
     left_join(weights_df) %>%
     group_by(WB_Group_Code, source_id,source_name, date) %>%
     summarise(
-      value=Hmisc::wtd.mean(value,weights = weight, na.rm=TRUE)
+      value=Hmisc::wtd.mean(value,weights = weight, na.rm=TRUE),
+      N=sum(!is.na(value))
     )
   
 } else {
   
   #produce weighted aggregate
   agg_df <- databank_df %>%
-    left_join(class_df, relationship = 'many-to-many') %>%
+    left_join(class_df %>% select(-country), relationship = 'many-to-many') %>%
     group_by(WB_Group_Code,WB_Group_Name, date, source_id, source_name) %>%
     summarise(
-      value=round(mean(value, na.rm=TRUE),2)
+      N=n(),
+      N_obs = sum(!is.na(value)),
+      value=round(mean(value, na.rm=TRUE),2),
     ) %>%
     ungroup() %>%
     filter(!is.na(WB_Group_Name))
@@ -228,9 +231,7 @@ data_bank_df_w_aggregates <- agg_df %>%
   rename(iso3c=WB_Group_Code,
          country=WB_Group_Name) %>%
   #bind to country data
-  bind_rows(databank_df) %>%
-  #keep just after 2016
-  filter(date>=2016) 
+  bind_rows(databank_df) 
 
 #save to csv
 write_excel_csv(data_bank_df_w_aggregates, paste(output_dir, 'SPI_databank_country_and_aggregates.csv', sep="/"))
@@ -243,7 +244,29 @@ data_bank_df_w_aggregates %>%
     SCALE=0,
     Data=value
   ) %>%
+  #make NA to blank
+  mutate(Data=if_else(is.na(Data),"",as.character(Data))) %>%
   write_excel_csv(paste(output_dir, 'SPI_databank_country_and_aggregates_DCS.csv', sep="/"))
+
+#Pivot from long to wide
+data_wide <- data_bank_df_w_aggregates %>%
+  transmute(
+    Time=paste0("YR", date),
+    Country=iso3c,
+    Series=source_id,
+    SCALE=0,
+    Data=value
+  ) %>%
+  mutate(Data=if_else(is.na(Data),"",as.character(Data))) %>%
+  #pivot wider by Time
+  pivot_wider(
+    names_from='Time',
+    values_from='Data',
+    names_sort=TRUE
+  ) 
+
+#save to csv
+write_excel_csv(data_wide, paste(output_dir, 'SPI_databank_country_and_aggregates_DCS_wide.csv', sep="/"))
 
 #footnotes
 data_bank_df_w_aggregates %>%
@@ -251,7 +274,6 @@ data_bank_df_w_aggregates %>%
     Country=iso3c,
     Series=source_id,
     Time=paste0("YR", date),
-    FootNote=footnote,
-    `Series Survey Source`= as.character(NA)
-  write_excel_csv(paste(output_dir, 'SPI_databank_footnotes.csv', sep="/"))
+    FootNote=footnote)
+%>% write_excel_csv(paste(output_dir, 'SPI_databank_footnotes.csv', sep="/"))
 
