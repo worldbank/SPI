@@ -44,7 +44,7 @@
 "SWZ","SZ","Eswatini","Mbabane",31.4659,-26.5225,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LMC","XN","Lower middle income","IDB","XH","Blend",2023,"2011"
 "ETH","ET","Ethiopia","Addis Ababa",38.7468,9.02274,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2023,NA
 "FJI","FJ","Fiji","Suva",178.399,-18.1149,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","UMC","XT","Upper middle income","IDB","XH","Blend",2023,NA
-"GAB","GA","Gabon","Libreville",9.45162,0.38832,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2023,NA
+"GAB","GA","Gabon","Libreville",9.45162,0.38832,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2023,"2021"
 "GMB","GM","Gambia, The","Banjul",-16.5885,13.4495,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2023,"2014"
 "GEO","GE","Georgia","Tbilisi",44.793,41.71,"ECS","Z7","Europe & Central Asia","ECA","7E","Europe & Central Asia (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2023,"Register based census"
 "GHA","GH","Ghana","Accra",-0.20795,5.57045,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2023,"2003, 2013"
@@ -92,7 +92,7 @@
 "NRU","NR","Nauru","Yaren District",166.920867,-0.5477,"EAS","Z4","East Asia & Pacific",NA,NA,NA,"HIC","XD","High income","IBD","XF","IBRD",2023,NA
 "NPL","NP","Nepal","Kathmandu",85.3157,27.6939,"SAS","8S","South Asia","SAS","8S","South Asia","LMC","XN","Lower middle income","IDX","XI","IDA",2023,"2001, 2006, 2018"
 "NIC","NI","Nicaragua","Managua",-86.2734,12.1475,"LCN","ZJ","Latin America & Caribbean","LAC","XJ","Latin America & Caribbean (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2023,"2010"
-"NER","NE","Niger","Niamey",2.1073,13.514,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2023,NA
+"NER","NE","Niger","Niamey",2.1073,13.514,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2023,"2022"
 "NGA","NG","Nigeria","Abuja",7.48906,9.05804,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LMC","XN","Lower middle income","IDB","XH","Blend",2023,NA
 "PAK","PK","Pakistan","Islamabad",72.8,30.5167,"SAS","8S","South Asia","SAS","8S","South Asia","LMC","XN","Lower middle income","IDB","XH","Blend",2023,"Register based census"
 "PLW","PW","Palau","Koror",134.479,7.34194,"EAS","Z4","East Asia & Pacific",NA,NA,NA,"HIC","XD","High income","IBD","XF","IBRD",2023,NA

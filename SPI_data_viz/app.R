@@ -6,6 +6,7 @@
 
 library(markdown)
 library(shiny)
+library(shinydashboard)
 library(shinyjs)
 library(tidyverse)
 library(plotly)
@@ -27,7 +28,7 @@ library(officer)
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv') 
 
-end_date <- 2022
+end_date <- 2023
 
 metadata_raw <- read_csv('SPI_dimensions_sources.csv')
 
@@ -133,7 +134,7 @@ ui <- navbarPage(id='container',
                                   </div>
                                   
                                     <div class="subnav-wrapper">
-                                    <div class="container subnavigation">
+                                    <div class="container-fluid subnavigation">
                                     <div class="row"><div class="col-xs-12">
                                         <ul> 
                                             <li><a title="Home" href="//www.worldbank.org/en/programs/statistical-performance-indicators">Home</a></li>
@@ -195,16 +196,18 @@ ui <- navbarPage(id='container',
                  #####################################################
                  # Global Map and Statistics Section
                  ####################################################
-                 tabPanel("Global Picture",tabName ='tab1',
+                 tabPanel("Global Picture",value ='global-picture',
                           tags$head(
-                            tags$link(rel = "stylesheet", type = "text/css", href = "spi-template.css")
+                            tags$link(rel = "stylesheet", type = "text/css", href = "spi-template.css"),
+                            
                           ),
                           # div(class="outer",
                           #     shiny::actionButton(inputId='ab1', label="Visit SPI Homepage", 
                           #                        icon = icon("external-link-square-alt"),
                           #                        # style="color: #86C2E6; background-color: #86C2E6; border-color: #86C2E6",
                           #                        onclick ="window.open('http://www.worldbank.org/spi', '_blank')"),
-                              fluidRow(
+
+                          fluidRow(
                                 column(3,
                                       selectizeInput("color_choices_overall", "Choose Indicator", 
                                              choices=metadata$descript,
@@ -227,6 +230,9 @@ ui <- navbarPage(id='container',
                             p(id='map_p','The boundaries, colors, denominations and any other information shown on this map do not imply, on the part of the World Bank Group, any judgment on the legal status of any territory, or any endorsement or acceptance of such boundaries.')
                             
                             ),
+                          p('Of the framework’s 22 dimensions, 14 have established methods and suitable data sources for a current total of 51 indicators. 
+                            But 8 of the dimensions do not yet have measurable indicators. One function of the framework is thus to motivate countries and the international 
+                            community to improve the statistical performance on those 14 dimensions—and to do more to establish methods and sources for the 8 remaining dimensions.'),
                           wellPanel(
                             fluidRow(
                               column(3,offset=1,
@@ -328,7 +334,7 @@ ui <- navbarPage(id='container',
                  #####################################################
                  # Country Reports section
                  ####################################################                 
-                 tabPanel("Country Reports",tabName ='tab2',
+                 tabPanel("Country Reports",value ='country-reports',
                           # div(class="outer",
                           #     shiny::actionButton(inputId='ab2', label="Visit SPI Homepage", 
                           #                         icon = icon("external-link-square-alt"),
@@ -363,7 +369,7 @@ ui <- navbarPage(id='container',
                  # Time Trends
                  #####################################################
                  
-                 tabPanel("Country Time Trends",
+                 tabPanel("Country Time Trends", value='country-trends',
                           # div(class="outer",style='padding:50px',
                           #     shiny::actionButton(inputId='ab3', label="Visit SPI Homepage", 
                           #                         icon = icon("external-link-square-alt"),
@@ -397,7 +403,7 @@ ui <- navbarPage(id='container',
                  #####################################################
                  # Country Table section
                  ####################################################                 
-                 tabPanel("Create Your Own SPI",tabName ='tab3',
+                 tabPanel("Create Your Own SPI",value ='custom-weights',
                           shinyjs::useShinyjs(), #need this for some advanced features like hiding items in UI
                           #css
                           tags$head(tags$style(
@@ -601,7 +607,23 @@ ui <- navbarPage(id='container',
 # Define server logic required to draw a histogram
 server <- function(input, output,session) {
 
+  # #get url links
+  observe({
+    query <- parseQueryString(session$clientData$url_search) #retrieve infor from url
+    query1 <- paste(names(query), query, sep = "=", collapse=", ")
+    print(query1)
     
+    if (query1 == "tab=country-reports") {
+      updateNavbarPage(session, inputId = "container", selected = "country-reports")
+    } 
+    else if (query1 == "tab=country-trends") {
+      updateTabItems(session, inputId = "container", selected = "country-trends")
+    } else if (query1 == "tab=custom-weights") {
+      updateTabItems(session, inputId = "container", selected = "custom-weights")
+    } else {
+      updateTabItems(session, inputId = "container", selected = "global-picture")
+        }
+  })
     
   output$downloadDataAll <- downloadHandler(
     filename = function() {
@@ -892,17 +914,20 @@ server <- function(input, output,session) {
             between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
             between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
             between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
-            between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+            between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%",
+            TRUE ~ "Not available"
             
           )) %>%
           mutate(spi_groups=factor(spi_groups, 
-                                   levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )),
-                 value = as.numeric(spi_groups))  
+                                   levels=c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%", "Not available" )),
+                 value = as.numeric(spi_groups),
+                 across(c('SPI_INDEX','SPI_INDEX_PIL1','SPI_INDEX_PIL2','SPI_INDEX_PIL3','SPI_INDEX_PIL4','SPI_INDEX_PIL5'),
+                        ~if_else(is.na(.),"Not available",as.character(round(.,1)))))  
           
         
         #set color pallete
-        col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
-        names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+        col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c", "#ced4da")  
+        names(col_pal) <- c("Top 20%","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%", "Not available" )
         
         SPI_highchart_map <- highchart(type = "map") %>%
           hc_add_series(mapData = countries,
@@ -927,15 +952,19 @@ server <- function(input, output,session) {
                                           list(from=2, to=2, color="#acece7", name="4th Quintile"),
                                           list(from=3, to=3, color="#f1dc76", name="3rd Quintile"),
                                           list(from=4, to=4, color="#ffbf69", name="2nd Quintile"),
-                                          list(from=5, to=5, color="#ff9f1c", name="Bottom 20%"))) %>% 
+                                          list(from=5, to=5, color="#ff9f1c", name="Bottom 20%"),
+                                          list(from=6, to=6, color="#ced4da", name="Not available"))
+                                               ) %>% 
           hc_mapNavigation(
             enabled = TRUE,
             enableMouseWheelZoom = TRUE,
             enableDoubleClickZoom = TRUE
           ) %>%
           hc_legend(
-            verticalAlign = "top"
-          )
+            verticalAlign = "top",
+            itemStyle = list(fontSize = "16px")
+            
+          ) 
         
         SPI_highchart_map
         
@@ -966,7 +995,12 @@ server <- function(input, output,session) {
             enabled = TRUE,
             enableMouseWheelZoom = TRUE,
             enableDoubleClickZoom = TRUE
-          )
+          ) %>%
+          hc_legend(
+            verticalAlign = "top",
+            itemStyle = list(fontSize = "16px")
+            
+          ) 
 
         SPI_highchart_map
         
@@ -1141,6 +1175,7 @@ server <- function(input, output,session) {
     country_report_lolli_fn <- function(variables, title, scale) {
       lollip_df_temp <- lolli_df() %>%
         select(country, starts_with('SPI')) %>%
+        select(country, SPI.INDEX, everything()) %>%
         relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
         pivot_longer(
           cols = starts_with('SPI'),
@@ -1180,14 +1215,24 @@ server <- function(input, output,session) {
         select(shortname, values, dimname, country, source_name ) %>%
         mutate(values=round(values,2))
     
+    cols <- c('#2C2C4C', '#D3EDC5','#C0D2DE','#A9BFDA','#92929E','#575797','#8186A6', '#FFFEBD','#CEE2CD')
     
     highchart() %>%
       hc_add_series(data = lollip_df_temp,
                     hcaes(x=shortname, y = values, group = country),
                     type = "column") %>%
-      hc_xAxis(type='category') %>%
+      hc_xAxis(type='category',
+               labels=list(
+                 style = list(fontSize = "16px", color = "#000000"))) %>%
       hc_yAxis(min=0,max=scale) %>%
-      hc_title(text=title)
+      hc_title(text=title,
+               style = list(fontSize = "24px", color = "#000000", fontWeight = "bold")) %>%
+      hc_colors(cols) %>%
+      hc_legend(
+        verticalAlign='top',
+        itemStyle = list(fontSize = "16px")
+      )
+    
 }
     
     output$fullplot <- renderUI({
@@ -1319,12 +1364,16 @@ server <- function(input, output,session) {
       #check if there is a country comparison group and if so add
       if (length(input$comparison_choice_time)==0) {
         
-        df_trends %>%
+        t <- df_trends %>%
           filter(country==input$country_choice_time) %>%
           bind_rows(region_agg) %>%
           bind_rows(income_agg) %>%
+          ungroup() %>%
           filter(!is.na(Score))%>%
           mutate(Score=round(Score, 1))
+        
+        t %>%
+          mutate(country=factor(country, levels=unique(t$country)))
         
       } else if (length(input$comparison_choice_time)>0) {
         
@@ -1334,13 +1383,18 @@ server <- function(input, output,session) {
           filter(country %in% input$comparison_choice_time)
         
         
-        df_trends %>%
+        t <- df_trends %>%
           filter(country==input$country_choice_time) %>%
           bind_rows(region_agg) %>%
           bind_rows(income_agg) %>%
           bind_rows(df_compare) %>%
+          ungroup() %>%
           filter(!is.na(Score)) %>%
           mutate(Score=round(Score, 1))
+        
+        t %>%
+          mutate(country=factor(country, levels=unique(t$country)))
+          
       }
       
       
@@ -1348,6 +1402,9 @@ server <- function(input, output,session) {
     }) 
     
     output$plot_time <- renderHighchart({
+      
+      cols <- c('#2C2C4C', '#89CF63','#739CB5','#648CBD','#92929E','#7B7B8A','#575798', '#FFFC37','#81B57E')
+      
       
       hchart(
         time_trends_df(),
@@ -1357,12 +1414,29 @@ server <- function(input, output,session) {
           y=Score,
           group=country
         ),
+        lineWidth=6,
+        marker=list(
+          radius=6
+        )
       ) %>%
         hc_xAxis(
-          allowDecimals=FALSE
+          allowDecimals=FALSE,
+          title=list(
+            style = list(fontSize = "18px", color = "#000000")),
+          labels=list(
+            style = list(fontSize = "16px", color = "#000000"))
         ) %>%
         hc_yAxis(
-          min=0
+          min=0,
+          title=list(
+            style = list(fontSize = "18px", color = "#000000")),
+          labels=list(
+            style = list(fontSize = "16px", color = "#000000"))
+        ) %>%
+        hc_colors(cols) %>%
+        hc_legend(
+          verticalAlign='top',
+          itemStyle = list(fontSize = "18px")
         )
       
     })

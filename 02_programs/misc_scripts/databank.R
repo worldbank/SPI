@@ -177,6 +177,11 @@ writexl::write_xlsx(databank_df,
 databank_df %>% filter(date==latest_date) %>% left_join(metadata) %>% filter(!is.na(pillar)) %>% writexl::write_xlsx(
   path=paste(output_dir, "/SPI_databank_latest.xlsx", sep=""))
 
+pillar_chart <- databank_df %>% filter(date==latest_date) %>% left_join(metadata_full) %>% filter(grepl('SPI.DIM', source_id)) %>%
+  filter(!is.na(pillar)) 
+
+writexl::write_xlsx(pillar_chart,
+  path=paste(output_dir, "/SPI_pillar_chart.xlsx", sep=""))
 
 
 ###########################  

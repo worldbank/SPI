@@ -17,7 +17,7 @@
 15,15,16,BLR,Belarus,rev4,rev4,rev4,rev4,nace
 16,16,17,BEL,Belgium,rev4,rev4,rev4,rev4,Not Found
 17,17,18,BLZ,Belize,Rev3,Rev3,Rev3,Rev3,No Data
-18,18,19,BEN,Benin,Rev3,Rev3,Rev3,Rev3,Not Found
+18,18,19,BEN,Benin,Rev3,Rev3,Rev3,rev4,Not Found
 19,19,20,BTN,Bhutan,ISIC rev2,ISIC rev2,ISIC rev2,ISIC rev2,No Data
 20,20,21,BOL,Bolivia,rev3,rev3,rev3,rev4,Not Found
 21,21,22,BIH,Bosnia and Herzegovina,rev4,rev4,rev4,rev4,nace
@@ -38,7 +38,7 @@
 36,36,37,COL,Colombia,rev4,rev4,rev4,rev4,Not Found
 37,37,38,COM,Comoros,,,,,Not Found
 38,38,39,COD,"Congo, Dem. Rep.",rev3,rev3,rev3,rev3,Not Found
-39,39,40,COG,"Congo, Rep.",ISIC rev2,ISIC rev2,ISIC rev2,ISIC rev2,Not Found
+39,39,40,COG,"Congo, Rep.",ISIC rev2,ISIC rev2,ISIC rev2,ISIC rev3,Not Found
 40,40,41,CRI,Costa Rica,rev4,rev4,rev4,rev4,Not Found
 41,41,42,CIV,Côte d'Ivoire,rev3,rev3,rev3,rev3,Not Found
 42,42,43,HRV,Croatia,rev4,rev4,rev4,rev4,nace
@@ -123,7 +123,7 @@
 121,121,122,NLD,Netherlands,rev4,rev4,rev4,rev4,nace
 122,122,123,NZL,New Zealand,rev4,rev4,rev4,rev4,Error
 123,123,124,NIC,Nicaragua,rev3,rev3,rev3,rev3,Not Found
-124,124,125,NER,Niger,rev3,rev3,rev3,rev3,Not Found
+124,124,125,NER,Niger,rev3,rev3,rev3,rev4,Not Found
 125,125,126,NGA,Nigeria,rev4,rev4,rev4,rev4,Error
 126,126,127,NOR,Norway,rev4,rev4,rev4,rev4,nace
 127,127,128,OMN,Oman,rev3,rev3,rev3,rev3,Not Found

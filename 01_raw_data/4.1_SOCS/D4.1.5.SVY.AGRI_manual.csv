@@ -15,7 +15,7 @@
 "BEN","BJ","Benin","Porto-Novo",2.6323,6.4779,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2023,NA
 "BFA","BF","Burkina Faso","Ouagadougou",-1.53395,12.3605,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2023,"1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007"
 "BGD","BD","Bangladesh","Dhaka",90.4113,23.7055,"SAS","8S","South Asia","SAS","8S","South Asia","LMC","XN","Lower middle income","IDX","XI","IDA",2023,"2005"
-"BGR","BG","Bulgaria","Sofia",23.3238,42.7105,"ECS","Z7","Europe & Central Asia",NA,NA,NA,"HIC","XD","High income","IBD","XF","IBRD",2023,"2005, 2007, 2013, 2016, 2020"
+"BGR","BG","Bulgaria","Sofia",23.3238,42.7105,"ECS","Z7","Europe & Central Asia",NA,NA,NA,"HIC","XD","High income","IBD","XF","IBRD",2023,"2005, 2007, 2013, 2016, 2020, 2021, 2022, 2023"
 "BHR","BH","Bahrain","Manama",50.5354,26.1921,"MEA","ZQ","Middle East & North Africa",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2023,NA
 "BHS","BS","Bahamas, The","Nassau",-77.339,25.0661,"LCN","ZJ","Latin America & Caribbean",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2023,NA
 "BIH","BA","Bosnia and Herzegovina","Sarajevo",18.4214,43.8607,"ECS","Z7","Europe & Central Asia","ECA","7E","Europe & Central Asia (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2023,NA
@@ -116,7 +116,7 @@
 "MNE","ME","Montenegro","Podgorica",19.2595,42.4602,"ECS","Z7","Europe & Central Asia","ECA","7E","Europe & Central Asia (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2023,"2016"
 "MNG","MN","Mongolia","Ulaanbaatar",106.937,47.9129,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2023,NA
 "MOZ","MZ","Mozambique","Maputo",32.5713,-25.9664,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2023,"2005, 2006"
-"MRT","MR","Mauritania","Nouakchott",-15.9824,18.2367,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2023,NA
+"MRT","MR","Mauritania","Nouakchott",-15.9824,18.2367,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2023,"2023"
 "MUS","MU","Mauritius","Port Louis",57.4977,-20.1605,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2023,"2005"
 "MWI","MW","Malawi","Lilongwe",33.7703,-13.9899,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2023,NA
 "MYS","MY","Malaysia","Kuala Lumpur",101.684,3.12433,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2023,NA
