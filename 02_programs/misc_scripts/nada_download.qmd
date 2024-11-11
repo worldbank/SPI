@@ -1,0 +1,34 @@
+---
+title: NADA webpage download
+output: html
+---
+
+
+```{python}
+import csv
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+#set path to  "C:/Users/wb469649/Documents/Github/SPI/01_raw_data/2.4_DSDS/"
+path = "C:/Users/wb469649/Documents/Github/SPI/01_raw_data/2.4_DSDS/"
+
+
+
+# Open the CSV file and read the URLs from the column NADA_text
+nada_csv = pd.read_csv(path + "D2.4.NADA.2022.csv")
+
+```
+
+
+```
+
+# For each URL, send a GET request and parse the HTML content
+for url in urls:
+    response = requests.get(url[0])
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Save the webpage content to a file
+    with open(f'{url[0].replace("http://", "").replace("https://", "").replace("/", "_")}.html', 'w') as file:
+        file.write(str(soup.prettify()))
+```

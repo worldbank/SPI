@@ -35,7 +35,6 @@ library(estimatr)
 library(ggpmisc)
 library(ggthemes)
 library(ggtext)
-#set directories
 dir <- here()
 
 raw_dir <- paste(dir, '01_raw_data', sep="/")
@@ -44,7 +43,7 @@ output_dir <- paste(dir, '03_output_data', sep="/")
 #weights (either unity (1) or population (2))
 wgt <- 1
 
-end_date <- 2022
+end_date <- 2023
 
 ```
 
@@ -120,24 +119,26 @@ To complete the virtuous data cycle, the capability of the statistical system ne
 pop_df <- wbstats::wb_data(country="all",
              indicator='SP.POP.TOTL',
              start_date=2004,
-             end_date=2022) %>%
+             end_date=end_date) %>%
   mutate(date=as.numeric(date)) %>%
   mutate(population=SP.POP.TOTL) %>%
-  select(country, date, population) 
+  select(iso3c, date, population) 
 
 
 #read in the SPI dataset
-spi_df_final <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) %>%
-  filter(date>=2021) %>%
-  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2020.csv', sep="/")) %>% filter(date==2020)) %>%
-  bind_rows(read_csv( file = paste(raw_dir, 'previous_vintages/SPI_data_2019.csv', sep="/")) %>% filter(date<2020)) %>%           
-  mutate(income=if_else(is.na(income), income_level, income)) %>%
+spi_df_final_raw <- read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/")) 
+
+
+spi_df_final <- spi_df_final_raw %>%
+   
   left_join(pop_df) %>%
   group_by(iso3c) %>%
   arrange(desc(date)) %>%
   fill(population, .direction = "downup") %>%
   mutate(wgt=wgt,
-         weights=if_else(wgt==2,population,1))  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+         weights=if_else(wgt==2,population,1)) %>%  #create a variable for weights for estimates.  This just makes is easier to switch between weights and unweighted estimates.
+  left_join(wbstats::wb_countries()) %>%
+    mutate(income= income_level) 
 
 
 
@@ -1094,7 +1095,7 @@ The nested structure of our index and the summation methods used to build an ove
 
 span <- c(2004:end_date)
 
-spi_df_empty <- bind_rows(replicate(length(span), wbstats::wbcountries(), simplify = FALSE), .id='date') %>%
+spi_df_empty <- bind_rows(replicate(length(span), wbstats::wb_countries(), simplify = FALSE), .id='date') %>%
   mutate(date=as.numeric(date)+span[1]-1) %>%
   filter(region!="Aggregates") # take out the aggregates (LAC, SAR, etc)
 
@@ -1198,7 +1199,7 @@ spi_index_df_temp <- spi_df_final %>%
 #Drop certain indicators that don't make cut because of imcomplete coverage usually
 spi_index_df_temp <- spi_index_df_temp %>%
   mutate(SPI.D4.3.GEO.first.admin.level=if_else(SPI.D4.3.GEO.first.admin.level<SPI.D4.3.GEO.second.admin.level,SPI.D4.3.GEO.second.admin.level, SPI.D4.3.GEO.first.admin.level )) %>% # some countries report data at 2nd admin level but not first.  This change addresses this fact, so that countries are given credit is they report at geographic level lower than 1st admin level.
-  select( -SPI.D5.3.DISK, -SPI.D4.3.GEO.second.admin.level) 
+  select( -SPI.D4.3.GEO.second.admin.level) 
 
 
 
@@ -2874,161 +2875,7 @@ FitFlextableToPage(top_changes_tab) %>%
 
 
 
-## Density Plots
 
-As another check, the distribution of scores across countries for each year has been presented and compared to a normal distribution. This exercise checks for whether the distribution of the SPI overall scores contains significant skew or fat tails. There is some indication of a bunching of scores near the top of the distribution of SPI scores. This is due to a large number of OECD countries possessing similar scores. This is not unexpected as OECD requires member countries to adhere to several methodological standards and to regularly report on a large set of indicators. These countries also are composed of several of the highest income countries that tend to be on the frontier of statistical production.
-
-
-```{r comparison, include=FALSE}
-
-#pull SCI values
-
-Request_metadata <- GET(url = paste0("http://api.worldbank.org/v2/country/all/indicator/IQ.SCI.OVRL?format=json&date=2004:2020&per_page=5000"))
-Response_metadata <- content(Request_metadata, as = "text", encoding = "UTF-8")
-
-# Parse the JSON content and convert it to a data frame.
-sci_df <- jsonlite::fromJSON(Response_metadata, flatten = TRUE) %>%
-  data.frame() %>%
-  transmute(
-    iso3c=countryiso3code,
-    country=country.value,
-    date=as.numeric(date),
-    SCI=value
-  ) %>%
-  left_join(spi_df_empty) %>% #add on country metadata
-  filter(!is.na(income)) %>%
-  select(iso3c, country, date, SCI  ) %>%
-  group_by(date) %>%
-  arrange(-SCI) %>%
-  mutate(SCI_rank=rank(-SCI),
-         SCI_rank=if_else(is.na(SCI),as.numeric(NA),SCI_rank))
-
-
-#check unique values by dimension.
-unique_scores_df <- sci_df %>% filter(date==2020) %>% mutate(SCI=round(SCI,3))
-unique_scores_sci <-length(unique(unique_scores_df$SCI))
-
-
-
-#read in ODIN data
-  for (i in c(2015,2016,2017,2018,2020,2021,2022)) {
-   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""))  %>%
-        as_tibble(.name_repair = 'universal') %>%
-        mutate(date=i) %>%
-        filter(Data.categories=='All Categories') %>%
-        select(-Year)
-
-
-    assign(paste('odin_df',i,sep="_"), temp)
-  }
-
-    #bind different years together
-odin_df <- bind_rows(odin_df_2015, odin_df_2016, odin_df_2017, odin_df_2018, odin_df_2020, odin_df_2021, odin_df_2022)
-
-
-odin_df <- odin_df %>%
-    select(Country.Code, date, Overall.score) %>%
-    rename(iso3c=Country.Code,
-           ODIN_score=Overall.score) %>%
-    group_by(date) %>%
-    arrange(-ODIN_score) %>%
-    mutate(ODIN_rank=rank(-ODIN_score, na.last='NA')) %>% 
-  right_join(spi_df_empty) %>%
-  arrange(country, date) %>%
-  group_by(country) %>%
-  mutate(across(starts_with("ODIN"), na.locf, na.rm=FALSE)) %>%
-  select(country, date, starts_with("ODIN"))
-
-
-#read in the old SPI
-# SPI_v0_df <- readxl::read_excel(path='C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/FinalCopy of SPI SCORE 2016-2018-DW.xlsx', skip=2) %>%
-#   transmute(
-#     iso3c=Country,
-#     SPI_2016=as.numeric(Overall...7),
-#     SPI_2017=as.numeric(Overall...12),
-#     SPI_2018=as.numeric(Overall...17)
-#   ) %>%
-#   pivot_longer(
-#     cols=c('SPI_2016','SPI_2017','SPI_2018'),
-#     names_to="date",
-#     values_to = 'SPI_v0'
-#   ) %>%
-#   mutate(date=gsub('SPI_','',date),
-#          date=as.numeric(date))
-
-
-#create one database
-comparison_df <- spi_index_df %>%
-  ungroup() %>%
-  filter(date %in% c(2016:end_date)) %>%
-  arrange(-SPI.INDEX) %>%
-  mutate(across(starts_with('SPI.INDEX'),~1*.),
-         across(starts_with('SPI.INDEX'),round,1)) %>%
-  select(country, iso3c, date, income, region, SPI.INDEX) %>%
-  left_join(sci_df) %>%
-  left_join(odin_df) %>%
-  #left_join(SPI_v0_df) %>%
-  group_by(iso3c) %>%
-  fill(SCI, .direction='downup')
-
-
-
-
-```
-
-*Figure 7.5: Distribution of SPI overall score across Countries*
-```{r density}
-
-density_df <- comparison_df %>%
-  select(iso3c, date, SPI.INDEX, ODIN_score, SCI) %>%
-  pivot_longer(
-    cols = c('SPI.INDEX', 'ODIN_score', 'SCI'),
-    names_to='index',
-    values_to='index_values'
-  ) %>%
-  mutate(
-    index_name=case_when(
-      index=='SPI.INDEX' ~ "SPI overall score",
-      index=='ODIN_score' ~ "Open Data Watch",
-      index=='SCI' ~ "SCI",
-      
-    )
-  )
-
-#show the density of our SPI index
-ggplot(spi_index_df, aes(x = SPI.INDEX)) + 
-  facet_wrap(~date) +
-  geom_histogram( 
-                          aes(y=..density.., fill=..count..)) +
-  stat_function(fun = dnorm, 
-                color='red',
-                args = list(mean = mean(spi_index_df$SPI.INDEX, na.rm=T), sd = sd(spi_index_df$SPI.INDEX, na.rm=T))) +
-    theme_spi() +
-  labs(
-    title='Distribution of SPI overall score across Countries',
-    color='Index Name'
-  ) +
-  xlab('SPI overall score') +
-  theme(legend.position = 'bottom')
-
-
-
-```
-
-
-```{r density2, eval=FALSE, include=FALSE}
-#show the density of our SPI index compared to other indices
-ggplot(density_df, aes(x = index_values, color=index_name)) + 
-  facet_wrap(~date) +
-  geom_density() +
-    theme_spi() +
-  labs(
-    title='Distribution of SPI overall score and alternative indices across countries',
-    color='Index Name'
-  ) +
-  xlab('Index value') +
-  theme(legend.position = 'bottom')
-```
 
 # Further Project Information
 
@@ -3234,6 +3081,9 @@ index_tab_time <- spi_index_df %>%
         brks6 <- quantile(index_tab_time$SPI.INDEX.2022, probs=c(1,2,3,4)/5,na.rm=T)
         brks6 <- append(0,brks6)
         if (max(brks6)<100) brks6 <- append(brks6,100)
+        brks7 <- quantile(index_tab_time$SPI.INDEX.2023, probs=c(1,2,3,4)/5,na.rm=T)
+        brks7 <- append(0,brks7)
+        if (max(brks7)<100) brks7 <- append(brks7,100)        
 
 #make nice looking
 index_tab_time <- index_tab_time %>%
@@ -3241,6 +3091,7 @@ index_tab_time <- index_tab_time %>%
   add_header_lines('SPI overall scores over time') %>%
   set_header_labels(values=list(
                        country="Country", 
+                       SPI.INDEX.2023="2023",
                        SPI.INDEX.2022="2022",
                        SPI.INDEX.2021="2021",
                        SPI.INDEX.2020="2020",
@@ -3249,6 +3100,8 @@ index_tab_time <- index_tab_time %>%
                        SPI.INDEX.2017="2017",
                        SPI.INDEX.2016="2016"
                                    )) %>%
+    bg(j = c('SPI.INDEX.2023'),
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks7, reverse=TRUE)) %>%    
     bg(j = c('SPI.INDEX.2022'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks6, reverse=TRUE)) %>%
     bg(j = c('SPI.INDEX.2021'),
@@ -3404,266 +3257,7 @@ spi_region_charts('spi_index_df','SPI.INDEX.PIL5','SPI Data Infrastructure Score
 
 ```
 
-## Comparison to other measures of statistical performance
 
-Next, the SPI is compared with several other indices of statistical performance that have been created. This provides a sense of how rankings differ across measures, how they correlate with other outcomes, and how the distributions of scores compare. These are the SCI, the Open Data Watch index (ODIN), and version 0 of the SPI overall score that was produced in [@cameron2019measuring] 
-
-We first compare the SPI overall score to the older World Bank [Statistical Capacity Index](http://datatopics.worldbank.org/statisticalcapacity/SCIdashboard.aspx).  The correlation between the SPI overall score and the SCI  is `r round(cor(comparison_df$SPI.INDEX,comparison_df$SCI, use='pairwise.complete.obs'),3)`.
-
-*Figure A.6: Scatterplot of Statistical Capacity Index (SCI) and SPI Overall Score *
-```{r sci}
-
-### Scatterplot SCI SPI
-spi_sci_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=SCI, color=region)) +
-  facet_wrap(~date) +
-  # geom_point() +
-  geom_text(aes(label=iso3c)) +
-  theme_spi() +
-  labs(
-    title='Scatterplot of Statistical Capacity Index (SCI) and SPI Overall Score'
-  ) +
-  ylab('SPI Overall Score') +
-  xlab('SCI value') +
-  theme(legend.position = 'bottom')
-
-spi_sci_plot
-
-
-```
-
-
-```{r scispireg}
-gdp_reg_df <- wbstats::wb_data(
-  indicator='NY.GDP.PCAP.KD',
-  start_date=2016,
-  end_date=2021
-    ) %>%
-  mutate(log_gdp_pcap=log(NY.GDP.PCAP.KD)) %>%
-  left_join(select(comparison_df,iso3c,date, region,SPI.INDEX,SCI,ODIN_score)) #merge on SPI Index data
-  
-  
-#regress Log GDP SPI
-m_spi <- lm_robust(SPI.INDEX ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
-
-m_spi_lm <- lm(SPI.INDEX ~ log_gdp_pcap + factor(date), data = filter(gdp_reg_df,!(is.na(SPI.INDEX) | is.na(log_gdp_pcap)))) 
-gdp_reg_df_resids <- broom::augment(m_spi_lm, data=filter(gdp_reg_df,!(is.na(SPI.INDEX) | is.na(log_gdp_pcap)) ))
-
-
-#regress Log GDP SCI
-m_sci <- lm_robust(SCI ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
-
-
-#regress Log GDP ODIN
-m_odin <- lm_robust(ODIN_score ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
-
-
-#regress Log GDP SPI_v0
-# m_spi_v0 <- lm_robust(SPI_v0 ~ log_gdp_pcap + factor(date), data = gdp_reg_df, se_type = "HC2") 
-# 
-m_spi_tidy <- broom::tidy(m_spi)
-m_spi_glance <- broom::glance(m_spi)
-# 
-spi_coef <- as.numeric(m_spi_tidy[2,2])
-spi_r2 <- as.numeric(m_spi_glance[1,1])
-
-```
-
-
-
-
-Next, the relationship is shown between Log GDP per capita, the SCI and the SPI overall score using linear regression. The Open Data Watch ODIN score and the version of the Statistical Performance Index developed in [@cameron2019measuring] are also included. While showing a strong relationship between an index and log GDP per capita does not mean the index is necessarily correct, and is certainly not necessarily causal, it does provide a face validity check of the index. Heteroskedasticity robust standard errors are shown in the table.
-
-Overall, the new SPI overall score has the strongest relationship to GDP per capita.  The linear regression estimates indicate that a 1% increase in GDP per capita is associated with a `r round(spi_coef/100,1)` point increase in the SPI overall score.  The r-squared from this regression is `r round(spi_r2,2)`.
-
-
-*Table A.6: Relationship between Statical Performance Measures and GDP per capita.*
-```{r scispiregtab}
-
-
-
-#combine SPI and SCI results together
-date_names <- grep("factor", names(coef(m_spi)), value = TRUE)
-names(date_names) <- gsub(".*)(.)", "Year: \\1", date_names)
-
-huxtable::huxreg('SPI overall score'=m_spi, 'SCI'=m_sci, 'Open Data Watch'=m_odin, 
-       coefs=c('Log GDP per Capita'='log_gdp_pcap', date_names, 'Intercept'='(Intercept)'),
-       note='{stars}. Heteroskedasticity Robust Std Errors in Parenthesis',
-       number_format=2,
-       bold_signif=0.05) %>%
-  # huxtable::set_caption('Linear Regressions of Alternate Statistical Performance Indices on Log GDP per Capita') %>%
-  huxtable::as_flextable() %>%
-  FitFlextableToPage() %>%
-  width(width=1.2)
-
-
-
-gdp_long <- gdp_reg_df %>%
-  pivot_longer(
-    cols = c('SPI.INDEX', 'ODIN_score', 'SCI'),
-    names_to='index',
-    values_to='index_values'
-  ) %>%
-  mutate(
-    index_name=case_when(
-      index=='SPI.INDEX' ~ "SPI overall score",
-      index=='ODIN_score' ~ "Open Data Watch",
-      index=='SCI' ~ "SCI",
-      
-    )
-  ) %>%
-  filter(date==2021)
-
-ggplot(gdp_long, aes(x=log_gdp_pcap,y=index_values, color=region)) +
-  facet_wrap(~index_name) +
-  # geom_point() +
-  geom_text(aes(label=iso3c)) +
-  theme_spi() +
-  labs(
-    title='Scatterplot of Alternate Statistical Performance Indices on Log GDP per Capita'
-  ) +
-  xlab('Log GDP Per Capita') +
-  ylab('Index Values') +
-  theme(legend.position = 'bottom')
-
-```
-
-
-
-We compare the SPI overall score to the [Open Data Watch rankings of country statistical systems](https://odin.opendatawatch.com/report/rankings).  The correlation between the SPI overall score and the ODIN index is `r round(cor(comparison_df$SPI.INDEX,comparison_df$ODIN_score, use='pairwise.complete.obs'),3)`
- 
-
-
-```{r odin, echo=FALSE}
-
- 
-
-### Scatterplot ODIN SPI
-spi_odin_plot <- ggplot(comparison_df, aes(y=SPI.INDEX,x=ODIN_score, color=region)) +
-  # geom_point() +
-  facet_wrap(~date) +
-  geom_text(aes(label=iso3c)) +
-  theme_spi() +
-  labs(
-    title='Scatterplot of SPI overall score on Open Data Watch Index'
-  ) +
-  ylab('SPI overall score') +
-  xlab('ODIN value') +
-  theme(legend.position = 'bottom')
-
-spi_odin_plot
-
-
-
-
-```
-
-
-
-
-
-## Other Tables and Figures
-
-*Table A.7: Linear Regressions of Government Effectiveness Score on SPI Overall Score from 2016-19*
-```{r gereg, echo=FALSE}
-# 
-
-
-
-
-
-ge_spi <- lm_robust(GE.EST ~ SPI.INDEX + log(NY.GDP.PCAP.KD) + factor(date) + factor(region) , data = ge_df, se_type = "HC2") 
-
-ge_spi_tidy <- broom::tidy(ge_spi)
-ge_spi_glance <- broom::glance(ge_spi)
-
-#fix labels
-factor_names <- grep("factor", names(coef(ge_spi)), value = TRUE)
-names(factor_names) <- gsub(".*)(.)", "\\1", factor_names)
-
-
-#create table
-huxtable::huxreg('Goverment Effectiveness'=ge_spi,
-       coefs=c('SPI Overall Score'='SPI.INDEX', 'Log GDP per Capita'='log(NY.GDP.PCAP.KD)', factor_names,  'Intercept'='(Intercept)'),
-       note='{stars}. Heteroskedasticity Robust Std Errors in Parenthesis.',
-       number_format=3,
-       bold_signif=0.05) %>%
-  #huxtable::set_caption('Linear Regressions of Changes in Government Effectiveness on Changes in SPI from 2016-19') %>%
-  huxtable::as_flextable() %>%
-  # add_header_lines('Linear Regressions of Government Effectiveness Score on SPI Overall Score from 2016-19') %>%
-  FitFlextableToPage() 
-
-```
-
-## Indicator Metadata
-
-*Table A.8: SPI Indicator Metadata*
-```{r metadatatab2}
-####
-# create table
-####
-
-metatable <- metadata %>%
-  filter(grepl('SPI.D',source_id)) %>%
-  select(-spi_indicator_name,-source_id)
-
-
-
-index_tab <- flextable(metatable) %>%
-  # add_header_lines('SPI Indicator Metadata.') %>%
-  set_header_labels(values=list(
-                       source_name="Indicator Name",
-                       SPI_indicator_id="Dimension",
-                       spi_indicator_description="Brief Description",
-                       spi_indicator_scoring="Scoring"
-                                   ))
-  FitFlextableToPage(index_tab) %>%
-  width(width=1.63)
-
-
-```
-
-
-```{r polar_coordinates, eval=FALSE, fig.height=20, fig.width=20, include=FALSE}
-
-  variables<-'SPI.INDEX'
-
-  title <- metadata_full %>%
-    filter(source_id==variables)
-  
-  title <- title$source_name
-    
-  SPI_changes <- spi_index_df %>%
-    rename(outcome=!!variables) %>%
-    select(country,iso3c, date, iso3c,region, outcome) %>%
-    filter(!is.na(outcome)) %>%
-    pivot_wider(
-      names_from='date',
-      names_prefix='outcome_',
-      values_from='outcome'
-      ) %>%
-    mutate(change=outcome_2020-outcome_2016,
-           color=if_else(change>=0,'improved', 'decreased')) %>%
-    arrange(-outcome_2020) %>%
-    mutate(country=factor(country, levels=unique(spi_index_df$country)))
-  
-  p<- ggplot(SPI_changes, aes(x=country)) +
-    geom_point(aes(y=outcome_2016)) +
-    geom_point(aes(y=outcome_2020), color='blue') +
-    geom_segment( aes(x=country ,xend=country, y=outcome_2016, yend=outcome_2020,
-                      color=color)) +
-    scale_color_manual(values = c('decreased' = "red", 'improved' = "green")) +
-    coord_polar() +
-    theme_spi() +
-    labs(
-      title=paste(title, "Change from 2016-2020", sep=" - "),
-      subtitle='Source: Statistical Performance Indicators',
-      color = 'Change 2016-2020') +
-    ylab('SPI Value')
-    
-  p
-
-
-```
 
 
 # References
