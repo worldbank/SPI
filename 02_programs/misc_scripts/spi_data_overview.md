@@ -1,217 +1,14 @@
 ---
 title: 'Technical Documentation on Data Sources and Methods for Statistical Performance Indicators'
 author: "Brian Stacy"
-date: "`r Sys.Date()`"
-output: bookdown::gitbook
-output_dir: "`r paste0(here::here(),'/docs')`"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, fig.height=7, fig.width=10, eval=FALSE, warning=FALSE)
 
-library(tidyverse)
-library(here)
-# devtools::install_github("worldbank/wbgviz", subdir = "wbgdata")
-# devtools::install_github("worldbank/wbgviz", subdir = "wbgcharts")
-# devtools::install_github("worldbank/wbgviz", subdir = "wbggeo")
-# devtools::install_github("worldbank/wbgviz", subdir = "wbgmaps")
-# library(wbggeo)
-# library(wbgmaps)
-library(ggthemes)
-library(Hmisc)
-library(httr)
-library(patchwork)
-library(ggrepel)
-library(lubridate)
-library(haven)
-library(cld2)
-library(zoo)
-library(readxl)
-library(flextable)
-#set directories
-dir <- here()
+# Introduction
 
-raw_dir <- paste(dir, '01_raw_data', sep="/")
-output_dir <- paste(dir, '03_output_data', sep="/")
+This document contains a detailed technical description of the Statistical Performance Indicators (SPI).  The document contains a detailed description of each indicator.
 
-#parameters
-window=5 #set the window for the moving averages
-
-end_date=2023
-
-```
-
-```{r spi_df}
-
-# This block of code will create a blank SPI dataset (only containing country info) that will be appended to when each indicator is added.
-# There will be two indicators added for each dimension
-# 1. An indicator with a score between 0-1 for each dimension
-# 2. An indicator with the raw (unscored) values of the indicators
-# The unit for this database will be country*year
-
-span <- c(2004:end_date)
-
-spi_df_empty <- bind_rows(replicate(length(span), wbstats::wb_countries(), simplify = FALSE), .id='date') %>%
-  mutate(date=as.numeric(date)+span[1]-1) %>%
-  filter(region!="Aggregates") # take out the aggregates (LAC, SAR, etc)
-
-spi_df <- spi_df_empty
-
-#read list of iso3c codes for matching from UN (https://unstats.un.org/unsd/methodology/m49/)
-iso3c <- read_csv(paste(raw_dir,'metadata/iso_codes.csv', sep="/"),
-                  col_types=list(col_character(), col_character(), col_character()))
-
-```
-
-```{r programs, include=FALSE}
-
-
-#For mapping the result
-# quality = "high"
-# maps <- wbgmaps::wbgmaps[[quality]]
-#load world bank map data
-load(paste0(raw_dir, '/misc/maps.Rdata'))
-standard_crop_wintri <- function() {
-  l <- list(
-    left=-12000000, right=16396891,
-    top=9400000, bottom=-6500000
-  )
-  l$xlim <- c(l$left, l$right)
-  l$ylim <- c(l$bottom, l$top)
-  l
-}
-
-country_metadata <- wbstats::wb_countries()
-
-
-
-spi_mapper  <- function(data, indicator, title) {
-  
- indicator<-indicator
-
-  map_df <- get(data) %>%
-    filter(date==max(date, na.rm=T)) %>%
-    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
-    group_by( country) %>%
-    #summarise(across(!! indicator,last)) %>%
-    rename(data_available=!! indicator) %>%
-    right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
-  
-  
-   p1 <- ggplot() +
-    geom_map(data = map_df, aes(map_id = iso3c, fill = 100*data_available), map = maps$countries) + 
-    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
-    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
-     geom_path(data = maps$boundaries,
-               aes(long, lat, group = group),
-               color = "white",
-               size = 0.3,
-               lineend = maps$boundaries$lineend,
-              linetype = maps$boundaries$linetype) +
-    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
-    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
-  scale_fill_distiller(palette = "RdYlGn",
-                       direction=1,
-                       limits = c(0,100))  +
-    coord_equal() +
-    theme_map(base_size=12) +
-    labs(
-      title=str_wrap(title,100),
-      subtitle= paste0('Data Point is for last year available (usually ',end_date,')'),
-      caption = 'Source: SPI Indicator.',
-      fill='SPI Indicator Value'
-    )
-  
-  #add histogram by region 
-  p2 <- map_df %>%
-    group_by(region) %>%
-    filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(data_available, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=region, fill=region)) +
-      geom_bar(stat="identity",position='dodge') +
-      geom_text(aes(label=Label)) +
-      labs(
-      title=str_wrap(paste(title, 'By Region', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
-      subtitle= paste0('Data Point is for last year available (usually ',end_date,')'),
-      ) +
-      expand_limits(x=c(0,100)) +
-      theme_bw()
-
-  #by income
-    p3 <- map_df %>%
-    group_by(income_level) %>%
-    filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(data_available, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=income_level, fill=income_level)) +
-      geom_bar(stat="identity",position='dodge') +
-      geom_text(aes(label=Label)) +
-      labs(
-      title=str_wrap(paste(title, 'By Income', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
-      subtitle= paste0('Data Point is for last year available (usually ',end_date,')'),
-      ) +
-      expand_limits(x=c(0,100)) +
-      theme_bw()
-    
-  # #add line graph over time
-  p4 <- get(data)  %>%
-    rename(data_available=!! indicator) %>%
-    # right_join(spi_df_empty) %>%
-    group_by( date) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
-    mutate(Percentage=100*mean(data_available),
-           Label = paste(round(Percentage,0))) %>%
-    ungroup() %>%
-    ggplot(aes(y=Percentage, x=date)) +
-      geom_point() +
-      geom_line(fill='blue') +
-      # geom_text_repel(aes(label=Label)) +
-      labs(
-      title=str_wrap(paste(title, 'By Date', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data'
-      ) +
-      expand_limits(y=c(0,100)) +
-      theme_bw()
-      
-  print(p1)
-  
-  print(p2)
-  
-  print(p3)
-
-  print(p4)
-    
-}
-
-
-#define function to pull data from UN Stats and return
-un_pull <- function(series,start, end) {
-  # jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&timePeriodStart=',start,'&timePeriodEnd=',end,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
-      jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
-
-    as_tibble() %>%
-    mutate(date=timePeriodStart) %>%
-    right_join(iso3c)
-    
-}  
-
-
-
-```
-
-
-
-
-
-# Introduction {-}
-
-This document contains a detailed technical description of the Statistical Performance Indicators (SPI).  The document contains a detailed description of each indicator, as well as the R code used to construct each indicator.
-
-## Motivation {-}
+## Motivation
 
 The primary purpose of the statistical system is to help users of statistics make better decisions or to hold those decision makers accountable. In the words of Principle 1 of the Fundamental Principles of Official Statistics, the statistics must “meet the test of practical utility”, serving “the Government, the economy and the public with data about the economic, demographic, social and environmental situation.” 
 
@@ -223,7 +20,7 @@ Yet, there are several areas in which the existing SCI can be improved. First, i
 
 Since its launch in 2004, the SCI’s methodology and coverage have basically remained the same, while the global data landscape has changed significantly. NSSs have made significant advancements with data collection and dissemination practices. At the same time, the adoption of the Sustainable Development Goals (SDGs) set an ambitious development agenda for the next 15 years on ending poverty, protecting the planet, and ensuring prosperity for all by 2030. This, in turn, increased the demand for data and raised the bar for national statistical systems regarding their capacity to produce high-quality data. We thus propose to improve the current SCI to better suit the changing global data landscape.
 
-## Overview of the New SPI {-}
+## Overview of the New SPI
 
 The new Statistical Performance Indicators (SPI) builds on the SCI, which the World Bank has regularly published since 2004.  Our new SPI will cover many of the same elements as the SCI, such as statistical methodology, source data, and periodicity, but will also expand into new areas. The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system.  We also are committing to making our project open data and open code to build confidence in our work.
 
@@ -265,28 +62,28 @@ We are collecting data on indicators for the 22 pillars above. For dissemination
 
 
 
-## Pillars of the new SPI {-}
+## Pillars of the new SPI
 
 
 A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as pillars. We refer to the 22 cells in the framwork in Figure 1 as dimensions. Finally, each dimension may be composed of multiple indicators. For instance, the dimension on censuses and surveys is made up indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.
 
-### Data use {-}
+### Data use
 
 The data use pillar is segmented by user type. The tiles on the Dashboard provide an indicator of use of statistics respectively by the legislature, executive, civil society (including sub-national actors), academia and international bodies. A mature system would score well across the tiles. Areas for development would be highlighted by weaker scores in that domain enabling questions to be asked about prioritization amongst user groups and why existing services are not resulting in higher use of national statistics in that segment.
 
-### Data services {-}
+### Data services
 
 The data services pillar is segmented by service type. The tiles on the Dashboard provide an indicator of the quality of data releases, the richness and openness of online access, the effectiveness of advisory and analytical services related to statistics and the availability and use of data services such as secure microdata access. Advisory and analytical services might incorporate elements related to data stewardship services including ethical consideration of proposals and calling out misuse of data in accordance with the Fundamental Principles of Official Statistics.
 
-### Data products {-}
+### Data products
 
 The data products pillar is segmented by topic and organized into social, economic, environmental and institutional domains using the typology of the Sustainable Development Goals. This approach enables comparisons across countries and anchors the system in the 2030 agenda so that a global view can be generated whilst enabling different emphasis to be applied in different countries to reflect the user needs of that country.
 
-### Data sources {-}
+### Data sources
 
 The data sources pillar is segmented between sources generated by the statistical office (censuses and surveys) and sources accessed from elsewhere (administrative data, geospatial data, private sector data and citizen generated data). The appropriate balance between these types of source will vary depending on the institutional setting and maturity of the statistical system in each country. High scores should reflect the extent to which the sources being utilized enable the necessary statistical indicators to be generated. For example, a low score on environment statistics may reflect a lack of use of (and low score for) geospatial data. This linkage, which is inherent in the data cycle approach, should help highlight areas for investment if country needs are to be met.
 
-### Data infrastructure {-}
+### Data infrastructure
 
 The data infrastructure pillar is segmented into hard and soft infrastructure segments itemizing essential cross cutting requirements for an effective statistical system. The segments are:   
 
@@ -301,40 +98,9 @@ The data infrastructure pillar is segmented into hard and soft infrastructure se
   5. Finance, both domestically and from donors    
   
 
-### Description of Dimensions {-}
-
-Below is a brief description of the 22 dimensions in our framework.  
 
 
-
-```{r metadatatab1, echo=FALSE}
-####
-# create table
-####
-pillars <- read_csv(paste(raw_dir, '/metadata/SPI_pillars.csv', sep=""))
-
-pillars <- pillars %>%
-  mutate(dimension=paste(dimension_number, dimension_name, sep=": "),
-         spi_indicator_description=Description) %>%
-  select(dimension, spi_indicator_description)
-
-
-pillars_tab <- flextable(pillars) %>%
-  add_header_lines('SPI Dimensions Metadata.') %>%
-  set_header_labels(values=list(
-                       dimension="Dimension",
-                       spi_indicator_description="Brief Description"
-                                   )) 
-
-pillars_tab %>%
-  width(width=4.2) %>%
-  align( align = "left", part = "body")
-
-
-
-```
-
-## SPI Data {-}
+## SPI Data
 
 Thanks to a large scale data collection effort by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering 14 out of our 22 dimensions for our dashboard.  These 54 indicators do allow us to provide data for each of our 5 pillars on data use, data services, data products, data sources, and data infrastructure.  Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public.  Going forward, the international community must work together to fill these gaps.
 
@@ -396,8 +162,9 @@ Not included because of lack of established methodology.
 Not included because of lack of established methodology. 
 
 
+
 ## Dimension 1.4: Data use by academia  
-Not included because of lack of established methodology. Work is in progress to measure this area.
+Not included because of lack of established methodology. Work is in progress to produce such an indicator.
 
 
 ## Dimension 1.5: Data use by international organizations   
@@ -417,113 +184,12 @@ The first measure examines whether comparable poverty estimates are produced by 
 The data will be pulled from the WDI and combined with metadata from the Povcalnet
 
 Scoring is as follows:
-
 Quality (1 points total):
-
-- 1 Point. Comparable data lasting at least two years within past 5 years	
-
-- 0.5 Point. Comparable data lasting at least two years within past 10 years	
-
-- 0 Points. No comparable data within past 10 years
+1 Point. Comparable data lasting at least two years within past 5 years	
+0.5 Point. Comparable data lasting at least two years within past 10 years	
+0 Points. No comparable data within past 10 years
 
 Note: Because poverty surveys are reported with a lag, we start measuring whether comparable poverty data is available two years prior.  So for 2019, the window starts from 2017 to give countries time to prepare poverty estimates based on surveys.
-
-
-```{r 3.1}
-library(pipr) 
-
-#new pipr package already includes survey coverage and comparability measures
-
-
-df <- get_stats()
-
-#save as csv
-#write_excel_csv(df, file=paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/"))
-
-df <- read_csv(paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/")) %>%
-  #exclude certain surveys that were produced not by statistical system but produced and financed from private firm (non-official source).  Change applies to India in particular.
-  filter(
-    !(survey_acronym=="CPHS" & country_code=="IND")
-  )
-
-
-#Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2004:end_date) {
-  
-    #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
-  if (reference_year>=2023) {
-    rec_window=7
-  } else if (reference_year==2022) {
-    rec_window=6
-  } else {
-    rec_window=5
-  }
- 
-  
-  temp_5<-df %>%
-        #filter(survey_coverage %in% c('national')) %>% #keep just nationally representative samples
-        mutate(frequency=((reference_year-as.numeric(year))<=rec_window) & (reference_year>=as.numeric(year))) %>% 
-        filter(frequency==TRUE) %>%
-        dplyr::group_by(country_code, survey_comparability) %>% #for each country and comparability type, get number of comparable estimates
-        dplyr::summarise(SPI.D1.5.POV_5=n())  %>%
-        ungroup() %>%
-        group_by(country_code) %>% #now get a total by country with the max number of comparable estimates
-        summarise(SPI.D1.5.POV_5=max(SPI.D1.5.POV_5, na.rm=T)) %>%
-        mutate(SPI.D1.5.POV_5=if_else(SPI.D1.5.POV_5>=2,1,0)) %>% #only give point if there is at least two observations that are comparable
-        mutate(date=reference_year,
-                 iso3c=country_code) %>%
-        left_join(country_metadata) %>%
-        dplyr::select( iso3c, date, starts_with('SPI.D1.5.POV')) 
-
-  temp_10<-df %>%
-        filter(survey_coverage %in% c('national')) %>% #keep just nationally representative samples
-        mutate(frequency=((reference_year-as.numeric(year))<=12) & (reference_year>=as.numeric(year))) %>% 
-        filter(frequency==TRUE) %>%
-        dplyr::group_by(country_code, survey_comparability) %>% #for each country and comparability type, get number of comparable estimates
-        dplyr::summarise(SPI.D1.5.POV_10=n())  %>%
-        ungroup() %>%
-        group_by(country_code) %>% #now get a total by country with the max number of comparable estimates
-        summarise(SPI.D1.5.POV_10=max(SPI.D1.5.POV_10, na.rm=T)) %>%
-        mutate(SPI.D1.5.POV_10=if_else(SPI.D1.5.POV_10>=2,1,0)) %>% #only give point if there is at least two observations that are comparable
-        mutate(date=reference_year,
-                 iso3c=country_code) %>%
-        left_join(country_metadata) %>%
-        dplyr::select( iso3c, date, starts_with('SPI.D1.5.POV')) 
-
-  temp <- temp_5 %>%
-    left_join(temp_10) %>%
-    mutate(SPI.D1.5.POV=case_when(
-      SPI.D1.5.POV_5==1 ~ 1,
-      SPI.D1.5.POV_10==1 ~ 0.5,
-      TRUE ~ 0
-    )) %>%
-    select(-SPI.D1.5.POV_5,-SPI.D1.5.POV_10)
-  
-  assign(paste("D3.1.AKI",reference_year,sep="_"), temp)
-}
-
-#now append together and save
-for (i in c(2004:end_date)) {
-  
-  temp<-get(paste('D3.1.AKI_',i, sep=""))
-  
-  if (!exists('D3.1.AKI')) {
-    D3.1.AKI<-temp
-  } else {
-    D3.1.AKI<-D3.1.AKI %>%
-      bind_rows(temp) %>%
-      arrange(-date, iso3c)
-  }
-}
-
-#fix countries not included
-D3.1.AKI<-D3.1.AKI %>%
-  right_join(spi_df_empty) %>%
-  #add a few manual changes for countries that are not updated in PIP, but have reviewed methodology and have consistent approach to measuring poverty comparably
-  #countries: JPN, AUS, NZL, SGP
-  mutate(SPI.D1.5.POV=if_else(iso3c %in% c('JPN','AUS','NZL', 'SGP'),1,SPI.D1.5.POV)) %>%
-  select(iso3c, date, SPI.D1.5.POV)
-```
 
 
 
@@ -539,106 +205,14 @@ Source data can bedivided into data included in the estimation model and data ex
 Countries are assessed for whether they can produce indicators over a five or ten year period that meet the thresholds set by UN IGME.
 
 Quality (1 points total):
-
-- 1 Point. Two indicators that met UN IGME standards within past 5 years		
-
-- 0.5 Point. Two indicators that met UN IGME standards within past 10 years		
-
-- 0 Points. No data that met UN IGME standards within past 10 years
+1 Point. Two indicators that met UN IGME standards within past 5 years		
+0.5 Point. Two indicators that met UN IGME standards within past 10 years		
+0 Points. No data that met UN IGME standards within past 10 years
 
 
 Data was pulled on April 13, 2020.
 
 Note: Because surveys are reported with a lag, we start measuring whether comparable poverty data is available two years prior.  So for 2019, the window starts from 2017 to give countries time to prepare poverty estimates based on surveys.
-
-```{r aki_3.3}
-
-#Read in data from UN Inter-agency Group for Child Mortality Estimation
-
-
-
-D3.3.AKI.MORT <- read_csv(file=paste(raw_dir, '1.5_DUIO/UN IGME Child Mortality and Stillbirth Estimates_2022.csv', sep="/")) %>%
-  as_tibble(.name_repair = 'universal') %>%
-  filter(Indicator=='Under-five mortality rate' & Sex=='Total' ) %>% #keep just observations for under 5 child mortality and for both sexes and overall wealth quintile
-  filter(Observation.Status=='Included in IGME') %>% # Also keep only surveys that met IGME criteria for inclusion as a nationally representative statistic
-  mutate(date=as.numeric(str_extract(Series.Year, "^.{4}")),
-         ind_date=as.numeric(str_extract(TIME_PERIOD, "^.{4}")),
-         country=Geographic.area,
-         D3.CHLD.MORT=OBS_VALUE) %>%
-  left_join(read_csv(file = paste(raw_dir, "/metadata/iso_codes.csv", sep="" ))) %>%
-  mutate(iso3c=if_else(country=="Côte d'Ivoire","CIV", iso3c)) 
-
-#Now loop from 2016 and 2019, keeping just data inside last 5 years.
-for (reference_year in 2004:end_date) {
-  
-  
-      #extend the window for more recent years.  For instance, end_date surveys are reported with a lag, so give them two year grace period
-  if (reference_year==end_date) {
-    rec_window=7
-  } else if (reference_year==(end_date-1)) {
-    rec_window=6
-  } else {
-    rec_window=5
-  }
- 
-  
-  temp_5 <-D3.3.AKI.MORT %>%
-          mutate(frequency=(((reference_year-as.numeric(date))<=rec_window & (reference_year>=as.numeric(date))) | ((reference_year-as.numeric(ind_date))<=rec_window & (reference_year>=as.numeric(ind_date))))) %>% #whether to use the survey year or indicator report year depends on data source.  for vital statistics sources need to use indicator reporting year, but for surveys use survey year
-          mutate(SPI.FREQ.D1.5.CHLD.MORT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
-          group_by(iso3c) %>%
-          summarise(SPI.FREQ.D1.5.CHLD.MORT=sum(SPI.FREQ.D1.5.CHLD.MORT, na.rm=T)) %>%
-          mutate(SPI.FREQ.D1.5.CHLD.MORT=case_when(
-            SPI.FREQ.D1.5.CHLD.MORT>=2 ~ 1,
-            TRUE ~ 0
-          )) %>%
-          mutate(SPI.D1.5.CHLD.MORT_5=SPI.FREQ.D1.5.CHLD.MORT) %>%
-          mutate(date=reference_year) %>%
-          dplyr::select( iso3c, date, starts_with('SPI.')) %>%
-          select(-SPI.FREQ.D1.5.CHLD.MORT)
-
-  temp_10 <-D3.3.AKI.MORT %>%
-          mutate(frequency=((reference_year-as.numeric(date))<=rec_window) & (reference_year>=as.numeric(date))) %>%
-          mutate(SPI.FREQ.D1.5.CHLD.MORT=if_else(frequency==TRUE,1,0)) %>% #create 0,1 variable for whether data point exists for country
-          group_by(iso3c) %>%
-          summarise(SPI.FREQ.D1.5.CHLD.MORT=sum(SPI.FREQ.D1.5.CHLD.MORT, na.rm=T)) %>%
-          mutate(SPI.FREQ.D1.5.CHLD.MORT=case_when(
-            SPI.FREQ.D1.5.CHLD.MORT>=2 ~ 1,
-            TRUE ~ 0
-          )) %>%
-          mutate(SPI.D1.5.CHLD.MORT_10=SPI.FREQ.D1.5.CHLD.MORT) %>%
-          mutate(date=reference_year) %>%
-          dplyr::select( iso3c, date, starts_with('SPI.')) %>%
-          select(-SPI.FREQ.D1.5.CHLD.MORT)
-  
-  temp <- temp_5 %>%
-    left_join(temp_10) %>%
-    mutate(SPI.D1.5.CHLD.MORT=case_when(
-      SPI.D1.5.CHLD.MORT_5==1 ~ 1,
-      SPI.D1.5.CHLD.MORT_10==1 ~ 0.5,
-      TRUE ~ 0
-    )) %>%
-    select(-SPI.D1.5.CHLD.MORT_5,-SPI.D1.5.CHLD.MORT_10)
-  
-  assign(paste("D3.3.AKI",reference_year,sep="_"), temp)
-}
-
-#now append together and save
-for (i in c(2004:end_date)) {
-  
-  temp<-get(paste('D3.3.AKI_',i, sep=""))
-  
-  if (!exists('D3.3.AKI')) {
-    D3.3.AKI<-temp
-  } else {
-    D3.3.AKI<-D3.3.AKI %>%
-      bind_rows(temp) %>%
-      arrange(-date, iso3c)
-  }
-}
-
-
-```
-
 
 
 
@@ -654,56 +228,12 @@ Scoring is as follows:
 
 Quality: 
 
-- 1 Points. Actual value
-
-- 0.67 Points. Preliminary value
-
-- 0.33 Points. Estimated value
-
+1 Points. Actual value
+0.67 Points. Preliminary value
+0.33 Points. Estimated value
 0 Points. No value
 
 
-
-```{r metadata_pull, echo=FALSE}
-
-# pull in some WDI metadata which will be used for constructing AKI indicators.
-# WDI metadata was gathered using previous vintages of WDI from 2016-19
-# Metadata was gathered and saved as csv files in the 011_data folder
-
-for (i in 2016:2023) {
-  temp <- read_csv(file = paste(raw_dir, "/metadata/WDI_metadata_",i,".csv", sep="" )) %>%
-    as_tibble(.name_repair='universal') %>%
-    mutate(National.accounts.reference.year=as.numeric(National.accounts.reference.year),
-           date=i)
-  
-    assign(paste("WDI_metadata",i,sep="_"), temp)
-}
-
-WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_2018, WDI_metadata_2019, WDI_metadata_2020, WDI_metadata_2021,WDI_metadata_2022,WDI_metadata_2023) 
-```
-
-
-
-```{r 3.15_debt}
-
-
-#reshape metaadata file
-D3.15.AKI <- WDI_metadata %>%
-  transmute(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
-            date=date,
-            External_debt_Reporting=External.debt.Reporting.status,
-            Income.Group=Income.Group) %>%
-  mutate(SPI.D1.5.DT.TDS.DPPF.XP.ZS= case_when(
-            External_debt_Reporting=='Actual' ~ 1,
-            External_debt_Reporting=='Preliminary' ~ 0.67,
-            External_debt_Reporting=='Estimate' ~ 0.33,
-            TRUE ~ 0
-          )) %>% 
-  mutate(SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else(((Income.Group=="High income" | iso3c %in% c("WBG", "PSE")) & is.na(External_debt_Reporting)),1,SPI.D1.5.DT.TDS.DPPF.XP.ZS)) %>% #fix an issue where high income countries are not judged on their debt reporting.  Also give credit to West Bank and Gaza as they are not an IMF country
-  ungroup() %>%
-  dplyr::select(iso3c, date,  contains('SPI.D1.5.DT.TDS.DPPF.XP.ZS')) 
-
-```
 
 
 ### Safely Managed Water
@@ -719,173 +249,9 @@ From the methodology: https://washdata.org/sites/default/files/JMP%20methodology
 
 We take therefore useable data if it appears within an 8 year window of the reference date.  Scoring:
 
-- 1 Point. At least two estimates, with breakdowns for urban/rural areas, within an 8 year window      
-  
-- 0.5 Points. At least two estimates, but not an urban/rural breakdown, within an 8 year window   
-  
-- 0 Points. Otherwise
-
-
-```{r safely_managed, eval=FALSE, include=FALSE}
-span <- c(2000:end_date)
-
-
-smw_template_df <- data.frame(
-  geo=c("National","Rural","Urban")
-)
-
-smw_empty_df <- bind_rows(replicate(length(span), smw_template_df, simplify = FALSE), .id='year') %>%
-  mutate(year=as.numeric(year)+span[1]-1)
-
-#function to download data from hyperlink from OECD
-hyper_read <-  function(hyperlink) {
-  tryCatch({
-    url <- hyperlink
-    temp <- tempfile()
-    download.file(url, temp, mode="wb", method='wininet')
-    temp_df <- read_excel(path=temp, #read in the file
-                          skip=4,
-                          sheet='Data Summary') %>%
-      filter(!is.na(year)) %>%
-      dplyr::select(source, type, year, starts_with('w_')) %>%
-      mutate(across(starts_with('w_'),as.character)) %>%
-      pivot_longer( #reshape to compare national urban rural estimates
-        cols = starts_with('w_'),
-        names_to = 'label',
-        values_to = "value"
-      ) %>%
-      mutate(geo = case_when( #split out national, urban, rural estimates
-        grepl("_n$",label) ~ "National",
-        grepl("_u$",label) ~ "Urban",
-        grepl("_r$",label) ~ "Rural"
-      )) %>%
-      mutate(data_available=if_else(!is.na(value),1,0)) %>% #get measure of whether value was available
-      mutate(data_quality=if_else((!grepl('\\[',value) & data_available==1),1,0)) %>% #values in brackets were not used in estimation.
-      group_by(source, type, year, geo) %>%
-      summarise(
-       data_available=max(data_available, na.rm=T),
-       data_quality=max(data_quality, na.rm=T),
-       data_value = mean(as.numeric(value),na.rm=T))  %>% 
-      ungroup() %>%
-       right_join(smw_empty_df) %>% #fill in missing years in database.
-       group_by(geo) %>%
-       mutate(max_value=max(data_value, na.rm=T),
-         max_value=if_else(max_value!=-Inf,max_value,-99)
-       ) %>%
-       mutate(data_quality=if_else((max_value>=99.5 | max_value<=0.5),1,as.numeric(data_quality))) %>% #because JMP imputes values indefinitely forward if value for water reaches >99.5%
-      ungroup()
-  }, error=function(e){
-    #return empty dataframe with empty columns
-    data.frame(
-      source=as.character(NA),
-      type=as.character(NA),
-      year=as.numeric(NA),
-      geo=as.character(NA),
-      data_available=as.numeric(NA),
-      data_quality=as.numeric(NA),
-      data_value=as.numeric(NA)
-    )
-  })
-}
-
-AFG_df <- hyper_read('https://washdata.org/data/country/AFG/household/download')
-USA_df <- hyper_read('https://washdata.org/data/country/USA/household/download')
-GBR_df <- hyper_read('https://washdata.org/data/country/GBR/household/download')
-
-safely_managed_raw_df <- country_metadata %>%
-  filter(region!='Aggregates') %>%
-  mutate(hyperlink=paste0('https://washdata.org/data/country/',iso3c,'/household/download'),
-         #if country is kosovo then use serbia numbers
-         hyperlink=if_else(iso3c=='XKX','https://washdata.org/data/country/SRB/household/download',hyperlink)
-         ) %>%
-  mutate(data=map( #loop across hyperlinks downloading data
-    hyperlink,
-    hyper_read
-      )) 
-
-safely_managed_raw_df <- safely_managed_raw_df %>%
-  mutate(data = map(data, ~ mutate(.x, type = as.character(type)))) %>%
-  unnest()
-
-write_excel_csv(safely_managed_raw_df,
-                path=paste(raw_dir, '1.5_DUIO/Safely_Managed_Water_data.csv', sep="/"))
-
-
-```
-
-```{r safely_managed_scored}
-
-#read in saved data
-safely_managed_raw_df <- read_csv(file=paste(raw_dir, '1.5_DUIO/Safely_Managed_Water_data.csv', sep="/"))
-
-#score the data
-
-#function to calculate 10 year window
-window_fun <- function(date_start, date_end) {
-  temp <- safely_managed_raw_df %>%
-  filter(between(year,date_start,date_end) ) %>%
-  group_by(iso3c, geo) %>%
-  summarise(data_quality=sum(data_quality, na.rm=T)) %>% #average over 10 years
-  pivot_wider(
-    names_from = 'geo',
-    values_from = 'data_quality'
-  ) %>%
-  mutate(
-    SPI.D1.5.SAFE.MAN.WATER=case_when(
-      (Rural>=2 & Urban>=2) ~ 1, #urban rural breakdown gets 1 point
-      (Rural>=2 | Urban>=2 | National>=2) ~ 0.5, #partial data at at least one geography gets 0.5
-      TRUE ~ 0
-    )
-  ) %>%
-  select(iso3c, SPI.D1.5.SAFE.MAN.WATER) %>%
-  mutate(date=date_end)
-  
-  
-
-}
-####
-# 8 Year window
-####
-#create this database for each year from 2004 to end_date using a 8 year window
-
-
-
-for (i in c(2015:end_date)) {
-  
-  end=i
-  #extend the window for more recent years.  For instance, end_date surveys are reported with a lag, so give them two year grace period
-  if (end==end_date) {
-    start=i-9
-  } else if (end==(end_date-1)) {
-    start=i-8
-  } else {
-    start=i-7
-  }
- 
-  
-  temp_df <- window_fun(start,end)
-  assign(paste('safe_managed_',end, sep=""), temp_df)
-}
-
-if (exists('safe_managed_df')) {
-  rm('safe_managed_df')
-}
-#now append together and save
-for (i in c(2015:end_date)) {
-  
-  temp<-get(paste('safe_managed_',i, sep=""))
-  
-  if (!exists('safe_managed_df')) {
-    safe_managed_df<-temp
-  } else {
-    safe_managed_df<-safe_managed_df %>%
-      bind_rows(temp) %>%
-      arrange(-date, iso3c)
-  }
-}
-
-
-```
+  * 1 Point. At least two estimates, with breakdowns for urban/rural areas, within an 8 year window       
+  * 0.5 Points. At least two estimates, but not an urban/rural breakdown, within an 8 year window   
+  * 0 Points. Otherwise
 
 
 ### Labor Force Statistics
@@ -899,166 +265,16 @@ From the ILO methodological note (https://www.ilo.org/ilostat-files/Documents/TE
 > With regard to the first criterion, in order for labour market data to be included in a particular model, they must be derived from a labour force survey, a household survey or, more rarely, a population census. National labour force surveys are generally similar across countries and present the highest data quality. Hence, the data derived from such surveys are more readily comparable than data obtained from other sources. Strict preference is therefore given to labour force survey-based data in the selection process. However, many developing countries, which lack the resources to carry out a labour force survey, do report labour market information on the basis of other types of household surveys or population censuses. Consequently, because of the need to balance the competing goals of data comparability and data coverage, some (non-labour force survey) household survey data and, more rarely, population census-based data are included in the models.
 
 Scoring:    
-
-- 1 Point. Country has a labor force survey based estimate in past 5 years of labor force participation broken down by total, male, and female & estimated value from ILO is within 10 percentage points of value reported by national government.   
-
-- 0.5 Point. Country has labor force survey or is within 10 points of ILO, but not both    
-
-- 0 Points. Otherwise
-
-```{r lfp}
-
-#request for surveys data
-#https://www.ilo.org/shinyapps/bulkexplorer2/?lang=en&segment=indicator&id=EAP_DWAP_SEX_AGE_RT_A&ref_area=AFG+ALB+DZA+ASM+AND+AGO+AIA+ATG+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BMU+BTN+BOL+BIH+BWA+BRA+VGB+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CYM+CAF+TCD+CHL+CHN+COL+COM+COG+COD+COK+CRI+HRV+CUB+CUW+CYP+CZE+CIV+DNK+DJI+DMA+DOM+ECU+EGY+SLV+GNQ+EST+SWZ+ETH+FRO+FLK+FJI+FIN+FRA+GUF+PYF+GAB+GMB+GEO+DEU+GHA+GIB+GRC+GRL+GRD+GLP+GUM+GTM+GGY+GIN+GNB+GUY+HTI+HND+HKG+HUN+ISL+IND+IDN+IRN+IRQ+IRL+IMN+ISR+ITA+JAM+JPN+JEY+JOR+KAZ+KEN+KIR+KOR+KOS+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LIE+LTU+LUX+MAC+MDG+MWI+MYS+MDV+MLI+MLT+MHL+MTQ+MRT+MUS+MEX+FSM+MDA+MCO+MNG+MNE+MSR+MAR+MOZ+MMR+NAM+NRU+NPL+NLD+ANT+NCL+NZL+NIC+NER+NGA+NIU+NFK+MKD+MNP+NOR+PSE+OMN+PAK+PLW+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+ROU+RUS+RWA+REU+SHN+KNA+LCA+VCT+WSM+SMR+STP+SAU+SEN+SRB+SYC+SLE+SGP+SVK+SVN+SLB+ZAF+SSD+ESP+LKA+SDN+SUR+SWE+CHE+SYR+TWN+TJK+TZA+THA+TLS+TGO+TON+TTO+TUN+TUR+TKM+TCA+TUV+UGA+UKR+ARE+GBR+USA+VIR+URY+UZB+VUT+VEN+VNM+YEM+ZMB+ZWE&sex=SEX_T&classif1=AGE_5YRBANDS_TOTAL+AGE_5YRBANDS_Y05-09+AGE_5YRBANDS_Y10-14+AGE_5YRBANDS_Y15-19+AGE_5YRBANDS_Y20-24+AGE_5YRBANDS_Y25-29+AGE_5YRBANDS_Y30-34+AGE_5YRBANDS_Y35-39+AGE_5YRBANDS_Y40-44+AGE_5YRBANDS_Y45-49+AGE_5YRBANDS_Y50-54+AGE_5YRBANDS_Y55-59+AGE_5YRBANDS_Y60-64+AGE_5YRBANDS_YGE65+AGE_10YRBANDS_TOTAL+AGE_10YRBANDS_YLT15+AGE_10YRBANDS_Y15-24+AGE_10YRBANDS_Y25-34+AGE_10YRBANDS_Y35-44+AGE_10YRBANDS_Y45-54+AGE_10YRBANDS_Y55-64+AGE_10YRBANDS_YGE65+AGE_AGGREGATE_TOTAL+AGE_AGGREGATE_YLT15+AGE_AGGREGATE_Y15-24+AGE_AGGREGATE_Y25-54+AGE_AGGREGATE_Y55-64+AGE_AGGREGATE_YGE65+AGE_YTHADULT_YGE15+AGE_YTHADULT_Y15-64+AGE_YTHADULT_Y15-24+AGE_YTHADULT_YGE25&timefrom=2010&timeto=2022
-
-#modelled
-# https://www.ilo.org/shinyapps/bulkexplorer2/?lang=en&segment=indicator&id=EAP_2WAP_SEX_AGE_RT_A&ref_area=AFG+ALB+DZA+AGO+ARG+ARM+ABW+AUS+AUT+AZE+BHS+BHR+BGD+BRB+BLR+BEL+BLZ+BEN+BTN+BOL+BIH+BWA+BRA+BRN+BGR+BFA+BDI+KHM+CMR+CAN+CPV+CAF+TCD+CHA+CHL+CHN+COL+COM+COG+COD+CRI+HRV+CUB+CYP+CZE+CIV+DNK+DJI+DOM+ECU+EGY+SLV+GNQ+ERI+EST+SWZ+ETH+FJI+FIN+FRA+PYF+GAB+GMB+GEO+DEU+GHA+GRC+GUM+GTM+GIN+GNB+GUY+HTI+HND+HKG+HUN+ISL+IND+IDN+IRN+IRQ+IRL+ISR+ITA+JAM+JPN+JOR+KAZ+KEN+PRK+KOR+KWT+KGZ+LAO+LVA+LBN+LSO+LBR+LBY+LTU+LUX+MAC+MDG+MWI+MYS+MDV+MLI+MLT+MRT+MUS+MEX+MDA+MNG+MNE+MAR+MOZ+MMR+NAM+NPL+NLD+NCL+NZL+NIC+NER+NGA+MKD+NOR+PSE+OMN+PAK+PAN+PNG+PRY+PER+PHL+POL+PRT+PRI+QAT+ROU+RUS+RWA+LCA+VCT+WSM+STP+SAU+SEN+SRB+SLE+SGP+SVK+SVN+SLB+SOM+ZAF+SSD+ESP+LKA+SDN+SUR+SWE+CHE+SYR+TWN+TJK+TZA+THA+TLS+TGO+TON+TTO+TUN+TUR+TKM+UGA+UKR+ARE+GBR+USA+VIR+URY+UZB+VUT+VEN+VNM+ESH+YEM+ZMB+ZWE+X01+X02+X03+X04+X05+X06+X07+X08+X09+X93+X10+X11+X12+X13+X14+X15+X16+X81+X17+X18+X19+X20+X21+X22+X23+X24+X25+X26+X27+X28+X29+X30+X31+X32+X33+X34+X35+X36+X94+X37+X38+X39+X40+X41+X42+X43+X44+X45+X46+X86+X47+X48+X49+X51+X52+X53+X54+X55+X56+X57+X58+X59+X60+X95+X61+X62+X63+X64+X65+X66+X67+X68+X69+X70+X71+X72+X73+X78+X96+X75+X76+X77+X74+X79+X84+X85+X92+X82+X83+X87+X88+X89+X90+X91&sex=SEX_T&classif1=AGE_5YRBANDS_TOTAL+AGE_5YRBANDS_Y05-09+AGE_5YRBANDS_Y10-14+AGE_5YRBANDS_Y15-19+AGE_5YRBANDS_Y20-24+AGE_5YRBANDS_Y25-29+AGE_5YRBANDS_Y30-34+AGE_5YRBANDS_Y35-39+AGE_5YRBANDS_Y40-44+AGE_5YRBANDS_Y45-49+AGE_5YRBANDS_Y50-54+AGE_5YRBANDS_Y55-59+AGE_5YRBANDS_Y60-64+AGE_5YRBANDS_YGE65+AGE_10YRBANDS_TOTAL+AGE_10YRBANDS_YLT15+AGE_10YRBANDS_Y15-24+AGE_10YRBANDS_Y25-34+AGE_10YRBANDS_Y35-44+AGE_10YRBANDS_Y45-54+AGE_10YRBANDS_Y55-64+AGE_10YRBANDS_YGE65+AGE_AGGREGATE_TOTAL+AGE_AGGREGATE_YLT15+AGE_AGGREGATE_Y15-24+AGE_AGGREGATE_Y25-54+AGE_AGGREGATE_Y55-64+AGE_AGGREGATE_YGE65+AGE_YTHADULT_YGE15+AGE_YTHADULT_Y15-64+AGE_YTHADULT_Y15-24+AGE_YTHADULT_YGE25&timefrom=2010&timeto=2022
-
-#read in ILO reference areas
-ilo_ref_area <- read_csv(file= paste0(raw_dir,"/metadata/ILO_reference_area.csv")) %>%
-  transmute(iso3c=ref_area,
-            country=ref_area.label)
-                         
-#read in the ILO data downloaded on November 24, 2020
-lfp_estimated <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_modelled-2024-01-24.csv")) %>%
-  as_tibble(.name_repair = 'universal') %>%
-  mutate(iso3c=ref_area,
-    date=time,
-    estimated_value=obs_value) %>%
-    #left_join(ilo_ref_area) %>%
-  select(iso3c, date,  estimated_value ) 
-
-#reported data by countries
-lfp_reported <- read_csv(paste0(raw_dir,"/1.5_DUIO/ILO_LFP_survey-2024-01-24.csv")) %>%
-  as_tibble(.name_repair = 'universal') %>%
-  mutate(iso3c=ref_area,
-    date=time,
-    reported_value=obs_value,
-    source=source.label) %>%
-  select(iso3c, date, source, reported_value )
-
-#merge the two together
-lfp_data <- lfp_reported %>%
-  left_join(lfp_estimated) %>%
-  mutate(estimate_diff=if_else(!is.na(estimated_value),reported_value-estimated_value,0),
-         lfs_source=(grepl("LFS",source))) %>%
-  filter(iso3c %in% country_metadata$iso3c)
+1 Point. Country has a labor force survey based estimate in past 5 years of labor force participation broken down by total, male, and female & estimated value from ILO is within 10 percentage points of value reported by national government.   
+0.5 Point. Country has labor force survey or is within 10 points of ILO, but not both    
+0 Points. Otherwise
 
 
-
-
-#score the data
-
-#function to calculate 10 year window
-ilo_fun <- function(date_start, date_end) {
-  temp <- lfp_data %>%
-    filter(between(date,date_start,date_end) ) %>%
-    dplyr::group_by(iso3c) %>%
-    dplyr::summarise(SPI.D1.5.LFP.ACC=as.numeric(mean(estimate_diff, na.rm=T)<=10),
-              SPI.D1.5.LFP.SOURCE=max(lfs_source, na.rm=T),
-              SPI.D1.5.LFP=(SPI.D1.5.LFP.ACC+SPI.D1.5.LFP.SOURCE)/2) %>%
-    select(iso3c, SPI.D1.5.LFP) %>%
-    mutate(date=date_end)
-    
-}
-####
-# 5 Year window
-####
-#create this database for each year from 2004 to 2020 using a 10 year window
-
-
-
-for (i in c(2010:end_date)) {
-  
-  end=i
-  
-    #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
-  if (end==end_date) {
-    start=i-6
-  } else if (end_date-1) {
-    start=i-5
-  } else {
-    start=i-4
-  }
-  
-  temp_df <- ilo_fun(start,end)
-  assign(paste('lfp_data_',end, sep=""), temp_df)
-}
-
-if (exists('lfp_data_df')) {
-  rm('lfp_data_df')
-}
-#now append together and save
-for (i in c(2010:end_date)) {
-  
-  temp<-get(paste('lfp_data_',i, sep=""))
-  
-  if (!exists('lfp_data_df')) {
-    lfp_data_df<-temp
-  } else {
-    lfp_data_df<-lfp_data_df %>%
-      bind_rows(temp) %>%
-      arrange(-date, iso3c)
-  }
-}
-
-```
-
-
-
-```{r aki_combine, echo=FALSE}
-
-
-
-
-#now combine AKI databases and write to csv
-D3.AKI <- spi_df_empty %>%
-  left_join(D3.1.AKI) %>%
-  left_join(D3.3.AKI) %>%
-  left_join(D3.15.AKI) %>%
-  left_join(safe_managed_df) %>%
-  left_join(lfp_data_df) %>%
-  right_join(spi_df_empty) %>%
-  mutate(SPI.D1.5.POV=if_else(is.na(SPI.D1.5.POV),0,as.numeric(SPI.D1.5.POV)),
-         SPI.D1.5.CHLD.MORT=if_else(is.na(SPI.D1.5.CHLD.MORT),0,as.numeric(SPI.D1.5.CHLD.MORT)),
-         SPI.D1.5.DT.TDS.DPPF.XP.ZS=if_else(is.na(SPI.D1.5.DT.TDS.DPPF.XP.ZS),0,as.numeric(SPI.D1.5.DT.TDS.DPPF.XP.ZS)),
-         SPI.D1.5.SAFE.MAN.WATER=if_else(is.na(SPI.D1.5.SAFE.MAN.WATER),0,as.numeric(SPI.D1.5.SAFE.MAN.WATER)),
-         SPI.D1.5.LFP=if_else(is.na(SPI.D1.5.LFP),0,as.numeric(SPI.D1.5.LFP))) 
-
-
-spi_df <- spi_df %>%
-  left_join(D3.AKI)
-
-```
-
-```{r aki_plots, echo=FALSE, fig.height=10}
-
-aki <- c(
-             SPI.D1.5.POV='Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)',
-             SPI.D1.5.CHLD.MORT='Mortality rate, under-5 (per 1,000 live births)', 
-             SPI.D1.5.DT.TDS.DPPF.XP.ZS='Debt service (PPG and IMF only, % of exports of goods, services and primary income)',
-             SPI.D1.5.SAFE.MAN.WATER = 'Safely Managed Drinking Water',
-             SPI.D1.5.LFP = 'Labor Force Participation'
-)
-
-
-for (ind in names(aki)) {
-  ind <- ind
-  names(aki)
-  print(ind)
-  temp_map <- D3.AKI %>%
-    filter(.data[[ind]] >= 0)
-  
-  spi_mapper('temp_map', ind, aki[[ind]])
-}
-
-```
 
 
 # Data Services
 
-
-
+ 
 
 ## Dimension 2.1: Data Releases
 
@@ -1069,80 +285,9 @@ Although subscription is voluntary, the subscribing member needs to be committed
 information about its data and data dissemination practices (metadata).  The metadata are posted on the IMF's SDDS and 
 e-GDDS websites.       
 
-- 1 Point. Subscribing to IMF SDDS+ or SDDS standards	
-
-- 0.5 Points. Subscribing to IMF e-GDDS standards	
-
-- 0 Points. Otherwise
-
-
-
-```{r idds}
-
-
-
-# Parse the JSON content and convert it to a data frame.
-D2.1_DSDR_sci <- read_csv(paste0(raw_dir, "/2.1_DSDR/SCI_archived_data.csv")) %>%
-  pivot_longer(
-    cols=YR2004:YR2015,
-    names_to='date',
-    values_to='value'
-  ) %>%
-  filter(`Series Code`=='5.21.01.01.sdds') %>%
-  transmute(
-    iso3c=`Country Code`,
-    date=as.numeric(str_remove_all(date,"YR")),
-    SDDS=if_else(is.na(value),0,as.numeric(value))
-  ) %>%
-  left_join(spi_df_empty) %>% #add on country metadata
-  filter(!is.na(income_level)) %>%
-  select(iso3c,  date, SDDS  ) 
-
-
-
-#read in metadata file.
-
-#pull data for several of the standards from WDI metadata
-
-df <- WDI_metadata
-
-# Manipulate and clean final data
-df <- df %>%
-  filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
-
-
-D2.1_DSDR <- df %>%
-  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
-         country=Table.Name) %>%
-  select(c('iso3c',  'date',  'IMF.data.dissemination.standard')  ) %>%
-  mutate(IDDS=IMF.data.dissemination.standard) %>%
-  mutate(SPI.D2.1.GDDS=case_when(
-    IDDS=="Special Data Dissemination Standard Plus (SDDS+)" | IDDS=="Special Data Dissemination Standard Plus (SDDS Plus)" | IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
-    IDDS=="Enhanced General Data Dissemination System (e-GDDS)"~ 0.5,
-    TRUE ~ 0 ),
-    SDDS=case_when(
-     IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
-    TRUE ~ 0 ))  %>%
-  bind_rows(D2.1_DSDR_sci) %>%
-  rename(RAW.D2.1.GDDS=IDDS) %>%
-  select(iso3c,  date, RAW.D2.1.GDDS, SPI.D2.1.GDDS  ) %>%
-  left_join(country_metadata)
-
-D2.1_DSDR_map <- D2.1_DSDR 
-
-
-spi_mapper('D2.1_DSDR_map', 'SPI.D2.1.GDDS', 'SDDS Data Standards in Place' )
-
-
-#add to spi databases
-spi_df <- spi_df %>%
-  left_join(D2.1_DSDR)
-
-
-
-
-```
-
+1 Point. Subscribing to IMF SDDS+ or SDDS standards	
+0.5 Points. Subscribing to IMF e-GDDS standards	
+0 Points. Otherwise
 
 
 
@@ -1159,16 +304,11 @@ Our source for this indicator is Open Data Watch.  Data was last accessed on Dec
 > between national statistical offices (NSOs) and data users. ODIN 2018/19 includes 178 countries, including most all OECD countries. Two-year comparisons are for all countries with
 > two years of data between 2015-2017. Scores can be compared across topics and countries.
 
-We use the Openness score from ODIN for this measure.  The score ranges from 0-100.  It contains scores along five dimensions: 
-
+We use the Openness score from ODIN for this measure.  The score ranges from 0-100.  It contains scores along five dimensions:    
   - Machine Readability   
-  
   - Non-Proprietary format    
-  
   - Download Options    
-  
   - Metadata Available    
-  
   - Terms of Use
   
 A description for each of these five dimensions is below:
@@ -1343,9 +483,8 @@ collected from the households and businesses when needed.
 
 NADA is an open source microdata cataloging system, compliant with the Data Documentation Initiative (DDI) and Dublin Core’s RDF metadata standards. It serves as a portal for researchers to browse, search, compare, apply for access, and download relevant census or survey datasets, questionnaires, reports and other information.
 
-- 1 Point. Yes
-
-- 0 Points. No
+1 Point. Yes
+0 Points. No
 
 ```{r nada}
 
@@ -1513,7 +652,12 @@ spi_mapper('un_sdg_map','SPI.D3.17.PTNS','Goal 17: Partnerships to achieve the G
 
 
 # Data Sources
-  
+
+Cleaning for the Data Sources Indicators.  Data Sources (4 Indicators):     
+  - 4.1_SOCS - Indicator 4.1: censuses and surveys        
+  - 4.2_SOAD - Indicator 4.2: administrative data   
+  - 4.3_SOGS - Indicator 4.3: geospatial data     
+  - 4.4_SOPC - Indicator 4.4: private/citizen generated data    
 
 ## Dimension 4.1: censuses and surveys 
 
@@ -1540,11 +684,9 @@ development of normal family living conditions.  Data obtained as part of the po
 including data on homeless persons, are often used in the presentation and analysis of the results 
 of the housing census.  It is recommended that population and housing censuses be conducted at least every 10 years. 
 
-- 1 Point. Population census done within last 10 years	
-
-- 0.5 Points. Population census done within last 20 years	
-
-- 0 Points. Otherwise
+1 Point. Population census done within last 10 years	
+0.5 Points. Population census done within last 20 years	
+0 Points. Otherwise
 
 ####  Agriculture census
 
@@ -1556,11 +698,9 @@ enumeration of all agricultural holdings, in combination with more detailed
 structural data using sampling methods.  It is recommended that agricultural
 censuses be conducted at least every 10 years.
 
-- 1 Point.  census done within last 10 years	
-
-- 0.5 Points.  census done within last 20 years	
-
-- 0 Points. Otherwise
+1 Point.  census done within last 10 years	
+0.5 Points.  census done within last 20 years	
+0 Points. Otherwise
 
 #### Business/establishment census
 
@@ -1570,11 +710,9 @@ Business Register information is establishment-based and includes business
 location, organization type (e.g. subsidiary or parent), industry
 classification, and operating data (e.g., receipts and employment).
 
-- 1 Point.  census done within last 10 years	
-
-- 0.5 Points.  census done within last 20 years	
-
-- 0 Points. Otherwise
+1 Point.  census done within last 10 years	
+0.5 Points.  census done within last 20 years	
+0 Points. Otherwise
 
 #### Household Survey on income/consumption/expenditure/budget/Integrated Survey 
 
@@ -1584,13 +722,10 @@ consumption surveys, household budget surveys, integrated surveys.  It is
 recommended that surveys on income and expenditure be conducted at least every
 3 to 5 years.
 
-- 1 Point. 3 or more surveys done within past 10 years	
-
-- 0.67 Points. 2 surveys done within past 10 years; 	
-
-- 0.33 Points. 1 survey done within past 10 years; 	
-
-- 0 Points. None within past 10 years
+1 Point. 3 or more surveys done within past 10 years	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 
 #### Agriculture survey
@@ -1601,13 +736,10 @@ agricultural land, production, crops and livestock, aquaculture, labor and
 cost, and time use.  Some issues, such as gender and food security, are of
 interest to most agriculture surveys.
 
-- 1 Point. 3 or more surveys done within past 10 years	
-
-- 0.67 Points. 2 surveys done within past 10 years; 	
-
-- 0.33 Points. 1 survey done within past 10 years; 	
-
-- 0 Points. None within past 10 years
+1 Point. 3 or more surveys done within past 10 years	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 ####  Labor Force Survey 
 
@@ -1619,13 +751,10 @@ between employees and the self-employed, public versus private sector
 employment, multiple job-holding, hiring, job creation, and duration of
 unemployment.
 
-- 1 Point. 3 or more surveys done within past 10 years	
-
-- 0.67 Points. 2 surveys done within past 10 years; 	
-
-- 0.33 Points. 1 survey done within past 10 years; 	
-
-- 0 Points. None within past 10 years
+1 Point. 3 or more surveys done within past 10 years	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 ####  Health/Demographic survey
 
@@ -1634,13 +763,10 @@ populations, such as health expenditure, access, utilization, and outcomes.
 They typically include Demographic and Health Surveys.  It is recommended that
 health surveys be conducted at least every 3 to 5 years.
 
-- 1 Point. 3 or more surveys done within past 10 years	
-
-- 0.67 Points. 2 surveys done within past 10 years; 	
-
-- 0.33 Points. 1 survey done within past 10 years; 	
-
-- 0 Points. None within past 10 years
+1 Point. 3 or more surveys done within past 10 years	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 ####  Business/establishment survey
 
@@ -1652,13 +778,10 @@ surveys include surveys of businesses, farms, and institutions.  They may ask
 for information about the establishment itself and/or employee characteristics
 and demographics.
 
-- 1 Point. 3 or more surveys done within past 10 years	
-
-- 0.67 Points. 2 surveys done within past 10 years; 	
-
-- 0.33 Points. 1 survey done within past 10 years; 	
-
-- 0 Points. None within past 10 years
+1 Point. 3 or more surveys done within past 10 years	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 
 
@@ -1923,8 +1046,20 @@ spi_mapper('cs_df_map', 'SPI.D4.1.8.BZSVY', 'Business Survey Availablility in Pa
 
 The following indicator checks whether administrative data is available for the following topic areas: Social Protection, Education, Population & Health, and Labor
 
-Average score for CRVS indicator.  Social Protection, Education, and Labor admin data indicators not included because of lack of established methodology. 
+Average score for CRVS indicator.  Social Protection, Education, and Labor admin data indicators not included because of lack of established methodology. While our team identified several promising sources for administrative data from the World Bank's ASPIRE team, UNESCO, and ILO, incomplete coverage across countries made us drop these indicators from our index.  A major research and data collection effort is needed from all custodian agencies  to fill in this information, so that a more comprehensive picture of administrative data availability can be produced.
 
+<!-- ### Social Protection Admin Data -->
+
+<!-- -  Atlas of Social Protection Indicators of Resilience and Equity (ASPIRE) is compilation of Social Protection and Labor (SPL) indicators to analyze scope and performance of SPL programs.    -->
+<!-- - ASPIRE has indicators for 136 countries on:     -->
+<!--   * Social assistance    -->
+<!--   * Social insurance     -->
+<!--   * Labor market programs  -->
+
+<!-- - Based on both program-level administrative data and national household survey data     -->
+<!-- - Data extends from 2001 to 2018 -->
+
+<!-- Scoring is 1 if administrative data is available to produce beneficiary counts or expenditures for any social protection and labor program, 0 otherwise.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score. -->
 
 ```{r aspire, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 
@@ -2089,11 +1224,8 @@ spi_mapper('unesco_map', 'SPI.D4.2.2.EDU', 'Education Administrative Data Availa
 Civil registration is the act of recording and documenting of vital events in a person’s life (including birth, marriage, divorce, adoption, and death and cause of death) and is a fundamental function of national governments. Birth registration establishes an individual’s legal identity at birth. A legal identity, name, nationality, and proof of age, are important human rights. They enable individuals to be included in various government, social and private services, and include the right to vote, etc. Vital statistics are compiled using civil registration information on these vital events. The availability of reliable and up-to-date vital statistics depends on the level of development of civil registration programs. An effective civil registration and vital statistics (CRVS) system is critical for planning and monitoring programs across several sectors. 
 
 Data comes from the UNSD Global SDG monitoring database and also the WDI.  Scoring is as follows:    
-
 1 Points. Both of at least 90% of births registered and at least 75% of deaths registered
-
 0.5 Points. One of at least 90% of births registered or at least 75% of deaths registered
-
 0 Points. Neither
 
 Source: World Bank WDI Metadata.  
@@ -2606,9 +1738,7 @@ The legislation and governance indicator will be drawn from SDG indicator 17.18.
 
 This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)
 
-Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics.
-
-Scores of 0 given a score of zero.
+Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics.  Scores of 0 given a score of zero.
 
 The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Date()`
 
@@ -2714,13 +1844,7 @@ spi_previous_vintage_d5 <- read_csv(file=paste(raw_dir, "/previous_vintages/","S
  has evolved to meet the changing economic structure, to follow systematic accounting 
  and ensure international compatibility. 
  
- Scoring: 
- 
- - 1 point for using SNA2008 or ESA 2010, 
- 
- - 0.5 points for using SNA 1993 or ESA 1995, 
- 
- - 0 points otherwise
+ Scoring: 1 point for using SNA2008 or ESA 2010, 0.5 points for using SNA 1993 or ESA 1995, 0 points otherwise
  
 ```{r snau}
 
@@ -2750,11 +1874,7 @@ National accounts base year is the year used as the base period for constant pri
 calculations in the country's national accounts.  It is recommended that the base year of 
 constant price estimates be changed periodically to reflect changes in economic structure and relative prices. 
 
-- 1 point for chained price, 
-
-- 0.5 for reference period within past 10 years, 
-
-- 0 points otherwise.
+1 point for chained price, 0.5 for reference period within past 10 years, 0 points otherwise.
 
 ```{r naby}
 
@@ -2799,11 +1919,11 @@ D5.2.2.NABY <- read_csv(paste(raw_dir, "5.2_DISM","D5.2.2.NABY_raw_metadata.csv"
  comparability.  The manual and classification have changed to cover the complete scope of industrial 
  production, employment, and GDP and other statistical areas.
 
-- 1 Point. Latest version is adopted (ISIC Rev 4, NACE Rev 2 or a compatible classification)  
+1 Point. Latest version is adopted (ISIC Rev 4, NACE Rev 2 or a compatible classification)  
 
-- 0.5 Points.  Previous version is used (ISIC Rev 3, NACE Rev 1 or a compatible classification)
+0.5 Points.  Previous version is used (ISIC Rev 3, NACE Rev 1 or a compatible classification)
 
-- 0 Points. Otherwise
+0 Points. Otherwise
 
 ```{r cnin}
 
@@ -2838,11 +1958,7 @@ Consumer Price Index serves as indicators of inflation and reflects changes in t
  refers to the year the weights were derived.  It is recommended that the base year be
  changed periodically to reflect changes in expenditure structure.  
  
--  1 Point. Annual chain linking. 
-
-- 0.5 Points. Base year in last 10 years. 
-
-- 0 points. Otherwise
+ 1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 points. Otherwise
  
 ```{r cpiby}
 
@@ -2947,9 +2063,7 @@ income elasticities.  It is an integral part of the SNA1993 and more detailed
 subdivision of the classes provide comparability between countries and between 
 statistics in these different areas.    
 
-- 1 Point. Follow Classification of Individual Consumption by Purpose (COICOP)	
-
-- 0 Points.	Otherwise
+1 Point. Follow Classification of Individual Consumption by Purpose (COICOP)	0 Points.	Otherwise
 
 ```{r hous}
 
@@ -3043,9 +2157,7 @@ Classification of status of employment refers to employment data that are
  basis for production of internationally comparable statistics on the employment 
  relationship, including the distinction between salaried employment and self-employment.  
  
-- 1 Point. Follow International Labour Organization, International Classification of Status in Employment (ICSE-93) or 2012 North American Industry Classification System (NAICS). 
-
-- 0 Points Otherwise. 
+1 Point. Follow International Labour Organization, International Classification of Status in Employment (ICSE-93) or 2012 North American Industry Classification System (NAICS). 0 Points Otherwise. 
  
 ```{r empl}
 
@@ -3080,11 +2192,9 @@ the central government's fiscal activities and following noncash recording basis
 Budgetary central government accounts do not necessarily include all central government 
 units, the picture they provide of central government activities is usually incomplete.  
 
-- 1 Point. Consolidated central government accounting follows noncash recording basis	 
-
-- 0.5 Points. Consolidated central government accounting follows cash recording basis	 
-
-- 0 Points. Otherwise 
+1 Point. Consolidated central government accounting follows noncash recording basis	 
+0.5 Points. Consolidated central government accounting follows cash recording basis	 
+0 Points. Otherwise 
 
 ```{r cgov}
 
@@ -3209,11 +2319,9 @@ business accounting with a balance sheet and income statement plus guidelines on
 treatment of exchange rate and other valuation adjustments.  The latest manual GFSM2014 
 is harmonized with the SNA2008. 
 
-- 1 Point. Follow the latest Government Finance Statistical Manual (2014)/ ESA2010	
-
-- 0.5 Points. Previous version is used (GFSM 2001)	
-
-- 0 Points. Otherwise
+1 Point. Follow the latest Government Finance Statistical Manual (2014)/ ESA2010	
+0.5 Points. Previous version is used (GFSM 2001)	
+0 Points. Otherwise
 
 
 ```{r fina}
@@ -3249,9 +2357,8 @@ accounting rules, and provides a comprehensive analytic framework for monetary a
 determination.  The Monetary and Finance Statistics: Compilation Guide (2008) provides detailed guidelines for 
 the compilation of monetary and financial statistics in addition to MFSM. 
 
-- 1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
-
-- 0 Points. Otherwise
+1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
+0 Points. Otherwise
 
 ```{r mony}
 
@@ -3359,9 +2466,8 @@ statistics production in different ways, such as quality, efficiency, standardiz
 and process-orientation.  It is used for all types of surveys, and "business" is not 
 related to "business statistics" but refers to the statistical office, simply expressed.  
 
-- 1 Point. GSBPM is in use
-
-- 0 Points. Otherwise
+1 Point. GSBPM is in use
+0 Points. Otherwise
 
 ```{r gsbp}
 
@@ -3489,9 +2595,7 @@ Not included because of lack of established methodology or suitable data sources
 
 Indicator based on  SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). This indicator measures whether the national statistical plan under implementation is fully funded. It relates to SDG 17.18.3 and is based on the annual Status Report on National Strategies for the Development of Statistics (NSDS).
 
-- Scores is 1 if the country has a national statistical plan that is fully funded and under implementation.  
-
-- Scores of 0 given a score of zero.
+Scores is 1 if the country has a national statistical plan that is fully funded and under implementation.  Scores of 0 given a score of zero.
 
 The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Date()`
 

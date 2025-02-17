@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Brian Stacy">
+<meta name="dcterms.date" content="2025-02-14">
+
+<title>Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="spi_data_overview_files/libs/clipboard/clipboard.min.js"></script>
+<script src="spi_data_overview_files/libs/quarto-html/quarto.js"></script>
+<script src="spi_data_overview_files/libs/quarto-html/popper.min.js"></script>
+<script src="spi_data_overview_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="spi_data_overview_files/libs/quarto-html/anchor.min.js"></script>
+<link href="spi_data_overview_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="spi_data_overview_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="spi_data_overview_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="spi_data_overview_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="spi_data_overview_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Technical Documentation on Data Sources and Methods for Statistical Performance Indicators</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Brian Stacy </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 14, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This document contains a detailed technical description of the Statistical Performance Indicators (SPI). The document contains a detailed description of each indicator, as well as the R code used to construct each indicator.</p>
+<section id="motivation" class="level2">
+<h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
+<p>The primary purpose of the statistical system is to help users of statistics make better decisions or to hold those decision makers accountable. In the words of Principle 1 of the Fundamental Principles of Official Statistics, the statistics must “meet the test of practical utility”, serving “the Government, the economy and the public with data about the economic, demographic, social and environmental situation.”</p>
+<p>The national statistical system, or NSS, plays a crucial role in modern economies. It provides stakeholders, ranging from policy makers to stock market analysts and the general public, with the latest data on the country’s socio-economic developments. At the international level, monitoring progress on global undertakings such as the recently established Sustainable Development Goals (SDGs) requires high-quality data that must be produced consistently across different national statistical systems. Assessing and improving the capacity of a country’s NSS has long been a part of the global agenda. Since the early 2000s, a few capacity assessment tools have been developed to identify the weaknesses and strengths of national statistical systems by other organizations including PARIS21, the Food and Agriculture Organization of the United Nations (FAO), the United Nations Economic Commission for Europe (UNECE), the United Nations Economic Commission for Africa (UNECA), and the U.S. Census Bureau.</p>
+<p>The World Bank’s Statistical Capacity Index (SCI) is one such tool that has been widely employed. Several international and national agencies have adopted the SCI for measuring progress in statistical capacity building and related investments. The World Bank mainstreamed the SCI in its monitoring and assessment framework and has adopted it as a baseline indicator in various projects at the country level. The SCI is based on publicly available data, and this has various advantages over other indexes of statistical capacity. A key advantage of the SCI is that it can provide assessment of a country’s statistical capacity in an internationally comparable and cost-effective manner.</p>
+<p>Yet, there are several areas in which the existing SCI can be improved. First, it comprises of a limited number of indicators and includes no indicators of some important data sources, such as labor force surveys, establishment surveys, or administrative data. Second, it ignores the data dissemination practices of an NSS, which is one of the key features of data usage. Third, the SCI has been criticized for placing too much weight on statistical output and activities, while neglecting the infrastructure and resource components of statistical systems. Finally, it is silent on whether the data products produced by the NSS are in high demand.</p>
+<p>Since its launch in 2004, the SCI’s methodology and coverage have basically remained the same, while the global data landscape has changed significantly. NSSs have made significant advancements with data collection and dissemination practices. At the same time, the adoption of the Sustainable Development Goals (SDGs) set an ambitious development agenda for the next 15 years on ending poverty, protecting the planet, and ensuring prosperity for all by 2030. This, in turn, increased the demand for data and raised the bar for national statistical systems regarding their capacity to produce high-quality data. We thus propose to improve the current SCI to better suit the changing global data landscape.</p>
+</section>
+<section id="overview-of-the-new-spi" class="level2">
+<h2 class="anchored" data-anchor-id="overview-of-the-new-spi">Overview of the New SPI</h2>
+<p>The new Statistical Performance Indicators (SPI) builds on the SCI, which the World Bank has regularly published since 2004. Our new SPI will cover many of the same elements as the SCI, such as statistical methodology, source data, and periodicity, but will also expand into new areas. The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system. We also are committing to making our project open data and open code to build confidence in our work.</p>
+<p>The new Statistical Performance Indicators (SPI) are designed to monitor how well countries statistical systems are meeting this purpose. By helping countries and development partners identify the strengths and weaknesses of national statistical systems the SPI can support policy advice for countries about their national statistical systems, investment decisions for donors including the World Bank, benchmarking of national statistical systems, and advocacy for national statistics.</p>
+<p>We identify five key pillars of a country’s statistical performance. These are data use, data services, data products, data sources, and data infrastructure . These pillars can be presented in the form of a dashboard that can help countries identify areas for development in their statistical system. Improvements in performance can be represented as a virtuous data cycle that can become self-sustaining.</p>
+<p><img src="SPI_cycle.png" class="img-fluid"></p>
+<p>Statistics have no value unless they are used. The first pillar of the SPI is therefore data use. A successful statistical system is one that produces data products that are highly used.</p>
+<p>In order to meet user needs, the statistical system must develop a range of services that connect data users and producers and facilitate dialogue between them. The second pillar of the SPI is therefore data services that are trusted by users. A successful statistical system is one with highly valued and well used statistical services.</p>
+<p>The dialogue between users and suppliers in turn drives the design of statistical products that are to be created including the quality of product needed for the country requirement. This will incorporate accuracy, timeliness, frequency, comparability and levels of disaggregation. The third pillar of the SPI is therefore data products. A successful statistical system is one that generates high quality statistical indicators that can also track progress for the Sustainable Development Goals (SDGs).</p>
+<p>In order to create the products required, the statistical system needs to make use of a variety of sources from both inside and outside the government. This will include making use of typical data collection methods like censuses and surveys, but also administrative data, geospatial data, and data generated from the private sector and from citizens. The fourth pillar of the SPI is therefore data sources. A successful statistical system is one which draws on all types of data sources relevant to the indicators that are to be produced.</p>
+<p>For the cycle to be complete, capability needs continuously to be reviewed to ensure that it is enough to deliver the products, services and ultimately data use required. The fifth pillar of the SPI is therefore data infrastructure. A successful statistical system is one that develops both hard infrastructure (legislation, governance, standards) and soft infrastructure (skills, partnerships) and has the financial resources to deliver. The 5 pillars and associated 22 dimensions of the SPI are as shown in Figure 1 below.</p>
+<p><em>Figure 1: The Dimensions and Pillars that Construct the New SPI</em> <img src="SPI_dashboard.png" class="img-fluid"></p>
+<p>A score against each element would facilitate:</p>
+<ol type="1">
+<li><p>Understanding of the maturity of the national statistical system in relation to others eg quintile groups of countries could be shown against each dimension</p></li>
+<li><p>This in turn would highlight relative strengths and weaknesses of the system and give an indication of the extent to which the official statistics could be relied upon</p></li>
+<li><p>It would also point to which other countries the country in question could learn from as it seeks to improve and create incentives to develop in a forward looking rather than backward looking way</p></li>
+<li><p>Time series would allow assessments to be made of progress of the system and a start point for assessments of return on investment for funding given for capacity building</p></li>
+<li><p>A dynamic view encouraging continuous improvement. As countries improve the bar for what good looks like would get higher</p></li>
+</ol>
+<p>Key characteristics of the SPI are: (i) uses only publicly accessible data; (ii) transparent methodology; (iii) easily replicable; (iv) provides a long-time series to track progress in performance; (v) captures outcomes and supporting elements; (vi) reflects the SDGs; (vii) facilitates at-a-glance comparisons on a global scale. We are collecting data on indicators for the 22 pillars above. For dissemination, the SPI will be presented both in the dashboard format above and as an index for each country. Further details on the construction of the new SPI are provided in the remainder of the document.</p>
+</section>
+<section id="pillars-of-the-new-spi" class="level2">
+<h2 class="anchored" data-anchor-id="pillars-of-the-new-spi">Pillars of the new SPI</h2>
+<p>A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as pillars. We refer to the 22 cells in the framwork in Figure 1 as dimensions. Finally, each dimension may be composed of multiple indicators. For instance, the dimension on censuses and surveys is made up indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.</p>
+<section id="data-use" class="level3">
+<h3 class="anchored" data-anchor-id="data-use">Data use</h3>
+<p>The data use pillar is segmented by user type. The tiles on the Dashboard provide an indicator of use of statistics respectively by the legislature, executive, civil society (including sub-national actors), academia and international bodies. A mature system would score well across the tiles. Areas for development would be highlighted by weaker scores in that domain enabling questions to be asked about prioritization amongst user groups and why existing services are not resulting in higher use of national statistics in that segment.</p>
+</section>
+<section id="data-services" class="level3">
+<h3 class="anchored" data-anchor-id="data-services">Data services</h3>
+<p>The data services pillar is segmented by service type. The tiles on the Dashboard provide an indicator of the quality of data releases, the richness and openness of online access, the effectiveness of advisory and analytical services related to statistics and the availability and use of data services such as secure microdata access. Advisory and analytical services might incorporate elements related to data stewardship services including ethical consideration of proposals and calling out misuse of data in accordance with the Fundamental Principles of Official Statistics.</p>
+</section>
+<section id="data-products" class="level3">
+<h3 class="anchored" data-anchor-id="data-products">Data products</h3>
+<p>The data products pillar is segmented by topic and organized into social, economic, environmental and institutional domains using the typology of the Sustainable Development Goals. This approach enables comparisons across countries and anchors the system in the 2030 agenda so that a global view can be generated whilst enabling different emphasis to be applied in different countries to reflect the user needs of that country.</p>
+</section>
+<section id="data-sources" class="level3">
+<h3 class="anchored" data-anchor-id="data-sources">Data sources</h3>
+<p>The data sources pillar is segmented between sources generated by the statistical office (censuses and surveys) and sources accessed from elsewhere (administrative data, geospatial data, private sector data and citizen generated data). The appropriate balance between these types of source will vary depending on the institutional setting and maturity of the statistical system in each country. High scores should reflect the extent to which the sources being utilized enable the necessary statistical indicators to be generated. For example, a low score on environment statistics may reflect a lack of use of (and low score for) geospatial data. This linkage, which is inherent in the data cycle approach, should help highlight areas for investment if country needs are to be met.</p>
+</section>
+<section id="data-infrastructure" class="level3">
+<h3 class="anchored" data-anchor-id="data-infrastructure">Data infrastructure</h3>
+<p>The data infrastructure pillar is segmented into hard and soft infrastructure segments itemizing essential cross cutting requirements for an effective statistical system. The segments are:</p>
+<ol type="1">
+<li><p>Legislation and governance covering the existence of laws and a functioning institutional framework for the statistical system</p></li>
+<li><p>Standards and methods addressing compliance with recognized frameworks and concepts</p></li>
+<li><p>Skills including level of skills within the statistical system and amongst users (statistical literacy)</p></li>
+<li><p>Partnerships reflecting the need for the statistical system to be inclusive and coherent</p></li>
+<li><p>Finance, both domestically and from donors</p></li>
+</ol>
+</section>
+<section id="description-of-dimensions" class="level3">
+<h3 class="anchored" data-anchor-id="description-of-dimensions">Description of Dimensions</h3>
+<p>Below is a brief description of the 22 dimensions in our framework.</p>
+</section>
+</section>
+<section id="spi-data" class="level2">
+<h2 class="anchored" data-anchor-id="spi-data">SPI Data</h2>
+<p>Thanks to a large scale data collection effort by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering 14 out of our 22 dimensions for our dashboard. These 54 indicators do allow us to provide data for each of our 5 pillars on data use, data services, data products, data sources, and data infrastructure. Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public. Going forward, the international community must work together to fill these gaps.</p>
+<p>An area of particular concern is in the pillar of data use. Currently, our dashboard only features data for one of the five dimensions in data use. That is on data use by international organizations. We are currently blind as to whether statistical systems are providing useful data to their national governments (legislature and executive branches), to civil society, and to academia. By closing this data gap, country national statistical offices (NSOs) can be better guided in whether the information they are providing is meeting their user’s needs. International organizations can help steer funding for capacity building in areas that are lacking. And the virtuous data cycle can begin: where better investment leads to more effectiveness, then more innovation, higher value-added, and ultimately greater impact.</p>
+<p>Another area that needs improvement is in the measurement of advisory and analytical services provided by NSOs, such as data stewardship services and the ethical consideration of proposals. By measuring this type of work done by NSOs that goes beyond producing data, the international community and the NSOs themselves can better assess whether this type of support is in place.</p>
+<p>In the area of data sources, more information is needed particularly in the areas of administrative data, geospatial data, and private and citizen generated data. While we have measures of administrative data use, particularly on the development of civil registrations and vital statistics systems, we have an incomplete picture of whether the administrative data systems are in place to measure health, education, labor, and social protection program statistics. For our geospatial indicator, we have a proxy measure of whether the country is able to produce indicators at the sub-national level, but we lack an understanding of how countries are using geospatial information in other ways, for instance using satellite data. And while the world is increasingly awash with private and citizen generated data, such as on mobility, job searching, or social networking, we were unable to find a reliable source to measure how national statistical systems are incorporating this information.</p>
+<p>Finally, many of the soft components of data infrastructure lacked adequate data. This includes the areas of skill (including data literacy) and partnerships between entities in the national statistical system. We are making use of the PARIS21 led SDG indicator on whether statistical legislation met the standards of the UN fundamental Principles of Statistics in our dashboard, but were unable to use this in our index, because countries have not sufficiently reported to PARIS21 on this measure. This is also true of the PARIS21 led SDG indicator on whether the national statistical system is fully funded. Countries should be encouraged to report on this information.</p>
+<p>Below is a brief description of the information (or lack thereof) we have available for the dimensions in our framework. For dimensions excluded, we either lacked a source with a developed methodology or else the data collection for that measure was incomplete. This is described below:</p>
+<ul>
+<li><p><strong>Dimension 1.1: Data use by national legislature:</strong> <em>Not included because of lack of established methodology. In principle it may be possible to utilize websites of national legislatures but this will require further work and assessment. </em><br>
+</p></li>
+<li><p><strong>Dimension 1.2: Data use by national executive branch:</strong> <em>Not included because of lack of established methodology. There are some usable data sources with fairly good coverage (as used by PARIS21) but gaps in data have prevented fuller assessment of suitable methods.</em><br>
+</p></li>
+<li><p><strong>Dimension 1.3: Data use by civil society:</strong> <em>Not included because of lack of established methodology. There are some usable data sources with good coverage, for example from social media but more data is required to help assess and allow for likely biases between and within countries.</em><br>
+</p></li>
+<li><p><strong>Dimension 1.4: Data use by academia:</strong> <em>Not included because of lack of established methodology. We have not been able to find usable data sources with global coverage on which a new methodology could be developed.</em><br>
+</p></li>
+<li><p><strong>Dimension 1.5: Data use by international organizations:</strong> <em>Reliability/Usefulness of Poverty, Child Mortality, Debt Statistics, safely managed drinking water, and labor force statistics data for international agencies using metadata. We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further</em></p></li>
+<li><p><strong>Dimension 2.1: Data Releases:</strong> <em>SPI.D2.1.GDDS - SDDS/e-GDDS subscription. This is a good data source but we recognize that it is a proxy for the concept we are seeking to capture rather than a direct measurement.</em><br>
+</p></li>
+<li><p><strong>Dimension 2.2: Online access:</strong> <em>SPI.D2.2.Openness.subscore ODIN Open Data Openness score. This is a well-established data source with good country coverage. In using this indicator, it is important to describe carefully what is captured since the purpose of ODIN is different to the purpose of the SPI.</em><br>
+</p></li>
+<li><p><strong>Dimension 2.3: Advisory/ Analytical Services:</strong> <em>Not included because of lack of established methodology. We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further.</em><br>
+</p></li>
+<li><p><strong>Dimension 2.4: Data services:</strong> <em>SPI.D2.4.NADA NADA metadata. We have not been able to find usable data sources with global coverage on which a new methodology could be developed.</em></p></li>
+<li><p><strong>Dimension 3.1: Social Statistics:</strong> <em>Average score for Goal 1-6 indicators. The primary data source is the UN SDG database. Whilst this is a database with comprehensive coverage that all countries have signed up to, it is clear that many (particularly developed countries) are not yet submitting their available national data. Scores for these countries are likely to represent an indicator of their willingness to submit national data rather than their performance in calculating the indicators. For OECD countries, we supplement the UN SDG database with comparable data submitted to the OECD following the methodology in Measuring Distance to the SDG Targets 2020: An Assessment of Where OECD Countries Stand (https://www.oecd.org/sdd/measuring-distance-to-the-sdg-targets-2020-a8caf3fa-en.htm). </em></p></li>
+<li><p><strong>Dimension 3.2: Economic Statistics:</strong> <em>Average score for Goal 7-12 indicators. See 3.1.</em><br>
+</p></li>
+<li><p><strong>Dimension 3.3: Environmental Statistics:</strong> <em>Average score for Goal 13-15 indicators. See 3.1.</em><br>
+</p></li>
+<li><p><strong>Dimension 3.4: Institutional Statistics:</strong> <em>Average score for Goal 16-17 indicators. See 3.1.</em></p></li>
+<li><p><strong>Dimension 4.1: Censuses and Surveys:</strong> <em>Average score Census and Survey Indicators indicators. In this release of the SPI the data and methods used for this indicator are the same as for the previous SPI. Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt outdated practices for censuses and surveys.</em></p></li>
+<li><p><strong>Dimension 4.2: Administrative Data:</strong> <em>Average score for CRVS indicator. Social Protection, Education, and Labor admin data indicators not included because of lack of established methodolgy. While our team identified several promising sources for administrative data from the World Bank’s ASPIRE team, UNESCO, and ILO, incomplete coverage across countries made us drop these indicators from our index. A major research and data collection effort is needed from all custodian agencies to fill in this information, so that a more comprehensive picture of administrative data availability can be produced. </em><br>
+</p></li>
+<li><p><strong>Dimension 4.3: Geospatial Data:</strong> <em>SPI.D4.3.GEO.first.admin.level - Geospatial data available at 1st Admin Level. We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the ability of the national statistical system to produce geospatial data. A major research and data collection effort is needed via GGIM to fill in this information, so that a more comprehensive picture of geospatial data capability at the national level can be produced. Until this is done, it we cannot even assess the scale of the data gaps in a comparable way. </em></p></li>
+<li><p><strong>Dimension 4.4: Private/citizen generated data:</strong> <em>Not included because of lack of established methodology. Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.</em></p></li>
+<li><p><strong>Dimension 5.1: Legislation and governance:</strong> <em>Included in dashboard, but not index because of insufficient country coverage. A global database of statistical and data legislation and governance practice would be a valuable resource for capacity building in general not just for the SPI.</em><br>
+</p></li>
+<li><p><strong>Dimension 5.2: Standards and Methods:</strong> <em>Average score for Standards and Methods indicators. In this release of the SPI the data and methods used for this indicator are the same as for the previous SPI. Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt only traditional standards and methods and neglect innovative solutions that may be more valid in the current context. </em><br>
+</p></li>
+<li><p><strong>Dimension 5.3: Skills:</strong> <em>Not included because of lack of established methodology or suitable data sources</em><br>
+</p></li>
+<li><p><strong>Dimension 5.4: Partnerships:</strong> <em>Not included because of lack of established methodology or suitable data sources</em><br>
+</p></li>
+<li><p><strong>Dimension 5.5: Finance:</strong> <em>Included in dashboard, but not index because of insufficient country coverage and concerns that the indicator has biases that would lead to misleading incentives. </em></p></li>
+</ul>
+<p>This process of eliminating some dimensions due to lack of established methodology or country coverage results in 12 dimensions This includes 1 on data use, 3 on data services, 4 on data products, 3 on data sources, and 1 on data infrastructure.</p>
+</section>
+</section>
+<section id="data-use-1" class="level1">
+<h1>Data Use</h1>
+<section id="dimension-1.1-data-use-by-national-legislature" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-1.1-data-use-by-national-legislature">Dimension 1.1: Data use by national legislature</h2>
+<p>Not included because of lack of established methodology.</p>
+</section>
+<section id="dimension-1.2-data-use-by-national-executive-branch" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-1.2-data-use-by-national-executive-branch">Dimension 1.2: Data use by national executive branch</h2>
+<p>Not included because of lack of established methodology.</p>
+</section>
+<section id="dimension-1.3-data-use-by-civil-society" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-1.3-data-use-by-civil-society">Dimension 1.3: Data use by civil society</h2>
+<p>Not included because of lack of established methodology.</p>
+</section>
+<section id="dimension-1.4-data-use-by-academia" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-1.4-data-use-by-academia">Dimension 1.4: Data use by academia</h2>
+<p>Not included because of lack of established methodology. Work is in progress to measure this area.</p>
+</section>
+<section id="dimension-1.5-data-use-by-international-organizations" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-1.5-data-use-by-international-organizations">Dimension 1.5: Data use by international organizations</h2>
+<p>The following indicator will measure how useful data sources produced in national statistics systems are for international organizations. We gather five measures of how useful or reliable country produced measures are for international organizations. The first on comparability of poverty estimates for the World Bank reporting on international poverty. A second on statistics on child mortality for the UN Inter-agency Group for Child Mortality Estimation. A third on accuracy of debt reporting as classified by the World Bank. A fourth on whether data sources are available to the JMP for estimating safely managed drinking water. A fifth on whether a suitable data source is available to the ILO for producing estimates of labor force participation. Each of these will be described in greater detail below.</p>
+<p>We recognize that these data sources provide only partial coverage but consider that they do at least provide some indication of the performance of the national statistical system. With more complete data sources it would be possible to assess this further.</p>
+<section id="poverty-comparability" class="level3">
+<h3 class="anchored" data-anchor-id="poverty-comparability">Poverty Comparability</h3>
+<p>The first measure examines whether comparable poverty estimates are produced by countries over time. The World Bank’s Povcalnet has introduced a comparability indicator for whether the country produces comparable poverty estimates over time. https://blogs.worldbank.org/opendata/apples-apples-povcalnet-introduces-new-comparability-indicator. This metadata has been compiled by the Country Poverty Economists in the World Bank’s Poverty and Equity Global Practice. From the Povcalnet team:</p>
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<p>As countries frequently improve household surveys and measurement methodologies, strict comparability of poverty estimates over time is often limited. Strictly comparable poverty estimates within a country require a consistent production process, including the sampling frame, questionnaires, the methodological construction of the welfare aggregates and poverty lines, a consistent deflation of prices in time and space, among many other considerations. Thus, the assessment of comparability is country-dependent and relies on the knowledge of the Country Poverty Economist and Regional Poverty Teams of the Poverty Global Practice, as well as close dialogue with national data producers with intimate knowledge of the survey design and methodology. Within a country, we assume comparability of poverty estimates over time unless there is a known change to survey methodology, measurement or data structure. More details on the comparability metadata database can be found in Atamanov et al.&nbsp;(2019) (section 4). The database can be downloaded in csv.</p>
+</blockquote>
+</blockquote>
+<p>The data will be pulled from the WDI and combined with metadata from the Povcalnet</p>
+<p>Scoring is as follows: Quality (1 points total): 1 Point. Comparable data lasting at least two years within past 5 years 0.5 Point. Comparable data lasting at least two years within past 10 years<br>
+0 Points. No comparable data within past 10 years</p>
+<p>Note: Because poverty surveys are reported with a lag, we start measuring whether comparable poverty data is available two years prior. So for 2019, the window starts from 2017 to give countries time to prepare poverty estimates based on surveys.</p>
+</section>
+<section id="mortality-rate-under-5-per-1000-live-births" class="level3">
+<h3 class="anchored" data-anchor-id="mortality-rate-under-5-per-1000-live-births">Mortality rate, under-5 (per 1,000 live births)</h3>
+<p>UN IGME makes all available source data on child mortality rates available with metadata on quality.</p>
+<p>https://childmortality.org/data/</p>
+<p>Source data can bedivided into data included in the estimation model and data excluded from the estimation model (note: data may be excluded for any one of several reasons including data quality or by rule—for example, indirect estimates from summary birth histories are not included when direct estimates from the full birth history from the same survey or census are available).</p>
+<p>Countries are assessed for whether they can produce indicators over a five or ten year period that meet the thresholds set by UN IGME.</p>
+<p>Quality (1 points total): 1 Point. Two indicators that met UN IGME standards within past 5 years<br>
+0.5 Point. Two indicators that met UN IGME standards within past 10 years<br>
+0 Points. No data that met UN IGME standards within past 10 years</p>
+<p>Data was pulled on April 13, 2020.</p>
+<p>Note: Because surveys are reported with a lag, we start measuring whether comparable poverty data is available two years prior. So for 2019, the window starts from 2017 to give countries time to prepare poverty estimates based on surveys.</p>
+</section>
+<section id="debt-service-ppg-and-imf-only-of-exports-of-goods-services-and-primary-income" class="level3">
+<h3 class="anchored" data-anchor-id="debt-service-ppg-and-imf-only-of-exports-of-goods-services-and-primary-income">Debt service (PPG and IMF only, % of exports of goods, services and primary income)</h3>
+<p>For this indicator, Debt service (PPG and IMF only, % of exports of goods, services and primary income), we will pull data from the WDI but modify the scoring using the WDI metadata on whether the external debt data is actual, estimated, or preliminary. The status “as reported (actual)” indicates that the country was fully current in its reporting under the DRS and that World Bank staff are satisfied that the reported data give an adequate and fair representation of the country’s total public debt. “Preliminary” data are based on reported or collected information, but because of incompleteness or other reasons, an element of staff estimation is included. “Estimated” data indicate that countries are not current in their reporting and that a significant element of staff estimation has been necessary for producing the data tables.</p>
+<p>Scoring is as follows:</p>
+<p>Quality:</p>
+<p>1 Points. Actual value 0.67 Points. Preliminary value 0.33 Points. Estimated value 0 Points. No value</p>
+</section>
+<section id="safely-managed-water" class="level3">
+<h3 class="anchored" data-anchor-id="safely-managed-water">Safely Managed Water</h3>
+<p>The WHO/UNCIECF JMP has estimated the safely managed water access by a simple linear regression based on the following data sources: Nationally representative household surveys (e.g.&nbsp;DHS, MICS) ; Population and housing censuses; Administrative data (such as regulatory agencies); Service provider data. JMP has provided the country files that include the original data sources.</p>
+<p>From the methodology: https://washdata.org/sites/default/files/JMP%20methodology-Apr-2018-5.pdf:</p>
+<blockquote class="blockquote">
+<p>The indicator for SDG 6.1, safely managed drinking water services are defined as use of an improved drinking water source which is accessible on premises, available when needed and free from contamination. To make an estimate of safely managed services, information on the use of improved drinking water sources is combined with information on the accessibility, availability and quality of drinking water. Estimates are based on the minimum value of these criteria or, where estimates are available for both rural and urban, a population weighted average of the two. The JMP reports estimates for safely managed drinking water provided information is available for at least 50 per cent of the population on quality of drinking water and either accessibility or availability.</p>
+</blockquote>
+<p>We take therefore useable data if it appears within an 8 year window of the reference date. Scoring:</p>
+<ul>
+<li>1 Point. At least two estimates, with breakdowns for urban/rural areas, within an 8 year window<br>
+</li>
+<li>0.5 Points. At least two estimates, but not an urban/rural breakdown, within an 8 year window<br>
+</li>
+<li>0 Points. Otherwise</li>
+</ul>
+</section>
+<section id="labor-force-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="labor-force-statistics">Labor Force Statistics</h3>
+<p>In this indicator, we compare estimated labor force participation data compared to data submitted to the ILO based on national data. ILOSTAT is the source of both datasets. Countries are given full points if an indicator is produced by a national government based on a labor force survey and if that estimate is within 10 percentage points of the ILO estimated value. If either of those two components are missing, but one is available, then the country gets 0.5 points. O points otherwise.</p>
+<p>The ILO modelled estimates series provides a complete set of internationally comparable labour statistics, including both nationally-reported observations and imputed data for countries with missing data. The imputations are produced through a series of econometric models maintained by the ILO. The purpose of estimating labour market indicators for countries with missing data is to obtain a balanced panel data set so that, every year, regional and global aggregates with consistent country coverage can be computed. These allow the ILO to analyse global and regional estimates of key labour market indicators and related trends. Moreover, the resulting country-level data, combining both reported and imputed observations, constitute a unique, internationally comparable data set on labour market indicators.</p>
+<p>From the ILO methodological note (https://www.ilo.org/ilostat-files/Documents/TEM.pdf), ILO has the following preferences for data with Labor force surveys coming first:</p>
+<blockquote class="blockquote">
+<p>With regard to the first criterion, in order for labour market data to be included in a particular model, they must be derived from a labour force survey, a household survey or, more rarely, a population census. National labour force surveys are generally similar across countries and present the highest data quality. Hence, the data derived from such surveys are more readily comparable than data obtained from other sources. Strict preference is therefore given to labour force survey-based data in the selection process. However, many developing countries, which lack the resources to carry out a labour force survey, do report labour market information on the basis of other types of household surveys or population censuses. Consequently, because of the need to balance the competing goals of data comparability and data coverage, some (non-labour force survey) household survey data and, more rarely, population census-based data are included in the models.</p>
+</blockquote>
+<p>Scoring:<br>
+1 Point. Country has a labor force survey based estimate in past 5 years of labor force participation broken down by total, male, and female &amp; estimated value from ILO is within 10 percentage points of value reported by national government.<br>
+0.5 Point. Country has labor force survey or is within 10 points of ILO, but not both<br>
+0 Points. Otherwise</p>
+</section>
+</section>
+</section>
+<section id="data-services-1" class="level1">
+<h1>Data Services</h1>
+<section id="dimension-2.1-data-releases" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-2.1-data-releases">Dimension 2.1: Data Releases</h2>
+<p>Data Dissemination Standard (SDDS) and electronic General Data Dissemination Standard (e-GDDS) were established by the International Monetary Fund (IMF) for member countries that have or that might seek access to international capital markets, to guide them in providing their economic and financial data to the public. Although subscription is voluntary, the subscribing member needs to be committed to observing the standard and provide information about its data and data dissemination practices (metadata). The metadata are posted on the IMF’s SDDS and e-GDDS websites.</p>
+<p>1 Point. Subscribing to IMF SDDS+ or SDDS standards 0.5 Points. Subscribing to IMF e-GDDS standards 0 Points. Otherwise</p>
+</section>
+<section id="dimension-2.2-online-access" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-2.2-online-access">Dimension 2.2: Online access</h2>
+<p>This indicator measures the richness and openness of online access.</p>
+<section id="source" class="level3">
+<h3 class="anchored" data-anchor-id="source">Source</h3>
+<p>Our source for this indicator is Open Data Watch. Data was last accessed on December 17, 2020. From Open Data watch:</p>
+<blockquote class="blockquote">
+<p>The Open Data Inventory (ODIN) assesses the coverage and openness of official statistics to help identify gaps, promote open data policies, improve access, and encourage dialogue between national statistical offices (NSOs) and data users. ODIN 2018/19 includes 178 countries, including most all OECD countries. Two-year comparisons are for all countries with two years of data between 2015-2017. Scores can be compared across topics and countries.</p>
+</blockquote>
+<p>We use the Openness score from ODIN for this measure. The score ranges from 0-100. It contains scores along five dimensions:<br>
+- Machine Readability<br>
+- Non-Proprietary format<br>
+- Download Options<br>
+- Metadata Available<br>
+- Terms of Use</p>
+<p>A description for each of these five dimensions is below:</p>
+<section id="machine-readability" class="level4">
+<h4 class="anchored" data-anchor-id="machine-readability">Machine Readability</h4>
+<blockquote class="blockquote">
+<p>Openness element 1 measures whether data are available in a machine readable format such as XLS, XLSX, CSV, and JSON. Machine-readable file formats allow users to easily process data using a computer. When data are made available in formats that are not machine readable, users cannot easily access and modify the data, which severely restricts the scope of the data’s use. In many cases PDF versions of datasets within reports can be useful to users, as the text in conjunction with the tables gives context and explanation to the figures which helps less technical users understand the data. Because of this, ODIN assessments do not penalize countries for making datasets available in PDF or other non-machine readable formats, unless these formats are the only option for exporting data. Scores are not penalized for having identical datasets in both machine readable and non-readable formats. Compression formats do not affect machine readability scores, only non-proprietary scores (see next page). Scores are given by data category, not indicator.</p>
+</blockquote>
+</section>
+<section id="non-proprietary-format" class="level4">
+<h4 class="anchored" data-anchor-id="non-proprietary-format">Non-Proprietary format</h4>
+<blockquote class="blockquote">
+<p>For the elements of data openness, scoring is calculated independent of the data coverage. If data files are compressed in RAR format (which is proprietary), data for that indicator should be considered proprietary even if the enclosing files are in a non-proprietary format. Files compressed in ZIP format are not affected.</p>
+</blockquote>
+</section>
+<section id="download-options" class="level4">
+<h4 class="anchored" data-anchor-id="download-options">Download Options</h4>
+<blockquote class="blockquote">
+<p>Openness element 3 measures whether data are available with three different download options: bulk download, API, and user-select options. A bulk download is defined at the indicator level as: The ability to download all data recorded in ODIN for a particular indicator (all years, disaggregations, and subnational data) in one file, or multiple files that can be downloaded simultaneously. Bulk downloads are a key component of the Open Definition, which requires data to be “provided as a whole . . . and downloadable via the internet.” User-selectable download options are defined as: Users must be able to select an indicator and at least one other dimension to create a download or table. These dimensions could include time periods, geographic disaggregations, or other recommended disaggregations. An option to choose the file export format is not enough. API stands for Application Programming Interface. Ideally, APIs should be clearly displayed on the website. ODIN assumes APIs are available for the NSOs entire data collection used in ODIN, unless clearly stated. ODIN assessors do not register for use or test API functionality. For more information on APIs, see this guide. Scores are given by data category, not indicator.</p>
+</blockquote>
+</section>
+<section id="metadata-available" class="level4">
+<h4 class="anchored" data-anchor-id="metadata-available">Metadata Available</h4>
+<blockquote class="blockquote">
+<p>Openness element 4 measures whether metadata are made available. Scores are given by data category, not indicator. Metadata are defined at the indicator level as information about how the data are defined/calculated and collected. ODIN classifies metadata into three categories: (1) Not Available, (2) Incomplete, and (3) Complete. The following must be available to classify metadata as complete: • Definition of the indicator, or definition of key terms used in the indicator description (as applicable), or how the indicator was calculated. • Publication (date of upload), compilation date (date on front of report is not sufficient), or date dataset was last updated. • Name of data source (what agency collected the data). If the metadata only have one or two of the above elements, they are scored as incomplete</p>
+</blockquote>
+</section>
+<section id="terms-of-use" class="level4">
+<h4 class="anchored" data-anchor-id="terms-of-use">Terms of Use</h4>
+<blockquote class="blockquote">
+<p>Openness element 5 measures whether data are available with an open terms of use. Generally, terms of use (TOU) will apply to an entire website or data portal (unless otherwise specified). In these cases, all data found on the same website and/or portal will receive the same score. If a portal is located on the same domain as the NSO website, the terms of use on the NSO site will apply. If the data are located on a portal or website on a different domain, another terms of use will need to be present. For a policy/ license to be accepted as a terms of use, it must clearly refer to the data found on the website. Terms of use that refer to nondata content (such as pictures, logos, etc.) of the website are not considered. A copyright symbol at the bottom of the page is not sufficient. A sentence indicating a recommended citation format is not sufficient. Terms of use are classified the following ways: (1) Not Available, (2) Restrictive, (3) Semi-Restrictive, and (4) Open. If the TOU contains one or more restrictive clauses, it receives 0 points and is classified as “restrictive.” Restrictive clauses include:</p>
+</blockquote>
+<p>For more details, consult the ODIN technical documentation: https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit#</p>
+</section>
+</section>
+</section>
+<section id="dimension-2.3-advisory-analytical-services" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-2.3-advisory-analytical-services">Dimension 2.3: Advisory/ Analytical Services</h2>
+<p>No established source exists for this indicator. This is experimental.</p>
+</section>
+<section id="dimension-2.4-data-services" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-2.4-data-services">Dimension 2.4: Data services</h2>
+<p>NSO has a listing of surveys and microdata sets that can provide the necessary data and reference for follow-up. Upon well-defined request and procedure per the national law and practice, users and practitioners can obtain the data collected from the households and businesses when needed.</p>
+<p>NADA is an open source microdata cataloging system, compliant with the Data Documentation Initiative (DDI) and Dublin Core’s RDF metadata standards. It serves as a portal for researchers to browse, search, compare, apply for access, and download relevant census or survey datasets, questionnaires, reports and other information.</p>
+<p>1 Point. Yes 0 Points. No</p>
+</section>
+</section>
+<section id="data-products-1" class="level1">
+<h1>Data Products</h1>
+<p>Cleaning for Data Products Indicators. Data Products (16 Indicators):</p>
+<ul>
+<li>GOAL 1: No Poverty<br>
+</li>
+<li>GOAL 2: Zero Hunger<br>
+</li>
+<li>GOAL 3: Good Health and Well-beingq<br>
+</li>
+<li>GOAL 4: Quality Education<br>
+</li>
+<li>GOAL 5: Gender Equality<br>
+</li>
+<li>GOAL 6: Clean Water and Sanitation<br>
+</li>
+<li>GOAL 7: Affordable and Clean Energy<br>
+</li>
+<li>GOAL 8: Decent Work and Economic Growth<br>
+</li>
+<li>GOAL 9: Industry, Innovation and Infrastructure<br>
+</li>
+<li>GOAL 10: Reduced Inequality<br>
+</li>
+<li>GOAL 11: Sustainable Cities and Communities<br>
+</li>
+<li>GOAL 12: Responsible Consumption and Production<br>
+</li>
+<li>GOAL 13: Climate Action<br>
+</li>
+<li><strong>GOAL 14: Life Below Water is excluded because this indicator is not relevant for landlocked countries</strong><br>
+</li>
+<li>GOAL 15: Life on Land<br>
+</li>
+<li>GOAL 16: Peace and Justice Strong Institutions<br>
+</li>
+<li>GOAL 17: Partnerships to achieve the Goal</li>
+</ul>
+<section id="methodology" class="level2">
+<h2 class="anchored" data-anchor-id="methodology">Methodology</h2>
+<ol type="1">
+<li><p>Download the latest SDG indicator data from UN Stats (https://unstats.un.org/sdgs/indicators/en/#) using their API</p></li>
+<li><p>Transform the data so that for each indicator we can create a score documenting whether a value exists for the country in a year, whether the value is based on country data, country data adjusted, estimated, or modelled data according the UN Stats metadata. <strong>This will only include tier 1 indicators, as of November 2020.</strong>.</p></li>
+<li><p>Combine the resulting data into a single set of indicators for use in the Statistical Performance Indicators dashboard and index by calculating the average across SDGs. This results in 17 total indicators. One for each SDG, which is the share of indicators with a value meeting quality criteria defined below.</p></li>
+</ol>
+<p>Below is a paraphrased description from the UN stats webpage (https://unstats.un.org/sdgs/indicators/indicators-list/):</p>
+<p>The global indicator framework for Sustainable Development Goals was developed by the Inter-Agency and Expert Group on SDG Indicators (IAEG-SDGs) and agreed upon at the 48th session of the United Nations Statistical Commission held in March 2017.</p>
+<p>The global indicator framework includes 231 unique indicators. Please note that the total number of indicators listed in the global indicator framework of SDG indicators is 247. However, twelve indicators repeat under two or three different targets.</p>
+<p>For each value of the indicator, the responsible international agency has been requested to indicate whether the national data were adjusted, estimated, modelled or are the result of global monitoring. The “nature” of the data in the SDG database is determined as follows:</p>
+<ul>
+<li><p>Country data (C): Produced and disseminated by the country (including data adjusted by the country to meet international standards);</p></li>
+<li><p>Country data adjusted (CA): Produced and provided by the country, but adjusted by the international agency for international comparability to comply with internationally agreed standards, definitions and classifications;</p></li>
+<li><p>Estimated (E): Estimated based on national data, such as surveys or administrative records, or other sources but on the same variable being estimated, produced by the international agency when country data for some year(s) is not available, when multiple sources exist, or when there are data quality issues;</p></li>
+<li><p>Modelled (M): Modelled by the agency on the basis of other covariates when there is a complete lack of data on the variable being estimated;</p></li>
+<li><p>Global monitoring data (G): Produced on a regular basis by the designated agency for global monitoring, based on country data. There is no corresponding figure at the country level.</p></li>
+</ul>
+<p>For each indicator, we will produce a value for each country with the following coding scheme:</p>
+<ul>
+<li><strong>1 Point</strong>: Indicator exists and the value is based on the <strong>country</strong>, <strong>country data adjusted</strong>, or <strong>estimated or Global Monitoring</strong> data<br>
+</li>
+<li><strong>0 Points</strong>: Indicator <strong>based on modeled data or does not exists</strong></li>
+</ul>
+<p>We give countries no credit for modeled data, because the country did not produce indicators in a form that was directly usable for reporting on an SDG indicator.</p>
+<p>When we average over all indicators in a goal to get a score, we compute a 5 year moving average to avoid year to year variability in reporting for SDGs. The overall score for an SDG is then the 5 year average of the percentage of indicator values based on <strong>country</strong>, <strong>country data adjusted</strong>, or <strong>estimated or Global Monitoring</strong> data that were available for the SDG.</p>
+<p>Because of the large data files and runtime of the program to calculate these indicators, the code to produce these indicators is in a separate file. https://github.com/stacybri/UN_Stats_SDG_Indicators_SPI/blob/master/02_programs/un_stats_cleaning.Rmd</p>
+</section>
+<section id="dimensions-3.1---3.17" class="level2">
+<h2 class="anchored" data-anchor-id="dimensions-3.1---3.17">Dimensions 3.1 - 3.17</h2>
+</section>
+</section>
+<section id="data-sources-1" class="level1">
+<h1>Data Sources</h1>
+<section id="dimension-4.1-censuses-and-surveys" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-4.1-censuses-and-surveys">Dimension 4.1: censuses and surveys</h2>
+<p>This indicator draws from data collected by the Statistical Performance Indicators team. The following censuses and surveys are considered:</p>
+<ul>
+<li>Population &amp; Housing census<br>
+</li>
+<li>Agriculture census<br>
+</li>
+<li>Business/establishment census<br>
+</li>
+<li>Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey<br>
+</li>
+<li>Agriculture survey<br>
+</li>
+<li>Labor Force Survey<br>
+</li>
+<li>Health/Demographic survey<br>
+</li>
+<li>Business/establishment survey</li>
+</ul>
+<section id="scoring-details" class="level3">
+<h3 class="anchored" data-anchor-id="scoring-details">Scoring details</h3>
+<section id="population-housing-census" class="level4">
+<h4 class="anchored" data-anchor-id="population-housing-census">Population &amp; Housing census</h4>
+<p>Population censuses collect data on the size, distribution and composition of population and information on a broad range of social and economic characteristics of the population. It also provides sampling frames for household and other surveys. Housing censuses provide information on the supply of housing units, the structural characteristics and facilities, and health and the development of normal family living conditions. Data obtained as part of the population census, including data on homeless persons, are often used in the presentation and analysis of the results of the housing census. It is recommended that population and housing censuses be conducted at least every 10 years.</p>
+<p>1 Point. Population census done within last 10 years<br>
+0.5 Points. Population census done within last 20 years 0 Points. Otherwise</p>
+</section>
+<section id="agriculture-census" class="level4">
+<h4 class="anchored" data-anchor-id="agriculture-census">Agriculture census</h4>
+<p>Agriculture censuses collect information on agricultural activities, such as size of holding, land tenure, land use, employment and production, and provide basic structural data and sampling frames for agricultural surveys. Censuses of agriculture normally involves collecting key structural data by complete enumeration of all agricultural holdings, in combination with more detailed structural data using sampling methods. It is recommended that agricultural censuses be conducted at least every 10 years.</p>
+<p>1 Point. census done within last 10 years<br>
+0.5 Points. census done within last 20 years<br>
+0 Points. Otherwise</p>
+</section>
+<section id="businessestablishment-census" class="level4">
+<h4 class="anchored" data-anchor-id="businessestablishment-census">Business/establishment census</h4>
+<p>Business/establishment censuses provide valuable information on all economic activities, number of employed and size of establishments in the economy. Business Register information is establishment-based and includes business location, organization type (e.g.&nbsp;subsidiary or parent), industry classification, and operating data (e.g., receipts and employment).</p>
+<p>1 Point. census done within last 10 years<br>
+0.5 Points. census done within last 20 years<br>
+0 Points. Otherwise</p>
+</section>
+<section id="household-survey-on-incomeconsumptionexpenditurebudgetintegrated-survey" class="level4">
+<h4 class="anchored" data-anchor-id="household-survey-on-incomeconsumptionexpenditurebudgetintegrated-survey">Household Survey on income/consumption/expenditure/budget/Integrated Survey</h4>
+<p>These surveys collect data on household income (including income in kind), consumption and expenditure. They typically include income, expenditure, and consumption surveys, household budget surveys, integrated surveys. It is recommended that surveys on income and expenditure be conducted at least every 3 to 5 years.</p>
+<p>1 Point. 3 or more surveys done within past 10 years<br>
+0.67 Points. 2 surveys done within past 10 years;<br>
+0.33 Points. 1 survey done within past 10 years;<br>
+0 Points. None within past 10 years</p>
+</section>
+<section id="agriculture-survey" class="level4">
+<h4 class="anchored" data-anchor-id="agriculture-survey">Agriculture survey</h4>
+<p>Agricultural surveys refer to surveys of agricultural holdings based on the sampling frames established by the agricultural census. These are surveys on agricultural land, production, crops and livestock, aquaculture, labor and cost, and time use. Some issues, such as gender and food security, are of interest to most agriculture surveys.</p>
+<p>1 Point. 3 or more surveys done within past 10 years<br>
+0.67 Points. 2 surveys done within past 10 years;<br>
+0.33 Points. 1 survey done within past 10 years;<br>
+0 Points. None within past 10 years</p>
+</section>
+<section id="labor-force-survey" class="level4">
+<h4 class="anchored" data-anchor-id="labor-force-survey">Labor Force Survey</h4>
+<p>Labor force survey is a standard household-based survey of work-related statistics at the national and sub-national employment or unemployment levels, rates or trends. The surveys also provide the characteristics of the employed or unemployed, including labor force status by age or gender, breakdowns between employees and the self-employed, public versus private sector employment, multiple job-holding, hiring, job creation, and duration of unemployment.</p>
+<p>1 Point. 3 or more surveys done within past 10 years<br>
+0.67 Points. 2 surveys done within past 10 years;<br>
+0.33 Points. 1 survey done within past 10 years;<br>
+0 Points. None within past 10 years</p>
+</section>
+<section id="healthdemographic-survey" class="level4">
+<h4 class="anchored" data-anchor-id="healthdemographic-survey">Health/Demographic survey</h4>
+<p>Health surveys collect information on various aspects of health of populations, such as health expenditure, access, utilization, and outcomes. They typically include Demographic and Health Surveys. It is recommended that health surveys be conducted at least every 3 to 5 years.</p>
+<p>1 Point. 3 or more surveys done within past 10 years<br>
+0.67 Points. 2 surveys done within past 10 years;<br>
+0.33 Points. 1 survey done within past 10 years;<br>
+0 Points. None within past 10 years</p>
+</section>
+<section id="businessestablishment-survey" class="level4">
+<h4 class="anchored" data-anchor-id="businessestablishment-survey">Business/establishment survey</h4>
+<p>The business/establishment survey provides information on employment, hours, and earnings of employees from a sample of business establishments including private and public, entities that are classified based on an establishment’s principal activity from the business or establishment census. Establishment surveys include surveys of businesses, farms, and institutions. They may ask for information about the establishment itself and/or employee characteristics and demographics.</p>
+<p>1 Point. 3 or more surveys done within past 10 years<br>
+0.67 Points. 2 surveys done within past 10 years;<br>
+0.33 Points. 1 survey done within past 10 years;<br>
+0 Points. None within past 10 years</p>
+</section>
+</section>
+</section>
+<section id="dimension-4.2-administrative-data" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-4.2-administrative-data">Dimension 4.2: administrative data</h2>
+<p>The following indicator checks whether administrative data is available for the following topic areas: Social Protection, Education, Population &amp; Health, and Labor</p>
+<p>Average score for CRVS indicator. Social Protection, Education, and Labor admin data indicators not included because of lack of established methodology.</p>
+<!-- ### Education Admin Data -->
+<!-- * UNESCO UIS has database containing data we can use on administrative data systems.  Database is accessible using the UIS bulk download service at https://apiportal.uis.unesco.org/bdds.  Data was last updated on September 29, 2020.   -->
+<!-- * We score countries based on whether there is: -->
+<!--   * Data tracking SDG 4.1.2 Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education     -->
+<!--   <!-- * Data tracking whether countries produce the following from administrative data sources: -->
+<p>–&gt;</p>
+<!--   <!--     * Out-of-school rate by school age and sex -->
+<p>–&gt; <!--   <!--     * 4.2.2 Participation rate in organized learning (one year before the official primary entry age), by sex --> –&gt;</p>
+<!-- In order to score this indicator, we calculate the fraction of the indicators that were produced in a country in a year.  In order to smooth out variation from year to year in reporting or conducting national assessments, we take a moving 5 year average. -->
+<section id="population-health-admin-data" class="level3">
+<h3 class="anchored" data-anchor-id="population-health-admin-data">Population &amp; Health Admin Data</h3>
+<ul>
+<li>This indicator is formed using World Bank metadata on whether the Civil Registration and Vital Statistics (CRVS) system is complete in the country.</li>
+</ul>
+<p>Civil registration is the act of recording and documenting of vital events in a person’s life (including birth, marriage, divorce, adoption, and death and cause of death) and is a fundamental function of national governments. Birth registration establishes an individual’s legal identity at birth. A legal identity, name, nationality, and proof of age, are important human rights. They enable individuals to be included in various government, social and private services, and include the right to vote, etc. Vital statistics are compiled using civil registration information on these vital events. The availability of reliable and up-to-date vital statistics depends on the level of development of civil registration programs. An effective civil registration and vital statistics (CRVS) system is critical for planning and monitoring programs across several sectors.</p>
+<p>Data comes from the UNSD Global SDG monitoring database and also the WDI. Scoring is as follows:<br>
+1 Points. Both of at least 90% of births registered and at least 75% of deaths registered 0.5 Points. One of at least 90% of births registered or at least 75% of deaths registered 0 Points. Neither</p>
+<p>Source: World Bank WDI Metadata.</p>
+<!-- ### Labor Admin Data -->
+<!-- * ILO shared database containing all administrative data sources used to produce ILO statistics (ILOSTAT)    -->
+<!--   * May not be comprehensive of all administrative datasets available in a country     -->
+<!--   * But gives some indication of whether labor statistics produced using Admin data -->
+<!-- * Database contains the following admin sources:     -->
+<!--   * Insurance records    -->
+<!--   * Labour inspectorate records    -->
+<!--   * Records of employers' organizations    -->
+<!--   * Employment office records -->
+<!--   * Records of workers' organizations -->
+<!--   * Other administrative records and related sources -->
+<!-- * Database extends from 2010 to 2020 and covers 177 countries.  -->
+<!-- To produce a score, we calculate the percentage of these six admin sources above that are available for a country in a given year.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score. -->
+</section>
+</section>
+<section id="dimension-4.3-geospatial-data" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-4.3-geospatial-data">Dimension 4.3: geospatial data</h2>
+<p>New indicator based on references to geospatial data in metadata relating to content on NSO website. We recognize that this data source provides only limited coverage but consider that it does at least provide some indication of the ability of the national statistical system to produce geospatial data. A major research and data collection effort is needed via GGIM to fill in this information, so that a more comprehensive picture of geospatial data capability at the national level can be produced. Until this is done, it we cannot even assess the scale of the data gaps in a comparable way.</p>
+<section id="source-1" class="level3">
+<h3 class="anchored" data-anchor-id="source-1">Source</h3>
+<p>Our source for this indicator is Open Data Watch. From Open Data watch:</p>
+<blockquote class="blockquote">
+<p>The Open Data Inventory (ODIN) assesses the coverage and openness of official statistics to help identify gaps, promote open data policies, improve access, and encourage dialogue between national statistical offices (NSOs) and data users. ODIN 2018/19 includes 178 countries, including most all OECD countries. Two-year comparisons are for all countries with two years of data between 2015-2017. Scores can be compared across topics and countries.</p>
+</blockquote>
+<p>We use their indicator on whether indicators are available at the first or second administrative level. To identify the first administrative levels, ODIN largely draws on the ISO 3166-2 standard. In many countries, first administrative levels refer to governorates, regions, or province. No official list exists for the second administrative level classifications. If geographical disaggregation exists that does not qualify as first administrative level, assume that the data are disaggregated to the second administrative level as long as the classification appears to be a further divisions of the first administrative level.</p>
+<p>Scoring for the ODIN indicators for geospatial information is below:</p>
+<ul>
+<li>1 point if all published data in a data category are available at first/second administrative level.<br>
+</li>
+<li>0.5 points if some published data in a data category are available at first/second administrative level.<br>
+</li>
+<li>0 points if no data are available at this level</li>
+</ul>
+<p>There are 21 data categories.</p>
+<p>Social Statistics<br>
+1. Population and Vital Statistics<br>
+2. Education Facilities<br>
+3. Education Outcomes<br>
+4. Health Facilities<br>
+5. Health Outcomes<br>
+6. Reproductive Health<br>
+7. Gender Statistics<br>
+8. Crime and Justice Statistics<br>
+9. Poverty Statistics</p>
+<p>Economic Statistics<br>
+10. National Accounts<br>
+11. Labor Statistics<br>
+12. Price Indexes<br>
+13. Government Finance<br>
+14. Money and Banking<br>
+15. International Trade<br>
+16. Balance of Payments</p>
+<p>Environmental Statistics<br>
+17. Land Use<br>
+18. Resource Use<br>
+19. Energy Use<br>
+20. Pollution<br>
+21. Built Environment</p>
+<p>For the first administrative unit: Money &amp; Banking, International Trade, and Balance of Payments are not scored for this element. For various indicators, lenient interpretations are used for first administrative divisions.</p>
+<p>For the second administrative unit: Money &amp; Banking, International Trade, Balance of Payments, National Accounts, Government Finance ,Pollution, Energy Use, Price Indexes, and Resource Use are not scored for this element. For various indicators within categories, second administrative level data is not required as well.</p>
+<p>In the scores we present below, we show a score between 0 and 1 with a maximum score of 1, which would mean the country has geo data in full for 100% of elements. A score of 0 indicates no data at all for any elements.</p>
+<p>More details on the geographic disaggregation considerations can be found in their technical manual:</p>
+<p>https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit</p>
+</section>
+</section>
+<section id="dimension-4.4-privatecitizen-generated-data" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-4.4-privatecitizen-generated-data">Dimension 4.4: private/citizen generated data</h2>
+<p>New indicator based on references to private/citizen generated data in metadata relating to content on NSO website. Not included because of lack of established methodology. Currently no comprehensive source exists to measure the use of private and citizen generated data in national statistical systems, and this should be another area where more data collection is needed by the international community.</p>
+<!-- ### Covid Mobility Data Availability  -->
+<!-- We have seen an increased use of private/citizen generated data during the COVID-19 pandemic.  One way in which it has been used is for tracking mobility of citizens to understand the social distancing measures citizens are taking.  As a measure of private/citizen generated data we make use of Apple and Google Mobility tracking data made publicly available during the pandemic. -->
+<!-- Source:  -->
+<!-- Google LLC "Google COVID-19 Community Mobility Reports". -->
+<!-- https://www.google.com/covid19/mobility/ Accessed: 2020-07-23. -->
+<!-- Apple "Mobility Trends Reports". -->
+<!-- https://www.apple.com/covid19/mobility/ Accessed: 2020-07-23. -->
+</section>
+</section>
+<section id="data-infrastructure-1" class="level1">
+<h1>Data Infrastructure</h1>
+<p>Data Infrastructure (5 Indicators):<br>
+- 5.1_DILG - Indicator 5.1: legislation and governance<br>
+- 5.2_DISM - Indicator 5.2: standards<br>
+- 5.3_DISK - Indicator 5.3: skills<br>
+- 5.4_DIPN - Indicator 5.4: partnerships<br>
+- 5.5_DIFI - Indicator 5.5: finance</p>
+<section id="dimension-5.1-legislation-and-governance" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-5.1-legislation-and-governance">Dimension 5.1: legislation and governance</h2>
+<p>The legislation and governance indicator will be drawn from SDG indicator 17.18.2 (national statistical legislation compliance with UN Fundamental Principles of Official Statistics), existence of National Statistical Council, national statistical strategy generation, national statistical plan. Also include some other legislative aspects that foster good use of statistics eg freedom of information, privacy/transparency, good governance (eg free and fair elections).</p>
+<p>This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)</p>
+<p>Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics. Scores of 0 given a score of zero.</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2025-02-14</p>
+</section>
+<section id="dimension-5.2-standards" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-5.2-standards">Dimension 5.2: standards</h2>
+<p>Average score for Standards and Methods indicators. In this release of the SPI the data and methods used for this indicator are the same as for the previous SPI. Further work could improve the validity of this indicator and reduce the risk that countries may be incentivized to adopt only traditional standards and methods and neglect innovative solutions that may be more valid in the current context.</p>
+<section id="system-of-national-accounts-in-use" class="level3">
+<h3 class="anchored" data-anchor-id="system-of-national-accounts-in-use">5.2.1 System of National Accounts in use</h3>
+<p>The national accounts data are compiled using the concepts, definitions, framework, and methodology of the System of National Account 2008 (SNA2008) or European System of National and Regional Accounts (ESA 2010). The manual has evolved to meet the changing economic structure, to follow systematic accounting and ensure international compatibility.</p>
+<p>Scoring: 1 point for using SNA2008 or ESA 2010, 0.5 points for using SNA 1993 or ESA 1995, 0 points otherwise</p>
+</section>
+<section id="national-accounts-base-year" class="level3">
+<h3 class="anchored" data-anchor-id="national-accounts-base-year">5.2.2 National Accounts base year</h3>
+<p>National accounts base year is the year used as the base period for constant price calculations in the country’s national accounts. It is recommended that the base year of constant price estimates be changed periodically to reflect changes in economic structure and relative prices.</p>
+<p>1 point for chained price, 0.5 for reference period within past 10 years, 0 points otherwise.</p>
+</section>
+<section id="classification-of-national-industry" class="level3">
+<h3 class="anchored" data-anchor-id="classification-of-national-industry">5.2.3 Classification of national industry</h3>
+<p>The industrial production data are compiled using the International Standard Industrial Classification of All Economic Activities (ISIC) Rev.4 and Statistical Classification of Economic Activities in the European Community (NACE) Rev.2. ISIC Rev.4 is a standard classification of economic activities arranged so that entities can be classified per the activity they carry out using criteria such as input, output and use of the products produced, more emphasis has been given to the character of the production process in defining and delineating ISIC classes for international comparability. The manual and classification have changed to cover the complete scope of industrial production, employment, and GDP and other statistical areas.</p>
+<p>1 Point. Latest version is adopted (ISIC Rev 4, NACE Rev 2 or a compatible classification)</p>
+<p>0.5 Points. Previous version is used (ISIC Rev 3, NACE Rev 1 or a compatible classification)</p>
+<p>0 Points. Otherwise</p>
+</section>
+<section id="cpi-base-year" class="level3">
+<h3 class="anchored" data-anchor-id="cpi-base-year">5.2.4 CPI base year</h3>
+<p>Consumer Price Index serves as indicators of inflation and reflects changes in the cost of acquiring a fixed basket of goods and services by the average consumer.<br>
+Weights are usually derived from consumer expenditure surveys and the CPI base year refers to the year the weights were derived. It is recommended that the base year be changed periodically to reflect changes in expenditure structure.</p>
+<p>1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 points. Otherwise</p>
+</section>
+<section id="classification-of-household-consumption" class="level3">
+<h3 class="anchored" data-anchor-id="classification-of-household-consumption">5.2.5 Classification of household consumption</h3>
+<p>Classification of Individual Consumption According to Purpose (COICOP) is used in household budget surveys, consumer price indices and international comparisons of gross domestic product (GDP) and its component expenditures.<br>
+Although COICOP is not strictly linked to any particular model of consumer behavior, the classification is designed to broadly reflect differences in income elasticities. It is an integral part of the SNA1993 and more detailed subdivision of the classes provide comparability between countries and between statistics in these different areas.</p>
+<p>1 Point. Follow Classification of Individual Consumption by Purpose (COICOP) 0 Points. Otherwise</p>
+</section>
+<section id="classification-of-status-of-employment" class="level3">
+<h3 class="anchored" data-anchor-id="classification-of-status-of-employment">5.2.6 Classification of status of employment</h3>
+<p>Classification of status of employment refers to employment data that are compiled using the current international standard International Classification of Status in Employment (ICSE-93). It classifies jobs with respect to the type of explicit or implicit contract of employment between the job holder and the economic unit in which he or she is employed. Therefore, it aims to provide the basis for production of internationally comparable statistics on the employment relationship, including the distinction between salaried employment and self-employment.</p>
+<p>1 Point. Follow International Labour Organization, International Classification of Status in Employment (ICSE-93) or 2012 North American Industry Classification System (NAICS). 0 Points Otherwise.</p>
+</section>
+<section id="central-government-accounting-status" class="level3">
+<h3 class="anchored" data-anchor-id="central-government-accounting-status">5.2.7 Central government accounting status</h3>
+<p>Government finance accounting status refers to the accounting basis for reporting central government financial data. For many countries’ government finance data, have been consolidated into one set of accounts capturing all the central government’s fiscal activities and following noncash recording basis.<br>
+Budgetary central government accounts do not necessarily include all central government units, the picture they provide of central government activities is usually incomplete.</p>
+<p>1 Point. Consolidated central government accounting follows noncash recording basis<br>
+0.5 Points. Consolidated central government accounting follows cash recording basis<br>
+0 Points. Otherwise</p>
+</section>
+<section id="compilation-of-government-finance-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="compilation-of-government-finance-statistics">5.2.8 Compilation of government finance statistics</h3>
+<p>(GFSM) in use for compiling the data. It provides guidelines on the institutional structure of governments and the presentation of fiscal data in a format similar to business accounting with a balance sheet and income statement plus guidelines on the treatment of exchange rate and other valuation adjustments. The latest manual GFSM2014 is harmonized with the SNA2008.</p>
+<p>1 Point. Follow the latest Government Finance Statistical Manual (2014)/ ESA2010<br>
+0.5 Points. Previous version is used (GFSM 2001)<br>
+0 Points. Otherwise</p>
+</section>
+<section id="compilation-of-monetary-and-financial-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="compilation-of-monetary-and-financial-statistics">5.2.9 Compilation of monetary and financial statistics</h3>
+<p>Compilation of monetary and financial statistics refers to the Monetary and Financial Statistics Manual (MFSM) in use. It covers concepts, definitions, classifications of financial instruments and sectors, and accounting rules, and provides a comprehensive analytic framework for monetary and financial planning and policy determination. The Monetary and Finance Statistics: Compilation Guide (2008) provides detailed guidelines for the compilation of monetary and financial statistics in addition to MFSM.</p>
+<p>1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016) 0 Points. Otherwise</p>
+</section>
+<section id="business-process" class="level3">
+<h3 class="anchored" data-anchor-id="business-process">5.2.10 Business process</h3>
+<p>The Generic Statistical Business Process Model (GSBPM) aims to describe statistics production in a general and process-oriented way. It is used both within and between statistical offices as a common basis for work with statistics production in different ways, such as quality, efficiency, standardization, and process-orientation. It is used for all types of surveys, and “business” is not related to “business statistics” but refers to the statistical office, simply expressed.</p>
+<p>1 Point. GSBPM is in use 0 Points. Otherwise</p>
+</section>
+</section>
+<section id="dimension-5.3-skills" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-5.3-skills">Dimension 5.3: Skills</h2>
+<p>Two indicators from the GovTech Maturity Index are included in this dimension. These include the Core Government Systems Index (CGSI) and the GovTech Enablers Index (GTEI). From the documentation: https://www.worldbank.org/en/programs/govtech/gtmi</p>
+<p>The GovTech Maturity Index (GTMI) was developed as part of the GovTech Initiative to introduce a measure of GovTech maturity in four focus areas — supporting core government systems, enhancing service delivery, mainstreaming citizen engagement, and fostering GovTech enablers— and to assist practitioners in the design of new digital transformation projects. Constructed for 198 economies, the GTMI is the most comprehensive measure of digital transformation in the public sector. The GTMI is not intended to create a ranking or assess a country’s readiness for or performance of GovTech; rather, it is intended to complement existing tools and diagnostics by providing a baseline and benchmark for GovTech maturity and identifying areas for improvement.</p>
+<p>The 2022 version of the GTMI is the simple average of the normalized scores of four components:</p>
+<p>CGSI: The Core Government Systems Index (17 indicators) captures the key aspects of a whole-of-government approach, including government cloud, interoperability framework and other platforms.</p>
+<p>GTEI: The GovTech Enablers Index (16 indicators) captures strategy, institutions, laws, and regulations, as well as digital skills, and innovation policies and programs, to foster GovTech.</p>
+</section>
+<section id="dimension-5.4-partnerships" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-5.4-partnerships">Dimension 5.4: partnerships</h2>
+<p>Not included because of lack of established methodology or suitable data sources.</p>
+</section>
+<section id="dimension-5.5-finance" class="level2">
+<h2 class="anchored" data-anchor-id="dimension-5.5-finance">Dimension 5.5: finance</h2>
+<p>Indicator based on SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). This indicator measures whether the national statistical plan under implementation is fully funded. It relates to SDG 17.18.3 and is based on the annual Status Report on National Strategies for the Development of Statistics (NSDS).</p>
+<p>Scores is 1 if the country has a national statistical plan that is fully funded and under implementation. Scores of 0 given a score of zero.</p>
+<p>The source is Paris 21 and UNSD. Data accessed using UNSD SDG API on 2025-02-14</p>
+<p>Source of this data is UNSD and Paris21.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

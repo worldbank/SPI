@@ -2,12 +2,15 @@
 title: 'Technical Documentation on Data Sources and Methods for Statistical Performance Indicators'
 author: "Brian Stacy"
 date: "`r Sys.Date()`"
-output: bookdown::gitbook
-output_dir: "`r paste0(here::here(),'/docs')`"
+output: html
+execute:
+    eval: false
+    warning: false
+    echo: false
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, fig.height=7, fig.width=10, eval=FALSE, warning=FALSE)
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, fig.height=7, fig.width=10, include=FALSE, eval=FALSE)
 
 library(tidyverse)
 library(here)
@@ -207,11 +210,11 @@ un_pull <- function(series,start, end) {
 
 
 
-# Introduction {-}
+# Introduction
 
 This document contains a detailed technical description of the Statistical Performance Indicators (SPI).  The document contains a detailed description of each indicator, as well as the R code used to construct each indicator.
 
-## Motivation {-}
+## Motivation
 
 The primary purpose of the statistical system is to help users of statistics make better decisions or to hold those decision makers accountable. In the words of Principle 1 of the Fundamental Principles of Official Statistics, the statistics must “meet the test of practical utility”, serving “the Government, the economy and the public with data about the economic, demographic, social and environmental situation.” 
 
@@ -223,7 +226,7 @@ Yet, there are several areas in which the existing SCI can be improved. First, i
 
 Since its launch in 2004, the SCI’s methodology and coverage have basically remained the same, while the global data landscape has changed significantly. NSSs have made significant advancements with data collection and dissemination practices. At the same time, the adoption of the Sustainable Development Goals (SDGs) set an ambitious development agenda for the next 15 years on ending poverty, protecting the planet, and ensuring prosperity for all by 2030. This, in turn, increased the demand for data and raised the bar for national statistical systems regarding their capacity to produce high-quality data. We thus propose to improve the current SCI to better suit the changing global data landscape.
 
-## Overview of the New SPI {-}
+## Overview of the New SPI
 
 The new Statistical Performance Indicators (SPI) builds on the SCI, which the World Bank has regularly published since 2004.  Our new SPI will cover many of the same elements as the SCI, such as statistical methodology, source data, and periodicity, but will also expand into new areas. The goals are to offer a framework that was forward looking, measured less mature statistical systems as well as advanced systems, covered the entire national statistical system, not just the National Statistical Office (NSO), and gives countries incentives to build a modern statistical system.  We also are committing to making our project open data and open code to build confidence in our work.
 
@@ -265,28 +268,28 @@ We are collecting data on indicators for the 22 pillars above. For dissemination
 
 
 
-## Pillars of the new SPI {-}
+## Pillars of the new SPI
 
 
 A quick primer on names. We refer to the 5 rows in the framework in Figure 1 as pillars. We refer to the 22 cells in the framwork in Figure 1 as dimensions. Finally, each dimension may be composed of multiple indicators. For instance, the dimension on censuses and surveys is made up indicators on whether population censuses have been conducted, agriculture censuses, labor force surveys, etc.
 
-### Data use {-}
+### Data use
 
 The data use pillar is segmented by user type. The tiles on the Dashboard provide an indicator of use of statistics respectively by the legislature, executive, civil society (including sub-national actors), academia and international bodies. A mature system would score well across the tiles. Areas for development would be highlighted by weaker scores in that domain enabling questions to be asked about prioritization amongst user groups and why existing services are not resulting in higher use of national statistics in that segment.
 
-### Data services {-}
+### Data services
 
 The data services pillar is segmented by service type. The tiles on the Dashboard provide an indicator of the quality of data releases, the richness and openness of online access, the effectiveness of advisory and analytical services related to statistics and the availability and use of data services such as secure microdata access. Advisory and analytical services might incorporate elements related to data stewardship services including ethical consideration of proposals and calling out misuse of data in accordance with the Fundamental Principles of Official Statistics.
 
-### Data products {-}
+### Data products
 
 The data products pillar is segmented by topic and organized into social, economic, environmental and institutional domains using the typology of the Sustainable Development Goals. This approach enables comparisons across countries and anchors the system in the 2030 agenda so that a global view can be generated whilst enabling different emphasis to be applied in different countries to reflect the user needs of that country.
 
-### Data sources {-}
+### Data sources
 
 The data sources pillar is segmented between sources generated by the statistical office (censuses and surveys) and sources accessed from elsewhere (administrative data, geospatial data, private sector data and citizen generated data). The appropriate balance between these types of source will vary depending on the institutional setting and maturity of the statistical system in each country. High scores should reflect the extent to which the sources being utilized enable the necessary statistical indicators to be generated. For example, a low score on environment statistics may reflect a lack of use of (and low score for) geospatial data. This linkage, which is inherent in the data cycle approach, should help highlight areas for investment if country needs are to be met.
 
-### Data infrastructure {-}
+### Data infrastructure
 
 The data infrastructure pillar is segmented into hard and soft infrastructure segments itemizing essential cross cutting requirements for an effective statistical system. The segments are:   
 
@@ -301,7 +304,7 @@ The data infrastructure pillar is segmented into hard and soft infrastructure se
   5. Finance, both domestically and from donors    
   
 
-### Description of Dimensions {-}
+### Description of Dimensions
 
 Below is a brief description of the 22 dimensions in our framework.  
 
@@ -334,7 +337,7 @@ pillars_tab %>%
 
 ```
 
-## SPI Data {-}
+## SPI Data
 
 Thanks to a large scale data collection effort by several organizations including the World Bank, IMF, Open Data Watch, PARIS21, the ILO, WHO, UNESCO, IHSN, and the UN, among others, we were able to compile 54 indicators covering 14 out of our 22 dimensions for our dashboard.  These 54 indicators do allow us to provide data for each of our 5 pillars on data use, data services, data products, data sources, and data infrastructure.  Yet, there remain major gaps in what we are able to measure, and the gaps may mean we are flying blind in some areas on whether statistical systems are meeting the needs of the public.  Going forward, the international community must work together to fill these gaps.
 
@@ -417,14 +420,10 @@ The first measure examines whether comparable poverty estimates are produced by 
 The data will be pulled from the WDI and combined with metadata from the Povcalnet
 
 Scoring is as follows:
-
 Quality (1 points total):
-
-- 1 Point. Comparable data lasting at least two years within past 5 years	
-
-- 0.5 Point. Comparable data lasting at least two years within past 10 years	
-
-- 0 Points. No comparable data within past 10 years
+1 Point. Comparable data lasting at least two years within past 5 years	
+0.5 Point. Comparable data lasting at least two years within past 10 years	
+0 Points. No comparable data within past 10 years
 
 Note: Because poverty surveys are reported with a lag, we start measuring whether comparable poverty data is available two years prior.  So for 2019, the window starts from 2017 to give countries time to prepare poverty estimates based on surveys.
 
@@ -539,12 +538,9 @@ Source data can bedivided into data included in the estimation model and data ex
 Countries are assessed for whether they can produce indicators over a five or ten year period that meet the thresholds set by UN IGME.
 
 Quality (1 points total):
-
-- 1 Point. Two indicators that met UN IGME standards within past 5 years		
-
-- 0.5 Point. Two indicators that met UN IGME standards within past 10 years		
-
-- 0 Points. No data that met UN IGME standards within past 10 years
+1 Point. Two indicators that met UN IGME standards within past 5 years		
+0.5 Point. Two indicators that met UN IGME standards within past 10 years		
+0 Points. No data that met UN IGME standards within past 10 years
 
 
 Data was pulled on April 13, 2020.
@@ -654,14 +650,10 @@ Scoring is as follows:
 
 Quality: 
 
-- 1 Points. Actual value
-
-- 0.67 Points. Preliminary value
-
-- 0.33 Points. Estimated value
-
+1 Points. Actual value
+0.67 Points. Preliminary value
+0.33 Points. Estimated value
 0 Points. No value
-
 
 
 ```{r metadata_pull, echo=FALSE}
@@ -719,11 +711,9 @@ From the methodology: https://washdata.org/sites/default/files/JMP%20methodology
 
 We take therefore useable data if it appears within an 8 year window of the reference date.  Scoring:
 
-- 1 Point. At least two estimates, with breakdowns for urban/rural areas, within an 8 year window      
-  
-- 0.5 Points. At least two estimates, but not an urban/rural breakdown, within an 8 year window   
-  
-- 0 Points. Otherwise
+  * 1 Point. At least two estimates, with breakdowns for urban/rural areas, within an 8 year window       
+  * 0.5 Points. At least two estimates, but not an urban/rural breakdown, within an 8 year window   
+  * 0 Points. Otherwise
 
 
 ```{r safely_managed, eval=FALSE, include=FALSE}
@@ -899,12 +889,9 @@ From the ILO methodological note (https://www.ilo.org/ilostat-files/Documents/TE
 > With regard to the first criterion, in order for labour market data to be included in a particular model, they must be derived from a labour force survey, a household survey or, more rarely, a population census. National labour force surveys are generally similar across countries and present the highest data quality. Hence, the data derived from such surveys are more readily comparable than data obtained from other sources. Strict preference is therefore given to labour force survey-based data in the selection process. However, many developing countries, which lack the resources to carry out a labour force survey, do report labour market information on the basis of other types of household surveys or population censuses. Consequently, because of the need to balance the competing goals of data comparability and data coverage, some (non-labour force survey) household survey data and, more rarely, population census-based data are included in the models.
 
 Scoring:    
-
-- 1 Point. Country has a labor force survey based estimate in past 5 years of labor force participation broken down by total, male, and female & estimated value from ILO is within 10 percentage points of value reported by national government.   
-
-- 0.5 Point. Country has labor force survey or is within 10 points of ILO, but not both    
-
-- 0 Points. Otherwise
+1 Point. Country has a labor force survey based estimate in past 5 years of labor force participation broken down by total, male, and female & estimated value from ILO is within 10 percentage points of value reported by national government.   
+0.5 Point. Country has labor force survey or is within 10 points of ILO, but not both    
+0 Points. Otherwise
 
 ```{r lfp}
 
@@ -1069,11 +1056,9 @@ Although subscription is voluntary, the subscribing member needs to be committed
 information about its data and data dissemination practices (metadata).  The metadata are posted on the IMF's SDDS and 
 e-GDDS websites.       
 
-- 1 Point. Subscribing to IMF SDDS+ or SDDS standards	
-
-- 0.5 Points. Subscribing to IMF e-GDDS standards	
-
-- 0 Points. Otherwise
+1 Point. Subscribing to IMF SDDS+ or SDDS standards	
+0.5 Points. Subscribing to IMF e-GDDS standards	
+0 Points. Otherwise
 
 
 
@@ -1159,16 +1144,11 @@ Our source for this indicator is Open Data Watch.  Data was last accessed on Dec
 > between national statistical offices (NSOs) and data users. ODIN 2018/19 includes 178 countries, including most all OECD countries. Two-year comparisons are for all countries with
 > two years of data between 2015-2017. Scores can be compared across topics and countries.
 
-We use the Openness score from ODIN for this measure.  The score ranges from 0-100.  It contains scores along five dimensions: 
-
+We use the Openness score from ODIN for this measure.  The score ranges from 0-100.  It contains scores along five dimensions:    
   - Machine Readability   
-  
   - Non-Proprietary format    
-  
   - Download Options    
-  
   - Metadata Available    
-  
   - Terms of Use
   
 A description for each of these five dimensions is below:
@@ -1343,9 +1323,8 @@ collected from the households and businesses when needed.
 
 NADA is an open source microdata cataloging system, compliant with the Data Documentation Initiative (DDI) and Dublin Core’s RDF metadata standards. It serves as a portal for researchers to browse, search, compare, apply for access, and download relevant census or survey datasets, questionnaires, reports and other information.
 
-- 1 Point. Yes
-
-- 0 Points. No
+1 Point. Yes
+0 Points. No
 
 ```{r nada}
 
@@ -1540,11 +1519,9 @@ development of normal family living conditions.  Data obtained as part of the po
 including data on homeless persons, are often used in the presentation and analysis of the results 
 of the housing census.  It is recommended that population and housing censuses be conducted at least every 10 years. 
 
-- 1 Point. Population census done within last 10 years	
-
-- 0.5 Points. Population census done within last 20 years	
-
-- 0 Points. Otherwise
+1 Point. Population census done within last 10 years	
+0.5 Points. Population census done within last 20 years	
+0 Points. Otherwise
 
 ####  Agriculture census
 
@@ -1556,11 +1533,9 @@ enumeration of all agricultural holdings, in combination with more detailed
 structural data using sampling methods.  It is recommended that agricultural
 censuses be conducted at least every 10 years.
 
-- 1 Point.  census done within last 10 years	
-
-- 0.5 Points.  census done within last 20 years	
-
-- 0 Points. Otherwise
+1 Point.  census done within last 10 years	
+0.5 Points.  census done within last 20 years	
+0 Points. Otherwise
 
 #### Business/establishment census
 
@@ -1570,11 +1545,9 @@ Business Register information is establishment-based and includes business
 location, organization type (e.g. subsidiary or parent), industry
 classification, and operating data (e.g., receipts and employment).
 
-- 1 Point.  census done within last 10 years	
-
-- 0.5 Points.  census done within last 20 years	
-
-- 0 Points. Otherwise
+1 Point.  census done within last 10 years	
+0.5 Points.  census done within last 20 years	
+0 Points. Otherwise
 
 #### Household Survey on income/consumption/expenditure/budget/Integrated Survey 
 
@@ -1584,13 +1557,10 @@ consumption surveys, household budget surveys, integrated surveys.  It is
 recommended that surveys on income and expenditure be conducted at least every
 3 to 5 years.
 
-- 1 Point. 3 or more surveys done within past 10 years	
-
-- 0.67 Points. 2 surveys done within past 10 years; 	
-
-- 0.33 Points. 1 survey done within past 10 years; 	
-
-- 0 Points. None within past 10 years
+1 Point. 3 or more surveys done within past 10 years	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 
 #### Agriculture survey
@@ -1601,13 +1571,10 @@ agricultural land, production, crops and livestock, aquaculture, labor and
 cost, and time use.  Some issues, such as gender and food security, are of
 interest to most agriculture surveys.
 
-- 1 Point. 3 or more surveys done within past 10 years	
-
-- 0.67 Points. 2 surveys done within past 10 years; 	
-
-- 0.33 Points. 1 survey done within past 10 years; 	
-
-- 0 Points. None within past 10 years
+1 Point. 3 or more surveys done within past 10 years	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 ####  Labor Force Survey 
 
@@ -1619,13 +1586,10 @@ between employees and the self-employed, public versus private sector
 employment, multiple job-holding, hiring, job creation, and duration of
 unemployment.
 
-- 1 Point. 3 or more surveys done within past 10 years	
-
-- 0.67 Points. 2 surveys done within past 10 years; 	
-
-- 0.33 Points. 1 survey done within past 10 years; 	
-
-- 0 Points. None within past 10 years
+1 Point. 3 or more surveys done within past 10 years	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 ####  Health/Demographic survey
 
@@ -1634,13 +1598,10 @@ populations, such as health expenditure, access, utilization, and outcomes.
 They typically include Demographic and Health Surveys.  It is recommended that
 health surveys be conducted at least every 3 to 5 years.
 
-- 1 Point. 3 or more surveys done within past 10 years	
-
-- 0.67 Points. 2 surveys done within past 10 years; 	
-
-- 0.33 Points. 1 survey done within past 10 years; 	
-
-- 0 Points. None within past 10 years
+1 Point. 3 or more surveys done within past 10 years	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 ####  Business/establishment survey
 
@@ -1652,13 +1613,10 @@ surveys include surveys of businesses, farms, and institutions.  They may ask
 for information about the establishment itself and/or employee characteristics
 and demographics.
 
-- 1 Point. 3 or more surveys done within past 10 years	
-
-- 0.67 Points. 2 surveys done within past 10 years; 	
-
-- 0.33 Points. 1 survey done within past 10 years; 	
-
-- 0 Points. None within past 10 years
+1 Point. 3 or more surveys done within past 10 years	
+0.67 Points. 2 surveys done within past 10 years; 	
+0.33 Points. 1 survey done within past 10 years; 	
+0 Points. None within past 10 years
 
 
 
@@ -2089,11 +2047,8 @@ spi_mapper('unesco_map', 'SPI.D4.2.2.EDU', 'Education Administrative Data Availa
 Civil registration is the act of recording and documenting of vital events in a person’s life (including birth, marriage, divorce, adoption, and death and cause of death) and is a fundamental function of national governments. Birth registration establishes an individual’s legal identity at birth. A legal identity, name, nationality, and proof of age, are important human rights. They enable individuals to be included in various government, social and private services, and include the right to vote, etc. Vital statistics are compiled using civil registration information on these vital events. The availability of reliable and up-to-date vital statistics depends on the level of development of civil registration programs. An effective civil registration and vital statistics (CRVS) system is critical for planning and monitoring programs across several sectors. 
 
 Data comes from the UNSD Global SDG monitoring database and also the WDI.  Scoring is as follows:    
-
 1 Points. Both of at least 90% of births registered and at least 75% of deaths registered
-
 0.5 Points. One of at least 90% of births registered or at least 75% of deaths registered
-
 0 Points. Neither
 
 Source: World Bank WDI Metadata.  
@@ -2606,9 +2561,7 @@ The legislation and governance indicator will be drawn from SDG indicator 17.18.
 
 This indicator measures whether the national statistical legislation complies with United Nations Fundamental Principles of Statistics (SDG 17.18.2)
 
-Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics.
-
-Scores of 0 given a score of zero.
+Scores is 1 if the country has a national statistical legislation compliant with United Nations Fundamental Principles of Statistics.  Scores of 0 given a score of zero.
 
 The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Date()`
 
@@ -2714,13 +2667,7 @@ spi_previous_vintage_d5 <- read_csv(file=paste(raw_dir, "/previous_vintages/","S
  has evolved to meet the changing economic structure, to follow systematic accounting 
  and ensure international compatibility. 
  
- Scoring: 
- 
- - 1 point for using SNA2008 or ESA 2010, 
- 
- - 0.5 points for using SNA 1993 or ESA 1995, 
- 
- - 0 points otherwise
+ Scoring: 1 point for using SNA2008 or ESA 2010, 0.5 points for using SNA 1993 or ESA 1995, 0 points otherwise
  
 ```{r snau}
 
@@ -2750,11 +2697,7 @@ National accounts base year is the year used as the base period for constant pri
 calculations in the country's national accounts.  It is recommended that the base year of 
 constant price estimates be changed periodically to reflect changes in economic structure and relative prices. 
 
-- 1 point for chained price, 
-
-- 0.5 for reference period within past 10 years, 
-
-- 0 points otherwise.
+1 point for chained price, 0.5 for reference period within past 10 years, 0 points otherwise.
 
 ```{r naby}
 
@@ -2799,11 +2742,11 @@ D5.2.2.NABY <- read_csv(paste(raw_dir, "5.2_DISM","D5.2.2.NABY_raw_metadata.csv"
  comparability.  The manual and classification have changed to cover the complete scope of industrial 
  production, employment, and GDP and other statistical areas.
 
-- 1 Point. Latest version is adopted (ISIC Rev 4, NACE Rev 2 or a compatible classification)  
+1 Point. Latest version is adopted (ISIC Rev 4, NACE Rev 2 or a compatible classification)  
 
-- 0.5 Points.  Previous version is used (ISIC Rev 3, NACE Rev 1 or a compatible classification)
+0.5 Points.  Previous version is used (ISIC Rev 3, NACE Rev 1 or a compatible classification)
 
-- 0 Points. Otherwise
+0 Points. Otherwise
 
 ```{r cnin}
 
@@ -2838,11 +2781,7 @@ Consumer Price Index serves as indicators of inflation and reflects changes in t
  refers to the year the weights were derived.  It is recommended that the base year be
  changed periodically to reflect changes in expenditure structure.  
  
--  1 Point. Annual chain linking. 
-
-- 0.5 Points. Base year in last 10 years. 
-
-- 0 points. Otherwise
+ 1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 points. Otherwise
  
 ```{r cpiby}
 
@@ -2947,9 +2886,7 @@ income elasticities.  It is an integral part of the SNA1993 and more detailed
 subdivision of the classes provide comparability between countries and between 
 statistics in these different areas.    
 
-- 1 Point. Follow Classification of Individual Consumption by Purpose (COICOP)	
-
-- 0 Points.	Otherwise
+1 Point. Follow Classification of Individual Consumption by Purpose (COICOP)	0 Points.	Otherwise
 
 ```{r hous}
 
@@ -3043,9 +2980,7 @@ Classification of status of employment refers to employment data that are
  basis for production of internationally comparable statistics on the employment 
  relationship, including the distinction between salaried employment and self-employment.  
  
-- 1 Point. Follow International Labour Organization, International Classification of Status in Employment (ICSE-93) or 2012 North American Industry Classification System (NAICS). 
-
-- 0 Points Otherwise. 
+1 Point. Follow International Labour Organization, International Classification of Status in Employment (ICSE-93) or 2012 North American Industry Classification System (NAICS). 0 Points Otherwise. 
  
 ```{r empl}
 
@@ -3080,11 +3015,9 @@ the central government's fiscal activities and following noncash recording basis
 Budgetary central government accounts do not necessarily include all central government 
 units, the picture they provide of central government activities is usually incomplete.  
 
-- 1 Point. Consolidated central government accounting follows noncash recording basis	 
-
-- 0.5 Points. Consolidated central government accounting follows cash recording basis	 
-
-- 0 Points. Otherwise 
+1 Point. Consolidated central government accounting follows noncash recording basis	 
+0.5 Points. Consolidated central government accounting follows cash recording basis	 
+0 Points. Otherwise 
 
 ```{r cgov}
 
@@ -3209,11 +3142,9 @@ business accounting with a balance sheet and income statement plus guidelines on
 treatment of exchange rate and other valuation adjustments.  The latest manual GFSM2014 
 is harmonized with the SNA2008. 
 
-- 1 Point. Follow the latest Government Finance Statistical Manual (2014)/ ESA2010	
-
-- 0.5 Points. Previous version is used (GFSM 2001)	
-
-- 0 Points. Otherwise
+1 Point. Follow the latest Government Finance Statistical Manual (2014)/ ESA2010	
+0.5 Points. Previous version is used (GFSM 2001)	
+0 Points. Otherwise
 
 
 ```{r fina}
@@ -3249,9 +3180,8 @@ accounting rules, and provides a comprehensive analytic framework for monetary a
 determination.  The Monetary and Finance Statistics: Compilation Guide (2008) provides detailed guidelines for 
 the compilation of monetary and financial statistics in addition to MFSM. 
 
-- 1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
-
-- 0 Points. Otherwise
+1 Point. Follow the latest Monetary and Finance Statistics Manual (2000) or Monetary and Finance Statistics: Compilation Guide (2008/2016)
+0 Points. Otherwise
 
 ```{r mony}
 
@@ -3359,9 +3289,8 @@ statistics production in different ways, such as quality, efficiency, standardiz
 and process-orientation.  It is used for all types of surveys, and "business" is not 
 related to "business statistics" but refers to the statistical office, simply expressed.  
 
-- 1 Point. GSBPM is in use
-
-- 0 Points. Otherwise
+1 Point. GSBPM is in use
+0 Points. Otherwise
 
 ```{r gsbp}
 
@@ -3489,9 +3418,7 @@ Not included because of lack of established methodology or suitable data sources
 
 Indicator based on  SDG indicators (SDG 17.18.3 (national statistical plan that is fully funded and under implementation). This indicator measures whether the national statistical plan under implementation is fully funded. It relates to SDG 17.18.3 and is based on the annual Status Report on National Strategies for the Development of Statistics (NSDS).
 
-- Scores is 1 if the country has a national statistical plan that is fully funded and under implementation.  
-
-- Scores of 0 given a score of zero.
+Scores is 1 if the country has a national statistical plan that is fully funded and under implementation.  Scores of 0 given a score of zero.
 
 The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Date()`
 
