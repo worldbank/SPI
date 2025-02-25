@@ -296,7 +296,10 @@ study_df_hh <- study_df_internal
 study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep = "")) %>%
   filter(#drop some surveys that are not relevant
     !(grepl("Good Growth Plan", title) |
-    grepl("COVID", title))
+    grepl("COVID", title)),
+    #drop surveys with created date after 2023
+    created<=2023
+    
   )
 saver("study_df_internal", "ag/oth|Agricultural Survey", "D4.1.5.SVY.AGRI_NADA.csv")
 saver("study_df_fao", "ag/oth|Agricultural Survey|hh/oth", "D4.1.5.SVY.AGRI_NADA_FAO.csv")
