@@ -257,7 +257,7 @@ saver <- function(data, indicator, filename) {
 
 
   survey_df <- get(data) %>%
-    filter(grepl("national|nacional", str_to_lower(geog_coverage))) %>% # keep just nationally representative surveys based on metadata
+    filter(grepl("national|nacional|whole", str_to_lower(geog_coverage))) %>% # keep just nationally representative surveys based on metadata
     rename(
       country = nation,
       indicator_date = year_start
