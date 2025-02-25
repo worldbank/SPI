@@ -246,7 +246,11 @@ svy_exclusions<-c(
 
 study_df_internal <- read_csv(paste(output_dir, "microdata_library_surveys.csv", sep = "/")) %>%
   #add exclusions based on country feedback
-  filter(!title %in% svy_exclusions)
+  filter(!title %in% svy_exclusions) %>%
+  filter(#drop some surveys that are not relevant
+    !(grepl("Good Growth Plan", title) 
+  )
+  )
 
 series_types_wb <- study_df_internal %>%
   group_by(series_info) %>%
@@ -289,20 +293,26 @@ saver <- function(data, indicator, filename) {
 study_df_hh <- study_df_internal
 
 # saver('study_df_internal','lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
-study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep = ""))
+study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep = "")) %>%
+  filter(#drop some surveys that are not relevant
+    !(grepl("Good Growth Plan", title) |
+    grepl("COVID", title))
+  )
 saver("study_df_internal", "ag/oth|Agricultural Survey", "D4.1.5.SVY.AGRI_NADA.csv")
-saver("study_df_fao", "ag/oth|Agricultural Survey", "D4.1.5.SVY.AGRI_NADA_FAO.csv")
+saver("study_df_fao", "ag/oth|Agricultural Survey|hh/oth", "D4.1.5.SVY.AGRI_NADA_FAO.csv")
 
 saver("study_df_fao", "ag/census|Agricultural Census", "D4.1.2.CEN.AGRI_NADA_FAO.csv")
 
 
 
 # save FAO and Microdatalib datasets
-ag_svys_df <- study_df_internal %>%
-  select(-c("created", "changed")) %>%
-  bind_rows(study_df_fao)
+ag_svys_df <- bind_rows(
+  read_csv(paste(output_dir, "D4.1.5.SVY.AGRI_NADA.csv", sep = "")),
+  read_csv(paste(output_dir, "D4.1.5.SVY.AGRI_NADA_FAO.csv", sep = ""))
+) 
 
-saver("ag_svys_df", "ag/oth|Agricultural Survey", "D4.1.5.SVY.AGRI_NADA.csv")
+write_excel_csv(ag_svys_df, path = paste(output_dir, "D4.1.5.SVY.AGRI_NADA.csv", sep = "")) # write to csv
+
 
 # use ILO for source of labor force surveys
 survey_df_ilo <- read_csv(paste(output_dir, "ilo_library_public_studies.csv", sep = "")) %>%

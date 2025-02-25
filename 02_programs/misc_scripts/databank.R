@@ -279,6 +279,6 @@ data_bank_df_w_aggregates %>%
     Country=iso3c,
     Series=source_id,
     Time=paste0("YR", date),
-    FootNote=footnote)
-%>% write_excel_csv(paste(output_dir, 'SPI_databank_footnotes.csv', sep="/"))
+    FootNote=footnote) %>% 
+  write_excel_csv(paste(output_dir, 'SPI_databank_footnotes.csv', sep="/"))
 
