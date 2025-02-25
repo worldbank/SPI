@@ -93,16 +93,11 @@ ilo_sources_catalog <- read_csv("https://www.ilo.org/ilostat-files/Documents/sou
 write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catalog.csv", sep = "")) # write to csv
 
 # pull from FAO
-temp <- tempfile()
-fao_base_url <- "https://microdata.fao.org/index.php/catalog/export/json?ps=5000&collection[]=agriculture-census-surveys"
-download.file(fao_base_url, temp)
-study_df_fao <- read_csv(temp) # convert to dataframe
-write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep = "")) # write to csv
-
 
 fao_base_url <- "https://microdata.fao.org/index.php/api/catalog" # define url
 study_request_fao <- fromJSON(paste(fao_base_url, "/search", "?ps=20000", sep = "")) # pull from url
 study_df_fao <- study_request_fao$result$rows
+write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep = "")) # write to csv
 
 # internal use studies from World Bank microdata library
 wb_base_url <- "http://microdatalib.worldbank.org/index.php/api/catalog" # define url
