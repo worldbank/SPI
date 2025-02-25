@@ -37,9 +37,7 @@ First the latest vintage of the SPI data is read from the [SPI github repo](http
 ```{r compdf}
 
 
-SPI_df_v1 <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_data.csv') %>%
-  select(-SPI.D5.3.DISK) #remove this column as it is not in the new data (and is not in the metadata file either
-
+SPI_df_v1 <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_data.csv') 
 SPI_df_new <-  read_csv( file = paste(output_dir, 'SPI_data.csv', sep="/"))          
   
 

@@ -3,7 +3,7 @@ AFG,AF,Afghanistan,Kabul,69.1761,34.5228,SAS,8S,South Asia,SAS,8S,South Asia,LIC
 AGO,AO,Angola,Luanda,13.242,-8.81155,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IBD,XF,IBRD,2020,NA
 ALB,AL,Albania,Tirane,19.8172,41.3317,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2020,Yes
 AND,AD,Andorra,Andorra la Vella,1.5218,42.5075,ECS,Z7,Europe & Central Asia,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2020,NA
-ARE,AE,United Arab Emirates,Abu Dhabi,54.3705,24.4764,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2020,NA
+ARE,AE,United Arab Emirates,Abu Dhabi,54.3705,24.4764,MEA,ZQ,Middle East & North Africa,NA,NA,NA,HIC,XD,High income,LNX,XX,Not classified,2020,Yes
 ARG,AR,Argentina,Buenos Aires,-58.4173,-34.6118,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2020,NA
 ARM,AM,Armenia,Yerevan,44.509,40.1596,ECS,Z7,Europe & Central Asia,ECA,7E,Europe & Central Asia (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2020,Yes
 ATG,AG,Antigua and Barbuda,Saint John's,-61.8456,17.1175,LCN,ZJ,Latin America & Caribbean ,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2020,NA
@@ -120,7 +120,7 @@ MRT,MR,Mauritania,Nouakchott,-15.9824,18.2367,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,
 MUS,MU,Mauritius,Port Louis,57.4977,-20.1605,SSF,ZG,Sub-Saharan Africa ,NA,NA,NA,HIC,XD,High income,IBD,XF,IBRD,2020,NA
 MWI,MW,Malawi,Lilongwe,33.7703,-13.9899,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2020,NA
 MYS,MY,Malaysia,Kuala Lumpur,101.684,3.12433,EAS,Z4,East Asia & Pacific,EAP,4E,East Asia & Pacific (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2020,NA
-NAM,"NA",Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2020,NA
+NAM,NA,Namibia,Windhoek,17.0931,-22.5648,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),UMC,XT,Upper middle income,IBD,XF,IBRD,2020,NA
 NER,NE,Niger,Niamey,2.1073,13.514,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LIC,XM,Low income,IDX,XI,IDA,2020,NA
 NGA,NG,Nigeria,Abuja,7.48906,9.05804,SSF,ZG,Sub-Saharan Africa ,SSA,ZF,Sub-Saharan Africa (excluding high income),LMC,XN,Lower middle income,IDB,XH,Blend,2020,NA
 NIC,NI,Nicaragua,Managua,-86.2734,12.1475,LCN,ZJ,Latin America & Caribbean ,LAC,XJ,Latin America & Caribbean (excluding high income),LMC,XN,Lower middle income,IDX,XI,IDA,2020,NA
