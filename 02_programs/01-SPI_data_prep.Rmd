@@ -1158,16 +1158,35 @@ Quality:
 # WDI metadata was gathered using previous vintages of WDI from 2016-19
 # Metadata was gathered and saved as csv files in the 011_data folder
 
-for (i in 2016:2023) {
-  temp <- read_csv(file = paste(raw_dir, "/metadata/WDI_metadata_",i,".csv", sep="" )) %>%
-    as_tibble(.name_repair='universal') %>%
-    mutate(National.accounts.reference.year=as.numeric(National.accounts.reference.year),
-           date=i)
+for (i in 2016:2025) {
+  temp <- read_csv(file = paste(raw_dir, 
+                                "/metadata/WDI_metadata_",
+                                i,
+                                ".csv", 
+                                sep = "" )) %>%
+    as_tibble(.name_repair = 'universal') %>%
+    mutate(National.accounts.reference.year = as.numeric(National.accounts.reference.year),
+           date = i)
   
-    assign(paste("WDI_metadata",i,sep="_"), temp)
+    assign(paste("WDI_metadata",
+                 i,
+                 sep = "_"), 
+           temp)
 }
 
-WDI_metadata <- bind_rows(WDI_metadata_2016, WDI_metadata_2017, WDI_metadata_2018, WDI_metadata_2019, WDI_metadata_2020, WDI_metadata_2021,WDI_metadata_2022,WDI_metadata_2023) 
+WDI_metadata <- bind_rows(WDI_metadata_2016,
+                          WDI_metadata_2017, 
+                          WDI_metadata_2018, 
+                          WDI_metadata_2019,
+                          WDI_metadata_2020, 
+                          WDI_metadata_2021,
+                          WDI_metadata_2022,
+                          WDI_metadata_2023, 
+                          WDI_metadata_2024, 
+                          WDI_metadata_2025 |> 
+                            rename(Code             = Country.Code, 
+                                   PPP.survey.years = PPP.survey.year) |> 
+                            select(names(WDI_metadata_2024))) 
 ```
 
 
