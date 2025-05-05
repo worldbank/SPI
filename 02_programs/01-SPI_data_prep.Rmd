@@ -31,13 +31,16 @@ library(flextable)
 #set directories
 dir <- here()
 
-raw_dir <- paste(dir, '01_raw_data', sep="/")
-output_dir <- paste(dir, '03_output_data', sep="/")
+raw_dir    <- paste(dir, 
+                    '01_raw_data', 
+                    sep = "/")
+output_dir <- paste(dir, 
+                    '03_output_data', 
+                    sep = "/")
 
 #parameters
-window=5 #set the window for the moving averages
-
-end_date=2023
+window   <- 5 #set the window for the moving averages
+end_date <- 2024 # set for June 2025 update
 
 ```
 
@@ -51,31 +54,41 @@ end_date=2023
 
 span <- c(2004:end_date)
 
-spi_df_empty <- bind_rows(replicate(length(span), wbstats::wb_countries(), simplify = FALSE), .id='date') %>%
-  mutate(date=as.numeric(date)+span[1]-1) %>%
-  filter(region!="Aggregates") # take out the aggregates (LAC, SAR, etc)
+spi_df_empty <- bind_rows(replicate(length(span), 
+                                    wbstats::wb_countries(), 
+                                    simplify = FALSE), 
+                          .id = 'date') %>%
+  mutate(date    = as.numeric(date) + 
+           span[1] - 1) %>%
+  filter(region != "Aggregates") # take out the aggregates (LAC, SAR, etc)
 
 spi_df <- spi_df_empty
 
 #read list of iso3c codes for matching from UN (https://unstats.un.org/unsd/methodology/m49/)
-iso3c <- read_csv(paste(raw_dir,'metadata/iso_codes.csv', sep="/"),
-                  col_types=list(col_character(), col_character(), col_character()))
+iso3c <- read_csv(paste(raw_dir,
+                        'metadata/iso_codes.csv', 
+                        sep = "/"),
+                  col_types = list(col_character(), 
+                                   col_character(), 
+                                   col_character()))
 
 ```
 
 ```{r programs, include=FALSE}
 
-
 #For mapping the result
 # quality = "high"
 # maps <- wbgmaps::wbgmaps[[quality]]
 #load world bank map data
-load(paste0(raw_dir, '/misc/maps.Rdata'))
+load(paste0(raw_dir, 
+            '/misc/maps.Rdata'))
 standard_crop_wintri <- function() {
+  
   l <- list(
-    left=-12000000, right=16396891,
-    top=9400000, bottom=-6500000
-  )
+    left   = -12000000, 
+    right  = 16396891,
+    top    = 9400000, 
+    bottom = -6500000)
   l$xlim <- c(l$left, l$right)
   l$ylim <- c(l$bottom, l$top)
   l
@@ -87,94 +100,130 @@ country_metadata <- wbstats::wb_countries()
 
 spi_mapper  <- function(data, indicator, title) {
   
- indicator<-indicator
+ indicator <- indicator
 
   map_df <- get(data) %>%
-    filter(date==max(date, na.rm=T)) %>%
+    filter(date == max(date, 
+                       na.rm = T)) %>%
     filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
-    group_by( country) %>%
+    group_by(country) %>%
     #summarise(across(!! indicator,last)) %>%
-    rename(data_available=!! indicator) %>%
+    rename(data_available =!! indicator) %>%
     right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+    mutate(data_available = if_else(is.na(data_available), 
+                                    as.numeric(NA), 
+                                    as.numeric(data_available)))    
   
   
    p1 <- ggplot() +
-    geom_map(data = map_df, aes(map_id = iso3c, fill = 100*data_available), map = maps$countries) + 
-    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
-    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+    geom_map(data = map_df, 
+             aes(map_id = iso3c, 
+                 fill   = 100*data_available), 
+             map  = maps$countries) + 
+    geom_polygon(data = maps$disputed, 
+                 aes(long, 
+                     lat, 
+                     group  = group, 
+                     map_id = id), 
+                 fill = "grey80") + 
+    geom_polygon(data = maps$lakes, 
+                 aes(long, 
+                     lat, 
+                     group = group), 
+                 fill = "white")  +
      geom_path(data = maps$boundaries,
-               aes(long, lat, group = group),
-               color = "white",
-               size = 0.3,
+               aes(long, 
+                   lat, 
+                   group = group),
+               color   = "white",
+               size    = 0.3,
                lineend = maps$boundaries$lineend,
               linetype = maps$boundaries$linetype) +
-    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
-    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
-  scale_fill_distiller(palette = "RdYlGn",
-                       direction=1,
-                       limits = c(0,100))  +
+    scale_x_continuous(expand = c(0, 0), 
+                       limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), 
+                       limits = standard_crop_wintri()$ylim) +
+  scale_fill_distiller(palette   = "RdYlGn",
+                       direction = 1,
+                       limits    = c(0,
+                                     100))  +
     coord_equal() +
-    theme_map(base_size=12) +
+    theme_map(base_size = 12) +
     labs(
-      title=str_wrap(title,100),
-      subtitle= paste0('Data Point is for last year available (usually ',end_date,')'),
-      caption = 'Source: SPI Indicator.',
-      fill='SPI Indicator Value'
-    )
+      title    = str_wrap(title, 100),
+      subtitle = paste0('Data Point is for last year available (usually ',
+                        end_date,')'),
+      caption  = 'Source: SPI Indicator.',
+      fill     = 'SPI Indicator Value')
   
   #add histogram by region 
   p2 <- map_df %>%
     group_by(region) %>%
-    filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(data_available, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=region, fill=region)) +
-      geom_bar(stat="identity",position='dodge') +
-      geom_text(aes(label=Label)) +
-      labs(
-      title=str_wrap(paste(title, 'By Region', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
-      subtitle= paste0('Data Point is for last year available (usually ',end_date,')'),
-      ) +
-      expand_limits(x=c(0,100)) +
+    filter(region    != 'Aggregates') %>%
+    mutate(Percentage = 100*mean(data_available, 
+                                 na.rm = T),
+           Label      = paste(round(Percentage,
+                                    0))) %>%
+    ggplot(aes(x    = Percentage, 
+               y    = region, 
+               fill = region)) +
+      geom_bar(stat     = "identity",
+               position = 'dodge') +
+      geom_text(aes(label = Label)) +
+      labs(title    = str_wrap(paste(title, 
+                                     'By Region', 
+                                     sep = " - "),
+                               100),
+           caption  = 'Source: SPI Indicators Raw Data',
+           subtitle = paste0('Data Point is for last year available (usually ',
+                             end_date,')')) +
+      expand_limits(x = c(0,100)) +
       theme_bw()
 
   #by income
     p3 <- map_df %>%
     group_by(income_level) %>%
-    filter(region!='Aggregates') %>%
-    mutate(Percentage=100*mean(data_available, na.rm=T),
-           Label = paste(round(Percentage,0))) %>%
-    ggplot(aes(x=Percentage, y=income_level, fill=income_level)) +
-      geom_bar(stat="identity",position='dodge') +
-      geom_text(aes(label=Label)) +
-      labs(
-      title=str_wrap(paste(title, 'By Income', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data',
-      subtitle= paste0('Data Point is for last year available (usually ',end_date,')'),
-      ) +
-      expand_limits(x=c(0,100)) +
+    filter(region    != 'Aggregates') %>%
+    mutate(Percentage = 100*mean(data_available, na.rm=T),
+           Label      = paste(round(Percentage,0))) %>%
+    ggplot(aes(x    = Percentage, 
+               y    = income_level, 
+               fill = income_level)) +
+      geom_bar(stat     = "identity",
+               position = 'dodge') +
+      geom_text(aes(label = Label)) +
+      labs(title    = str_wrap(paste(title, 
+                                     'By Income', 
+                                     sep = " - "),
+                               100),
+           caption  = 'Source: SPI Indicators Raw Data',
+           subtitle = paste0('Data Point is for last year available (usually ',
+                             end_date,')')) +
+      expand_limits(x = c(0,100)) +
       theme_bw()
     
   # #add line graph over time
   p4 <- get(data)  %>%
-    rename(data_available=!! indicator) %>%
+    rename(data_available =!! indicator) %>%
     # right_join(spi_df_empty) %>%
-    group_by( date) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
-    mutate(Percentage=100*mean(data_available),
-           Label = paste(round(Percentage,0))) %>%
+    group_by(date) %>%
+    mutate(data_available = if_else(is.na(data_available), 
+                                    as.numeric(NA), 
+                                    as.numeric(data_available))) %>%
+    mutate(Percentage = 100*mean(data_available),
+           Label      = paste(round(Percentage,0))) %>%
     ungroup() %>%
-    ggplot(aes(y=Percentage, x=date)) +
+    ggplot(aes(y = Percentage, 
+               x = date)) +
       geom_point() +
-      geom_line(fill='blue') +
+      geom_line(fill = 'blue') +
       # geom_text_repel(aes(label=Label)) +
-      labs(
-      title=str_wrap(paste(title, 'By Date', sep=" - "),100),
-      caption = 'Source: SPI Indicators Raw Data'
-      ) +
-      expand_limits(y=c(0,100)) +
+      labs(title   = str_wrap(paste(title, 
+                                    'By Date', 
+                                    sep = " - "),
+                              100),
+           caption = 'Source: SPI Indicators Raw Data') +
+      expand_limits(y = c(0,100)) +
       theme_bw()
       
   print(p1)
@@ -189,12 +238,18 @@ spi_mapper  <- function(data, indicator, title) {
 
 
 #define function to pull data from UN Stats and return
-un_pull <- function(series,start, end) {
+un_pull <- function(series,
+                    start, 
+                    end) {
   # jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&timePeriodStart=',start,'&timePeriodEnd=',end,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
-      jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
+      jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',
+                               series,
+                               '&pageSize=10000',
+                               sep = ""), 
+                         flatten = TRUE)$data %>%
 
     as_tibble() %>%
-    mutate(date=timePeriodStart) %>%
+    mutate(date = timePeriodStart) %>%
     right_join(iso3c)
     
 }  
@@ -311,24 +366,29 @@ Below is a brief description of the 22 dimensions in our framework.
 ####
 # create table
 ####
-pillars <- read_csv(paste(raw_dir, '/metadata/SPI_pillars.csv', sep=""))
+pillars <- read_csv(paste(raw_dir, 
+                          '/metadata/SPI_pillars.csv', 
+                          sep = ""))
 
 pillars <- pillars %>%
-  mutate(dimension=paste(dimension_number, dimension_name, sep=": "),
-         spi_indicator_description=Description) %>%
-  select(dimension, spi_indicator_description)
+  mutate(dimension = paste(dimension_number, 
+                           dimension_name, 
+                           sep = ": "),
+         spi_indicator_description = Description) %>%
+  select(dimension, 
+         spi_indicator_description)
 
 
 pillars_tab <- flextable(pillars) %>%
   add_header_lines('SPI Dimensions Metadata.') %>%
-  set_header_labels(values=list(
-                       dimension="Dimension",
-                       spi_indicator_description="Brief Description"
-                                   )) 
+  set_header_labels(values = 
+                      list(dimension                 = "Dimension",
+                           spi_indicator_description = "Brief Description")) 
 
 pillars_tab %>%
-  width(width=4.2) %>%
-  align( align = "left", part = "body")
+  width(width = 4.2) %>%
+  align(align = "left", 
+        part = "body")
 
 
 
@@ -398,15 +458,26 @@ Not included because of lack of established methodology. There are some usable d
 
 ```{r vnr, eval=FALSE, include=FALSE}
 #load data
-vnr_use_df <- read_csv(paste(raw_dir, "/1.2_DUNE/UN_VNR_use_of_numbers.csv", sep="")) %>%
+vnr_use_df <- read_csv(paste(raw_dir, 
+                             "/1.2_DUNE/UN_VNR_use_of_numbers.csv", 
+                             sep = "")) %>%
+  left_join(iso3c |> 
+              select(country, 
+                     iso3c), 
+            by = "country") |> 
   group_by(iso3c) %>%
-  filter(year==max(year, na.rm=T)) %>%
-  mutate(date=end_date)
+  filter(year == max(year, 
+                     na.rm = T)) %>%
+  mutate(date = end_date)
 
 
 vnr_use_merge <- vnr_use_df %>% 
-  group_by(iso3c, date, name) %>%
-  summarise(SPI.D1.2.VNR=wtd.mean(freq_of_numbers, w=freq_of_terms))
+  group_by(iso3c,
+           country,
+           date, 
+           name) %>%
+  summarise(SPI.D1.2.VNR = wtd.mean(freq_of_numbers, 
+                                    w = freq_of_terms))
 
 
 #add to spi databases
@@ -416,7 +487,9 @@ spi_df <- spi_df %>%
 #map the VNR data
 
 #overall score
-spi_mapper('vnr_use_merge', 'SPI.D1.2.VNR', 'Overall Score for Use of Numbers in VNRs')
+spi_mapper('vnr_use_merge', 
+           'SPI.D1.2.VNR', 
+           'Overall Score for Use of Numbers in VNRs')
 
 
 # #SDG 1
@@ -1235,61 +1308,79 @@ We take therefore useable data if it appears within an 8 year window of the refe
 span <- c(2000:end_date)
 
 
-smw_template_df <- data.frame(
-  geo=c("National","Rural","Urban")
-)
+smw_template_df <- data.frame(geo = c("National",
+                                      "Rural",
+                                      "Urban"))
 
-smw_empty_df <- bind_rows(replicate(length(span), smw_template_df, simplify = FALSE), .id='year') %>%
-  mutate(year=as.numeric(year)+span[1]-1)
+smw_empty_df <- bind_rows(replicate(length(span), 
+                                    smw_template_df, 
+                                    simplify = FALSE), 
+                          .id='year') %>%
+  mutate(year = as.numeric(year) + span[1] - 1)
 
 #function to download data from hyperlink from OECD
 hyper_read <-  function(hyperlink) {
   tryCatch({
-    url <- hyperlink
+    url  <- hyperlink
     temp <- tempfile()
-    download.file(url, temp, mode="wb", method='wininet')
-    temp_df <- read_excel(path=temp, #read in the file
-                          skip=4,
-                          sheet='Data Summary') %>%
+    download.file(url, 
+                  temp,
+                  mode   = "wb", 
+                  method = 'wininet')
+    temp_df <- read_excel(path  = temp, # read in the file
+                          skip  = 4,
+                          sheet = 'Data Summary') %>%
       filter(!is.na(year)) %>%
-      dplyr::select(source, type, year, starts_with('w_')) %>%
-      mutate(across(starts_with('w_'),as.character)) %>%
-      pivot_longer( #reshape to compare national urban rural estimates
-        cols = starts_with('w_'),
-        names_to = 'label',
-        values_to = "value"
-      ) %>%
-      mutate(geo = case_when( #split out national, urban, rural estimates
-        grepl("_n$",label) ~ "National",
-        grepl("_u$",label) ~ "Urban",
-        grepl("_r$",label) ~ "Rural"
-      )) %>%
-      mutate(data_available=if_else(!is.na(value),1,0)) %>% #get measure of whether value was available
-      mutate(data_quality=if_else((!grepl('\\[',value) & data_available==1),1,0)) %>% #values in brackets were not used in estimation.
-      group_by(source, type, year, geo) %>%
-      summarise(
-       data_available=max(data_available, na.rm=T),
-       data_quality=max(data_quality, na.rm=T),
-       data_value = mean(as.numeric(value),na.rm=T))  %>% 
+      dplyr::select(source, 
+                    type,
+                    year,
+                    starts_with('w_')) %>%
+      mutate(across(starts_with('w_'),
+                    as.character)) %>%
+      # reshape to compare national urban rural estimates
+      pivot_longer(cols      = starts_with('w_'),
+                   names_to  = 'label',
+                   values_to = "value") %>%
+      # split out national, urban, rural estimates
+      mutate(geo = 
+               case_when(grepl("_n$",label) ~ "National",
+                         grepl("_u$",label) ~ "Urban",
+                         grepl("_r$",label) ~ "Rural")) %>%
+      mutate(data_available = if_else(!is.na(value),1,0)) %>% #get measure of whether value was available
+      mutate(data_quality   = if_else((!grepl('\\[',value) & 
+                                         data_available==1),
+                                      1,
+                                      0)) %>% #values in brackets were not used in estimation.
+      group_by(source, 
+               type, 
+               year, 
+               geo) %>%
+      summarise(data_available = max(data_available, 
+                                     na.rm = T),
+                data_quality   = max(data_quality, 
+                                     na.rm = T),
+                data_value     = mean(as.numeric(value),
+                                      na.rm = T))  %>% 
       ungroup() %>%
-       right_join(smw_empty_df) %>% #fill in missing years in database.
-       group_by(geo) %>%
-       mutate(max_value=max(data_value, na.rm=T),
-         max_value=if_else(max_value!=-Inf,max_value,-99)
-       ) %>%
-       mutate(data_quality=if_else((max_value>=99.5 | max_value<=0.5),1,as.numeric(data_quality))) %>% #because JMP imputes values indefinitely forward if value for water reaches >99.5%
-      ungroup()
-  }, error=function(e){
+      right_join(smw_empty_df) %>% #fill in missing years in database.
+      group_by(geo) %>%
+     mutate(max_value    = max(data_value, 
+                                 na.rm = T),
+            max_value    = if_else(max_value != -Inf,
+                                     max_value, -99),
+            data_quality = if_else((max_value>=99.5 | max_value<=0.5),
+                                   1,
+                                   as.numeric(data_quality))) %>% #because JMP imputes values indefinitely forward if value for water reaches >99.5%
+    ungroup()
+  }, error = function(e) {
     #return empty dataframe with empty columns
-    data.frame(
-      source=as.character(NA),
-      type=as.character(NA),
-      year=as.numeric(NA),
-      geo=as.character(NA),
-      data_available=as.numeric(NA),
-      data_quality=as.numeric(NA),
-      data_value=as.numeric(NA)
-    )
+    data.frame(source        = as.character(NA),
+               type          = as.character(NA),
+               year          = as.numeric(NA),
+               geo           = as.character(NA),
+               data_available= as.numeric(NA),
+               data_quality  = as.numeric(NA),
+               data_value    = s.numeric(NA))
   })
 }
 
@@ -1299,21 +1390,30 @@ GBR_df <- hyper_read('https://washdata.org/data/country/GBR/household/download')
 
 safely_managed_raw_df <- country_metadata %>%
   filter(region!='Aggregates') %>%
-  mutate(hyperlink=paste0('https://washdata.org/data/country/',iso3c,'/household/download'),
+  mutate(hyperlink = paste0('https://washdata.org/data/country/',
+                            iso3c,
+                            '/household/download'),
          #if country is kosovo then use serbia numbers
-         hyperlink=if_else(iso3c=='XKX','https://washdata.org/data/country/SRB/household/download',hyperlink)
+         hyperlink = if_else(iso3c=='XKX',
+                             'https://washdata.org/data/country/SRB/household/download',
+                             hyperlink)
          ) %>%
-  mutate(data=map( #loop across hyperlinks downloading data
-    hyperlink,
-    hyper_read
-      )) 
+  #loop across hyperlinks downloading data
+  mutate(data = map(hyperlink,
+                    hyper_read)) 
 
-safely_managed_raw_df <- safely_managed_raw_df %>%
-  mutate(data = map(data, ~ mutate(.x, type = as.character(type)))) %>%
+safely_managed_raw_df <- 
+  safely_managed_raw_df %>%
+  mutate(data = map(data,
+                    ~ mutate(.x, 
+                             type = as.character(type)))) %>%
   unnest()
 
+
 write_excel_csv(safely_managed_raw_df,
-                path=paste(raw_dir, '1.5_DUIO/Safely_Managed_Water_data.csv', sep="/"))
+                path = paste(raw_dir, 
+                             '1.5_DUIO/Safely_Managed_Water_data.csv', 
+                              sep="/"))
 
 
 ```
