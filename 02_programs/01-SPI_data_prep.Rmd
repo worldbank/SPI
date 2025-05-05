@@ -1751,21 +1751,22 @@ e-GDDS websites.
 
 
 # Parse the JSON content and convert it to a data frame.
-D2.1_DSDR_sci <- read_csv(paste0(raw_dir, "/2.1_DSDR/SCI_archived_data.csv")) %>%
-  pivot_longer(
-    cols=YR2004:YR2015,
-    names_to='date',
-    values_to='value'
-  ) %>%
-  filter(`Series Code`=='5.21.01.01.sdds') %>%
-  transmute(
-    iso3c=`Country Code`,
-    date=as.numeric(str_remove_all(date,"YR")),
-    SDDS=if_else(is.na(value),0,as.numeric(value))
-  ) %>%
+D2.1_DSDR_sci <- read_csv(paste0(raw_dir, 
+                                 "/2.1_DSDR/SCI_archived_data.csv")) %>%
+  pivot_longer(cols      = YR2004:YR2015,
+               names_to  = 'date',
+               values_to = 'value') %>%
+  filter(`Series Code` == '5.21.01.01.sdds') %>%
+  transmute(iso3c = `Country Code`,
+            date  = as.numeric(str_remove_all(date,"YR")),
+            SDDS  = if_else(is.na(value),
+                            0,
+                            as.numeric(value))) %>%
   left_join(spi_df_empty) %>% #add on country metadata
   filter(!is.na(income_level)) %>%
-  select(iso3c,  date, SDDS  ) 
+  select(iso3c,  
+         date, 
+         SDDS) 
 
 
 
@@ -1781,20 +1782,27 @@ df <- df %>%
 
 
 D2.1_DSDR <- df %>%
-  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
-         country=Table.Name) %>%
-  select(c('iso3c',  'date',  'IMF.data.dissemination.standard')  ) %>%
-  mutate(IDDS=IMF.data.dissemination.standard) %>%
-  mutate(SPI.D2.1.GDDS=case_when(
-    IDDS=="Special Data Dissemination Standard Plus (SDDS+)" | IDDS=="Special Data Dissemination Standard Plus (SDDS Plus)" | IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
-    IDDS=="Enhanced General Data Dissemination System (e-GDDS)"~ 0.5,
-    TRUE ~ 0 ),
-    SDDS=case_when(
-     IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
-    TRUE ~ 0 ))  %>%
+  mutate(iso3c   = if_else(is.na(Country.Code), 
+                           Code, 
+                           Country.Code),
+         country = Table.Name) %>%
+  select(c('iso3c',  
+           'date',  
+           'IMF.data.dissemination.standard')  ) %>%
+  mutate(IDDS = IMF.data.dissemination.standard) %>%
+  mutate(SPI.D2.1.GDDS = case_when(IDDS=="Special Data Dissemination Standard Plus (SDDS+)" | 
+                                     IDDS=="Special Data Dissemination Standard Plus (SDDS Plus)" | 
+                                     IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
+                                   IDDS=="Enhanced General Data Dissemination System (e-GDDS)"~ 0.5,
+                                   TRUE ~ 0 ),
+         SDDS = case_when(IDDS=="Special Data Dissemination Standard (SDDS)"~ 1, 
+                          TRUE ~ 0 ))  %>%
   bind_rows(D2.1_DSDR_sci) %>%
-  rename(RAW.D2.1.GDDS=IDDS) %>%
-  select(iso3c,  date, RAW.D2.1.GDDS, SPI.D2.1.GDDS  ) %>%
+  rename(RAW.D2.1.GDDS = IDDS) %>%
+  select(iso3c,  
+         date, 
+         RAW.D2.1.GDDS, 
+         SPI.D2.1.GDDS) %>%
   left_join(country_metadata)
 
 D2.1_DSDR_map <- D2.1_DSDR 
@@ -1871,51 +1879,108 @@ For more details, consult the ODIN technical documentation:
 https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/edit#
 
 ```{r online_access}
-
-  #read in ODIN data
-  for (i in c(2015,2016,2017,2018,2020, 2021, 2022, 2023)) {
-   temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""),)  %>%
-        as_tibble(.name_repair = 'universal') %>%
-        mutate(date=i) %>%
-        filter(Data.categories=='All Categories') %>%
+#read in ODIN data
+  for (i in span[-which(span == 2019 | span < 2015)]) {
+  
+   temp <- read_csv(paste(raw_dir, 
+                          '/2.2_DSOA/',
+                          'ODIN_',
+                          i,
+                          '.csv', 
+                          sep = ""))  %>%
+     as_tibble(.name_repair = 'universal') %>%
+     mutate(date = i) %>%
+     filter(Data.categories == 'All Categories') %>%
+     
         #convert all columns in "Indicator.coverage.and.disaggregation" "Data.available.last.5.years"           "Data.available.last.10.years"          "First.administrative.level"     "Second.administrative.level"           "Coverage.subscore"                     "Machine.readable"                      "Non.proprietary"                       "Download.options"                      "Metadata.available"                    "Terms.of.use"                          "Openness.subscore"                     "Overall.score"  to numeric
         mutate(
           across(
-            c('Indicator.coverage.and.disaggregation', 'Data.available.last.5.years', 'Data.available.last.10.years', 'First.administrative.level', 'Second.administrative.level', 'Coverage.subscore', 'Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore', 'Overall.score'),
-            as.numeric
-          )
-          ) %>%
+            c('Indicator.coverage.and.disaggregation', 
+              'Data.available.last.5.years', 
+              'Data.available.last.10.years',
+              'First.administrative.level', 
+              'Second.administrative.level', 
+              'Coverage.subscore', 
+              'Machine.readable', 
+              'Non.proprietary', 
+              'Download.options', 
+              'Metadata.available', 
+              'Terms.of.use', 
+              'Openness.subscore', 
+              'Overall.score'),
+            as.numeric)) %>%
 
         select(-Year)
 
 
-    assign(paste('openness_df',i,sep="_"), temp)
+    assign(paste('openness_df',
+                 i,
+                 sep = "_"), 
+           temp)
   }
 
 #bind different years together
-openness_df <- bind_rows(openness_df_2015, openness_df_2016, openness_df_2017, openness_df_2018,openness_df_2020,openness_df_2021,
-                  openness_df_2022,
-                  openness_df_2023 )
+openness_df <- bind_rows(openness_df_2015, 
+                         openness_df_2016, 
+                         openness_df_2017, 
+                         openness_df_2018,
+                         openness_df_2020,
+                         openness_df_2021,
+                         openness_df_2022,
+                         openness_df_2023, 
+                         openness_df_2024)
 
 
 openness_df <- openness_df %>%
-    select(Country.Code, date, Machine.readable, Non.proprietary, Download.options, Metadata.available, Terms.of.use, Openness.subscore) %>%
-    rename(iso3c=Country.Code) %>%
-    group_by( iso3c) %>%
+    select(Country.Code, 
+           date, 
+           Machine.readable, 
+           Non.proprietary, 
+           Download.options,
+           Metadata.available, 
+           Terms.of.use, 
+           Openness.subscore) %>%
+    rename(iso3c = Country.Code) %>%
+    group_by(iso3c) %>%
     right_join(country_metadata) %>%
-    mutate(
-      across(c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore'),~if_else(is.na(.), 0, .)           )
-      
-           )  
+    mutate(across(c('Machine.readable', 
+                    'Non.proprietary', 
+                    'Download.options', 
+                    'Metadata.available', 
+                    'Terms.of.use', 
+                    'Openness.subscore'),
+                  ~ if_else(is.na(.), 0, .)))
 
 #do some quick renaming and formatting
 openness_df_temp1 <- openness_df %>% 
-  rename_with(~paste('RAW.D2.2',., sep="."), .cols=c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore') ) 
+  rename_with(~paste('RAW.D2.2',
+                     ., 
+                     sep = "."), 
+              .cols = c('Machine.readable', 
+                        'Non.proprietary', 
+                        'Download.options',
+                        'Metadata.available', 
+                        'Terms.of.use', 
+                        'Openness.subscore') ) 
 
 
 openness_df_temp2 <- openness_df %>% 
-  mutate(across(c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore'), ~./100)) %>%
-  rename_with(~paste('SPI.D2.2',., sep="."), .cols=c('Machine.readable', 'Non.proprietary', 'Download.options', 'Metadata.available', 'Terms.of.use', 'Openness.subscore') ) 
+  mutate(across(c('Machine.readable', 
+                  'Non.proprietary', 
+                  'Download.options', 
+                  'Metadata.available', 
+                  'Terms.of.use', 
+                  'Openness.subscore'), 
+                ~./100)) %>%
+  rename_with(~paste('SPI.D2.2',
+                     .,
+                     sep = "."), 
+              .cols = c('Machine.readable', 
+                        'Non.proprietary',
+                        'Download.options',
+                        'Metadata.available', 
+                        'Terms.of.use', 
+                        'Openness.subscore') ) 
 
 openness_df <- openness_df_temp1 %>%
   left_join(openness_df_temp2)
