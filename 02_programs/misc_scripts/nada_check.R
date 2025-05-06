@@ -3,12 +3,12 @@
 
 library(tidyverse)
 library(httr)
+library(here)
 
-
-dir <- "C:/Users/wb469649/Documents/Github/SPI/01_raw_data/2.4_DSDS/"
+dir <- here("01_raw_data","2.4_DSDS")
 
 # read in NADA SPI microdata file
-nada_raw_df <- read_csv(paste0(dir, "D2.4.NADA.2022.csv"))
+nada_raw_df <- read_csv(paste0(dir, "/D2.4.NADA.2023.csv"))
 
 # get list of NADA sites to check
 nada_sites <- nada_raw_df 
@@ -53,7 +53,7 @@ for (cntry in nada_sites$iso3c) {
 
 nada_sites %>%
   left_join(working_nada_df) %>%
-  write_excel_csv("C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/SPI 2023/03_output/Nada2023.csv")
+  write_excel_csv("C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/SPI 2024/03_output/Nada2024.csv")
 
 
 # write_excel_csv(working_nada_df, 'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/Nada2020.csv')
