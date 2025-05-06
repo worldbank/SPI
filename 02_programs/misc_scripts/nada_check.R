@@ -6,6 +6,7 @@ library(httr)
 library(here)
 
 dir <- here("01_raw_data","2.4_DSDS")
+UPI <- 'WB469649'
 
 # read in NADA SPI microdata file
 nada_raw_df <- read_csv(paste0(dir, "/D2.4.NADA.2023.csv"))
@@ -53,7 +54,7 @@ for (cntry in nada_sites$iso3c) {
 
 nada_sites %>%
   left_join(working_nada_df) %>%
-  write_excel_csv("C:/Users/WB469649/WBG/Statistical Performance Indicators (SPI) - WB Group - Documents/Data/SPI 2024/03_output/Nada2024.csv")
+  write_excel_csv(paste0("C:/Users/",UPI,"/WBG/Statistical Performance Indicators (SPI) - WB Group - Documents/Data/SPI 2024/03_output/Nada2024.csv"))
 
 
 # write_excel_csv(working_nada_df, 'C:/Users/wb469649/OneDrive - WBG/DECIS/SPI/Data/Nada2020.csv')
