@@ -2119,18 +2119,34 @@ NADA is an open source microdata cataloging system, compliant with the Data Docu
 ```{r nada}
 
 #read in csv file.
-D2.4_NADA <- read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.2020.csv", sep="/" ))) %>%
-  bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.2022.csv", sep="/" )) %>% mutate(date=2021)) %>%
-  bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.2022.csv", sep="/" )) %>% mutate(date=2022)) %>%
-  bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', "D2.4.NADA.2023.csv", sep="/" )) %>% mutate(date=2023)) %>%
-  mutate(SPI.D2.4.NADA=case_when(
+D2.4_NADA <- read_csv(file = paste(raw_dir, 
+                                   '/2.4_DSDS/',
+                                   "D2.4.NADA.csv", 
+                                   sep = "/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  '/2.4_DSDS/', 
+                                  "D2.4.NADA.2020.csv", 
+                                  sep = "/" ))) %>%
+  bind_rows(read_csv(file = paste(raw_dir, '/2.4_DSDS/', 
+                                  "D2.4.NADA.2022.csv", 
+                                  sep = "/" )) %>%
+              mutate(date = 2021)) %>%
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  '/2.4_DSDS/', 
+                                  "D2.4.NADA.2022.csv",
+                                  sep = "/" )) %>% 
+              mutate(date = 2022)) %>%
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  '/2.4_DSDS/',
+                                  "D2.4.NADA.2023.csv",
+                                  sep = "/" )) %>% 
+              mutate(date = 2023)) %>%
+  mutate(SPI.D2.4.NADA = case_when(
     NADA==1 ~ 1, 
     NADA==0 ~ 0, 
-    TRUE ~ 0 
-  ))  %>%
-  rename(RAW.D2.4.NADA=NADA,
-         RAW.D2.4.NADA_text=NADA_text) %>%
+    TRUE    ~ 0))  %>%
+  rename(RAW.D2.4.NADA      = NADA,
+         RAW.D2.4.NADA_text = NADA_text) %>%
   select(iso3c,  date, RAW.D2.4.NADA,RAW.D2.4.NADA_text, SPI.D2.4.NADA  ) %>%
   arrange(date, iso3c)
 
@@ -3486,13 +3502,24 @@ df <- df %>%
   filter(!is.na(Income.Group))  #keep just countries (drop aggregations)
 
 #pull IMF country codes for merging
-imf_codes <- read_csv(file=paste(raw_dir, "metadata","IMF_country_codes.csv", sep="/" ))
+imf_codes <- read_csv(file = paste(raw_dir, 
+                                   "metadata",
+                                   "IMF_country_codes.csv", 
+                                   sep = "/" ))
 
 #read in previous vintage of SPI as starting point for previous years
-vintage_year <- end_date-1
-spi_previous_vintage_d5 <- read_csv(file=paste(raw_dir, "/previous_vintages/","SPI_data_",vintage_year,".csv", sep="" )) %>%
-  select(iso3c, date, starts_with('RAW.D5'),starts_with('SPI.D5.')) %>%
-  filter(date>=2016)
+vintage_year <- end_date - 1
+spi_previous_vintage_d5 <- read_csv(file = paste(raw_dir, 
+                                                 "/previous_vintages/",
+                                                 "SPI_data_",
+                                                 vintage_year,
+                                                 ".csv", 
+                                                 sep = "" )) %>%
+  select(iso3c, 
+         date, 
+         starts_with('RAW.D5'),
+         starts_with('SPI.D5.')) %>%
+  filter(date >= 2016)
 
 ```
 
@@ -3511,19 +3538,25 @@ spi_previous_vintage_d5 <- read_csv(file=paste(raw_dir, "/previous_vintages/","S
 
 #read in metadata file.
 D5.2.1.SNAU <- df %>%
-  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
-         country=Table.Name) %>%
-  select(c('iso3c',  'date',  'System.of.National.Accounts')  ) %>%
-  mutate(SNAU=System.of.National.Accounts) %>%
-  mutate(SNAU=str_extract(SNAU, "\\d{4}") ) %>%
-  mutate(SPI.D5.2.1.SNAU=case_when(
-    SNAU=="2008" ~ 1, 
-    SNAU=="1993" ~ 0.5,
-    TRUE ~ 0 
-  ),
-      RAW.D5.2.1.SNAU=System.of.National.Accounts) %>%
-  arrange(date, iso3c) %>%
-  select(iso3c,  date,RAW.D5.2.1.SNAU, SPI.D5.2.1.SNAU  ) 
+  mutate(iso3c   = if_else(is.na(Country.Code), 
+                           Code, 
+                           Country.Code),
+         country = Table.Name) %>%
+  select(c('iso3c',  
+           'date',  
+           'System.of.National.Accounts')  ) %>%
+  mutate(SNAU = System.of.National.Accounts) %>%
+  mutate(SNAU = str_extract(SNAU, 
+                            "\\d{4}") ) %>%
+  mutate(SPI.D5.2.1.SNAU = case_when(SNAU=="2008" ~ 1, 
+                                     SNAU=="1993" ~ 0.5,
+                                     TRUE ~ 0 ),
+         RAW.D5.2.1.SNAU = System.of.National.Accounts) %>%
+  arrange(date, 
+          iso3c) %>%
+  select(iso3c,  
+         date,RAW.D5.2.1.SNAU,
+         SPI.D5.2.1.SNAU) 
 
 
 ```
@@ -3539,29 +3572,42 @@ constant price estimates be changed periodically to reflect changes in economic 
 
 ```{r naby}
 
-
-  
-
  df %>%
-  mutate(iso3c=if_else(is.na(Country.Code), Code, Country.Code),
-         country=Table.Name) %>%
-  select(c('iso3c',  'date',  'National.accounts.base.year')  ) %>%
-  mutate(NABY=National.accounts.base.year) %>%
-  mutate(NABY_dates=gsub("\\d{2}/","",NABY) ) %>%
-  mutate(NABY_dates=str_extract(NABY_dates, "\\d{4}") ) %>%
-  mutate(NABY_dates=if_else(NABY=="20015/2016","2016",NABY_dates)) %>% #fix an issue in WDI metadata
+  mutate(iso3c   = if_else(is.na(Country.Code), 
+                           Code, 
+                           Country.Code),
+         country = Table.Name) %>%
+  select(c('iso3c',  
+           'date',  
+           'National.accounts.base.year') ) %>%
+  mutate(NABY       = National.accounts.base.year,
+         NABY_dates = gsub("\\d{2}/",
+                           "",
+                           NABY),
+         NABY_dates = str_extract(NABY_dates, 
+                                  "\\d{4}"), 
+         NABY_dates = if_else(NABY == "20015/2016",
+                              "2016",
+                              NABY_dates)) %>% #fix an issue in WDI metadata
   arrange(iso3c,date) %>%
-  write_excel_csv(paste(raw_dir, "5.2_DISM","D5.2.2.NABY_raw_metadata.csv", sep="/" )) 
+  write_excel_csv(paste(raw_dir, 
+                        "5.2_DISM",
+                        "D5.2.2.NABY_raw_metadata.csv", 
+                        sep="/" )) 
 
 
-D5.2.2.NABY <- read_csv(paste(raw_dir, "5.2_DISM","D5.2.2.NABY_raw_metadata.csv", sep="/" )) %>%
-  mutate(SPI.D5.2.2.NABY=case_when(
-    NABY=="Original chained constant price data are rescaled." ~ 1, 
-    (date-as.numeric(NABY_dates))<=10 ~ 0.5, #within 10 years of reference period
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.2.NABY=NABY)  %>%
-  select(iso3c,  date, RAW.D5.2.2.NABY, SPI.D5.2.2.NABY  ) %>%
+D5.2.2.NABY <- read_csv(paste(raw_dir, 
+                              "5.2_DISM",
+                              "D5.2.2.NABY_raw_metadata.csv", 
+                              sep = "/" )) %>%
+  mutate(SPI.D5.2.2.NABY = case_when(NABY=="Original chained constant price data are rescaled." ~ 1, 
+                                     (date-as.numeric(NABY_dates)) <= 10 ~ 0.5, #within 10 years of reference period
+                                     TRUE ~ 0),
+         RAW.D5.2.2.NABY = NABY)  %>%
+  select(iso3c,  
+         date, 
+         RAW.D5.2.2.NABY, 
+         SPI.D5.2.2.NABY  ) %>%
   arrange(date)
 
 
@@ -3589,23 +3635,29 @@ D5.2.2.NABY <- read_csv(paste(raw_dir, "5.2_DISM","D5.2.2.NABY_raw_metadata.csv"
 ```{r cnin}
 
 #read in csv file.
-D5.2.3.CNIN <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.3.CNIN.2023.csv", sep="/" )) %>% #add in 2020 data
-  pivot_longer(cols = c(`2020`:`2023`),
-               names_to='date',
-               values_to='CNIN') %>%
-  mutate(
-  iso3c=Code,
-  date=as.numeric(date)
-  ) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.3.CNIN.csv", sep="/" ))) %>%
-  mutate(SPI.D5.2.3.CNIN=case_when(
-    str_to_lower(CNIN)=="nace rev2" | str_to_lower(CNIN)=="rev4" ~ 1, 
-    str_to_lower(CNIN)=="nace rev1" | str_to_lower(CNIN)=="rev3" ~ 0.5, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.3.CNIN=CNIN)  %>%
-  select(iso3c,  date, RAW.D5.2.3.CNIN, SPI.D5.2.3.CNIN  ) %>%
-  arrange(date, iso3c)
+D5.2.3.CNIN <- read_csv(file = paste(raw_dir, 
+                                     "5.2_DISM",
+                                     "D5.2.3.CNIN.2023.csv",
+                                     sep = "/" )) %>% #add in 2020 data
+  pivot_longer(cols      = c(`2020`:`2023`),
+               names_to  = 'date',
+               values_to = 'CNIN') %>%
+  mutate(iso3c = Code,
+         date  = as.numeric(date)) %>%
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM",
+                                  "D5.2.3.CNIN.csv", 
+                                  sep = "/" ))) %>%
+  mutate(SPI.D5.2.3.CNIN = case_when(str_to_lower(CNIN)=="nace rev2" | str_to_lower(CNIN)=="rev4" ~ 1, 
+                                     str_to_lower(CNIN)=="nace rev1" | str_to_lower(CNIN)=="rev3" ~ 0.5, 
+                                     TRUE ~ 0),
+         RAW.D5.2.3.CNIN = CNIN)  %>%
+  select(iso3c,  
+         date, 
+         RAW.D5.2.3.CNIN,
+         SPI.D5.2.3.CNIN) %>%
+  arrange(date, 
+          iso3c)
 
 
 
@@ -3627,8 +3679,12 @@ Consumer Price Index serves as indicators of inflation and reflects changes in t
 
 #read in csv file.
 D5.2.4.CPIBY <- spi_previous_vintage_d5 %>%
-  select(iso3c,  date, RAW.D5.2.4.CPIBY, SPI.D5.2.4.CPIBY  ) %>%
-  arrange(date, iso3c) %>%
+  select(iso3c,  
+         date,
+         RAW.D5.2.4.CPIBY, 
+         SPI.D5.2.4.CPIBY) %>%
+  arrange(date, 
+          iso3c) %>%
   right_join(spi_df_empty)
   
 
@@ -3637,56 +3693,72 @@ D5.2.4.CPIBY <- spi_previous_vintage_d5 %>%
 #####
 
 #use alternative data source provided by the IMF
-
+imf_file <- "2025.04_Compiled Data for World Bank_V2.xlsx"
 #read in data on when the weights were last updated to measure if annual chain linking is done
-D5.2.4.COICOP.WGT <-   read_excel(path=paste(raw_dir, "5.2_DISM","2024.02_Compiled Data for World Bank.xlsx", sep="/" ),
+D5.2.4.COICOP.WGT <- read_excel(path = paste(raw_dir, 
+                                             "5.2_DISM",
+                                             imf_file, 
+                                             sep = "/" ),
                                sheet = "COICOP Month_Last Change",
-                               skip=4
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country_revised
-  ) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
+                               skip  = 4) %>%
+  as_tibble(.name_repair = 'universal') %>%  
+  rename(IMF_code    = Code,
+         IMF_country = Country_revised) %>%
+  mutate(IMF_code    = as.numeric(IMF_code)) %>%
   left_join(imf_codes)
   
   
 #read in last time the CPI reference period is updated to fill in rest of info  
-D5.2.4.CPI.REF <-  read_excel(path=paste(raw_dir, "5.2_DISM","2024.02_Compiled Data for World Bank.xlsx", sep="/" ),
+D5.2.4.CPI.REF <-  read_excel(path   = paste(raw_dir, 
+                                             "5.2_DISM",
+                                             imf_file, 
+                                             sep = "/" ),
                                sheet = "2. CPI Reference Period",
-                              skip=2
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%
-  rename(IMF_country=Country) %>%
+                              skip   = 2) %>%
+  as_tibble(.name_repair = 'universal') %>%
+  rename(IMF_country     = Country) %>%
   left_join(D5.2.4.COICOP.WGT) #merge CPI weights
   
 #now calculate whether annual chain linking is used and CPI base year from scratch using this info
-D5.2.4.CPIBY.IMF.RAW <- D5.2.4.CPI.REF %>%
+D5.2.4.CPIBY.IMF.RAW <- D5.2.4.CPI.REF %>% 
   filter(!is.na(iso3c)) %>%
-  mutate(CPI_ref_period=str_sub(Common.Reference.Period,1,4),
-         CPI_ref_period=as.numeric(CPI_ref_period),
-         CPI_weight_change=str_sub(last_change,1,4),
-         CPI_weight_change=as.numeric(CPI_weight_change),
-         iso3c=if_else(iso3c=="KOS", 'XKX',iso3c) ) %>% #fix kosovo
-  mutate(RAW.D5.2.4.CPIBY.IMF=if_else((CPI_weight_change>=2023 & CPI_ref_period<=2023), "annual chained",as.character(CPI_ref_period),as.character(CPI_ref_period))) %>%
-  mutate(RAW.D5.2.4.CPIBY.IMF=if_else((iso3c=='AUS' | iso3c=='NZL'),"annual chained",as.character(RAW.D5.2.4.CPIBY.IMF),as.character(RAW.D5.2.4.CPIBY.IMF))) #replace Australia and New Zealand as annual chain linking.  They use quarterly cpi releases and do not show up in this dataset
+  mutate(CPI_ref_period    = str_sub(Common.Reference.Period,1,4),
+         CPI_ref_period    = as.numeric(CPI_ref_period),
+         CPI_weight_change = str_sub(last_change,1,4),
+         CPI_weight_change = as.numeric(CPI_weight_change),
+         iso3c             = if_else(iso3c == "KOS", 
+                                     'XKX',
+                                     iso3c) ) %>% #fix kosovo
+  mutate(RAW.D5.2.4.CPIBY.IMF = if_else((CPI_weight_change >= 2023 &
+                                           CPI_ref_period <= 2023), 
+                                        "annual chained",
+                                        as.character(CPI_ref_period),
+                                        as.character(CPI_ref_period))) %>%
+  mutate(RAW.D5.2.4.CPIBY.IMF = if_else((iso3c == 'AUS' | iso3c == 'NZL'),
+                                        "annual chained",
+                                        as.character(RAW.D5.2.4.CPIBY.IMF),
+                                        as.character(RAW.D5.2.4.CPIBY.IMF))) 
+# replace Australia and New Zealand as annual chain linking.  
+# They use quarterly cpi releases and do not show up in this dataset
   
 #score from 2010 to 2020  
 if (exists('D5.2.4.CPIBY.IMF')) {
     rm(D5.2.4.CPIBY.IMF)
 } 
 
-for (i in c(2015:2023)) {
+for (i in c(2015:end_date)) {
   temp <- D5.2.4.CPIBY.IMF.RAW %>%
-    mutate(date=i) %>%
-    mutate(SPI.D5.2.4.CPIBY.IMF=case_when(
-      RAW.D5.2.4.CPIBY.IMF=="annual chained" ~ 1, 
-      (date-as.numeric(RAW.D5.2.4.CPIBY.IMF))<=10 ~ 0.5, #within 10 years of reference period
-      TRUE ~ 0 
-    )) %>%
-    select(iso3c, date, RAW.D5.2.4.CPIBY.IMF, SPI.D5.2.4.CPIBY.IMF  ) %>%
-    arrange(date, iso3c)
+    mutate(date = i) %>%
+    mutate(SPI.D5.2.4.CPIBY.IMF = case_when(RAW.D5.2.4.CPIBY.IMF == "annual chained" ~ 1, 
+                                            (date-as.numeric(RAW.D5.2.4.CPIBY.IMF))<=10 ~ 0.5, 
+                                            #within 10 years of reference period
+                                            TRUE ~ 0)) %>%
+    select(iso3c, 
+           date, 
+           RAW.D5.2.4.CPIBY.IMF, 
+           SPI.D5.2.4.CPIBY.IMF) %>%
+    arrange(date, 
+            iso3c)
   
   if (!exists('D5.2.4.CPIBY.IMF')) {
     D5.2.4.CPIBY.IMF <- temp
@@ -3702,11 +3774,10 @@ for (i in c(2015:2023)) {
 #update based on IMF data.  Use manually collected value when other value not available
 D5.2.4.CPIBY <- D5.2.4.CPIBY %>%
   full_join(D5.2.4.CPIBY.IMF) %>%
-  mutate(SPI.D5.2.4.CPIBY=if_else(is.na(SPI.D5.2.4.CPIBY),SPI.D5.2.4.CPIBY.IMF,SPI.D5.2.4.CPIBY)) %>%
-  select(-SPI.D5.2.4.CPIBY.IMF) 
-
-
-
+  mutate(SPI.D5.2.4.CPIBY = if_else(is.na(SPI.D5.2.4.CPIBY),
+                                    SPI.D5.2.4.CPIBY.IMF,
+                                    SPI.D5.2.4.CPIBY)) %>%
+  select(-SPI.D5.2.4.CPIBY.IMF)
 
 ```
 
@@ -3730,7 +3801,10 @@ statistics in these different areas.
 
 #read in csv file.
 D5.2.5.HOUS <- spi_previous_vintage_d5 %>%
-  select(iso3c,  date, RAW.D5.2.5.HOUS, SPI.D5.2.5.HOUS  ) %>%
+  select(iso3c,  
+         date,
+         RAW.D5.2.5.HOUS, 
+         SPI.D5.2.5.HOUS) %>%
   arrange(date, iso3c) %>%
   right_join(spi_df_empty)
   
@@ -3744,64 +3818,73 @@ D5.2.5.HOUS <- spi_previous_vintage_d5 %>%
 #use alternative data source provided by the IMF
 
 #read in data on COICOP from IMF
-D5.2.5.HOUS.IMF.2022 <-   read_excel(path=paste(raw_dir, "5.2_DISM","2022.10_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet = "3. Household Consump Class",
-                               skip=0
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.5.HOUS.IMF=case_when(
-    Status..as.of.October.2022=="COICOP" ~ 1, 
-    Status..as.of.October.2022=="COICOP." ~ 1, 
-    Status..as.of.October.2022=="COICOP 2018" ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.5.HOUS.IMF=Status..as.of.October.2022) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
+D5.2.5.HOUS.IMF.2022 <-   read_excel(path = paste(raw_dir, 
+                                                  "5.2_DISM",
+                                                  "2022.10_Compiled Data for World Bank.xlsx", 
+                                                  sep = "/" ),
+                                     sheet = "3. Household Consump Class",
+                                     skip  = 0) %>%
+  as_tibble(.name_repair = 'universal') %>%  
+  rename(IMF_code    = Code,
+         IMF_country = Country) %>%
+  mutate(SPI.D5.2.5.HOUS.IMF = case_when(Status..as.of.October.2022 == "COICOP" ~ 1, 
+                                         Status..as.of.October.2022 == "COICOP." ~ 1, 
+                                         Status..as.of.October.2022 == "COICOP 2018" ~ 1, 
+                                         TRUE ~ 0),
+  RAW.D5.2.5.HOUS.IMF = Status..as.of.October.2022) %>%
+  mutate(IMF_code     = as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
-  mutate(
-        iso3c=if_else(iso3c=="KOS", 'XKX',iso3c) ) %>% #fix kosovo
-  select(iso3c, RAW.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS.IMF ) 
+  mutate(iso3c = if_else(iso3c == "KOS", 
+                         'XKX',
+                         iso3c) ) %>% 
+  #fix kosovo
+  select(iso3c, 
+         RAW.D5.2.5.HOUS.IMF,
+         SPI.D5.2.5.HOUS.IMF) 
 
 #read in data on COICOP from IMF
-D5.2.5.HOUS.IMF.2023 <-   read_excel(path=paste(raw_dir, "5.2_DISM","2024.02_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet = "3. Household Consump Class",
-                               skip=0
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.5.HOUS.IMF=case_when(
-    Status..as.of.January.2024=="COICOP" ~ 1, 
-    Status..as.of.January.2024=="COICOP." ~ 1, 
-    Status..as.of.January.2024=="COICOP 2018" ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.5.HOUS.IMF=Status..as.of.January.2024) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
+D5.2.5.HOUS.IMF.2023 <- read_excel(path  = paste(raw_dir, 
+                                                 "5.2_DISM",
+                                                 "2024.02_Compiled Data for World Bank.xlsx", 
+                                                 sep = "/" ),
+                                   sheet = "3. Household Consump Class",
+                                   skip  = 0) %>%
+  as_tibble(.name_repair = 'universal') %>%  
+  rename(IMF_code    = Code,
+         IMF_country = Country) %>%
+  mutate(SPI.D5.2.5.HOUS.IMF = case_when(Status..as.of.January.2024=="COICOP" ~ 1, 
+                                         Status..as.of.January.2024=="COICOP." ~ 1, 
+                                         Status..as.of.January.2024=="COICOP 2018" ~ 1, 
+                                         TRUE ~ 0),
+         RAW.D5.2.5.HOUS.IMF = Status..as.of.January.2024) %>%
+  mutate(IMF_code            = as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
-  mutate(
-        iso3c=if_else(iso3c=="KOS", 'XKX',iso3c) ) %>% #fix kosovo
-  select(iso3c, RAW.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS.IMF ) 
+  mutate(iso3c = if_else(iso3c == "KOS", 
+                         'XKX',
+                         iso3c) ) %>% 
+  #fix kosovo
+  select(iso3c, 
+         RAW.D5.2.5.HOUS.IMF,
+         SPI.D5.2.5.HOUS.IMF) 
 
 D5.2.5.HOUS.IMF <- D5.2.5.HOUS.IMF.2022 %>% 
-  bind_rows(D5.2.5.HOUS.IMF.2022 %>% mutate(date=2021)) %>%
-  mutate(date=if_else(!is.na(date),2022,2021)) %>%
-  bind_rows(D5.2.5.HOUS.IMF.2023 %>% mutate(date=2023)) %>%
+  bind_rows(D5.2.5.HOUS.IMF.2022 %>% 
+              mutate(date = 2021)) %>%
+  mutate(date = if_else(!is.na(date),
+                        2022,
+                        2021)) %>%
+  bind_rows(D5.2.5.HOUS.IMF.2023 %>% 
+              mutate(date = 2023)) %>%
   filter(!is.na(iso3c))
-
-
-  
   
 D5.2.5.HOUS <-  D5.2.5.HOUS %>%
   full_join(D5.2.5.HOUS.IMF) %>%
-  mutate(SPI.D5.2.5.HOUS=if_else(is.na(SPI.D5.2.5.HOUS),SPI.D5.2.5.HOUS.IMF,SPI.D5.2.5.HOUS)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
-  select(-country,-SPI.D5.2.5.HOUS.IMF) %>%
+  mutate(SPI.D5.2.5.HOUS = if_else(is.na(SPI.D5.2.5.HOUS),
+                                   SPI.D5.2.5.HOUS.IMF,
+                                   SPI.D5.2.5.HOUS)) %>% 
+  #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-country,
+         -SPI.D5.2.5.HOUS.IMF) %>%
   arrange(date, iso3c) 
 ```
 
@@ -3823,22 +3906,42 @@ Classification of status of employment refers to employment data that are
 ```{r empl}
 
 #read in csv file.
-D5.2.6.EMPL <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.2020.csv", sep="/" ))) %>% # add in 2020 data
-  mutate(SPI.D5.2.6.EMPL=case_when(
-    EMPL=="ICSE-93" | EMPL=="NAICS" ~ 1, 
-    TRUE ~ 0 
-  )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.2022.csv", sep="/" )) %>% mutate(date=2021, SPI.D5.2.6.EMPL=as.numeric(ISCE))) %>% # add in 2022 data
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.2022.csv", sep="/" )) %>% mutate(date=2022, SPI.D5.2.6.EMPL=as.numeric(ISCE))) %>% # add in 2022 data
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.6.EMPL.2023.csv", sep="/" )) %>% mutate(date=2023, SPI.D5.2.6.EMPL=as.numeric(ISCE))) %>% # add in 2023 data  
-  mutate(
-    RAW.D5.2.6.EMPL=EMPL)  %>%
-  select(iso3c,  date, RAW.D5.2.6.EMPL, SPI.D5.2.6.EMPL  ) %>%
-  arrange(date, iso3c)
-
-
-
+D5.2.6.EMPL <- read_csv(file = paste(raw_dir, 
+                                     "5.2_DISM","D5.2.6.EMPL.csv", 
+                                     sep = "/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM",
+                                  "D5.2.6.EMPL.2020.csv", 
+                                  sep = "/" ))) %>% 
+  # add in 2020 data
+  mutate(SPI.D5.2.6.EMPL = case_when(EMPL=="ICSE-93" | EMPL=="NAICS" ~ 1, 
+                                     TRUE ~ 0)) %>%
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM","D5.2.6.EMPL.2022.csv", 
+                                  sep = "/" )) %>% 
+              mutate(date            = 2021, 
+                     SPI.D5.2.6.EMPL = as.numeric(ISCE))) %>% # add in 2022 data
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM",
+                                  "D5.2.6.EMPL.2022.csv",
+                                  sep = "/" )) %>% 
+              mutate(date            = 2022, 
+                     SPI.D5.2.6.EMPL = as.numeric(ISCE))) %>% 
+  # add in 2022 data
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM",
+                                  "D5.2.6.EMPL.2023.csv", 
+                                  sep = "/" )) %>% 
+              mutate(date            = 2023, 
+                     SPI.D5.2.6.EMPL = as.numeric(ISCE))) %>% 
+  # add in 2023 data  
+  mutate(RAW.D5.2.6.EMPL = EMPL)  %>%
+  select(iso3c,  
+         date, 
+         RAW.D5.2.6.EMPL, 
+         SPI.D5.2.6.EMPL) %>%
+  arrange(date, 
+          iso3c)
 
 ```
 
@@ -3861,10 +3964,15 @@ units, the picture they provide of central government activities is usually inco
 
 
 
+
 #read in csv file.
 D5.2.7.CGOV <- spi_previous_vintage_d5 %>%
-  select(iso3c,  date, RAW.D5.2.7.CGOV, SPI.D5.2.7.CGOV  ) %>%
-  arrange(date, iso3c) %>%
+  select(iso3c,  
+         date, 
+         RAW.D5.2.7.CGOV, 
+         SPI.D5.2.7.CGOV) %>%
+  arrange(date, 
+          iso3c) %>%
   right_join(spi_df_empty)
 
 
@@ -3878,95 +3986,104 @@ D5.2.7.CGOV <- spi_previous_vintage_d5 %>%
 
 #read in data from IMF
 # 2021
-D5.2.7.CGOV.IMF.2021 <-   read_excel(path=paste(raw_dir, "5.2_DISM","2022.10_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet = "5. Cntrl Gct Acct Status",
-                               skip=9
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.7.CGOV.IMF=case_when(
-    General.Government..consolidated.=="AC" ~ 1, 
-    General.Government..consolidated.=="CA" ~ 0.5,
-    General.Government..consolidated.=="NA" ~ as.numeric(NA),
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.7.CGOV.IMF=General.Government..consolidated.) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
+D5.2.7.CGOV.IMF.2021 <-   
+  read_excel(path = paste(raw_dir, 
+                          "5.2_DISM",
+                          "2022.10_Compiled Data for World Bank.xlsx",
+                          sep = "/"),
+             sheet = "5. Cntrl Gct Acct Status",
+             skip  = 9) %>%
+  as_tibble(.name_repair = 'universal') %>%  
+  rename(IMF_code       = Code,
+         IMF_country    = Country) %>%
+  mutate(SPI.D5.2.7.CGOV.IMF = case_when(General.Government..consolidated.=="AC" ~ 1, 
+                                         General.Government..consolidated.=="CA" ~ 0.5,
+                                         General.Government..consolidated.=="NA" ~ as.numeric(NA),
+                                         TRUE ~ 0),
+         RAW.D5.2.7.CGOV.IMF = General.Government..consolidated.) %>%
+  mutate(IMF_code = as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
-    mutate(
-        iso3c=if_else(iso3c=="KOS", 'XKX',iso3c) ) %>% #fix kosovo
-  select(iso3c, RAW.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV.IMF ) %>%
-  mutate(date=2021)
+    mutate(iso3c  = if_else(iso3c == "KOS",
+                            'XKX',
+                            iso3c) ) %>% 
+  #fix kosovo
+  select(iso3c, 
+         RAW.D5.2.7.CGOV.IMF,
+         SPI.D5.2.7.CGOV.IMF) %>%
+  mutate(date = 2021)
 
 #2022
-D5.2.7.CGOV.IMF.2022 <-   read_excel(path=paste(raw_dir, "5.2_DISM","2022.10_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet = "5. Cntrl Gct Acct Status",
-                               skip=9
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.7.CGOV.IMF=case_when(
-    General.Government..consolidated.=="AC" ~ 1, 
-    General.Government..consolidated.=="CA" ~ 0.5,
-    General.Government..consolidated.=="NA" ~ as.numeric(NA),
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.7.CGOV.IMF=General.Government..consolidated.) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
+D5.2.7.CGOV.IMF.2022 <-   read_excel(path = paste(raw_dir, 
+                                                  "5.2_DISM",
+                                                  "2022.10_Compiled Data for World Bank.xlsx", 
+                                                  sep = "/" ),
+                                     sheet = "5. Cntrl Gct Acct Status",
+                                     skip  = 9) %>%
+  as_tibble(.name_repair = 'universal') %>%  
+  rename(IMF_code    = Code,
+         IMF_country = Country) %>%
+  mutate(SPI.D5.2.7.CGOV.IMF = case_when(General.Government..consolidated.=="AC" ~ 1, 
+                                         General.Government..consolidated.=="CA" ~ 0.5,
+                                         General.Government..consolidated.=="NA" ~ as.numeric(NA),
+                                         TRUE ~ 0),
+         RAW.D5.2.7.CGOV.IMF = General.Government..consolidated.) %>%
+  mutate(IMF_code            = as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
-    mutate(
-        iso3c=if_else(iso3c=="KOS", 'XKX',iso3c) ) %>% #fix kosovo
-  select(iso3c, RAW.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV.IMF ) %>%
-  mutate(date=2022)
+    mutate(iso3c = if_else(iso3c == "KOS", 
+                           'XKX',
+                           iso3c) ) %>% 
+  #fix kosovo
+  select(iso3c, 
+         RAW.D5.2.7.CGOV.IMF,
+         SPI.D5.2.7.CGOV.IMF ) %>%
+  mutate(date = 2022)
 
 
-D5.2.7.CGOV.IMF.2023 <-   read_excel(path=paste(raw_dir, "5.2_DISM","2024.02_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet = "5. Cntrl Gct Acct Status",
-                               skip=9
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.7.CGOV.IMF=case_when(
-    General.Government..consolidated.=="AC" ~ 1, 
-    General.Government..consolidated.=="CA" ~ 0.5,
-    General.Government..consolidated.=="NA" ~ as.numeric(NA),
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.7.CGOV.IMF=General.Government..consolidated.) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
+D5.2.7.CGOV.IMF.2023 <-   
+  read_excel(path = paste(raw_dir, 
+                          "5.2_DISM",
+                          "2024.02_Compiled Data for World Bank.xlsx", 
+                          sep = "/" ),
+             sheet = "5. Cntrl Gct Acct Status",
+             skip  = 9) %>%
+  as_tibble(.name_repair = 'universal') %>%  
+  rename(IMF_code    = Code,
+         IMF_country = Country) %>%
+  mutate(SPI.D5.2.7.CGOV.IMF = case_when(General.Government..consolidated.=="AC" ~ 1, 
+                                         General.Government..consolidated.=="CA" ~ 0.5,
+                                         General.Government..consolidated.=="NA" ~ as.numeric(NA),
+                                         TRUE ~ 0),
+         RAW.D5.2.7.CGOV.IMF = General.Government..consolidated.) %>%
+  mutate(IMF_code            = as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
-    mutate(
-        iso3c=if_else(iso3c=="KOS", 'XKX',iso3c) ) %>% #fix kosovo
-  select(iso3c, RAW.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV.IMF ) %>%
-  mutate(date=2023)
+  mutate(iso3c = if_else(iso3c == "KOS", 
+                         'XKX',
+                         iso3c) ) %>% 
+  #fix kosovo
+  select(iso3c, 
+         RAW.D5.2.7.CGOV.IMF,
+         SPI.D5.2.7.CGOV.IMF) %>%
+  mutate(date = 2023)
   
 
-D5.2.7.CGOV.IMF <- bind_rows(
-  D5.2.7.CGOV.IMF.2021,
-  D5.2.7.CGOV.IMF.2022,
-  D5.2.7.CGOV.IMF.2023
-) %>%
+D5.2.7.CGOV.IMF <- bind_rows(D5.2.7.CGOV.IMF.2021,
+                             D5.2.7.CGOV.IMF.2022,
+                             D5.2.7.CGOV.IMF.2023) %>%
   filter(!is.na(iso3c))
 
 D5.2.7.CGOV <-  D5.2.7.CGOV %>%
   full_join(D5.2.7.CGOV.IMF) %>%
-  mutate(SPI.D5.2.7.CGOV=if_else(is.na(SPI.D5.2.7.CGOV),SPI.D5.2.7.CGOV.IMF,SPI.D5.2.7.CGOV)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
-  select(-country,-SPI.D5.2.7.CGOV.IMF) %>%
+  mutate(SPI.D5.2.7.CGOV = if_else(is.na(SPI.D5.2.7.CGOV),
+                                   SPI.D5.2.7.CGOV.IMF,
+                                   SPI.D5.2.7.CGOV)) %>% 
+  #fill in with IMF data if missing.  This applies mostly to high income countries
+  select(-country
+         ,-SPI.D5.2.7.CGOV.IMF) %>%
   #use na.locf for some that are not updated by IMF
   arrange(date, iso3c) %>%
   group_by(iso3c) %>%
-  mutate(
-    SPI.D5.2.7.CGOV=na.locf(SPI.D5.2.7.CGOV, na.rm=FALSE)
-  ) %>%
+  mutate(SPI.D5.2.7.CGOV = na.locf(SPI.D5.2.7.CGOV, 
+                                   na.rm = FALSE)) %>%
   ungroup() %>%
   filter(!is.na(SPI.D5.2.7.CGOV))
 
@@ -3988,20 +4105,46 @@ is harmonized with the SNA2008.
 ```{r fina}
 
 #read in csv file.
-D5.2.8.FINA <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.2020.csv", sep="/" )) ) %>% #add in 2020 data
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.2022.csv", sep="/" )) %>% mutate(date=2021, iso3c=Code)) %>% #add in 2020 data
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.2022.csv", sep="/" )) %>% mutate(date=2022, iso3c=Code)) %>% #add in 2020 data
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.8.FINA.2023.csv", sep="/" )) %>% mutate(date=2023, iso3c=Code)) %>% #add in 2020 data
+D5.2.8.FINA <- 
+  read_csv(file = paste(raw_dir, 
+                        "5.2_DISM",
+                        "D5.2.8.FINA.csv",
+                        sep = "/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM","D5.2.8.FINA.2020.csv", 
+                                  sep = "/" )) ) %>% 
+  #add in 2020 data
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM",
+                                  "D5.2.8.FINA.2022.csv",
+                                  sep = "/" )) %>% 
+              mutate(date  = 2021, 
+                     iso3c = Code)) %>% 
+  #add in 2020 data
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM","D5.2.8.FINA.2022.csv", 
+                                  sep = "/" )) %>% 
+              mutate(date  = 2022, 
+                     iso3c = Code)) %>% 
+  #add in 2020 data
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM",
+                                  "D5.2.8.FINA.2023.csv",
+                                  sep = "/" )) %>% 
+              mutate(date  = 2023, 
+                     iso3c = Code)) %>% 
+  #add in 2020 data
   
-  mutate(SPI.D5.2.8.FINA=case_when(
-    FINA=="2014" | FINA=="ESA 2010"~ 1, 
-    FINA=="2001" ~ 0.5,
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.8.FINA=FINA)  %>%
-  select(iso3c,  date, RAW.D5.2.8.FINA, SPI.D5.2.8.FINA  ) %>%
-  arrange(date, iso3c)
+  mutate(SPI.D5.2.8.FINA = case_when(FINA=="2014" | FINA=="ESA 2010"~ 1, 
+                                     FINA=="2001" ~ 0.5,
+                                     TRUE ~ 0),
+         RAW.D5.2.8.FINA = FINA)  %>%
+  select(iso3c,  
+         date,
+         RAW.D5.2.8.FINA, 
+         SPI.D5.2.8.FINA) %>%
+  arrange(date, 
+          iso3c)
 
 
 
@@ -4027,8 +4170,12 @@ the compilation of monetary and financial statistics in addition to MFSM.
 
 #read in csv file.
 D5.2.9.MONY <- spi_previous_vintage_d5 %>%
-  select(iso3c,  date, RAW.D5.2.9.MONY, SPI.D5.2.9.MONY  ) %>%
-  arrange(date, iso3c) %>%
+  select(iso3c,  
+         date, 
+         RAW.D5.2.9.MONY,
+         SPI.D5.2.9.MONY  ) %>%
+  arrange(date,
+          iso3c) %>%
   right_join(spi_df_empty)
 
 
@@ -4042,74 +4189,91 @@ D5.2.9.MONY <- spi_previous_vintage_d5 %>%
 #use alternative data source provided by the IMF
 
 #read in data from IMF
-D5.2.9.MONY.IMF <-   read_excel(path=paste(raw_dir, "5.2_DISM","2020.11.04_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet ="7. MFS Compilation status",
-                               skip=0
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.9.MONY.IMF=case_when(
-    grepl('MFSM 2000',Monetary.and.Financial.Statistics..MFS..Reporting.Status) ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.9.MONY.IMF=Monetary.and.Financial.Statistics..MFS..Reporting.Status) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
+D5.2.9.MONY.IMF <-   
+  read_excel(path = paste(raw_dir, 
+                          "5.2_DISM",
+                          "2020.11.04_Compiled Data for World Bank.xlsx", 
+                          sep = "/" ),
+                              
+              sheet = "7. MFS Compilation status",
+                              
+              skip = 0) %>%
+  as_tibble(.name_repair = 'universal') %>%  
+  rename(IMF_code    = Code,
+         IMF_country = Country) %>%
+  mutate(SPI.D5.2.9.MONY.IMF = case_when(grepl('MFSM 2000',
+                                               Monetary.and.Financial.Statistics..MFS..Reporting.Status) ~ 1, 
+                                         TRUE ~ 0),
+          RAW.D5.2.9.MONY.IMF = Monetary.and.Financial.Statistics..MFS..Reporting.Status) %>%
+  mutate(IMF_code = as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
-  select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) %>%
-  mutate(date=2020)
+  select(iso3c, 
+         RAW.D5.2.9.MONY.IMF,
+         SPI.D5.2.9.MONY.IMF) %>%
+  mutate(date = 2020)
 
 
 #read in data from IMF
-D5.2.9.MONY.IMF.2022 <-   read_excel(path=paste(raw_dir, "5.2_DISM","2022.10_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet ="7. MFS Compilation status",
-                               skip=0
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.9.MONY.IMF=case_when(
-    grepl('MFSM 2000',Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.October.2022) ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.9.MONY.IMF=Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.October.2022) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
+D5.2.9.MONY.IMF.2022 <-   
+  read_excel(path = paste(raw_dir, 
+                          "5.2_DISM",
+                          "2022.10_Compiled Data for World Bank.xlsx", 
+                          sep = "/" ),
+             sheet = "7. MFS Compilation status",
+             skip  = 0) %>%
+  as_tibble(.name_repair = 'universal') %>%  
+  rename(IMF_code    = Code,
+         IMF_country = Country,) %>%
+  mutate(SPI.D5.2.9.MONY.IMF = case_when(grepl('MFSM 2000',
+                                               Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.October.2022) ~ 1, 
+                                         TRUE ~ 0 ),
+         RAW.D5.2.9.MONY.IMF = Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.October.2022,
+         IMF_code            = as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
-  select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) 
+  select(iso3c, 
+         RAW.D5.2.9.MONY.IMF,
+         SPI.D5.2.9.MONY.IMF ) 
 
-D5.2.9.MONY.IMF.2023 <-   read_excel(path=paste(raw_dir, "5.2_DISM","2024.02_Compiled Data for World Bank.xlsx", sep="/" ),
-                               sheet ="7. MFS Compilation status",
-                               skip=0
-                               ) %>%
-  as_tibble(.name_repair='universal') %>%  
-  rename(
-    IMF_code=Code,
-    IMF_country=Country,
-  ) %>%
-  mutate(SPI.D5.2.9.MONY.IMF=case_when(
-    grepl('MFSM 2000',Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.January.2024) ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.9.MONY.IMF=Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.January.2024) %>%
-  mutate(IMF_code=as.numeric(IMF_code)) %>%
+D5.2.9.MONY.IMF.2023 <-  
+  read_excel(path = paste(raw_dir, 
+                          "5.2_DISM",
+                          "2024.02_Compiled Data for World Bank.xlsx", 
+                        sep = "/" ),
+             sheet = "7. MFS Compilation status",
+             skip  = 0) %>%
+  as_tibble(.name_repair = 'universal') %>%  
+  rename(IMF_code    = Code,
+         IMF_country = Country) %>%
+  mutate(SPI.D5.2.9.MONY.IMF = case_when(
+    grepl('MFSM 2000',
+          Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.January.2024) ~ 1, 
+    TRUE ~ 0),
+    RAW.D5.2.9.MONY.IMF = Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.January.2024) %>%
+  mutate(IMF_code = as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
-  select(iso3c, RAW.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY.IMF ) 
+  select(iso3c, 
+         RAW.D5.2.9.MONY.IMF,
+         SPI.D5.2.9.MONY.IMF) 
 
 D5.2.9.MONY.IMF <- D5.2.9.MONY.IMF %>%
-  bind_rows(D5.2.9.MONY.IMF.2022 %>% mutate(date=2021)) %>%
-  bind_rows(D5.2.9.MONY.IMF.2022 %>% mutate(date=2022)) %>%
-  bind_rows(D5.2.9.MONY.IMF.2023 %>% mutate(date=2023))  %>%
+  bind_rows(D5.2.9.MONY.IMF.2022 %>% 
+              mutate(date = 2021)) %>%
+  bind_rows(D5.2.9.MONY.IMF.2022 %>% 
+              mutate(date = 2022)) %>%
+  bind_rows(D5.2.9.MONY.IMF.2023 %>% 
+              mutate(date = 2023))  %>%
   filter(!is.na(iso3c))
   
 D5.2.9.MONY <-  D5.2.9.MONY %>%
   full_join(D5.2.9.MONY.IMF) %>%
-  mutate(SPI.D5.2.9.MONY=if_else(is.na(SPI.D5.2.9.MONY),SPI.D5.2.9.MONY.IMF,SPI.D5.2.9.MONY,0)) %>% #fill in with IMF data if missing.  This applies mostly to high income countries
+  mutate(SPI.D5.2.9.MONY = if_else(is.na(SPI.D5.2.9.MONY),
+                                   SPI.D5.2.9.MONY.IMF,
+                                   SPI.D5.2.9.MONY,
+                                   0)) %>% 
+  #fill in with IMF data if missing.  This applies mostly to high income countries
   select(-SPI.D5.2.9.MONY.IMF) %>%
-  arrange(date, iso3c)
+  arrange(date, 
+          iso3c)
 
 
 ```
@@ -4133,18 +4297,41 @@ related to "business statistics" but refers to the statistical office, simply ex
 ```{r gsbp}
 
 #read in csv file.
-D5.2.10.GSBP <- read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.csv", sep="/" )) %>%
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.2020.csv", sep="/" ))) %>% #add in 2020 data
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.2021.csv", sep="/" )) %>% mutate(date=2021)) %>% #add in 2021 data
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.2022.csv", sep="/" ))%>% mutate(date=2022)) %>% #add in 2022 data
-  bind_rows(read_csv(file = paste(raw_dir, "5.2_DISM","D5.2.10.GSBP.2023.csv", sep="/" ))%>% mutate(date=2023)) %>% #add in 2022 data
-  mutate(SPI.D5.2.10.GSBP=case_when(
-    str_to_lower(GSBP)=="yes" ~ 1, 
-    TRUE ~ 0 
-  ),
-  RAW.D5.2.10.GSBP=GSBP)  %>%
-  select(iso3c,  date, RAW.D5.2.10.GSBP, SPI.D5.2.10.GSBP  ) %>%
-  arrange(date, iso3c)
+D5.2.10.GSBP <- read_csv(file = paste(raw_dir, 
+                                      "5.2_DISM",
+                                      "D5.2.10.GSBP.csv",
+                                      sep = "/" )) %>%
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM",
+                                  "D5.2.10.GSBP.2020.csv", 
+                                  sep = "/" ))) %>% 
+  #add in 2020 data
+  bind_rows(read_csv(file = paste(raw_dir,
+                                  "5.2_DISM",
+                                  "D5.2.10.GSBP.2021.csv", 
+                                  sep = "/" )) %>% 
+              mutate(date = 2021)) %>% 
+  #add in 2021 data
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM",
+                                  "D5.2.10.GSBP.2022.csv",
+                                  sep = "/" )) %>% 
+              mutate(date = 2022)) %>% 
+  #add in 2022 data
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM",
+                                  "D5.2.10.GSBP.2023.csv", 
+                                  sep = "/" )) %>% 
+              mutate(date = 2023)) %>% #add in 2022 data
+  mutate(SPI.D5.2.10.GSBP = case_when(str_to_lower(GSBP)=="yes" ~ 1, 
+                                      TRUE ~ 0),
+         RAW.D5.2.10.GSBP = GSBP)  %>%
+  select(iso3c,  
+         date, 
+         RAW.D5.2.10.GSBP, 
+         SPI.D5.2.10.GSBP) %>%
+  arrange(date, 
+          iso3c)
 
 
 ```
@@ -4164,8 +4351,11 @@ D5.2.MSC <- spi_df_empty %>%
   left_join(D5.2.8.FINA) %>%
   left_join(D5.2.9.MONY) %>%
   left_join(D5.2.10.GSBP) %>%
-  select(iso3c,  date, everything()) %>%
-  arrange(date, iso3c) 
+  select(iso3c,  
+         date,
+         everything()) %>%
+  arrange(date, 
+          iso3c) 
 
 
 #add to spi databases
@@ -4173,35 +4363,65 @@ spi_df <- spi_df %>%
   left_join(D5.2.MSC)
 
 #now do the figures 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.1.SNAU))
-spi_mapper('msc_df_map', 'SPI.D5.2.1.SNAU', 'System of National Accounts in use in 2020' )
+msc_df_map <- D5.2.MSC %>%  
+  filter(!is.na(SPI.D5.2.1.SNAU))
+spi_mapper('msc_df_map', 
+           'SPI.D5.2.1.SNAU', 
+           'System of National Accounts in use in 2020' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.2.NABY))
-spi_mapper('msc_df_map', 'SPI.D5.2.2.NABY', 'National Accounts base year in 2020' )
+msc_df_map <- D5.2.MSC %>% 
+  filter(!is.na(SPI.D5.2.2.NABY))
+spi_mapper('msc_df_map', 
+           'SPI.D5.2.2.NABY', 
+           'National Accounts base year in 2020' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.3.CNIN))
-spi_mapper('msc_df_map', 'SPI.D5.2.3.CNIN', 'Classification of national industry in 2020' )
+msc_df_map <- D5.2.MSC %>%  
+  filter(!is.na(SPI.D5.2.3.CNIN))
+spi_mapper('msc_df_map', 
+           'SPI.D5.2.3.CNIN', 
+           'Classification of national industry in 2020' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.4.CPIBY))
-spi_mapper('msc_df_map', 'SPI.D5.2.4.CPIBY', 'CPI base year in 2020' )
+msc_df_map <- D5.2.MSC %>%  
+  filter(!is.na(SPI.D5.2.4.CPIBY))
+spi_mapper('msc_df_map', 
+           'SPI.D5.2.4.CPIBY', 
+           'CPI base year in 2020' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.5.HOUS))
-spi_mapper('msc_df_map', 'SPI.D5.2.5.HOUS', 'Classification of household consumption in 2020' )
+msc_df_map <- D5.2.MSC %>%  
+  filter(!is.na(SPI.D5.2.5.HOUS))
+spi_mapper('msc_df_map', 
+           'SPI.D5.2.5.HOUS', 
+           'Classification of household consumption in 2020' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.6.EMPL))
-spi_mapper('msc_df_map', 'SPI.D5.2.6.EMPL', 'Classification of status of employment in 2020' )
+msc_df_map <- D5.2.MSC %>%  
+  filter(!is.na(SPI.D5.2.6.EMPL))
+spi_mapper('msc_df_map', 
+           'SPI.D5.2.6.EMPL', 
+           'Classification of status of employment in 2020' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.7.CGOV))
-spi_mapper('msc_df_map', 'SPI.D5.2.7.CGOV', 'Central government accounting status in 2020' )
+msc_df_map <- D5.2.MSC %>%  
+  filter(!is.na(SPI.D5.2.7.CGOV))
+spi_mapper('msc_df_map', 
+           'SPI.D5.2.7.CGOV',
+           'Central government accounting status in 2020' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.8.FINA))
-spi_mapper('msc_df_map', 'SPI.D5.2.8.FINA', 'Compilation of government finance statistics in 2020' )
+msc_df_map <- D5.2.MSC %>%  
+  filter(!is.na(SPI.D5.2.8.FINA))
+spi_mapper('msc_df_map', 
+           'SPI.D5.2.8.FINA',
+           'Compilation of government finance statistics in 2020' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.9.MONY))
-spi_mapper('msc_df_map', 'SPI.D5.2.9.MONY', 'Compilation of monetary and financial statistics in 2020' )
+msc_df_map <- D5.2.MSC %>% 
+  filter(!is.na(SPI.D5.2.9.MONY))
+spi_mapper('msc_df_map', 
+           'SPI.D5.2.9.MONY', 
+           'Compilation of monetary and financial statistics in 2020' )
 
-msc_df_map <- D5.2.MSC %>%  filter(!is.na(SPI.D5.2.10.GSBP))
-spi_mapper('msc_df_map', 'SPI.D5.2.10.GSBP', 'Business process in 2020' )
+msc_df_map <- D5.2.MSC %>%  
+  filter(!is.na(SPI.D5.2.10.GSBP))
+spi_mapper('msc_df_map', 
+           'SPI.D5.2.10.GSBP', 
+           'Business process in 2020' )
 
 ```
 
@@ -4221,14 +4441,15 @@ GTEI: The GovTech Enablers Index (16 indicators) captures strategy, institutions
 
 ```{r}
 #read in the GTMI data
-gtmi_df <- read_excel(path=paste(raw_dir, "5.3_DISK", "WBG_GovTech Dataset_Oct2022.xlsx", sep="/"),
-                      sheet="CG_GTMI_Groups") %>%
-  transmute(
-    iso3c=Code,
-    date=Year,
-    D.5.3.CGSI=CGSI,
-    D.5.3.GTEI=GTEI
-  )
+gtmi_df <- read_excel(path  = paste(raw_dir, 
+                                    "5.3_DISK", 
+                                    "WBG_GovTech Dataset_Oct2022.xlsx", 
+                                    sep = "/"),
+                      sheet = "CG_GTMI_Groups") %>%
+  transmute(iso3c      = Code,
+            date       = Year,
+            D.5.3.CGSI = CGSI,
+            D.5.3.GTEI = GTEI)
 
 D5.3_DISK <- spi_df_empty %>%
   left_join(gtmi_df) 
@@ -4240,9 +4461,13 @@ spi_df <- spi_df %>%
 D5.3_DISK_map <- D5.3_DISK %>%
   filter(!is.na(D.5.3.CGSI))
 
-spi_mapper('D5.3_DISK_map', 'D.5.3.CGSI', 'Core Government Systems Index. Source: World Bank')
+spi_mapper('D5.3_DISK_map', 
+           'D.5.3.CGSI', 
+           'Core Government Systems Index. Source: World Bank')
 
-spi_mapper('D5.3_DISK_map', 'D.5.3.GTEI', 'GovTech Enablers Index. Source: World Bank')
+spi_mapper('D5.3_DISK_map', 
+           'D.5.3.GTEI',
+           'GovTech Enablers Index. Source: World Bank')
 
 ```
 
@@ -4265,11 +4490,23 @@ Source of this data is UNSD and Paris21.
 ```{r finance}
 
 #pull from unsd api
-D5.5_DIFI <- read_csv(file=paste(raw_dir, '5.5_DIFI', 'SG_STT_NSDSFND.csv', sep="/")) %>% 
-  select(iso3c, date,ind_value) %>%
+D5.5_DIFI <- 
+  read_csv(file = paste(raw_dir, 
+                        '5.5_DIFI', 
+                        'SG_STT_NSDSFND.csv', 
+                        sep = "/")) %>% 
+  select(iso3c, 
+         date,
+         ind_value) %>%
   right_join(spi_df_empty) %>%
-  mutate(RAW.D5.5.DIFI=if_else((is.na(ind_value) | ind_value=="NaN"),as.numeric(NA), as.numeric(ind_value)),
-         SPI.D5.5.DIFI=if_else((is.na(ind_value) | ind_value=="NaN"),as.numeric(NA), as.numeric(ind_value))) %>%
+  mutate(RAW.D5.5.DIFI = if_else((is.na(ind_value) | 
+                                    ind_value == "NaN"),
+                                 as.numeric(NA), 
+                                 as.numeric(ind_value)),
+         SPI.D5.5.DIFI = if_else((is.na(ind_value) | 
+                                    ind_value == "NaN"),
+                                 as.numeric(NA), 
+                                 as.numeric(ind_value))) %>%
   select(-ind_value)
 
 
@@ -4327,7 +4564,9 @@ spi_df <- spi_df %>%
 D5.5_DIFI_map <- D5.5_DIFI %>%
   filter(!is.na(SPI.D5.5.DIFI))
 
-spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Source: Paris21')
+spi_mapper('D5.5_DIFI_map', 
+           'RAW.D5.5.DIFI', 
+           'Statistical plan fully funded. Source: Paris21')
 
 ```
 
@@ -4336,17 +4575,22 @@ spi_mapper('D5.5_DIFI_map', 'RAW.D5.5.DIFI', 'Statistical plan fully funded. Sou
 ```{r append}
 
 #add in population
-pop_df <- wbstats::wb_data(country="all",
-             indicator='SP.POP.TOTL',
-             start_date=2004,
-             end_date=end_date) %>%
-  mutate(date=as.numeric(date)) %>%
-  mutate(population=SP.POP.TOTL) %>%
-  select(iso3c, date, population)
+pop_df <- wbstats::wb_data(country    = "all",
+                           indicator  = 'SP.POP.TOTL',
+                           start_date = 2004,
+                           end_date   = end_date) %>%
+  mutate(date       = as.numeric(date),
+         population = SP.POP.TOTL) %>%
+  select(iso3c,
+         date,
+         population)
 
 # create final dataset
 spi_df_final <- spi_df %>%
-  dplyr::select(iso3c, date, starts_with("SPI"), starts_with("RAW")) %>%
+  select(iso3c, 
+         date, 
+         starts_with("SPI"), 
+         starts_with("RAW")) %>%
   right_join(spi_df_empty) %>%
   left_join(pop_df) %>%
   arrange(-date,iso3c)
@@ -4355,28 +4599,38 @@ spi_df_final <- spi_df %>%
 ####
 #lining up data to end_date and filling in some values for OECD countries.  
 ####
+
 #get a list of oecd countries
 oecd_country_query <-  GET(url = "https://api.worldbank.org/v2/country?region=OED&format=json") %>%
-  content( as = "text", encoding = "UTF-8") %>%
-  jsonlite::fromJSON( flatten = TRUE) 
+  content(as = "text", 
+          encoding = "UTF-8") %>%
+  jsonlite::fromJSON(flatten = TRUE) 
 
 #do some conversion to produce a dataframe
 oecd_country_df <- oecd_country_query[[2]] %>%
   as_tibble() 
   
-country_mod_list <- oecd_country_df$name  #fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
-country_mod_list <- c(country_mod_list, 'Singapore')
+country_mod_list <- oecd_country_df$name 
+#fill in the missing values for OECDs with 1s because by participating in OECD these countries have this
+country_mod_list <- c(country_mod_list, 
+                      'Singapore')
 spi_df_final <- spi_df_final %>%
   arrange(country, date) %>%
   group_by(iso3c) %>%
-  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>%
+  mutate(across(starts_with("SPI"),
+                na.locf, 
+                na.rm = FALSE)) %>%
   mutate(across(c(#"SPI.D1.5.POV",
                   "SPI.D2.1.GDDS",
                   "SPI.D5.1.DILG",
-                  "SPI.D5.2.3.CNIN", "SPI.D5.2.5.HOUS", "SPI.D5.2.6.EMPL", "SPI.D5.2.8.FINA",
+                  "SPI.D5.2.3.CNIN", 
+                  "SPI.D5.2.5.HOUS", 
+                  "SPI.D5.2.6.EMPL",
+                  "SPI.D5.2.8.FINA",
                   "SPI.D5.2.10.GSBP",
                   "SPI.D5.5.DIFI"),
-                ~if_else(( (income_level=='High income')  & (country %in% country_mod_list)),1,.)                )) 
+                ~ if_else(( (income_level=='High income')  & 
+                              (country %in% country_mod_list)),1,.))) 
 
 ```
 
@@ -4386,17 +4640,25 @@ spi_df_final <- spi_df_final %>%
 #write to csv
 spi_df_final %>%
   distinct() %>%
-  mutate(across(is.list, as.character)) %>%
-  write_excel_csv( path = paste(output_dir, 'SPI_data.csv', sep="/"))
+  mutate(across(is.list, 
+                as.character)) %>%
+  write_excel_csv(path = paste(output_dir, 
+                               'SPI_data.csv', 
+                               sep = "/"))
 
 #label data
 #read in metadata
-names_df <- data.frame('source_id'=colnames(spi_df_final))
+names_df <- data.frame('source_id' = colnames(spi_df_final))
 
-spi_meta <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep="")) %>%
+spi_meta <- read_csv(paste(raw_dir, 
+                           '/metadata/SPI_dimensions_sources.csv',
+                           sep = "")) %>%
   right_join(names_df) %>%
-  mutate(source_name=if_else(is.na(source_name), paste(source_id), source_name)) %>%
-  arrange(factor(source_id, levels=colnames(spi_df_final)))
+  mutate(source_name = if_else(is.na(source_name), 
+                               paste(source_id), 
+                               source_name)) %>%
+  arrange(factor(source_id, 
+                 levels = colnames(spi_df_final)))
 
 #label data
 
@@ -4405,10 +4667,17 @@ label(spi_df_final) = as.list(spi_meta$source_name)
 
 #write to stata
 spi_df_final %>%
-  mutate(across(is.list, as.character)) %>%
-  rename_with(~gsub(".","_",.x, fixed=TRUE)) %>%
-  select(-latitude,-longitude) %>%
-  write_dta( path = paste(output_dir, 'SPI_data.dta', sep="/"))
+  mutate(across(is.list, 
+                as.character)) %>%
+  rename_with(~gsub(".",
+                    "_",
+                    .x, 
+                    fixed = TRUE)) %>%
+  select(-latitude,
+         -longitude) %>%
+  write_dta(path = paste(output_dir, 
+                         'SPI_data.dta',
+                         sep = "/"))
 
 ```
 
