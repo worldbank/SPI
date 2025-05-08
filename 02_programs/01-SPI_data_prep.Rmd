@@ -981,99 +981,140 @@ Note: Because poverty surveys are reported with a lag, we start measuring whethe
 
 
 ```{r 3.1}
-library(pipr) 
+library(pipr)
 
 #new pipr package already includes survey coverage and comparability measures
 
 
-df <- get_stats()
+df <- get_stats(server = "qa")
 
 #save as csv
-#write_excel_csv(df, file=paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/"))
+write_excel_csv(df, 
+                file = paste(raw_dir, 
+                             '1.5_DUIO/PIP_comparability_latest.csv', 
+                             sep = "/"))
 
-df <- read_csv(paste(raw_dir, '1.5_DUIO/PIP_comparability_latest.csv', sep="/")) %>%
-  #exclude certain surveys that were produced not by statistical system but produced and financed from private firm (non-official source).  Change applies to India in particular.
+df <- read_csv(paste(raw_dir, 
+                     '1.5_DUIO/PIP_comparability_latest.csv', 
+                     sep = "/")) %>%
+  # exclude certain surveys that were produced not by statistical system 
+  # but produced and financed from private firm (non-official source).  
+  # Change applies to India in particular.
   filter(
-    !(survey_acronym=="CPHS" & country_code=="IND")
-  )
+    !(survey_acronym == "CPHS" & country_code == "IND"))
 
 
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
 for (reference_year in 2004:end_date) {
   
-    #extend the window for more recent years.  For instance, 2020 surveys are reported with a lag, so give them two year grace period
-  if (reference_year>=2023) {
-    rec_window=7
-  } else if (reference_year==2022) {
-    rec_window=6
+  # extend the window for more recent years.  
+  #   For instance, 2020 surveys are reported with a lag, so give them two year grace period
+  if (reference_year >= 2023) {
+    rec_window <- 7
+  } else if (reference_year == 2022) {
+    rec_window <- 6
   } else {
-    rec_window=5
+    rec_window <- 5
   }
  
   
-  temp_5<-df %>%
-        #filter(survey_coverage %in% c('national')) %>% #keep just nationally representative samples
-        mutate(frequency=((reference_year-as.numeric(year))<=rec_window) & (reference_year>=as.numeric(year))) %>% 
-        filter(frequency==TRUE) %>%
-        dplyr::group_by(country_code, survey_comparability) %>% #for each country and comparability type, get number of comparable estimates
-        dplyr::summarise(SPI.D1.5.POV_5=n())  %>%
+  temp_5 <- df %>%
+    #filter(survey_coverage %in% c('national')) %>% 
+    #keep just nationally representative samples
+        mutate(frequency = ((reference_year - as.numeric(year)) <= rec_window) &
+                 (reference_year >= as.numeric(year))) %>% 
+        filter(frequency == TRUE) %>%
+        group_by(country_code, 
+                 survey_comparability) %>% 
+    #for each country and comparability type, get number of comparable estimates
+        summarise(SPI.D1.5.POV_5 = n())  %>%
         ungroup() %>%
-        group_by(country_code) %>% #now get a total by country with the max number of comparable estimates
-        summarise(SPI.D1.5.POV_5=max(SPI.D1.5.POV_5, na.rm=T)) %>%
-        mutate(SPI.D1.5.POV_5=if_else(SPI.D1.5.POV_5>=2,1,0)) %>% #only give point if there is at least two observations that are comparable
-        mutate(date=reference_year,
-                 iso3c=country_code) %>%
+        group_by(country_code) %>% 
+    #now get a total by country with the max number of comparable estimates
+        summarise(SPI.D1.5.POV_5 = max(SPI.D1.5.POV_5, 
+                                       na.rm = T)) %>%
+        mutate(SPI.D1.5.POV_5 = if_else(SPI.D1.5.POV_5 >= 2,1,0)) %>% 
+    #only give point if there is at least two observations that are comparable
+        mutate(date  = reference_year,
+               iso3c = country_code) %>%
         left_join(country_metadata) %>%
-        dplyr::select( iso3c, date, starts_with('SPI.D1.5.POV')) 
+        select(iso3c, 
+               date, 
+               starts_with('SPI.D1.5.POV')) 
 
-  temp_10<-df %>%
-        filter(survey_coverage %in% c('national')) %>% #keep just nationally representative samples
-        mutate(frequency=((reference_year-as.numeric(year))<=12) & (reference_year>=as.numeric(year))) %>% 
-        filter(frequency==TRUE) %>%
-        dplyr::group_by(country_code, survey_comparability) %>% #for each country and comparability type, get number of comparable estimates
-        dplyr::summarise(SPI.D1.5.POV_10=n())  %>%
+  temp_10 <- df %>%
+        filter(survey_coverage %in% c('national')) %>% 
+    #keep just nationally representative samples
+        mutate(frequency = ((reference_year - as.numeric(year)) <= 12) &
+                 (reference_year >= as.numeric(year))) %>% 
+        filter(frequency == TRUE) %>%
+        group_by(country_code, 
+                 survey_comparability) %>% 
+    #for each country and comparability type, get number of comparable estimates
+        summarise(SPI.D1.5.POV_10 = n())  %>%
         ungroup() %>%
-        group_by(country_code) %>% #now get a total by country with the max number of comparable estimates
-        summarise(SPI.D1.5.POV_10=max(SPI.D1.5.POV_10, na.rm=T)) %>%
-        mutate(SPI.D1.5.POV_10=if_else(SPI.D1.5.POV_10>=2,1,0)) %>% #only give point if there is at least two observations that are comparable
-        mutate(date=reference_year,
-                 iso3c=country_code) %>%
+        group_by(country_code) %>% 
+    #now get a total by country with the max number of comparable estimates
+        summarise(SPI.D1.5.POV_10 = max(SPI.D1.5.POV_10, 
+                                        na.rm = T)) %>%
+        mutate(SPI.D1.5.POV_10 = if_else(SPI.D1.5.POV_10 >= 2,
+                                         1,
+                                         0)) %>% 
+    #only give point if there is at least two observations that are comparable
+        mutate(date  = reference_year,
+               iso3c = country_code) %>%
         left_join(country_metadata) %>%
-        dplyr::select( iso3c, date, starts_with('SPI.D1.5.POV')) 
+        select(iso3c, 
+               date, 
+               starts_with('SPI.D1.5.POV')) 
 
   temp <- temp_5 %>%
     left_join(temp_10) %>%
-    mutate(SPI.D1.5.POV=case_when(
-      SPI.D1.5.POV_5==1 ~ 1,
-      SPI.D1.5.POV_10==1 ~ 0.5,
-      TRUE ~ 0
-    )) %>%
-    select(-SPI.D1.5.POV_5,-SPI.D1.5.POV_10)
+    mutate(SPI.D1.5.POV = case_when(
+      SPI.D1.5.POV_5  == 1 ~ 1,
+      SPI.D1.5.POV_10 == 1 ~ 0.5,
+      TRUE ~ 0)) %>%
+    select(-SPI.D1.5.POV_5,
+           -SPI.D1.5.POV_10)
   
-  assign(paste("D3.1.AKI",reference_year,sep="_"), temp)
+  assign(paste("D3.1.AKI",
+               reference_year,
+               sep = "_"), 
+         temp)
 }
 
 #now append together and save
 for (i in c(2004:end_date)) {
   
-  temp<-get(paste('D3.1.AKI_',i, sep=""))
+  temp <- get(paste('D3.1.AKI_',
+                    i, 
+                    sep = ""))
   
   if (!exists('D3.1.AKI')) {
-    D3.1.AKI<-temp
+    D3.1.AKI <- temp
   } else {
-    D3.1.AKI<-D3.1.AKI %>%
+    D3.1.AKI <- D3.1.AKI %>%
       bind_rows(temp) %>%
-      arrange(-date, iso3c)
+      arrange(-date, 
+              iso3c)
   }
 }
 
 #fix countries not included
-D3.1.AKI<-D3.1.AKI %>%
+D3.1.AKI <- D3.1.AKI %>%
   right_join(spi_df_empty) %>%
-  #add a few manual changes for countries that are not updated in PIP, but have reviewed methodology and have consistent approach to measuring poverty comparably
+  #add a few manual changes for countries that are not updated in PIP, 
+  #but have reviewed methodology and have consistent approach to measuring poverty comparably
   #countries: JPN, AUS, NZL, SGP
-  mutate(SPI.D1.5.POV=if_else(iso3c %in% c('JPN','AUS','NZL', 'SGP'),1,SPI.D1.5.POV)) %>%
-  select(iso3c, date, SPI.D1.5.POV)
+  mutate(SPI.D1.5.POV = if_else(iso3c %in% c('JPN',
+                                             'AUS',
+                                             'NZL', 
+                                             'SGP'),
+                                1,
+                                SPI.D1.5.POV)) %>%
+  select(iso3c, 
+         date, 
+         SPI.D1.5.POV)
 ```
 
 
@@ -2831,8 +2872,13 @@ Source: World Bank WDI Metadata.
 
 
 #read in data from UNSD database on SDGs
-df_birth <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_BRTH90N.csv', sep="/")) %>% #Countries with birth registration data that are at least 90 percent complete (1 = YES; 0 = NO)
-  filter(date>=2015 & date<=end_date) %>%
+df_birth <- read_csv(file = paste(raw_dir, 
+                                  '4.2_SOAD', 
+                                  'SG_REG_BRTH90N.csv', 
+                                  sep="/")) %>% 
+  # Countries with birth registration data 
+  #     that are at least 90 percent complete (1 = YES; 0 = NO)
+  filter(date >= 2015 & date <= end_date) %>%
   left_join(spi_df_empty) %>%
   transmute(
     iso3c=iso3c,
@@ -2865,25 +2911,43 @@ df_death <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_DETH75N.csv', sep="
 
 #supplement with wdi data
 crvs_wdi <- WDI_metadata %>%
-  select(Country.Code, date, Vital.registration.complete) %>%
-  mutate(iso3c=Country.Code,
-         SPI.D4.2.3.WDI=if_else(grepl('Yes', Vital.registration.complete),1,0),
-         RAW.D4.2.3.CRVS.WDI=Vital.registration.complete) %>%
-  select(-Country.Code, -Vital.registration.complete)
+  select(Country.Code, 
+         date, 
+         Vital.registration.complete) %>%
+  mutate(iso3c               = Country.Code,
+         SPI.D4.2.3.WDI      = if_else(grepl('Yes', 
+                                              Vital.registration.complete),
+                                              1,
+                                              0),
+         RAW.D4.2.3.CRVS.WDI = Vital.registration.complete) %>%
+  select(-Country.Code, 
+         -Vital.registration.complete)
 
 crvs_df <- spi_df_empty %>%
   left_join(df_birth) %>%
   left_join(df_death) %>%
   left_join(crvs_wdi) %>%
-  mutate(
-         SPI.D4.2.3.CRVS=SPI.D4.2.3.DETH75+SPI.D4.2.3.BRTH90,
-         SPI.D4.2.3.CRVS=if_else(is.na(SPI.D4.2.3.CRVS),SPI.D4.2.3.WDI,SPI.D4.2.3.CRVS)) %>%
+  mutate(SPI.D4.2.3.CRVS = SPI.D4.2.3.DETH75 + SPI.D4.2.3.BRTH90,
+         SPI.D4.2.3.CRVS = if_else(is.na(SPI.D4.2.3.CRVS),
+                                   SPI.D4.2.3.WDI,
+                                   SPI.D4.2.3.CRVS)) %>%
   select(-SPI.D4.2.3.WDI) %>%
   group_by(iso3c) %>%
-  mutate(across(starts_with("SPI"), na.locf, na.rm=FALSE)) %>% #use carry forward to most recent value
-  mutate(across(starts_with("SPI"), ~if_else(is.na(.),0,.))) %>%
+  mutate(across(starts_with("SPI"), 
+                na.locf, 
+                na.rm = FALSE)) %>% 
+  #use carry forward to most recent value
+  mutate(across(starts_with("SPI"), 
+                ~if_else(is.na(.),
+                         0,
+                         .))) %>%
   ungroup() %>%
-  select(c( 'iso3c', 'date','RAW.D4.2.3.BRTH90', 'RAW.D4.2.3.DETH75', 'RAW.D4.2.3.CRVS.WDI', 'SPI.D4.2.3.CRVS')  ) 
+  select(c( 'iso3c', 
+            'date',
+            'RAW.D4.2.3.BRTH90', 
+            'RAW.D4.2.3.DETH75', 
+            'RAW.D4.2.3.CRVS.WDI', 
+            'SPI.D4.2.3.CRVS')  ) 
 
 
 
