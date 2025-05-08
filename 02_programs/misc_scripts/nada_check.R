@@ -5,10 +5,17 @@ library(tidyverse)
 library(httr)
 
 
-dir <- "C:/Users/wb469649/Documents/Github/SPI/01_raw_data/2.4_DSDS/"
+dir <- here::here("01_raw_data", 
+                  "2.4_DSDS") #"C:/Users/wb469649/Documents/Github/SPI/01_raw_data/2.4_DSDS/"
 
+nadafile <- paste0("D2.4.NADA.", 
+                   end_date  - 1, # previous vintage
+                   ".csv")
 # read in NADA SPI microdata file
-nada_raw_df <- read_csv(paste0(dir, "D2.4.NADA.2022.csv"))
+nada_raw_df <- read_csv(paste0(dir,
+                               "/",
+                               nadafile))
+                               #"D2.4.NADA.2022.csv"))
 
 # get list of NADA sites to check
 nada_sites <- nada_raw_df 
