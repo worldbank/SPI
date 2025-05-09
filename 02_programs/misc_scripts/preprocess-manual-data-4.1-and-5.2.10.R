@@ -15,12 +15,15 @@ library(here)
 # Directory for SPI excel files
 excel_dir <- here("01_raw_data", 
                   "4.1_SOCS", 
-                  "raw")
+                  "raw", 
+                  "input")
 # Directory for SPI csv files that are created
 csv_dir <- here("01_raw_data", 
-                "4.1_SOCS")#paste0(excel_dir, "/03_output")
+                "4.1_SOCS", 
+                "raw")
 out_dir <- here("01_raw_data", 
-                "4.1_SOCS")
+                "4.1_SOCS", 
+                "raw")
 ###########
 # Preliminary
 ###########
@@ -175,7 +178,7 @@ D2.2.CEN.AGRI <- D2.2.CEN.AGRI %>%
 
 write_excel_csv(D2.2.CEN.AGRI,
                 file = paste(csv_dir, 
-                             "D4.1.1.CEN.AGRI.2024.csv", 
+                             "D4.1.2.CEN.AGRI.2024.csv", 
                              sep = "/" ))
 
 
