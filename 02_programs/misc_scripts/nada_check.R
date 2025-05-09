@@ -29,6 +29,8 @@ for (cntry in nada_sites$iso3c) {
     tryCatch(
       {
         req <- GET(site)
+        #sleep
+        Sys.sleep(5)
         print(req)
         if (req$status_code == 200) {
           status <- TRUE
