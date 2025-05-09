@@ -13,11 +13,14 @@ library(here)
 
 
 # Directory for SPI excel files
-excel_dir <- here()
-
+excel_dir <- here("01_raw_data", 
+                  "4.1_SOCS", 
+                  "raw")
 # Directory for SPI csv files that are created
-csv_dir <- paste0(excel_dir, "/03_output")
-out_dir <- "C:/Users/wb469649/Documents/Github/SPI/01_raw_data"
+csv_dir <- here("01_raw_data", 
+                "4.1_SOCS")#paste0(excel_dir, "/03_output")
+out_dir <- here("01_raw_data", 
+                "4.1_SOCS")
 ###########
 # Preliminary
 ###########
@@ -48,10 +51,21 @@ country_metadata <- wb_countries()
 #####
 
 
-spi_loader <- function(variable_num1, variable_num2,variable_name, skip) {
-  read_excel(path=paste(excel_dir,"/01_raw_data/D",paste(variable_num1,variable_num2,sep="."),".MSC.",variable_name,".xlsx", sep=""),
-             sheet= "Data",
-             skip=skip,
+spi_loader <- function(variable_num1, 
+                       variable_num2,
+                       variable_name, 
+                       skip) {
+  read_excel(path  =paste(excel_dir,
+                          "D",
+                          paste(variable_num1,
+                                variable_num2,
+                                sep = "."),
+                          ".MSC.",
+                          variable_name,
+                          ".xlsx", 
+                          sep = ""),
+             sheet = "Data",
+             skip  = skip,
              .name_repair = 'universal') 
 }
 
@@ -81,13 +95,13 @@ D1.12.MSC.GSBP_2023 <- spi_loader(1,12,'GSBP', 0) %>%
   mutate(GSBP=Business.Process..GSBPM.,
          iso3c=Code,
          country=Country,
-         date=2023) %>%
+         date=2024) %>%
   select(iso3c,date, GSBP) %>%
   arrange(iso3c, date) %>%
   left_join(country_metadata) %>%
   select(colnames(country_metadata), everything()) %>%
   write_excel_csv(
-    file = paste(out_dir, "/5.2_DISM/D5.2.10.GSBP.2023.csv", sep="/" ))
+    file = paste(out_dir, "/5.2_DISM/D5.2.10.GSBP.2024.csv", sep="/" ))
 ###############################
 # SPI Dimension 2: Censuses and Surveys (CS): 
 ###############################
@@ -98,22 +112,35 @@ D1.12.MSC.GSBP_2023 <- spi_loader(1,12,'GSBP', 0) %>%
 
 
 #add in 2022 data.  Because the data doesn't include HIC countries, we append this to the original database
-D2.1.CEN.POPU<-read_excel(path=paste(excel_dir,"/01_raw_data/","D2.1.CEN.POPU.xlsx", sep=""),
-                          sheet="Data",
-                          skip=0,
-                          .name_repair = 'universal')
+D2.1.CEN.POPU <- 
+  read_excel(path         = paste(excel_dir,
+                                  "D2.1.CEN.POPU.xlsx", 
+                                  sep = "/"),
+             sheet        = "Data",
+             skip         = 0,
+             .name_repair = 'universal')
 
 #data contains values of past census years, (i.e. ,1987, 1997, etc), need to clean these for our purposes
-D2.1.CEN.POPU <- D2.1.CEN.POPU %>%
-  mutate(POP.CENSUS=gsub("^,*|(?<=,),|,*$", "", Years, perl=T), 
-         iso3c=Code,
-         date=2023) %>% #remove leading and trailing commas
-  select(iso3c,date, POP.CENSUS) %>%
+D2.1.CEN.POPU <- 
+  D2.1.CEN.POPU %>%
+  mutate(POP.CENSUS = gsub("^,*|(?<=,),|,*$", 
+                           "", 
+                           Years, 
+                           perl = T), 
+         iso3c      = Code,
+         date       = 2024) %>% 
+  #remove leading and trailing commas
+  select(iso3c,
+         date, 
+         POP.CENSUS) %>%
   left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything())
+  select(colnames(country_metadata), 
+         everything())
 
 write_excel_csv(D2.1.CEN.POPU,
-                file = paste(csv_dir, "D4.1.1.CEN.POPU.2023.csv", sep="/" ))
+                file = paste(csv_dir, 
+                             "D4.1.1.CEN.POPU.2024.csv", 
+                             sep = "/" ))
 
 
 #########
@@ -122,22 +149,34 @@ write_excel_csv(D2.1.CEN.POPU,
 
 
 #add in 2022 data.  Because the data doesn't include HIC countries, we append this to the original database
-D2.2.CEN.AGRI<-read_excel(path=paste(excel_dir,"/01_raw_data/","D2.2.CEN.AGRI.xlsx", sep=""),
-                          sheet="Data",
-                          skip=2,
-                          .name_repair = 'universal')
+D2.2.CEN.AGRI <-
+  read_excel(path = paste(excel_dir,
+                          "D2.2.CEN.AGRI.xlsx", 
+                          sep = "/"),
+             sheet        = "Data",
+             skip         = 2,
+             .name_repair = 'universal')
 
 #data contains values of past census years, (i.e. ,1987, 1997, etc), need to clean these for our purposes
 D2.2.CEN.AGRI <- D2.2.CEN.AGRI %>%
-  mutate(AGRI.CENSUS=gsub("^,*|(?<=,),|,*$", "", Years, perl=T), 
-         iso3c=Code,
-         date=2023) %>% #remove leading and trailing commas
-  select(iso3c,date, AGRI.CENSUS) %>%
+  mutate(AGRI.CENSUS = gsub("^,*|(?<=,),|,*$", 
+                            "", 
+                            Years, 
+                            perl = T), 
+         iso3c       = Code,
+         date        = 2024) %>% 
+  #remove leading and trailing commas
+  select(iso3c,
+         date, 
+         AGRI.CENSUS) %>%
   left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything())
+  select(colnames(country_metadata), 
+         everything())
 
 write_excel_csv(D2.2.CEN.AGRI,
-                file = paste(csv_dir, "D4.1.1.CEN.AGRI.2023.csv", sep="/" ))
+                file = paste(csv_dir, 
+                             "D4.1.1.CEN.AGRI.2024.csv", 
+                             sep = "/" ))
 
 
 #########
@@ -152,24 +191,36 @@ write_excel_csv(D2.2.CEN.AGRI,
 
 
 #add in 2022 data.  Because the data doesn't include HIC countries, we append this to the original database
-D2.3.CEN.BIZZ<-read_excel(path=paste(excel_dir,"/01_raw_data/","D2.3.CEN.BIZZ.xlsx", sep=""),
-                               sheet="Data",
-                               skip=2,
-                               .name_repair = 'universal')
+D2.3.CEN.BIZZ <-
+  read_excel(path = paste(excel_dir,
+                          "D2.3.CEN.BIZZ.xlsx", 
+                          sep = "/"),
+             sheet        = "Data",
+             skip         = 2,
+             .name_repair = 'universal')
 
 #data contains values of past census years, (i.e. ,1987, 1997, etc), need to clean these for our purposes
-D2.3.CEN.BIZZ <- D2.3.CEN.BIZZ %>%
-  mutate(BIZZ.CENSUS=gsub("^,*|(?<=,),|,*$", "", Years, perl=T), 
-         iso3c=Code,
-         date=2023) %>% #remove leading and trailing commas
-  select(iso3c,date, BIZZ.CENSUS) %>%
+D2.3.CEN.BIZZ <- 
+  D2.3.CEN.BIZZ %>%
+  mutate(BIZZ.CENSUS = gsub("^,*|(?<=,),|,*$", 
+                            "", 
+                            Years, 
+                            perl = T), 
+         iso3c       = Code,
+         date        = 2024) %>% #remove leading and trailing commas
+  select(iso3c,
+         date, 
+         BIZZ.CENSUS) %>%
   left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything())
+  select(colnames(country_metadata), 
+         everything())
 
 
 
 write_excel_csv(D2.3.CEN.BIZZ,
-                path = paste(csv_dir, "D4.1.3.CEN.BIZZ.2023.csv", sep="/" ))
+                file = paste(csv_dir, 
+                             "D4.1.3.CEN.BIZZ.2024.csv", 
+                             sep = "/" ))
 
 
 #########
@@ -185,24 +236,37 @@ write_excel_csv(D2.3.CEN.BIZZ,
 
 
 #add in 2022 data.  Because the data doesn't include HIC countries, we append this to the original database
-D2.4.SVY.HOUS<-read_excel(path=paste(excel_dir,"/01_raw_data/","D2.4.SVY.HOUS.xlsx", sep=""),
-                               sheet="Data",
-                               skip=2,
-                               .name_repair = 'universal')
+D2.4.SVY.HOUS <-
+  read_excel(path = paste(excel_dir,
+                          "D2.4.SVY.HOUS.xlsx", 
+                          sep = "/"),
+             sheet        = "Data",
+             skip         = 2,
+             .name_repair = 'universal')
 
 #data contains values of past census years, (i.e. ,1987, 1997, etc), need to clean these for our purposes
-D2.4.SVY.HOUS <- D2.4.SVY.HOUS %>%
-  mutate(HOUS.SURVEYS=gsub("^,*|(?<=,),|,*$", "", Houseshold.survey.on.income..consumption..expenditure..budget..Integrated.Survey, perl=T), 
-         iso3c=Code,
-         country=Country,
-         date=2023) %>% #remove leading and trailing commas
-  select(iso3c,date, HOUS.SURVEYS)  %>%
+D2.4.SVY.HOUS <- 
+  D2.4.SVY.HOUS %>%
+  mutate(HOUS.SURVEYS = gsub("^,*|(?<=,),|,*$", 
+                             "", 
+                             Houseshold.survey.on.income..consumption..expenditure..budget..Integrated.Survey, 
+                             perl = T), 
+         iso3c   = Code,
+         country = Country,
+         date    = 2024) %>% 
+  #remove leading and trailing commas
+  select(iso3c,
+         date, 
+         HOUS.SURVEYS)  %>%
   arrange(iso3c) %>%
   left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything())
+  select(colnames(country_metadata), 
+         everything())
 
 write_excel_csv(D2.4.SVY.HOUS,
-                path = paste(csv_dir, "D4.1.4.SVY.HOUS.2023.csv", sep="/" ))
+                file = paste(csv_dir, 
+                             "D4.1.4.SVY.HOUS.2024.csv", 
+                             sep = "/" ))
 
 #########
 # 2.5 Agriculture survey
@@ -217,25 +281,38 @@ write_excel_csv(D2.4.SVY.HOUS,
 
 
 #add in 2022 data.  Because the data doesn't include HIC countries, we append this to the original database
-D2.5.SVY.AGRI<-read_excel(path=paste(excel_dir,"/01_raw_data/","/D2.5.SVY.AGRI.xlsx", sep=""),
-                               sheet="Data",
-                               skip=2,
-                               .name_repair = 'universal')
+D2.5.SVY.AGRI <-
+  read_excel(path = paste(excel_dir,
+                          "/D2.5.SVY.AGRI.xlsx", 
+                          sep = "/"),
+             sheet        = "Data",
+             skip         = 2,
+             .name_repair = 'universal')
 
 #data contains values of past census years, (i.e. ,1987, 1997, etc), need to clean these for our purposes
-D2.5.SVY.AGRI <- D2.5.SVY.AGRI %>%
-  mutate(AGRI.SURVEYS=gsub("^,*|(?<=,),|,*$", "", Years, perl=T), 
-         iso3c=Code,
-         country=Country,
-         date=2023) %>% #remove leading and trailing commas
-  select(iso3c,date, AGRI.SURVEYS) %>%
-  arrange( iso3c) %>%
+D2.5.SVY.AGRI <- 
+  D2.5.SVY.AGRI %>%
+  mutate(AGRI.SURVEYS = gsub("^,*|(?<=,),|,*$", 
+                             "", 
+                             Years, 
+                             perl = T), 
+         iso3c   = Code,
+         country = Country,
+         date    = 2024) %>% 
+  #remove leading and trailing commas
+  select(iso3c,
+         date,
+         AGRI.SURVEYS) %>%
+  arrange(iso3c) %>%
   left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything())
+  select(colnames(country_metadata), 
+         everything())
 
 
 write_excel_csv(D2.5.SVY.AGRI,
-                path = paste(csv_dir, "D4.1.5.SVY.AGRI.2023.csv", sep="/" ))
+                file = paste(csv_dir, 
+                             "D4.1.5.SVY.AGRI.2024.csv", 
+                             sep = "/" ))
 
 
 #########
@@ -252,27 +329,40 @@ write_excel_csv(D2.5.SVY.AGRI,
 
 
 #add in 2022 data.  Because the data doesn't include HIC countries, we append this to the original database
-D2.6.SVY.LABR<-read_excel(path=paste(excel_dir,"/01_raw_data/","/D2.6.SVY.LABR.xlsx", sep=""),
-                               sheet="Data",
-                               skip=2,
-                               .name_repair = 'universal')
+D2.6.SVY.LABR <- 
+  read_excel(path = paste(excel_dir,
+                          "/D2.6.SVY.LABR.xlsx", 
+                          sep = "/"),
+             sheet        = "Data",
+             skip         = 2,
+             .name_repair = 'universal')
 
 #data contains values of past census years, (i.e. ,1987, 1997, etc), need to clean these for our purposes
-D2.6.SVY.LABR <- D2.6.SVY.LABR %>%
-  mutate(LABR.SURVEYS=gsub("^,*|(?<=,),|,*$", "", Years, perl=T), 
-         iso3c=Code,
-         country=Country,
-         date=2023) %>% #remove leading and trailing commas
-  select(iso3c,date, LABR.SURVEYS)  %>%
+D2.6.SVY.LABR <- 
+  D2.6.SVY.LABR %>%
+  mutate(LABR.SURVEYS = gsub("^,*|(?<=,),|,*$", 
+                             "", 
+                             Years, 
+                             perl = T), 
+         iso3c   = Code,
+         country = Country,
+         date    = 2024) %>% 
+  #remove leading and trailing commas
+  select(iso3c,
+         date, 
+         LABR.SURVEYS)  %>%
   ungroup() %>%
-  arrange( iso3c) %>%
+  arrange(iso3c) %>%
   left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything())
+  select(colnames(country_metadata), 
+         everything())
 
 
 
 write_excel_csv(D2.6.SVY.LABR,
-                path = paste(csv_dir, "D4.1.6.SVY.LABR.2023.csv", sep="/" ))
+                file = paste(csv_dir, 
+                             "D4.1.6.SVY.LABR.2024.csv", 
+                             sep = "/" ))
 
 
 #########
@@ -287,10 +377,13 @@ write_excel_csv(D2.6.SVY.LABR,
 
 
 #read in four different worksheets.  Each corresponding to NSO website, MICS, DHS, or surveys in microdata library
-D2.7.SVY.HLTH.NSO<-read_excel(path=paste(excel_dir,"/01_raw_data/","/D2.7.SVY.HLTH.xlsx", sep=""),
-                               sheet="NSO websites",
-                               skip=2,
-                               .name_repair = 'universal')
+D2.7.SVY.HLTH.NSO <- 
+  read_excel(path = paste(excel_dir,
+                          "/D2.7.SVY.HLTH.xlsx", 
+                          sep = "/"),
+             sheet        = "NSO websites",
+             skip         = 2,
+             .name_repair = 'universal')
 
 
 #microdata library
@@ -307,21 +400,31 @@ D2.7.SVY.HLTH <- D2.7.SVY.HLTH.NSO
 
 
 # Now do a final reshap to make the dataset similar to other Dimension 2 datasets
-D2.7.SVY.HLTH <- D2.7.SVY.HLTH %>% #do some reshaping of this df to match previous version
+D2.7.SVY.HLTH <- D2.7.SVY.HLTH %>% 
+  #do some reshaping of this df to match previous version
   #create a string to match original
-  mutate(HLTH.SURVEYS=gsub("^,*|(?<=,),|,*$", "", Year, perl=T), 
-         iso3c=Country,
-         country=country.name,
-         date=2023) %>% #remove leading and trailing commas
-  select(iso3c,date, HLTH.SURVEYS)  %>%
-  arrange( iso3c) %>%
+  mutate(HLTH.SURVEYS = gsub("^,*|(?<=,),|,*$", 
+                             "", 
+                             Year, 
+                             perl = T), 
+         iso3c   = Country,
+         country = country.name,
+         date    = 2024) %>% 
+  #remove leading and trailing commas
+  select(iso3c,
+         date, 
+         HLTH.SURVEYS)  %>%
+  arrange(iso3c) %>%
   left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything())
+  select(colnames(country_metadata), 
+         everything())
 
 
 
 write_excel_csv(D2.7.SVY.HLTH,
-                path = paste(csv_dir, "D4.1.7.SVY.HLTH.2023.csv", sep="/" ))
+                file = paste(csv_dir, 
+                             "D4.1.7.SVY.HLTH.2024.csv", 
+                             sep="/" ))
 
 #########
 # 2.8 Business/establishment survey
@@ -337,23 +440,37 @@ write_excel_csv(D2.7.SVY.HLTH,
 
 
 #add in 2022 data.  Because the data doesn't include HIC countries, we append this to the original database
-D2.8.SVY.BIZZ<-read_excel(path=paste(excel_dir,"/01_raw_data/","/D2.8.SVY.BIZZ.xlsx", sep=""),
-                               sheet="Data",
-                               skip=2,
-                               .name_repair = 'universal')
+D2.8.SVY.BIZZ <-
+  read_excel(path = paste(excel_dir,
+                          "/D2.8.SVY.BIZZ.xlsx", 
+                          sep = "/"),
+             sheet        = "Data",
+             skip         = 2,
+             .name_repair = 'universal')
 
-#data contains values of past census years, (i.e. ,1987, 1997, etc), need to clean these for our purposes
-D2.8.SVY.BIZZ <- D2.8.SVY.BIZZ %>%
-  mutate(BIZZ.SURVEYS=gsub("^,*|(?<=,),|,*$", "", Years, perl=T), 
-         iso3c=Code,
-         country=Country,
-         date=2023) %>% #remove leading and trailing commas
-  select(iso3c,date, BIZZ.SURVEYS)   %>%
-  arrange( iso3c) %>%
+#data contains values of past census years, 
+# (i.e. ,1987, 1997, etc), need to clean these for our purposes
+D2.8.SVY.BIZZ <- 
+  D2.8.SVY.BIZZ %>%
+  mutate(BIZZ.SURVEYS = gsub("^,*|(?<=,),|,*$", 
+                             "", 
+                             Years, 
+                             perl = T), 
+         iso3c   = Code,
+         country = Country,
+         date    = 2024) %>% 
+  #remove leading and trailing commas
+  select(iso3c,
+         date, 
+         BIZZ.SURVEYS)   %>%
+  arrange(iso3c) %>%
   left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything())
+  select(colnames(country_metadata), 
+         everything())
 
 
 write_excel_csv(D2.8.SVY.BIZZ,
-                path = paste(csv_dir, "D4.1.8.SVY.BIZZ.2023.csv", sep="/" ))
+                path = paste(csv_dir, 
+                             "D4.1.8.SVY.BIZZ.2024.csv", 
+                             sep = "/" ))
 
