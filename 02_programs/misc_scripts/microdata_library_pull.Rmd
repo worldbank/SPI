@@ -88,9 +88,6 @@ write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studi
 
 
 
-# second ILO source
-#ilo_sources_catalog <- read_csv("https://www.ilo.org/ilostat-files/Documents/sources_en.csv")
-#write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catalog.csv", sep = "")) # write to csv
 
 # pull from FAO
 
@@ -133,22 +130,25 @@ internal_series <- study_df_internal$idno
 # use purr to loop over list of surveys and return some extra info
 series_info_fn <- function(series) {
   info <- fromJSON(paste("http://microdatalib.worldbank.org/index.php/api/catalog/", series, sep = ""))
-  series_info <- as.character(info$dataset$metadata$study_desc$series_statement$series_name)
+  print(info)
+  series_info   <- as.character(info$dataset$metadata$study_desc$series_statement$series_name)
   sampling_info <- as.character(info$dataset$metadata$study_desc$method$analysis_info$response_rate)
   geog_coverage <- as.character(info$dataset$metadata$study_desc$study_info$geog_coverage)
-  tibble::tibble(series_info, sampling_info, geog_coverage)
+  tibble::tibble(series_info, 
+                 sampling_info, 
+                 geog_coverage)
 }
 
-
+library(collapse)
 # now produce a dataframe with the more info on survey
-study_df_internal <- study_df_internal %>%
-  mutate(series_info_dat = map(internal_series, possibly(series_info_fn,
-    otherwise = "Something Wrong"
-  ))) %>%
+t1 <- Sys.time()
+study_df_internal2 <- study_df_internal[c(1), ] %>%
+  fmutate(series_info_dat = map(internal_series, 
+                               possibly(series_info_fn,
+    otherwise = "Something Wrong"))) %>%
   unnest(series_info_dat,
-    keep_empty = TRUE
-  )
-
+    keep_empty = TRUE)
+t2 <- Sys.time()
 study_df_internal <- study_df_internal %>%
   mutate(across(is.list, as.character))
 
