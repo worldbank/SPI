@@ -2813,7 +2813,8 @@ cs_df <- spi_df_empty %>%
   left_join(cs5_df) %>%
   left_join(cs6_df) %>%
   left_join(cs7_df) %>%
-  left_join(cs8_df) 
+  left_join(cs8_df) %>%
+  filter(!is.na(iso3c)) 
 
 #add to spi databases
 spi_df <- spi_df %>%
@@ -4855,6 +4856,7 @@ pop_df <- wbstats::wb_data(country    = "all",
                            end_date   = end_date) %>%
   mutate(date       = as.numeric(date),
          population = SP.POP.TOTL) %>%
+
   select(iso3c,
          date,
          population)
