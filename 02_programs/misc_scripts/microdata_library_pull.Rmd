@@ -89,8 +89,8 @@ write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studi
 
 
 # second ILO source
-ilo_sources_catalog <- read_csv("https://www.ilo.org/ilostat-files/Documents/sources_en.csv")
-write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catalog.csv", sep = "")) # write to csv
+#ilo_sources_catalog <- read_csv("https://www.ilo.org/ilostat-files/Documents/sources_en.csv")
+#write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catalog.csv", sep = "")) # write to csv
 
 # pull from FAO
 
