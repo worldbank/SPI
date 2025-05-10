@@ -28,6 +28,7 @@ library(cld2)
 library(zoo)
 library(readxl)
 library(flextable)
+library(tidylog)
 #set directories
 dir <- here()
 
@@ -986,13 +987,13 @@ library(pipr)
 #new pipr package already includes survey coverage and comparability measures
 
 
-df <- get_stats(server = "qa")
+#df <- get_stats(server = "qa")
 
 #save as csv
-write_excel_csv(df, 
-                file = paste(raw_dir, 
-                             '1.5_DUIO/PIP_comparability_latest.csv', 
-                             sep = "/"))
+# write_excel_csv(df, 
+#                 file = paste(raw_dir, 
+#                              '1.5_DUIO/PIP_comparability_latest.csv', 
+#                              sep = "/"))
 
 df <- read_csv(paste(raw_dir, 
                      '1.5_DUIO/PIP_comparability_latest.csv', 
@@ -1009,9 +1010,9 @@ for (reference_year in 2004:end_date) {
   
   # extend the window for more recent years.  
   #   For instance, 2020 surveys are reported with a lag, so give them two year grace period
-  if (reference_year >= 2023) {
+  if (reference_year >= end_date) {
     rec_window <- 7
-  } else if (reference_year == 2022) {
+  } else if (reference_year == end_date-1) {
     rec_window <- 6
   } else {
     rec_window <- 5
@@ -2141,7 +2142,11 @@ D2.4_NADA <- read_csv(file = paste(raw_dir,
                                   "D2.4.NADA.2023.csv",
                                   sep = "/" )) %>% 
               mutate(date = 2023)) %>%
-  mutate(SPI.D2.4.NADA = case_when(
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  '/2.4_DSDS/',
+                                  "D2.4.NADA.2024.csv",
+                                  sep = "/" )) %>% 
+              mutate(date = 2024)) %>%  mutate(SPI.D2.4.NADA = case_when(
     NADA==1 ~ 1, 
     NADA==0 ~ 0, 
     TRUE    ~ 0))  %>%
@@ -2271,7 +2276,7 @@ un_sdg_data_read  <- function(year) {
 
 #read in versions
 #apply function from 2004 to 2023 and bind together
-un_sdg_df <- bind_rows(lapply(2004:2023, un_sdg_data_read)) 
+un_sdg_df <- bind_rows(lapply(2004:2024, un_sdg_data_read)) 
 
 #add to spi databases
 spi_df <- spi_df %>%
@@ -2922,7 +2927,7 @@ aspire_fun <- function(date_start, date_end) {
 ####
 # X Year moving average
 ####
-#create this database for each year from 2004 to 2023 using a X year average
+#create this database for each year from 2004 to 2024 using a X year average
 for (i in c(2004:end_date)) {
   
   start=i-(window-1)
@@ -3065,8 +3070,8 @@ df_birth <- read_csv(file = paste(raw_dir,
   transmute(
     iso3c=iso3c,
     date=date,
-    RAW.D4.2.3.BRTH90=ind_value,
-    SPI.D4.2.3.BRTH90=if_else(ind_value==1,0.5,0)
+    RAW.D4.2.3.BRTH90=Value,
+    SPI.D4.2.3.BRTH90=if_else(Value==1,0.5,0)
   ) %>%
   #some countries do not update data ever year, so carry forward last value if missing
   group_by(iso3c) %>%
@@ -3082,8 +3087,8 @@ df_death <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_DETH75N.csv', sep="
     transmute(
     iso3c=iso3c,
     date=date,
-    RAW.D4.2.3.DETH75=ind_value,
-    SPI.D4.2.3.DETH75=if_else(ind_value==1,0.5,0)
+    RAW.D4.2.3.DETH75=Value,
+    SPI.D4.2.3.DETH75=if_else(Value==1,0.5,0)
     ) %>%
   #some countries do not update data ever year, so carry forward last value if missing
   group_by(iso3c) %>%
@@ -3294,7 +3299,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 
   #read in ODIN data
   #read in ODIN data
-  for (i in c(2015,2016,2017,2018,2020, 2021, 2022, 2023)) {
+  for (i in c(2015,2016,2017,2018,2020, 2021, 2022, 2023, 2024)) {
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""),)  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
@@ -3313,7 +3318,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
     assign(paste('geo_df',i,sep="_"), temp)
   }
 #bind different years together
-geo_df <- bind_rows(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018, geo_df_2020, geo_df_2021, geo_df_2022, geo_df_2023)
+geo_df <- bind_rows(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018, geo_df_2020, geo_df_2021, geo_df_2022, geo_df_2023, geo_df_2024)
 
 #for some small countries, the data at 1st admin level is not included.  These countries include:
 # Andorra, Anguilla, Antigua and Barbuda, Bahrain, Dominica, Hong Kong, Macao, Maldives, Malta, Marshall Islands, 
@@ -3897,8 +3902,8 @@ D5.2.4.CPIBY.IMF.RAW <- D5.2.4.CPI.REF %>%
          iso3c             = if_else(iso3c == "KOS", 
                                      'XKX',
                                      iso3c) ) %>% #fix kosovo
-  mutate(RAW.D5.2.4.CPIBY.IMF = if_else((CPI_weight_change >= 2023 &
-                                           CPI_ref_period <= 2023), 
+  mutate(RAW.D5.2.4.CPIBY.IMF = if_else((CPI_weight_change >= 2024 &
+                                           CPI_ref_period <= 2024), 
                                         "annual chained",
                                         as.character(CPI_ref_period),
                                         as.character(CPI_ref_period))) %>%

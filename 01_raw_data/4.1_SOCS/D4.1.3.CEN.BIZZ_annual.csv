@@ -100,16 +100,13 @@
 "KNA",-99,NA,NA
 "KOR",-99,"Register based census",NA
 "KWT",-99,"Register based census",NA
-"LAO",2006,NA,"2006"
 "LAO",-99,"Register based census",NA
 "LBN",-99,"Register based census",NA
-"LBR",2007,NA,"2007"
 "LBR",2017,"2017",NA
 "LBY",-99,NA,NA
 "LCA",-99,"Register based census",NA
-"LKA",1983,NA,"1983, 2003, 2006"
-"LKA",2003,"2003, 2013","1983, 2003, 2006"
-"LKA",2006,NA,"1983, 2003, 2006"
+"LKA",1983,NA,"1983, 2003"
+"LKA",2003,"2003, 2013","1983, 2003"
 "LKA",2013,"2003, 2013",NA
 "LSO",-99,"Register based census",NA
 "LTU",-99,"Register based census",NA
@@ -127,9 +124,8 @@
 "MMR",-99,"Register based census",NA
 "MNE",-99,"Register based census",NA
 "MNG",-99,"Register based census",NA
-"MOZ",2004,NA,"2004, 2015"
+"MOZ",2004,NA,"2004"
 "MOZ",2014,"2014",NA
-"MOZ",2015,NA,"2004, 2015"
 "MRT",-99,NA,NA
 "MUS",-99,"Register based census",NA
 "MWI",2016,"2016",NA
@@ -142,7 +138,6 @@
 "NOR",-99,"Register based census",NA
 "NPL",2001,"2001, 2006, 2018",NA
 "NPL",2006,"2001, 2006, 2018",NA
-"NPL",2007,NA,"2007"
 "NPL",2018,"2001, 2006, 2018",NA
 "NRU",-99,NA,NA
 "NZL",-99,"Register based census",NA
@@ -162,10 +157,6 @@
 "QAT",-99,"Register based census",NA
 "ROU",-99,"Register based census",NA
 "RUS",-99,"Register based census",NA
-"RWA",2011,NA,"2011, 2014, 2017, 2022"
-"RWA",2014,NA,"2011, 2014, 2017, 2022"
-"RWA",2017,NA,"2011, 2014, 2017, 2022"
-"RWA",2022,NA,"2011, 2014, 2017, 2022"
 "RWA",-99,"Register based census",NA
 "SAU",-99,"Register based census",NA
 "SDN",-99,NA,NA
@@ -198,7 +189,6 @@
 "TUR",-99,"Register based census",NA
 "TUV",-99,NA,NA
 "TZA",-99,"Register based census",NA
-"UGA",2006,NA,"2006"
 "UGA",-99,"Register based census",NA
 "UKR",-99,"Register based census",NA
 "URY",-99,"Register based census",NA
@@ -206,13 +196,11 @@
 "UZB",-99,"Register based census",NA
 "VCT",-99,NA,NA
 "VEN",-99,NA,NA
-"VNM",2008,NA,"2008"
 "VNM",-99,"Register based census",NA
 "VUT",-99,"Register based census",NA
 "WSM",-99,NA,NA
 "XKX",-99,"Register based census",NA
 "YEM",-99,NA,NA
-"ZAF",2021,NA,"2021"
 "ZAF",-99,"Register based census",NA
 "ZMB",-99,NA,NA
-"ZWE",2013,"2013","2013"
+"ZWE",2013,"2013",NA
