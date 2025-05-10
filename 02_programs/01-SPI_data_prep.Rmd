@@ -4491,6 +4491,12 @@ D5.2.10.GSBP <- read_csv(file = paste(raw_dir,
                                   "D5.2.10.GSBP.2023.csv", 
                                   sep = "/" )) %>% 
               mutate(date = 2023)) %>% #add in 2022 data
+  #add in 2022 data
+  bind_rows(read_csv(file = paste(raw_dir, 
+                                  "5.2_DISM",
+                                  "D5.2.10.GSBP.2024.csv", 
+                                  sep = "/" )) %>% 
+              mutate(date = 2024)) %>% #add in 2024 data
   mutate(SPI.D5.2.10.GSBP = case_when(str_to_lower(GSBP)=="yes" ~ 1, 
                                       TRUE ~ 0),
          RAW.D5.2.10.GSBP = GSBP)  %>%

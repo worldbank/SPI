@@ -24,6 +24,11 @@ csv_dir <- here("01_raw_data",
 out_dir <- here("01_raw_data", 
                 "4.1_SOCS", 
                 "raw")
+gsbpm_input_dir <- here("01_raw_data", 
+                        "5.2_DISM", 
+                        "raw")
+gsbpm_output_dir <- here("01_raw_data", 
+                         "4.1_SOCS")
 ###########
 # Preliminary
 ###########
@@ -58,7 +63,7 @@ spi_loader <- function(variable_num1,
                        variable_num2,
                        variable_name, 
                        skip) {
-  read_excel(path  =paste(excel_dir,
+  read_excel(path  = paste(excel_dir,
                           "D",
                           paste(variable_num1,
                                 variable_num2,
@@ -71,7 +76,16 @@ spi_loader <- function(variable_num1,
              skip  = skip,
              .name_repair = 'universal') 
 }
-
+spi_loader_gsbpm <- function(variable_num1, 
+                       variable_num2,
+                       variable_name, 
+                       skip) {
+  read_csv(file  = paste(gsbpm_input_dir,
+                          "/D1.12.MSC",
+                          ".csv", 
+                          sep = "")) 
+}
+gsbpm_input_dir
 
 ##################
 # This section will read in raw excels collected by SPI team, then keep just key info and convert to csv for indexing in github
@@ -94,17 +108,25 @@ spi_loader <- function(variable_num1,
 
 
 
-D1.12.MSC.GSBP_2023 <- spi_loader(1,12,'GSBP', 0) %>%
-  mutate(GSBP=Business.Process..GSBPM.,
-         iso3c=Code,
-         country=Country,
-         date=2024) %>%
-  select(iso3c,date, GSBP) %>%
-  arrange(iso3c, date) %>%
+D1.12.MSC.GSBP_2024 <- spi_loader_gsbpm(1,12,'GSBP', 0) %>%
+  mutate(GSBP    = `Business Process (GSBPM)`,
+         iso3c   = Code,
+         country = Country,
+         date    = 2024) %>%
+  select(iso3c,
+         date, 
+         GSBP) %>%
+  arrange(iso3c, 
+          date) %>%
   left_join(country_metadata) %>%
-  select(colnames(country_metadata), everything()) %>%
-  write_excel_csv(
-    file = paste(out_dir, "/5.2_DISM/D5.2.10.GSBP.2024.csv", sep="/" ))
+  select(colnames(country_metadata), 
+         everything()) 
+D1.12.MSC.GSBP_2024 #%>%
+write_csv(x = D1.12.MSC.GSBP_2024, 
+          file = fs::path("01_raw_data",
+                               "5.2_DISM",
+                               "D5.2.10.GSBP.2024.csv"))
+
 ###############################
 # SPI Dimension 2: Censuses and Surveys (CS): 
 ###############################
