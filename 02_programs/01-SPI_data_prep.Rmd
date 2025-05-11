@@ -2806,14 +2806,14 @@ cs8_df <-
 
 #brind all censuses and surveys together
 cs_df <- spi_df_empty %>%
-  left_join(cs1_df) %>%
-  left_join(cs2_df) %>%
-  left_join(cs3_df) %>%
-  left_join(cs4_df) %>%
-  left_join(cs5_df) %>%
-  left_join(cs6_df) %>%
-  left_join(cs7_df) %>%
-  left_join(cs8_df) %>%
+  left_join(cs1_df %>%  filter(!is.na(iso3c))) %>%
+  left_join(cs2_df %>%  filter(!is.na(iso3c))) %>%
+  left_join(cs3_df %>%  filter(!is.na(iso3c))) %>%
+  left_join(cs4_df %>%  filter(!is.na(iso3c))) %>%
+  left_join(cs5_df %>%  filter(!is.na(iso3c))) %>%
+  left_join(cs6_df %>%  filter(!is.na(iso3c))) %>%
+  left_join(cs7_df %>%  filter(!is.na(iso3c))) %>%
+  left_join(cs8_df %>%  filter(!is.na(iso3c))) %>%
   filter(!is.na(iso3c)) 
 
 #add to spi databases
@@ -4142,13 +4142,13 @@ D5.2.6.EMPL <- read_csv(file = paste(raw_dir,
               mutate(date            = 2023, 
                      SPI.D5.2.6.EMPL = as.numeric(ISCE))) %>% 
   # add in 2023 data  
-  # bind_rows(read_csv(file = paste(raw_dir, 
-  #                                 "5.2_DISM",
-  #                                 "D5.2.6.EMPL.2024.csv", 
-  #                                 sep = "/" )) %>% 
-  #             mutate(date            = 2024, 
-  #                    SPI.D5.2.6.EMPL = as.numeric(ISCE))) %>% 
-  # add in 2023 data  
+  bind_rows(read_csv(file = paste(raw_dir,
+                                  "5.2_DISM",
+                                  "D5.2.6.EMPL.2024.csv",
+                                  sep = "/" )) %>%
+              mutate(date            = 2024,
+                     SPI.D5.2.6.EMPL = as.numeric(ISCE))) %>%
+  # add in 2024 data  
   mutate(RAW.D5.2.6.EMPL = EMPL)  %>%
   select(iso3c,  
          date, 
