@@ -104,11 +104,6 @@ write_excel_csv(study_df_ilo,
 
 
 
-# second ILO source - 2025 THE API PULL ISN'T WORKING, FOLLOW INSTRUCTIONS FOR DOWNLOAD AND RENAME
-# dir <- "https://ilostat.ilo.org/data/national-sources-catalogue/sources_en.csv"
-# ilo_sources_catalog <- read_csv("https://www.ilo.org/ilostat-files/Documents/sources_en.csv")
-# ilo_sources_catalog <- read_csv(dir)
-# write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catalog.csv", sep = "")) # write to csv
 
 # pull from FAO
 
