@@ -2682,7 +2682,7 @@ survey_fun  <- function(data, input_var) {
 
   temp <- temp_2024
   
-  for (i in 2004:2024) {
+  for (i in 2004:(end_date - 1)) {
     temp <- bind_rows(temp, 
                       get(paste('temp',
                                 i,
