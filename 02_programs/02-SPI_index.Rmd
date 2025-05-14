@@ -43,7 +43,7 @@ output_dir <- paste(dir, '03_output_data', sep="/")
 #weights (either unity (1) or population (2))
 wgt <- 1
 
-end_date <- 2023
+end_date <- 2024
 
 ```
 
@@ -928,21 +928,40 @@ Putting the scores together creates a dashboard for each national statistical sy
   
 
 ```{r metadatatab1, eval=FALSE, include=FALSE}
+pillars <- read_csv(paste(raw_dir, 
+                          '/metadata/SPI_pillars.csv', 
+                          sep = ""))
+
+pillars <- pillars %>%
+  mutate(dimension = paste(dimension_number, 
+                           dimension_name, 
+                           sep = ": "),
+         spi_indicator_description = Description) %>%
+  select(dimension, 
+         spi_indicator_description)
+
+
+pillars_tab <- flextable(pillars) %>%
+  add_header_lines('SPI Dimensions Metadata.') %>%
+  set_header_labels(values = 
+                      list(dimension                 = "Dimension",
+                           spi_indicator_description = "Brief Description")) 
+
 ####
 # create table
 ####
 
-pillars <- pillars %>%
-  mutate(pillar=paste(pillar_number, pillar_name, sep=": ")) %>%
-  select(pillar, spi_indicator_description)
-
-
-pillars_tab <- flextable(pillars) %>%
-  add_header_lines('SPI Pillars Metadata.') %>%
-  set_header_labels(values=list(
-                       pillar="Pillar",
-                       spi_indicator_description="Brief Description"
-                                   )) 
+# pillars <- pillars %>%
+#   mutate(pillar=paste(pillar_number, pillar_name, sep=": ")) %>%
+#   select(pillar, spi_indicator_description)
+# 
+# 
+# pillars_tab <- flextable(pillars) %>%
+#   add_header_lines('SPI Pillars Metadata.') %>%
+#   set_header_labels(values=list(
+#                        pillar="Pillar",
+#                        spi_indicator_description="Brief Description"
+#                                    )) 
 
 FitFlextableToPage(pillars_tab) %>%
   width(width=3.2) %>%
@@ -1768,9 +1787,9 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
 ```{r aggpillarsplot3, eval=FALSE, include=FALSE}
 
-spi_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
+#spi_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
-
+spi_region_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
 ```
 
@@ -2014,7 +2033,7 @@ index_compare <- spi_index_df_dim3_alt %>%
 ```{r index_compare_plot, eval=FALSE, include=FALSE}
 
 
-spi_charts('spi_index_df_dim3_alt', 'SPI.INDEX.PIL3.ALT','Pillar 3: Data Products - OECD High Income Top Coded')
+spi_country_charts('spi_index_df_dim3_alt', 'SPI.INDEX.PIL3.ALT','Pillar 3: Data Products - OECD High Income Top Coded')
 
 
 ```
@@ -2022,7 +2041,7 @@ spi_charts('spi_index_df_dim3_alt', 'SPI.INDEX.PIL3.ALT','Pillar 3: Data Product
 ```{r index_compare_plot2, eval=FALSE, include=FALSE}
 
 
-spi_charts('spi_index_df_dim3_alt2', 'SPI.INDEX.PIL3.ALT2','Pillar 3: Data Products - All High Income Top Coded')
+spi_region_charts('spi_index_df_dim3_alt2', 'SPI.INDEX.PIL3.ALT2','Pillar 3: Data Products - All High Income Top Coded')
 
 
 ```
@@ -2395,11 +2414,11 @@ anova_pil_plot
 
 #Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each dimension.
 
-anova_pillar_df <- spi_index_df %>%
+anova_pillar_df <- spi_index_df %>% 
   mutate(SPI.DIM1.5=SPI.INDEX.PIL1/100) %>%
-  select(country, iso3c, date, starts_with("INDEX")) %>%
+  select(country, iso3c, date, contains("INDEX")) %>% 
   pivot_longer(
-    cols=starts_with("INDEX"),
+    cols=contains("INDEX"),
     names_to='Dimension',
     values_to='value'
   ) %>%
@@ -2412,7 +2431,7 @@ anova_pillar_df <- spi_index_df %>%
         ),
     std_dev=as.numeric(std_dev)
   ) %>%
-  left_join(pillars, by = c('Dimension'='dimension_id'))
+  left_join(pillars, by = c('Dimension'='dimension'))
   
     
 anova_pillar_plot <- anova_pillar_df %>%
@@ -2483,7 +2502,7 @@ hci_df <- wbstats::wb_data(country="countries_only",
               start_date=2016,
               end_date=2020,
               return_wide = F) %>%
-  left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
+  left_join(select(spi_index_df,iso3c,date, region,contains('SPI.INDEX'))) #merge on SPI Index data
 
 #get the correlation for 2020
 hci_df_2018 <- hci_df %>%
