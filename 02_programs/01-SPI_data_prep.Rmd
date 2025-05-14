@@ -459,38 +459,38 @@ Not included because of lack of established methodology. There are some usable d
 
 ```{r vnr, eval=FALSE, include=FALSE}
 #load data
-vnr_use_df <- read_csv(paste(raw_dir, 
-                             "/1.2_DUNE/UN_VNR_use_of_numbers.csv", 
-                             sep = "")) %>%
-  left_join(iso3c |> 
-              select(country, 
-                     iso3c), 
-            by = "country") |> 
-  group_by(iso3c) %>%
-  filter(year == max(year, 
-                     na.rm = T)) %>%
-  mutate(date = end_date)
-
-
-vnr_use_merge <- vnr_use_df %>% 
-  group_by(iso3c,
-           country,
-           date, 
-           name) %>%
-  summarise(SPI.D1.2.VNR = wtd.mean(freq_of_numbers, 
-                                    w = freq_of_terms))
-
-
-#add to spi databases
-spi_df <- spi_df %>%
-  left_join(vnr_use_merge)
-
-#map the VNR data
-
-#overall score
-spi_mapper('vnr_use_merge', 
-           'SPI.D1.2.VNR', 
-           'Overall Score for Use of Numbers in VNRs')
+# vnr_use_df <- read_csv(paste(raw_dir, 
+#                              "/1.2_DUNE/UN_VNR_use_of_numbers.csv", 
+#                              sep = "")) %>%
+#   left_join(iso3c |> 
+#               select(country, 
+#                      iso3c), 
+#             by = "country") |> 
+#   group_by(iso3c) %>%
+#   filter(year == max(year, 
+#                      na.rm = T)) %>%
+#   mutate(date = end_date)
+# 
+# 
+# vnr_use_merge <- vnr_use_df %>% 
+#   group_by(iso3c,
+#            country,
+#            date, 
+#            name) %>%
+#   summarise(SPI.D1.2.VNR = wtd.mean(freq_of_numbers, 
+#                                     w = freq_of_terms))
+# 
+# 
+# #add to spi databases
+# spi_df <- spi_df %>%
+#   left_join(vnr_use_merge)
+# 
+# #map the VNR data
+# 
+# #overall score
+# spi_mapper('vnr_use_merge', 
+#            'SPI.D1.2.VNR', 
+#            'Overall Score for Use of Numbers in VNRs')
 
 
 # #SDG 1
@@ -607,82 +607,82 @@ Not included because of lack of established methodology. There are some usable d
 
 
 ```{r api_plots, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-if (exists('nso_tweets_df')) {
-  rm('nso_tweets_df')
-}
-
-load(paste(raw_dir, "/1.3_DUCS/twitter_pull_df.RData", sep=""))
-
-# dataframe by year and month
-nso_tweets_sum <- nso_tweets_df %>%
-  mutate(date=floor_date(as_date(time_stamp), "month")) %>%
-  group_by(iso3c, date) %>%
-  summarise(freq=n()) %>%
-  ungroup() %>%
-  # complete(country, date = full_seq(date, period = 1), fill = list(freq = 0)) %>%
-  filter(!is.na(country))
-
-####################################
-#Some summary stats and descriptive
-####################################
-
-#Years
-ggplot(data=nso_tweets_sum, aes(x=date, y=freq, group=country, color=country)) +
-  geom_point() +
-  geom_path() +
-  theme_bw() + 
-  labs(y='Number of Tweets') +
-  facet_wrap(~country, scales = "free_y") +
-  ggtitle(str_wrap("Counts of the Number of Tweets by NSO in Date",55))
-
+# 
+# if (exists('nso_tweets_df')) {
+#   rm('nso_tweets_df')
+# }
+# 
+# load(paste(raw_dir, "/1.3_DUCS/twitter_pull_df.RData", sep=""))
+# 
+# # dataframe by year and month
+# nso_tweets_sum <- nso_tweets_df %>%
+#   mutate(date=floor_date(as_date(time_stamp), "month")) %>%
+#   group_by(iso3c, date) %>%
+#   summarise(freq=n()) %>%
+#   ungroup() %>%
+#   # complete(country, date = full_seq(date, period = 1), fill = list(freq = 0)) %>%
+#   filter(!is.na(country))
+# 
+# ####################################
+# #Some summary stats and descriptive
+# ####################################
+# 
+# #Years
+# ggplot(data=nso_tweets_sum, aes(x=date, y=freq, group=country, color=country)) +
+#   geom_point() +
+#   geom_path() +
+#   theme_bw() + 
+#   labs(y='Number of Tweets') +
+#   facet_wrap(~country, scales = "free_y") +
+#   ggtitle(str_wrap("Counts of the Number of Tweets by NSO in Date",55))
+# 
 
 
 ```
 
 ```{r twitter_map, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-# load data
-#Now map the result
-quality = "high"
-maps <- wbgmaps::wbgmaps[[quality]]
-
-country_metadata <- wbstats::wb_countries()
-  
-  twitter_map <- nso_tweets_sum %>%
-    group_by( country) %>%
-    summarise(across(everything(),first)) %>%
-    mutate(data_available=TRUE) %>%
-    right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), FALSE, data_available)) 
-  
-  
-   ggplot() +
-    geom_map(data = twitter_map, aes(map_id = iso3c, fill = data_available), map = maps$countries) + 
-    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
-    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
-     geom_path(data = maps$boundaries,
-               aes(long, lat, group = group),
-               color = "white",
-               size = 0.1,
-               lineend = maps$boundaries$lineend,
-              linetype = maps$boundaries$linetype) +
-    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
-    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
-    scale_fill_brewer(
-      name='Data Available',
-      palette='Paired',
-      na.value='blue'
-    ) +
-    coord_equal() +
-    theme_map(base_size=12) +
-    labs(
-      title=str_wrap('Availability of Twitter Account by Country since 2010',150),
-      caption = 'Source: Twitter'
-    )
-
-
-
+# 
+# # load data
+# #Now map the result
+# quality = "high"
+# maps <- wbgmaps::wbgmaps[[quality]]
+# 
+# country_metadata <- wbstats::wb_countries()
+#   
+#   twitter_map <- nso_tweets_sum %>%
+#     group_by( country) %>%
+#     summarise(across(everything(),first)) %>%
+#     mutate(data_available=TRUE) %>%
+#     right_join(country_metadata) %>%
+#     mutate(data_available=if_else(is.na(data_available), FALSE, data_available)) 
+#   
+#   
+#    ggplot() +
+#     geom_map(data = twitter_map, aes(map_id = iso3c, fill = data_available), map = maps$countries) + 
+#     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+#     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+#      geom_path(data = maps$boundaries,
+#                aes(long, lat, group = group),
+#                color = "white",
+#                size = 0.1,
+#                lineend = maps$boundaries$lineend,
+#               linetype = maps$boundaries$linetype) +
+#     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+#     scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+#     scale_fill_brewer(
+#       name='Data Available',
+#       palette='Paired',
+#       na.value='blue'
+#     ) +
+#     coord_equal() +
+#     theme_map(base_size=12) +
+#     labs(
+#       title=str_wrap('Availability of Twitter Account by Country since 2010',150),
+#       caption = 'Source: Twitter'
+#     )
+# 
+# 
+# 
 
 
 ```
@@ -744,98 +744,98 @@ Not included because of lack of established methodology. We have not been able t
 #   mutate(across(is.list, as.character))
 # 
 # write_excel_csv(study_df_ihsn, paste(raw_dir, '1.4_DUAC', 'ihsn_citations.csv', sep="/"))
-
-# pull in dataset with citation counts
-study_df_ihsn <- read_csv(paste(raw_dir, '1.4_DUAC', 'ihsn_citations.csv', sep="/"))
-
-
-#categories surveys in IHSN
-study_df_ihsn <- study_df_ihsn %>%
-  mutate(topic=case_when(
-    grepl('Population|Housing|Censuses',series_info) ~ 'Population and Housing Censuses',
-    grepl('lfs',series_info) ~ 'Labor Force Surveys',
-    grepl('dhs|DHS|mics|MICS|whs|hea',series_info) ~ 'Health Surveys',
-    grepl('ies',series_info) ~ 'Income/Expenditure Surveys',
-    grepl('sems',series_info) ~ 'Socio/Economic Monitoring Surveys',
-    grepl('lsms', series_info) ~ 'Living Standards Measurement Study',
-    grepl('ag', series_info) ~ 'Agriculture Survey or Census',
-    grepl('en', series_info) ~ 'Enterprise Survey',
-    grepl('oth',series_info) ~ 'Other Household Surveys',
-    grepl('Opinion', series_info) ~ 'Opinion Survey',
-    TRUE ~ 'Other'
-  )) %>%
-  mutate(date=year_end,
-         country=nation)
-
-##########
-#Form measures of academic use
-##########
-
-#get population data to produce per-capita measure
-pop <-wbstats::wb(country="countries_only", 
-              indicator='SP.POP.TOTL',
-              startdate=2004,
-              enddate=end_date,
-              removeNA=FALSE) %>%
-     transmute(
-       iso3c=iso3c,
-       country=country,
-       date=as.numeric(date),
-       population=value
-     )
-
-#get topics list
-topics_list <- unique(study_df_ihsn$topic)
-
-  #Now calculate our SPI score for this indicator
-  for (i in 2004:end_date) {
-   temp <- study_df_ihsn %>%
-    filter(date<=i) %>% #get a list of all surveys conducted before the year
-    group_by(iso3c, topic) %>%
-    summarise(total_downloads=sum(total_downloads))
-   
-   #add grand total
-   temp_tot <- study_df_ihsn %>%
-    filter(date<=i) %>% #get a list of all surveys conducted before the year
-    group_by(iso3c) %>%
-    summarise(total_downloads=sum(total_downloads)) %>%
-    mutate(topic="Total")
-   
-  temp <- temp %>%
-    bind_rows(temp_tot) %>%
-    mutate(date=i) %>% 
-    pivot_wider(names_from='topic',
-                values_from='total_downloads') %>%
-    mutate(across(topics_list, ~if_else(is.na(.),0,.))) %>%
-    arrange(date, country)
-
-
-    assign(paste('academic_use_df',i,sep="_"), temp)
-  }
-
-  academic_use_df <- academic_use_df_end_date
-
-  
-    
-for (i in 2004:2019) {
-    academic_use_df <- bind_rows(academic_use_df, get(paste('academic_use_df',i,sep="_")))
-  }
-  
-
-
-academic_use_df <- academic_use_df %>%
-  left_join(pop) %>%
-  right_join(spi_df_empty) %>%
-  filter(!is.na(income)) %>%
-  mutate(downloads_per_capita=1000*Total/population) %>% #create measure of downloads per 1,000,000 persons
-  mutate(downloads_per_capita=if_else(is.na(downloads_per_capita),0,downloads_per_capita)) %>%
-  group_by(date) %>%
-  mutate(academic_use_rank = rank(-downloads_per_capita)) %>%
-  select(iso3c, date,region, downloads_per_capita, academic_use_rank)
-
-
-academic_use_map <- academic_use_df %>%
-  filter(downloads_per_capita>0)
+# 
+# # pull in dataset with citation counts
+# study_df_ihsn <- read_csv(paste(raw_dir, '1.4_DUAC', 'ihsn_citations.csv', sep="/"))
+# 
+# 
+# #categories surveys in IHSN
+# study_df_ihsn <- study_df_ihsn %>%
+#   mutate(topic=case_when(
+#     grepl('Population|Housing|Censuses',series_info) ~ 'Population and Housing Censuses',
+#     grepl('lfs',series_info) ~ 'Labor Force Surveys',
+#     grepl('dhs|DHS|mics|MICS|whs|hea',series_info) ~ 'Health Surveys',
+#     grepl('ies',series_info) ~ 'Income/Expenditure Surveys',
+#     grepl('sems',series_info) ~ 'Socio/Economic Monitoring Surveys',
+#     grepl('lsms', series_info) ~ 'Living Standards Measurement Study',
+#     grepl('ag', series_info) ~ 'Agriculture Survey or Census',
+#     grepl('en', series_info) ~ 'Enterprise Survey',
+#     grepl('oth',series_info) ~ 'Other Household Surveys',
+#     grepl('Opinion', series_info) ~ 'Opinion Survey',
+#     TRUE ~ 'Other'
+#   )) %>%
+#   mutate(date=year_end,
+#          country=nation)
+# 
+# ##########
+# #Form measures of academic use
+# ##########
+# 
+# #get population data to produce per-capita measure
+# pop <-wbstats::wb(country="countries_only", 
+#               indicator='SP.POP.TOTL',
+#               startdate=2004,
+#               enddate=end_date,
+#               removeNA=FALSE) %>%
+#      transmute(
+#        iso3c=iso3c,
+#        country=country,
+#        date=as.numeric(date),
+#        population=value
+#      )
+# 
+# #get topics list
+# topics_list <- unique(study_df_ihsn$topic)
+# 
+#   #Now calculate our SPI score for this indicator
+#   for (i in 2004:end_date) {
+#    temp <- study_df_ihsn %>%
+#     filter(date<=i) %>% #get a list of all surveys conducted before the year
+#     group_by(iso3c, topic) %>%
+#     summarise(total_downloads=sum(total_downloads))
+#    
+#    #add grand total
+#    temp_tot <- study_df_ihsn %>%
+#     filter(date<=i) %>% #get a list of all surveys conducted before the year
+#     group_by(iso3c) %>%
+#     summarise(total_downloads=sum(total_downloads)) %>%
+#     mutate(topic="Total")
+#    
+#   temp <- temp %>%
+#     bind_rows(temp_tot) %>%
+#     mutate(date=i) %>% 
+#     pivot_wider(names_from='topic',
+#                 values_from='total_downloads') %>%
+#     mutate(across(topics_list, ~if_else(is.na(.),0,.))) %>%
+#     arrange(date, country)
+# 
+# 
+#     assign(paste('academic_use_df',i,sep="_"), temp)
+#   }
+# 
+#   academic_use_df <- academic_use_df_end_date
+# 
+#   
+#     
+# for (i in 2004:2019) {
+#     academic_use_df <- bind_rows(academic_use_df, get(paste('academic_use_df',i,sep="_")))
+#   }
+#   
+# 
+# 
+# academic_use_df <- academic_use_df %>%
+#   left_join(pop) %>%
+#   right_join(spi_df_empty) %>%
+#   filter(!is.na(income)) %>%
+#   mutate(downloads_per_capita=1000*Total/population) %>% #create measure of downloads per 1,000,000 persons
+#   mutate(downloads_per_capita=if_else(is.na(downloads_per_capita),0,downloads_per_capita)) %>%
+#   group_by(date) %>%
+#   mutate(academic_use_rank = rank(-downloads_per_capita)) %>%
+#   select(iso3c, date,region, downloads_per_capita, academic_use_rank)
+# 
+# 
+# academic_use_map <- academic_use_df %>%
+#   filter(downloads_per_capita>0)
 
 #add to spi databases
 # spi_df <- spi_df %>%
@@ -845,112 +845,112 @@ academic_use_map <- academic_use_df %>%
 
 
 ```{r ihsn_plots, eval=FALSE, include=FALSE}
-# #Do some basic plots
-g1 <- study_df_ihsn %>%
-    mutate(total=n()) %>%
-    group_by(topic) %>%
-    summarise(Percentage=100*n()/total,
-           Label = paste(round(Percentage,0),'%', sep="")) %>%
-    ggplot(aes(x=Percentage, y=topic, fill=topic)) +
-      geom_bar(stat="identity",position='dodge') +
-      geom_text(aes(label=Label), nudge_x = 1) +
-      expand_limits(x=c(0,25)) +
-      labs(
-      title=str_wrap('Percentage of IHSN Surveys by Topic Across All Countries',100),
-      caption = 'Source: IHSN'
-      ) +
-      theme_bw() +
-      theme(
-        legend.position = 'none'
-      )
-
-g2 <- study_df_ihsn %>%
-    mutate(total= sum(total_downloads)) %>%
-    group_by(topic) %>%
-    summarise(share_downloads=100*sum(total_downloads)/total,
-           Label = paste(round(share_downloads,0),'%', sep="")) %>%
-    ggplot(aes(x=share_downloads, y=topic, fill=topic)) +
-      geom_bar(stat="identity",position='dodge') +
-      geom_text(aes(label=Label), nudge_x = 2) +
-      expand_limits(x=c(0,50)) +
-      labs(
-      title=str_wrap('Share of Total Downloads of IHSN Surveys by Topic Across All Countries',100),
-      caption = 'Source: IHSN'
-      ) +
-      xlab( 'Share of Total Downloads') +
-      theme_bw() +
-      theme(
-        legend.position = 'none'
-      )
-
-print(g1)
-print(g2)
-
-#do the plots  
-   ggplot() +
-    geom_map(data = filter(academic_use_map, date==end_date), aes(map_id = iso3c, fill = academic_use_rank), map = maps$countries) + 
-    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
-    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
-     geom_path(data = maps$boundaries,
-               aes(long, lat, group = group),
-               color = "white",
-               size = 0.1,
-               lineend = maps$boundaries$lineend,
-              linetype = maps$boundaries$linetype) +
-    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
-    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
-    scale_fill_distiller(
-      name=str_wrap('Country Ranking',10),
-      palette='Blues',
-      na.value='black',
-      direction = -1
-    )  +
-    coord_equal() +
-    theme_map(base_size=12) +
-    labs(
-      title=str_wrap('Ranking in Survey Downloads Per Capita',100),
-      caption = 'Source: IHSN'
-    )
-   
-   filter(academic_use_map, date==end_date) %>%
-    group_by(region) %>%
-    filter(region!='Aggregates') %>%
-    summarise(downloads_per_capita=mean(downloads_per_capita, na.rm=T),
-           Label = paste(round(mean(downloads_per_capita, na.rm=T)), sep="")) %>%
-    ggplot(aes(x=downloads_per_capita, y=region, fill=region)) +
-      geom_bar(stat="identity",position='dodge') +
-      geom_text(aes(label=Label)) +
-      labs(
-      title=str_wrap(paste('Average Survey Downloads Per Thousand Persons', 'By Region', sep=" - "),100),
-      caption = 'Source: IHSN'
-      ) +
-      xlab('Downloads per Thousand Persons') +
-      theme_bw() +
-      theme(
-        legend.position = 'none'
-      )
-   
-  #line graph 
-  academic_use_map  %>%
-    right_join(spi_df_empty) %>%
-    group_by( date) %>%
-    mutate(downloads_per_capita=if_else(is.na(downloads_per_capita), 0, downloads_per_capita)) %>%
-    mutate(downloads_per_capita=mean(downloads_per_capita, na.rm=T),
-           Label = paste(mean(downloads_per_capita, na.rm=T),'/',n(), sep="")) %>%
-    ungroup() %>%
-    ggplot(aes(y=downloads_per_capita, x=date)) +
-      geom_point() +
-      geom_line(fill='blue') +
-      # geom_text_repel(aes(label=Label)) +
-      labs(
-      title=str_wrap(paste('Average Survey Downloads Per Thousand Persons', 'By Date', sep=" - "),100),
-      caption = 'Source: IHSN'
-      ) +
-      expand_limits(y=c(0,100)) +
-      ylab('Downloads per Thousand Persons') +
-      theme_bw()   
-
+# # #Do some basic plots
+# g1 <- study_df_ihsn %>%
+#     mutate(total=n()) %>%
+#     group_by(topic) %>%
+#     summarise(Percentage=100*n()/total,
+#            Label = paste(round(Percentage,0),'%', sep="")) %>%
+#     ggplot(aes(x=Percentage, y=topic, fill=topic)) +
+#       geom_bar(stat="identity",position='dodge') +
+#       geom_text(aes(label=Label), nudge_x = 1) +
+#       expand_limits(x=c(0,25)) +
+#       labs(
+#       title=str_wrap('Percentage of IHSN Surveys by Topic Across All Countries',100),
+#       caption = 'Source: IHSN'
+#       ) +
+#       theme_bw() +
+#       theme(
+#         legend.position = 'none'
+#       )
 # 
+# g2 <- study_df_ihsn %>%
+#     mutate(total= sum(total_downloads)) %>%
+#     group_by(topic) %>%
+#     summarise(share_downloads=100*sum(total_downloads)/total,
+#            Label = paste(round(share_downloads,0),'%', sep="")) %>%
+#     ggplot(aes(x=share_downloads, y=topic, fill=topic)) +
+#       geom_bar(stat="identity",position='dodge') +
+#       geom_text(aes(label=Label), nudge_x = 2) +
+#       expand_limits(x=c(0,50)) +
+#       labs(
+#       title=str_wrap('Share of Total Downloads of IHSN Surveys by Topic Across All Countries',100),
+#       caption = 'Source: IHSN'
+#       ) +
+#       xlab( 'Share of Total Downloads') +
+#       theme_bw() +
+#       theme(
+#         legend.position = 'none'
+#       )
+# 
+# print(g1)
+# print(g2)
+# 
+# #do the plots  
+#    ggplot() +
+#     geom_map(data = filter(academic_use_map, date==end_date), aes(map_id = iso3c, fill = academic_use_rank), map = maps$countries) + 
+#     geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+#     geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+#      geom_path(data = maps$boundaries,
+#                aes(long, lat, group = group),
+#                color = "white",
+#                size = 0.1,
+#                lineend = maps$boundaries$lineend,
+#               linetype = maps$boundaries$linetype) +
+#     scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+#     scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+#     scale_fill_distiller(
+#       name=str_wrap('Country Ranking',10),
+#       palette='Blues',
+#       na.value='black',
+#       direction = -1
+#     )  +
+#     coord_equal() +
+#     theme_map(base_size=12) +
+#     labs(
+#       title=str_wrap('Ranking in Survey Downloads Per Capita',100),
+#       caption = 'Source: IHSN'
+#     )
+#    
+#    filter(academic_use_map, date==end_date) %>%
+#     group_by(region) %>%
+#     filter(region!='Aggregates') %>%
+#     summarise(downloads_per_capita=mean(downloads_per_capita, na.rm=T),
+#            Label = paste(round(mean(downloads_per_capita, na.rm=T)), sep="")) %>%
+#     ggplot(aes(x=downloads_per_capita, y=region, fill=region)) +
+#       geom_bar(stat="identity",position='dodge') +
+#       geom_text(aes(label=Label)) +
+#       labs(
+#       title=str_wrap(paste('Average Survey Downloads Per Thousand Persons', 'By Region', sep=" - "),100),
+#       caption = 'Source: IHSN'
+#       ) +
+#       xlab('Downloads per Thousand Persons') +
+#       theme_bw() +
+#       theme(
+#         legend.position = 'none'
+#       )
+#    
+#   #line graph 
+#   academic_use_map  %>%
+#     right_join(spi_df_empty) %>%
+#     group_by( date) %>%
+#     mutate(downloads_per_capita=if_else(is.na(downloads_per_capita), 0, downloads_per_capita)) %>%
+#     mutate(downloads_per_capita=mean(downloads_per_capita, na.rm=T),
+#            Label = paste(mean(downloads_per_capita, na.rm=T),'/',n(), sep="")) %>%
+#     ungroup() %>%
+#     ggplot(aes(y=downloads_per_capita, x=date)) +
+#       geom_point() +
+#       geom_line(fill='blue') +
+#       # geom_text_repel(aes(label=Label)) +
+#       labs(
+#       title=str_wrap(paste('Average Survey Downloads Per Thousand Persons', 'By Date', sep=" - "),100),
+#       caption = 'Source: IHSN'
+#       ) +
+#       expand_limits(y=c(0,100)) +
+#       ylab('Downloads per Thousand Persons') +
+#       theme_bw()   
+# 
+# # 
 
 
 ```
@@ -2893,81 +2893,81 @@ Average score for CRVS indicator.  Social Protection, Education, and Labor admin
 <!-- Scoring is 1 if administrative data is available to produce beneficiary counts or expenditures for any social protection and labor program, 0 otherwise.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score. -->
 
 ```{r aspire, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-#read data
-aspire_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ASPIRE_sources.csv', sep="/"))
-
-#cleaning of aspire data
-aspire_df <- aspire_df_raw %>%
-    mutate(date=as.numeric(year)) %>%
-    filter(!is.na(date)) %>%
-    group_by( ccode, date) %>%
-    summarise(ben_count_avail=(!is.na(mean(ben, na.rm=T))),
-              ben_exp_avail=(!is.na(mean(exp_b, na.rm=T)))) %>%
-    rename(iso3c=ccode) %>%
-    left_join(country_metadata) %>%
-    mutate(ben_info_avail=(ben_count_avail==TRUE | ben_exp_avail==TRUE)
-           )
-
-write_excel_csv(aspire_df, paste(output_dir, 'SPL_admin_data_availability.csv', sep="/"))
-
-#create 5 year moving average
-aspire_fun <- function(date_start, date_end) {
-  temp <- aspire_df %>%
-      filter(between(date,date_start,date_end) ) %>%  
-      group_by(iso3c, country) %>%
-      mutate(ben_info_avail=if_else(ben_info_avail==TRUE,as.numeric(ben_info_avail), 0)) %>%
-      summarise(ben_info_avail=round(mean(ben_info_avail),1) #get an average of this across countries
-              ) %>%
-      mutate(SPI.D4.2.1.SPL=if_else(is.na(ben_info_avail),0, ben_info_avail),
-            RAW.D4.2.1.SPL=ben_info_avail) %>%
-      mutate(date=date_end) %>%
-      select(c('iso3c',  'date', 'RAW.D4.2.1.SPL', 'SPI.D4.2.1.SPL')  )
-      
-  
-
-}
-
-
-
-####
-# X Year moving average
-####
-#create this database for each year from 2004 to 2024 using a X year average
-for (i in c(2004:end_date)) {
-  
-  start=i-(window-1)
-  end=i
-  
-  temp_df <- aspire_fun(start,end)
-  assign(paste('aspire_',end, sep=""), temp_df)
-}
-
-if (exists('aspire_df')) {
-  rm('aspire_df')
-}
-#now append together and save
-for (i in c(2004:end_date)) {
-  
-  temp<-get(paste('aspire_',i, sep=""))
-  
-  if (!exists('aspire_df')) {
-    aspire_df<-temp
-  } else {
-    aspire_df<-aspire_df %>%
-      bind_rows(temp) %>%
-      arrange(-date, iso3c)
-  }
-}
-
-
-#add to spi databases
-spi_df <- spi_df %>%
-  left_join(aspire_df)
-
-aspire_map <- aspire_df
-
-spi_mapper('aspire_map', 'SPI.D4.2.1.SPL', 'Administrative Data Available on Beneficiary Counts or Expenditures using ASPIRE' )
+# 
+# #read data
+# aspire_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ASPIRE_sources.csv', sep="/"))
+# 
+# #cleaning of aspire data
+# aspire_df <- aspire_df_raw %>%
+#     mutate(date=as.numeric(year)) %>%
+#     filter(!is.na(date)) %>%
+#     group_by( ccode, date) %>%
+#     summarise(ben_count_avail=(!is.na(mean(ben, na.rm=T))),
+#               ben_exp_avail=(!is.na(mean(exp_b, na.rm=T)))) %>%
+#     rename(iso3c=ccode) %>%
+#     left_join(country_metadata) %>%
+#     mutate(ben_info_avail=(ben_count_avail==TRUE | ben_exp_avail==TRUE)
+#            )
+# 
+# write_excel_csv(aspire_df, paste(output_dir, 'SPL_admin_data_availability.csv', sep="/"))
+# 
+# #create 5 year moving average
+# aspire_fun <- function(date_start, date_end) {
+#   temp <- aspire_df %>%
+#       filter(between(date,date_start,date_end) ) %>%  
+#       group_by(iso3c, country) %>%
+#       mutate(ben_info_avail=if_else(ben_info_avail==TRUE,as.numeric(ben_info_avail), 0)) %>%
+#       summarise(ben_info_avail=round(mean(ben_info_avail),1) #get an average of this across countries
+#               ) %>%
+#       mutate(SPI.D4.2.1.SPL=if_else(is.na(ben_info_avail),0, ben_info_avail),
+#             RAW.D4.2.1.SPL=ben_info_avail) %>%
+#       mutate(date=date_end) %>%
+#       select(c('iso3c',  'date', 'RAW.D4.2.1.SPL', 'SPI.D4.2.1.SPL')  )
+#       
+#   
+# 
+# }
+# 
+# 
+# 
+# ####
+# # X Year moving average
+# ####
+# #create this database for each year from 2004 to 2024 using a X year average
+# for (i in c(2004:end_date)) {
+#   
+#   start=i-(window-1)
+#   end=i
+#   
+#   temp_df <- aspire_fun(start,end)
+#   assign(paste('aspire_',end, sep=""), temp_df)
+# }
+# 
+# if (exists('aspire_df')) {
+#   rm('aspire_df')
+# }
+# #now append together and save
+# for (i in c(2004:end_date)) {
+#   
+#   temp<-get(paste('aspire_',i, sep=""))
+#   
+#   if (!exists('aspire_df')) {
+#     aspire_df<-temp
+#   } else {
+#     aspire_df<-aspire_df %>%
+#       bind_rows(temp) %>%
+#       arrange(-date, iso3c)
+#   }
+# }
+# 
+# 
+# #add to spi databases
+# spi_df <- spi_df %>%
+#   left_join(aspire_df)
+# 
+# aspire_map <- aspire_df
+# 
+# spi_mapper('aspire_map', 'SPI.D4.2.1.SPL', 'Administrative Data Available on Beneficiary Counts or Expenditures using ASPIRE' )
 
 
 ```
@@ -3005,46 +3005,46 @@ spi_mapper('aspire_map', 'SPI.D4.2.1.SPL', 'Administrative Data Available on Ben
 # 
 # #read the data
 # url <- 'https://api.uis.unesco.org/sdmx/data/UNESCO,SDG4,2.0/ADMIN.NB.._T._T._T.G2_3+GLAST............?startPeriod=2013&endPeriod=2020&format=csv-sdmx&locale=en&subscription-key=fd406abcbf3d4e318741b8537c92fe43'
-
-unesco_df_raw <- read_csv(file=paste(raw_dir, '4.2_SOAD','UIS_SDG_MONITOR', 'SDG_DATA_NATIONAL.csv', sep="/"))
-
-#cleaning of unesco data
-unesco_df <- unesco_df_raw %>%
-    rename(iso3c=COUNTRY_ID) %>%
-    mutate(date=as.numeric(YEAR)) %>%
-    mutate(type = case_when( #categorize based on whether they are assessment, out of school, or participation data
-      grepl('admi', INDICATOR_ID) ~ "NAS", #Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education 
-      # grepl('ROFST', SDG_IND) ~ "OOS", # Out-of-school rate by school age and sex
-      # grepl('NERA', SDG_IND) ~ "ORGL" # Participation rate in organized learning (one year before the official primary entry age), by sex
-    )) %>%
-   filter(type=="NAS") %>%
-    mutate(edu_admin_available=(VALUE==1)) %>% #get a variable for wehther admin based value exists for indicator
-    group_by( iso3c, date, type) %>%
-    summarise(edu_admin_available=mean(as.numeric(edu_admin_available))) %>% 
-    ungroup() %>%
-    pivot_wider(
-      names_from='type',
-      names_glue="RAW.D4.2.2.EDU.{type}",
-      values_from='edu_admin_available',
-      values_fill=NA
-    ) %>%
-    right_join(spi_df_empty) %>%
-    mutate(across(starts_with('RAW.D4.2.2.EDU'),~if_else(is.na(.),0,.))) %>%
-    group_by(iso3c) %>%
-    arrange(-date, iso3c) %>%
-    mutate(across(starts_with('RAW.D4.2.2.EDU'),~zoo::rollmean(.,k=window,fill=NA,align='left'),.names="{col}.MA5")) %>% #X year rolling average
-    ungroup() %>%
-    mutate(SPI.D4.2.2.EDU=(RAW.D4.2.2.EDU.NAS)) %>%
-  select(c('iso3c',  'date', 'RAW.D4.2.2.EDU.NAS', 'SPI.D4.2.2.EDU')  )
-
-#add to spi databases
-spi_df <- spi_df %>%
-  left_join(unesco_df)
-
-unesco_map <- unesco_df 
-
-spi_mapper('unesco_map', 'SPI.D4.2.2.EDU', 'Education Administrative Data Available According to UIS' )
-
+# 
+# unesco_df_raw <- read_csv(file=paste(raw_dir, '4.2_SOAD','UIS_SDG_MONITOR', 'SDG_DATA_NATIONAL.csv', sep="/"))
+# 
+# #cleaning of unesco data
+# unesco_df <- unesco_df_raw %>%
+#     rename(iso3c=COUNTRY_ID) %>%
+#     mutate(date=as.numeric(YEAR)) %>%
+#     mutate(type = case_when( #categorize based on whether they are assessment, out of school, or participation data
+#       grepl('admi', INDICATOR_ID) ~ "NAS", #Administration of a nationally-representative learning assessment (a) in Grade 2 or 3; (b) at the end of primary education; and (c) at the end of lower secondary education 
+#       # grepl('ROFST', SDG_IND) ~ "OOS", # Out-of-school rate by school age and sex
+#       # grepl('NERA', SDG_IND) ~ "ORGL" # Participation rate in organized learning (one year before the official primary entry age), by sex
+#     )) %>%
+#    filter(type=="NAS") %>%
+#     mutate(edu_admin_available=(VALUE==1)) %>% #get a variable for wehther admin based value exists for indicator
+#     group_by( iso3c, date, type) %>%
+#     summarise(edu_admin_available=mean(as.numeric(edu_admin_available))) %>% 
+#     ungroup() %>%
+#     pivot_wider(
+#       names_from='type',
+#       names_glue="RAW.D4.2.2.EDU.{type}",
+#       values_from='edu_admin_available',
+#       values_fill=NA
+#     ) %>%
+#     right_join(spi_df_empty) %>%
+#     mutate(across(starts_with('RAW.D4.2.2.EDU'),~if_else(is.na(.),0,.))) %>%
+#     group_by(iso3c) %>%
+#     arrange(-date, iso3c) %>%
+#     mutate(across(starts_with('RAW.D4.2.2.EDU'),~zoo::rollmean(.,k=window,fill=NA,align='left'),.names="{col}.MA5")) %>% #X year rolling average
+#     ungroup() %>%
+#     mutate(SPI.D4.2.2.EDU=(RAW.D4.2.2.EDU.NAS)) %>%
+#   select(c('iso3c',  'date', 'RAW.D4.2.2.EDU.NAS', 'SPI.D4.2.2.EDU')  )
+# 
+# #add to spi databases
+# spi_df <- spi_df %>%
+#   left_join(unesco_df)
+# 
+# unesco_map <- unesco_df 
+# 
+# spi_mapper('unesco_map', 'SPI.D4.2.2.EDU', 'Education Administrative Data Available According to UIS' )
+# 
 
 ```
 
@@ -3182,62 +3182,62 @@ spi_mapper('crvs_map',
 <!-- To produce a score, we calculate the percentage of these six admin sources above that are available for a country in a given year.  In order to smooth out gaps in reporting, we take a moving 5 year average of the score. -->
 
 ```{r ilo, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-
-#read data
-ilo_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ILOSTAT_sources.csv', sep="/"))
-
-#cleaning of aspire data
-ilo_df <- ilo_df_raw %>%
-  filter(!grepl('legislation',Source)) %>% # filter out labor legislation, which is included but not reflective of needs.
-  mutate(type = case_when( #categorize based on whether they are assessment, out of school, or participation data
-      (Source.type=="Insurance records" ) ~ "INSUR", #Insurance records 
-      (Source.type=="Labour inspectorate records" ) ~ "INSP", # Labour inspectorate records  
-      (Source.type=="Records of employers' organizations" ) ~ "EMPORG", # Records of employers' organizations
-      (Source.type=="Employment office records" ) ~ "EMPOFF", # Employment office records
-      (Source.type=="Records of workers' organizations"  ) ~ "WRKORG", # Records of workers' organizations
-      (Source.type=="Other administrative records and related sources" ) ~ "OTHER" # Other administrative records and related sources
-                        ),
-      admin_available=1) %>%
-  select(iso3c, date, type,Source ) %>%
-      pivot_wider(
-      names_from='type',
-      names_glue="RAW.D4.2.4.LBR.{type}",
-      values_from='Source',
-      values_fill=NULL
-    ) 
-
-
-#apply carryforward to fill in missing values
-ilo_df <- ilo_df %>%
-  right_join(spi_df_empty) %>%
-  arrange(iso3c, date) %>%
-  group_by(iso3c) %>%
-  mutate(across(starts_with('RAW.D4.2.4.LBR'),
-                ~if_else(.!='NULL',1, 0),
-                .names="{col}_available")) %>%
-  mutate(ILO.Source.type.filled=(RAW.D4.2.4.LBR.OTHER_available +
-                                RAW.D4.2.4.LBR.INSUR_available +
-                                RAW.D4.2.4.LBR.EMPOFF_available+
-                                RAW.D4.2.4.LBR.WRKORG_available+
-                                RAW.D4.2.4.LBR.INSP_available  +
-                                RAW.D4.2.4.LBR.EMPORG_available)/6) %>%
-  group_by(iso3c) %>%
-  arrange(-date, iso3c) %>%
-  mutate(across(starts_with('ILO.Source.type.filled'),~zoo::rollmean(.,k=window,fill=NA,align='left'),.names="{col}.MA5")) %>% #X year rolling average
-  ungroup() %>%
-  mutate(SPI.D4.2.4.LBR=if_else(is.na(ILO.Source.type.filled.MA5),0, ILO.Source.type.filled.MA5)) %>%
-  dplyr::select(c('iso3c',  'date', 'SPI.D4.2.4.LBR'), starts_with('RAW.D4.2.4.LBR')  ) %>%
-  select(-ends_with('available'))
-
-#add to spi databases
-spi_df <- spi_df %>%
-  left_join(ilo_df)  
-
-
-ilo_map <- ilo_df 
-
-spi_mapper('ilo_map', 'SPI.D4.2.4.LBR', 'Labor Administrative Data Available According to ILO' )
-
+# 
+# #read data
+# ilo_df_raw <- read_csv(paste(raw_dir, '4.2_SOAD','ILOSTAT_sources.csv', sep="/"))
+# 
+# #cleaning of aspire data
+# ilo_df <- ilo_df_raw %>%
+#   filter(!grepl('legislation',Source)) %>% # filter out labor legislation, which is included but not reflective of needs.
+#   mutate(type = case_when( #categorize based on whether they are assessment, out of school, or participation data
+#       (Source.type=="Insurance records" ) ~ "INSUR", #Insurance records 
+#       (Source.type=="Labour inspectorate records" ) ~ "INSP", # Labour inspectorate records  
+#       (Source.type=="Records of employers' organizations" ) ~ "EMPORG", # Records of employers' organizations
+#       (Source.type=="Employment office records" ) ~ "EMPOFF", # Employment office records
+#       (Source.type=="Records of workers' organizations"  ) ~ "WRKORG", # Records of workers' organizations
+#       (Source.type=="Other administrative records and related sources" ) ~ "OTHER" # Other administrative records and related sources
+#                         ),
+#       admin_available=1) %>%
+#   select(iso3c, date, type,Source ) %>%
+#       pivot_wider(
+#       names_from='type',
+#       names_glue="RAW.D4.2.4.LBR.{type}",
+#       values_from='Source',
+#       values_fill=NULL
+#     ) 
+# 
+# 
+# #apply carryforward to fill in missing values
+# ilo_df <- ilo_df %>%
+#   right_join(spi_df_empty) %>%
+#   arrange(iso3c, date) %>%
+#   group_by(iso3c) %>%
+#   mutate(across(starts_with('RAW.D4.2.4.LBR'),
+#                 ~if_else(.!='NULL',1, 0),
+#                 .names="{col}_available")) %>%
+#   mutate(ILO.Source.type.filled=(RAW.D4.2.4.LBR.OTHER_available +
+#                                 RAW.D4.2.4.LBR.INSUR_available +
+#                                 RAW.D4.2.4.LBR.EMPOFF_available+
+#                                 RAW.D4.2.4.LBR.WRKORG_available+
+#                                 RAW.D4.2.4.LBR.INSP_available  +
+#                                 RAW.D4.2.4.LBR.EMPORG_available)/6) %>%
+#   group_by(iso3c) %>%
+#   arrange(-date, iso3c) %>%
+#   mutate(across(starts_with('ILO.Source.type.filled'),~zoo::rollmean(.,k=window,fill=NA,align='left'),.names="{col}.MA5")) %>% #X year rolling average
+#   ungroup() %>%
+#   mutate(SPI.D4.2.4.LBR=if_else(is.na(ILO.Source.type.filled.MA5),0, ILO.Source.type.filled.MA5)) %>%
+#   dplyr::select(c('iso3c',  'date', 'SPI.D4.2.4.LBR'), starts_with('RAW.D4.2.4.LBR')  ) %>%
+#   select(-ends_with('available'))
+# 
+# #add to spi databases
+# spi_df <- spi_df %>%
+#   left_join(ilo_df)  
+# 
+# 
+# ilo_map <- ilo_df 
+# 
+# spi_mapper('ilo_map', 'SPI.D4.2.4.LBR', 'Labor Administrative Data Available According to ILO' )
+# 
 
 ```
 
@@ -3525,54 +3525,54 @@ New indicator based on references to private/citizen generated data in metadata 
 # Google
 #####
 #google mobility
-google_df_raw <- read_csv(paste(raw_dir, '4.4_SOPC','Global_Mobility_Report.csv', sep="/"))
-
-
-#match to world bank country database
-google_df <- google_df_raw %>%
-  group_by(country_region_code) %>%
-  summarise(freq=n()) %>%
-  left_join(country_metadata, by=c('country_region_code'='iso2c')) %>%
-  mutate(date=2020,
-         value=1)
-
-
-spi_mapper('google_df', 'value', 'Google Global Mobility Report Data' )
-
-
-#####
-# Apple
-#####
-
-apple_df_raw <- read_csv(paste(raw_dir, '4.4_SOPC','applemobilitytrends-2020-07-26.csv', sep="/")) 
-
-#match to world bank country database
-apple_df <- apple_df_raw %>%
-  select(-c('country', 'alternative_name', 'sub-region')) %>%
-  filter(geo_type=="country/region") %>%
-  rename(country=region) %>%
-  pivot_longer(cols=starts_with("2020"),
-               names_to='date',
-               values_to='value') %>%
-  group_by(iso3c) %>%
-  summarise(across(everything(), last)) %>%
-  mutate(country=case_when(
-    country=="Egypt" ~ "Egypt, Arab Rep.",
-    country=="Republic of Korea" ~ "Korea, Rep.",
-    country=="Macao" ~ "Macao SAR, China",
-    country=="Slovakia" ~ "Slovak Republic",
-    country=="Taiwan" ~ "Taiwan, China",
-    TRUE ~ country
-  )) %>%
-  group_by(iso3c) %>%
-  summarise(freq=n()) %>%
-  left_join(country_metadata) %>%
-  mutate(date=2020,
-         value=1)
-
-
-
-spi_mapper('apple_df', 'value', 'Apple Mobility Report Data' )
+# google_df_raw <- read_csv(paste(raw_dir, '4.4_SOPC','Global_Mobility_Report.csv', sep="/"))
+# 
+# 
+# #match to world bank country database
+# google_df <- google_df_raw %>%
+#   group_by(country_region_code) %>%
+#   summarise(freq=n()) %>%
+#   left_join(country_metadata, by=c('country_region_code'='iso2c')) %>%
+#   mutate(date=2020,
+#          value=1)
+# 
+# 
+# spi_mapper('google_df', 'value', 'Google Global Mobility Report Data' )
+# 
+# 
+# #####
+# # Apple
+# #####
+# 
+# apple_df_raw <- read_csv(paste(raw_dir, '4.4_SOPC','applemobilitytrends-2020-07-26.csv', sep="/")) 
+# 
+# #match to world bank country database
+# apple_df <- apple_df_raw %>%
+#   select(-c('country', 'alternative_name', 'sub-region')) %>%
+#   filter(geo_type=="country/region") %>%
+#   rename(country=region) %>%
+#   pivot_longer(cols=starts_with("2020"),
+#                names_to='date',
+#                values_to='value') %>%
+#   group_by(iso3c) %>%
+#   summarise(across(everything(), last)) %>%
+#   mutate(country=case_when(
+#     country=="Egypt" ~ "Egypt, Arab Rep.",
+#     country=="Republic of Korea" ~ "Korea, Rep.",
+#     country=="Macao" ~ "Macao SAR, China",
+#     country=="Slovakia" ~ "Slovak Republic",
+#     country=="Taiwan" ~ "Taiwan, China",
+#     TRUE ~ country
+#   )) %>%
+#   group_by(iso3c) %>%
+#   summarise(freq=n()) %>%
+#   left_join(country_metadata) %>%
+#   mutate(date=2020,
+#          value=1)
+# 
+# 
+# 
+# spi_mapper('apple_df', 'value', 'Apple Mobility Report Data' )
 
 ```
 
@@ -4716,33 +4716,33 @@ GTEI: The GovTech Enablers Index (16 indicators) captures strategy, institutions
 
 ```{r}
 #read in the GTMI data
-gtmi_df <- read_excel(path  = paste(raw_dir, 
-                                    "5.3_DISK", 
-                                    "WBG_GovTech Dataset_Oct2022.xlsx", 
-                                    sep = "/"),
-                      sheet = "CG_GTMI_Groups") %>%
-  transmute(iso3c      = Code,
-            date       = Year,
-            D.5.3.CGSI = CGSI,
-            D.5.3.GTEI = GTEI)
-
-D5.3_DISK <- spi_df_empty %>%
-  left_join(gtmi_df) 
-
-#add to spi databases
-spi_df <- spi_df %>%
-  left_join(D5.3_DISK)
-
-D5.3_DISK_map <- D5.3_DISK %>%
-  filter(!is.na(D.5.3.CGSI))
-
-spi_mapper('D5.3_DISK_map', 
-           'D.5.3.CGSI', 
-           'Core Government Systems Index. Source: World Bank')
-
-spi_mapper('D5.3_DISK_map', 
-           'D.5.3.GTEI',
-           'GovTech Enablers Index. Source: World Bank')
+# gtmi_df <- read_excel(path  = paste(raw_dir, 
+#                                     "5.3_DISK", 
+#                                     "WBG_GovTech Dataset_Oct2022.xlsx", 
+#                                     sep = "/"),
+#                       sheet = "CG_GTMI_Groups") %>%
+#   transmute(iso3c      = Code,
+#             date       = Year,
+#             D.5.3.CGSI = CGSI,
+#             D.5.3.GTEI = GTEI)
+# 
+# D5.3_DISK <- spi_df_empty %>%
+#   left_join(gtmi_df) 
+# 
+# #add to spi databases
+# spi_df <- spi_df %>%
+#   left_join(D5.3_DISK)
+# 
+# D5.3_DISK_map <- D5.3_DISK %>%
+#   filter(!is.na(D.5.3.CGSI))
+# 
+# spi_mapper('D5.3_DISK_map', 
+#            'D.5.3.CGSI', 
+#            'Core Government Systems Index. Source: World Bank')
+# 
+# spi_mapper('D5.3_DISK_map', 
+#            'D.5.3.GTEI',
+#            'GovTech Enablers Index. Source: World Bank')
 
 ```
 
