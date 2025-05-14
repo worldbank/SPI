@@ -15,7 +15,7 @@ library(ggcorrplot)
 #set directories
 dir <- here()
 
-end_year<- 2023
+end_year <- 2024
 
 raw_dir <- paste(dir, '01_raw_data', sep="/")
 output_dir <- paste(dir, '03_output_data', sep="/")
