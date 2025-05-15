@@ -7,7 +7,7 @@ library(tidyverse)
 library(here)
 library(readxl)
 
-latest_date=2023
+latest_date=2024
 
 #set paths
 dir <- here()
