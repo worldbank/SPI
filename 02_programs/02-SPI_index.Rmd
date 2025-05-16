@@ -3103,13 +3103,16 @@ index_tab_time <- spi_index_df %>%
         brks7 <- quantile(index_tab_time$SPI.INDEX.2023, probs=c(1,2,3,4)/5,na.rm=T)
         brks7 <- append(0,brks7)
         if (max(brks7)<100) brks7 <- append(brks7,100)        
-
+        brks8 <- quantile(index_tab_time$SPI.INDEX.2024, probs=c(1,2,3,4)/5,na.rm=T)
+        brks8 <- append(0,brks8)
+        if (max(brks8)<100) brks8 <- append(brks8,100)  
 #make nice looking
 index_tab_time <- index_tab_time %>%
   flextable() %>%
   add_header_lines('SPI overall scores over time') %>%
   set_header_labels(values=list(
                        country="Country", 
+                       SPI.INDEX.2024="2024",
                        SPI.INDEX.2023="2023",
                        SPI.INDEX.2022="2022",
                        SPI.INDEX.2021="2021",
@@ -3119,7 +3122,9 @@ index_tab_time <- index_tab_time %>%
                        SPI.INDEX.2017="2017",
                        SPI.INDEX.2016="2016"
                                    )) %>%
-    bg(j = c('SPI.INDEX.2023'),
+    bg(j = c('SPI.INDEX.2024'),
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks8, reverse=TRUE)) %>%   
+  bg(j = c('SPI.INDEX.2023'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks7, reverse=TRUE)) %>%    
     bg(j = c('SPI.INDEX.2022'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks6, reverse=TRUE)) %>%
