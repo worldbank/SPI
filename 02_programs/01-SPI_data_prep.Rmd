@@ -41,7 +41,7 @@ output_dir <- paste(dir,
 
 #parameters
 window   <- 5 #set the window for the moving averages
-end_date <- 2024 # set for June 2025 update
+end_date <- 2024 # set for Nov 2025 update
 
 ```
 
@@ -987,13 +987,13 @@ library(pipr)
 #new pipr package already includes survey coverage and comparability measures
 
 
-#df <- get_stats(server = "qa")
+df <- get_stats(server = "dev")
 
 #save as csv
-# write_excel_csv(df, 
-#                 file = paste(raw_dir, 
-#                              '1.5_DUIO/PIP_comparability_latest.csv', 
-#                              sep = "/"))
+write_excel_csv(df,
+                file = paste(raw_dir,
+                             '1.5_DUIO/PIP_comparability_latest.csv',
+                             sep = "/"))
 
 df <- read_csv(paste(raw_dir, 
                      '1.5_DUIO/PIP_comparability_latest.csv', 
@@ -1273,7 +1273,7 @@ Quality:
 # WDI metadata was gathered using previous vintages of WDI from 2016-19
 # Metadata was gathered and saved as csv files in the 011_data folder
 
-for (i in 2016:2025) {
+for (i in 2016:end_date + 1) {
   temp <- read_csv(file = paste(raw_dir, 
                                 "/metadata/WDI_metadata_",
                                 i,
@@ -1302,13 +1302,18 @@ WDI_metadata <- bind_rows(WDI_metadata_2016,
                             rename(Code             = Country.Code, 
                                    PPP.survey.years = PPP.survey.year) |> 
                             select(names(WDI_metadata_2024))) 
+write_excel_csv(x    = WDI_metadata, 
+                file = here::here("01_raw_data", 
+                                  "metadata", 
+                                  "WDI_metadata.csv"))
+
+
 ```
 
 
 
+
 ```{r 3.15_debt}
-
-
 #reshape metaadata file
 D3.15.AKI <- WDI_metadata %>%
   transmute(iso3c                   = if_else(is.na(Country.Code),
@@ -1462,7 +1467,7 @@ safely_managed_raw_df <-
 
 
 write_excel_csv(safely_managed_raw_df,
-                path = paste(raw_dir, 
+                file = paste(raw_dir, 
                              '1.5_DUIO/Safely_Managed_Water_data.csv', 
                               sep = "/"))
 
@@ -1588,10 +1593,14 @@ ilo_ref_area <- read_csv(file = paste0(raw_dir,
             country = ref_area.label)
                          
 #read in the ILO data downloaded on November 24, 2020
-fn_modelled <- "/1.5_DUIO/EAP_2WAP_SEX_AGE_RT_A-20250505T1724.csv"
+#fn_modelled <- "/1.5_DUIO/EAP_2WAP_SEX_AGE_RT_A-20250505T1724.csv" # <------- this was June 2025
 #fn_modelled <- "/1.5_DUIO/ILO_LFP_modelled-2024-01-24.csv"
-fn_survey   <- "/1.5_DUIO/EAP_DWAP_SEX_AGE_RT_A-20250505T1724.csv"
+#fn_survey   <- "/1.5_DUIO/EAP_DWAP_SEX_AGE_RT_A-20250505T1724.csv" # <----- this was June 2025
 #fn_survey   <- "/1.5_DUIO/ILO_LFP_survey-2024-01-24.csv"
+
+fn_modelled <- "/1.5_DUIO/EAP_2WAP_SEX_AGE_RT_A-20250923T0014.csv"
+fn_survey   <- "/1.5_DUIO/EAP_DWAP_SEX_AGE_RT_A-20250923T0014.csv"
+
 lfp_estimated <- read_csv(paste0(raw_dir, 
                                  fn_modelled)) %>%
   as_tibble(.name_repair = 'universal') %>%
