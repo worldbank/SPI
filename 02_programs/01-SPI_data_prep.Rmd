@@ -8,7 +8,7 @@ output_dir: "`r paste0(here::here(),'/docs')`"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.height=7, fig.width=10)
-
+rm(list = ls())
 library(tidyverse)
 library(here)
 # devtools::install_github("worldbank/wbgviz", subdir = "wbgdata")
@@ -987,7 +987,7 @@ library(pipr)
 #new pipr package already includes survey coverage and comparability measures
 
 
-df <- get_stats(server = "dev")
+df <- get_stats()
 
 #save as csv
 write_excel_csv(df,
@@ -1273,7 +1273,8 @@ Quality:
 # WDI metadata was gathered using previous vintages of WDI from 2016-19
 # Metadata was gathered and saved as csv files in the 011_data folder
 
-for (i in 2016:end_date + 1) {
+for (i in 2016:(end_date + 1)) {
+  print(i)
   temp <- read_csv(file = paste(raw_dir, 
                                 "/metadata/WDI_metadata_",
                                 i,
@@ -1429,6 +1430,7 @@ hyper_read <-  function(hyperlink) {
                                    as.numeric(data_quality))) %>% #because JMP imputes values indefinitely forward if value for water reaches >99.5%
     ungroup()
   }, error = function(e) {
+    print("error----------")
     #return empty dataframe with empty columns
     data.frame(source        = as.character(NA),
                type          = as.character(NA),
@@ -1436,11 +1438,11 @@ hyper_read <-  function(hyperlink) {
                geo           = as.character(NA),
                data_available= as.numeric(NA),
                data_quality  = as.numeric(NA),
-               data_value    = s.numeric(NA))
+               data_value    = as.numeric(NA))
   })
 }
 
-AFG_df <- hyper_read('https://washdata.org/data/country/AFG/household/download')
+AFG_df2 <- hyper_read('https://washdata.org/data/country/AFG/household/download')
 USA_df <- hyper_read('https://washdata.org/data/country/USA/household/download')
 GBR_df <- hyper_read('https://washdata.org/data/country/GBR/household/download')
 
@@ -2170,7 +2172,7 @@ D2.4_NADA <- read_csv(file = paste(raw_dir,
   arrange(date, iso3c)
 
 D2.4_NADA_map <- D2.4_NADA %>%
-  filter(SPI.D2.4.NADA>0) %>%
+  #filter(SPI.D2.4.NADA>0) %>%
   left_join(country_metadata)
 
 spi_mapper('D2.4_NADA_map', 'RAW.D2.4.NADA', 'NADA in Place' )

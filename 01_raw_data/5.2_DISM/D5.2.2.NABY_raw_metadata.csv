@@ -168,7 +168,7 @@
 "BFA",2022,"2015","2015","2015"
 "BFA",2023,"2015","2015","2015"
 "BFA",2024,"2015","2015","2015"
-"BFA",2025,"2015","2015","2015"
+"BFA",2025,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "BGD",2016,"2005/06","2005/06","2006"
 "BGD",2017,"2005/06","2005/06","2006"
 "BGD",2018,"2005/06","2005/06","2006"
@@ -378,7 +378,7 @@
 "CIV",2022,"2015","2015","2015"
 "CIV",2023,"2015","2015","2015"
 "CIV",2024,"2015","2015","2015"
-"CIV",2025,"2015","2015","2015"
+"CIV",2025,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "CMR",2016,"2000","2000","2000"
 "CMR",2017,"2000","2000","2000"
 "CMR",2018,"2005","2005","2005"
@@ -388,7 +388,7 @@
 "CMR",2022,"2016","2016","2016"
 "CMR",2023,"2016","2016","2016"
 "CMR",2024,"2016","2016","2016"
-"CMR",2025,"2016","2016","2016"
+"CMR",2025,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "COD",2017,"2005","2005","2005"
 "COD",2018,"2005","2005","2005"
 "COD",2019,"2005","2005","2005"
@@ -417,7 +417,7 @@
 "COL",2022,"2015","2015","2015"
 "COL",2023,"2015","2015","2015"
 "COL",2024,"2015","2015","2015"
-"COL",2025,"2015","2015","2015"
+"COL",2025,"Original chained constant price data are rescaled","Original chained constant price data are rescaled",NA
 "COM",2016,"1990","1990","1990"
 "COM",2017,"1990","1990","1990"
 "COM",2018,"1990","1990","1990"
@@ -527,7 +527,7 @@
 "DMA",2022,"2006","2006","2006"
 "DMA",2023,"2006","2006","2006"
 "DMA",2024,"2006","2006","2006"
-"DMA",2025,"2006","2006","2006"
+"DMA",2025,"2018","2018","2018"
 "DNK",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "DNK",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "DNK",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
@@ -617,7 +617,6 @@
 "ETH",2022,"2015/2016","2015/2016","2020"
 "ETH",2023,"2015/2016","2015/2016","2020"
 "ETH",2024,"2015/2016","2015/2016","2020"
-"ETH",2025,"2015/2016","2015/2016","2020"
 "FIN",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "FIN",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "FIN",2018,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
@@ -1288,7 +1287,7 @@
 "MLI",2022,"1999","1999","1999"
 "MLI",2023,"1999","1999","1999"
 "MLI",2024,"1999","1999","1999"
-"MLI",2025,"1999","1999","1999"
+"MLI",2025,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "MLT",2016,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "MLT",2017,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "MLT",2018,"2010","2010","2010"
@@ -1358,7 +1357,7 @@
 "MRT",2022,"2014","2014","2014"
 "MRT",2023,"2014","2014","2014"
 "MRT",2024,"2014","2014","2014"
-"MRT",2025,"2022","2022","2022"
+"MRT",2025,"Original chained consatnt price data are rescaled.","Original chained consatnt price data are rescaled.",NA
 "MUS",2016,"2006","2006","2006"
 "MUS",2017,"2006","2006","2006"
 "MUS",2018,"2006","2006","2006"
@@ -1368,7 +1367,7 @@
 "MUS",2022,"2006","2006","2006"
 "MUS",2023,"2018","2018","2018"
 "MUS",2024,"2018","2018","2018"
-"MUS",2025,"2018","2018","2018"
+"MUS",2025,"Original chained consatnt price data are rescaled.","Original chained consatnt price data are rescaled.",NA
 "MWI",2016,"2010","2010","2010"
 "MWI",2017,"2010","2010","2010"
 "MWI",2018,"2010","2010","2010"
@@ -1697,7 +1696,7 @@
 "SEN",2022,"2014","2014","2014"
 "SEN",2023,"2014","2014","2014"
 "SEN",2024,"2014","2014","2014"
-"SEN",2025,"2014","2014","2014"
+"SEN",2025,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "SGP",2016,"2010","2010","2010"
 "SGP",2017,"2010","2010","2010"
 "SGP",2018,"2010","2010","2010"
@@ -1787,7 +1786,7 @@
 "STP",2022,"2008","2008","2008"
 "STP",2023,"2008","2008","2008"
 "STP",2024,"2008","2008","2008"
-"STP",2025,"2008","2008","2008"
+"STP",2025,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "SUR",2016,"2007","2007","2007"
 "SUR",2017,"2007","2007","2007"
 "SUR",2018,"2007","2007","2007"
@@ -1877,7 +1876,7 @@
 "TCA",2022,"2012","2012","2012"
 "TCA",2023,"2012","2012","2012"
 "TCA",2024,"2012","2012","2012"
-"TCA",2025,"2012","2012","2012"
+"TCA",2025,"2018","2018","2018"
 "TCD",2016,"2005","2005","2005"
 "TCD",2017,"2005","2005","2005"
 "TCD",2018,"2005","2005","2005"
@@ -1887,7 +1886,7 @@
 "TCD",2022,"2005","2005","2005"
 "TCD",2023,"2005","2005","2005"
 "TCD",2024,"2017","2017","2017"
-"TCD",2025,"2005","2005","2005"
+"TCD",2025,"Original chained constant price data are rescaled.","Original chained constant price data are rescaled.",NA
 "TGO",2016,"2000","2000","2000"
 "TGO",2017,"2000","2000","2000"
 "TGO",2018,"2000","2000","2000"
@@ -2074,7 +2073,7 @@
 "VGB",2022,NA,NA,NA
 "VGB",2023,NA,NA,NA
 "VGB",2024,NA,NA,NA
-"VGB",2025,NA,NA,NA
+"VGB",2025,"2012","2012","2012"
 "VIR",2016,"1982","1982","1982"
 "VIR",2017,"1982","1982","1982"
 "VIR",2018,"1982","1982","1982"
