@@ -987,13 +987,13 @@ library(pipr)
 #new pipr package already includes survey coverage and comparability measures
 
 
-df <- get_stats()
+#df <- get_stats()
 
 #save as csv
-write_excel_csv(df,
-                file = paste(raw_dir,
-                             '1.5_DUIO/PIP_comparability_latest.csv',
-                             sep = "/"))
+# write_excel_csv(df,
+#                 file = paste(raw_dir,
+#                              '1.5_DUIO/PIP_comparability_latest.csv',
+#                              sep = "/"))
 
 df <- read_csv(paste(raw_dir, 
                      '1.5_DUIO/PIP_comparability_latest.csv', 
@@ -3897,17 +3897,17 @@ D5.2.4.CPIBY <- spi_previous_vintage_d5 %>%
 #####
 
 #use alternative data source provided by the IMF
-imf_file <- "2025.04_Compiled Data for World Bank_V2.xlsx"
+imf_file <- "2025.10_Compiled Data for World Bank.xlsx"
 #read in data on when the weights were last updated to measure if annual chain linking is done
 D5.2.4.COICOP.WGT <- read_excel(path = paste(raw_dir, 
                                              "5.2_DISM",
                                              imf_file, 
                                              sep = "/" ),
-                               sheet = "COICOP Month_Last Change",
-                               skip  = 4) %>%
+                               sheet = "3. COICOP Month_Last Change",
+                               skip  = 3) %>%
   as_tibble(.name_repair = 'universal') %>%  
   rename(IMF_code    = Code,
-         IMF_country = Country_revised) %>%
+         IMF_country = Country) %>%
   mutate(IMF_code    = as.numeric(IMF_code)) %>%
   left_join(imf_codes)
   
@@ -3917,8 +3917,8 @@ D5.2.4.CPI.REF <-  read_excel(path   = paste(raw_dir,
                                              "5.2_DISM",
                                              imf_file, 
                                              sep = "/" ),
-                               sheet = "2. CPI Reference Period",
-                              skip   = 2) %>%
+                               sheet = "1. CPI Reference Period",
+                              skip   = 1) %>%
   as_tibble(.name_repair = 'universal') %>%
   rename(IMF_country     = Country) %>%
   left_join(D5.2.4.COICOP.WGT) #merge CPI weights
@@ -4075,18 +4075,18 @@ D5.2.5.HOUS.IMF.2023 <- read_excel(path  = paste(raw_dir,
 
 D5.2.5.HOUS.IMF.2024 <- read_excel(path  = paste(raw_dir, 
                                                  "5.2_DISM",
-                                                 "2025.04_Compiled Data for World Bank_V2.xlsx", 
+                                                 "2025.10_Compiled Data for World Bank.xlsx", 
                                                  sep = "/" ),
-                                   sheet = "3. Household Consump Class",
-                                   skip  = 0) %>%
+                                   sheet = "2. Household Consump Class",
+                                   skip  = 1) %>%
   as_tibble(.name_repair = 'universal') %>%  
   rename(IMF_code    = Code,
          IMF_country = Country) %>%
-  mutate(SPI.D5.2.5.HOUS.IMF = case_when(Status..as.of.April.2025=="COICOP" ~ 1, 
-                                         Status..as.of.April.2025=="COICOP." ~ 1, 
-                                         Status..as.of.April.2025=="COICOP 2018" ~ 1, 
+  mutate(SPI.D5.2.5.HOUS.IMF = case_when(Status =="COICOP" ~ 1, 
+                                         Status =="COICOP." ~ 1, 
+                                         Status =="COICOP 2018" ~ 1, 
                                          TRUE ~ 0),
-         RAW.D5.2.5.HOUS.IMF = Status..as.of.April.2025) %>%
+         RAW.D5.2.5.HOUS.IMF = Status) %>%
   mutate(IMF_code            = as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
   mutate(iso3c = if_else(iso3c == "KOS", 
@@ -4309,7 +4309,7 @@ D5.2.7.CGOV.IMF.2024 <-
                           "5.2_DISM",
                           imf_file, 
                           sep = "/" ),
-             sheet = "5. Cntrl Gct Acct Status",
+             sheet = "4. Cntrl Gct Acct Status",
              skip  = 9) %>%
   as_tibble(.name_repair = 'universal') %>%  
   rename(IMF_code    = Code,
@@ -4531,16 +4531,16 @@ D5.2.9.MONY.IMF.2024 <-
                           "5.2_DISM",
                           imf_file, 
                         sep = "/" ),
-             sheet = "7. MFS Compilation status",
-             skip  = 0) %>%
+             sheet = "6. MFS Compilation status",
+             skip  = 1) %>%
   as_tibble(.name_repair = 'universal') %>%  
   rename(IMF_code    = Code,
          IMF_country = Country) %>%
   mutate(SPI.D5.2.9.MONY.IMF = case_when(
     grepl('MFSM 2000',
-          Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.April.2025) ~ 1, 
+          Monetary.and.Financial.Statistics..MFS..Reporting.Status) ~ 1, 
     TRUE ~ 0),
-    RAW.D5.2.9.MONY.IMF = Monetary.and.Financial.Statistics..MFS..Reporting.Status..as.of.April.2025) %>%
+    RAW.D5.2.9.MONY.IMF = Monetary.and.Financial.Statistics..MFS..Reporting.Status) %>%
   mutate(IMF_code = as.numeric(IMF_code)) %>%
   left_join(imf_codes) %>%
   select(iso3c, 
