@@ -14,7 +14,7 @@ bibliography: ./bibliography.bib
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.path = "plots/", dev = c("png"), dpi=500)
-
+rm(list = ls())
 
 library(tidyverse)
 library(flextable)
@@ -260,15 +260,22 @@ spi_region_charts  <- function(data, indicator, title) {
     mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(`SPI Score`,0))) %>%
     arrange(-`SPI Score`) 
-  
+
+  # Old regions  
+  # region_order <- c("Sub-Saharan Africa" ,
+  #                   "South Asia",
+  #                   "North America",
+  #                   "Middle East & North Africa",
+  #                   "Latin America & Caribbean",
+  #                   "Europe & Central Asia", 
+  #                   "East Asia & Pacific")
   region_order <- c("Sub-Saharan Africa" ,
                     "South Asia",
                     "North America",
-                    "Middle East & North Africa",
+                    "Middle East, North Africa, Afghanistan & Pakistan",
                     "Latin America & Caribbean",
-                    "Europe & Central Asia", 
-                    "East Asia & Pacific"
-                           )
+                    "Europe & Central Asia",
+                    "East Asia & Pacific")
 
   region_SPI_df <- region_SPI_df %>%
     mutate(region=factor(region, levels=region_order))
@@ -446,15 +453,22 @@ spi_country_charts  <- function(data, indicator, title) {
   col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
   names(col_pal) <- c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
   
-
-  region_order <- c("Sub-Saharan Africa" ,
-                    "South Asia",
-                    "North America",
-                    "Middle East & North Africa",
-                    "Latin America & Caribbean",
-                    "Europe & Central Asia", 
-                    "East Asia & Pacific"
-                           )
+  # Old regions
+  # region_order <- c("Sub-Saharan Africa" ,
+  #                   "South Asia",
+  #                   "North America",
+  #                   "Middle East & North Africa",
+  #                   "Latin America & Caribbean",
+  #                   "Europe & Central Asia", 
+  #                   "East Asia & Pacific"
+  #                          )
+    region_order <- c("Sub-Saharan Africa" ,
+                      "South Asia",
+                      "North America",
+                      "Middle East, North Africa, Afghanistan & Pakistan",
+                      "Latin America & Caribbean",
+                      "Europe & Central Asia",
+                      "East Asia & Pacific")
   
   p2_alt <- SPI_map %>%
     ungroup() %>%
@@ -703,16 +717,47 @@ p2_alt3
 
 fcs_charts <- function(data, indicator, title) { 
   #FY22 Fragile and conflict-affected situations (https://thedocs.worldbank.org/en/doc/9b8fbdb62f7183cef819729cc9073671-0090082022/original/FCSList-FY06toFY22.pdf)
-  high_intensity_conflict <- c('Afghanistan', 'Somalia', 'Syrian Arab Republic','Yemen, Rep.', "Armenia", "Azerbaijan" )
+  high_intensity_conflict <- c('Afghanistan', 
+                               'Somalia', 
+                               'Syrian Arab Republic',
+                               'Yemen, Rep.', 
+                               "Armenia", 
+                               "Azerbaijan" )
   
-  medium_intensity_conflict <- c('Burkina Faso','Burundi', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.','Ethiopia','Haiti',
-                                 'Iraq', 'Libya','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan')
+  medium_intensity_conflict <- c('Burkina Faso',
+                                 'Burundi', 
+                                 'Cameroon',
+                                 'Central African Republic', 
+                                 'Chad', 
+                                 'Congo, Dem. Rep.',
+                                 'Ethiopia',
+                                 'Haiti',
+                                 'Iraq', 
+                                 'Libya',
+                                 'Mali',
+                                 'Mozambique',
+                                 'Myanmar',
+                                 'Niger',
+                                 'Nigeria',
+                                 'South Sudan')
   
-  high_institutional_social_fragility <- c('Congo, Rep.','Eritrea','Guinea-Bissau',
-                                           'Kosovo','Lebanon','Papua New Guinea',
-                                           'Sudan','Venezuela, RB','West Bank and Gaza','Zimbabwe')
+  high_institutional_social_fragility <- c('Congo, Rep.',
+                                           'Eritrea',
+                                           'Guinea-Bissau',
+                                           'Kosovo',
+                                           'Lebanon',
+                                           'Papua New Guinea',
+                                           'Sudan',
+                                           'Venezuela, RB',
+                                           'West Bank and Gaza',
+                                           'Zimbabwe')
   
-  small_states <- c('Comoros','Kiribati','Marshall Islands','Micronesia, Fed. Sts.','Solomon Islands','Timor-Leste','Tuvalu')
+  small_states <- c('Comoros',
+                    'Kiribati',
+                    'Marshall Islands',
+                    'Micronesia, Fed. Sts.',
+                    'Solomon Islands',
+                    'Timor-Leste','Tuvalu')
   
 
  indicator<-indicator
@@ -742,8 +787,13 @@ fcs_charts <- function(data, indicator, title) {
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
 
-  fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
-  fcs_list <- c("FCS country","Non-FCS country")
+  fcs_list <- c("High-Intensity Conflict", 
+                "Medium-Intensity Conflict",
+                "High Institutional & Social Fragility",
+                "Small States",
+                "Non-FCS country")
+  fcs_list <- c("FCS country",
+                "Non-FCS country")
 
   p2_alt2 <- map_df %>%
     ungroup() %>%
@@ -772,16 +822,48 @@ p2_alt2
 
 fcs_chart_aggregate <- function(data, indicator, title) { 
   #FY21 Fragile and conflict-affected situations (http://pubdocs.worldbank.org/en/888211594267968803/FCSList-FY21.pdf)
-  high_intensity_conflict <- c('Afghanistan', 'Libya', 'Somalia', 'Syrian Arab Republic' )
+  high_intensity_conflict <- c('Afghanistan', 
+                               'Libya', 
+                               'Somalia', 
+                               'Syrian Arab Republic' )
   
-  medium_intensity_conflict <- c('Burkina Faso', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.',
-                                 'Iraq','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan','Yemen, Rep.')
+  medium_intensity_conflict <- c('Burkina Faso', 
+                                 'Cameroon',
+                                 'Central African Republic', 
+                                 'Chad', 
+                                 'Congo, Dem. Rep.',
+                                 'Iraq',
+                                 'Mali',
+                                 'Mozambique',
+                                 'Myanmar',
+                                 'Niger',
+                                 'Nigeria',
+                                 'South Sudan',
+                                 'Yemen, Rep.')
   
-  high_institutional_social_fragility <- c('Burundi','Congo, Rep.','Eritrea','Gambia, The','Guinea-Bissau',
-                                           'Haiti','Kosovo','Lao PDR','Lebanon','Liberia','Papua New Guinea',
-                                           'Sudan','Venezuela, RB','West Bank and Gaza','Zimbabwe')
+  high_institutional_social_fragility <- c('Burundi',
+                                           'Congo, Rep.',
+                                           'Eritrea',
+                                           'Gambia, The',
+                                           'Guinea-Bissau',
+                                           'Haiti',
+                                           'Kosovo',
+                                           'Lao PDR',
+                                           'Lebanon',
+                                           'Liberia',
+                                           'Papua New Guinea',
+                                           'Sudan',
+                                           'Venezuela, RB',
+                                           'West Bank and Gaza',
+                                           'Zimbabwe')
   
-  small_states <- c('Comoros','Kiribati','Marshall Islands','Micronesia, Fed. Sts.','Solomon Islands','Timor-Leste','Tuvalu')
+  small_states <- c('Comoros',
+                    'Kiribati',
+                    'Marshall Islands',
+                    'Micronesia, Fed. Sts.',
+                    'Solomon Islands',
+                    'Timor-Leste',
+                    'Tuvalu')
   
 
  indicator<-indicator
@@ -811,8 +893,13 @@ fcs_chart_aggregate <- function(data, indicator, title) {
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
 
-  fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
-  fcs_list <- c("FCS country","Non-FCS country")
+  fcs_list <- c("High-Intensity Conflict", 
+                "Medium-Intensity Conflict",
+                "High Institutional & Social Fragility",
+                "Small States",
+                "Non-FCS country")
+  fcs_list <- c("FCS country",
+                "Non-FCS country")
 
   p2_alt2 <- map_df %>%
     group_by(fcs) %>%
@@ -825,7 +912,9 @@ fcs_chart_aggregate <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
       caption = str_wrap('Source: World Bank. Statistical Performance Indicators. Non-FCS countries include all countries not classified as FCS.  This includes high income countries.',70),
-      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
+      subtitle= paste0('Based on data for ',
+                       end_date,
+                       ' or the latest year available')
       ) +
       scale_fill_brewer(palette = 'Set2') +
       scale_y_discrete(limits = fcs_list) +
@@ -1465,8 +1554,12 @@ spi_mapper('spi_index_df','SPI.INDEX','')
 
 ```{r maturitytabovr}
 
-indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
-              "SPI.INDEX.PIL4","SPI.INDEX.PIL5")
+indicators<-c("SPI.INDEX",
+              "SPI.INDEX.PIL1",
+              "SPI.INDEX.PIL2",
+              "SPI.INDEX.PIL3",
+              "SPI.INDEX.PIL4",
+              "SPI.INDEX.PIL5")
 
 maturity_tab <- spi_maturity_table('spi_index_df',indicators,end_date) 
 
@@ -1540,7 +1633,9 @@ Finally, when looking over time, since 2016 the SPI overall score values are rel
 ```{r spiregcharts}
 #show map and summary stats by region and income group
 
-spi_region_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
+spi_region_charts('spi_index_df',
+                  'SPI.INDEX',
+                  'SPI Overall Score')
 
 ```
 
