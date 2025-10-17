@@ -28,10 +28,44 @@ metadata_full <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep=
 
 #read in classifications (MUST UPDATE PERIODICALLY)
 
-class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xlsx', sep=""), sheet="compositions") %>%
+# class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xlsx', sep=""), sheet="compositions") %>%
+#   rename(
+#     iso3c=WB_Country_Code,
+#     country=WB_Country_Name
+#   )
+class_df <- haven::read_dta(file = paste0(raw_dir, '/misc/CLASS.dta'))
+class_df <- class_df %>%
+  filter(year_fiscal == 2025) %>%
+  select(economy, 
+         code, 
+         region, 
+         region_code, 
+         incgroup, 
+         incgroup_code,
+         ida, 
+         ida_code, 
+         fcv_code) %>%
+  pivot_longer(
+    cols     = -c(economy, code),
+    names_to = "group_type",
+    values_to = "value"
+  ) %>%
+  mutate(
+    Group_Type = case_when(
+      str_ends(group_type, "_code") ~ "Group_Code",
+      TRUE ~ "Group"
+    ),
+    group_type = str_remove(group_type, "_code$")
+  ) %>%
+  pivot_wider(
+    names_from  = Group_Type,
+    values_from = value
+  ) |> 
   rename(
-    iso3c=WB_Country_Code,
-    country=WB_Country_Name
+    iso3c         = code,
+    country       = economy,
+    WB_Group_Code = Group_Code,
+    WB_Group_Name = Group
   )
 
 
