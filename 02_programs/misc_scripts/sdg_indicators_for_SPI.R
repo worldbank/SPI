@@ -138,3 +138,4 @@ statistical_financing <- read_csv(here("01_raw_data", "5.5_DIFI", "SG_STT_NSDSFN
 
 
 write_csv(statistical_financing, paste(raw_dir, '5.5_DIFI', 'SG_STT_NSDSFND.csv', sep="/"))
+

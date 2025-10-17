@@ -82,7 +82,7 @@ ilo_survey_pull <- function(page) {
   study_df_ilo <- read_csv(temp) # convert to dataframe
   return(study_df_ilo)
 }
-
+`
 # loop over pages and pull data
 nrow <- 100
 # while loop that checks if the number of rows is 100
@@ -168,6 +168,7 @@ series_info_fn <- function(series) {
   series_info   <- as.character(info$dataset$metadata$study_desc$series_statement$series_name)
   sampling_info <- as.character(info$dataset$metadata$study_desc$method$analysis_info$response_rate)
   geog_coverage <- as.character(info$dataset$metadata$study_desc$study_info$geog_coverage)
+
   tibble::tibble(series_info, 
                  sampling_info, 
                  geog_coverage)
@@ -175,11 +176,15 @@ series_info_fn <- function(series) {
 
 library(collapse)
 # now produce a dataframe with the more info on survey
+empty_df <- 
+  tibble(series_inf    = NA, 
+         sampling_info = NA, 
+         geog_coverage = NA)
 t1 <- Sys.time()
 study_df_internal2 <- study_df_internal %>%
   fmutate(series_info_dat = map(internal_series, 
                                 possibly(series_info_fn,
-                                         otherwise = "Something Wrong"))) %>%
+                                         otherwise = empty_df))) %>%
   unnest(series_info_dat,
          keep_empty = TRUE)
 t2 <- Sys.time()
@@ -247,8 +252,12 @@ write_excel_csv(study_df_fao,
 ```{r householdsurveys}
 # access household surveys in PIP (povcalnet)
 url <- "https://api.worldbank.org/pip/v1/survey-metadata"
-pip_df <- fromJSON(url,
-  simplifyDataFrame = TRUE) %>%
+raw_txt <- readLines(url, warn = FALSE)
+clean_txt <- iconv(raw_txt, from = "", to = "UTF-8", sub = "")
+json_clean <- paste(clean_txt, collapse = "\n")
+parsed <- fromJSON(json_clean)
+
+pip_df <- parsed |> 
   filter(survey_coverage == "national") %>%
   rename(indicator_date = reporting_year,
          iso3c          = country_code) %>%

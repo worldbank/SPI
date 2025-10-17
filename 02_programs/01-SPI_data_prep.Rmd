@@ -1442,7 +1442,7 @@ hyper_read <-  function(hyperlink) {
   })
 }
 
-AFG_df2 <- hyper_read('https://washdata.org/data/country/AFG/household/download')
+AFG_df <- hyper_read('https://washdata.org/data/country/AFG/household/download')
 USA_df <- hyper_read('https://washdata.org/data/country/USA/household/download')
 GBR_df <- hyper_read('https://washdata.org/data/country/GBR/household/download')
 
@@ -3316,7 +3316,7 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
 
   #read in ODIN data
   #read in ODIN data
-  for (i in c(2015,2016,2017,2018, 2019,2020, 2021, 2022, 2023, 2024)) {
+  for (i in c(2015:end_date)) {
    temp <- read_csv(paste(raw_dir, '/2.2_DSOA/','ODIN_',i,'.csv', sep=""),)  %>%
         as_tibble(.name_repair = 'universal') %>%
         mutate(date=i) %>%
@@ -3335,7 +3335,16 @@ https://docs.google.com/document/d/1ubPL1l_3im9bjlCVZ6W2ICAy6UAiXl1hGeA1aXImkxI/
     assign(paste('geo_df',i,sep="_"), temp)
   }
 #bind different years together
-geo_df <- bind_rows(geo_df_2015, geo_df_2016, geo_df_2017, geo_df_2018, geo_df_2019, geo_df_2020, geo_df_2021, geo_df_2022, geo_df_2023, geo_df_2024)
+geo_df <- bind_rows(geo_df_2015, 
+                    geo_df_2016, 
+                    geo_df_2017, 
+                    geo_df_2018, 
+                    geo_df_2019, 
+                    geo_df_2020, 
+                    geo_df_2021, 
+                    geo_df_2022, 
+                    geo_df_2023, 
+                    geo_df_2024)
 
 #for some small countries, the data at 1st admin level is not included.  These countries include:
 # Andorra, Anguilla, Antigua and Barbuda, Bahrain, Dominica, Hong Kong, Macao, Maldives, Malta, Marshall Islands, 
@@ -3613,11 +3622,16 @@ The source is Paris 21 and UNSD.  Data accessed using UNSD SDG API on `r Sys.Dat
 ```{r legislation_governance}
 
 
-D5.1_DILG <- read_csv(file=paste(raw_dir, '5.1_DILG', 'SG_STT_FPOS.csv', sep="/")) %>% 
+D5.1_DILG <- read_csv(file=paste(raw_dir, '5.1_DILG', 
+                                 'SG_STT_FPOS.csv', 
+                                 sep="/")) %>% 
   select(iso3c, date,Value) %>%
   right_join(spi_df_empty) %>%
-  mutate(RAW.D5.1.DILG=if_else((is.na(Value) | Value=="NaN"),as.numeric(NA), as.numeric(Value)),
-         SPI.D5.1.DILG=if_else((is.na(Value) | Value=="NaN"),as.numeric(NA), as.numeric(Value))) %>%
+  mutate(RAW.D5.1.DILG=if_else((is.na(Value) | Value=="NaN"),
+                               as.numeric(NA), as.numeric(Value)),
+         SPI.D5.1.DILG=if_else((is.na(Value) | Value=="NaN"),
+                               as.numeric(NA), 
+                               as.numeric(Value))) %>%
   select(-Value, -country)
 # 
 # #read in csv file.
