@@ -2292,7 +2292,7 @@ un_sdg_data_read  <- function(year) {
 
 #read in versions
 #apply function from 2004 to 2023 and bind together
-un_sdg_df <- bind_rows(lapply(2004:2024, un_sdg_data_read)) 
+un_sdg_df <- bind_rows(lapply(2004:end_date, un_sdg_data_read)) 
 
 #add to spi databases
 spi_df <- spi_df %>%
