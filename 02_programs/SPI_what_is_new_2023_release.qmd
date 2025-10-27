@@ -3,9 +3,6 @@ title: '2024 Update of the Statistical Performance Indicators: What is New?'
 author: "Prepared by Brian Stacy & Umar Serajuddin"
 date: "`r Sys.Date()`"
 date-format: long
-format:
-  docx:
-    reference-doc: custom-reference-doc.docx
 abstract: 'The 2024 release of the Statistical Performance Indicator (SPI) includes new data for the calendar year 2023. There were no changes to the framework, methodology, or data sources for the SPI compared to previous releases. This document provides an overview of the major changes to the scores compared to the first year of data available in 2016.'
 bibliography: ./bibliography.bib
 ---
