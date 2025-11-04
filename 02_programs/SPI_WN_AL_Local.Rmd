@@ -55,63 +55,49 @@ start_date <- 2016
 
 # ---- small helpers for importing ----
 ```
-# **Overview**: The 2025 Statistical Performance Indicators (SPI) release includes data from 2024 with updates to previous years, incorporating the latest information from organizations such as the World Bank, IMF, and UN Agencies. The SPI continues to assess national statistical systems across five pillars with 22 dimensions, though data is currently available for 14 of these dimensions.
+**Overview**: The 2025 Statistical Performance Indicators (SPI) release includes data from 2024 with updates to previous years, incorporating the latest information from organizations such as the World Bank, IMF, and UN Agencies. The SPI continues to assess national statistical systems across five pillars with 22 dimensions, though data is currently available for 14 of these dimensions.
 
-#  **Methodology Consistency**: Since the 2019 release, the scoring methodology and data sources have remained largely unchanged, ensuring consistency and comparability with prior releases. The only exception is the indicator for comparable poverty measures in the data use pillar. Previously, high-income countries not covered by PovcalNet were assigned a score of 1 due to the lack of data. However, with expanded coverage in the Poverty and Inequality Platform (PIP) since 2021, all countries are now assessed based on the availability of comparable poverty data.
+**Methodology Consistency**: Since the 2019 release, the scoring methodology and data sources have remained largely unchanged, ensuring consistency and comparability with prior releases. The only exception is the indicator for comparable poverty measures in the data use pillar. Previously, high-income countries not covered by PovcalNet were assigned a score of 1 due to the lack of data. However, with expanded coverage in the Poverty and Inequality Platform (PIP) since 2021, all countries are now assessed based on the availability of comparable poverty data.
 
-#  **Data Updates**: Revisions to previous SPI scores were made to reflect updated data, particularly in Pillars 1, 3, and 4, with minimal impact on overall scores. The correlation between the previous and revised scores remains high, with a 0.99 correlation in 2022.
+**Data Updates**: Revisions to previous SPI scores were made to reflect updated data, particularly in Pillars 1, 3, and 4, with minimal impact on overall scores. The correlation between the previous and revised scores remains high, with a 0.99 correlation in 2022.
 
-# **Data Coverage**: The SPI now includes 187 economies, up from 167 in 2016, covering over 99% of the global population. This expansion is largely driven by an increase in economies with data openness scores.
+**Data Coverage**: The SPI now includes 187 economies, up from 167 in 2016, covering over 99% of the global population. This expansion is largely driven by an increase in economies with data openness scores.
 
-#  **Score Improvements**: Global SPI scores have risen by an average of 12.9 points from 2016 to 2024. Country rankings have remained stable, with a Spearman rank correlation of 0.92.
+**Score Improvements**: Global SPI scores have risen by an average of 12.9 points from 2016 to 2024. Country rankings have remained stable, with a Spearman rank correlation of 0.92.
 
-#  **Performance by Decile**: The largest improvements were observed in countries that ranked in the bottom 20% in 2016. In contrast, countries in the top decile showed minimal growth due to their already high scores.
+**Performance by Decile**: The largest improvements were observed in countries that ranked in the bottom 20% in 2016. In contrast, countries in the top decile showed minimal growth due to their already high scores.
 
-# **Pillar Contributions**: Improvements in data services and infrastructure have been the major contributors to overall score increases, especially in the bottom deciles. Specifically, 43% of the improvements in the bottom decile are attributed to better data services, and 22% to better data infrastructure.
+**Pillar Contributions**: Improvements in data services and infrastructure have been the major contributors to overall score increases, especially in the bottom deciles. Specifically, 43% of the improvements in the bottom decile are attributed to better data services, and 22% to better data infrastructure.
 
-#  **Regional and Income Group Analysis**: North America and Europe & Central Asia are the top-performing regions. The next highest scoring regions on average, after excluding countries with small populations, are East Asia & the Pacific region, Latin America & the Caribbean, South Asia, the Middle East and North Africa, and Sub-Saharan Africa, in that order. Statistical performance improves with income, with lower-middle-income countries showing the fastest growth, followed by low-income, upper-middle-income, and high-income countries.
+**Regional and Income Group Analysis**: North America and Europe & Central Asia are the top-performing regions. The next highest scoring regions on average, after excluding countries with small populations, are East Asia & the Pacific region, Latin America & the Caribbean, South Asia, the Middle East and North Africa, and Sub-Saharan Africa, in that order. Statistical performance improves with income, with lower-middle-income countries showing the fastest growth, followed by low-income, upper-middle-income, and high-income countries.
 
-#  **Population Size Impact**: High-income countries with populations under 500,000 face specific challenges, scoring the same on average (56 points) as the average for all low-income countries. This suggests that small economies may face unique challenges in building statistical capacity.
+**Population Size Impact**: High-income countries with populations under 500,000 face specific challenges, scoring the same on average (56 points) as the average for all low-income countries. This suggests that small economies may face unique challenges in building statistical capacity.
 
-#  **Conclusion**: The 2025 SPI release highlights significant progress in global statistical performance, driven by improvements in data services and infrastructure. While top-performing regions and countries maintain their ranks, lower middle-income and smaller economies show promising advancements. This trend indicates a positive development in global data and statistical capacity building. For further details, the [SPI research paper](https://www.nature.com/articles/s41597-023-01971-0) and the [SPI GitHub repository](https://github.com/worldbank/SPI) provide additional information on how the SPI is put together, as well as the raw data and code.
+**Conclusion**: The 2025 SPI release highlights significant progress in global statistical performance, driven by improvements in data services and infrastructure. While top-performing regions and countries maintain their ranks, lower middle-income and smaller economies show promising advancements. This trend indicates a positive development in global data and statistical capacity building. For further details, the [SPI research paper](https://www.nature.com/articles/s41597-023-01971-0) and the [SPI GitHub repository](https://github.com/worldbank/SPI) provide additional information on how the SPI is put together, as well as the raw data and code.
 
 ```{r}
-#ggplot theme
-theme_spi <- function () { 
-  theme_minimal(base_size = 14) %+replace%
-    theme(
-      plot.title = element_text(face = "bold", size = 16, color = "#333333"),
-      plot.subtitle = element_text(size = 14, color = "#666666"),
-      axis.title = element_text(face = "bold"),
-      legend.title = element_blank(),
-      legend.position = "top",
-      legend.text = element_text(size = 12),
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      axis.line = element_line(color = "#cccccc")
-    )
-}
-
-
-
 # ---- themes & palettes ----
-theme_spi <- function () {
+theme_spi <- function() {
   theme_minimal(base_size = 14) %+replace%
     theme(
-      plot.title    = element_text(face = "bold", size = 16, color = "#333333"),
-      plot.subtitle = element_text(size = 14, color = "#666666"),
-      axis.title    = element_text(face = "bold"),
-      legend.title  = element_blank(),
-      legend.position = "top",
-      legend.text   = element_text(size = 12),
+      plot.title       = element_text(face  = "bold", 
+                                      size  = 16, 
+                                      color = "#333333"),
+      plot.subtitle    = element_text(size  = 14, 
+                                      color = "#666666"),
+      axis.title       = element_text(face = "bold"),
+      legend.title     = element_blank(),
+      legend.position  = "top",
+      legend.text      = element_text(size = 12),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      axis.line     = element_line(color = "#cccccc")
+      axis.line        = element_line(color = "#cccccc")
     )
 }
 
 # Distinct colors on the fly for arbitrary label sets
-.make_palette <- function(levels_vec, default_hex = NULL) {
+.make_palette <- function(levels_vec, 
+                          default_hex = NULL) {
   lv <- unique(levels_vec[!is.na(levels_vec)])
   n  <- length(lv)
   if (n == 0) return(c())
@@ -126,36 +112,48 @@ theme_spi <- function () {
   pal
 }
 
-# Dynamic palettes from actual data (no hard-coding)
-
-
-income_levels       <- c("Low income","Lower middle income","Upper middle income","High income")
-income_colors       <- c("#fb8500","#ffb703","#219ebc","#023047"); names(income_colors) <- income_levels
-
-
-pillar_levels       <- c("Pillar 1: Data Use","Pillar 2: Data Services","Pillar 3: Data Products",
-                         "Pillar 4: Data Sources","Pillar 5: Data Infrastructure")
-pillar_colors       <- c("#fee440","#9b5de5","#00bbf9","#00f5d4","#f15bb5"); names(pillar_colors) <- pillar_levels
+income_levels       <- c("Low income",
+                         "Lower middle income",
+                         "Upper middle income",
+                         "High income")
+income_colors       <- c("#fb8500",
+                         "#ffb703",
+                         "#219ebc",
+                         "#023047") 
+names(income_colors) <- income_levels
+pillar_levels       <- c("Pillar 1: Data Use",
+                         "Pillar 2: Data Services",
+                         "Pillar 3: Data Products",
+                         "Pillar 4: Data Sources",
+                         "Pillar 5: Data Infrastructure")
+pillar_colors       <- c("#fee440",
+                         "#9b5de5",
+                         "#00bbf9",
+                         "#00f5d4",
+                         "#f15bb5")
+names(pillar_colors) <- pillar_levels
 
 ```
 
 ```{r data}
-spi_index_df<-read_csv( file = paste(output_dir, 'SPI_index.csv', sep="/")) 
-# %>%
-#   filter(date>=2021) %>%
-#   bind_rows(read_csv( file = paste(output_dir, 'SPI_index_2020.csv', sep="/")) %>% filter(date==2020)) %>%
-#   bind_rows(read_csv( file = paste(output_dir, 'SPI_index_2019.csv', sep="/")) %>% filter(date<2020))            
+spi_index_df <- read_csv( file = paste(output_dir, 
+                                       'SPI_index.csv', 
+                                       sep = "/")) 
 #metadata 
+metadata2 <- read_csv(paste(raw_dir, 
+                            '/metadata/SPI_dimensions_sources.csv', 
+                            sep = ""))
 
-#metadata 
-metadata2 <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep=""))
-
-metadata_full <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep="")) %>%
-  rename(source_name=descript) %>%
+metadata_full <- read_csv(paste(raw_dir, 
+                                '/metadata/SPI_index_sources.csv', 
+                                sep = "")) %>%
+  rename(source_name = descript) %>%
   bind_rows(metadata2)
 
 # add new regions to SPI database
-class_data <- read_dta(paste(raw_dir, '/misc/CLASS.dta', sep="/")) %>%
+class_data <- read_dta(paste(raw_dir, 
+                             '/misc/CLASS.dta', 
+                             sep = "/")) %>%
   # Get the most recent year for each country
   group_by(code) %>%
   arrange(desc(year_fiscal)) %>%
@@ -163,12 +161,12 @@ class_data <- read_dta(paste(raw_dir, '/misc/CLASS.dta', sep="/")) %>%
   ungroup() %>%
   # Select and rename columns to match existing code
   transmute(
-    iso3c = code,
-    country = economy,
-    region = region,
-    income = incgroup,
-    lending_type = ida,
-    fcv = fcv,
+    iso3c            = code,
+    country          = economy,
+    region           = region,
+    income           = incgroup,
+    lending_type     = ida,
+    fcv              = fcv,
     fragile_conflict = case_when(
       fcv == "Yes" ~ "FCS country",
       TRUE ~ "Non-FCS country"
@@ -177,21 +175,31 @@ class_data <- read_dta(paste(raw_dir, '/misc/CLASS.dta', sep="/")) %>%
 
 # Remove any existing classification columns from spi_index_df to avoid conflicts
 spi_index_df <- spi_index_df %>%
-  select(-any_of(c("region", "income", "lending_type", "fcv", "fragile_conflict"))) %>%
-  left_join(class_data %>% select(-country), by = "iso3c")
+  select(-any_of(c("region", 
+                   "income", 
+                   "lending_type", 
+                   "fcv", 
+                   "fragile_conflict"))) %>%
+  left_join(class_data %>% 
+              select(-country), 
+            by = "iso3c")
 
-region_levels       <- spi_index_df |> dplyr::distinct(region) |> dplyr::pull(region)
-lending_levels      <- spi_index_df |> dplyr::distinct(lending_type) |> dplyr::pull(lending_type)
-region_colors       <- .make_palette(region_levels)  # hue-based
-lending_colors      <- .make_palette(lending_levels)
-
-
+region_levels  <- spi_index_df |> 
+  distinct(region) |> 
+  pull(region)
+lending_levels <- spi_index_df |> 
+  distinct(lending_type) |> 
+  pull(lending_type)
+region_colors  <- .make_palette(region_levels)  # hue-based
+lending_colors <- .make_palette(lending_levels)
 ```
 
 ```{r}
 
 #get list of economies with score in 2016 to keep countries fixed.
-list_2016 <- spi_index_df %>% filter(date==start_date) %>% filter(!is.na(SPI.INDEX))
+list_2016 <- spi_index_df %>% 
+  filter(date==start_date) %>% 
+  filter(!is.na(SPI.INDEX))
 list_2016 <- list_2016$iso3c
 #aggregate to global level
 spi_agg_df <- spi_index_df %>%
@@ -227,58 +235,101 @@ country_metadata <- wbstats::wb_countries()
 
 spi_mapper  <- function(data, indicator, title) {
   
-  indicator<-indicator
+  indicator <- indicator
   
   map_df <- get(data) %>%
-    filter(date==max(date, na.rm=T)) %>%
+    filter(date == max(date, 
+                       na.rm = T)) %>%
     filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
     group_by( iso3c) %>%
     #summarise(across(!! indicator,last)) %>%
-    rename(data_available=!! indicator) %>%
-    select(iso3c, date, data_available, weights) %>%
+    rename(data_available = !! indicator) %>%
+    select(iso3c, 
+           date, 
+           data_available,
+           weights) %>%
     right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
+    mutate(data_available = if_else(is.na(data_available), 
+                                    s.numeric(NA), 
+                                    as.numeric(data_available)))     
   
   
-  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+  spi_groups_quantiles <- quantile(map_df$data_available, 
+                                   probs = c(1, 2, 3, 4)/5,
+                                   na.rm = T)
   
   SPI_map <- map_df %>%
-    mutate(spi_groups=case_when(
-      between(data_available, spi_groups_quantiles[4],100) ~ "Top Quintile",
-      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
-      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
-      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
-      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+    mutate(spi_groups = case_when(
+      between(data_available, 
+              spi_groups_quantiles[4],
+              100) ~ "Top Quintile",
+      between(data_available, 
+              spi_groups_quantiles[3],
+              spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, 
+              spi_groups_quantiles[2],
+              spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, 
+              spi_groups_quantiles[1],
+              spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 
+              0,
+              spi_groups_quantiles[1]) ~ "Bottom 20%"
       
     )) %>%
-    mutate(spi_groups=factor(spi_groups, 
-                             levels=c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+    mutate(spi_groups = factor(spi_groups, 
+                               levels = c("Top Quintile",
+                                          "4th Quintile",
+                                          "3rd Quintile",
+                                          "2nd Quintile",
+                                          "Bottom 20%" )))  
   
   #set color pallete
-  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
-  names(col_pal) <- c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  col_pal <- c("#2ec4b6",
+               "#acece7",
+               "#f1dc76",
+               "#ffbf69",
+               "#ff9f1c")  
+  names(col_pal) <- c("Top Quintile",
+                      "4th Quintile",
+                      "3rd Quintile",
+                      "2nd Quintile",
+                      "Bottom 20%" )
   
-  p1<-ggplot() +
-    geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
-    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
-    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+  p1 <- ggplot() +
+    geom_map(data = SPI_map, 
+             aes(map_id = iso3c, 
+                 fill   = spi_groups), 
+             map = maps$countries) + 
+    geom_polygon(data = maps$disputed, 
+                 aes(long, 
+                     lat, 
+                     group  = group, 
+                     map_id = id), 
+                 fill = "grey80") + 
+    geom_polygon(data = maps$lakes, 
+                 aes(long, lat, 
+                     group = group), 
+                 fill = "white")  +
     geom_path(data = maps$boundaries,
               aes(long, lat, group = group),
               color = "white",
               size = 0.3,
               lineend = maps$boundaries$lineend,
               linetype = maps$boundaries$linetype) +
-    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
-    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_x_continuous(expand = c(0, 0), 
+                       limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), 
+                       limits = standard_crop_wintri()$ylim) +
     scale_fill_manual(
-      name='SPI Score',
-      values=col_pal,
-      na.value='grey'
+      name     = 'SPI Score',
+      values   = col_pal,
+      na.value = 'grey'
     ) +
     coord_equal() +
-    theme_map(base_size=12) +
+    theme_map(base_size = 12) +
     labs(
-      title=str_wrap(title,100),
+      title   = str_wrap(title,100),
       caption = 'Source: World Bank. Statistical Performance Indicators'
     )
   print(p1)
@@ -287,30 +338,48 @@ spi_mapper  <- function(data, indicator, title) {
 spi_region_charts <- function(data, indicator, title) {
   
   map_df <- get(data) |>
-    dplyr::filter(date == max(date, na.rm = TRUE)) |>
-    dplyr::group_by(iso3c) |>
-    dplyr::rename(data_available = !!indicator) |>
-    dplyr::select(iso3c, date, data_available, weights, region) |>
-    dplyr::ungroup() |>
-    dplyr::mutate(data_available = if_else(is.na(data_available), NA_real_, as.numeric(data_available)))
+    filter(date == max(date, 
+                       na.rm = TRUE)) |>
+    group_by(iso3c) |>
+    rename(data_available = !!indicator) |>
+    select(iso3c, 
+           date, 
+           data_available,
+           weights, 
+           region) |>
+    ungroup() |>
+    mutate(data_available = if_else(is.na(data_available), 
+                                    NA_real_, 
+                                    as.numeric(data_available)))
   
   region_SPI_df <- map_df |>
-    dplyr::filter(!is.na(region)) |>
-    dplyr::group_by(region) |>
-    dplyr::mutate(`SPI Score` = Hmisc::wtd.mean(data_available, weights = weights, na.rm = TRUE),
+    filter(!is.na(region)) |>
+    group_by(region) |>
+    mutate(`SPI Score` = Hmisc::wtd.mean(data_available, weights = weights, na.rm = TRUE),
                   Label = paste(round(`SPI Score`, 0))) |>
-    dplyr::summarise(`SPI Score` = dplyr::first(`SPI Score`), Label = dplyr::first(Label), .groups = "drop") |>
-    dplyr::arrange(dplyr::desc(`SPI Score`)) |>
-    dplyr::mutate(region = factor(region, levels = region))
+    summarise(`SPI Score` = first(`SPI Score`), 
+              Label = first(Label), 
+              .groups = "drop") |>
+    arrange(desc(`SPI Score`)) |>
+    mutate(region = factor(region, 
+                           levels = region))
   
-  ggplot(region_SPI_df, aes(x = `SPI Score`, y = region, fill = region)) +
-    geom_bar(stat = "identity", position = "dodge") +
+  ggplot(region_SPI_df, 
+         aes(x = `SPI Score`, 
+             y = region, 
+             fill = region)) +
+    geom_bar(stat = "identity", 
+             position = "dodge") +
     geom_text(aes(label = Label)) +
     scale_fill_manual(values = region_colors) +
     labs(
-      title    = stringr::str_wrap(paste(title, "By Region", sep = " - "), 100),
+      title    = str_wrap(paste(title, 
+                                "By Region", 
+                                sep = " - "), 100),
       caption  = "Source: World Bank. Statistical Performance Indicators.",
-      subtitle = paste0("Based on data for ", end_date, " or the latest year available")
+      subtitle = paste0("Based on data for ", 
+                        end_date, 
+                        " or the latest year available")
     ) +
     expand_limits(x = c(0, 100)) +
     theme_spi() +
@@ -320,14 +389,17 @@ spi_region_charts <- function(data, indicator, title) {
 spi_income_charts  <- function(data, indicator, title) {
   
   map_df <- get(data) %>%
-    filter(date==max(date, na.rm=T)) %>%
+    filter(date == max(date, 
+                     na.rm = T)) %>%
     filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
     group_by( iso3c) %>%
     #summarise(across(!! indicator,last)) %>%
-    rename(data_available=!! indicator) %>%
+    rename(data_available =!! indicator) %>%
     select(iso3c, date, data_available, weights) %>%
     right_join(country_metadata) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))  
+    mutate(data_available = if_else(is.na(data_available), 
+                                    as.numeric(NA), 
+                                    as.numeric(data_available)))  
   
   
   
@@ -356,20 +428,31 @@ spi_income_charts  <- function(data, indicator, title) {
   
   p3 <- map_df %>%
     group_by(income) %>%
-    filter(region!='Aggregates') %>%
-    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
-           Label = paste(round(`SPI Score`,0))) %>%
-    ggplot(aes(x=`SPI Score`, y=income, fill=income)) +
-    geom_bar(stat="identity",position='dodge') +
-    geom_text(aes(label=Label)) +
-    scale_fill_manual(values=income_colors) +
+    filter(region != 'Aggregates') %>%
+    mutate(`SPI Score` = wtd.mean(data_available, 
+                                  weights = weights, 
+                                  na.rm = T),
+           Label = paste(round(`SPI Score`,
+                               0))) %>%
+    ggplot(aes(x    = `SPI Score`, 
+               y    = income, 
+               fill = income)) +
+    geom_bar(stat     = "identity",
+             position = 'dodge') +
+    geom_text(aes(label = Label)) +
+    scale_fill_manual(values = income_colors) +
     labs(
-      title=str_wrap(paste(title, 'By Income', sep=" - "),100),
-      caption = 'Source: World Bank. Statistical Performance Indicators.',
-      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
+      title    =str_wrap(paste(title, 
+                               'By Income',
+                               sep = " - "),100),
+      caption  = 'Source: World Bank. Statistical Performance Indicators.',
+      subtitle = paste0('Based on data for ',
+                        end_date,
+                        ' or the latest year available')
     ) +
     scale_y_discrete(limits = income) +
-    expand_limits(x=c(0,100)) +
+    expand_limits(x = c(0,
+                        100)) +
     theme_spi() +
     theme(legend.position = 'top')
   
@@ -386,11 +469,15 @@ spi_time_charts  <- function(data, indicator, title) {
   
   # #add line graph over time
   p4 <- get(data)  %>%
-    rename(data_available=!! indicator) %>%
+    rename(data_available =!! indicator) %>%
     # right_join(spi_df_empty) %>%
-    group_by(income, date) %>%
-    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
-    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+    group_by(income, 
+             date) %>%
+    mutate(data_available = if_else(is.na(data_available), 
+                                    as.numeric(NA), 
+                                    as.numeric(data_available))) %>%
+    mutate(`SPI Score` = wtd.mean(data_available, 
+                                weights = weights, na.rm = T),
            Label = paste(round(`SPI Score`,0))) %>%
     ungroup() %>%
     ggplot(aes(y=`SPI Score`, x=date, color=income)) +
@@ -452,14 +539,14 @@ spi_country_charts  <- function(data, indicator, title) {
   
   # order regions by their mean score in the current year
   region_means <- SPI_map |>
-    dplyr::group_by(region) |>
-    dplyr::summarise(m = mean(data_available, na.rm = TRUE), .groups = "drop") |>
-    dplyr::arrange(dplyr::desc(m)) |>
-    dplyr::pull(region)
+    group_by(region) |>
+    summarise(m = mean(data_available, na.rm = TRUE), .groups = "drop") |>
+    arrange(desc(m)) |>
+    pull(region)
   
   p2_alt <- SPI_map |>
-    dplyr::ungroup() |>
-    dplyr::mutate(region = factor(region, levels = region_means)) |>
+    ungroup() |>
+    mutate(region = factor(region, levels = region_means)) |>
     ggplot(aes(x = data_available, y = region, color = spi_groups)) +
     geom_point() +
     geom_text(aes(label = country), position = position_jitter(width = .1, height = .4), check_overlap = TRUE) +
@@ -625,7 +712,7 @@ lending_charts <- function(data, indicator, title) {
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
   
-  lending_list <- spi_index_df |> dplyr::distinct(lending_type) |> dplyr::pull(lending_type)
+  lending_list <- spi_index_df |> distinct(lending_type) |> pull(lending_type)
   # then:
   scale_y_discrete(limits = lending_list)
   # and:
@@ -675,7 +762,7 @@ lending_chart_aggregate <- function(data, indicator, title) {
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
   
-  lending_list <- spi_index_df |> dplyr::distinct(lending_type) |> dplyr::pull(lending_type)
+  lending_list <- spi_index_df |> distinct(lending_type) |> pull(lending_type)
   # then:
   scale_y_discrete(limits = lending_list)
   # and:
@@ -715,15 +802,15 @@ lending_chart_aggregate <- function(data, indicator, title) {
 
 fcs_charts <- function(data, indicator, title) {
   map_df <- get(data) |>
-    dplyr::filter(date == max(date, na.rm = TRUE)) |>
-    dplyr::group_by(iso3c) |>
-    dplyr::rename(data_available = !!indicator) |>
-    dplyr::select(iso3c, country, fragile_conflict, date, data_available, weights) |>
-    dplyr::ungroup() |>
-    dplyr::mutate(data_available = if_else(is.na(data_available), NA_real_, as.numeric(data_available)))
+    filter(date == max(date, na.rm = TRUE)) |>
+    group_by(iso3c) |>
+    rename(data_available = !!indicator) |>
+    select(iso3c, country, fragile_conflict, date, data_available, weights) |>
+    ungroup() |>
+    mutate(data_available = if_else(is.na(data_available), NA_real_, as.numeric(data_available)))
   
   fcs_levels <- c("FCS country","Non-FCS country")
-  ggplot(map_df |> dplyr::filter(!is.na(fragile_conflict)),
+  ggplot(map_df |> filter(!is.na(fragile_conflict)),
          aes(x = data_available, y = fragile_conflict, color = fragile_conflict)) +
     geom_point() +
     geom_text(aes(label = country), position = position_jitter(width = .1, height = .4), check_overlap = TRUE) +
@@ -740,18 +827,18 @@ fcs_charts <- function(data, indicator, title) {
 
 fcs_chart_aggregate <- function(data, indicator, title) {
   map_df <- get(data) |>
-    dplyr::filter(date == max(date, na.rm = TRUE)) |>
-    dplyr::group_by(iso3c) |>
-    dplyr::rename(data_available = !!indicator) |>
-    dplyr::select(iso3c, fragile_conflict, date, data_available, weights) |>
-    dplyr::ungroup() |>
-    dplyr::mutate(data_available = if_else(is.na(data_available), NA_real_, as.numeric(data_available)))
+    filter(date == max(date, na.rm = TRUE)) |>
+    group_by(iso3c) |>
+    rename(data_available = !!indicator) |>
+    select(iso3c, fragile_conflict, date, data_available, weights) |>
+    ungroup() |>
+    mutate(data_available = if_else(is.na(data_available), NA_real_, as.numeric(data_available)))
   
   fcs_levels <- c("FCS country","Non-FCS country")
   map_df |>
-    dplyr::filter(!is.na(fragile_conflict)) |>
-    dplyr::group_by(fragile_conflict) |>
-    dplyr::mutate(`SPI Score` = Hmisc::wtd.mean(data_available, weights = weights, na.rm = TRUE),
+    filter(!is.na(fragile_conflict)) |>
+    group_by(fragile_conflict) |>
+    mutate(`SPI Score` = Hmisc::wtd.mean(data_available, weights = weights, na.rm = TRUE),
                   Label      = paste(round(`SPI Score`, 0))) |>
     ggplot(aes(x = `SPI Score`, y = fragile_conflict, fill = fragile_conflict)) +
     geom_bar(stat = "identity", position = "dodge") +
@@ -1438,32 +1525,32 @@ The regional rankings have remained largely unchanged over this period. The two 
 
 # Build the base table
 reg_avg_base <- spi_index_df %>%
-  dplyr::mutate(
-    small_pop = dplyr::if_else(population <= 500000, "Population <= 500k", "Population > 500k")
+  mutate(
+    small_pop = if_else(population <= 500000, "Population <= 500k", "Population > 500k")
   ) %>%
-  dplyr::filter(small_pop == "Population > 500k") %>%
-  dplyr::filter(date %in% c(start_date, end_date)) %>%
-  dplyr::group_by(date, region) %>%
-  dplyr::summarise(SPI.INDEX = mean(SPI.INDEX, na.rm = TRUE), .groups = "drop")
+  filter(small_pop == "Population > 500k") %>%
+  filter(date %in% c(start_date, end_date)) %>%
+  group_by(date, region) %>%
+  summarise(SPI.INDEX = mean(SPI.INDEX, na.rm = TRUE), .groups = "drop")
 
 #  Determine region ordering by end_date averages
 region_levels <- reg_avg_base %>%
-  dplyr::filter(date == end_date) %>%
-  dplyr::arrange(dplyr::desc(SPI.INDEX)) %>%
-  dplyr::pull(region) %>%
+  filter(date == end_date) %>%
+  arrange(desc(SPI.INDEX)) %>%
+  pull(region) %>%
   unique()
 
 # Fallback in case end_date is missing for some regions
 if (length(region_levels) == 0) {
   region_levels <- reg_avg_base %>%
-    dplyr::arrange(dplyr::desc(SPI.INDEX)) %>%
-    dplyr::pull(region) %>%
+    arrange(desc(SPI.INDEX)) %>%
+    pull(region) %>%
     unique()
 }
 
 #  Final table with factors applied
 reg_avg <- reg_avg_base %>%
-  dplyr::mutate(
+  mutate(
     date   = factor(date, levels = c(start_date, end_date)),
     region = factor(region, levels = region_levels)
   )
@@ -1647,7 +1734,7 @@ get_delta <- function(tab, label, start_date, end_date) {
   # If the year columns aren't present, bail safely
 if (!(start_col %in% names(tab)) || !(end_col %in% names(tab))) return(NA_real_)
 
-row <- tab %>% dplyr::filter(.data[[group_col]] == label)
+row <- tab %>% filter(.data[[group_col]] == label)
 
 if (nrow(row) == 0) return(NA_real_)
 
