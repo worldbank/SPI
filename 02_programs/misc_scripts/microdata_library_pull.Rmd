@@ -22,7 +22,6 @@ library(here)
 library(purrr)
 library(ggthemes)
 
-
 # Directory for SPI csv files  to be created
 dir <- here()
 
@@ -52,6 +51,9 @@ study_request_public <- fromJSON(paste(public_base_url,
 study_df_public <- study_request_public$result$rows # convert to dataframe
 write_excel_csv(study_df_public, 
                 path = paste(output_dir, 
+                             "microdata_library_public_studies.csv", 
+                             sep = "")) # write to csv
+study_df_public <- read_csv(file = paste(output_dir, 
                              "microdata_library_public_studies.csv", 
                              sep = "")) # write to csv
 gt(as_tibble(head(study_df_public[, 1:5]))) # display top 5 rows of dataframe
@@ -129,7 +131,10 @@ write_excel_csv(study_df_internal,
                 path = paste(output_dir, 
                              "microdata_library_internal_studies.csv", 
                              sep = "")) # write to csv
-
+study_df_internal <- 
+  read_csv(file = paste(output_dir, 
+                             "microdata_library_internal_studies.csv", 
+                             sep = ""))
 
 gt(as_tibble(head(study_df_internal[, 1:5])))
 
@@ -198,6 +203,9 @@ write_excel_csv(study_df_internal,
                 path = paste(output_dir, 
                              "microdata_library_surveys.csv", 
                              sep = "")) # write to csv
+study_df_internal <- read_csv(file = paste(output_dir, 
+                             "microdata_library_surveys.csv", 
+                             sep = ""))
 # gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
 ```
 
@@ -331,7 +339,7 @@ saver <- function(data, indicator, filename) {
       country == "Gambia" ~ "Gambia, The",
       TRUE ~ country
     )) %>%
-    filter(grepl(indicator, series_info)) %>%
+    filter(grepl(str_to_lower(indicator), str_to_lower(series_info))) %>%
     group_by(country, indicator_date) %>%
     summarise(
       freq = n(),
@@ -501,7 +509,7 @@ write_excel_csv(survey_df, path = paste(output_dir, "D4.1.6.SVY.LABR_NADA.csv", 
 
 saver("study_df_internal", "dhs|mics|whs|hea|DHS|MICS|WHS|Demographic and Health", "D4.1.7.SVY.HLTH_NADA.csv")
 
-saver("study_df_internal", "Business Survey", "D4.1.8.SVY.BIZZ_NADA.csv")
+saver("study_df_internal", "Business Survey|Enterprise Survey", "D4.1.8.SVY.BIZZ_NADA.csv")
 
 
 # slightly modified code for estabilishment census
