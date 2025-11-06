@@ -29,9 +29,14 @@ library(zoo)
 library(readxl)
 library(flextable)
 library(tidylog)
-#set directories
-dir <- here()
 
+
+```
+
+```{r set-parameters}
+# set directories
+#-------------------
+dir <- here()
 raw_dir    <- paste(dir, 
                     '01_raw_data', 
                     sep = "/")
@@ -39,11 +44,24 @@ output_dir <- paste(dir,
                     '03_output_data', 
                     sep = "/")
 
-#parameters
+# parameters
+#-------------------
 window   <- 5 #set the window for the moving averages
 end_date <- 2024 # set for Nov 2025 update
 
+# Create objects
+#-------------------
+span <- c(2004:end_date)
+# read list of iso3c codes for matching from UN (https://unstats.un.org/unsd/methodology/m49/)
+iso3c <- read_csv(paste(raw_dir,
+                        'metadata/iso_codes.csv', 
+                        sep = "/"),
+                  col_types = list(col_character(), 
+                                   col_character(), 
+                                   col_character()))
+
 ```
+
 
 ```{r spi_df}
 
@@ -53,7 +71,6 @@ end_date <- 2024 # set for Nov 2025 update
 # 2. An indicator with the raw (unscored) values of the indicators
 # The unit for this database will be country*year
 
-span <- c(2004:end_date)
 
 spi_df_empty <- bind_rows(replicate(length(span), 
                                     wbstats::wb_countries(), 
@@ -64,14 +81,6 @@ spi_df_empty <- bind_rows(replicate(length(span),
   filter(region != "Aggregates") # take out the aggregates (LAC, SAR, etc)
 
 spi_df <- spi_df_empty
-
-#read list of iso3c codes for matching from UN (https://unstats.un.org/unsd/methodology/m49/)
-iso3c <- read_csv(paste(raw_dir,
-                        'metadata/iso_codes.csv', 
-                        sep = "/"),
-                  col_types = list(col_character(), 
-                                   col_character(), 
-                                   col_character()))
 
 ```
 
@@ -1608,6 +1617,9 @@ lfp_estimated <- read_csv(paste0(raw_dir,
   as_tibble(.name_repair = 'universal') %>%
   filter(sex.label=="Total",
          classif1.label=="Age (Youth, adults): 15+") %>%
+  mutate(ref_area.label = ifelse(str_detect(ref_area.label, "Tanzania"), 
+                                 "United Republic of Tanzania", 
+                                 ref_area.label)) |>   ## ZP add Nov 2025 update (check in future)
   left_join(iso3c |> 
               select(country, iso3c), 
             by = join_by(ref_area.label == country)) |> 
@@ -1625,6 +1637,9 @@ lfp_reported <- read_csv(paste0(raw_dir,
   as_tibble(.name_repair = 'universal') %>% 
   filter(sex.label=="Total",
          classif1.label=="Age (Youth, adults): 15+") %>%
+  mutate(ref_area.label = ifelse(str_detect(ref_area.label, "Tanzania"), 
+                                 "United Republic of Tanzania", 
+                                 ref_area.label)) |>   ## ZP add Nov 2025 update (check in future)
   left_join(iso3c |> 
               select(country, iso3c), 
             by = join_by(ref_area.label == country)) |> 
