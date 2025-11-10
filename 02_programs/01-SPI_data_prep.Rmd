@@ -1180,7 +1180,6 @@ D3.3.AKI.MORT <-
 #Now loop from 2016 and 2019, keeping just data inside last 5 years.
 for (reference_year in 2004:end_date) {
   
-  
       #extend the window for more recent years.  For instance, end_date surveys are reported with a lag, so give them two year grace period
   if (reference_year == end_date) {
     rec_window = 7
@@ -1194,7 +1193,8 @@ for (reference_year in 2004:end_date) {
   temp_5 <- D3.3.AKI.MORT %>%
           mutate(frequency = (((reference_year - as.numeric(date)) <= rec_window & 
                                  (reference_year >= as.numeric(date))) | ((reference_year - as.numeric(ind_date)) <= rec_window & 
-                                                                          (reference_year >= as.numeric(ind_date))))) %>% # whether to use the survey year or 
+                                                                          (reference_year >= as.numeric(ind_date))))) %>% 
+    # whether to use the survey year or 
     # indicator report year depends on data source.  for vital statistics sources need to use indicator reporting year, but for surveys use survey year
           mutate(SPI.FREQ.D1.5.CHLD.MORT = if_else(frequency == TRUE, 1, 0)) %>% #create 0,1 variable for whether data point exists for country
           group_by(iso3c) %>%
@@ -1651,6 +1651,11 @@ lfp_reported <- read_csv(paste0(raw_dir,
          date, 
          source, 
          reported_value )
+write_csv(x = lfp_reported, 
+          file = fs::path(raw_dir, 
+                          "1.5_DUIO", 
+                          paste0("lfp_reported_", end_date), 
+                          ext = "csv"))
 
 #merge the two together
 lfp_data <- lfp_reported %>%
@@ -2479,15 +2484,55 @@ and demographics.
 
 census_fun  <- function(data, input_var) {
   
-  data <- data
+  data      <- data
   input_var <- input_var
-
-  #read in csv file.
-  cs_df <- read_csv(file = paste(raw_dir, 
+  
+  # Merge base + manual and combine the two sources of year strings -------
+  # Helper: extract unique, sorted 4-digit years from up to two character vectors and
+  # return a single ", " separated string (or NA_character_).
+  .combine_years <- function(a, b) {
+    ax <- if (is.na(a)) "" else a
+    bx <- if (is.na(b)) "" else b
+    yrs <- c(
+      str_extract_all(ax, "\\d{4}")[[1]],
+      str_extract_all(bx, "\\d{4}")[[1]]
+    )
+    yrs <- unique(yrs[nzchar(yrs)])
+    if (!length(yrs)) return(NA_character_)
+    paste(sort(as.integer(yrs)), collapse = ", ")
+  }
+  
+  # --- 0) Read the base CSV (as before) -------------------------------------
+  base_raw <- read_csv(file = paste(raw_dir, 
                                  '/4.1_SOCS/raw/', 
                                  data, 
                                  ".2024.csv", 
-                                 sep = ""))  %>% 
+                                 sep = ""))
+  # --- 1) Read the manual review file and keep only iso3c + the input_var col ---
+  # We select the column whose *name* equals the character scalar input_var.
+  manual_path = file.path(raw_dir, 
+                          "4.1_SOCS", 
+                          "raw",
+                          "D4.1.Manual.Review.xlsx")
+  manual_raw <- read_xlsx(manual_path) |>
+    select(iso3c, 
+           all_of(input_var))
+
+  # Add manual review data
+  #----------------------------
+  cs_start <- base_raw %>%
+    left_join(manual_raw, by = "iso3c", suffix = c("", "_manual")) %>%
+    mutate(
+      !!input_var := mapply(
+        .combine_years,
+        .data[[input_var]],
+        .data[[paste0(input_var, "_manual")]]
+        )) %>%
+    select(-all_of(paste0(input_var, "_manual")))
+  
+  
+  #read in csv file.
+  cs_df <- cs_start %>% 
     #bring in data collected for  2020 data
     write_excel_csv(path = paste(raw_dir, 
                                  '/4.1_SOCS/', 
@@ -2600,16 +2645,59 @@ census_fun  <- function(data, input_var) {
 
 
 survey_fun  <- function(data, input_var) {
-  
+
   data      <- data
   input_var <- input_var
-
-  #read in csv file that was manually collected.
-  cs_df <- read_csv(file = paste(raw_dir, 
+  
+  # Merge base + manual and combine the two sources of year strings -------
+  # Helper: extract unique, sorted 4-digit years from up to two character vectors and
+  # return a single ", " separated string (or NA_character_).
+  .combine_years <- function(a, b) {
+    ax <- if (is.na(a)) "" else a
+    bx <- if (is.na(b)) "" else b
+    yrs <- c(
+      str_extract_all(ax, "\\d{4}")[[1]],
+      str_extract_all(bx, "\\d{4}")[[1]]
+    )
+    yrs <- unique(yrs[nzchar(yrs)])
+    if (!length(yrs)) return(NA_character_)
+    paste(sort(as.integer(yrs)), collapse = ", ")
+  }
+  
+  # --- 0) Read the base CSV (as before) -------------------------------------
+  base_raw <- read_csv(file = paste(raw_dir, 
                                  '/4.1_SOCS/raw/', 
                                  data, 
                                  ".2024.csv", 
-                                 sep = "")) %>%        
+                                 sep = ""))
+  # --- 1) Read the manual review file and keep only iso3c + the input_var col ---
+  # We select the column whose *name* equals the character scalar input_var.
+  manual_path = file.path(raw_dir, 
+                          "4.1_SOCS", 
+                          "raw",
+                          "D4.1.Manual.Review.xlsx")
+  manual_raw <- read_xlsx(manual_path) |>
+    select(iso3c, 
+           all_of(input_var))
+
+  # Add manual review data
+  #----------------------------
+  cs_start <- base_raw %>%
+    left_join(manual_raw, 
+              by = "iso3c", 
+              suffix = c("", 
+                         "_manual")) %>%
+    mutate(
+      !!input_var := mapply(
+        .combine_years,
+        .data[[input_var]],
+        .data[[paste0(input_var, "_manual")]]
+        )) %>%
+    select(-all_of(paste0(input_var, 
+                          "_manual")))
+  
+  #read in csv file that was manually collected.
+  cs_df <- cs_start %>%        
     #add in 2020 manual data    
     write_excel_csv(path = paste(raw_dir, 
                                  '/4.1_SOCS/', 
