@@ -1,0 +1,1807 @@
+---
+title: '2025 Update of the Statistical Performance Indicators: What is New?'
+author: "Prepared by XXXX"
+date: "`r Sys.Date()`"
+date-format: long
+format:
+  docx:
+    reference-doc: custom-reference-doc.docx
+bibliography: ./bibliography.bib
+---
+
+
+
+```{r setup, include=FALSE}
+# ---- knitr defaults ----
+knitr::opts_chunk$set(
+  echo = FALSE,
+  fig.height = 6,
+  fig.path   = "plots/",
+  fig.width  = 9.5,
+  message    = FALSE,
+  warning    = FALSE,
+  dev        = c("png"),
+  dpi        = 500
+)
+#library(Hmisc)
+#library(patchwork)
+#library(ggpmisc)
+# ---- packages ----
+library(readxl)
+library(tidyverse)   # includes readr, readxl, purrr, dplyr, etc.
+library(flextable)
+library(here)
+library(ggthemes)
+library(httr)
+library(ggrepel)
+library(haven)       # Stata/SAS/SPSS
+library(zoo)
+library(dplyr)
+library(tidyverse)
+library(readr)
+library(ggtext)
+library(estimatr)
+library(stringr)
+# ---- project directories (relative to repo root) ----
+#set directories
+dir <- "/Users/landau/Documents/GitHub/SPI"
+
+raw_dir <- paste(dir, '01_raw_data', sep="/")
+output_dir <- paste(dir, '03_output_data', sep="/")
+
+# ---- parameters ----
+wgt        <- 1
+end_date   <- 2024
+start_date <- 2016
+
+# ---- small helpers for importing ----
+
+**Overview**: The 2025 Statistical Performance Indicators (SPI) release includes data from 2024 with updates to previous years, incorporating the latest information from organizations such as the World Bank, IMF, and UN Agencies. The SPI continues to assess national statistical systems across five pillars with 22 dimensions, though data is currently available for 14 of these dimensions.
+
+**Methodology Consistency**: Since the 2019 release, the scoring methodology and data sources have remained largely unchanged, ensuring consistency and comparability with prior releases. The only exception is the indicator for comparable poverty measures in the data use pillar. Previously, high-income countries not covered by PovcalNet were assigned a score of 1 due to the lack of data. However, with expanded coverage in the Poverty and Inequality Platform (PIP) since 2021, all countries are now assessed based on the availability of comparable poverty data.
+
+**Data Updates**: Revisions to previous SPI scores were made to reflect updated data, particularly in Pillars 1, 3, and 4, with minimal impact on overall scores. The correlation between the previous and revised scores remains high, with a 0.99 correlation in 2022.
+
+**Data Coverage**: The SPI now includes 187 economies, up from 167 in 2016, covering over 99% of the global population. This expansion is largely driven by an increase in economies with data openness scores.
+
+**Score Improvements**: Global SPI scores have risen by an average of 12.9 points from 2016 to 2024. Country rankings have remained stable, with a Spearman rank correlation of 0.92.
+
+**Performance by Decile**: The largest improvements were observed in countries that ranked in the bottom 20% in 2016. In contrast, countries in the top decile showed minimal growth due to their already high scores.
+
+**Pillar Contributions**: Improvements in data services and infrastructure have been the major contributors to overall score increases, especially in the bottom deciles. Specifically, 43% of the improvements in the bottom decile are attributed to better data services, and 22% to better data infrastructure.
+
+**Regional and Income Group Analysis**: North America and Europe & Central Asia are the top-performing regions. The next highest scoring regions on average, after excluding countries with small populations, are East Asia & the Pacific region, Latin America & the Caribbean, South Asia, the Middle East and North Africa, and Sub-Saharan Africa, in that order. Statistical performance improves with income, with lower-middle-income countries showing the fastest growth, followed by low-income, upper-middle-income, and high-income countries.
+
+**Population Size Impact**: High-income countries with populations under 500,000 face specific challenges, scoring the same on average (56 points) as the average for all low-income countries. This suggests that small economies may face unique challenges in building statistical capacity.
+
+**Conclusion**: The 2025 SPI release highlights significant progress in global statistical performance, driven by improvements in data services and infrastructure. While top-performing regions and countries maintain their ranks, lower middle-income and smaller economies show promising advancements. This trend indicates a positive development in global data and statistical capacity building. For further details, the [SPI research paper](https://www.nature.com/articles/s41597-023-01971-0) and the [SPI GitHub repository](https://github.com/worldbank/SPI) provide additional information on how the SPI is put together, as well as the raw data and code.
+
+
+```{r themes}
+
+#ggplot theme
+theme_spi <- function () { 
+    theme_minimal(base_size = 14) %+replace%
+    theme(
+      plot.title = element_text(face = "bold", size = 16, color = "#333333"),
+      plot.subtitle = element_text(size = 14, color = "#666666"),
+      axis.title = element_text(face = "bold"),
+      legend.title = element_blank(),
+      legend.position = "top",
+      legend.text = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      axis.line = element_line(color = "#cccccc")
+  )
+}
+
+
+
+# ---- themes & palettes ----
+theme_spi <- function () {
+  theme_minimal(base_size = 14) %+replace%
+    theme(
+      plot.title    = element_text(face = "bold", size = 16, color = "#333333"),
+      plot.subtitle = element_text(size = 14, color = "#666666"),
+      axis.title    = element_text(face = "bold"),
+      legend.title  = element_blank(),
+      legend.position = "top",
+      legend.text   = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      axis.line     = element_line(color = "#cccccc")
+    )
+}
+
+# Distinct colors on the fly for arbitrary label sets
+.make_palette <- function(levels_vec, default_hex = NULL) {
+  lv <- unique(levels_vec[!is.na(levels_vec)])
+  n  <- length(lv)
+  if (n == 0) return(c())
+  # Use your existing hexes if you want stable branding, otherwise hue_pal
+  if (!is.null(default_hex)) {
+    # recycle or trim provided palette to n
+    pal <- rep(default_hex, length.out = n)
+  } else {
+    pal <- scales::hue_pal()(n)
+  }
+  names(pal) <- lv
+  pal
+}
+
+# Dynamic palettes from actual data (no hard-coding)
+
+
+income_levels       <- c("Low income","Lower middle income","Upper middle income","High income")
+income_colors       <- c("#fb8500","#ffb703","#219ebc","#023047"); names(income_colors) <- income_levels
+
+
+pillar_levels       <- c("Pillar 1: Data Use","Pillar 2: Data Services","Pillar 3: Data Products",
+                         "Pillar 4: Data Sources","Pillar 5: Data Infrastructure")
+pillar_colors       <- c("#fee440","#9b5de5","#00bbf9","#00f5d4","#f15bb5"); names(pillar_colors) <- pillar_levels
+
+```
+
+
+
+```{r data}
+spi_index_df<-read_csv( file = paste(output_dir, 'SPI_index.csv', sep="/")) 
+# %>%
+#   filter(date>=2021) %>%
+#   bind_rows(read_csv( file = paste(output_dir, 'SPI_index_2020.csv', sep="/")) %>% filter(date==2020)) %>%
+#   bind_rows(read_csv( file = paste(output_dir, 'SPI_index_2019.csv', sep="/")) %>% filter(date<2020))            
+#metadata 
+
+#metadata 
+metadata2 <- read_csv(paste(raw_dir, '/metadata/SPI_dimensions_sources.csv', sep=""))
+
+metadata_full <- read_csv(paste(raw_dir, '/metadata/SPI_index_sources.csv', sep="")) %>%
+  rename(source_name=descript) %>%
+  bind_rows(metadata2)
+
+# add new regions to SPI database
+class_data <- read_dta(paste(raw_dir, '/misc/CLASS.dta', sep="/")) %>%
+  # Get the most recent year for each country
+  group_by(code) %>%
+  arrange(desc(year_fiscal)) %>%
+  slice(1) %>%
+  ungroup() %>%
+  # Select and rename columns to match existing code
+  transmute(
+    iso3c = code,
+    country = economy,
+    region = region,
+    income = incgroup,
+    lending_type = ida,
+    fcv = fcv,
+    fragile_conflict = case_when(
+      fcv == "Yes" ~ "FCS country",
+      TRUE ~ "Non-FCS country"
+    )
+  )
+
+# Remove any existing classification columns from spi_index_df to avoid conflicts
+spi_index_df <- spi_index_df %>%
+  select(-any_of(c("region", "income", "lending_type", "fcv", "fragile_conflict"))) %>%
+  # Merge with classification data
+  left_join(class_data, by = "iso3c")
+
+region_levels       <- spi_index_df |> dplyr::distinct(region) |> dplyr::pull(region)
+lending_levels      <- spi_index_df |> dplyr::distinct(lending_type) |> dplyr::pull(lending_type)
+region_colors       <- .make_palette(region_levels)  # hue-based
+lending_colors      <- .make_palette(lending_levels)
+
+
+```
+
+```{r}
+
+#get list of economies with score in 2016 to keep countries fixed.
+list_2016 <- spi_index_df %>% filter(date==start_date) %>% filter(!is.na(SPI.INDEX))
+list_2016 <- list_2016$iso3c
+#aggregate to global level
+spi_agg_df <- spi_index_df %>%
+  filter(iso3c %in% list_2016) %>% #keep countries fixed.
+  group_by(date) %>%
+  summarise(across(starts_with("SPI."),mean, na.rm=T)) 
+
+```
+
+
+```{r programs, include=FALSE}
+
+
+#For mapping the result
+# quality = "high"
+# maps <- wbgmaps::wbgmaps[[quality]]
+#load world bank map data
+load(paste0(raw_dir, '/misc/maps.Rdata'))
+standard_crop_wintri <- function() {
+  l <- list(
+    left=-12000000, right=16396891,
+    top=9400000, bottom=-6500000
+  )
+  l$xlim <- c(l$left, l$right)
+  l$ylim <- c(l$bottom, l$top)
+  l
+}
+
+
+country_metadata <- wbstats::wb_countries()
+
+
+
+
+spi_mapper  <- function(data, indicator, title) {
+  
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( iso3c) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))     
+
+
+  spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+  
+  SPI_map <- map_df %>%
+    mutate(spi_groups=case_when(
+      between(data_available, spi_groups_quantiles[4],100) ~ "Top Quintile",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+  
+  #set color pallete
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+  names(col_pal) <- c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
+  p1<-ggplot() +
+    geom_map(data = SPI_map, aes(map_id = iso3c, fill = spi_groups), map = maps$countries) + 
+    geom_polygon(data = maps$disputed, aes(long, lat, group = group, map_id = id), fill = "grey80") + 
+    geom_polygon(data = maps$lakes, aes(long, lat, group = group), fill = "white")  +
+    geom_path(data = maps$boundaries,
+              aes(long, lat, group = group),
+              color = "white",
+              size = 0.3,
+              lineend = maps$boundaries$lineend,
+              linetype = maps$boundaries$linetype) +
+    scale_x_continuous(expand = c(0, 0), limits = standard_crop_wintri()$xlim) +
+    scale_y_continuous(expand = c(0, 0), limits = standard_crop_wintri()$ylim) +
+    scale_fill_manual(
+      name='SPI Score',
+      values=col_pal,
+      na.value='grey'
+    ) +
+    coord_equal() +
+    theme_map(base_size=12) +
+    labs(
+      title=str_wrap(title,100),
+      caption = 'Source: World Bank. Statistical Performance Indicators'
+    )
+ print(p1)
+}
+
+spi_region_charts <- function(data, indicator, title) {
+
+  map_df <- get(data) |>
+    dplyr::filter(date == max(date, na.rm = TRUE)) |>
+    dplyr::group_by(iso3c) |>
+    dplyr::rename(data_available = !!indicator) |>
+    dplyr::select(iso3c, date, data_available, weights, region) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(data_available = if_else(is.na(data_available), NA_real_, as.numeric(data_available)))
+
+  region_SPI_df <- map_df |>
+    dplyr::filter(!is.na(region)) |>
+    dplyr::group_by(region) |>
+    dplyr::mutate(`SPI Score` = Hmisc::wtd.mean(data_available, weights = weights, na.rm = TRUE),
+                  Label = paste(round(`SPI Score`, 0))) |>
+    dplyr::summarise(`SPI Score` = dplyr::first(`SPI Score`), Label = dplyr::first(Label), .groups = "drop") |>
+    dplyr::arrange(dplyr::desc(`SPI Score`)) |>
+    dplyr::mutate(region = factor(region, levels = region))
+
+  ggplot(region_SPI_df, aes(x = `SPI Score`, y = region, fill = region)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    geom_text(aes(label = Label)) +
+    scale_fill_manual(values = region_colors) +
+    labs(
+      title    = stringr::str_wrap(paste(title, "By Region", sep = " - "), 100),
+      caption  = "Source: World Bank. Statistical Performance Indicators.",
+      subtitle = paste0("Based on data for ", end_date, " or the latest year available")
+    ) +
+    expand_limits(x = c(0, 100)) +
+    theme_spi() +
+    theme(legend.position = "top")
+}
+
+spi_income_charts  <- function(data, indicator, title) {
+  
+    map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( iso3c) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))  
+    
+    
+    
+    
+
+
+  # p2_alt <- map_df %>%
+  #   ungroup() %>%
+  #   filter(region!='Aggregates') %>%
+  #   mutate(`SPI Score`=(data_available),
+  #          Label = paste(round(`SPI Score`,0))) %>%
+  #   ggplot(aes(x=`SPI Score`, y=region, color=region)) +
+  #     geom_point() +
+  #     geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+  #     labs(
+  #     title=str_wrap(paste(title, 'By Country', sep=" - "),100),
+  #     caption = 'Source: World Bank. Statistical Performance Indicators.',
+  #     subtitle= paste0('Based on data for ',end_date,' or the latest year available')
+  #     ) +
+  #     expand_limits(x=c(0,100)) +
+  #     theme_spi() +
+  #     theme(legend.position = 'top')  
+  
+  #by income
+    income <- c("Low income", "Lower middle income","Upper middle income","High income")
+
+    p3 <- map_df %>%
+    group_by(income) %>%
+    filter(region!='Aggregates') %>%
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=income, fill=income)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      scale_fill_manual(values=income_colors) +
+      labs(
+      title=str_wrap(paste(title, 'By Income', sep=" - "),100),
+      caption = 'Source: World Bank. Statistical Performance Indicators.',
+      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
+      ) +
+      scale_y_discrete(limits = income) +
+      expand_limits(x=c(0,100)) +
+      theme_spi() +
+      theme(legend.position = 'top')
+    
+
+
+  print(p3)
+
+
+}
+
+spi_time_charts  <- function(data, indicator, title) {
+  
+
+    
+  # #add line graph over time
+  p4 <- get(data)  %>%
+    rename(data_available=!! indicator) %>%
+    # right_join(spi_df_empty) %>%
+    group_by(income, date) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available))) %>%
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ungroup() %>%
+    ggplot(aes(y=`SPI Score`, x=date, color=income)) +
+      geom_point() +
+      geom_line() +
+      scale_color_manual(values=income_colors) +
+      # geom_text_repel(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Date', sep=" - "),100),
+      caption = 'Source: World Bank. Statistical Performance Indicators.'
+      ) +
+      expand_limits(y=c(0,100)) +
+      theme_spi() +
+      theme(legend.position = 'top')
+  
+
+            
+      
+
+
+  print(p4)
+    
+}
+
+spi_country_charts  <- function(data, indicator, title) {
+  
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( iso3c) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    filter(region!="Aggregates") %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+   spi_groups_quantiles <- quantile(map_df$data_available, probs=c(1,2,3,4)/5,na.rm=T)
+  
+  SPI_map <- map_df %>%
+    mutate(spi_groups=case_when(
+      between(data_available, spi_groups_quantiles[4],100) ~ "Top Quintile",
+      between(data_available, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+      between(data_available, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+      between(data_available, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+      between(data_available, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      
+    )) %>%
+    mutate(spi_groups=factor(spi_groups, 
+                             levels=c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+  
+  #set color pallete
+  col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
+  names(col_pal) <- c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
+  
+
+  # order regions by their mean score in the current year
+  region_means <- SPI_map |>
+    dplyr::group_by(region) |>
+    dplyr::summarise(m = mean(data_available, na.rm = TRUE), .groups = "drop") |>
+    dplyr::arrange(dplyr::desc(m)) |>
+    dplyr::pull(region)
+
+  p2_alt <- SPI_map |>
+    dplyr::ungroup() |>
+    dplyr::mutate(region = factor(region, levels = region_means)) |>
+    ggplot(aes(x = data_available, y = region, color = spi_groups)) +
+      geom_point() +
+      geom_text(aes(label = country), position = position_jitter(width = .1, height = .4), check_overlap = TRUE) +
+      labs(
+        title    = stringr::str_wrap(paste(title, "By Country", sep = " - "), 100),
+        caption  = "Source: World Bank. Statistical Performance Indicators.",
+        subtitle = paste0("Based on data for ", end_date, " or the latest year available")
+      ) +
+      xlab("Score") +
+      expand_limits(x = c(0, 100)) +
+      scale_color_manual(
+        name  = "SPI Score",
+        values= c("Top Quintile"="#2ec4b6","4th Quintile"="#acece7","3rd Quintile"="#f1dc76","2nd Quintile"="#ffbf69","Bottom 20%"="#ff9f1c"),
+        na.value = "grey"
+      ) +
+      theme_spi() +
+      theme(legend.position = "top")
+
+  p2_alt
+
+}
+
+
+spi_maturity_table <- function(data, indicators, reference_year) {
+
+      df_overall <- get(data) %>%
+      filter(date==as.numeric(reference_year)) %>% 
+      select(iso3c, date, income, region, all_of(indicators), SPI.INDEX) 
+    
+    
+    spi_groups_quantiles <- quantile(df_overall$SPI.INDEX, probs=c(1,2,3,4)/5,na.rm=T)
+    
+    df_overall <- df_overall %>%
+      mutate(spi_groups=case_when(
+        between(SPI.INDEX, spi_groups_quantiles[4],100) ~ "Top Quintile",
+        between(SPI.INDEX, spi_groups_quantiles[3],spi_groups_quantiles[4]) ~ "4th Quintile",
+        between(SPI.INDEX, spi_groups_quantiles[2],spi_groups_quantiles[3]) ~ "3rd Quintile",
+        between(SPI.INDEX, spi_groups_quantiles[1],spi_groups_quantiles[2]) ~ "2nd Quintile",
+        between(SPI.INDEX, 0,spi_groups_quantiles[1]) ~ "Bottom 20%"
+      )) %>%
+      mutate(spi_groups=factor(spi_groups, 
+                               levels=c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )))  
+    
+    #produce by income
+    sumstats<- df_overall %>%
+      group_by(spi_groups) %>%
+      filter(!is.na(spi_groups)) %>%
+      select(spi_groups, all_of(indicators)) %>%
+      summarise_all(~round(mean(., na.rm=T),1)) 
+    
+    #produce global number
+    sumstats_gl<- df_overall %>%
+      mutate(spi_groups='Global') %>%
+      group_by(spi_groups) %>%
+      select(spi_groups, all_of(indicators)) %>%
+      summarise_all(~round(mean(., na.rm=T),1)) 
+    
+    
+    #transpose data
+    sumstats_df_long <-sumstats 
+    
+    sumstats_df <- as.data.frame(t(sumstats_df_long %>% select(-spi_groups)))
+    colnames(sumstats_df) = sumstats_df_long$spi_groups 
+    
+    
+    sumstats_df <- sumstats_df %>%
+      rownames_to_column() %>%
+      rename(series=rowname)
+    
+    
+    #create labels df
+    metadata_tab2_overall <- metadata_full %>% 
+      janitor::clean_names() %>%
+      transmute(series=source_id, 
+                indicator_name=source_name)
+    
+    
+    #add variable label
+    sumstats_df <- sumstats_df %>%
+      left_join(metadata_tab2_overall) %>%
+      rename(Series=series,
+             Label=indicator_name) %>%
+      mutate(Label=if_else(is.na(Label),Series,Label)) %>%
+      select(Label, c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" ))
+
+      sumstats_df
+ 
+
+}
+
+
+spi_group_table <- function(data, indicators, reference_year, group) {
+
+      df_overall <- get(data) %>%
+      filter(date==as.numeric(reference_year)) %>% 
+      left_join(country_metadata) %>%
+      select(iso3c, date, income, region, lending_type, all_of(indicators), SPI.INDEX) %>%
+      rename(group=!! group)
+    
+    
+    
+    #produce by income
+    sumstats<- df_overall %>%
+      group_by(group) %>%
+      filter(!is.na(group)) %>%
+      select(group, all_of(indicators)) %>%
+      summarise_all(~round(mean(., na.rm=T),1)) 
+    
+    #produce global number
+    sumstats_gl<- df_overall %>%
+      mutate(group='Global') %>%
+      group_by(group) %>%
+      select(group, all_of(indicators)) %>%
+      summarise_all(~round(mean(., na.rm=T),1)) 
+    
+    
+    #transpose data
+    sumstats_df_long <-sumstats 
+    
+    sumstats_df <- as.data.frame(t(sumstats_df_long %>% select(-group)))
+    colnames(sumstats_df) = sumstats_df_long$group 
+    
+    
+    sumstats_df <- sumstats_df %>%
+      rownames_to_column() %>%
+      rename(series=rowname)
+    
+    
+    #create labels df
+    metadata_tab2_overall <- metadata_full %>% 
+      janitor::clean_names() %>%
+      transmute(series=source_id, 
+                indicator_name=source_name)
+    
+    
+    #add variable label
+    sumstats_df <- sumstats_df %>%
+      left_join(metadata_tab2_overall) %>%
+      rename(Series=series,
+             Label=indicator_name) %>%
+      mutate(Label=if_else(is.na(Label),Series,Label)) %>%
+      select(Label, everything()) %>%
+      select(-Series)
+
+      sumstats_df
+ 
+
+}
+
+lending_charts <- function(data, indicator, title) { 
+
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( iso3c) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  lending_list <- spi_index_df |> dplyr::distinct(lending_type) |> dplyr::pull(lending_type)
+# then:
+scale_y_discrete(limits = lending_list)
+# and:
+scale_color_manual(values = lending_colors)
+scale_fill_manual(values  = lending_colors)
+
+  
+  p2_alt3 <- map_df %>%
+    ungroup() %>%
+    filter(region!='Aggregates') %>%
+    mutate(`SPI Score`=(data_available),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=lending_type, color=lending_type)) +
+      geom_point() +
+      geom_text(aes(label=country), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+      labs(
+      title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
+      caption = 'Source: World Bank. Statistical Performance Indicators.',
+      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
+      ) +
+      scale_y_discrete(limits = lending_list) +
+      expand_limits(x=c(0,100)) +
+      theme_spi() +
+      theme(legend.position = 'top',
+            title= element_text(size = 20),
+            axis.title.y=element_blank(),
+            text = element_text(size = 14)) 
+   
+p2_alt3 
+  
+ 
+}
+
+lending_chart_aggregate <- function(data, indicator, title) { 
+
+
+ indicator<-indicator
+
+  map_df <- get(data) %>%
+    filter(date==max(date, na.rm=T)) %>%
+    filter(!(country %in% c('Greenland'))) %>% #drop a few countries for which we do not collect data.
+    group_by( iso3c) %>%
+    #summarise(across(!! indicator,last)) %>%
+    rename(data_available=!! indicator) %>%
+    select(iso3c, date, data_available, weights ) %>%
+    right_join(country_metadata) %>%
+    mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
+  
+
+  lending_list <- spi_index_df |> dplyr::distinct(lending_type) |> dplyr::pull(lending_type)
+# then:
+scale_y_discrete(limits = lending_list)
+# and:
+scale_color_manual(values = lending_colors)
+scale_fill_manual(values  = lending_colors)
+
+  
+  
+
+  p2_alt3 <- map_df %>%
+    group_by(lending_type) %>%
+    filter(region!='Aggregates') %>%
+    mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
+           Label = paste(round(`SPI Score`,0))) %>%
+    ggplot(aes(x=`SPI Score`, y=lending_type, fill=lending_type)) +
+      geom_bar(stat="identity",position='dodge') +
+      geom_text(aes(label=Label)) +
+      labs(
+      title=str_wrap(paste(title, 'By Lending Status', sep=" - "),100),
+      caption = 'Source: World Bank. Statistical Performance Indicators.',
+      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
+      ) +
+      scale_y_discrete(limits = lending_list) +
+      expand_limits(x=c(0,100)) +
+      theme_spi() +
+      theme(legend.position = 'top')
+            # title= element_text(size = 20),
+            # axis.title.y=element_blank(),
+            # text = element_text(size = 14)) 
+   
+p2_alt3 
+  
+ 
+}
+
+
+
+fcs_charts <- function(data, indicator, title) {
+  map_df <- get(data) |>
+    dplyr::filter(date == max(date, na.rm = TRUE)) |>
+    dplyr::group_by(iso3c) |>
+    dplyr::rename(data_available = !!indicator) |>
+    dplyr::select(iso3c, country, fragile_conflict, date, data_available, weights) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(data_available = if_else(is.na(data_available), NA_real_, as.numeric(data_available)))
+
+  fcs_levels <- c("FCS country","Non-FCS country")
+  ggplot(map_df |> dplyr::filter(!is.na(fragile_conflict)),
+         aes(x = data_available, y = fragile_conflict, color = fragile_conflict)) +
+    geom_point() +
+    geom_text(aes(label = country), position = position_jitter(width = .1, height = .4), check_overlap = TRUE) +
+    labs(
+      title    = stringr::str_wrap(paste(title, "By Fragile and Conflict-affected Situations (FCS)", sep = " - "), 100),
+      caption  = "Source: World Bank. Statistical Performance Indicators.",
+      subtitle = paste0("Based on data for ", end_date, " or the latest year available")
+    ) +
+    scale_y_discrete(limits = fcs_levels) +
+    expand_limits(x = c(0, 100)) +
+    theme_spi() +
+    theme(legend.position = "top")
+}
+
+fcs_chart_aggregate <- function(data, indicator, title) {
+  map_df <- get(data) |>
+    dplyr::filter(date == max(date, na.rm = TRUE)) |>
+    dplyr::group_by(iso3c) |>
+    dplyr::rename(data_available = !!indicator) |>
+    dplyr::select(iso3c, fragile_conflict, date, data_available, weights) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(data_available = if_else(is.na(data_available), NA_real_, as.numeric(data_available)))
+
+  fcs_levels <- c("FCS country","Non-FCS country")
+  map_df |>
+    dplyr::filter(!is.na(fragile_conflict)) |>
+    dplyr::group_by(fragile_conflict) |>
+    dplyr::mutate(`SPI Score` = Hmisc::wtd.mean(data_available, weights = weights, na.rm = TRUE),
+                  Label      = paste(round(`SPI Score`, 0))) |>
+    ggplot(aes(x = `SPI Score`, y = fragile_conflict, fill = fragile_conflict)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    geom_text(aes(label = Label)) +
+    labs(
+      title    = stringr::str_wrap(paste(title, "By Fragile and Conflict-affected Situations (FCS)", sep = " - "), 100),
+      caption  = stringr::str_wrap("Source: World Bank. Statistical Performance Indicators. Non-FCS countries include all countries not classified as FCS.", 70),
+      subtitle = paste0("Based on data for ", end_date, " or the latest year available")
+    ) +
+    scale_y_discrete(limits = fcs_levels) +
+    expand_limits(x = c(0, 100)) +
+    theme_spi() +
+    theme(legend.position = "top")
+}
+
+
+
+
+#define function to pull data from UN Stats and return
+un_pull <- function(series,start, end) {
+  # jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&timePeriodStart=',start,'&timePeriodEnd=',end,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
+      jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
+
+    as_tibble() %>%
+    mutate(date=timePeriodStart) %>%
+    right_join(iso3c)
+    
+}  
+
+FitFlextableToPage <- function(ft, pgwidth = 6){
+
+  ft_out <- ft %>% 
+    add_footer_lines(values = "Source: World Bank. Statistical Performance Indicators."                 ) %>%
+    autofit()
+
+  ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
+  return(ft_out)
+}
+
+# add equations to plots
+eq_plot_txt <- function(data, inp, var) {
+    eq <- lm_robust(data[[var]] ~ data[[inp]], data = data, se_type = "HC2")
+    coef <- round(coef(eq), 2)
+    std_err <- round(sqrt(diag(vcov(eq))), 2)
+    r_2 <- round(summary(eq)$r.squared, 2)
+    sprintf(" y = %.2f + %.2f x, R<sup>2</sup> = %.2f <br> (%.2f) <span style='color:white'> %s</span> (%.2f) ", coef[1], coef[2], r_2[1], std_err[1], "s", std_err[2])
+}
+
+
+tile_chart <- function(indicators) {
+    tile_df <- spi_agg_df %>%
+      relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
+      filter(between(date,start_date,end_date)) %>%
+      select(date, indicators) %>%
+      pivot_longer(
+        cols=indicators,
+        names_to = 'source_id',
+        values_to = 'Score'
+      ) %>%
+      left_join(metadata_full) %>%
+      filter(!is.na(source_name)) %>%
+      mutate(source_name=str_wrap(source_name, 30),
+             Score=round(Score,2)) %>%
+      mutate(source_name=factor(source_name, levels=unique(source_name))) 
+      
+    # tileplot 
+    ggplot(tile_df, aes(x=date, y=source_name, fill= Score)) + 
+      geom_tile(color = "white") +
+      geom_text(aes(label=Score), color='white', size=5) +
+      ylab('Indicator') +
+      theme_spi() +
+      #scale_fill_binned(guide = guide_coloursteps(show.limits = TRUE)) +
+      scale_y_discrete(limits = rev(levels(tile_df$source_name))) +
+        theme(
+          panel.grid.minor.y = element_blank(),
+          panel.grid.major.y = element_blank(),
+          axis.text.y=element_text(size=12),
+          #legend.text = element_text(size=14),
+          plot.title = element_text(size=16)
+          
+        )
+}
+
+tile_table <- function(indicators) {
+    tile_df <- spi_agg_df %>%
+      relocate(SPI.D3.13.CLMT, .after = SPI.D3.12.CNSP) %>%
+      filter(between(date,start_date,end_date)) %>%
+      select(date, indicators) %>%
+      #make date the columns and indicators the rows. Pivot data
+      pivot_longer(cols = indicators, names_to = 'source_id', values_to = 'value') %>%
+      mutate(value=round(value,2)) %>%
+      pivot_wider(names_from = date, values_from = value) %>%
+      left_join(metadata_full) %>%
+      filter(!is.na(source_name)) %>%
+      mutate(source_name=str_wrap(source_name, 30)) %>%
+      mutate(source_name=factor(source_name, levels=unique(source_name))) %>%
+      #keep just source_name and the date columns
+      select(source_name, all_of(as.character(seq(start_date, end_date, by=1)))) %>%
+      rename(' '='source_name') 
+    
+    flextable(tile_df) %>%
+      theme_alafoli() %>%
+      bg(j=2:ncol(tile_df), 
+         bg=scales::col_numeric(palette='Blues', domain=c(0,1))) %>%
+      color(j=2:ncol(tile_df), color='white') %>%
+      #center text
+      align(j=2:ncol(tile_df), align='center', part='all')  %>%
+      autofit() 
+}
+
+```
+
+
+# What is New?
+
+```{r}
+#| label: missinglist
+names(spi_index_df)[names(spi_index_df) == "country.x"] <- "country"
+#get list of missing countries
+missing_list <- spi_index_df %>%
+  filter(date == end_date, is.na(SPI.INDEX)) %>%
+  distinct(country) %>%          # or distinct(iso3c) if you prefer codes
+  pull(country)
+
+#turn into comma separated list
+missing_list <- paste(missing_list, collapse=", ")
+
+```
+
+
+In `r end_date`, the SPI Overall Score is available for `r nrow(spi_index_df %>% filter(!is.na(SPI.INDEX)) %>% filter(date==end_date))` economies, representing more than 99 percent of the world population.^[The countries without an SPI Overall Score are `r missing_list`.] There has been an increase in the number of economies with an SPI overall score since 2016, with a rise from 167 economies to `r nrow(spi_index_df %>% filter(!is.na(SPI.INDEX)) %>% filter(date==end_date))`.^[  The World Bank’s World Development Indicators includes 217 economies. If an economy does not have data for one of the indicators used to generate the SPI overall score, no score is produced for this country, as the SPI does not rely on modelling or imputation to produce the scores.]  This growth is largely due to the inclusion of more economies with a data openness score from Open Data Watch.
+
+
+
+**Figure 2**. Number of Economies with SPI Overall Score.
+```{r}
+spi_index_df %>%
+  filter(!is.na(SPI.INDEX)) %>%
+  group_by(date) %>%
+  summarise(n=n()) %>%
+  mutate(date=factor(date,levels=c(start_date:end_date))) %>%
+  ggplot(aes(x=date, y=n, label=n)) +
+    geom_col(fill='#8ecae6') +
+    geom_text(nudge_y = -5, size=7, color='white' ) +
+    theme_minimal() +
+    xlab("Year") +
+    ylab('Number of Economies') +
+    expand_limits(y=c(0,217))
+```
+
+## Data Updates
+
+
+```{r}
+#| label: comparison
+
+#read in previous vintage of data
+spi_previous_vintage <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/refs/heads/master/03_output_data/SPI_index.csv') %>%
+  select(country, iso3c, date, starts_with('SPI.D1.'), starts_with('SPI.D2.'),
+         starts_with("SPI.D3."), starts_with('SPI.D4.'), starts_with('SPI.D5.'))
+
+spi_current_vintage <- spi_index_df %>%
+  select(country, iso3c, date, starts_with('SPI.D1.'), starts_with('SPI.D2.'), starts_with("SPI.D3."), starts_with('SPI.D4.'), starts_with('SPI.D5.'))
+
+#pivot data longer
+spi_previous_vintage_long <- spi_previous_vintage %>%
+  pivot_longer(
+    cols=starts_with('SPI.'),
+    names_to='source_id',
+    values_to='value_previous'
+  )
+
+spi_current_vintage_long <- spi_current_vintage %>%
+  pivot_longer(
+    cols=starts_with('SPI.'),
+    names_to='source_id',
+    values_to='value_current'
+  ) 
+
+#join the data
+comparison_df <- spi_previous_vintage_long %>%
+  left_join(spi_current_vintage_long, by=c('country', 'iso3c', 'date', 'source_id')) %>%
+  left_join(metadata_full) %>%
+  filter(!is.na(value_previous) & !is.na(value_current)) %>%
+  mutate(change=value_current-value_previous) 
+
+#get correlation between current and previous value
+correlation_df <- comparison_df %>%
+  group_by(source_id) %>%
+  summarise(correlation=cor(value_previous, value_current),
+            avg_change=mean(change, na.rm=TRUE),
+            avg_abs_change=mean(abs(change), na.rm=TRUE)) 
+
+
+comparison_df <- comparison_df%>%
+  filter(abs(change)>0) %>% #drop small changes
+  filter(date>=2016)
+
+#create a table grouped by country and date, with the collapsed list of updated indicators
+comparison_table <- comparison_df %>%
+  group_by(country, date) %>%
+  summarise(
+    updated_indicators=paste0(source_name, collapse=', ')
+  ) %>%
+  arrange(country, date)
+
+#create a summary of the number of countries with updated indicators by indicaor
+indicator_summary <- comparison_df %>%
+  group_by(source_id) %>%
+  summarise(
+    n_countries=n_distinct(country)
+  ) %>%
+  left_join(metadata_full) %>%
+  arrange(pillar, SPI_indicator_id) %>%
+  transmute(
+    Pillar=pillar,
+    Indicator=source_name,
+    `Number of Countries with Updated Data`=n_countries
+  )
+
+#correlation SPI scores
+spi_index_previous_vintage <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/refs/heads/master/03_output_data/SPI_index.csv') %>%
+  select(country, iso3c, date, SPI.INDEX) %>%
+  filter(date==2022) %>%
+  rename(SPI.INDEX.previous=SPI.INDEX)
+
+spi_index_current_vintage <- spi_index_df %>%
+  filter(date==2022) %>%
+  select(country, iso3c, date, SPI.INDEX)
+
+spi_index_compare <- spi_index_previous_vintage %>%
+  left_join(spi_index_current_vintage, by=c('country', 'iso3c')) %>%
+  filter(!is.na(SPI.INDEX) & !is.na(SPI.INDEX.previous)) 
+
+spi_index_correlation <- spi_index_compare %>%
+  summarise(correlation=cor(SPI.INDEX, SPI.INDEX.previous)) %>%
+  pull()
+
+
+```
+
+
+Previous SPI scores have been revised to incorporate updated data, ensuring that they reflect the most recent and accurate information available. These revisions have led to changes in SPI scores for some countries in past years.
+
+The table below lists the countries with updated data since 2016, categorized by indicator. Pillar 3, which covers the availability of SDG indicators, has seen the most updates due to ongoing changes in the UN SDG Indicators database, the primary source for these indicators. Due to delays in data availability, many updates have also occurred in Pillar 4 (data sources) and Pillar 1 (data usage by international agencies). Changes in Pillar 2, covering data services, primarily based on the Open Data Watch Open Data Inventory, are smaller adjustments to scores. A few countries have seen updates in Pillar 5 (data infrastructure), reflecting the latest available information.
+
+```{r}
+#| label: tbl-indicatorschanged
+#| tbl-cap: Countries with updated data since 2016 by Indicator
+#| 
+flextable(indicator_summary) %>%
+  merge_v(j=1) %>%
+  theme_box() %>%
+  #set column width to 1.5, 3, and 1.5
+  width(j=1:3, width=c(1.5,3,1.5)) 
+```
+
+
+These revisions have had a generally minimal impact on overall SPI scores. In 2022, the correlation between previous and revised SPI scores was `r round(spi_index_correlation,2)`, demonstrating a high level of consistency. 
+
+**Figure 3**. Correlation between Previous and Current SPI scores in 2022 Following Data Update
+```{r}
+#| label: fig-correlationupdate
+
+
+eq_location <- data.frame(
+    x = 30,
+    y = 75
+)
+
+spi_index_compare %>%
+  ggplot(aes(x=SPI.INDEX.previous, y=SPI.INDEX)) +
+    geom_point() +
+    geom_text(aes(label=iso3c), position=position_jitter(width=.1,height=.4), check_overlap=T) +
+    geom_smooth(method='lm', se=FALSE) +
+    geom_richtext(
+        data = eq_location, aes(x = x, y = y, label = eq_plot_txt(spi_index_compare, "SPI.INDEX", "SPI.INDEX.previous")), hjust = 0.2
+    ) +
+    labs(
+      #title='Correlation Between Previous and current SPI scores in 2022 Following Data Update',
+      x='SPI Score (Previous)',
+      y='SPI Score (Current)'
+    ) +
+    theme_spi()
+```
+
+
+
+
+
+
+## Global Trends
+
+The table below shows the progression of SPI scores from 2016 to 2023. Each year’s overall score and individual scores for the five pillars—Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure—are listed. The table highlights steady improvements in SPI scores, with significant gains in pillars such as Data Services and Data Infrastructure.
+
+```{r}
+#| label: tbl-tile1
+#| tbl-cap: Improvement in SPI Overall Scores over time
+tile_table(c( 'SPI.INDEX' ,'SPI.INDEX.PIL1', 'SPI.INDEX.PIL2', 'SPI.INDEX.PIL3', 'SPI.INDEX.PIL4', 'SPI.INDEX.PIL5'                 ))  %>%
+  colformat_double( digits = 1) %>%
+      bg(j=2:(end_date-start_date+2), 
+         bg=scales::col_numeric(palette='Blues', domain=c(0,100))) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
+
+
+
+```
+
+
+### Data Use
+
+This table outlines key data use indicators between 2016 and 2023, such as the availability of poverty headcount ratios, under-5 mortality rates, debt service data, and safely managed drinking water. It tracks the quality and consistency of these data across years, noting stable or slightly fluctuating scores for each indicator. Overall, the data use pillar has seen little change over time, with most indicators remaining consistent.
+
+
+```{r}
+#| label: tbl-d1tile1
+#| tbl-cap: Pillar 1 - Data Use - Indicators over time
+
+
+tile_table(c('SPI.D1.5.POV', 'SPI.D1.5.CHLD.MORT', 'SPI.D1.5.DT.TDS.DPPF.XP.ZS', 'SPI.D1.5.SAFE.MAN.WATER', 'SPI.D1.5.LFP')) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
+
+```
+
+
+### Data Services
+
+This table focuses on the development of data services, covering indicators such as e-GDDS subscription, machine readability, and download options. It reflects how countries have advanced in providing accessible, standardized, and open data, with noticeable improvements in machine-readable formats, non-proprietary formats of data, and microdata catalogs, particularly after 2017.
+
+```{r}
+#| label: tbl-D2tile1
+#| tbl-cap: Pillar 2 - Data Services - Indicators over time
+#| 
+tile_table(c('SPI.D2.1.GDDS', 'SPI.D2.2.Machine.readable', 'SPI.D2.2.Non.proprietary', 'SPI.D2.2.Download.options', 'SPI.D2.2.Metadata.available', 'SPI.D2.2.Terms.of.use', 'SPI.D2.2.Openness.subscore', 'SPI.D2.4.NADA')) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
+
+```
+
+
+
+
+### Data Products
+
+The data products pillar tracks the availability of indicators for the Sustainable Development Goals (SDGs), such as no poverty, zero hunger, clean water, and good health. Scores, measuring the availability of indicators over the previous five years, for each SDG indicator from 2016 to 2023 are shown, with improvements in availability in many areas like education, inequality and sustainable cities. Some areas such as climate statistics have shown little improvement since 2016.
+
+```{r }
+#| label: tbl-D3tile1
+#| tbl-cap: Pillar 3 - Data Products - Indicators over time
+tile_table(c('SPI.D3.1.POV', 'SPI.D3.2.HNGR', 'SPI.D3.3.HLTH', 'SPI.D3.4.EDUC', 'SPI.D3.5.GEND', 'SPI.D3.6.WTRS', 'SPI.D3.7.ENRG', 'SPI.D3.8.WORK', 'SPI.D3.9.INDY', 'SPI.D3.10.NEQL', 'SPI.D3.11.CITY', 'SPI.D3.12.CNSP', 'SPI.D3.13.CLMT', 'SPI.D3.15.LAND', 'SPI.D3.16.INST', 'SPI.D3.17.PTNS')) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
+
+```
+
+
+
+### Data Sources
+
+This table provides a summary of key data source indicators over time, including censuses (population, agriculture, and business), surveys (household, labor force, and health), and civil registration data. The scores reflect the extent to which countries are keeping up with critical data collection exercises. There have been increases in some areas, such as business censuses/registries and agricultural surveys, though certain survey types such as poverty and health surveys have seen slight declines in recent years.
+
+```{r}
+#| label: tbl-D4tile1
+#| tbl-cap: Pillar 4 - Data Sources - Indicators over time
+
+tile_table(c('SPI.D4.1.1.POPU', 'SPI.D4.1.2.AGRI', 'SPI.D4.1.3.BIZZ', 'SPI.D4.1.4.HOUS', 'SPI.D4.1.5.AGSVY', 'SPI.D4.1.6.LABR', 'SPI.D4.1.7.HLTH', 'SPI.D4.1.8.BZSVY', 'SPI.D4.2.3.CRVS', 'SPI.D4.3.GEO.first.admin.level')) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
+
+```
+
+
+### Data Infrastructure
+
+This table presents indicators of data infrastructure, including legislation on data, national accounts systems, and classification of industries. It shows how countries have progressed in adopting international standards and improving their data frameworks, with notable gains in areas like classification of household consumption and employment status. 
+
+```{r D5tile1}
+#| label: tbl-D5tile1
+#| tbl-cap: Pillar 5 - Data Infrastructure - Indicators over time
+
+tile_table(c('SPI.D5.1.DILG', 'SPI.D5.2.1.SNAU', 'SPI.D5.2.2.NABY', 'SPI.D5.2.3.CNIN', 'SPI.D5.2.4.CPIBY', 'SPI.D5.2.5.HOUS', 'SPI.D5.2.6.EMPL', 'SPI.D5.2.7.CGOV', 'SPI.D5.2.8.FINA', 'SPI.D5.2.9.MONY', 'SPI.D5.2.10.GSBP', 'SPI.D5.5.DIFI')) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
+
+```
+
+
+
+## How Have Country Scores Changed Between `r start_date` and `r end_date`
+
+
+
+```{r changes}
+#create a dataframe for the 2016 SPI to calculate changes since 2016
+
+spi_index_end_date <- spi_index_df %>%
+  filter(date==end_date) %>%
+  filter(!is.na(SPI.INDEX))
+
+spi_index_start_date <- spi_index_df %>%
+  filter(date==start_date) %>%
+  filter(!is.na(SPI.INDEX)) %>%
+  mutate(SPI.INDEX.start_date=SPI.INDEX) %>%
+  select(iso3c, region, SPI.INDEX.start_date)
+
+spi_changes <- spi_index_end_date %>%
+  mutate(SPI.INDEX.end_date=SPI.INDEX) %>%
+  select(iso3c, country,region,income, SPI.INDEX.end_date) %>%
+  left_join(spi_index_start_date)
+
+
+#correlation
+corr_end_date_start_date <- cor(spi_changes$SPI.INDEX.end_date,spi_changes$SPI.INDEX.start_date, use='pairwise.complete.obs')
+#spearman_end_date_start_date <- spearman(spi_changes$SPI.INDEX.end_date,spi_changes$SPI.INDEX.start_date)
+
+changes <- spi_changes$SPI.INDEX.end_date - spi_changes$SPI.INDEX.start_date
+avg_change <- mean(changes, na.rm=TRUE)
+deciles <- quantile(changes, probs = seq(from=0, to=1, by=.1), na.rm=TRUE)
+
+
+```
+
+The SPI overall score combines 51 indicators into a single score, ranging from 0 to 100. On average, countries' SPI overall scores rose by `r round(avg_change)` points between `r start_date` and `r end_date`. However, country rankings have remained steady, with a correlation of `r round(corr_end_date_start_date,2)` between the SPI overall scores in `r start_date` and `r end_date`, and a Spearman rank correlation of `r round(spearman_end_date_start_date,2)`.
+
+The most significant improvements in SPI overall scores occurred in countries that ranked in the bottom two deciles in `r start_date` Countries in the bottom 10% saw an average increase of 16 points between `r start_date` and `r end_date`, while those in the top 10% grew the least, as they were already close to the maximum score in several areas.
+
+
+
+
+
+
+**Figure 4**. Scatterplot of `r end_date` SPI overall score  & `r start_date` SPI overall score
+```{r }
+#| label: changesplot
+
+spi_changes %>%
+  mutate(change=SPI.INDEX.end_date-SPI.INDEX.start_date,
+         #income to factor
+         income=factor(income,
+           levels=c('Low income','Lower middle income','Upper middle income','High income'),
+         )) %>%
+  arrange(desc(change)) %>%
+  mutate(order=row_number()) %>%
+  ggplot( aes(y=change, x=order, color=income)) +
+    geom_point() +
+    geom_text(aes(label=iso3c), nudge_y=2, angle=90, size=3, check_overlap=T) +
+    scale_color_manual(
+      #use region_colors
+      values=income_colors
+    ) +
+    theme_spi() +
+    labs(
+      title=paste0('Change in SPI Overall Score between ',start_date, ' and ', end_date),
+    ) +
+    geom_hline(yintercept=0)+
+    geom_hline(yintercept = avg_change, color='red', linetype='dashed') +
+    #add annotation for avg_change
+    annotate("text", x = 25, y = avg_change+1, label = paste0('Average Change = ',round(avg_change,1)), color='red') +
+    ylab(paste0('Change in SPI Overall Score')) +
+    xlab(paste0(start_date,'')) +
+    theme(legend.position = 'bottom',
+          #remove x axis lines and values
+          axis.title.x=element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()) +
+    guides(
+      size="none"
+    )
+
+
+```
+
+Note: Solid grey line represents zero change in the SPI overall score since 2016.  Red dotted line represents the average change across countries since 2016.  N=187 economies.
+
+
+
+
+
+
+
+
+```{r elephantfun, echo=FALSE, dpi=250, message=FALSE, warning=FALSE, fig.height=8, fig.width=14}
+
+growth_plot <- function(variables, name) {
+  
+
+
+  elephant_df <- spi_index_df %>%
+    rename(spi_data=!! variables) %>%
+    select( iso3c, date, spi_data) %>%
+    group_by(iso3c, date) %>%
+    mutate(row = row_number()) %>%
+    pivot_wider(names_from=date,
+                names_prefix='spi_data_',
+                values_from=c('spi_data')) %>%
+    rename(spi_data_end_date=!! paste0('spi_data_',end_date),
+           spi_data_start_date=!! paste0('spi_data_',start_date)) %>%
+    ungroup() %>%
+    mutate(growth=(spi_data_end_date-spi_data_start_date)) %>%
+    filter(!(is.na(spi_data_end_date) | is.na(spi_data_start_date))) %>%
+    mutate(spi_rank=100*rank(spi_data_start_date)/length(spi_data_start_date),
+           spi_bins=case_when( #calculate deciles
+             between(spi_rank,0,10) ~ "1st Decile",
+             between(spi_rank,10,20) ~ "2nd Decile",
+             between(spi_rank,20,30) ~ "3rd Decile",
+             between(spi_rank,30,40) ~ "4th Decile",
+             between(spi_rank,40,50) ~ "5th Decile",
+             between(spi_rank,50,60) ~ "6th Decile",
+             between(spi_rank,60,70) ~ "7th Decile",
+             between(spi_rank,70,80) ~ "8th Decile",
+             between(spi_rank,80,90) ~ "9th Decile",
+             between(spi_rank,90,100) ~ "Top Decile"
+           )) %>%
+    arrange(spi_rank)
+  
+  #summarise into decile bins
+  elephant_df <- elephant_df %>%
+    mutate(spi_bins=factor(spi_bins, levels=unique(elephant_df$spi_bins))) %>%
+    group_by(spi_bins) %>%
+    summarise(growth=mean(growth))
+  
+  ggplot(elephant_df, aes(x=spi_bins, y=growth, label=round(growth,1))) +
+    geom_segment(aes(xend=as.numeric(spi_bins)-0.5,x=as.numeric(spi_bins)+0.5, y=growth, yend=growth)) +
+    geom_bar(, stat = "identity", fill='#ca6702') +
+    ggrepel::geom_text_repel(nudge_y=-.5, size=6,segment.alpha =  0, color='white' ) +
+    scale_x_discrete() +
+    theme_spi() +
+    xlab(str_wrap(paste0('Decile in ',start_date),40)) +
+    ylab(str_wrap(paste0('Change in Score (',start_date,'-',end_date,')'),20)) +
+    labs(
+      #title=str_wrap("2nd & 3rd deciles have improved most since 2016.",70),
+      subtitle=str_wrap(paste0('Change in SPI Overall Score from ',start_date,'-',end_date,' by 2016 decile group'),70),
+      caption=paste0(name,' scale = 0 - 100 points.')
+    ) +
+    expand_limits(y=0) +
+    scale_alpha_continuous(
+      range=c(0.3,1)
+    ) +
+    expand_limits(y=c(-2,3)) +
+  theme(
+    axis.title.y = element_text(angle=0, vjust = 0.5),
+    text = element_text(size = 14),
+    title= element_text(size = 20),
+    legend.position = 'none'
+  )
+
+}
+
+
+# growth_plot('SPI.INDEX.PIL1', 'SPI Pillar 1 (Data Use) Score')
+# growth_plot('SPI.INDEX.PIL2', 'SPI Pillar 2 (Data Services) Score')
+# growth_plot('SPI.INDEX.PIL3', 'SPI Pillar 3 (Data Products) Score')
+# growth_plot('SPI.INDEX.PIL4', 'SPI Pillar 4 (Data Sources) Score')
+# growth_plot('SPI.INDEX.PIL5', 'SPI Pillar 5 (Data Infrastructure) Score')
+
+
+```
+
+
+**Figure 5**. Bottom Two Deciles Have Improved Most from `r start_date`-`r end_date`
+
+```{r}
+#| label: elephant
+#| fig-height: 8
+#| fig-width: 12
+
+growth_plot('SPI.INDEX', 'SPI Overall Score')
+
+```
+
+Note: N=167 economies.
+
+
+
+
+
+```{r}
+#| label: phantstacked
+
+  elephant_stacked_country_df <- spi_index_df %>%
+    select( iso3c, date, starts_with('SPI.INDEX')) %>%
+    group_by(iso3c, date) %>%
+    mutate(row = row_number()) %>%
+    pivot_wider(names_from=date,
+                values_from=starts_with('SPI.INDEX')) %>%
+    rename(SPI.INDEX_end_date=!! paste0('SPI.INDEX_',end_date),
+           SPI.INDEX.PIL1_end_date=!! paste0('SPI.INDEX.PIL1_',end_date),
+           SPI.INDEX.PIL2_end_date=!! paste0('SPI.INDEX.PIL2_',end_date),
+           SPI.INDEX.PIL3_end_date=!! paste0('SPI.INDEX.PIL3_',end_date),
+           SPI.INDEX.PIL4_end_date=!! paste0('SPI.INDEX.PIL4_',end_date),
+           SPI.INDEX.PIL5_end_date=!! paste0('SPI.INDEX.PIL5_',end_date),
+           SPI.INDEX_start_date=!! paste0('SPI.INDEX_',start_date),
+           SPI.INDEX.PIL1_start_date=!! paste0('SPI.INDEX.PIL1_',start_date),
+           SPI.INDEX.PIL2_start_date=!! paste0('SPI.INDEX.PIL2_',start_date),
+           SPI.INDEX.PIL3_start_date=!! paste0('SPI.INDEX.PIL3_',start_date),
+           SPI.INDEX.PIL4_start_date=!! paste0('SPI.INDEX.PIL4_',start_date),
+           SPI.INDEX.PIL5_start_date=!! paste0('SPI.INDEX.PIL5_',start_date)) %>%
+    ungroup() %>%
+    mutate(overall_growth=(SPI.INDEX_end_date-SPI.INDEX_start_date),
+           dim1_growth=(SPI.INDEX.PIL1_end_date-SPI.INDEX.PIL1_start_date),
+           dim2_growth=(SPI.INDEX.PIL2_end_date-SPI.INDEX.PIL2_start_date),
+           dim3_growth=(SPI.INDEX.PIL3_end_date-SPI.INDEX.PIL3_start_date),
+           dim4_growth=(SPI.INDEX.PIL4_end_date-SPI.INDEX.PIL4_start_date),
+           dim5_growth=(SPI.INDEX.PIL5_end_date-SPI.INDEX.PIL5_start_date)
+           ) %>%
+    filter(!(is.na(SPI.INDEX_end_date) | is.na(SPI.INDEX_start_date))) %>%
+    mutate(spi_rank=100*rank(SPI.INDEX_start_date)/length(SPI.INDEX_start_date),
+           spi_bins=case_when( #calculate deciles
+             between(spi_rank,0,10) ~ "1st Decile",
+             between(spi_rank,10,20) ~ "2nd Decile",
+             between(spi_rank,20,30) ~ "3rd Decile",
+             between(spi_rank,30,40) ~ "4th Decile",
+             between(spi_rank,40,50) ~ "5th Decile",
+             between(spi_rank,50,60) ~ "6th Decile",
+             between(spi_rank,60,70) ~ "7th Decile",
+             between(spi_rank,70,80) ~ "8th Decile",
+             between(spi_rank,80,90) ~ "9th Decile",
+             between(spi_rank,90,100) ~ "Top Decile"
+           )) %>%
+    arrange(spi_rank)
+  
+  #summarise into decile bins
+  elephant_stacked_df <- elephant_stacked_country_df %>%
+    mutate(spi_bins=factor(spi_bins, levels=unique(elephant_stacked_country_df$spi_bins))) %>%
+    group_by(spi_bins) %>%
+    summarise(
+              D1=mean(dim1_growth),
+              D2=mean(dim2_growth),
+              D3=mean(dim3_growth),
+              D4=mean(dim4_growth),
+              D5=mean(dim5_growth)) %>%
+    pivot_longer(
+      cols=c('D1', 'D2', 'D3', 'D4', 'D5'),
+      values_to='growth',
+      names_to='pillar'
+    ) %>%
+    mutate(pillar=case_when(
+      pillar=="D1" ~ "Pillar 1: Data Use",
+      pillar=="D2" ~ "Pillar 2: Data Services",
+      pillar=="D3" ~ "Pillar 3: Data Products",
+      pillar=="D4" ~ "Pillar 4: Data Sources",
+      pillar=="D5" ~ "Pillar 5: Data Infrastructure"
+    )) %>%
+    mutate(growth=growth/5) #divide by 5 so that pillar scores sum to overall score.  This puts equal weight on each pillar in the sum
+  
+
+decile1_p1 <- elephant_stacked_df %>% filter(spi_bins=="1st Decile") %>% filter(pillar=="Pillar 1: Data Use") %>% purrr::pluck(3)  
+decile1_p2 <- elephant_stacked_df %>% filter(spi_bins=="1st Decile") %>% filter(pillar=="Pillar 2: Data Services") %>% purrr::pluck(3)  
+decile1_p3 <- elephant_stacked_df %>% filter(spi_bins=="1st Decile") %>% filter(pillar=="Pillar 3: Data Products") %>% purrr::pluck(3)  
+decile1_p4 <- elephant_stacked_df %>% filter(spi_bins=="1st Decile") %>% filter(pillar=="Pillar 4: Data Sources") %>% purrr::pluck(3)  
+decile1_p5 <- elephant_stacked_df %>% filter(spi_bins=="1st Decile") %>% filter(pillar=="Pillar 5: Data Infrastructure") %>% purrr::pluck(3)  
+decile_total <- decile1_p1 + decile1_p2 + decile1_p3 + decile1_p4 + decile1_p5
+```
+
+
+Most of the improvement in the SPI overall score is driven by improvements in the Data Services and Data Infrastructure pillar. The Data Services pillar covers whether data is openly available online, the country's data dissemination standard, and whether metadata is available to describe data sources.  The Data Infrastructure pillar mainly covers the extent to which countries are applying modern standards and methods, as well as other aspects of infrastructure. Figure 6 takes the total change reported in Figure 5 and decomposes it into the five pillars. Countries in the bottom 10% saw a contribution of `r 100*round(decile1_p2/decile_total,2)`% (`r round(decile1_p2,1)` out of the total of `r round(decile_total,1)` points) from better data services. `r 100*round(decile1_p3/decile_total,2)`% of the improvement came from better data products with better SDG reporting. `r 100*round(decile1_p5/decile_total,2)`% came from better data infrastructure, such as adoption of better standards and methodologies for producing data. In some cases, the scores for decile groups dropped for certain pillars, such as data use or SDG reporting, which can happen if data that is available becomes outdated for that country (falls outside the window dictated by the indicator scoring).
+
+In some cases, the scores for decile groups dropped for certain pillars, such as data use, which can happen if available data becomes outdated for that country (falls outside the window dictated by the indicator scoring).
+
+**Figure 6**. Data Products and Data Infrastructure Saw Major Improvements from `r start_date`-`r end_date`.
+
+```{r}
+#| label: elephantstacked
+#| #| fig-height: 8
+#| fig-width: 12
+#| 
+name <- 'SPI Overall Score'
+
+  ggplot(elephant_stacked_df, aes(x=spi_bins, y=growth, fill=pillar, label=paste0(round(growth,1)))) +
+    geom_bar(stat = "identity", position='stack') +
+    geom_text(size = 6, position = position_stack(vjust = 0.5), color='black') +
+    scale_x_discrete() +
+    scale_fill_manual(
+      values=pillar_colors
+    ) +
+    theme_spi() +
+    xlab(str_wrap(paste0('Decile in ',start_date),40)) +
+    ylab(str_wrap(paste0('Change in Score (',start_date,'-',end_date,')'),20)) +
+    labs(
+      #title=str_wrap("Countries in 2nd and 3rd deciles have grown most since 2016.",70),
+      subtitle=str_wrap(paste0('Change in SPI Overall Score from ',start_date,'-',end_date,' by ',start_date,' decile group'),70),
+      caption=paste0(name,' scale = 0 - 100 points.')
+    ) +
+    expand_limits(y=c(-2,3)) +
+  theme(
+    axis.title.y = element_text(angle=0, vjust = 0.5),
+    text = element_text(size = 14),
+    title= element_text(size = 20),
+    legend.position = 'bottom'
+  ) +
+    guides(fill=guide_legend(nrow=2,byrow=TRUE))
+
+```
+
+Note: N=167 economies.
+
+
+
+
+
+
+
+
+
+
+
+
+## How Have Scores Changed by Country Groupings?
+
+The regional rankings have remained largely unchanged over this period. The two top performing regions are North America, and Europe and Central Asia, while Sub-Saharan Africa shows the worst statistical performance. East Asia and the Pacific and Latin America and the Carribbean are the next best scoring region, each with an average SPI overall score greater than 70.^[ In the cases of the East Asia and Pacific and Latin America and the Caribbean regions in particular, which both contain large numbers of smaller island economies, the non-population regional average score significantly differs from the population weighted average.  A population weighted average shows North America with the highest average score, followed by Europe and Central Asia, Latin America & Caribbean, South Asia, East Asia & Pacific, the Middle East & North Africa, and Sub-Saharan Africa.] South Asia, the Middle East and North Africa, and Sub-Saharan Africa are the three lowest scoring regions, in that order. Sub-Saharan Africa lags the highest scoring region by more than 30 points on the SPI overall score (0-100). 
+
+
+**Figure 7**. Comparison of SPI Overall Scores in `r start_date` and `r end_date` - Unweighted Regional Averages
+```{r}
+#| label: regchng
+#| fig-width: 14
+#| fig-height: 8
+
+# Build the base table
+reg_avg_base <- spi_index_df %>%
+  dplyr::mutate(
+    small_pop = dplyr::if_else(population <= 500000, "Population <= 500k", "Population > 500k")
+  ) %>%
+  dplyr::filter(small_pop == "Population > 500k") %>%
+  dplyr::filter(date %in% c(start_date, end_date)) %>%
+  dplyr::group_by(date, region) %>%
+  dplyr::summarise(SPI.INDEX = mean(SPI.INDEX, na.rm = TRUE), .groups = "drop")
+
+#  Determine region ordering by end_date averages
+region_levels <- reg_avg_base %>%
+  dplyr::filter(date == end_date) %>%
+  dplyr::arrange(dplyr::desc(SPI.INDEX)) %>%
+  dplyr::pull(region) %>%
+  unique()
+
+# Fallback in case end_date is missing for some regions
+if (length(region_levels) == 0) {
+  region_levels <- reg_avg_base %>%
+    dplyr::arrange(dplyr::desc(SPI.INDEX)) %>%
+    dplyr::pull(region) %>%
+    unique()
+}
+
+#  Final table with factors applied
+reg_avg <- reg_avg_base %>%
+  dplyr::mutate(
+    date   = factor(date, levels = c(start_date, end_date)),
+    region = factor(region, levels = region_levels)
+  )
+
+ggplot(reg_avg, aes(x=region,y=SPI.INDEX, fill=date,group = region,label=round(SPI.INDEX,0))) +
+  geom_col(position = 'dodge2') +
+  geom_text(position = position_dodge2(width = 1), size=8, color='white', vjust=1.5) +
+    scale_fill_manual(
+    values=c("#006e90", "#f18f01")
+  ) +
+  ylab("SPI Overall Score") +
+  ggtitle('Unweighted Regional Average of SPI Overall Score by Year') +
+  theme_minimal() +
+  theme(legend.position='top',
+        text = element_text(size = 14),
+        axis.text.x=element_text(size = 14)) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
+
+```
+Note: N=172 economies.Economies with less than 500K population are excluded from this analysis.
+
+
+
+```{r}
+inc_avg <- spi_index_df %>%
+  mutate(small_pop = if_else(population <= 500000,
+                             "Population <= 500k", "Population > 500k")) %>%
+  filter(small_pop == "Population > 500k",
+         date %in% c(start_date, end_date),
+         income %in% c("Low income","Lower middle income","Upper middle income","High income")) %>%
+  group_by(date, income) %>%
+  summarise(SPI.INDEX = mean(SPI.INDEX, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    date   = factor(date, levels = c(start_date, end_date)),
+    income = factor(income, levels = c("Low income","Lower middle income","Upper middle income","High income"))
+  )
+
+# Pivot to wide with friendly column names "start"/"end"
+inc_wide <- inc_avg %>%
+  mutate(
+    # compare on numeric, not factor
+    period = if_else(as.integer(as.character(date)) == start_date, "start", "end")
+  ) %>%
+  select(income, period, SPI.INDEX) %>%
+  tidyr::pivot_wider(names_from = period, values_from = SPI.INDEX)
+
+# Compute changes by income, safely
+inc_change <- inc_wide %>%
+  mutate(change = round(end - start, 1)) %>%
+  select(income, change)
+
+# If you still want individual scalars:
+lic_chg  <- inc_change %>% filter(income == "Low income") %>% pull(change)
+lmic_chg <- inc_change %>% filter(income == "Lower middle income") %>% pull(change)
+umic_chg <- inc_change %>% filter(income == "Upper middle income") %>% pull(change)
+hic_chg  <- inc_change %>% filter(income == "High income") %>% pull(change)
+
+
+From comparing average scores by income group (Figure 8), it is clear that on average statistical performance improves with income. Additionally, scores have improved in each region between `r start_date` and `r end_date`.  Lower middle income countries have seen the fastest growth since `r start_date`, rising `r lmic_chg` points by `r end_date`.  Low income countries improved their SPI score on average by `r lic_chg` points, while upper middle income countries improved their score by `r umic_chg` points on average.  High income countries gained `r hic_chg` points.  
+
+
+**Figure 8**. Comparison of SPI Overall Scores in `r start_date` and `r end_date` - Unweighted Income Group Averages
+```{r}
+#| label: incchange
+#| fig-width: 12
+#| fig-height: 8
+
+
+
+ggplot(inc_avg, aes(x=income,y=SPI.INDEX, fill=date,group = income,label=round(SPI.INDEX,0))) +
+  geom_col(position = 'dodge2') +
+  geom_text(position = position_dodge2(width = 1), size=8, color='white', vjust=1.5) +
+  ylab("SPI Overall Score") +
+  ggtitle('Unweighted Income Group Average of SPI Overall Score by Year') +
+  scale_fill_manual(
+    values=c("#006e90", "#f18f01")
+  ) +
+  
+  theme_minimal() +
+  theme(legend.position='top',
+        text = element_text(size = 18),
+        axis.text.x=element_text(size = 14)) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 15))
+
+```
+Note: N=172 economies.Economies with less than 500K population are excluded from this analysis.
+
+```{r}
+#| label: grouptab
+
+income_tab <- spi_index_df %>%
+  filter(between(date, start_date, end_date)) %>%
+  filter(income %in% c("Low income","Lower middle income","Upper middle income","High income")) %>%
+  group_by(date, income) %>%
+  summarise(SPI.INDEX = mean(SPI.INDEX, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    date   = factor(date, levels = start_date:end_date),
+    income = factor(income, levels = c("Low income","Lower middle income","Upper middle income","High income")),
+    SPI.INDEX = round(SPI.INDEX, 1)
+  ) %>%
+  pivot_wider(names_from = date, values_from = "SPI.INDEX") %>%
+  arrange(income)
+
+# Order lending types by average end_date score (and include any new labels, e.g. "Rest of the world")
+lend_levels <- spi_index_df %>%
+  filter(date == end_date) %>%
+  group_by(lending_type) %>%
+  summarise(m = mean(SPI.INDEX, na.rm = TRUE), .groups = "drop") %>%
+  arrange(desc(m)) %>%
+  pull(lending_type)
+
+lending_tab <- spi_index_df %>%
+  filter(between(date, start_date, end_date)) %>%
+  group_by(date, lending_type) %>%
+  summarise(SPI.INDEX = mean(SPI.INDEX, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    date         = factor(date, levels = start_date:end_date),
+    lending_type = factor(lending_type, levels = lend_levels),
+    SPI.INDEX    = round(SPI.INDEX, 1)
+  ) %>%
+  pivot_wider(names_from = date, values_from = "SPI.INDEX") %>%
+  arrange(lending_type)
+
+fcs_tab <- spi_index_df %>%
+  filter(between(date, start_date, end_date)) %>%
+  filter(fragile_conflict %in% c("FCS country","Non-FCS country")) %>%
+  group_by(date, fragile_conflict) %>%
+  summarise(SPI.INDEX = mean(SPI.INDEX, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    date            = factor(date, levels = start_date:end_date),
+    fragile_conflict= factor(fragile_conflict, levels = c("FCS country","Non-FCS country")),
+    SPI.INDEX       = round(SPI.INDEX, 1)
+  ) %>%
+  pivot_wider(names_from = date, values_from = "SPI.INDEX") %>%
+  arrange(fragile_conflict)
+
+# small islands
+small_tab <- spi_index_df %>%
+  filter(between(date, start_date, end_date)) %>%
+  mutate(small_pop = if_else(population <= 500000, "Population <= 500k", "Population > 500k")) %>%
+  filter(!is.na(small_pop)) %>%
+  group_by(date, small_pop) %>%
+  summarise(SPI.INDEX = mean(SPI.INDEX, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    date      = factor(date, levels = start_date:end_date),
+    small_pop = factor(small_pop, levels = c("Population <= 500k","Population > 500k")),
+    SPI.INDEX = round(SPI.INDEX, 1)
+  ) %>%
+  pivot_wider(names_from = date, values_from = "SPI.INDEX") %>%
+  arrange(small_pop)
+
+
+small_tab2 <- spi_index_df %>%
+  filter(between(date, start_date, end_date)) %>%
+  mutate(small_pop = if_else(population <= 500000, "Population <= 500k", "Population > 500k")) %>%
+  filter(!is.na(small_pop)) %>%
+  group_by(date, income, small_pop) %>%
+  summarise(SPI.INDEX = mean(SPI.INDEX, na.rm = TRUE), .groups = "drop") %>%
+  mutate(
+    date      = factor(date, levels = start_date:end_date),
+    small_pop = factor(small_pop, levels = c("Population <= 500k","Population > 500k")),
+    SPI.INDEX = round(SPI.INDEX, 1)
+  ) %>%
+  pivot_wider(names_from = date, values_from = "SPI.INDEX") %>%
+  arrange(small_pop)
+
+group_tab <-
+  bind_rows(
+    #income_tab %>% rename(group=income),
+    lending_tab %>% rename(group=lending_type),
+    fcs_tab %>% rename(group=fragile_conflict),
+    small_tab %>% rename(group=small_pop)
+  ) %>%
+  rename(` `=group)
+
+get_delta <- function(tab, label, start_date, end_date) {
+  group_col  <- names(tab)[1]
+  start_col  <- as.character(start_date)
+  end_col    <- as.character(end_date)
+
+  # If the year columns aren't present, bail safely
+  if (!(start_col %in% names(tab)) || !(end_col %in% names(tab))) return(NA_real_)
+
+  row <- tab %>% dplyr::filter(.data[[group_col]] == label)
+
+  if (nrow(row) == 0) return(NA_real_)
+
+  v_sta <- suppressWarnings(row[[start_col]][1])
+  v_end <- suppressWarnings(row[[end_col]][1])
+
+  if (length(v_sta) == 0 || length(v_end) == 0 || is.na(v_sta) || is.na(v_end)) return(NA_real_)
+
+  round(v_end - v_sta, 1)
+}
+
+ida            <- get_delta(lending_tab, "IDA",  start_date, end_date)
+ibrd           <- get_delta(lending_tab, "IBRD", start_date, end_date)
+blend          <- get_delta(lending_tab, "Blend", start_date, end_date)
+rotw           <- get_delta(lending_tab, "Rest of the world", start_date, end_date)   # if present
+not_classified <- get_delta(lending_tab, "Not classified", start_date, end_date)
+
+```
+
+Finally, as shown in Table 8, countries receiving grants and low-interest loans from the International Development Association (IDA) have seen  their SPI overall score rise by `r ida` points on average since 2016. Countries receiving loans from the International Bank for Reconstruction and Development (IBRD) have seen an average increase of `r ibrd` points. Countries receiving a blend of both IDA and IBRD financing have seen an average increase of `r blend` points. Countries not classified as either IDA or IBRD have seen an average increase of `r not_classified` points.
+
+Countries with smaller population sizes face specific challenges.  Even for high income countries, those countries with populations of less than 500,000 individuals have a lower average score than the average for lower middle income countries with populations greater than 500,000.  The average SPI overall score for high income countries with populations less than 500K is similar in magnitude (56 points) to those of low income countries (56). Countries in conflict (57 points on the SPI overall score) or facing institutional and social fragility (47 points) score significantly below non-FCS economies (74 points). 
+
+
+
+
+
+```{r}
+#| label: tbl-group
+#| tbl-cap: "Changes in SPI Overall Scores by Lending Group, Fragility, and Population Size."
+
+
+
+flextable(group_tab) %>%
+  theme_alafoli() %>%
+  hline(i=4) %>%
+  hline(i=7) %>%
+  #set width to 2.3 for first column and 0.5 for the rest
+  width(j=1, width=2.3) %>%
+  width(j=2:(end_date-start_date+2), width=0.5) 
+  
+```
+
+
+Note: N=187 economies.
+
+
+
+
+
+
+# ANNEX: Information on Scoring of Indicators
+ 
+More information can be found at the following resource:
+
+https://worldbank.github.io/SPI/technical-documentation-of-spi-indicators.html
+
+| **Indicator Name**                                                                                | **Brief Description**                                                                                                                             | **Scoring**                                                                                                                                                              |
+|---------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Availability of Comparable Poverty headcount ratio at $2.15 a day          | Comparability data from World Bank's PIP                                                                                                       | 1 Point. Comparable data lasting at least two years within past 5 years. 0.5 Point. Comparable data lasting at least two years within past 10 years. 0 Points. No comparable data within past 5 years |
+| Availability of Mortality rate under-5 (per 1000 live births) data meeting quality standards       | Child Mortality Metadata from UN IGME                                                                                                                | 1 Point. Two indicators that met UN IGME standards within past 5 years. 0.5 Point. Two indicators that met UN IGME standards within past 10 years. 0 Points. No data that met UN IGME standards within past 10 years |
+| Quality of Debt service data according to World Bank                                               | Debt Reporting Metadata from World Bank                                                                                                              | 1 Points. Actual value. 0.67 Points. Preliminary value. 0.33 Points. Estimated value. 0 Points. No value                                                                      |
+| Safely Managed Drinking Water                                                                      | Availability of Safely Managed Drinking Water data for use by JMP                                                                                     | 1 Point. At least two estimates with breakdowns for urban/rural areas within an 8 year window. 0.5 Points. At least two estimates but not an urban/rural breakdown within an 8 year window. 0 Points. Otherwise |
+| Labor force participation rate by sex and age (%)                                                  | Labor force participation data for use by ILO                                                                                                        | 1 Point. Country has a labor force survey based estimate in past 5 years of labor force participation broken down by total male and female & estimated value from ILO is within 10 percentage points of value reported by national government. 0.5 Point. Country has labor force survey or is within 10 points of ILO but not both. 0 Points. Otherwise |
+| SDDS/e-GDDS subscription                                                                           | The Special Data Dissemination Standard (SDDS) and electronic General Data Dissemination Standard (e-GDDS) were established by the International Monetary Fund (IMF) for member countries that have or that might seek access to international capital markets to guide them in providing their economic and financial data to the public. Although subscription is voluntary the subscribing member needs to be committed to observing the standard and provide information about its data and data dissemination practices (metadata). The metadata are posted on the IMF’s SDDS and e-GDDS websites. | Point. Subscribing to IMF SDDS+ or SDDS standards. 0.5 Points. Subscribing to IMF e-GDDS standards. 0 Points. Otherwise |
+| ODIN Open Data Openness score                                                                      | ODW Openness score                                                                                                                                   | Our source for this indicator is Open Data Watch. Scores range from 0-100. For more details consult the ODIN technical documentation.                                       |
+| NADA metadata                                                                                      | NADA/NSO websites. Statistical systems must be open and transparent about their methods and procedures and provide access to adequate metadata – detailed descriptions of the methods and procedures used to produce  microddata. | 1 Point. Yes available. 0 Points. No.                                                                                                                                     |
+| GOAL 1: No Poverty                                                                                 | SDG Goal 1 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 1 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 2: Zero Hunger                                                                                | SDG Goal 2 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 2 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 3: Good Health and Well-being                                                                 | SDG Goal 3 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 3 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 4: Quality Education                                                                          | SDG Goal 4 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 4 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 5: Gender Equality                                                                            | SDG Goal 5 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 5 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 6: Clean Water and Sanitation                                                                 | SDG Goal 6 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 6 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 7: Affordable and Clean Energy                                                                | SDG Goal 7 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 7 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 8: Decent Work and Economic Growth                                                            | SDG Goal 8 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 8 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 9: Industry Innovation and Infrastructure                                                     | SDG Goal 9 data availability. Source: UN Global SDG Indicators Database                                                                               | Fraction of Indicators in Goal 9 with value produced by country's statistical system within a 5-year window.                                                              |
+| GOAL 10: Reduced Inequality                                                                        | SDG Goal 10 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 10 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 11: Sustainable Cities and Communities                                                        | SDG Goal 11 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 11 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 12: Responsible Consumption and Production                                                    | SDG Goal 12 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 12 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 13: Climate Action                                                                            | SDG Goal 13 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 13 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 14: Life Below Water                                                                          | SDG Goal 14 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 14 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 15: Life on Land                                                                              | SDG Goal 15 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 15 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 16: Peace and Justice Strong Institutions                                                     | SDG Goal 16 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 16 with value produced by country's statistical system within a 5-year window.                                                             |
+| GOAL 17: Partnerships to achieve the Goal                                                          | SDG Goal 17 data availability. Source: UN Global SDG Indicators Database                                                                              | Fraction of Indicators in Goal 17 with value produced by country's statistical system within a 5-year window.                                                             |
+| Population & Housing census (Availability score over 20 years)                                     | Population censuses collect data on the size, distribution, and composition of population and provide sampling frames for household and other surveys.  | 1 Point. Population census done within last 10 years. 0.5 Points. Population census done within last 20 years. 0 Points. Otherwise.                                       |
+| Agriculture census (Availability score over 20 years)                                              | Agriculture censuses collect information on agricultural activities such as size of holding, land tenure, land use, employment, and production.       | 1 Point. Census done within last 10 years. 0.5 Points. Census done within last 20 years. 0 Points. Otherwise.                                                             |
+| Business/establishment census (Availability score over 20 years)                                   | Business/establishment censuses provide valuable information on all economic activities, number of employed, and size of establishments.               | 1 Point. Census done within last 10 years. 0.5 Points. Census done within last 20 years. 0 Points. Otherwise.                                                             |
+| Household Survey on income etc. (Availability score over 10 years)                                 | These surveys collect data on household income (including income in kind), consumption, and expenditure. It is recommended that surveys be conducted at least every 3 to 5 years. | 1 Point. 3 or more surveys done within past 10 years. 0.67 Points. 2 surveys done within past 10 years. 0.33 Points. 1 survey done within past 10 years. 0 Points. None within past 10 years. |
+| Agriculture survey (Availability score over 10 years)                                              | Agricultural surveys refer to surveys of agricultural holdings based on the sampling frames established by the agricultural census.                   | 1 Point. 3 or more surveys done within past 10 years. 0.67 Points. 2 surveys done within past 10 years. 0.33 Points. 1 survey done within past 10 years. 0 Points. None within past 10 years. |
+| Labor Force Survey (Availability score over 10 years)                                              | Labor force survey is a standard household-based survey of work-related statistics at the national and sub-national level.                            | 1 Point. 3 or more surveys done within past 10 years. 0.67 Points. 2 surveys done within past 10 years. 0.33 Points. 1 survey done within past 10 years. 0 Points. None within past 10 years. |
+| Health/Demographic survey (Availability score over 10 years)                                       | Health surveys collect information on various aspects of health of populations. It is recommended that health surveys be conducted at least every 3 to 5 years. | 1 Point. 3 or more surveys done within past 10 years. 0.67 Points. 2 surveys done within past 10 years. 0.33 Points. 1 survey done within past 10 years. 0 Points. None within past 10 years. |
+| Business/establishment survey (Availability score over 10 years)                                   | The business/establishment survey provides information on employment, hours, and earnings of employees from a sample of business establishments.       | 1 Point. 3 or more surveys done within past 10 years. 0.67 Points. 2 surveys done within past 10 years. 0.33 Points. 1 survey done within past 10 years. 0 Points. None within past 10 years. |
+| Social Protection Admin (ASPIRE)                                           | Administrative data available on social protection programs from ASPIRE (World Bank) databases                                                        | Scoring is 1 if administrative data is available to produce beneficiary counts or expenditures for any social protection and labor program. 0 otherwise.                  |
+| Civil Registration and Vital Statistics (CRVS) system                                              | Birth registrations 90% complete and death registration 75% complete according to UNSD.                                                               | Score is 1 if both complete. 0.5 if one of two is complete. 0 if neither complete.                                                                                       |
+| Geospatial data available at 1st Admin Level                                                       | Indicator data availability at sub-national levels                                                                                                     | Our source for this indicator is Open Data Watch. Indicator is whether data is available at the first administrative level. Scores range from 0-100.                     |
+| Legislation Indicator based on PARIS21 indicators on SDG 17.18.2                                   | Existence of National Statistical Council, national statistical strategy, and plan. Also includes legislative aspects such as freedom of information, privacy, and good governance. | Score is 1 if the country has a national statistical legislation compliant with UN Fundamental Principles of Statistics. 0 otherwise.                                    |
+| System of national accounts in use                                                                 | The national accounts data are compiled using the System of National Account 2008 (SNA2008) or European System of National and Regional Accounts (ESA 2010). | 1 point for using SNA2008 or ESA 2010. 0.5 points for using SNA 1993 or ESA 1995. 0 points otherwise.                                                                   |
+| National Accounts base year                                                                        | National accounts base year is the year used for constant price calculations.                                                                          | 1 point for chained price. 0.5 for reference period within past 10 years. 0 points otherwise.                                                                             |
+| Classification of national industry                                                                | The industrial production data are compiled using International Standard Industrial Classification (ISIC) Rev.4 or Statistical Classification of Economic Activities in the European Community (NACE) Rev.2. | 1 Point. Latest version adopted. 0.5 Points. Previous version. 0 Points otherwise.                                                                                        |
+| CPI base year                                                                                      | Consumer Price Index reflects changes in the cost of acquiring a fixed basket of goods and services by the average consumer.                           | 1 Point. Annual chain linking. 0.5 Points. Base year in last 10 years. 0 Points otherwise.                                                                               |
+| Classification of household consumption                                                            | Classification of Individual Consumption According to Purpose (COICOP) used in household budget surveys and international GDP comparisons.            | 1 Point. Follow COICOP. 0 Points otherwise.                                                                                                                              |
+| Classification of status of employment                                                             | Classification of status of employment data using the International Classification of Status in Employment (ISCE-93).                                   | 1 Point. Follow ISCE-93 or 2012 North American Industry Classification System (NAICS). 0 Points otherwise.                                                               |
+| Central government accounting status                                                               | Government finance accounting status follows noncash recording basis.                                                                                   | 1 Point. Follows noncash recording basis. 0.5 Points. Follows cash recording basis. 0 Points otherwise.                                                                  |
+| Compilation of government finance statistics                                                       | Compilation of government finance statistics follows the Government Finance Statistics Manual (GFSM).                                                   | 1 Point. Follows GFSM 2014. 0.5 Points. Follows GFSM 2001. 0 Points otherwise.                                                                                           |
+| Compilation of monetary and financial statistics                                                   | Compilation of monetary and financial statistics follows the Monetary and Financial Statistics Manual (MFSM).                                           | 1 Point. Follows MFSM 2000 or the Compilation Guide (2008/2016). 0 Points otherwise.                                                                                     |
+| Business process                                                                                   | The Generic Statistical Business Process Model (GSBPM) describes statistics production in a general and process-oriented way.                           | 1 Point. GSBPM is in use. 0 Points otherwise.                                                                                                                             |
+| Finance Indicator based on PARIS21 indicators on SDG 17.18.3 & SDG 17.19.1                         | Indicator based on PARIS21 SDG indicators (national statistical plan that is fully funded and under implementation).                                     | Score is 1 if the country has a national statistical plan that is fully funded and under implementation. 0 otherwise.                                                    |
+
