@@ -3947,7 +3947,8 @@ D5.2.2.NABY <- read_csv(paste(raw_dir,
 
 ```{r cnin}
 
-#read in csv file.
+# --- 1) Read in data
+#----------------------------------------------------------
 D5.2.3.CNIN <- read_csv(file = paste(raw_dir, 
                                      "5.2_DISM",
                                      "D5.2.3.CNIN.2024.csv",
@@ -3960,7 +3961,52 @@ D5.2.3.CNIN <- read_csv(file = paste(raw_dir,
   bind_rows(read_csv(file = paste(raw_dir, 
                                   "5.2_DISM",
                                   "D5.2.3.CNIN.csv", 
-                                  sep = "/" ))) %>%
+                                  sep = "/" )))
+
+
+
+# Preserve original column order to guarantee identical schema on return
+.base_cols <- names(D5.2.3.CNIN)
+
+# --- 2) Load manual review 
+#----------------------------------------------------------
+manual_path <- file.path(raw_dir, 
+                         "5.2_DISM", 
+                         "D5.2.3.CNIN.Manual.Review.xlsx")
+manual_raw  <- readxl::read_xlsx(manual_path)
+
+year_cols <- intersect(names(manual_raw), 
+                       unique(as.character(D5.2.3.CNIN$date)))
+
+manual_long <- manual_raw %>%
+  select(iso3c, any_of(year_cols)) %>%
+  pivot_longer(
+    cols      = all_of(year_cols),
+    names_to  = "date",
+    values_to = "CNIN_manual"
+  ) %>%
+  mutate(
+    date          = as.numeric(.data$date),
+    CNIN_manual   = str_squish(as.character(.data$CNIN_manual)),
+    CNIN_manual   = na_if(.data$CNIN_manual, "")) %>%
+  filter(!is.na(.data$CNIN_manual))   # keep only actual corrections
+
+# --- 3) Update data with review inputs 
+#----------------------------------------------------------
+D5.2.3.CNIN <- left_join(
+  D5.2.3.CNIN, 
+  manual_long, 
+  by = c("iso3c", 
+         "date")) |> 
+  mutate(CNIN = ifelse(!is.na(CNIN_manual), 
+                       CNIN_manual, 
+                       CNIN))
+D5.2.3.CNIN$CNIN_manual <- NULL
+
+# --- 4) Execute scoring
+#----------------------------------------------------------
+D5.2.3.CNIN <- 
+  D5.2.3.CNIN %>%
   mutate(SPI.D5.2.3.CNIN = case_when(str_to_lower(CNIN)=="nace rev2" | str_to_lower(CNIN)=="rev4" ~ 1, 
                                      str_to_lower(CNIN)=="nace rev1" | str_to_lower(CNIN)=="rev3" ~ 0.5, 
                                      TRUE ~ 0),
@@ -3971,8 +4017,6 @@ D5.2.3.CNIN <- read_csv(file = paste(raw_dir,
          SPI.D5.2.3.CNIN) %>%
   arrange(date, 
           iso3c)
-
-
 
 ```
 
@@ -4720,13 +4764,13 @@ D5.2.10.GSBP <- read_csv(file = paste(raw_dir,
                                   "D5.2.10.GSBP.2022.csv",
                                   sep = "/" )) %>% 
               mutate(date = 2022)) %>% 
-  #add in 2022 data
+  #add in 2023 data
   bind_rows(read_csv(file = paste(raw_dir, 
                                   "5.2_DISM",
                                   "D5.2.10.GSBP.2023.csv", 
                                   sep = "/" )) %>% 
               mutate(date = 2023)) %>% #add in 2022 data
-  #add in 2022 data
+  #add in 2024 data
   bind_rows(read_csv(file = paste(raw_dir, 
                                   "5.2_DISM",
                                   "D5.2.10.GSBP.2024.csv", 
