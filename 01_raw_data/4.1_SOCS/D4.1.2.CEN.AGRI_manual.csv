@@ -69,7 +69,7 @@
 "LAO","LA","Lao PDR","Vientiane",102.177,18.5826,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2024,"1999, 2011, 2020"
 "LBN","LB","Lebanon","Beirut",35.5134,33.8872,"MEA","ZQ","Middle East, North Africa, Afghanistan & Pakistan","MNA","XQ","Middle East, North Africa, Afghanistan & Pakistan (excluding high income)","LMC","XN","Lower middle income","IBD","XF","IBRD",2024,"1999, 2010"
 "LSO","LS","Lesotho","Maseru",27.7167,-29.5208,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2024,"1999, 2009, 2020"
-"LBR","LR","Liberia","Monrovia",-10.7957,6.30039,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2024,NA
+"LBR","LR","Liberia","Monrovia",-10.7957,6.30039,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2024,"2024"
 "LBY","LY","Libya","Tripoli",13.1072,32.8578,"MEA","ZQ","Middle East, North Africa, Afghanistan & Pakistan","MNA","XQ","Middle East, North Africa, Afghanistan & Pakistan (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2024,"2001"
 "MKD","MK","North Macedonia","Skopje",21.4361,42.0024,"ECS","Z7","Europe & Central Asia","ECA","7E","Europe & Central Asia (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2024,"2007, 2020"
 "MDG","MG","Madagascar","Antananarivo",45.7167,-20.4667,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2024,"2004"
@@ -137,7 +137,7 @@
 "UKR","UA","Ukraine","Kiev",30.5038,50.4536,"ECS","Z7","Europe & Central Asia","ECA","7E","Europe & Central Asia (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2024,NA
 "URY","UY","Uruguay","Montevideo",-56.0675,-34.8941,"LCN","ZJ","Latin America & Caribbean",NA,NA,NA,"HIC","XD","High income","IBD","XF","IBRD",2024,"2000, 2011"
 "UZB","UZ","Uzbekistan","Tashkent",69.269,41.3052,"ECS","Z7","Europe & Central Asia","ECA","7E","Europe & Central Asia (excluding high income)","LMC","XN","Lower middle income","IDB","XH","Blend",2024,NA
-"VUT","VU","Vanuatu","Port-Vila",168.321,-17.7404,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2024,"2007"
+"VUT","VU","Vanuatu","Port-Vila",168.321,-17.7404,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2024,"2007, 2022"
 "VEN","VE","Venezuela, RB","Caracas",-69.8371,9.08165,"LCN","ZJ","Latin America & Caribbean",NA,NA,NA,"INX","XY","Not classified","IBD","XF","IBRD",2024,"1996, 2008"
 "VNM","VN","Viet Nam","Hanoi",105.825,21.0069,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","LMC","XN","Lower middle income","IBD","XF","IBRD",2024,"2001, 2006, 2011, 2016, 2020"
 "PSE","PS","West Bank and Gaza",NA,NA,NA,"MEA","ZQ","Middle East, North Africa, Afghanistan & Pakistan","MNA","XQ","Middle East, North Africa, Afghanistan & Pakistan (excluding high income)","LMC","XN","Lower middle income","LNX","XX","Not classified",2024,"2010, 2021"

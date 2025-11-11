@@ -1743,8 +1743,6 @@ for (i in c(2010:end_date)) {
 ```{r aki_combine, echo=FALSE}
 
 
-
-
 #now combine AKI databases and write to csv
 D3.AKI <- spi_df_empty %>%
   left_join(D3.1.AKI) %>%
@@ -2854,28 +2852,6 @@ cs4_df <-
          starts_with("SPI"), 
          starts_with("RAW")) 
 
-# ZP v2024 update: the india adjustment no longer required
-#                  because a) there are now HCES surveys released
-#                          b) accounted for CPHS surveys by removing in manual data in raw/input/ fold
-
-#%>%
-  # mutate(
-  #   # adjust score for India. 
-  #   # India has a poverty survey that is not produced by the
-  #   # national statistical office that is included in PIP.  
-  #   # Because it is produced by a private company that charges 
-  #   # money for the survey, rather than produced by the NSO, it does not count
-  #   SPI.D4.1.4.HOUS = if_else((iso3c == "IND" & date %in% c(2015:2024)),
-  #                             0,
-  #                             SPI.D4.1.4.HOUS),
-  #   RAW.D4.1.4.HOUS.SURVEYS_nada = if_else((iso3c == "IND" & 
-  #                                             date %in% c(2015:2024)), 
-  #                                          "1977, 1983, 1987, 1993, 2004, 2009, 2011",
-  #                                          RAW.D4.1.4.HOUS.SURVEYS_nada),
-  #   RAW.D4.1.4.HOUS = if_else((iso3c == "IND" & 
-  #                                date %in% c(2015:2024)), 
-  #                             "1977, 1983, 1987, 1993, 2004, 2009, 2011",
-  #                             RAW.D4.1.4.HOUS))
 #Agriculture survey 
 cs5_df <- survey_fun('D4.1.5.SVY.AGRI', 
                      'AGRI.SURVEYS') %>%

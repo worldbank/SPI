@@ -148,7 +148,7 @@
 "SDN","SD","Sudan","Khartoum",32.5363,15.5932,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2024,NA
 "SEN","SN","Senegal","Dakar",-17.4734,14.7247,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2024,"2005, 2006, 2007, 2011, 2016, 2017, 2018"
 "SGP","SG","Singapore","Singapore",103.85,1.28941,"EAS","Z4","East Asia & Pacific",NA,NA,NA,"HIC","XD","High income","LNX","XX","Not classified",2024,"2018, 2019, 2020, 2021, 2022, 2023, 2024"
-"SLB","SB","Solomon Islands","Honiara",159.949,-9.42676,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2024,NA
+"SLB","SB","Solomon Islands","Honiara",159.949,-9.42676,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2024,"2017"
 "SLE","SL","Sierra Leone","Freetown",-13.2134,8.4821,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2024,NA
 "SLV","SV","El Salvador","San Salvador",-89.2073,13.7034,"LCN","ZJ","Latin America & Caribbean","LAC","XJ","Latin America & Caribbean (excluding high income)","UMC","XT","Upper middle income","IBD","XF","IBRD",2024,NA
 "SOM","SO","Somalia, Fed. Rep.","Mogadishu",45.3254,2.07515,"SSF","ZG","Sub-Saharan Africa","SSA","ZF","Sub-Saharan Africa (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2024,NA
@@ -182,7 +182,7 @@
 "VCT","VC","St. Vincent and the Grenadines","Kingstown",-61.2653,13.2035,"LCN","ZJ","Latin America & Caribbean","LAC","XJ","Latin America & Caribbean (excluding high income)","UMC","XT","Upper middle income","IDB","XH","Blend",2024,NA
 "VEN","VE","Venezuela, RB","Caracas",-69.8371,9.08165,"LCN","ZJ","Latin America & Caribbean",NA,NA,NA,"INX","XY","Not classified","IBD","XF","IBRD",2024,NA
 "VNM","VN","Viet Nam","Hanoi",105.825,21.0069,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","LMC","XN","Lower middle income","IBD","XF","IBRD",2024,NA
-"VUT","VU","Vanuatu","Port-Vila",168.321,-17.7404,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2024,NA
+"VUT","VU","Vanuatu","Port-Vila",168.321,-17.7404,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","LMC","XN","Lower middle income","IDX","XI","IDA",2024,"2022"
 "WSM","WS","Samoa","Apia",-171.752,-13.8314,"EAS","Z4","East Asia & Pacific","EAP","4E","East Asia & Pacific (excluding high income)","UMC","XT","Upper middle income","IDX","XI","IDA",2024,"2005, 2015"
 "XKX","XK","Kosovo","Pristina",20.926,42.565,"ECS","Z7","Europe & Central Asia","ECA","7E","Europe & Central Asia (excluding high income)","UMC","XT","Upper middle income","IDX","XI","IDA",2024,"2015, 2016, 2017, 2018, 2019"
 "YEM","YE","Yemen, Rep.","Sana'a",44.2075,15.352,"MEA","ZQ","Middle East, North Africa, Afghanistan & Pakistan","MNA","XQ","Middle East, North Africa, Afghanistan & Pakistan (excluding high income)","LIC","XM","Low income","IDX","XI","IDA",2024,NA
