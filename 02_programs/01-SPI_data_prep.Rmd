@@ -2488,17 +2488,39 @@ census_fun  <- function(data, input_var) {
   # Merge base + manual and combine the two sources of year strings -------
   # Helper: extract unique, sorted 4-digit years from up to two character vectors and
   # return a single ", " separated string (or NA_character_).
-  .combine_years <- function(a, b) {
-    ax <- if (is.na(a)) "" else a
-    bx <- if (is.na(b)) "" else b
-    yrs <- c(
-      str_extract_all(ax, "\\d{4}")[[1]],
-      str_extract_all(bx, "\\d{4}")[[1]]
-    )
-    yrs <- unique(yrs[nzchar(yrs)])
-    if (!length(yrs)) return(NA_character_)
-    paste(sort(as.integer(yrs)), collapse = ", ")
-  }
+  # .combine_years <- function(a, b) {
+  #   ax <- if (is.na(a)) "" else a
+  #   bx <- if (is.na(b)) "" else b
+  #   yrs <- c(
+  #     str_extract_all(ax, "\\d{4}")[[1]],
+  #     str_extract_all(bx, "\\d{4}")[[1]]
+  #   )
+  #   yrs <- unique(yrs[nzchar(yrs)])
+  #   if (!length(yrs)) return(NA_character_)
+  #   paste(sort(as.integer(yrs)), collapse = ", ")
+  # }
+  .combine_years_register <- function(a, b) {
+  ax <- if (is.na(a)) "" else trimws(a)
+  bx <- if (is.na(b)) "" else trimws(b)
+
+  # detect "Register based census" robustly (case-insensitive, tolerate extra spaces)
+  has_reg <- grepl("\\bregister\\b.*\\bbased\\b.*\\bcensus\\b", ax, ignore.case = TRUE) ||
+             grepl("\\bregister\\b.*\\bbased\\b.*\\bcensus\\b", bx, ignore.case = TRUE)
+
+  # extract 4-digit years from both strings
+  yrs <- c(
+    stringr::str_extract_all(ax, "\\d{4}")[[1]],
+    stringr::str_extract_all(bx, "\\d{4}")[[1]]
+  )
+  yrs <- unique(yrs[nzchar(yrs)])
+
+  parts <- character(0)
+  if (has_reg) parts <- c(parts, "Register based census")
+  if (length(yrs)) parts <- c(parts, paste(sort(as.integer(yrs)), collapse = ", "))
+
+  if (!length(parts)) return(NA_character_)
+  paste(parts, collapse = ", ")
+}
   
   # --- 0) Read the base CSV (as before) -------------------------------------
   base_raw <- read_csv(file = paste(raw_dir, 
@@ -2522,7 +2544,7 @@ census_fun  <- function(data, input_var) {
     left_join(manual_raw, by = "iso3c", suffix = c("", "_manual")) %>%
     mutate(
       !!input_var := mapply(
-        .combine_years,
+        .combine_years_register,
         .data[[input_var]],
         .data[[paste0(input_var, "_manual")]]
         )) %>%
@@ -2806,8 +2828,8 @@ survey_fun  <- function(data, input_var) {
 
 #Population Censuses
 cs1_df <-
-  census_fun('D4.1.1.CEN.POPU', 
-             'POP.CENSUS') %>%
+  census_fun(data      = 'D4.1.1.CEN.POPU', 
+             input_var = 'POP.CENSUS') %>%
   rename(RAW.D4.1.1.POPU = input_var,
          SPI.D4.1.1.POPU = indicator) %>%
   select(iso3c, 
@@ -2817,8 +2839,8 @@ cs1_df <-
 
 #Agriculture census  
 cs2_df <-
-  census_fun('D4.1.2.CEN.AGRI', 
-             'AGRI.CENSUS') %>%
+  census_fun(data      = 'D4.1.2.CEN.AGRI', 
+             input_var = 'AGRI.CENSUS') %>%
   rename(RAW.D4.1.2.AGRI = input_var,
          SPI.D4.1.2.AGRI = indicator) %>%
   select(iso3c, 
@@ -2830,8 +2852,8 @@ cs2_df <-
 
 #Business/establishment census 
 cs3_df <-
-  census_fun('D4.1.3.CEN.BIZZ', 
-             'BIZZ.CENSUS') %>%
+  census_fun(data      = 'D4.1.3.CEN.BIZZ', 
+             input_var = 'BIZZ.CENSUS') %>%
   rename(RAW.D4.1.3.BIZZ             = input_var,
          RAW.D4.1.3.BIZZ.CENSUS_nada = nada_dates,
          SPI.D4.1.3.BIZZ             = indicator) %>%
@@ -2842,8 +2864,8 @@ cs3_df <-
 
 #Household Survey on income/ consumption/ expenditure/ budget/ Integrated Survey
 cs4_df <-
-  survey_fun('D4.1.4.SVY.HOUS', 
-             'HOUS.SURVEYS') %>%
+  survey_fun(data      = 'D4.1.4.SVY.HOUS', 
+             input_var = 'HOUS.SURVEYS') %>%
   rename(RAW.D4.1.4.HOUS              = input_var,
          RAW.D4.1.4.HOUS.SURVEYS_nada = nada_dates,
          SPI.D4.1.4.HOUS              = indicator) %>%
@@ -2853,8 +2875,8 @@ cs4_df <-
          starts_with("RAW")) 
 
 #Agriculture survey 
-cs5_df <- survey_fun('D4.1.5.SVY.AGRI', 
-                     'AGRI.SURVEYS') %>%
+cs5_df <- survey_fun(data      = 'D4.1.5.SVY.AGRI', 
+                     input_var = 'AGRI.SURVEYS') %>%
   rename(RAW.D4.1.5.AGSVY             = input_var,
          RAW.D4.1.5.AGRI.SURVEYS_nada = nada_dates,
          SPI.D4.1.5.AGSVY             = indicator) %>%
@@ -2865,8 +2887,8 @@ cs5_df <- survey_fun('D4.1.5.SVY.AGRI',
 
 #Labor Force Survey 
 cs6_df <-
-  survey_fun('D4.1.6.SVY.LABR', 
-             'LABR.SURVEYS') %>%
+  survey_fun(data      = 'D4.1.6.SVY.LABR', 
+             input_var = 'LABR.SURVEYS') %>%
   rename(RAW.D4.1.6.LABR              = input_var,
          RAW.D4.1.6.LABR.SURVEYS_nada = nada_dates,
          SPI.D4.1.6.LABR              = indicator) %>%
@@ -2877,8 +2899,8 @@ cs6_df <-
 
 #Health/Demographic survey
 cs7_df <-
-  survey_fun('D4.1.7.SVY.HLTH', 
-             'HLTH.SURVEYS') %>%
+  survey_fun(data      = 'D4.1.7.SVY.HLTH', 
+             input_var = 'HLTH.SURVEYS') %>%
   rename(RAW.D4.1.7.HLTH              = input_var,
          RAW.D4.1.7.HLTH.SURVEYS_nada = nada_dates,
          SPI.D4.1.7.HLTH              = indicator) %>%
@@ -2889,8 +2911,8 @@ cs7_df <-
 
 #Business/establishment survey  
 cs8_df <-
-  survey_fun('D4.1.8.SVY.BIZZ', 
-             'BIZZ.SURVEYS') %>%
+  survey_fun(data      = 'D4.1.8.SVY.BIZZ', 
+             input_var = 'BIZZ.SURVEYS') %>%
   rename(RAW.D4.1.8.BZSVY             = input_var,
          RAW.D4.1.8.BIZZ.SURVEYS_nada = nada_dates,
          SPI.D4.1.8.BZSVY             = indicator) %>%
