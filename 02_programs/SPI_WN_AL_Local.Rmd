@@ -1,6 +1,6 @@
 ---
-title: "2025 Update of the Statistical Performance Indicators: What's New?"
-author: "Prepared by XXXX"
+title: "2024 Update of the Statistical Performance Indicators: What's New?"
+author: "Prepared by Zander Prinsloo, Umar Serajuddin, and Brian Stacy"
 date: "`r Sys.Date()`"
 output:
   word_document: default
@@ -8,7 +8,7 @@ bibliography: []
 ---
   
 ```{r setup, include=FALSE}
-# ---- knitr defaults ----
+# ---- knitr defaults ---- 
 knitr::opts_chunk$set(
   echo = FALSE,
   fig.height = 6,
@@ -38,6 +38,7 @@ library(readr)
 library(ggtext)
 library(estimatr)
 library(stringr)
+library(collapse)
 # ---- project directories (relative to repo root) ----
 #set directories
 dir        <- here::here()
@@ -55,15 +56,15 @@ start_date <- 2016
 
 # ---- small helpers for importing ----
 ```
-**Overview**: The 2025 Statistical Performance Indicators (SPI) release includes data from 2024 with updates to previous years, incorporating the latest information from organizations such as the World Bank, IMF, and UN Agencies. The SPI continues to assess national statistical systems across five pillars with 22 dimensions, though data is currently available for 14 of these dimensions.
+**Overview**: The 2024 Statistical Performance Indicators (SPI) release includes data from 2024 with updates to previous years, incorporating the latest information from organizations such as the World Bank, IMF, and UN Agencies. The SPI continues to assess national statistical systems across five pillars with 22 dimensions, though data is currently available for 14 of these dimensions. This update does not include any changes to the methodology, merely an update of the underlying data.
 
-**Methodology Consistency**: Since the 2019 release, the scoring methodology and data sources have remained largely unchanged, ensuring consistency and comparability with prior releases. The only exception is the indicator for comparable poverty measures in the data use pillar. Previously, high-income countries not covered by PovcalNet were assigned a score of 1 due to the lack of data. However, with expanded coverage in the Poverty and Inequality Platform (PIP) since 2021, all countries are now assessed based on the availability of comparable poverty data.
+**Methodology Consistency**: Since the 2019 release, the scoring methodology and data sources have remained largely unchanged, ensuring consistency and comparability with prior releases. The only exception is the indicator for comparable poverty measures in the data use pillar. Previously, high-income countries not covered by PovcalNet were assigned a score of 1 due to the lack of data. However, with expanded coverage in the Poverty and Inequality Platform (PIP) since 2021, all countries are now assessed based on the availability of comparable poverty data. This vintage of the SPI data does not have any methodological changes.
 
-**Data Updates**: Revisions to previous SPI scores were made to reflect updated data, particularly in Pillars 1, 3, and 4, with minimal impact on overall scores. The correlation between the previous and revised scores remains high, with a 0.99 correlation in 2022.
+**Data Updates**: Revisions to previous SPI scores were made to reflect updated data, particularly in Pillars 1, 3, and 4, with minimal impact on overall scores. The correlation between the previous and revised scores remains high, with the 2022 scores having a correlation of 0.98 across different vintages.
 
 **Data Coverage**: The SPI now includes 187 economies, up from 167 in 2016, covering over 99% of the global population. This expansion is largely driven by an increase in economies with data openness scores.
 
-**Score Improvements**: Global SPI scores have risen by an average of 12.9 points from 2016 to 2024. Country rankings have remained stable, with a Spearman rank correlation of 0.92.
+**Score Improvements**: Global SPI scores have risen by an average of 12.5 points from 2016 to 2024. Country rankings have remained stable, with a Spearman rank correlation of 0.9.
 
 **Performance by Decile**: The largest improvements were observed in countries that ranked in the bottom 20% in 2016. In contrast, countries in the top decile showed minimal growth due to their already high scores.
 
@@ -73,7 +74,7 @@ start_date <- 2016
 
 **Population Size Impact**: High-income countries with populations under 500,000 face specific challenges, scoring the same on average (56 points) as the average for all low-income countries. This suggests that small economies may face unique challenges in building statistical capacity.
 
-**Conclusion**: The 2025 SPI release highlights significant progress in global statistical performance, driven by improvements in data services and infrastructure. While top-performing regions and countries maintain their ranks, lower middle-income and smaller economies show promising advancements. This trend indicates a positive development in global data and statistical capacity building. For further details, the [SPI research paper](https://www.nature.com/articles/s41597-023-01971-0) and the [SPI GitHub repository](https://github.com/worldbank/SPI) provide additional information on how the SPI is put together, as well as the raw data and code.
+**Conclusion**: The 2024 SPI release highlights significant progress in global statistical performance, driven by improvements in data services and infrastructure. While top-performing regions and countries maintain their ranks, lower middle-income and smaller economies show promising advancements. This trend indicates a positive development in global data and statistical capacity building. For further details, the [SPI research paper](https://www.nature.com/articles/s41597-023-01971-0) and the [SPI GitHub repository](https://github.com/worldbank/SPI) provide additional information on how the SPI is put together, as well as the raw data and code.
 
 ```{r}
 # ---- themes & palettes ----
@@ -139,6 +140,7 @@ names(pillar_colors) <- pillar_levels
 spi_index_df <- read_csv( file = paste(output_dir, 
                                        'SPI_index.csv', 
                                        sep = "/")) 
+spi_index_2023  <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_index.csv')
 #metadata 
 metadata2 <- read_csv(paste(raw_dir, 
                             '/metadata/SPI_dimensions_sources.csv', 
@@ -857,6 +859,52 @@ fcs_chart_aggregate <- function(data, indicator, title) {
 
 
 
+
+
+plot_dim41_svy_levels <- function(df_new,
+                                  df_old,
+                                  title = "Global SPI.DIM4.1.SVY.INDEX (old vs new)",
+                                  xlab  = NULL,
+                                  ylab  = "Average SPI.DIM4.1.SVY.INDEX",
+                                  legend_labels = c(new = "New", old = "Old")) {
+  needed <- c("date", "SPI.DIM4.1.SVY.INDEX")
+  if (!all(needed %in% names(df_new))) stop("df_new missing: ", paste(setdiff(needed, names(df_new)), collapse = ", "))
+  if (!all(needed %in% names(df_old))) stop("df_old missing: ", paste(setdiff(needed, names(df_old)), collapse = ", "))
+
+  df_new <- fmutate(df_new, date = as.integer(date))
+  df_old <- fmutate(df_old, date = as.integer(date))
+
+  # Simple global means by year
+  agg_fun <- function(dat) {
+    dat |>
+      fselect(c("date", "SPI.DIM4.1.SVY.INDEX")) |>
+      fgroup_by(date) |>
+      fsummarise(mean_val = fmean(SPI.DIM4.1.SVY.INDEX, na.rm = TRUE)) |>
+      fungroup()
+  }
+
+  g_new <- agg_fun(df_new) |> fmutate(dataset = "new")
+  g_old <- agg_fun(df_old) |> fmutate(dataset = "old")
+
+  plot_df <- bind_rows(g_new, g_old)
+
+  ggplot(plot_df, aes(x = date, y = mean_val, color = dataset)) +
+    geom_line(linewidth = 1.5) +
+    geom_point(size = 3) +
+    scale_color_manual(values = c(new = "#bf3f34", old = "#1b6ca8"),
+                       labels = legend_labels,
+                       name = NULL) +
+    labs(title = title, x = xlab, y = ylab) +
+    theme_minimal(base_size = 14) +
+    theme(legend.position = "top") + 
+    expand_limits(x=c(2015, 2026)) +
+  theme(
+    text = element_text(size = 14),
+    title= element_text(size = 20),
+    legend.position = 'bottom'
+  ) 
+}
+
 #define function to pull data from UN Stats and return
 un_pull <- function(series,start, end) {
   # jsonlite::fromJSON(paste('https://unstats.un.org/SDGAPI/v1/sdg/Series/Data?seriesCode=',series,'&timePeriodStart=',start,'&timePeriodEnd=',end,'&pageSize=10000',sep=""), flatten = TRUE)$data %>%
@@ -1083,7 +1131,7 @@ spi_index_correlation <- spi_index_compare %>%
 
 Previous SPI scores have been revised to incorporate updated data, ensuring that they reflect the most recent and accurate information available. These revisions have led to changes in SPI scores for some countries in past years.
 
-The table below lists the countries with updated data since 2016, categorized by indicator. Pillar 3, which covers the availability of SDG indicators, has seen the most updates due to ongoing changes in the UN SDG Indicators database, the primary source for these indicators. Due to delays in data availability, many updates have also occurred in Pillar 4 (data sources) and Pillar 1 (data usage by international agencies). Changes in Pillar 2, covering data services, primarily based on the Open Data Watch Open Data Inventory, are smaller adjustments to scores. A few countries have seen updates in Pillar 5 (data infrastructure), reflecting the latest available information.
+The table below lists the countries with updated data since 2016, categorized by indicator. Due to delays in data availability, many updates have also occurred in Pillar 4 (data sources) and Pillar 1 (data usage by international agencies). Changes in Pillar 5, covering data infrastructure, primarily based on data from the IMF, are smaller adjustments to scores and reflects the latest available information. 
 
 ```{r}
 #| label: tbl-indicatorschanged
@@ -1127,7 +1175,7 @@ spi_index_compare %>%
 
 ## Global Trends
 
-The table below shows the progression of SPI scores from 2016 to 2023. Each year's overall score and individual scores for the five pillars---Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure---are listed. The table highlights steady improvements in SPI scores, with significant gains in pillars such as Data Services and Data Infrastructure.
+The table below shows the progression of SPI scores from 2016 to 2024. Each year's overall score and individual scores for the five pillars---Data Use, Data Services, Data Products, Data Sources, and Data Infrastructure---are listed. The table highlights steady improvements in SPI scores, with significant gains in pillars such as Data Services and Data Infrastructure.
 
 ```{r}
 #| label: tbl-tile1
@@ -1177,7 +1225,7 @@ tile_table(c('SPI.D2.1.GDDS', 'SPI.D2.2.Machine.readable', 'SPI.D2.2.Non.proprie
 
 ### Data Products
 
-The data products pillar tracks the availability of indicators for the Sustainable Development Goals (SDGs), such as no poverty, zero hunger, clean water, and good health. Scores, measuring the availability of indicators over the previous five years, for each SDG indicator from 2016 to 2023 are shown, with improvements in availability in many areas like education, inequality and sustainable cities. Some areas such as climate statistics have shown little improvement since 2016.
+The data products pillar tracks the availability of indicators for the Sustainable Development Goals (SDGs), such as no poverty, zero hunger, clean water, and good health. Scores, measuring the availability of indicators over the previous five years, for each SDG indicator from 2016 to 2024 are shown, with improvements in availability in many areas like education, inequality and sustainable cities. Some areas such as climate statistics have shown little improvement since 2016.
 
 ```{r }
 #| label: tbl-D3tile1
@@ -1253,7 +1301,7 @@ deciles <- quantile(changes, probs = seq(from=0, to=1, by=.1), na.rm=TRUE)
 
 ```
 
-The SPI overall score combines 51 indicators into a single score, ranging from 0 to 100. On average, countries' SPI overall scores rose by `r round(avg_change)` points between `r start_date` and `r end_date`. However, country rankings have remained steady, with a correlation of `r round(corr_end_date_start_date,2)` between the SPI overall scores in `r start_date` and `r end_date`, and a Spearman rank correlation.
+The SPI overall score combines 51 indicators into a single score, ranging from 0 to 100. On average, countries' SPI overall scores rose by `r round(avg_change, 1)` points between `r start_date` and `r end_date`. However, country rankings have remained steady, with a correlation of `r round(corr_end_date_start_date,2)` between the SPI overall scores in `r start_date` and `r end_date`, and a Spearman rank correlation.
 
 The most significant improvements in SPI overall scores occurred in countries that ranked in the bottom two deciles in `r start_date` Countries in the bottom 10% saw an average increase of 16 points between `r start_date` and `r end_date`, while those in the top 10% grew the least, as they were already close to the maximum score in several areas.
 
@@ -1510,6 +1558,24 @@ name <- 'SPI Overall Score'
 
 Note: N=167 economies.
 
+## Revisions to Pillar 4 on Data Sources
+
+There have been some revisions to the data sources pillar. These revisions primarily come from additional surveys being included in the SPI data base. This is due to a combination of new surveys being released by NSOs, expansions to libraries in the SPI sources, a detailed and rigorous review and strengthening data collection efforts, etc. Figure 7 below shows that the 2024 SPI data reflects a more pronounced improvement in survey data sources over the past two decades.
+
+**Figure 7**. Upward revision in SPI Dimension 4.1, the index on survey data sources.
+```{r data-sources-revisions}
+#| label: data-sources-revisions
+#| fig-width: 14
+#| fig-height: 8
+plot_dim41_svy_levels(spi_index_df, spi_index_2023,
+                      title = "Revised global aggregate for SPI.DIM4.1.SVY.INDEX",
+                      xlab  = "Date",
+                      ylab  = "SPI Dimension on survey data sources",
+                      legend_labels = c(new = "2024 Vintage", old = "2023 Vintage"))
+
+```
+
+
 ## How Have Scores Changed by Country Groupings?
 
 The regional rankings have remained largely unchanged over this period. The two top performing regions are North America, and Europe and Central Asia, while Sub-Saharan Africa shows the worst statistical performance. East Asia and the Pacific and Latin America and the Carribbean are the next best scoring region, each with an average SPI overall score greater than 70.[^3] South Asia, the Middle East and North Africa, and Sub-Saharan Africa are the three lowest scoring regions, in that order. Sub-Saharan Africa lags the highest scoring region by more than 30 points on the SPI overall score (0-100).
@@ -1754,7 +1820,7 @@ not_classified <- get_delta(lending_tab, "Not classified", start_date, end_date)
 
 ```
 
-Finally, as shown in Table 8, countries receiving grants and low-interest loans from the International Development Association (IDA) have seen their SPI overall score rise by `r ida` points on average since 2016. Countries receiving loans from the International Bank for Reconstruction and Development (IBRD) have seen an average increase of `r ibrd` points. Countries receiving a blend of both IDA and IBRD financing have seen an average increase of `r blend` points. Countries not classified as either IDA or IBRD have seen an average increase of `r not_classified` points.
+Finally, as shown in Table , countries receiving grants and low-interest loans from the International Development Association (IDA) have seen their SPI overall score rise by `r ida` points on average since 2016. Countries receiving loans from the International Bank for Reconstruction and Development (IBRD) have seen an average increase of `r ibrd` points. Countries receiving a blend of both IDA and IBRD financing have seen an average increase of `r blend` points. Countries not classified as either IDA or IBRD have seen an average increase of `r not_classified` points.
 
 Countries with smaller population sizes face specific challenges. Even for high income countries, those countries with populations of less than 500,000 individuals have a lower average score than the average for lower middle income countries with populations greater than 500,000. The average SPI overall score for high income countries with populations less than 500K is similar in magnitude (56 points) to those of low income countries (56). Countries in conflict (57 points on the SPI overall score) or facing institutional and social fragility (47 points) score significantly below non-FCS economies (74 points).
 
