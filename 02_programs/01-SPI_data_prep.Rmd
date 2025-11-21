@@ -1299,9 +1299,15 @@ for (i in 2016:(end_date + 1)) {
            temp)
 }
 
-WDI_metadata <- bind_rows(WDI_metadata_2016,
-                          WDI_metadata_2017, 
-                          WDI_metadata_2018, 
+WDI_metadata <- bind_rows(WDI_metadata_2016 |> 
+                            rename(Code             = Country.Code, 
+                                   PPP.survey.years = PPP.survey.year),
+                          WDI_metadata_2017 |> 
+                            rename(Code             = Country.Code, 
+                                   PPP.survey.years = PPP.survey.year) , 
+                          WDI_metadata_2018 |> 
+                            rename(Code             = Country.Code, 
+                                   PPP.survey.years = PPP.survey.year) , 
                           WDI_metadata_2019,
                           WDI_metadata_2020, 
                           WDI_metadata_2021,
