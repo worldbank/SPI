@@ -1,0 +1,191 @@
+,Unnamed: 0.1,Unnamed: 0,#,iso3c,Country,EMPL_Status_2020,DCS data,IMF_checker_EMP_2022,IMF_checker_UNEMP_2022,ISCE_x,IMF_checker_EMP_2023,IMF_checker_UNEMP_2023,IMF_checker_EMP,IMF_checker_UNEMP,ISCE_y,ISCE
+0,0,0,1,AFG,Afghanistan,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+1,1,1,2,ALB,Albania,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+2,2,2,3,DZA,Algeria,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+3,3,3,4,AND,Andorra,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,,1
+4,4,4,5,AGO,Angola,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+5,5,5,6,ATG,Antigua and Barbuda,,0,ILO,No Data,0,ILO,No Data,ILO,No Data,1,1
+6,6,6,7,ARG,Argentina,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+7,7,7,8,ARM,Armenia,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+8,8,8,9,AUS,Australia,ICSE-93,1,International Labour Organisation,International Labour Organisation,1,International Labour Organisation,International Labour Organisation,International Labour Organisation,International Labour Organisation,1,1
+9,9,9,10,AUT,Austria,,0,ILO,ILO,1,Not Found,ILO,Not Found,ILO,1,1
+10,10,10,11,AZE,Azerbaijan,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+11,11,11,12,BHS,"Bahamas, The",,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+12,12,12,13,BHR,Bahrain,,0,ILO,ILO,1,ILO,ILO,Not Found,ILO,0,1
+13,13,13,14,BGD,Bangladesh,,0,ILO,Not Found,1,ILO,Not Found,ILO,Not Found,1,1
+14,14,14,15,BRB,Barbados,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+15,15,15,16,BLR,Belarus,ICSE-93,1,International Labour Organisation,International Labour Organisation,1,ICSE,ICSE,ICSE,ICSE,1,1
+16,16,16,17,BEL,Belgium,,0,ILO,International Labour Organisation,1,ILO,International Labour Organisation,ILO,International Labour Organisation,1,1
+17,17,17,18,BLZ,Belize,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+18,18,18,19,BEN,Benin,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,,1
+19,19,19,20,BTN,Bhutan,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+20,20,20,21,BOL,Bolivia,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,,1
+21,21,21,22,BIH,Bosnia and Herzegovina,,0,ILO,ILO,1,ILO,ILO,Not Found,ILO,1,1
+22,22,22,23,BWA,Botswana,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,,1
+23,23,23,24,BRA,Brazil,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,,1
+24,24,24,25,BRN,Brunei Darussalam,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+25,25,25,26,BGR,Bulgaria,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+26,26,26,27,BFA,Burkina Faso,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+27,27,27,28,BDI,Burundi,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,,1
+28,28,28,29,CPV,Cabo Verde,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,,1
+29,29,29,30,KHM,Cambodia,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+30,30,30,31,CMR,Cameroon,,0,Not Found,No Data,1,Not Found,No Data,Not Found,No Data,,1
+31,31,31,32,CAN,Canada,NAICS,1,NAICS,NAICS,1,NAICS,NAICS,NAICS,NAICS,1,1
+32,32,32,33,CAF,Central African Republic,,0,ICSE,ICSE,0,ICSE,ICSE,ICSE,ICSE,,0
+33,33,33,34,TCD,Chad,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,,1
+34,34,34,35,CHL,Chile,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+35,35,35,36,CHN,China,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,0,1
+36,36,36,37,COL,Colombia,,0,ILO,ILO,1,ILO,ILO,ICSE,ICSE,1,1
+37,37,37,38,COM,Comoros,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+38,38,38,39,COD,"Congo, Dem. Rep.",,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+39,39,39,40,COG,"Congo, Rep.",,0,Not Found,No Data,1,Not Found,No Data,Not Found,No Data,0,1
+40,40,40,41,CRI,Costa Rica,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+41,41,41,42,CIV,Côte d'Ivoire,,0,ILO,No Data,1,ILO,No Data,ILO,No Data,1,1
+42,42,42,43,HRV,Croatia,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+43,43,43,44,CYP,Cyprus,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+44,44,44,45,CZE,Czech Republic,,0,ILO,ICSE,1,ILO,ICSE,ILO,ICSE,1,1
+45,45,45,46,DNK,Denmark,,0,ILO,ILO,1,ILO,ILO,ILO,ICSE,1,1
+46,46,46,47,DJI,Djibouti,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,,1
+47,47,47,48,DMA,Dominica,,0,ILO,ILO,0,ILO,ILO,ILO,ILO,,0
+48,48,48,49,DOM,Dominican Republic,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+49,49,49,50,ECU,Ecuador,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+50,50,50,51,EGY,"Egypt, Arab Rep.",,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+51,51,51,52,SLV,El Salvador,,0,ILO,ILO,1,ILO,ILO,Error,ILO,1,1
+52,52,52,53,GNQ,Equatorial Guinea,,0,No Data,No Data,0,No Data,No Data,No Data,No Data,,0
+53,53,53,54,ERI,Eritrea,,0,Error,Error,0,Error,Error,Error,Error,,0
+54,54,54,55,EST,Estonia,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+55,55,55,56,SWZ,Eswatini,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+56,56,56,57,ETH,Ethiopia,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+57,57,57,58,FJI,Fiji,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+58,58,58,59,FIN,Finland,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+59,59,59,60,FRA,France,,0,Not Found,ILO,1,Not Found,ILO,Not Found,ILO,1,1
+60,60,60,61,GAB,Gabon,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+61,61,61,62,GMB,"Gambia, The",,0,International Labour Organisation,ILO,1,International Labour Organisation,ILO,International Labour Organisation,ILO,1,1
+62,62,62,63,GEO,Georgia,ICSE-93,1,ICSE,ILO,1,ICSE,ILO,ICSE,ILO,1,1
+63,63,63,64,DEU,Germany,,0,ILO,International Labour Organisation,1,ILO,International Labour Organisation,ILO,International Labour Organisation,1,1
+64,64,64,65,GHA,Ghana,,0,Not Found,No Data,1,Not Found,No Data,Not Found,No Data,1,1
+65,65,65,66,GRC,Greece,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+66,66,66,67,GRD,Grenada,,0,Not Found,No Data,1,Not Found,No Data,Not Found,No Data,1,1
+67,67,67,68,GTM,Guatemala,,0,International Labour Organisation,International Labour Organisation,1,International Labour Organisation,International Labour Organisation,International Labour Organisation,International Labour Organisation,1,1
+68,68,68,69,GIN,Guinea,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+69,69,69,70,GNB,Guinea-Bissau,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+70,70,70,71,GUY,Guyana,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+71,71,71,72,HTI,Haiti,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,,1
+72,72,72,73,HND,Honduras,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,,1
+73,73,73,74,HUN,Hungary,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+74,74,74,75,ISL,Iceland,ICSE-93,1,ICSE,Not Found,1,ICSE,Not Found,ICSE,Not Found,1,1
+75,75,75,76,IND,India,,0,ICSE,ICSE,1,ILO,ILO,ILO,ILO,1,1
+76,76,76,77,IDN,Indonesia,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+77,77,77,78,IRN,"Iran, Islamic Rep.",,0,Not Found,No Data,1,Not Found,No Data,Not Found,No Data,,1
+78,78,78,79,IRQ,Iraq,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+79,79,79,80,IRL,Ireland,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+80,80,80,81,ISR,Israel,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+81,81,81,82,ITA,Italy,,0,ICSE,ICSE,1,ICSE,ILO,ICSE,ILO,1,1
+82,82,82,83,JAM,Jamaica,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+83,83,83,84,JPN,Japan,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+84,84,84,85,JOR,Jordan,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+85,85,85,86,KAZ,Kazakhstan,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+86,86,86,87,KEN,Kenya,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,,1
+87,87,87,88,KIR,Kiribati,,0,Not Found,No Data,1,Not Found,No Data,Not Found,No Data,,1
+88,88,88,89,KOR,"Korea, Rep.",,0,ICSE,ILO,1,ICSE,ILO,ICSE,ILO,,1
+89,89,89,90,XKX,Kosovo,,0,Error,Error,1,Error,Error,Error,Error,,1
+90,90,90,91,KWT,Kuwait,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+91,91,91,92,KGZ,Kyrgyz Republic,ICSE-93,1,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+92,92,92,93,LAO,Lao PDR,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+93,93,93,94,LVA,Latvia,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+94,94,94,95,LBN,Lebanon,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+95,95,95,96,LSO,Lesotho,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+96,96,96,97,LBR,Liberia,,0,Not Found,No Data,1,Not Found,No Data,Not Found,No Data,1,1
+97,97,97,98,LBY,Libya,,0,Not Found,No Data,0,Not Found,No Data,Not Found,No Data,0,0
+98,98,98,99,LTU,Lithuania,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+99,99,99,100,LUX,Luxembourg,,0,Not Found,ILO,1,Not Found,ILO,Not Found,ILO,1,1
+100,100,100,101,MKD,"Macedonia, FYR",,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+101,101,101,102,MDG,Madagascar,,0,ILO,Not Found,1,ILO,Not Found,ILO,Not Found,1,1
+102,102,102,103,MWI,Malawi,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+103,103,103,104,MYS,Malaysia,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+104,104,104,105,MDV,Maldives,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,,1
+105,105,105,106,MLI,Mali,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+106,106,106,107,MLT,Malta,,0,ICSE,ICSE,1,ICSE,ILO,ICSE,ILO,1,1
+107,107,107,108,MHL,Marshall Islands,,0,ILO,No Data,1,ILO,No Data,ILO,No Data,,1
+108,108,108,109,MRT,Mauritania,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+109,109,109,110,MUS,Mauritius,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+110,110,110,111,MEX,Mexico,NAICS,1,NAICS,NAICS,1,NAICS,NAICS,NAICS,NAICS,1,1
+111,111,111,112,FSM,"Micronesia, Fed. Sts.",,0,Not Found,No Data,1,Not Found,No Data,Not Found,No Data,,1
+112,112,112,113,MDA,Moldova,ICSE-93,1,Not Found,ILO,1,Not Found,ILO,Not Found,ILO,,1
+113,113,113,114,MNG,Mongolia,ICSE-93,1,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+114,114,114,115,MNE,Montenegro,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+115,115,115,116,MAR,Morocco,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+116,116,116,117,MOZ,Mozambique,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,,1
+117,117,117,118,MMR,Myanmar,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+118,118,118,119,NAM,Namibia,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+119,119,119,120,NRU,Nauru,,0,Error,Error,1,Error,Error,Error,Error,,1
+120,120,120,121,NPL,Nepal,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+121,121,121,122,NLD,Netherlands,,0,Not Found,ILO,1,Not Found,ILO,Not Found,ILO,1,1
+122,122,122,123,NZL,New Zealand,,0,Error,Error,1,Error,Error,Error,Error,1,1
+123,123,123,124,NIC,Nicaragua,,0,ILO,Not Found,1,ILO,Not Found,ILO,Not Found,1,1
+124,124,124,125,NER,Niger,,0,ILO,No Data,1,ILO,No Data,ILO,No Data,1,1
+125,125,125,126,NGA,Nigeria,,0,ILO,Error,1,ILO,Error,ILO,Error,1,1
+126,126,126,127,NOR,Norway,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+127,127,127,128,OMN,Oman,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,,1
+128,128,128,129,PAK,Pakistan,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+129,129,129,130,PLW,Palau,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,,1
+130,130,130,131,PAN,Panama,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+131,131,131,132,PNG,Papua New Guinea,,0,Not Found,No Data,0,Not Found,No Data,Not Found,No Data,,0
+132,132,132,133,PRY,Paraguay,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+133,133,133,134,PER,Peru,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+134,134,134,135,PHL,Philippines,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+135,135,135,136,POL,Poland,,0,ILO,ILO,1,ILO,ILO,Not Found,ILO,1,1
+136,136,136,137,PRT,Portugal,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+137,137,137,138,QAT,Qatar,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+138,138,138,139,ROU,Romania,ICSE-93,1,Not Found,ICSE,1,Not Found,ICSE,Not Found,ICSE,1,1
+139,139,139,140,RUS,Russian Federation,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+140,140,140,141,RWA,Rwanda,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+141,141,141,142,WSM,Samoa,,0,Not Found,No Data,1,Not Found,No Data,Not Found,No Data,1,1
+142,142,142,143,STP,São Tomé and Principe,,0,No Data,No Data,0,No Data,No Data,No Data,No Data,,0
+143,143,143,144,SAU,Saudi Arabia,,0,ICSE,ICSE,1,ICSE,ICSE,Error,Error,0,1
+144,144,144,145,SEN,Senegal,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+145,145,145,146,SRB,Serbia,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+146,146,146,147,SYC,Seychelles,,0,Not Found,ILO,1,Not Found,ILO,Not Found,ILO,1,1
+147,147,147,148,SLE,Sierra Leone,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+148,148,148,149,SGP,Singapore,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+149,149,149,150,SVK,Slovak Republic,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+150,150,150,151,SVN,Slovenia,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+151,151,151,152,SLB,Solomon Islands,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,,1
+152,152,152,153,SOM,Somalia,,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+153,153,153,154,ZAF,South Africa,,0,International Labour Organisation,ILO,1,International Labour Organisation,ILO,International Labour Organisation,ILO,1,1
+154,154,154,155,SSD,South Sudan,,0,Error,Error,0,Error,Error,Error,Error,,0
+155,155,155,156,ESP,Spain,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+156,156,156,157,LKA,Sri Lanka,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+157,157,157,158,KNA,St. Kitts and Nevis,,0,ILO,ILO,0,ILO,ILO,ILO,ILO,,0
+158,158,158,159,LCA,St. Lucia,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+159,159,159,160,VCT,St. Vincent and the Grenadines,,0,Not Found,No Data,0,Not Found,No Data,Not Found,No Data,,0
+160,160,160,161,SDN,Sudan,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+161,161,161,162,SUR,Suriname,,0,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+162,162,162,163,SWE,Sweden,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+163,163,163,164,CHE,Switzerland,,0,Not Found,ILO,1,Not Found,ILO,Not Found,ILO,1,1
+164,164,164,165,SYR,Syrian Arab Republic,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+165,165,165,166,TJK,Tajikistan,,0,Not Found,ILO,0,Not Found,ILO,Not Found,ILO,1,1
+166,166,166,167,TZA,Tanzania,ICSE-93,1,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+167,167,167,168,THA,Thailand,ICSE-93,1,ICSE,ICSE,1,ICSE,ICSE,ICSE,ICSE,1,1
+168,168,168,169,TLS,Timor-Leste,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+169,169,169,170,TGO,Togo,,0,Not Found,No Data,1,Not Found,No Data,Not Found,No Data,1,1
+170,170,170,171,TON,Tonga,,0,ILO,No Data,1,ILO,No Data,ILO,No Data,1,1
+171,171,171,172,TTO,Trinidad and Tobago,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+172,172,172,173,TUN,Tunisia,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+173,173,173,174,TUR,Turkey,ICSE-93,1,Error,ICSE,1,Error,ICSE,Error,ICSE,,1
+174,174,174,175,TKM,Turkmenistan,,0,Error,Error,0,Error,Error,Error,Error,,0
+175,175,175,176,TUV,Tuvalu,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,,1
+176,176,176,177,UGA,Uganda,ICSE-93,1,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+177,177,177,178,UKR,Ukraine,ICSE-93,1,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+178,178,178,179,ARE,United Arab Emirates,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+179,179,179,180,GBR,United Kingdom,,0,ILO,Not Found,1,ILO,Not Found,ILO,Not Found,,1
+180,180,180,181,USA,United States,NAICS,1,NAICS,NAICS,1,NAICS,NAICS,NAICS,NAICS,,1
+181,181,181,182,URY,Uruguay,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1
+182,182,182,183,UZB,Uzbekistan,ICSE-93,1,ICSE,ILO,1,ICSE,ILO,ICSE,ILO,1,1
+183,183,183,184,VUT,Vanuatu,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,,1
+184,184,184,185,VEN,"Venezuela, RB",,0,ILO,ILO,1,ILO,ILO,ILO,ILO,,1
+185,185,185,186,VNM,Vietnam,,0,International Labour Organisation,Not Found,1,International Labour Organisation,Not Found,International Labour Organisation,Not Found,1,1
+186,186,186,187,PSE,West Bank and Gaza,,0,Error,Error,1,Error,Error,Error,Error,1,1
+187,187,187,188,YEM,"Yemen, Rep.",,0,No Data,No Data,1,No Data,No Data,No Data,No Data,1,1
+188,188,188,189,ZMB,Zambia,,0,Not Found,Not Found,1,Not Found,Not Found,Not Found,Not Found,1,1
+189,189,189,190,ZWE,Zimbabwe,,0,ILO,ILO,1,ILO,ILO,ILO,ILO,1,1

@@ -58,13 +58,49 @@ databank_df <- databank_df %>%
 ###############
 
 #read in classifications (MUST UPDATE PERIODICALLY)
-class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xlsx', sep=""), sheet="Groups") %>%
+class_df <- haven::read_dta(file = paste0(raw_dir, '/misc/CLASS.dta'))
+class_df <- class_df %>%
+  filter(year_fiscal == 2025) %>%
+  select(economy, 
+         code, 
+         region, 
+         region_code, 
+         incgroup, 
+         incgroup_code,
+         ida, 
+         ida_code, 
+         fcv_code) %>%
+  pivot_longer(
+    cols     = -c(economy, code),
+    names_to = "group_type",
+    values_to = "value"
+  ) %>%
+  mutate(
+    Group_Type = case_when(
+      str_ends(group_type, "_code") ~ "Group_Code",
+      TRUE ~ "Group"
+    ),
+    group_type = str_remove(group_type, "_code$")
+  ) %>%
+  pivot_wider(
+    names_from  = Group_Type,
+    values_from = value
+  ) |> 
   rename(
-    iso3c=CountryCode,
-    country=CountryName,
-    WB_Group_Code=GroupCode,
-    WB_Group_Name=GroupName
+    iso3c         = code,
+    country       = economy,
+    WB_Group_Code = Group_Code,
+    WB_Group_Name = Group
   )
+
+
+# class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xlsx', sep=""), sheet="Groups") %>%
+#   rename(
+#     iso3c=CountryCode,
+#     country=CountryName,
+#     WB_Group_Code=GroupCode,
+#     WB_Group_Name=GroupName
+#   )
 
 # class_df <- read_excel(paste(raw_dir, '/misc/CLASS.xls', sep=""),sheet = "Groups") %>%
 #   rename(

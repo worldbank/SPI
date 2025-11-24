@@ -14,7 +14,7 @@ bibliography: ./bibliography.bib
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9, fig.height = 6, fig.path = "plots/", dev = c("png"), dpi=500)
-
+rm(list = ls())
 
 library(tidyverse)
 library(flextable)
@@ -32,7 +32,7 @@ library(ggrepel)
 library(haven)
 library(zoo)
 library(estimatr)
-library(ggpmisc)
+#library(ggpmisc)
 library(ggthemes)
 library(ggtext)
 dir <- here()
@@ -43,7 +43,7 @@ output_dir <- paste(dir, '03_output_data', sep="/")
 #weights (either unity (1) or population (2))
 wgt <- 1
 
-end_date <- 2023
+end_date <- 2024
 
 ```
 
@@ -260,15 +260,22 @@ spi_region_charts  <- function(data, indicator, title) {
     mutate(`SPI Score`=wtd.mean(data_available, weights = weights, na.rm=T),
            Label = paste(round(`SPI Score`,0))) %>%
     arrange(-`SPI Score`) 
-  
+
+  # Old regions  
+  # region_order <- c("Sub-Saharan Africa" ,
+  #                   "South Asia",
+  #                   "North America",
+  #                   "Middle East & North Africa",
+  #                   "Latin America & Caribbean",
+  #                   "Europe & Central Asia", 
+  #                   "East Asia & Pacific")
   region_order <- c("Sub-Saharan Africa" ,
                     "South Asia",
                     "North America",
-                    "Middle East & North Africa",
+                    "Middle East, North Africa, Afghanistan & Pakistan",
                     "Latin America & Caribbean",
-                    "Europe & Central Asia", 
-                    "East Asia & Pacific"
-                           )
+                    "Europe & Central Asia",
+                    "East Asia & Pacific")
 
   region_SPI_df <- region_SPI_df %>%
     mutate(region=factor(region, levels=region_order))
@@ -446,15 +453,22 @@ spi_country_charts  <- function(data, indicator, title) {
   col_pal <- c("#2ec4b6","#acece7","#f1dc76","#ffbf69","#ff9f1c")  
   names(col_pal) <- c("Top Quintile","4th Quintile","3rd Quintile","2nd Quintile","Bottom 20%" )
   
-
-  region_order <- c("Sub-Saharan Africa" ,
-                    "South Asia",
-                    "North America",
-                    "Middle East & North Africa",
-                    "Latin America & Caribbean",
-                    "Europe & Central Asia", 
-                    "East Asia & Pacific"
-                           )
+  # Old regions
+  # region_order <- c("Sub-Saharan Africa" ,
+  #                   "South Asia",
+  #                   "North America",
+  #                   "Middle East & North Africa",
+  #                   "Latin America & Caribbean",
+  #                   "Europe & Central Asia", 
+  #                   "East Asia & Pacific"
+  #                          )
+    region_order <- c("Sub-Saharan Africa" ,
+                      "South Asia",
+                      "North America",
+                      "Middle East, North Africa, Afghanistan & Pakistan",
+                      "Latin America & Caribbean",
+                      "Europe & Central Asia",
+                      "East Asia & Pacific")
   
   p2_alt <- SPI_map %>%
     ungroup() %>%
@@ -703,16 +717,47 @@ p2_alt3
 
 fcs_charts <- function(data, indicator, title) { 
   #FY22 Fragile and conflict-affected situations (https://thedocs.worldbank.org/en/doc/9b8fbdb62f7183cef819729cc9073671-0090082022/original/FCSList-FY06toFY22.pdf)
-  high_intensity_conflict <- c('Afghanistan', 'Somalia', 'Syrian Arab Republic','Yemen, Rep.', "Armenia", "Azerbaijan" )
+  high_intensity_conflict <- c('Afghanistan', 
+                               'Somalia', 
+                               'Syrian Arab Republic',
+                               'Yemen, Rep.', 
+                               "Armenia", 
+                               "Azerbaijan" )
   
-  medium_intensity_conflict <- c('Burkina Faso','Burundi', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.','Ethiopia','Haiti',
-                                 'Iraq', 'Libya','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan')
+  medium_intensity_conflict <- c('Burkina Faso',
+                                 'Burundi', 
+                                 'Cameroon',
+                                 'Central African Republic', 
+                                 'Chad', 
+                                 'Congo, Dem. Rep.',
+                                 'Ethiopia',
+                                 'Haiti',
+                                 'Iraq', 
+                                 'Libya',
+                                 'Mali',
+                                 'Mozambique',
+                                 'Myanmar',
+                                 'Niger',
+                                 'Nigeria',
+                                 'South Sudan')
   
-  high_institutional_social_fragility <- c('Congo, Rep.','Eritrea','Guinea-Bissau',
-                                           'Kosovo','Lebanon','Papua New Guinea',
-                                           'Sudan','Venezuela, RB','West Bank and Gaza','Zimbabwe')
+  high_institutional_social_fragility <- c('Congo, Rep.',
+                                           'Eritrea',
+                                           'Guinea-Bissau',
+                                           'Kosovo',
+                                           'Lebanon',
+                                           'Papua New Guinea',
+                                           'Sudan',
+                                           'Venezuela, RB',
+                                           'West Bank and Gaza',
+                                           'Zimbabwe')
   
-  small_states <- c('Comoros','Kiribati','Marshall Islands','Micronesia, Fed. Sts.','Solomon Islands','Timor-Leste','Tuvalu')
+  small_states <- c('Comoros',
+                    'Kiribati',
+                    'Marshall Islands',
+                    'Micronesia, Fed. Sts.',
+                    'Solomon Islands',
+                    'Timor-Leste','Tuvalu')
   
 
  indicator<-indicator
@@ -742,8 +787,13 @@ fcs_charts <- function(data, indicator, title) {
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
 
-  fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
-  fcs_list <- c("FCS country","Non-FCS country")
+  fcs_list <- c("High-Intensity Conflict", 
+                "Medium-Intensity Conflict",
+                "High Institutional & Social Fragility",
+                "Small States",
+                "Non-FCS country")
+  fcs_list <- c("FCS country",
+                "Non-FCS country")
 
   p2_alt2 <- map_df %>%
     ungroup() %>%
@@ -772,16 +822,48 @@ p2_alt2
 
 fcs_chart_aggregate <- function(data, indicator, title) { 
   #FY21 Fragile and conflict-affected situations (http://pubdocs.worldbank.org/en/888211594267968803/FCSList-FY21.pdf)
-  high_intensity_conflict <- c('Afghanistan', 'Libya', 'Somalia', 'Syrian Arab Republic' )
+  high_intensity_conflict <- c('Afghanistan', 
+                               'Libya', 
+                               'Somalia', 
+                               'Syrian Arab Republic' )
   
-  medium_intensity_conflict <- c('Burkina Faso', 'Cameroon','Central African Republic', 'Chad', 'Congo, Dem. Rep.',
-                                 'Iraq','Mali','Mozambique','Myanmar','Niger','Nigeria','South Sudan','Yemen, Rep.')
+  medium_intensity_conflict <- c('Burkina Faso', 
+                                 'Cameroon',
+                                 'Central African Republic', 
+                                 'Chad', 
+                                 'Congo, Dem. Rep.',
+                                 'Iraq',
+                                 'Mali',
+                                 'Mozambique',
+                                 'Myanmar',
+                                 'Niger',
+                                 'Nigeria',
+                                 'South Sudan',
+                                 'Yemen, Rep.')
   
-  high_institutional_social_fragility <- c('Burundi','Congo, Rep.','Eritrea','Gambia, The','Guinea-Bissau',
-                                           'Haiti','Kosovo','Lao PDR','Lebanon','Liberia','Papua New Guinea',
-                                           'Sudan','Venezuela, RB','West Bank and Gaza','Zimbabwe')
+  high_institutional_social_fragility <- c('Burundi',
+                                           'Congo, Rep.',
+                                           'Eritrea',
+                                           'Gambia, The',
+                                           'Guinea-Bissau',
+                                           'Haiti',
+                                           'Kosovo',
+                                           'Lao PDR',
+                                           'Lebanon',
+                                           'Liberia',
+                                           'Papua New Guinea',
+                                           'Sudan',
+                                           'Venezuela, RB',
+                                           'West Bank and Gaza',
+                                           'Zimbabwe')
   
-  small_states <- c('Comoros','Kiribati','Marshall Islands','Micronesia, Fed. Sts.','Solomon Islands','Timor-Leste','Tuvalu')
+  small_states <- c('Comoros',
+                    'Kiribati',
+                    'Marshall Islands',
+                    'Micronesia, Fed. Sts.',
+                    'Solomon Islands',
+                    'Timor-Leste',
+                    'Tuvalu')
   
 
  indicator<-indicator
@@ -811,8 +893,13 @@ fcs_chart_aggregate <- function(data, indicator, title) {
     mutate(data_available=if_else(is.na(data_available), as.numeric(NA), as.numeric(data_available)))    
   
 
-  fcs_list <- c("High-Intensity Conflict", "Medium-Intensity Conflict","High Institutional & Social Fragility","Small States","Non-FCS country")
-  fcs_list <- c("FCS country","Non-FCS country")
+  fcs_list <- c("High-Intensity Conflict", 
+                "Medium-Intensity Conflict",
+                "High Institutional & Social Fragility",
+                "Small States",
+                "Non-FCS country")
+  fcs_list <- c("FCS country",
+                "Non-FCS country")
 
   p2_alt2 <- map_df %>%
     group_by(fcs) %>%
@@ -825,7 +912,9 @@ fcs_chart_aggregate <- function(data, indicator, title) {
       labs(
       title=str_wrap(paste(title, 'By Fragile and Conflict-affected Situations (FCS)', sep=" - "),100),
       caption = str_wrap('Source: World Bank. Statistical Performance Indicators. Non-FCS countries include all countries not classified as FCS.  This includes high income countries.',70),
-      subtitle= paste0('Based on data for ',end_date,' or the latest year available')
+      subtitle= paste0('Based on data for ',
+                       end_date,
+                       ' or the latest year available')
       ) +
       scale_fill_brewer(palette = 'Set2') +
       scale_y_discrete(limits = fcs_list) +
@@ -928,21 +1017,40 @@ Putting the scores together creates a dashboard for each national statistical sy
   
 
 ```{r metadatatab1, eval=FALSE, include=FALSE}
+pillars <- read_csv(paste(raw_dir, 
+                          '/metadata/SPI_pillars.csv', 
+                          sep = ""))
+
+pillars <- pillars %>%
+  mutate(dimension = paste(dimension_number, 
+                           dimension_name, 
+                           sep = ": "),
+         spi_indicator_description = Description) %>%
+  select(dimension, 
+         spi_indicator_description)
+
+
+pillars_tab <- flextable(pillars) %>%
+  add_header_lines('SPI Dimensions Metadata.') %>%
+  set_header_labels(values = 
+                      list(dimension                 = "Dimension",
+                           spi_indicator_description = "Brief Description")) 
+
 ####
 # create table
 ####
 
-pillars <- pillars %>%
-  mutate(pillar=paste(pillar_number, pillar_name, sep=": ")) %>%
-  select(pillar, spi_indicator_description)
-
-
-pillars_tab <- flextable(pillars) %>%
-  add_header_lines('SPI Pillars Metadata.') %>%
-  set_header_labels(values=list(
-                       pillar="Pillar",
-                       spi_indicator_description="Brief Description"
-                                   )) 
+# pillars <- pillars %>%
+#   mutate(pillar=paste(pillar_number, pillar_name, sep=": ")) %>%
+#   select(pillar, spi_indicator_description)
+# 
+# 
+# pillars_tab <- flextable(pillars) %>%
+#   add_header_lines('SPI Pillars Metadata.') %>%
+#   set_header_labels(values=list(
+#                        pillar="Pillar",
+#                        spi_indicator_description="Brief Description"
+#                                    )) 
 
 FitFlextableToPage(pillars_tab) %>%
   width(width=3.2) %>%
@@ -1398,6 +1506,7 @@ spi_index_df <- spi_index_df %>%
 
 ```
 
+# Analysis
 
 ```{r text_computations}
 
@@ -1446,8 +1555,12 @@ spi_mapper('spi_index_df','SPI.INDEX','')
 
 ```{r maturitytabovr}
 
-indicators<-c("SPI.INDEX","SPI.INDEX.PIL1","SPI.INDEX.PIL2","SPI.INDEX.PIL3",
-              "SPI.INDEX.PIL4","SPI.INDEX.PIL5")
+indicators<-c("SPI.INDEX",
+              "SPI.INDEX.PIL1",
+              "SPI.INDEX.PIL2",
+              "SPI.INDEX.PIL3",
+              "SPI.INDEX.PIL4",
+              "SPI.INDEX.PIL5")
 
 maturity_tab <- spi_maturity_table('spi_index_df',indicators,end_date) 
 
@@ -1521,7 +1634,9 @@ Finally, when looking over time, since 2016 the SPI overall score values are rel
 ```{r spiregcharts}
 #show map and summary stats by region and income group
 
-spi_region_charts('spi_index_df','SPI.INDEX','SPI Overall Score')
+spi_region_charts('spi_index_df',
+                  'SPI.INDEX',
+                  'SPI Overall Score')
 
 ```
 
@@ -1768,9 +1883,9 @@ spi_mapper('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
 ```{r aggpillarsplot3, eval=FALSE, include=FALSE}
 
-spi_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
+#spi_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
-
+spi_region_charts('spi_index_df','SPI.INDEX.PIL3','Pillar 3: Data Products Scores')
 
 ```
 
@@ -2014,7 +2129,7 @@ index_compare <- spi_index_df_dim3_alt %>%
 ```{r index_compare_plot, eval=FALSE, include=FALSE}
 
 
-spi_charts('spi_index_df_dim3_alt', 'SPI.INDEX.PIL3.ALT','Pillar 3: Data Products - OECD High Income Top Coded')
+spi_country_charts('spi_index_df_dim3_alt', 'SPI.INDEX.PIL3.ALT','Pillar 3: Data Products - OECD High Income Top Coded')
 
 
 ```
@@ -2022,7 +2137,7 @@ spi_charts('spi_index_df_dim3_alt', 'SPI.INDEX.PIL3.ALT','Pillar 3: Data Product
 ```{r index_compare_plot2, eval=FALSE, include=FALSE}
 
 
-spi_charts('spi_index_df_dim3_alt2', 'SPI.INDEX.PIL3.ALT2','Pillar 3: Data Products - All High Income Top Coded')
+spi_region_charts('spi_index_df_dim3_alt2', 'SPI.INDEX.PIL3.ALT2','Pillar 3: Data Products - All High Income Top Coded')
 
 
 ```
@@ -2395,11 +2510,11 @@ anova_pil_plot
 
 #Analysis of variance.  In the analysis below, I will calculate the variance in each dimension and in each dimension.
 
-anova_pillar_df <- spi_index_df %>%
+anova_pillar_df <- spi_index_df %>% 
   mutate(SPI.DIM1.5=SPI.INDEX.PIL1/100) %>%
-  select(country, iso3c, date, starts_with("INDEX")) %>%
+  select(country, iso3c, date, contains("INDEX")) %>% 
   pivot_longer(
-    cols=starts_with("INDEX"),
+    cols=contains("INDEX"),
     names_to='Dimension',
     values_to='value'
   ) %>%
@@ -2412,7 +2527,7 @@ anova_pillar_df <- spi_index_df %>%
         ),
     std_dev=as.numeric(std_dev)
   ) %>%
-  left_join(pillars, by = c('Dimension'='dimension_id'))
+  left_join(pillars, by = c('Dimension'='dimension'))
   
     
 anova_pillar_plot <- anova_pillar_df %>%
@@ -2483,7 +2598,7 @@ hci_df <- wbstats::wb_data(country="countries_only",
               start_date=2016,
               end_date=2020,
               return_wide = F) %>%
-  left_join(select(spi_index_df,iso3c,date, region,starts_with('SPI.INDEX'))) #merge on SPI Index data
+  left_join(select(spi_index_df,iso3c,date, region,contains('SPI.INDEX'))) #merge on SPI Index data
 
 #get the correlation for 2020
 hci_df_2018 <- hci_df %>%
@@ -3084,13 +3199,16 @@ index_tab_time <- spi_index_df %>%
         brks7 <- quantile(index_tab_time$SPI.INDEX.2023, probs=c(1,2,3,4)/5,na.rm=T)
         brks7 <- append(0,brks7)
         if (max(brks7)<100) brks7 <- append(brks7,100)        
-
+        brks8 <- quantile(index_tab_time$SPI.INDEX.2024, probs=c(1,2,3,4)/5,na.rm=T)
+        brks8 <- append(0,brks8)
+        if (max(brks8)<100) brks8 <- append(brks8,100)  
 #make nice looking
 index_tab_time <- index_tab_time %>%
   flextable() %>%
   add_header_lines('SPI overall scores over time') %>%
   set_header_labels(values=list(
                        country="Country", 
+                       SPI.INDEX.2024="2024",
                        SPI.INDEX.2023="2023",
                        SPI.INDEX.2022="2022",
                        SPI.INDEX.2021="2021",
@@ -3100,7 +3218,9 @@ index_tab_time <- index_tab_time %>%
                        SPI.INDEX.2017="2017",
                        SPI.INDEX.2016="2016"
                                    )) %>%
-    bg(j = c('SPI.INDEX.2023'),
+    bg(j = c('SPI.INDEX.2024'),
+       bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks8, reverse=TRUE)) %>%   
+  bg(j = c('SPI.INDEX.2023'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks7, reverse=TRUE)) %>%    
     bg(j = c('SPI.INDEX.2022'),
        bg = scales::col_bin(col_palette, domain=c(0,100), bins=brks6, reverse=TRUE)) %>%

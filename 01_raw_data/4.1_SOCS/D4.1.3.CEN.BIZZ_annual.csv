@@ -58,7 +58,9 @@
 "EST",-99,"Register based census",NA
 "ETH",-99,NA,NA
 "FIN",-99,"Register based census",NA
-"FJI",-99,NA,NA
+"FJI",2022,"2022, 2023, 2024",NA
+"FJI",2023,"2022, 2023, 2024",NA
+"FJI",2024,"2022, 2023, 2024",NA
 "FRA",-99,"Register based census",NA
 "FSM",-99,NA,NA
 "GAB",2021,"2021",NA
@@ -91,7 +93,7 @@
 "JOR",2011,"2006, 2011, 2018",NA
 "JOR",2018,"2006, 2011, 2018",NA
 "JPN",-99,"Register based census",NA
-"KAZ",-99,"Register based census",NA
+"KAZ",2024,"Register based census, 2024",NA
 "KEN",2010,"2010, 2017","2010"
 "KEN",2017,"2010, 2017",NA
 "KGZ",-99,"Register based census",NA
@@ -100,16 +102,14 @@
 "KNA",-99,NA,NA
 "KOR",-99,"Register based census",NA
 "KWT",-99,"Register based census",NA
-"LAO",2006,NA,"2006"
 "LAO",-99,"Register based census",NA
 "LBN",-99,"Register based census",NA
-"LBR",2007,NA,"2007"
-"LBR",2017,"2017",NA
+"LBR",2017,"2017, 2023",NA
+"LBR",2023,"2017, 2023",NA
 "LBY",-99,NA,NA
 "LCA",-99,"Register based census",NA
-"LKA",1983,NA,"1983, 2003, 2006"
-"LKA",2003,"2003, 2013","1983, 2003, 2006"
-"LKA",2006,NA,"1983, 2003, 2006"
+"LKA",1983,NA,"1983, 2003"
+"LKA",2003,"2003, 2013","1983, 2003"
 "LKA",2013,"2003, 2013",NA
 "LSO",-99,"Register based census",NA
 "LTU",-99,"Register based census",NA
@@ -127,9 +127,8 @@
 "MMR",-99,"Register based census",NA
 "MNE",-99,"Register based census",NA
 "MNG",-99,"Register based census",NA
-"MOZ",2004,NA,"2004, 2015"
+"MOZ",2004,NA,"2004"
 "MOZ",2014,"2014",NA
-"MOZ",2015,NA,"2004, 2015"
 "MRT",-99,NA,NA
 "MUS",-99,"Register based census",NA
 "MWI",2016,"2016",NA
@@ -142,7 +141,6 @@
 "NOR",-99,"Register based census",NA
 "NPL",2001,"2001, 2006, 2018",NA
 "NPL",2006,"2001, 2006, 2018",NA
-"NPL",2007,NA,"2007"
 "NPL",2018,"2001, 2006, 2018",NA
 "NRU",-99,NA,NA
 "NZL",-99,"Register based census",NA
@@ -162,19 +160,15 @@
 "QAT",-99,"Register based census",NA
 "ROU",-99,"Register based census",NA
 "RUS",-99,"Register based census",NA
-"RWA",2011,NA,"2011, 2014, 2017, 2022"
-"RWA",2014,NA,"2011, 2014, 2017, 2022"
-"RWA",2017,NA,"2011, 2014, 2017, 2022"
-"RWA",2022,NA,"2011, 2014, 2017, 2022"
 "RWA",-99,"Register based census",NA
 "SAU",-99,"Register based census",NA
 "SDN",-99,NA,NA
 "SEN",2016,"2016",NA
 "SGP",-99,"Register based census",NA
-"SLB",-99,NA,NA
+"SLB",2024,"2024",NA
 "SLE",2022,"2022",NA
 "SLV",-99,"Register based census",NA
-"SOM",-99,NA,NA
+"SOM",2024,"2024",NA
 "SRB",-99,"Register based census",NA
 "SSD",-99,NA,NA
 "STP",-99,NA,NA
@@ -198,7 +192,6 @@
 "TUR",-99,"Register based census",NA
 "TUV",-99,NA,NA
 "TZA",-99,"Register based census",NA
-"UGA",2006,NA,"2006"
 "UGA",-99,"Register based census",NA
 "UKR",-99,"Register based census",NA
 "URY",-99,"Register based census",NA
@@ -206,13 +199,11 @@
 "UZB",-99,"Register based census",NA
 "VCT",-99,NA,NA
 "VEN",-99,NA,NA
-"VNM",2008,NA,"2008"
 "VNM",-99,"Register based census",NA
-"VUT",-99,"Register based census",NA
+"VUT",2022,"Register based census, 2022",NA
 "WSM",-99,NA,NA
 "XKX",-99,"Register based census",NA
 "YEM",-99,NA,NA
-"ZAF",2021,NA,"2021"
 "ZAF",-99,"Register based census",NA
 "ZMB",-99,NA,NA
-"ZWE",2013,"2013","2013"
+"ZWE",2013,"2013",NA

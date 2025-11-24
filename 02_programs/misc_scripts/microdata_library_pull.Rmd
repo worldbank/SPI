@@ -20,15 +20,17 @@ library(tidytext)
 library(rsdmx)
 library(here)
 library(purrr)
-
 library(ggthemes)
-
 
 # Directory for SPI csv files  to be created
 dir <- here()
 
 input_dir <- paste(dir, "01_raw_data", sep = "/")
-output_dir <- paste(dir, "01_raw_data", "4.1_SOCS/", sep = "/")
+#output_dir <- paste(dir, "01_raw_data", "4.1_SOCS/", sep = "/")
+output_dir <- paste(dir, 
+                    "01_raw_data", 
+                    "4.1_SOCS/",
+                    sep = "/")
 
 country_metadata <- wbstats::wb_countries()
 ```
@@ -42,9 +44,18 @@ Below we pull data from both the public, non-public (World Bank use only) microd
 ```{r data_pulls}
 # public studies from World Bank microdata library
 public_base_url <- "http://microdata.worldbank.org/index.php/api/catalog" # define url
-study_request_public <- fromJSON(paste(public_base_url, "/search", "?ps=10000", sep = "")) # pull from url
+study_request_public <- fromJSON(paste(public_base_url, 
+                                       "/search", 
+                                       "?ps=10000",
+                                       sep = "")) # pull from url
 study_df_public <- study_request_public$result$rows # convert to dataframe
-write_excel_csv(study_df_public, path = paste(output_dir, "microdata_library_public_studies.csv", sep = "")) # write to csv
+write_excel_csv(study_df_public, 
+                path = paste(output_dir, 
+                             "microdata_library_public_studies.csv", 
+                             sep = "")) # write to csv
+study_df_public <- read_csv(file = paste(output_dir, 
+                             "microdata_library_public_studies.csv", 
+                             sep = "")) # write to csv
 gt(as_tibble(head(study_df_public[, 1:5]))) # display top 5 rows of dataframe
 
 
@@ -58,18 +69,22 @@ gt(as_tibble(head(study_df_public[, 1:5]))) # display top 5 rows of dataframe
 # pull from ILO
 temp <- tempfile()
 ilo_base_url <- "https://www.ilo.org/surveyLib/index.php/catalog/export/csv?page=1&ps=100&collection[]=LFS"
-download.file(ilo_base_url, temp)
+download.file(ilo_base_url, 
+              temp)
 study_df_ilo <- read_csv(temp) # convert to dataframe
 
 # convert to a function with the page number as an argument
 ilo_survey_pull <- function(page) {
-  ilo_base_url <- paste("https://www.ilo.org/surveyLib/index.php/catalog/export/csv?page=", page, "&ps=100&collection[]=LFS", sep = "")
+  ilo_base_url <- paste("https://www.ilo.org/surveyLib/index.php/catalog/export/csv?page=",
+                        page, 
+                        "&ps=100&collection[]=LFS",
+                        sep = "")
   temp <- tempfile()
   download.file(ilo_base_url, temp)
   study_df_ilo <- read_csv(temp) # convert to dataframe
   return(study_df_ilo)
 }
-
+`
 # loop over pages and pull data
 nrow <- 100
 # while loop that checks if the number of rows is 100
@@ -84,32 +99,42 @@ while (nrow == 100) {
   }
   i <- i + 1
 }
-write_excel_csv(study_df_ilo, path = paste(output_dir, "ilo_library_public_studies.csv", sep = "")) # write to csv
+write_excel_csv(study_df_ilo,
+                path = paste(output_dir, 
+                             "ilo_library_public_studies.csv", 
+                             sep = "")) # write to csv
 
 
 
-# second ILO source
-ilo_sources_catalog <- read_csv("https://www.ilo.org/ilostat-files/Documents/sources_en.csv")
-write_excel_csv(ilo_sources_catalog, path = paste(output_dir, "ilo_sources_catalog.csv", sep = "")) # write to csv
 
 # pull from FAO
-temp <- tempfile()
-fao_base_url <- "https://microdata.fao.org/index.php/catalog/export/json?ps=5000&collection[]=agriculture-census-surveys"
-download.file(fao_base_url, temp)
-study_df_fao <- read_csv(temp) # convert to dataframe
-write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep = "")) # write to csv
-
 
 fao_base_url <- "https://microdata.fao.org/index.php/api/catalog" # define url
-study_request_fao <- fromJSON(paste(fao_base_url, "/search", "?ps=20000", sep = "")) # pull from url
+study_request_fao <- fromJSON(paste(fao_base_url, 
+                                    "/search", 
+                                    "?ps=20000", 
+                                    sep = "")) # pull from url
 study_df_fao <- study_request_fao$result$rows
+write_excel_csv(study_df_fao, 
+                path = paste(output_dir, 
+                             "fao_library_public_studies.csv", 
+                             sep = "")) # write to csv
 
 # internal use studies from World Bank microdata library
 wb_base_url <- "http://microdatalib.worldbank.org/index.php/api/catalog" # define url
-study_request_wb <- fromJSON(paste(wb_base_url, "/search", "?ps=20000", sep = "")) # pull from url
+study_request_wb <- fromJSON(paste(wb_base_url, 
+                                   "/search", 
+                                   "?ps=20000", 
+                                   sep = "")) # pull from url
 study_df_internal <- study_request_wb$result$rows
-write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_internal_studies.csv", sep = "")) # write to csv
-
+write_excel_csv(study_df_internal, 
+                path = paste(output_dir, 
+                             "microdata_library_internal_studies.csv", 
+                             sep = "")) # write to csv
+study_df_internal <- 
+  read_csv(file = paste(output_dir, 
+                             "microdata_library_internal_studies.csv", 
+                             sep = ""))
 
 gt(as_tibble(head(study_df_internal[, 1:5])))
 
@@ -117,7 +142,11 @@ gt(as_tibble(head(study_df_internal[, 1:5])))
 
 # check for matches
 matches_wb_public <- study_df_internal %>%
-  inner_join(study_df_public, by = c("title", "nation", "year_start", "year_end"))
+  inner_join(study_df_public, 
+             by = c("title",
+                    "nation", 
+                    "year_start", 
+                    "year_end"))
 
 # matches_wb_ihsn <- study_df_internal %>%
 #   inner_join(study_df_ihsn, by=c('title', 'nation','year_start','year_end'))
@@ -137,28 +166,46 @@ internal_series <- study_df_internal$idno
 
 # use purr to loop over list of surveys and return some extra info
 series_info_fn <- function(series) {
-  info <- fromJSON(paste("http://microdatalib.worldbank.org/index.php/api/catalog/", series, sep = ""))
-  series_info <- as.character(info$dataset$metadata$study_desc$series_statement$series_name)
+  info <- fromJSON(paste("http://microdatalib.worldbank.org/index.php/api/catalog/", 
+                         series, 
+                         sep = ""))
+  #print(info)
+  series_info   <- as.character(info$dataset$metadata$study_desc$series_statement$series_name)
   sampling_info <- as.character(info$dataset$metadata$study_desc$method$analysis_info$response_rate)
   geog_coverage <- as.character(info$dataset$metadata$study_desc$study_info$geog_coverage)
-  tibble::tibble(series_info, sampling_info, geog_coverage)
+
+  tibble::tibble(series_info, 
+                 sampling_info, 
+                 geog_coverage)
 }
 
-
+library(collapse)
 # now produce a dataframe with the more info on survey
-study_df_internal <- study_df_internal %>%
-  mutate(series_info_dat = map(internal_series, possibly(series_info_fn,
-    otherwise = "Something Wrong"
-  ))) %>%
+empty_df <- 
+  tibble(series_inf    = NA, 
+         sampling_info = NA, 
+         geog_coverage = NA)
+t1 <- Sys.time()
+study_df_internal2 <- study_df_internal %>%
+  fmutate(series_info_dat = map(internal_series, 
+                                possibly(series_info_fn,
+                                         otherwise = empty_df))) %>%
   unnest(series_info_dat,
-    keep_empty = TRUE
-  )
-
+         keep_empty = TRUE)
+t2 <- Sys.time()
+print(t2-t1)
+study_df_internal <- study_df_internal2
 study_df_internal <- study_df_internal %>%
   mutate(across(is.list, as.character))
 
 
-write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_surveys.csv", sep = "")) # write to csv
+write_excel_csv(study_df_internal, 
+                path = paste(output_dir, 
+                             "microdata_library_surveys.csv", 
+                             sep = "")) # write to csv
+study_df_internal <- read_csv(file = paste(output_dir, 
+                             "microdata_library_surveys.csv", 
+                             sep = ""))
 # gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
 ```
 
@@ -166,7 +213,9 @@ write_excel_csv(study_df_internal, path = paste(output_dir, "microdata_library_s
 
 ```{r micro_series_info_FAO}
 # get list of survey ids
-study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep = "")) # convert to dataframe
+study_df_fao <- read_csv(paste(output_dir, 
+                               "fao_library_public_studies.csv", 
+                               sep = "")) # convert to dataframe
 fao_series <- study_df_fao$id
 
 
@@ -174,72 +223,85 @@ fao_series <- study_df_fao$id
 
 # use purr to loop over list of surveys and return some extra info
 series_info_fn_fao <- function(series) {
-  info <- fromJSON(paste("https://microdata.fao.org/index.php/metadata/export/", series, "/json", sep = ""))
-  series_info <- as.character(info$study_desc$series_statement$series_name)
+  info <- fromJSON(paste("https://microdata.fao.org/index.php/metadata/export/", 
+                         series, 
+                         "/json", 
+                         sep = ""))
+  series_info   <- as.character(info$study_desc$series_statement$series_name)
   geog_coverage <- as.character(info$study_desc$study_info$geog_coverage)
-  tibble::tibble(series_info, geog_coverage)
+  tibble::tibble(series_info, 
+                 geog_coverage)
 }
 
-
+t1a <- Sys.time()
 # now produce a dataframe with the more info on survey
 study_df_fao <- study_df_fao %>%
-  mutate(series_info_dat = map(fao_series, possibly(series_info_fn_fao,
-    otherwise = "Something Wrong"
-  ))) %>%
+  mutate(series_info_dat = map(fao_series, 
+                               possibly(series_info_fn_fao,
+                                        otherwise = "Something Wrong"))) %>%
   unnest(series_info_dat,
-    keep_empty = TRUE
-  )
-
+         keep_empty = TRUE)
+t2a <- Sys.time()
+print(t2a - t1a)
 study_df_fao <- study_df_fao %>%
-  mutate(across(where(is.list), as.character))
+  mutate(across(where(is.list), 
+                as.character))
 
 
-write_excel_csv(study_df_fao, path = paste(output_dir, "fao_library_public_studies.csv", sep = "")) # write to csv
+write_excel_csv(study_df_fao, 
+                path = paste(output_dir, 
+                             "fao_library_public_studies.csv", 
+                             sep = "")) # write to csv
 # gt(as_tibble(head(study_df_ihsn[,1:5]))) #display top 5 rows of dataframe
 ```
 
+# D4.1.4.SVY.HOUS_NADA.csv
 
 ```{r householdsurveys}
 # access household surveys in PIP (povcalnet)
 url <- "https://api.worldbank.org/pip/v1/survey-metadata"
-pip_df <- fromJSON(url,
-  simplifyDataFrame = TRUE
-) %>%
+raw_txt <- readLines(url, warn = FALSE)
+clean_txt <- iconv(raw_txt, from = "", to = "UTF-8", sub = "")
+json_clean <- paste(clean_txt, collapse = "\n")
+parsed <- fromJSON(json_clean)
+
+pip_df <- parsed |> 
   filter(survey_coverage == "national") %>%
-  rename(
-    indicator_date = reporting_year,
-    iso3c = country_code
-  ) %>%
-  select(iso3c, indicator_date) %>%
+  rename(indicator_date = reporting_year,
+         iso3c          = country_code) %>%
+  select(iso3c, 
+         indicator_date) %>%
   left_join(country_metadata) %>%
-  select(country, indicator_date)
+  select(country, 
+         indicator_date)
 
 
 survey_df <- study_df_internal %>%
-  filter(grepl("national|nacional", str_to_lower(geog_coverage))) %>% # keep just nationally representative surveys based on metadata
+  filter(grepl("national|nacional", 
+               str_to_lower(geog_coverage))) %>% 
+  # keep just nationally representative surveys based on metadata
   rename(
-    country = nation,
-    indicator_date = year_start
-  ) %>%
-  mutate(country = case_when(
-    country == "Gambia" ~ "Gambia, The",
-    TRUE ~ country
-  )) %>%
-  filter(grepl("lsms|hh/is|hh/ies|Income/Expenditure/Household Survey", series_info)) %>%
+    country        = nation,
+    indicator_date = year_start) %>%
+  mutate(country = case_when(country == "Gambia" ~ "Gambia, The",
+                             TRUE ~ country)) %>%
+  filter(grepl("lsms|hh/is|hh/ies|Income/Expenditure/Household Survey",
+               series_info)) %>%
   bind_rows(pip_df) %>%
-  group_by(country, indicator_date) %>%
+  group_by(country, 
+           indicator_date) %>%
   summarise(
     freq = n(),
-    title = first(title)
-  ) %>%
+    title = first(title)) %>%
   group_by(country) %>%
   mutate(
     nada_dates = paste0(indicator_date, collapse = ", "),
-    nada_title = paste0(title, collapse = "; ")
-  ) %>%
+    nada_title = paste0(title, collapse = "; ")) %>%
   select(country, indicator_date, nada_dates, nada_title)
 
-write_excel_csv(survey_df, path = paste(output_dir, "D4.1.4.SVY.HOUS_NADA.csv", sep = "")) # write to csv
+write_excel_csv(survey_df, 
+                path = paste(output_dir, 
+                             "D4.1.4.SVY.HOUS_NADA.csv", sep = "")) # write to csv
 ```
 
 
@@ -249,9 +311,13 @@ svy_exclusions<-c(
   "COVID19 Refugee Household Monitoring 2020" #excluded due to focus only on refugees
 )
 
-study_df_internal <- read_csv(paste(output_dir, "microdata_library_surveys.csv", sep = "/")) %>%
+study_df_internal <- read_csv(paste(output_dir, 
+                                    "microdata_library_surveys.csv", 
+                                    sep = "/")) %>%
   #add exclusions based on country feedback
-  filter(!title %in% svy_exclusions)
+  filter(!title %in% svy_exclusions) %>%
+  filter(#drop some surveys that are not relevant
+    !(grepl("Good Growth Plan", title) ))
 
 series_types_wb <- study_df_internal %>%
   group_by(series_info) %>%
@@ -262,7 +328,9 @@ saver <- function(data, indicator, filename) {
 
 
   survey_df <- get(data) %>%
-    filter(grepl("national|nacional", str_to_lower(geog_coverage))) %>% # keep just nationally representative surveys based on metadata
+    filter(grepl("national|nacional|whole", 
+                 str_to_lower(geog_coverage))) %>%
+    # keep just nationally representative surveys based on metadata
     rename(
       country = nation,
       indicator_date = year_start
@@ -271,7 +339,7 @@ saver <- function(data, indicator, filename) {
       country == "Gambia" ~ "Gambia, The",
       TRUE ~ country
     )) %>%
-    filter(grepl(indicator, series_info)) %>%
+    filter(grepl(str_to_lower(indicator), str_to_lower(series_info))) %>%
     group_by(country, indicator_date) %>%
     summarise(
       freq = n(),
@@ -282,32 +350,62 @@ saver <- function(data, indicator, filename) {
       nada_dates = paste0(indicator_date, collapse = ", "),
       nada_title = paste0(title, collapse = "; ")
     ) %>%
-    select(country, indicator_date, nada_dates, nada_title)
+    select(country, 
+           indicator_date, 
+           nada_dates, 
+           nada_title)
 
 
 
 
-  write_excel_csv(survey_df, path = paste(output_dir, filename, sep = "")) # write to csv
+  write_excel_csv(survey_df, 
+                  path = paste(output_dir, 
+                               filename, 
+                               sep = "")) # write to csv
 }
 
 # houshold surveys with pip surveys included
 study_df_hh <- study_df_internal
 
 # saver('study_df_internal','lsms|hh/is|hh/ies|Income/Expenditure/Household Survey' , 'D4.1.4.SVY.HOUS_NADA.csv')
-study_df_fao <- read_csv(paste(output_dir, "fao_library_public_studies.csv", sep = ""))
-saver("study_df_internal", "ag/oth|Agricultural Survey", "D4.1.5.SVY.AGRI_NADA.csv")
-saver("study_df_fao", "ag/oth|Agricultural Survey", "D4.1.5.SVY.AGRI_NADA_FAO.csv")
+study_df_fao <- read_csv(paste(output_dir, 
+                               "fao_library_public_studies.csv", 
+                               sep = "")) %>%
+  filter(
+    #drop some surveys that are not relevant
+    !(grepl("Good Growth Plan", title) |
+    grepl("COVID", title)),
+    #drop surveys with created date after 2023
+    created<=2023
+    
+  )
+saver("study_df_internal", 
+      "ag/oth|Agricultural Survey", 
+      "D4.1.5.SVY.AGRI_NADA.csv")
+saver("study_df_fao", 
+      "ag/oth|Agricultural Survey|hh/oth", 
+      "D4.1.5.SVY.AGRI_NADA_FAO.csv")
 
-saver("study_df_fao", "ag/census|Agricultural Census", "D4.1.2.CEN.AGRI_NADA_FAO.csv")
+saver("study_df_fao", 
+      "ag/census|Agricultural Census", 
+      "D4.1.2.CEN.AGRI_NADA_FAO.csv")
 
 
 
 # save FAO and Microdatalib datasets
-ag_svys_df <- study_df_internal %>%
-  select(-c("created", "changed")) %>%
-  bind_rows(study_df_fao)
+ag_svys_df <- bind_rows(
+  read_csv(paste(output_dir, 
+                 "D4.1.5.SVY.AGRI_NADA.csv", 
+                 sep = "")),
+  read_csv(paste(output_dir, 
+                 "D4.1.5.SVY.AGRI_NADA_FAO.csv", 
+                 sep = ""))) 
 
-saver("ag_svys_df", "ag/oth|Agricultural Survey", "D4.1.5.SVY.AGRI_NADA.csv")
+write_excel_csv(ag_svys_df, 
+                path = paste(output_dir, 
+                             "D4.1.5.SVY.AGRI_NADA.csv", 
+                             sep = "")) # write to csv
+
 
 # use ILO for source of labor force surveys
 survey_df_ilo <- read_csv(paste(output_dir, "ilo_library_public_studies.csv", sep = "")) %>%
@@ -411,7 +509,7 @@ write_excel_csv(survey_df, path = paste(output_dir, "D4.1.6.SVY.LABR_NADA.csv", 
 
 saver("study_df_internal", "dhs|mics|whs|hea|DHS|MICS|WHS|Demographic and Health", "D4.1.7.SVY.HLTH_NADA.csv")
 
-saver("study_df_internal", "Business Survey", "D4.1.8.SVY.BIZZ_NADA.csv")
+saver("study_df_internal", "Business Survey|Enterprise Survey", "D4.1.8.SVY.BIZZ_NADA.csv")
 
 
 # slightly modified code for estabilishment census
