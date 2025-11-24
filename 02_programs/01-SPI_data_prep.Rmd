@@ -1332,9 +1332,7 @@ write_excel_csv(x    = WDI_metadata,
 ```{r 3.15_debt}
 #reshape metaadata file
 D3.15.AKI <- WDI_metadata %>%
-  transmute(iso3c                   = if_else(is.na(Country.Code),
-                                              Code,
-                                              Country.Code),
+  transmute(iso3c                   = Code,
             date                    = date,
             External_debt_Reporting = External.debt.Reporting.status,
             Income.Group            = Income.Group) %>%
@@ -1863,9 +1861,7 @@ df <- df %>%
 
 
 D2.1_DSDR <- df %>%
-  mutate(iso3c   = if_else(is.na(Country.Code), 
-                           Code, 
-                           Country.Code),
+  mutate(iso3c   = Code,
          country = Table.Name) %>%
   select(c('iso3c',  
            'date',  
@@ -3228,16 +3224,16 @@ df_death <- read_csv(file=paste(raw_dir, '4.2_SOAD', 'SG_REG_DETH75N.csv', sep="
 
 #supplement with wdi data
 crvs_wdi <- WDI_metadata %>%
-  select(Country.Code, 
+  select(Code, 
          date, 
          Vital.registration.complete) %>%
-  mutate(iso3c               = Country.Code,
+  mutate(iso3c               = Code,
          SPI.D4.2.3.WDI      = if_else(grepl('Yes', 
                                               Vital.registration.complete),
                                               1,
                                               0),
          RAW.D4.2.3.CRVS.WDI = Vital.registration.complete) %>%
-  select(-Country.Code, 
+  select(-Code, 
          -Vital.registration.complete)
 
 crvs_df <- spi_df_empty %>%
@@ -3855,9 +3851,7 @@ spi_previous_vintage_d5 <- read_csv(file = paste(raw_dir,
 
 #read in metadata file.
 D5.2.1.SNAU <- df %>%
-  mutate(iso3c   = if_else(is.na(Country.Code), 
-                           Code, 
-                           Country.Code),
+  mutate(iso3c   = Code,
          country = Table.Name) %>%
   select(c('iso3c',  
            'date',  
@@ -3890,9 +3884,7 @@ constant price estimates be changed periodically to reflect changes in economic 
 ```{r naby}
 
  df %>%
-  mutate(iso3c   = if_else(is.na(Country.Code), 
-                           Code, 
-                           Country.Code),
+  mutate(iso3c   = Code,
          country = Table.Name) %>%
   select(c('iso3c',  
            'date',  
