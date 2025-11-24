@@ -3235,7 +3235,7 @@ crvs_wdi <- WDI_metadata %>%
          RAW.D4.2.3.CRVS.WDI = Vital.registration.complete) %>%
   select(-Code, 
          -Vital.registration.complete)
-
+# In November 2025, some of the countries had revised CRVS scores. THey were typically revised down but not always. This is because there was a matching error in the WDI metadata, where some files did not always used "Code" but rather "Country.Code" so they were mismatched. Then, the CRVS usually would take the missing BIRTH/DETH numbers forward if there was missing data because there would be no WDI data to use. However, now many of those countries had WDI data to use, so the carrying forward UN SD CRVS data did not need to occur, which caused their estimates to change. 
 crvs_df <- spi_df_empty %>%
   left_join(df_birth) %>%
   left_join(df_death) %>%
