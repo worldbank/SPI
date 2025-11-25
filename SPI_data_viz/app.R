@@ -28,7 +28,7 @@ library(officer)
 #read in data and metatdata
 SPI <- read_csv('SPI_index.csv') 
 
-end_date <- 2023
+end_date <- 2024
 
 metadata_raw <- read_csv('SPI_dimensions_sources.csv')
 
