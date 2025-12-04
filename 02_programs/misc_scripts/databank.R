@@ -1,7 +1,7 @@
 #This script will prepare the SPI data for loading into the World Bank's databank
 # Written by Brian Stacy
 # March 4, 2021
-
+rm(list = ls())
 #load packages
 library(tidyverse)
 library(here)

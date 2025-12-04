@@ -140,7 +140,9 @@ names(pillar_colors) <- pillar_levels
 spi_index_df <- read_csv( file = paste(output_dir, 
                                        'SPI_index.csv', 
                                        sep = "/")) 
-spi_index_2023  <- read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_index.csv')
+
+spi_index_2023  <- read_csv("https://raw.githubusercontent.com/worldbank/SPI/7407ed97939ca1cc3fa9e7e35494b2b347d9e202/03_output_data/SPI_index.csv")
+  #read_csv('https://raw.githubusercontent.com/worldbank/SPI/master/03_output_data/SPI_index.csv')
 #metadata 
 metadata2 <- read_csv(paste(raw_dir, 
                             '/metadata/SPI_dimensions_sources.csv', 
