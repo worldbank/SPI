@@ -362,6 +362,7 @@ ui <- navbarPage(id='container',
                                 ),
                           #country report: https://github.com/worldbank/SPI/blob/master/country_reports/Albania%20Country%20Report.docx?raw=true    
                           uiOutput("rep"),
+                          uiOutput("dg_rep"),
 
                           withSpinner(uiOutput(('fullplot' )))
                  ),
@@ -641,6 +642,15 @@ server <- function(input, output,session) {
   output$rep <- renderUI({
     tagList(url())
   })
+  dg_url <- reactive({
+    tags$a(paste0("Download ",input$country_choice," Data Gaps"), 
+           href=paste0("https://github.com/WB-DECIS/spi_data_gaps_assessments/raw/refs/heads/main/data_gaps_documents/", 
+                       input$country_choice, 
+                       "_Data_Gaps_Assessment.docx"))
+  }) 
+  output$dg_rep <- renderUI({
+    tagList(dg_url())
+  })
   
 
     #################################################
@@ -678,7 +688,7 @@ server <- function(input, output,session) {
     # 
     #add country choices
     choice <- unique(as.character(country_info$country))
-    choice<-append('All',choice)
+    choice <- append('All',choice)
     #add region choices
     region_choice <- unique(as.character(country_info$region))
     region_choice<-append('All',region_choice)
