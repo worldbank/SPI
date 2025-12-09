@@ -4715,6 +4715,10 @@ D5.2.9.MONY <-  D5.2.9.MONY %>%
                                    SPI.D5.2.9.MONY.IMF,
                                    SPI.D5.2.9.MONY,
                                    0)) %>% 
+  mutate(SPI.D5.2.9.MONY = if_else(iso3c == "SAU" & date == 2023,
+                                   SPI.D5.2.9.MONY.IMF,
+                                   SPI.D5.2.9.MONY,
+                                   0)) %>% 
   #fill in with IMF data if missing.  This applies mostly to high income countries
   select(-SPI.D5.2.9.MONY.IMF) %>%
   arrange(date, 

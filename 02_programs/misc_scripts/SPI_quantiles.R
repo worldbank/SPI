@@ -109,3 +109,4 @@ SPI |>
          `Data Infrastructure Score` = SPI.INDEX.PIL5, 
          `SPI Overall Score`         = SPI.INDEX) %>%
   write_csv(paste0(dir, "/03_output_data/SPI_indicators_2024.csv"))
+

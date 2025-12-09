@@ -64,4 +64,4 @@ treemap_df <- treemap_df %>%
   filter(!is.na(value)) 
 
 #save
-write_excel_csv(treemap_df, fs::path(output_dir, 'SPI_treemap.csv')
+write_excel_csv(treemap_df, fs::path(output_dir, 'SPI_treemap.csv'))
